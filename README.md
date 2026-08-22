@@ -16,8 +16,22 @@ npm test           # all package tests
 npm run typecheck
 ```
 
-No API keys needed to run the app — TTS uses the browser, and the doubt agent runs
-as a scripted stub until the live agent lands.
+No API keys are required — TTS uses the browser voice and the doubt session falls
+back to a scripted stub. For the **real live tutor**, copy
+`apps/classroom/.env.example` to `apps/classroom/.env.local` and set
+`VITE_GEMINI_API_KEY` (free at https://aistudio.google.com/apikey).
+
+## Deploy
+
+The app is a static PWA (installable, offline shell). One command with the
+[Vercel CLI](https://vercel.com/cli):
+
+```bash
+npx vercel deploy --prod    # vercel.json already configures build + SPA rewrites
+```
+
+Set `VITE_GEMINI_API_KEY` in the Vercel project's environment variables to ship
+the live tutor.
 
 ## Where things live
 
