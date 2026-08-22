@@ -13,9 +13,28 @@ export interface DoubtContext {
 }
 
 /**
- * STUB — replaced by the doubt-session builder. Pure derivation from
- * (lesson, beatIndex); clamps out-of-range indices.
+ * Pure derivation of the agent's briefing from (lesson, beatIndex).
+ *
+ * The index is clamped, never trusted: a ✋ can race the player's advancing
+ * beat pointer, and the agent must still receive a sane moment of the class
+ * rather than the app crashing at the worst possible time.
  */
-export function buildContext(_lesson: Lesson, _beatIndex: number): DoubtContext {
-  throw new Error('@ai-tutor/doubt-session buildContext: not implemented yet');
+export function buildContext(lesson: Lesson, beatIndex: number): DoubtContext {
+  const last = lesson.beats.length - 1;
+  const raw = Number.isFinite(beatIndex) ? Math.floor(beatIndex) : 0;
+  const i = Math.min(last, Math.max(0, raw));
+
+  const beat = lesson.beats[i];
+  const soFar = lesson.beats.slice(0, i + 1);
+
+  return {
+    lessonId: lesson.id,
+    beatId: beat.id,
+    beatTopic: beat.topic,
+    transcriptSoFar: soFar.map((b) => b.narration).join('\n'),
+    // Copies, so the agent (or anything downstream) mutating its briefing can
+    // never corrupt the lesson document.
+    visibleElementIds: [...beat.show],
+    recentBeats: soFar.map((b) => ({ id: b.id, topic: b.topic })),
+  };
 }

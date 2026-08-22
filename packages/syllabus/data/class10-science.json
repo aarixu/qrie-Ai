@@ -1,0 +1,100 @@
+{
+  "id": "class10-science",
+  "klass": 10,
+  "subject": "Science",
+  "chapters": [
+    {
+      "id": "life-processes",
+      "title": "Life Processes",
+      "topics": [
+        {
+          "id": "nutrition",
+          "title": "Nutrition in Plants and Animals",
+          "objectives": [
+            "Student can distinguish autotrophic from heterotrophic nutrition with one everyday example of each.",
+            "Student can state the raw materials and products of photosynthesis and build its word equation.",
+            "Student can explain what stomata do and why guard cells close them when the plant risks losing too much water.",
+            "Student can trace food through the human alimentary canal and name what acts on it at each stop — saliva in the mouth, acid and pepsin in the stomach, intestinal juices in the small intestine.",
+            "Student can explain why villi make the small intestine the main site of absorption."
+          ],
+          "visualIdeas": [
+            "Leaf cross-section as a box with labelled arrows: CO2 in, O2 out, sunlight from above, water arriving from the roots",
+            "Photosynthesis word equation assembled term by term as a formula element",
+            "Alimentary canal as a chain of boxes mouth → oesophagus → stomach → small intestine → large intestine, with a note appearing beside each stop naming its juice or enzyme",
+            "Zoom-in box on villi drawn with pen strokes to show how folding multiplies surface area"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "respiration",
+          "title": "Respiration",
+          "objectives": [
+            "Student can explain why respiration is a cellular process — every cell burns glucose, breathing only supplies the oxygen.",
+            "Student can compare aerobic and anaerobic respiration by their end products and the energy each releases.",
+            "Student can explain muscle cramps after a sprint using lactic acid build-up, and name what yeast makes instead.",
+            "Student can describe how millions of alveoli give the lungs a huge exchange surface and trace oxygen and carbon dioxide across it.",
+            "Student can state why ATP is called the energy currency of the cell."
+          ],
+          "visualIdeas": [
+            "Glucose box splitting into pyruvate, then three branching arrow paths: with oxygen (CO2 + water + lots of energy), without oxygen in muscle (lactic acid), in yeast (alcohol + CO2)",
+            "Sprinter example: run → cramp as a 'bad'-tone note on the lactic acid branch",
+            "Lungs box with a zoom-in on one alveolus and a paired set of arrows, O2 in and CO2 out",
+            "ATP drawn as a small coin note that reappears whenever energy is spent"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "heart-circulation",
+          "title": "The Heart and Double Circulation",
+          "objectives": [
+            "Student can name the four chambers of the heart and the receiving job of atria versus the pumping job of ventricles.",
+            "Student can trace double circulation — the short lung loop and the long body loop — and explain why blood passes through the heart twice in one full round.",
+            "Student can explain why the left ventricle wall is thicker than the right: it must push blood to the whole body, not just the nearby lungs.",
+            "Student can compare arteries and veins by wall thickness, blood pressure, valves, and direction of flow.",
+            "Student can explain why keeping oxygenated and deoxygenated blood separate suits warm-blooded animals with high energy needs."
+          ],
+          "visualIdeas": [
+            "Four-chamber grid of boxes RA / LA / RV / LV inside a heart outline",
+            "Two arrow loops colour-coded by tone: a short lungs loop and a long body loop, oxygenated legs in 'good' tone",
+            "Side-by-side artery vs vein boxes with notes: thick elastic wall under high pressure vs thin wall with valves",
+            "Pen stroke thickening the LV wall while the narration explains the pressure difference"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "blood-components",
+          "title": "Blood and Its Components",
+          "objectives": [
+            "Student can name the four components of blood — plasma, red cells, white cells, platelets — and one job of each.",
+            "Student can explain why haemoglobin makes red blood cells such efficient oxygen carriers.",
+            "Student can describe how platelets plug a cut and start the clot that stops bleeding.",
+            "Student can state what lymph is and how it differs from blood."
+          ],
+          "visualIdeas": [
+            "Blood in a test-tube box: pale plasma layer on top, cell layer below, labels appearing one by one",
+            "Three character boxes with jobs: RBC as delivery van, WBC as security guard, platelet as repair crew",
+            "A cut drawn as a pen stroke with platelet arrows converging on it and a 'good'-tone clot note",
+            "Dashed arrow leaking plasma out of a capillary to show where lymph comes from"
+          ],
+          "estMinutes": 8
+        },
+        {
+          "id": "excretion",
+          "title": "Excretion — Kidneys and Nephrons",
+          "objectives": [
+            "Student can explain why the body must remove urea, naming the liver as where it is made and the kidney as where it is filtered out.",
+            "Student can trace urine from kidney → ureter → bladder → urethra.",
+            "Student can describe filtration and selective reabsorption in a nephron — glucose and most water return to the blood, urea does not.",
+            "Student can explain what dialysis does for a patient whose kidneys have failed."
+          ],
+          "visualIdeas": [
+            "Body outline with two kidney boxes and ureter arrows running down to a bladder box",
+            "Nephron zoom box: blood in, filtrate arrow out, reabsorption arrows returning glucose and water in 'good' tone, urea arrow leaving in 'bad' tone",
+            "Dialysis machine as an external box plumbed to the arm with dashed arrows, labelled as an artificial kidney"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    }
+  ]
+}

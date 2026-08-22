@@ -16,10 +16,76 @@ export function estimateSpeechMs(text: string, wpm = 140): number {
 }
 
 /**
- * STUB — replaced by the player builder. Contract in packages/player/README.md:
- * uses window.speechSynthesis when available, otherwise falls back to a timer
- * of estimateSpeechMs(text).
+ * Browser TTS via window.speechSynthesis. Where that is missing (tests, old
+ * WebViews) the adapter times the words instead — the player keeps advancing,
+ * just silently.
  */
-export function createBrowserTts(_opts?: { lang?: string; rate?: number }): TtsAdapter {
-  throw new Error('@ai-tutor/player createBrowserTts: not implemented yet');
+export function createBrowserTts(opts?: { lang?: string; rate?: number }): TtsAdapter {
+  const synth = typeof window !== 'undefined' ? window.speechSynthesis : undefined;
+  if (!synth) return createTimerTts();
+  return createSynthTts(synth, opts?.lang ?? 'en-IN', opts?.rate ?? 1);
+}
+
+function createSynthTts(synth: SpeechSynthesis, lang: string, rate: number): TtsAdapter {
+  // Resolver of the in-flight speak(). Each utterance settles through its OWN
+  // finish() closure, so a late `end` event from a cancelled utterance can
+  // never resolve a newer speak()'s promise.
+  let pendingFinish: (() => void) | null = null;
+
+  return {
+    speak(text: string): Promise<void> {
+      pendingFinish?.(); // never leave an older speak() hanging
+      return new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => {
+          if (settled) return; // `end` can still fire after cancel — resolve once
+          settled = true;
+          if (pendingFinish === finish) pendingFinish = null;
+          resolve();
+        };
+        pendingFinish = finish;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = rate;
+        // An errored utterance must resolve too, or the class stalls forever.
+        utterance.onend = finish;
+        utterance.onerror = finish;
+        synth.speak(utterance);
+      });
+    },
+    cancel(): void {
+      synth.cancel();
+      // Engines are inconsistent about firing `end` for cancelled utterances —
+      // settle the pending promise ourselves rather than wait on the engine.
+      pendingFinish?.();
+    },
+  };
+}
+
+/** Word-count timer standing in for a voice. Same contract, no sound. */
+function createTimerTts(): TtsAdapter {
+  let pendingFinish: (() => void) | null = null;
+
+  return {
+    speak(text: string): Promise<void> {
+      pendingFinish?.();
+      return new Promise<void>((resolve) => {
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          if (pendingFinish === finish) pendingFinish = null;
+          resolve();
+        };
+        pendingFinish = finish;
+        timer = setTimeout(finish, estimateSpeechMs(text));
+      });
+    },
+    cancel(): void {
+      pendingFinish?.();
+    },
+  };
 }
