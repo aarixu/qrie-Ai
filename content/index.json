@@ -1,14 +1,49 @@
 {
   "lessons": [
     {
+      "id": "class10-nutrition",
+      "title": "Nutrition",
+      "subtitle": "Class 10 · Life Processes",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-nutrition/lesson.json",
+      "topicRef": "class10-science/life-processes/nutrition"
+    },
+    {
+      "id": "class10-respiration",
+      "title": "Respiration",
+      "subtitle": "Class 10 · Life Processes",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-respiration/lesson.json",
+      "topicRef": "class10-science/life-processes/respiration"
+    },
+    {
       "id": "class10-heart-mini",
       "title": "Heart & Circulation",
       "subtitle": "Class 10 · Life Processes",
       "class": 10,
       "subject": "Science",
       "path": "class10-heart-mini/lesson.json",
-      "status": "dev-fixture",
       "topicRef": "class10-science/life-processes/heart-circulation"
+    },
+    {
+      "id": "class10-blood",
+      "title": "Blood & Its Components",
+      "subtitle": "Class 10 · Life Processes",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-blood/lesson.json",
+      "topicRef": "class10-science/life-processes/blood-components"
+    },
+    {
+      "id": "class10-excretion",
+      "title": "Excretion",
+      "subtitle": "Class 10 · Life Processes",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-excretion/lesson.json",
+      "topicRef": "class10-science/life-processes/excretion"
     }
   ]
 }

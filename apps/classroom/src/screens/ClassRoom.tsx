@@ -10,6 +10,7 @@ import {
   type HandoffState,
 } from '@ai-tutor/doubt-session';
 import { findEntry, fetchLesson } from '../lib/content';
+import { createGeminiAgent } from '../lib/geminiAgent';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { logDoubt } from '../stores/doubtLog';
 import { Avatar, type AvatarMode } from '../ui/Avatar';
@@ -82,10 +83,17 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
   const [agentLines, setAgentLines] = useState<string[]>([]);
   const [recallBeatId, setRecallBeatId] = useState<string | null>(null);
 
+  // The real tutor when a key is configured; the scripted stub otherwise, so
+  // the app runs (and the seam demos) with zero setup.
+  const agent = useMemo(() => {
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+    return apiKey ? createGeminiAgent({ apiKey }) : createStubAgent();
+  }, []);
+
   const handoff = useMemo(
     () =>
       createHandoff({
-        agent: createStubAgent(),
+        agent,
         speak: (text) => tts.speak(text),
         onPause: () => playerRef.current.pause(),
         onResume: () => {
@@ -96,7 +104,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
         },
         onRecall: (beatId) => setRecallBeatId(beatId),
       }),
-    [lesson, tts],
+    [lesson, tts, agent],
   );
 
   useEffect(() => {
