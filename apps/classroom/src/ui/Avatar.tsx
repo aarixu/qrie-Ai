@@ -3,47 +3,46 @@ import { theme } from './theme';
 export type AvatarMode = 'idle' | 'teaching' | 'listening';
 
 /**
- * The tutor's presence: a chalk portrait sketched on the board's corner —
- * a hand-drawn circle with a warm core that breathes while she teaches and
- * turns mint while she listens in a live doubt. Deliberately abstract (no
- * face to get wrong); a real viseme avatar can replace this component later —
- * it only consumes `mode`.
+ * The tutor's presence: a clean circular badge that pulses while she speaks
+ * and turns green while she listens in a live doubt. Deliberately abstract —
+ * a real character/viseme avatar can replace this component later; it only
+ * consumes `mode`.
  */
 export function Avatar({ mode }: { mode: AvatarMode }) {
-  const ink = mode === 'listening' ? theme.good : mode === 'teaching' ? theme.accent : theme.chalkDim;
+  const ring = mode === 'listening' ? theme.green : mode === 'teaching' ? theme.blue : theme.border;
+  const core = mode === 'listening' ? theme.green : mode === 'teaching' ? theme.blue : theme.textFaint;
   return (
-    <div aria-label={`tutor ${mode}`} style={{ position: 'relative', width: 66, height: 66 }}>
-      <svg width={66} height={66} viewBox="0 0 66 66" style={{ display: 'block' }}>
-        {/* chalk circle, drawn slightly rough */}
-        <circle
-          cx={33}
-          cy={33}
-          r={29}
-          fill="rgba(238,241,234,0.04)"
-          stroke={ink}
-          strokeWidth={2.2}
-          strokeDasharray="46 5 34 4 52 6"
-          strokeLinecap="round"
-          style={{ transition: 'stroke 300ms' }}
-        />
-        <circle cx={33} cy={33} r={13} fill={ink} opacity={0.9} style={{ transition: 'fill 300ms' }}>
+    <div
+      aria-label={`tutor ${mode}`}
+      style={{
+        width: 62,
+        height: 62,
+        borderRadius: '50%',
+        background: theme.bg,
+        border: `3px solid ${ring}`,
+        boxShadow: `0 2px 0 ${theme.border}`,
+        display: 'grid',
+        placeItems: 'center',
+        transition: 'border-color 300ms',
+      }}
+    >
+      <svg width={30} height={30} viewBox="0 0 30 30" style={{ display: 'block' }}>
+        {/* a friendly "speaking" glyph: face dot + two sound arcs */}
+        <circle cx={11} cy={15} r={6.5} fill={core} style={{ transition: 'fill 300ms' }}>
           {mode !== 'idle' && (
-            <animate attributeName="r" values="13;10.5;13" dur="1.6s" repeatCount="indefinite" />
+            <animate attributeName="r" values="6.5;5.4;6.5" dur="1.4s" repeatCount="indefinite" />
           )}
         </circle>
-      </svg>
-      {mode !== 'idle' && (
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '50%',
-            boxShadow: `0 0 26px ${ink}44`,
-            pointerEvents: 'none',
-            transition: 'box-shadow 300ms',
-          }}
+        <path
+          d="M21 10.5a7 7 0 0 1 0 9M24 8a11 11 0 0 1 0 14"
+          fill="none"
+          stroke={core}
+          strokeWidth={2.4}
+          strokeLinecap="round"
+          opacity={mode === 'idle' ? 0.35 : 0.9}
+          style={{ transition: 'opacity 300ms, stroke 300ms' }}
         />
-      )}
+      </svg>
     </div>
   );
 }

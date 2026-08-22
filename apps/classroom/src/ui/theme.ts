@@ -1,34 +1,56 @@
 /**
- * "Raat ki Kaksha" — the app looks like a real Indian classroom blackboard at
- * night: deep green slate, chalk inks, a wooden tray. One place for every
- * chrome color so the whole product looks like one product. Content never
- * carries colors — canvas tones resolve in @ai-tutor/stage, chrome here.
+ * Design language copied from the most established consumer-learning app
+ * pattern (Duolingo-style): light surfaces, saturated brand colors, chunky
+ * "pressable" buttons with a hard bottom shadow, bold rounded type (Nunito),
+ * 2px card borders. One place for every chrome color so the whole product
+ * looks like one product; canvas tones resolve in @ai-tutor/stage.
  */
 export const theme = {
-  /** Deep green-black slate — unmistakably a blackboard, not "generic dark mode". */
-  bg: '#0d1411',
-  bgDeep: '#090e0b',
-  /** The board itself: slightly greener, with a vignette applied where used. */
-  board: 'radial-gradient(120% 100% at 50% 0%, #16221c 0%, #101a15 55%, #0c130f 100%)',
-  /** Wooden chalk-tray / frame browns. */
-  wood: '#5a4030',
-  woodDark: '#3d2b1f',
-  woodGrad: 'linear-gradient(180deg, #6b4c38 0%, #533b2a 45%, #3d2b1f 100%)',
+  bg: '#ffffff',
+  bgSoft: '#f7f7f7',
+  border: '#e5e5e5',
 
-  chalk: '#eef1ea',
-  chalkDim: '#9fb0a5',
-  chalkLine: 'rgba(238,241,234,0.16)',
-  /** A piece of yellow chalk — the one accent everything important uses. */
-  accent: '#f5c84c',
-  accentInk: '#241a04',
-  good: '#8fd6a8',
-  danger: '#f09a9a',
+  text: '#3c3c3c',
+  textMuted: '#777777',
+  textFaint: '#afafaf',
 
-  surface: 'rgba(238,241,234,0.05)',
-  surfaceBorder: 'rgba(238,241,234,0.13)',
+  green: '#58cc02',
+  greenDark: '#58a700',
+  blue: '#1cb0f6',
+  blueDark: '#1899d6',
+  red: '#ff4b4b',
+  yellow: '#ffc800',
+  purple: '#ce82ff',
 
-  /** Chalk handwriting (Devanagari-capable) for anything "written on the board". */
-  fontChalk: "'Kalam', 'Segoe Print', 'Comic Sans MS', cursive",
-  /** Warm rounded UI text for buttons, captions, labels. */
-  font: "'Baloo 2', 'Segoe UI', system-ui, sans-serif",
+  font: "'Nunito', 'Segoe UI', system-ui, sans-serif",
 } as const;
+
+/** Duolingo-signature chunky button: solid fill, darker hard bottom shadow, presses down. */
+export const chunky = (fill: string, shadow: string) =>
+  ({
+    border: 'none',
+    borderRadius: 14,
+    background: fill,
+    color: '#ffffff',
+    font: `800 15px ${theme.font}`,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    boxShadow: `0 4px 0 ${shadow}`,
+    cursor: 'pointer',
+    transition: 'filter 150ms, transform 100ms, box-shadow 100ms',
+  }) as const;
+
+/** Secondary button: white, 2px border, gray bold text. */
+export const outlined = () =>
+  ({
+    borderRadius: 14,
+    border: `2px solid ${theme.border}`,
+    borderBottomWidth: 4,
+    background: theme.bg,
+    color: theme.textMuted,
+    font: `800 15px ${theme.font}`,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    cursor: 'pointer',
+    transition: 'background 150ms',
+  }) as const;

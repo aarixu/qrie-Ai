@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { HandoffState } from '@ai-tutor/doubt-session';
-import { theme } from './theme';
+import { theme, chunky } from './theme';
 import { CheckIcon, SendIcon } from './icons';
 
 export interface DoubtPanelProps {
@@ -12,9 +12,9 @@ export interface DoubtPanelProps {
 }
 
 /**
- * The live doubt overlay — a slate panel leaning on the board. The recording
- * stays visible behind it: the student never leaves the class, the class just
- * leans in to listen. Text input for now; voice arrives with the live agent.
+ * The live doubt bottom sheet. The lesson stays visible above it — the
+ * student never leaves the class, the class just leans in to listen.
+ * Text input for now; voice arrives with the live agent.
  */
 export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
   const [draft, setDraft] = useState('');
@@ -30,43 +30,38 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
   return (
     <div
       style={{
-        position: 'absolute',
-        left: 12,
-        right: 12,
-        bottom: 'calc(12px + env(safe-area-inset-bottom))',
-        borderRadius: 16,
-        background: 'linear-gradient(180deg, rgba(18,27,22,0.96), rgba(11,17,13,0.96))',
-        border: `1.5px solid ${theme.surfaceBorder}`,
-        boxShadow: '0 16px 44px rgba(0,0,0,0.55)',
-        padding: 14,
+        background: theme.bg,
+        borderTop: `2px solid ${theme.border}`,
+        borderRadius: '20px 20px 0 0',
+        boxShadow: '0 -8px 30px rgba(0,0,0,0.08)',
+        padding: '14px 16px calc(14px + env(safe-area-inset-bottom))',
         display: 'grid',
-        gap: 10,
-        backdropFilter: 'blur(10px)',
+        gap: 12,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span
           style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            background: theme.good,
-            boxShadow: `0 0 10px ${theme.good}`,
+            width: 9,
+            height: 9,
+            borderRadius: 5,
+            background: theme.green,
+            boxShadow: `0 0 0 3px ${theme.green}33`,
           }}
         />
-        <span style={{ color: theme.good, font: `600 12.5px ${theme.font}`, letterSpacing: 0.4 }}>
+        <span style={{ color: theme.green, font: `800 13px ${theme.font}`, letterSpacing: 0.5 }}>
           {live ? 'LIVE · your tutor is listening' : 'your tutor is joining…'}
         </span>
       </div>
 
-      <div style={{ maxHeight: '30vh', overflowY: 'auto', display: 'grid', gap: 8 }}>
+      <div style={{ maxHeight: '28vh', overflowY: 'auto', display: 'grid', gap: 8 }}>
         {lines.map((line, i) => (
           <div
             key={i}
             style={{
-              color: theme.chalk,
-              font: `400 15.5px/1.55 ${theme.fontChalk}`,
-              opacity: i === lines.length - 1 ? 1 : 0.6,
+              color: theme.text,
+              font: `700 15px/1.5 ${theme.font}`,
+              opacity: i === lines.length - 1 ? 1 : 0.55,
             }}
           >
             {line}
@@ -84,13 +79,13 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           disabled={!live}
           style={{
             flex: 1,
-            minHeight: 46,
-            padding: '10px 14px',
-            borderRadius: 12,
-            border: `1.5px solid ${theme.surfaceBorder}`,
-            background: 'rgba(238,241,234,0.06)',
-            color: theme.chalk,
-            font: `15px ${theme.font}`,
+            minHeight: 48,
+            padding: '10px 16px',
+            borderRadius: 14,
+            border: `2px solid ${theme.border}`,
+            background: theme.bgSoft,
+            color: theme.text,
+            font: `700 15px ${theme.font}`,
           }}
         />
         <button
@@ -98,16 +93,13 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           disabled={!live}
           aria-label="send doubt"
           style={{
-            width: 46,
-            minHeight: 46,
-            borderRadius: 12,
-            border: 'none',
+            ...(live
+              ? chunky(theme.blue, theme.blueDark)
+              : { ...chunky('#e5e5e5', '#d0d0d0'), cursor: 'default' }),
+            width: 52,
+            minHeight: 48,
             display: 'grid',
             placeItems: 'center',
-            background: live ? theme.accent : theme.surface,
-            color: live ? theme.accentInk : theme.chalkDim,
-            cursor: live ? 'pointer' : 'default',
-            transition: 'background 200ms',
           }}
         >
           <SendIcon size={19} />
@@ -116,18 +108,14 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           onClick={onEnd}
           disabled={!live}
           style={{
+            ...(live
+              ? chunky(theme.green, theme.greenDark)
+              : { ...chunky('#e5e5e5', '#d0d0d0'), cursor: 'default' }),
+            minHeight: 48,
+            padding: '0 16px',
             display: 'flex',
             alignItems: 'center',
-            gap: 6,
-            minHeight: 46,
-            padding: '0 14px',
-            borderRadius: 12,
-            border: `1.5px solid ${live ? theme.good : theme.surfaceBorder}`,
-            background: 'transparent',
-            color: live ? theme.good : theme.chalkDim,
-            font: `500 13.5px ${theme.font}`,
-            cursor: live ? 'pointer' : 'default',
-            transition: 'border-color 200ms, color 200ms',
+            gap: 7,
           }}
         >
           <CheckIcon size={16} />

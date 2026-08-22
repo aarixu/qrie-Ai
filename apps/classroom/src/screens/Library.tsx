@@ -12,11 +12,14 @@ interface IndexEntry {
   status?: string;
 }
 
+/** Per-subject tile colors, cycled — the established card-list look. */
+const SUBJECT_COLORS = [theme.green, theme.blue, theme.purple, theme.yellow, theme.red];
+
 /**
- * Lesson picker — a wall of small blackboards, one per class. Reads
- * content/index.json (served as static data by Vite). A lesson that fails
- * validation shows as unavailable rather than crashing the app — broken
- * content must never take the classroom down.
+ * Lesson picker — a clean card list. Reads content/index.json (served as
+ * static data by Vite). A lesson that fails validation shows as unavailable
+ * rather than crashing the app — broken content must never take the
+ * classroom down.
  */
 export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
   const [entries, setEntries] = useState<IndexEntry[] | null>(null);
@@ -54,103 +57,101 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
       style={{
         position: 'fixed',
         inset: 0,
-        background: `radial-gradient(140% 110% at 50% -10%, #131c16 0%, ${theme.bg} 55%, ${theme.bgDeep} 100%)`,
+        background: theme.bg,
         overflowY: 'auto',
         fontFamily: theme.font,
-        padding: 'calc(26px + env(safe-area-inset-top)) 18px 30px',
+        padding: 'calc(28px + env(safe-area-inset-top)) 18px 30px',
       }}
     >
       <div style={{ maxWidth: 560, margin: '0 auto' }}>
-        {/* Chalk-written masthead */}
-        <h1
-          style={{
-            color: theme.chalk,
-            font: `700 34px ${theme.fontChalk}`,
-            margin: 0,
-            textShadow: `0 0 24px rgba(238,241,234,0.18)`,
-          }}
-        >
-          AI Tutor
-        </h1>
-        <div
-          style={{
-            width: 132,
-            height: 3,
-            borderRadius: 2,
-            background: theme.accent,
-            opacity: 0.85,
-            margin: '6px 0 8px',
-          }}
-        />
-        <p style={{ color: theme.chalkDim, font: `15px ${theme.font}`, margin: '0 0 22px' }}>
+        <h1 style={{ color: theme.text, font: `900 30px ${theme.font}`, margin: 0 }}>AI Tutor</h1>
+        <p style={{ color: theme.textMuted, font: `700 15px ${theme.font}`, margin: '4px 0 22px' }}>
           Pick a class — and whenever you're stuck, just raise your hand.
         </p>
 
         {error && (
-          <div style={{ color: theme.danger, font: `14px ${theme.font}`, marginBottom: 14 }}>
+          <div style={{ color: theme.red, font: `700 14px ${theme.font}`, marginBottom: 14 }}>
             {error}
           </div>
         )}
         {!entries && !error && (
-          <div style={{ color: theme.chalkDim, font: `14px ${theme.font}` }}>Setting up the board…</div>
+          <div style={{ color: theme.textFaint, font: `700 14px ${theme.font}` }}>Loading…</div>
         )}
 
-        <div style={{ display: 'grid', gap: 16 }}>
-          {entries?.map((entry) => (
-            <button
-              key={entry.id}
-              onClick={() => open(entry)}
-              disabled={busy !== null}
-              style={{
-                textAlign: 'left',
-                padding: 6,
-                borderRadius: 13,
-                border: 'none',
-                background: theme.woodGrad,
-                boxShadow: 'inset 0 1px 0 rgba(255,220,180,0.22), 0 8px 22px rgba(0,0,0,0.45)',
-                cursor: 'pointer',
-                transition: 'transform 200ms, box-shadow 200ms',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,220,180,0.22), 0 10px 26px rgba(0,0,0,0.55), 0 0 0 2px ${theme.accent}55`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow =
-                  'inset 0 1px 0 rgba(255,220,180,0.22), 0 8px 22px rgba(0,0,0,0.45)';
-              }}
-            >
-              {/* A small blackboard inside a wooden frame */}
-              <div
+        <div style={{ display: 'grid', gap: 14 }}>
+          {entries?.map((entry, i) => {
+            const tile = SUBJECT_COLORS[i % SUBJECT_COLORS.length];
+            return (
+              <button
+                key={entry.id}
+                onClick={() => open(entry)}
+                disabled={busy !== null}
                 style={{
-                  borderRadius: 9,
-                  background: theme.board,
-                  boxShadow: 'inset 0 0 34px rgba(0,0,0,0.5)',
-                  padding: '16px 18px 14px',
-                  display: 'grid',
-                  gap: 4,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  textAlign: 'left',
+                  padding: 14,
+                  borderRadius: 16,
+                  border: `2px solid ${theme.border}`,
+                  borderBottomWidth: 4,
+                  background: theme.bg,
+                  cursor: 'pointer',
+                  transition: 'background 150ms, border-color 150ms',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = theme.bgSoft;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = theme.bg;
                 }}
               >
+                {/* Subject tile */}
                 <div
                   style={{
-                    color: theme.accent,
-                    font: `600 11.5px ${theme.font}`,
-                    letterSpacing: 1,
-                    textTransform: 'uppercase',
+                    width: 56,
+                    height: 56,
+                    borderRadius: 14,
+                    background: tile,
+                    boxShadow: `inset 0 -4px 0 rgba(0,0,0,0.14)`,
+                    display: 'grid',
+                    placeItems: 'center',
+                    color: '#ffffff',
+                    font: `900 22px ${theme.font}`,
+                    flexShrink: 0,
                   }}
                 >
-                  Class {entry.class} · {entry.subject}
+                  {entry.subject.charAt(0)}
                 </div>
-                <div style={{ color: theme.chalk, font: `700 22px ${theme.fontChalk}` }}>
-                  {busy === entry.id ? 'Opening…' : entry.title}
-                </div>
-                {entry.subtitle && (
-                  <div style={{ color: theme.chalkDim, font: `13px ${theme.font}` }}>
-                    {entry.subtitle}
+
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div
+                    style={{
+                      color: theme.textFaint,
+                      font: `800 11px ${theme.font}`,
+                      letterSpacing: 0.8,
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Class {entry.class} · {entry.subject}
                   </div>
-                )}
-              </div>
-            </button>
-          ))}
+                  <div style={{ color: theme.text, font: `800 18px ${theme.font}` }}>
+                    {busy === entry.id ? 'Opening…' : entry.title}
+                  </div>
+                  {entry.subtitle && (
+                    <div style={{ color: theme.textMuted, font: `700 13px ${theme.font}` }}>
+                      {entry.subtitle}
+                    </div>
+                  )}
+                </div>
+
+                {/* Chevron */}
+                <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke={theme.textFaint} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

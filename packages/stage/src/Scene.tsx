@@ -14,19 +14,19 @@ export interface SceneProps {
  * whole look of every lesson can be retuned in this one table.
  */
 const TONE_COLORS: Record<Tone, string> = {
-  neutral: '#dfe5dd',
-  good: '#8fd6a8',
-  bad: '#f09a9a',
-  accent: '#f5c84c',
+  neutral: '#4b4b4b',
+  good: '#58cc02',
+  bad: '#ff4b4b',
+  accent: '#1cb0f6',
 };
 
-/** The board's slate tone. Used only for text halos so labels stay readable over strokes. */
-const PAGE_BG = '#101a15';
-/** Headline/formula ink — brighter than the neutral tone so titles pop on the slate. */
-const INK = '#f3f5ef';
+/** The canvas card's background. Used only for text halos so labels stay readable over strokes. */
+const PAGE_BG = '#ffffff';
+/** Headline/formula ink — darker than the neutral tone so titles anchor the page. */
+const INK = '#3c3c3c';
 
-/** Kalam is the app's chalk hand (Devanagari-capable); the rest are fallbacks. */
-const FONT_HAND = "'Kalam', 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif";
+/** Matches the app's UI face (Duolingo-style bold rounded sans). */
+const FONT_HAND = "'Nunito', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 
 const DRAW_MS = 400;
@@ -91,12 +91,13 @@ function noteBoxHeight(text: string, w: number): number {
 
 const noteCardStyle = (color: string): CSSProperties => ({
   boxSizing: 'border-box',
-  background: `${color}17`,
-  border: `1.5px solid ${color}59`,
-  borderRadius: 10,
+  background: `${color}14`,
+  border: `2px solid ${color}55`,
+  borderRadius: 12,
   padding: '9px 12px',
-  color: '#dde1ea',
+  color: '#3c3c3c',
   fontFamily: FONT_HAND,
+  fontWeight: 700,
   fontSize: 14.5,
   lineHeight: 1.45,
 });
@@ -144,7 +145,7 @@ const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
 function renderTitle(el: Extract<Element, { kind: 'title' }>): ReactElement {
   return (
     <>
-      <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_HAND} fontSize={44} fontWeight={700} fill={INK}>
+      <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_HAND} fontSize={44} fontWeight={900} fill={INK}>
         {el.text}
       </text>
       {el.sub && (
@@ -173,7 +174,7 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
           textAnchor="middle"
           fontFamily={FONT_HAND}
           fontSize={17}
-          fontWeight={600}
+          fontWeight={800}
           letterSpacing={0.6}
           fill={color}
         >
@@ -257,7 +258,7 @@ function renderModel3d(el: Extract<Element, { kind: 'model3d' }>): ReactElement 
   const d = s * 0.55;
   return (
     <>
-      <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={12} fill="#ffffff" fillOpacity={0.04} stroke={color} strokeOpacity={0.55} strokeWidth={1.8} strokeDasharray="7 6" />
+      <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={12} fill="#000000" fillOpacity={0.03} stroke={color} strokeOpacity={0.45} strokeWidth={2} strokeDasharray="7 6" />
       <g stroke={color} strokeWidth={2} fill="none" strokeLinejoin="round" opacity={0.85}>
         <rect x={cx - s} y={cy - s + d} width={2 * s} height={2 * s} rx={2} />
         <rect x={cx - s + d} y={cy - s} width={2 * s} height={2 * s} rx={2} opacity={0.45} />
