@@ -15,16 +15,13 @@ import { createLiveAgent } from '../lib/liveAgent';
 import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { logDoubt } from '../stores/doubtLog';
-import { Avatar, type AvatarMode } from '../ui/Avatar';
-import { Controls } from '../ui/Controls';
-import { DoubtPanel } from '../ui/DoubtPanel';
+import { Icon } from '../ui/Icon';
+import { TutorBadge, type TutorMode } from '../ui/TutorBadge';
 import {
-  VoiceDoubtPanel,
-  type VoiceDoubtState,
-  type VoiceTranscriptLine,
-} from '../ui/VoiceDoubtPanel';
-import { BackIcon, PlayIcon, ReplayIcon } from '../ui/icons';
-import { theme, chunky } from '../ui/theme';
+  VoiceDoubtSheet,
+  type VoiceState,
+  type TranscriptLine,
+} from '../ui/VoiceDoubtSheet';
 
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
 export function LessonRoute() {
@@ -50,10 +47,14 @@ export function LessonRoute() {
 
   if (error) {
     return (
-      <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center', background: theme.bg, fontFamily: theme.font, padding: 24 }}>
-        <div style={{ textAlign: 'center', display: 'grid', gap: 14, justifyItems: 'center' }}>
-          <div style={{ color: theme.text, font: `800 17px ${theme.font}` }}>{error}</div>
-          <button onClick={() => navigate('/')} style={{ ...chunky(theme.blue, theme.blueDark), minHeight: 46, padding: '10px 22px' }}>
+      <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
+        <div className="text-center flex flex-col items-center gap-4">
+          <Icon name="error" className="text-4xl text-on-surface-variant" />
+          <p className="font-headline-md text-[18px] leading-6 text-on-surface">{error}</p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all"
+          >
             Back home
           </button>
         </div>
@@ -62,8 +63,8 @@ export function LessonRoute() {
   }
   if (!lesson) {
     return (
-      <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center', background: theme.bg, fontFamily: theme.font }}>
-        <div style={{ color: theme.textFaint, font: `700 15px ${theme.font}` }}>Loading…</div>
+      <div className="bg-background min-h-screen grid place-items-center font-body-md">
+        <p className="font-body-md text-body-md text-on-surface-variant">Loading…</p>
       </div>
     );
   }
@@ -91,8 +92,8 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
   const [recallBeatId, setRecallBeatId] = useState<string | null>(null);
 
   // Live-voice session state, fed by the live agent's callbacks.
-  const [liveState, setLiveState] = useState<VoiceDoubtState>('connecting');
-  const [transcript, setTranscript] = useState<VoiceTranscriptLine[]>([]);
+  const [liveState, setLiveState] = useState<VoiceState>('connecting');
+  const [transcript, setTranscript] = useState<TranscriptLine[]>([]);
   const [micLevel, setMicLevel] = useState(0);
   const [muted, setMuted] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
@@ -182,7 +183,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
       ? { visible: [...recalled.show], focus: [...(recalled.focus ?? [])] }
       : computeVisible(lesson, player.beatIndex);
 
-  const avatarMode: AvatarMode = inDoubt
+  const avatarMode: TutorMode = inDoubt
     ? 'listening'
     : player.state === 'playing'
       ? 'teaching'
@@ -239,170 +240,99 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
   // Beat progress fills the top bar the way established lesson players do.
   const progress = player.state === 'ended' ? 1 : (player.beatIndex + (player.state === 'idle' ? 0 : 1)) / lesson.beats.length;
 
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: theme.bg,
-        display: 'flex',
-        flexDirection: 'column',
-        fontFamily: theme.font,
-        overflow: 'hidden',
-      }}
-    >
-      {/* Top bar: back + progress bar (+ LIVE pill during a doubt) */}
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          padding: '12px 16px',
-          paddingTop: 'calc(12px + env(safe-area-inset-top))',
-        }}
-      >
-        <button
-          onClick={onExit}
-          aria-label="back to library"
-          style={{
-            width: 42,
-            height: 42,
-            display: 'grid',
-            placeItems: 'center',
-            border: 'none',
-            background: 'none',
-            color: theme.textFaint,
-            cursor: 'pointer',
-          }}
-        >
-          <BackIcon />
-        </button>
-        <div
-          aria-label={`progress: beat ${player.beatIndex + 1} of ${lesson.beats.length}`}
-          style={{
-            flex: 1,
-            height: 14,
-            borderRadius: 8,
-            background: theme.border,
-            overflow: 'hidden',
-          }}
-        >
-          <div
-            style={{
-              width: `${Math.round(progress * 100)}%`,
-              height: '100%',
-              borderRadius: 8,
-              background: theme.green,
-              boxShadow: 'inset 0 -4px 0 rgba(0,0,0,0.12)',
-              transition: 'width 400ms ease',
-            }}
-          />
-        </div>
-        {inDoubt && (
-          <span
-            style={{
-              color: '#ffffff',
-              background: theme.green,
-              font: `800 11px ${theme.font}`,
-              letterSpacing: 0.8,
-              borderRadius: 12,
-              padding: '4px 12px',
-              boxShadow: `0 2px 0 ${theme.greenDark}`,
-            }}
+    <div className="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pb-[104px]">
+      {/* Top: back, progress, title */}
+      <header className="w-full px-margin-mobile pt-4 pb-3 bg-surface sticky top-0 z-10 flex flex-col gap-3 shadow-sm">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onExit}
+            aria-label="Go back"
+            className="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors flex-shrink-0"
           >
-            LIVE
-          </span>
-        )}
+            <Icon name="arrow_back" />
+          </button>
+          <div className="flex-grow h-3 bg-surface-variant rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${Math.round(progress * 100)}%` }}
+            />
+          </div>
+          {inDoubt && (
+            <span className="flex items-center gap-1.5 bg-[#dcfce7] text-[#166534] rounded-full px-3 py-1 font-label-sm text-label-sm font-bold flex-shrink-0">
+              <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
+              LIVE
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <h1 className="font-headline-md text-headline-md font-bold text-on-surface">{lesson.title}</h1>
+          {lesson.subtitle && (
+            <p className="font-label-md text-label-md text-on-surface-variant mt-0.5">{lesson.subtitle}</p>
+          )}
+        </div>
       </header>
 
-      {/* Lesson title */}
-      <div style={{ padding: '0 20px 6px', textAlign: 'center' }}>
-        <div style={{ color: theme.text, font: `800 17px ${theme.font}` }}>{lesson.title}</div>
-        {lesson.subtitle && (
-          <div style={{ color: theme.textFaint, font: `700 12px ${theme.font}` }}>{lesson.subtitle}</div>
-        )}
-      </div>
+      {/* The canvas card */}
+      <main className="flex-grow flex flex-col px-margin-mobile py-stack-md gap-stack-md max-w-[1120px] mx-auto w-full">
+        <section className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-soft-indigo relative">
+          <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-surface-container-low grid place-items-center">
+            <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
 
-      {/* The canvas card. minHeight:0 lets it shrink instead of shoving the
-          footer off-screen; the Scene letterboxes inside it. */}
-      <main style={{ flex: 1, minHeight: 0, position: 'relative', padding: '4px 14px 8px' }}>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: 18,
-            border: `2px solid ${theme.border}`,
-            boxShadow: `0 2px 0 ${theme.border}`,
-            background: theme.bg,
-            overflow: 'hidden',
-            position: 'relative',
-          }}
-        >
-          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
-
-          {/* Class not started / finished: one clear action, centre-stage. */}
-          {notStarted && (
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                display: 'grid',
-                placeItems: 'center',
-                background: 'rgba(255,255,255,0.72)',
-              }}
-            >
-              <button
-                onClick={startClass}
-                style={{
-                  ...chunky(theme.green, theme.greenDark),
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  padding: '16px 30px',
-                  fontSize: 16,
-                }}
-              >
-                {player.state === 'ended' ? <ReplayIcon /> : <PlayIcon />}
-                {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
-              </button>
-            </div>
-          )}
-
-          <div style={{ position: 'absolute', right: 12, bottom: 12 }}>
-            <Avatar mode={avatarMode} />
+            {/* Not started / finished: one clear action, centre-canvas. */}
+            {notStarted && (
+              <div className="absolute inset-0 grid place-items-center bg-surface-container-lowest/70 backdrop-blur-[2px]">
+                <button
+                  onClick={startClass}
+                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all"
+                >
+                  <Icon name={player.state === 'ended' ? 'replay' : 'play_arrow'} filled />
+                  {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+
+          {/* The tutor, sitting on the card's edge */}
+          <div className="absolute -bottom-6 right-4">
+            <TutorBadge mode={avatarMode} />
+          </div>
+        </section>
+
+        {/* What she is saying right now */}
+        <section className="text-center px-4 max-w-2xl mx-auto mt-6 min-h-[64px]">
+          {caption && (
+            <p className="font-body-lg text-body-lg text-on-surface-variant">{caption}</p>
+          )}
+        </section>
       </main>
 
-      {/* Captions — what she's saying right now */}
-      <div style={{ minHeight: 52, padding: '2px 22px 6px', display: 'grid', placeItems: 'center' }}>
-        {caption && (
-          <div
-            style={{
-              maxWidth: '62ch',
-              textAlign: 'center',
-              color: theme.textMuted,
-              font: `700 15px/1.5 ${theme.font}`,
-            }}
-          >
-            {caption}
-          </div>
-        )}
-      </div>
-
-      {/* Footer: actions while teaching, doubt sheet while live. */}
+      {/* Bottom: lesson controls, or the live doubt sheet */}
       {!inDoubt ? (
-        <Controls
-          playing={player.state === 'playing'}
-          canRaiseHand={player.state === 'playing' || player.state === 'paused'}
-          onPlayPause={() => (player.state === 'playing' ? player.pause() : player.play())}
-          onRaiseHand={raiseHand}
-        />
+        <nav className="fixed bottom-0 left-0 w-full z-50 px-margin-mobile py-4 bg-surface-container rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-[calc(1rem+env(safe-area-inset-bottom))]">
+          <div className="flex gap-4 items-center w-full max-w-[1120px] mx-auto">
+            <button
+              onClick={() => (player.state === 'playing' ? player.pause() : player.play())}
+              aria-label={player.state === 'playing' ? 'Pause lesson' : 'Play lesson'}
+              className="grid place-items-center text-on-surface-variant bg-surface rounded-full w-12 h-12 border-2 border-outline-variant hover:bg-surface-container-high transition-colors flex-shrink-0"
+            >
+              <Icon name={player.state === 'playing' ? 'pause' : 'play_arrow'} filled />
+            </button>
+            <button
+              onClick={raiseHand}
+              disabled={player.state !== 'playing' && player.state !== 'paused'}
+              className="flex-grow flex items-center justify-center gap-2 bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:border-b-4 disabled:active:translate-y-0"
+            >
+              <Icon name="front_hand" filled />
+              Raise hand
+            </button>
+          </div>
+        </nav>
       ) : voiceMode ? (
-        <VoiceDoubtPanel
-          // Until the agent has actually connected, the seam is still speaking
-          // its bridge line — show "connecting" rather than the agent's state.
-          state={handoffState === 'LIVE' ? liveState : 'connecting'}
+        <VoiceDoubtSheet
+          handoff={handoffState}
+          voice={handoffState === 'LIVE' ? liveState : 'connecting'}
           transcript={transcript}
           micLevel={micLevel}
           muted={muted}
@@ -411,11 +341,15 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
           onSendText={(text) => handoff.sendUserText(text)}
         />
       ) : (
-        <DoubtPanel
-          state={handoffState}
-          lines={agentLines}
-          onSend={(text) => handoff.sendUserText(text)}
+        <VoiceDoubtSheet
+          handoff={handoffState}
+          voice={handoffState === 'LIVE' ? 'listening' : 'connecting'}
+          transcript={agentLines.map((text) => ({ role: 'tutor' as const, text, final: true }))}
+          micLevel={0}
+          muted
+          onToggleMute={() => {}}
           onEnd={() => handoff.endDoubt()}
+          onSendText={(text) => handoff.sendUserText(text)}
         />
       )}
     </div>

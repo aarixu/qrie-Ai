@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VidyaFlow - Your Results</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#494bd6",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-fixed": "#301400",
+                        "primary-container": "#6063ee",
+                        "surface-variant": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "inverse-primary": "#c0c1ff",
+                        "secondary-fixed": "#ffddb8",
+                        "on-primary-container": "#fffbff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#fffbff",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "tertiary-container": "#b55d00",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "secondary": "#855300",
+                        "outline-variant": "#c7c4d7",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "outline": "#767586",
+                        "surface-dim": "#d8dadc",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "surface-container-high": "#e6e8ea",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#07006c",
+                        "error": "#ba1a1a",
+                        "tertiary": "#904900",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "primary-fixed": "#e1e0ff",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-surface-variant": "#464554",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "tertiary-fixed": "#ffdcc5",
+                        "primary": "#4648d4",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fea619",
+                        "on-secondary-container": "#684000",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "stack-sm": "12px",
+                        "base-unit": "8px",
+                        "stack-md": "24px",
+                        "gutter": "16px",
+                        "stack-lg": "48px",
+                        "margin-desktop": "32px",
+                        "card-padding": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-xl": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "body-md": ["Lexend"],
+                        "label-md": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "headline-md": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    },
+                    boxShadow: {
+                        'soft-float': '0px 4px 20px rgba(99, 102, 241, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .squishy-button {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .squishy-button:active {
+            transform: scale(0.95);
+        }
+        .bg-pattern-dots {
+            background-image: radial-gradient(var(--tw-gradient-stops));
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md flex flex-col relative pb-[80px]">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-background shadow-sm flex justify-between items-center px-margin-mobile py-base-unit z-40">
+<div class="flex items-center gap-2">
+<img alt="Student Profile Portrait" class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="A small, circular profile picture of a young smiling student wearing a bright blue shirt, against a soft pastel yellow background. The lighting is warm and natural, giving a positive, encouraging vibe suitable for an educational platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT8AMAtvs6Zv6zvPNnIFDgbHaonC6iKynZ9wZT_RP79-scmOelkLnr86YuT28zMy5l01-W948xlMxkZeXs5i7gg1lcrKJctK45WPYoqWsJn7I8x4CBSytITVKpvNhv0stqD18DYYGW8Uati1jWzZ3HkyYsk-V2pn5qDfFhi64M_siEaUEUk-aI4bCzzHsYsg86wK4hvAlB-9kzck9DWQPFG9crCo8nxpT6pcgVstg4krAkWoRjZsUwS1JPYhfanlo3ytBi6aJbDfw"/>
+</div>
+<h1 class="font-headline-md text-headline-md-mobile text-primary dark:text-primary-fixed-dim font-bold tracking-tight">VidyaFlow</h1>
+<button class="w-10 h-10 flex items-center justify-center text-primary dark:text-primary-fixed-dim hover:bg-surface-container-low transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">local_fire_department</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1120px] mx-auto px-margin-mobile py-stack-md flex flex-col gap-stack-lg relative overflow-hidden">
+<!-- Ambient Background Pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03]" style="background-image: radial-gradient(circle at 2px 2px, #4648d4 1px, transparent 0); background-size: 24px 24px;"></div>
+<!-- Header Section -->
+<div class="flex flex-col gap-stack-sm relative z-10 text-center pt-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Here is your plan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">We found 4 things worth fixing first - start at the top.</p>
+</div>
+<!-- Plan Steps List -->
+<div class="flex flex-col gap-gutter relative z-10 w-full md:max-w-2xl md:mx-auto">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-soft-float hover:scale-[1.02] transition-transform duration-300 flex items-start gap-gutter border border-surface-variant/50">
+<div class="shrink-0 w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-md text-headline-md shadow-sm">
+                    1
+                </div>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface tracking-tight">Number Systems</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Worth fixing first - 6 later topics build on this one</p>
+</div>
+<button class="squishy-button shrink-0 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-[3px] border-[#3739a8] self-start sm:self-auto">
+                        Start
+                    </button>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-soft-float hover:scale-[1.02] transition-transform duration-300 flex items-start gap-gutter border border-surface-variant/50">
+<div class="shrink-0 w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md shadow-sm">
+                    2
+                </div>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface tracking-tight">Fractions &amp; Decimals</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Mastering this will make Algebra much easier</p>
+</div>
+<button class="squishy-button shrink-0 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-[3px] border-[#3739a8] self-start sm:self-auto">
+                        Start
+                    </button>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-soft-float hover:scale-[1.02] transition-transform duration-300 flex items-start gap-gutter border border-surface-variant/50 opacity-80">
+<div class="shrink-0 w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md shadow-sm">
+                    3
+                </div>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface tracking-tight">Basic Geometry</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Essential for understanding shapes and area</p>
+</div>
+<div class="shrink-0 bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-4 py-2 rounded-full self-start sm:self-auto border border-outline-variant">
+                        Coming soon
+                    </div>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-soft-float hover:scale-[1.02] transition-transform duration-300 flex items-start gap-gutter border border-surface-variant/50">
+<div class="shrink-0 w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-headline-md text-headline-md shadow-sm">
+                    4
+                </div>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-gutter">
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-md text-headline-md-mobile text-on-surface tracking-tight">Data Handling</h3>
+<p class="font-body-md text-label-md text-on-surface-variant">Useful for interpreting graphs and charts</p>
+</div>
+<button class="squishy-button shrink-0 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-[3px] border-[#3739a8] self-start sm:self-auto">
+                        Start
+                    </button>
+</div>
+</div>
+</div>
+<!-- Bottom Action -->
+<div class="mt-4 pb-stack-lg relative z-10 w-full md:max-w-2xl md:mx-auto">
+<button class="squishy-button w-full bg-surface-container-highest text-on-surface font-label-md text-label-md py-4 rounded-xl border-b-[3px] border-outline-variant shadow-sm flex items-center justify-center gap-2 hover:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+                Go to home
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on md and up) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-lowest dark:bg-inverse-surface shadow-lg" style="box-shadow: 0px -4px 20px rgba(99,102,241,0.08);">
+<div class="w-full flex justify-around items-center px-4 py-2">
+<!-- Learn (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-all duration-300 ease-out hover:bg-surface-variant/50 group">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">school</span>
+<span class="font-label-sm text-label-sm mt-1">Learn</span>
+</button>
+<!-- Practice -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-300 ease-out hover:bg-surface-variant/50 rounded-lg px-2 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit_note</span>
+<span class="font-label-sm text-label-sm mt-1">Practice</span>
+</button>
+<!-- Streaks -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-300 ease-out hover:bg-surface-variant/50 rounded-lg px-2 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">auto_graph</span>
+<span class="font-label-sm text-label-sm mt-1">Streaks</span>
+</button>
+<!-- Profile -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-all duration-300 ease-out hover:bg-surface-variant/50 rounded-lg px-2 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</button>
+</div>
+</nav>
+</body></html>

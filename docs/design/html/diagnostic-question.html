@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Diagnostic Test - Science</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-highest": "#e0e3e5",
+                      "on-error-container": "#93000a",
+                      "surface-container-high": "#e6e8ea",
+                      "surface-tint": "#494bd6",
+                      "on-tertiary-container": "#fffbff",
+                      "on-tertiary-fixed-variant": "#703700",
+                      "tertiary-container": "#b55d00",
+                      "tertiary-fixed-dim": "#ffb783",
+                      "surface-container": "#eceef0",
+                      "secondary-container": "#fea619",
+                      "secondary": "#855300",
+                      "outline": "#767586",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eff1f3",
+                      "tertiary": "#904900",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#e1e0ff",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed-variant": "#653e00",
+                      "on-primary-fixed-variant": "#2f2ebe",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#684000",
+                      "tertiary-fixed": "#ffdcc5",
+                      "surface-container-low": "#f2f4f6",
+                      "secondary-fixed": "#ffddb8",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-primary-fixed": "#07006c",
+                      "primary": "#4648d4",
+                      "inverse-surface": "#2d3133",
+                      "surface-variant": "#e0e3e5",
+                      "secondary-fixed-dim": "#ffb95f",
+                      "error-container": "#ffdad6",
+                      "on-surface": "#191c1e",
+                      "on-background": "#191c1e",
+                      "inverse-primary": "#c0c1ff",
+                      "on-tertiary-fixed": "#301400",
+                      "background": "#f7f9fb",
+                      "on-surface-variant": "#464554",
+                      "on-primary": "#ffffff",
+                      "surface-bright": "#f7f9fb",
+                      "primary-container": "#6063ee",
+                      "on-primary-container": "#fffbff",
+                      "surface": "#f7f9fb",
+                      "outline-variant": "#c7c4d7",
+                      "on-secondary-fixed": "#2a1700"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "margin-desktop": "32px",
+                      "card-padding": "24px",
+                      "stack-sm": "12px",
+                      "margin-mobile": "16px",
+                      "stack-md": "24px",
+                      "base-unit": "8px",
+                      "stack-lg": "48px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Lexend"
+                      ],
+                      "headline-xl": [
+                              "Quicksand"
+                      ],
+                      "headline-lg-mobile": [
+                              "Quicksand"
+                      ],
+                      "headline-lg": [
+                              "Quicksand"
+                      ],
+                      "label-sm": [
+                              "Lexend"
+                      ],
+                      "headline-md": [
+                              "Quicksand"
+                      ],
+                      "body-md": [
+                              "Lexend"
+                      ],
+                      "label-md": [
+                              "Lexend"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-xl": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col items-center">
+<div class="w-full max-w-md min-h-screen flex flex-col bg-background relative shadow-sm">
+<header class="flex items-center px-margin-mobile py-4 sticky top-0 bg-background z-10">
+<button aria-label="Close test" class="p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 text-on-surface-variant flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<div class="flex-grow mx-4 relative">
+<div class="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div aria-valuemax="100" aria-valuemin="0" aria-valuenow="35" class="h-full bg-[#10B981] rounded-full w-[35%] transition-all duration-500 ease-out flex items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSJ0cmFuc3BhcmVudCI+PC9yZWN0Pgo8cGF0aCBkPSJNMCA4TDggMCoiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjIpIiBzdHJva2Utd2lkdGg9IjIiPjwvcGF0aD4KPC9zdmc+')] opacity-50"></div>
+</div>
+</div>
+</div>
+<div class="text-on-surface-variant font-label-md text-label-md flex-shrink-0">
+                7 / 20
+            </div>
+</header>
+<main class="flex-grow flex flex-col px-margin-mobile pt-stack-md pb-stack-lg">
+<div class="mb-stack-lg">
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-[#ECFDF5] text-[#047857] font-label-sm text-label-sm uppercase tracking-wider mb-stack-sm border border-[#A7F3D0]">
+                    SCIENCE - LIFE PROCESSES
+                </div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-2 mb-stack-md">
+                    Which chamber of the heart pumps blood to the whole body?
+                </h1>
+</div>
+<div class="flex flex-col gap-stack-sm w-full">
+<button class="w-full bg-surface-container-lowest border-2 border-transparent rounded-[24px] p-card-padding flex items-center gap-4 text-left shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_24px_rgba(99,102,241,0.12)] hover:scale-[1.02] hover:border-surface-tint/20 transition-all duration-200 active:scale-[0.98] focus:outline-none focus:border-surface-tint focus:ring-2 focus:ring-surface-tint/20 group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 text-on-surface-variant font-headline-md text-headline-md group-hover:bg-primary-fixed group-hover:text-on-primary-fixed transition-colors">
+                        A
+                    </div>
+<span class="font-body-lg text-body-lg text-on-surface flex-grow">Right Atrium</span>
+</button>
+<button class="w-full bg-surface-container-lowest border-2 border-transparent rounded-[24px] p-card-padding flex items-center gap-4 text-left shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_24px_rgba(99,102,241,0.12)] hover:scale-[1.02] hover:border-surface-tint/20 transition-all duration-200 active:scale-[0.98] focus:outline-none focus:border-surface-tint focus:ring-2 focus:ring-surface-tint/20 group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 text-on-surface-variant font-headline-md text-headline-md group-hover:bg-primary-fixed group-hover:text-on-primary-fixed transition-colors">
+                        B
+                    </div>
+<span class="font-body-lg text-body-lg text-on-surface flex-grow">Right Ventricle</span>
+</button>
+<button class="w-full bg-surface-container-lowest border-2 border-transparent rounded-[24px] p-card-padding flex items-center gap-4 text-left shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_24px_rgba(99,102,241,0.12)] hover:scale-[1.02] hover:border-surface-tint/20 transition-all duration-200 active:scale-[0.98] focus:outline-none focus:border-surface-tint focus:ring-2 focus:ring-surface-tint/20 group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 text-on-surface-variant font-headline-md text-headline-md group-hover:bg-primary-fixed group-hover:text-on-primary-fixed transition-colors">
+                        C
+                    </div>
+<span class="font-body-lg text-body-lg text-on-surface flex-grow">Left Atrium</span>
+</button>
+<button class="w-full bg-surface-container-lowest border-2 border-transparent rounded-[24px] p-card-padding flex items-center gap-4 text-left shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_24px_rgba(99,102,241,0.12)] hover:scale-[1.02] hover:border-surface-tint/20 transition-all duration-200 active:scale-[0.98] focus:outline-none focus:border-surface-tint focus:ring-2 focus:ring-surface-tint/20 group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center flex-shrink-0 text-on-surface-variant font-headline-md text-headline-md group-hover:bg-primary-fixed group-hover:text-on-primary-fixed transition-colors">
+                        D
+                    </div>
+<span class="font-body-lg text-body-lg text-on-surface flex-grow">Left Ventricle</span>
+</button>
+</div>
+</main>
+<footer class="p-margin-mobile flex justify-center pb-safe mt-auto">
+<button class="flex items-center gap-2 px-4 py-3 rounded-full text-outline font-label-md text-label-md hover:bg-surface-container-high transition-colors active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="help">help</span>
+                I am not sure
+            </button>
+</footer>
+</div>
+</body></html>

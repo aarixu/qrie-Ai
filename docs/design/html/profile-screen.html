@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile - K-12 Learning App</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Lexend:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary-container": "#fea619",
+                        "inverse-surface": "#2d3133",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-bright": "#f7f9fb",
+                        "outline": "#767586",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#fffbff",
+                        "on-secondary-fixed": "#2a1700",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "tertiary-container": "#b55d00",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#494bd6",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#ffddb8",
+                        "primary-container": "#6063ee",
+                        "tertiary": "#904900",
+                        "outline-variant": "#c7c4d7",
+                        "surface-variant": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "on-background": "#191c1e",
+                        "on-tertiary-fixed": "#301400",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "primary": "#4648d4",
+                        "on-primary-fixed": "#07006c",
+                        "error-container": "#ffdad6",
+                        "background": "#f7f9fb",
+                        "surface-container-low": "#f2f4f6",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-secondary-container": "#684000",
+                        "inverse-primary": "#c0c1ff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "error": "#ba1a1a",
+                        "secondary": "#855300",
+                        "on-surface": "#191c1e",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#464554",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e1e0ff",
+                        "surface-container": "#eceef0",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-secondary": "#ffffff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-lg": "48px",
+                        "gutter": "16px",
+                        "stack-sm": "12px",
+                        "stack-md": "24px",
+                        "margin-mobile": "16px",
+                        "base-unit": "8px",
+                        "margin-desktop": "32px",
+                        "card-padding": "24px"
+                    },
+                    fontFamily: {
+                        "headline-md": ["Quicksand"],
+                        "body-lg": ["Lexend"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "headline-xl": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "label-sm": ["Lexend"],
+                        "label-md": ["Lexend"],
+                        "body-md": ["Lexend"]
+                    },
+                    fontSize: {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pattern-dots {
+            background-image: radial-gradient(var(--tw-colors-outline-variant) 1px, transparent 1px);
+            background-size: 24px 24px;
+            background-position: 0 0;
+            opacity: 0.15;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased relative min-h-screen pb-[80px]">
+<!-- Dot Pattern Background -->
+<div class="fixed inset-0 pattern-dots pointer-events-none z-0"></div>
+<div class="relative z-10 w-full max-w-md mx-auto">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-background flex justify-between items-center px-margin-mobile py-4 z-20">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Profile</h1>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container shadow-[0px_4px_20px_rgba(99,102,241,0.08)]">
+<img alt="Student Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Xb4Oal8t8tAWY4OlBcUBkDsI74v8s_5NAVhYjrhjL-WaxuRAhUP-OJMZ-QiIL45CpjseThgeleAALOlUYLNRw5rc5qSPsUSrXssa4Fp74iE0-D9pSMXVeoIz4-MEj_wrNlqY3QsC-ZFFYvAePtLPEqSPoGDzo4-TlTzfqTeic3fzEG5Vig0iMZXnwSIwKBMjmYcjav4ocD7Is7jaRRio1vVXj5KbtabN-ZeuzAPr2eM9q-wzR7MzLVxg"/>
+</div>
+</header>
+<main class="px-margin-mobile flex flex-col gap-stack-md mt-4">
+<!-- Identity Card -->
+<section class="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] flex items-center gap-4 transition-transform duration-200 hover:scale-[1.02]">
+<div class="w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-primary-container">
+<img alt="Rahul Sharma Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Xb4Oal8t8tAWY4OlBcUBkDsI74v8s_5NAVhYjrhjL-WaxuRAhUP-OJMZ-QiIL45CpjseThgeleAALOlUYLNRw5rc5qSPsUSrXssa4Fp74iE0-D9pSMXVeoIz4-MEj_wrNlqY3QsC-ZFFYvAePtLPEqSPoGDzo4-TlTzfqTeic3fzEG5Vig0iMZXnwSIwKBMjmYcjav4ocD7Is7jaRRio1vVXj5KbtabN-ZeuzAPr2eM9q-wzR7MzLVxg"/>
+</div>
+<div class="flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-surface">Rahul Sharma</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Class 10 - Science, Maths, English</p>
+</div>
+</section>
+<!-- My Class Section -->
+<section class="flex flex-col gap-stack-sm">
+<h3 class="font-label-sm text-label-sm uppercase text-outline tracking-wider">MY CLASS</h3>
+<div class="flex gap-2 overflow-x-auto pb-2 -mx-margin-mobile px-margin-mobile snap-x scrollbar-hide">
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 6</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 7</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 8</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 9</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-primary text-on-primary shadow-[0px_4px_12px_rgba(96,99,238,0.3)] border-b-2 border-primary-fixed-dim transition-transform duration-200 hover:scale-[1.02]">Class 10</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 11</button>
+<button class="snap-start shrink-0 px-4 py-2 rounded-full font-label-md text-label-md bg-surface-container-high text-on-surface-variant hover:bg-surface-variant transition-colors shadow-sm">Class 12</button>
+</div>
+</section>
+<!-- Settings List -->
+<section class="flex flex-col gap-2">
+<button class="w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center justify-between shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:scale-[1.01] transition-transform duration-200 active:scale-95 group">
+<div class="flex items-center gap-4 text-on-surface">
+<span aria-hidden="true" class="material-symbols-outlined text-primary" data-icon="book">book</span>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Subjects</span>
+</div>
+<span aria-hidden="true" class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center justify-between shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:scale-[1.01] transition-transform duration-200 active:scale-95 group">
+<div class="flex items-center gap-4 text-on-surface">
+<span aria-hidden="true" class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Notifications</span>
+</div>
+<span aria-hidden="true" class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center justify-between shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:scale-[1.01] transition-transform duration-200 active:scale-95 group">
+<div class="flex items-center gap-4 text-on-surface">
+<span aria-hidden="true" class="material-symbols-outlined text-primary" data-icon="download">download</span>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Downloads</span>
+</div>
+<span aria-hidden="true" class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center justify-between shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:scale-[1.01] transition-transform duration-200 active:scale-95 group">
+<div class="flex items-center gap-4 text-on-surface">
+<span aria-hidden="true" class="material-symbols-outlined text-primary" data-icon="help">help</span>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Help and support</span>
+</div>
+<span aria-hidden="true" class="material-symbols-outlined text-outline-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+</section>
+<!-- Reset Action -->
+<section class="mt-4 mb-stack-lg">
+<button class="w-full py-4 px-6 rounded-full border-2 border-error text-error font-label-md text-label-md uppercase tracking-wider hover:bg-error-container hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-sm">
+                    Reset progress
+                </button>
+</section>
+</main>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl shadow-[0px_-4px_20px_rgba(99,102,241,0.08)] bg-surface-container-lowest md:hidden flex justify-around items-center px-4 py-3">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity p-2" href="#">
+<span aria-hidden="true" class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity p-2" href="#">
+<span aria-hidden="true" class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm mt-1">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:opacity-80 transition-opacity p-2" href="#">
+<span aria-hidden="true" class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-sm text-label-sm mt-1">Progress</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-105 transition-transform duration-300 ease-out shadow-sm" href="#">
+<span aria-hidden="true" class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<style>
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lesson Complete</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#c0c1ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#684000",
+                        "primary-fixed": "#e1e0ff",
+                        "primary": "#4648d4",
+                        "secondary": "#855300",
+                        "on-primary-container": "#fffbff",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-fixed": "#07006c",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f7f9fb",
+                        "tertiary": "#904900",
+                        "tertiary-container": "#b55d00",
+                        "outline": "#767586",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-container": "#6063ee",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "inverse-primary": "#c0c1ff",
+                        "outline-variant": "#c7c4d7",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-bright": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "secondary-fixed": "#ffddb8",
+                        "tertiary-fixed": "#ffdcc5",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-background": "#191c1e",
+                        "surface-tint": "#494bd6",
+                        "secondary-container": "#fea619",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464554",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "48px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px",
+                        "base-unit": "8px",
+                        "card-padding": "24px",
+                        "gutter": "16px",
+                        "stack-md": "24px",
+                        "margin-desktop": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Quicksand"],
+                        "label-sm": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "label-md": ["Lexend"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "headline-md": ["Quicksand"],
+                        "body-md": ["Lexend"],
+                        "headline-xl": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .confetti {
+            position: absolute;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .pop-in {
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Ambient background pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-5" style="background-image: radial-gradient(circle at 2px 2px, #4648d4 1px, transparent 0); background-size: 24px 24px;"></div>
+<main class="w-full max-w-[480px] px-margin-mobile flex flex-col items-center z-10">
+<!-- Celebration Badge -->
+<div class="relative w-32 h-32 mb-stack-md flex items-center justify-center pop-in">
+<!-- Confetti shapes -->
+<div class="confetti top-0 -left-6 text-secondary-container">
+<svg fill="currentColor" height="16" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+<circle cx="8" cy="8" r="8"></circle>
+</svg>
+</div>
+<div class="confetti -top-4 right-2 text-tertiary-container" style="animation-delay: 0.2s;">
+<svg fill="currentColor" height="16" viewbox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg">
+<rect height="16" transform="rotate(45 8 8)" width="16"></rect>
+</svg>
+</div>
+<div class="confetti bottom-4 -right-8 text-primary-fixed-dim" style="animation-delay: 0.4s;">
+<svg fill="currentColor" height="20" viewbox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 0L12.9389 7.06107L20 10L12.9389 12.9389L10 20L7.06107 12.9389L0 10L7.06107 7.06107L10 0Z"></path>
+</svg>
+</div>
+<div class="confetti -bottom-2 -left-4 text-secondary-container" style="animation-delay: 0.6s;">
+<svg fill="currentColor" height="12" viewbox="0 0 12 12" width="12" xmlns="http://www.w3.org/2000/svg">
+<rect height="12" rx="4" width="12"></rect>
+</svg>
+</div>
+<!-- Central Badge -->
+<div class="w-24 h-24 bg-primary rounded-full flex items-center justify-center shadow-[0px_4px_32px_rgba(99,102,241,0.4)] border-4 border-surface z-10 relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20"></div>
+<span class="material-symbols-outlined text-on-primary text-[48px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<!-- Typography -->
+<h1 class="text-primary font-headline-lg-mobile text-headline-lg-mobile text-center mb-2 pop-in" style="animation-delay: 0.1s; opacity: 0;">Lesson complete!</h1>
+<p class="text-on-surface-variant font-body-md text-body-md text-center mb-stack-md pop-in" style="animation-delay: 0.2s; opacity: 0;">Heart &amp; Circulation</p>
+<!-- Streak Pill -->
+<div class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-full flex items-center gap-2 mb-stack-lg shadow-[0px_4px_20px_rgba(254,166,25,0.2)] pop-in" style="animation-delay: 0.3s; opacity: 0;">
+<span class="material-symbols-outlined text-[#d94a00]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-md text-label-md">5 day streak</span>
+</div>
+<!-- Stats Row -->
+<div class="flex flex-row gap-4 w-full justify-center mb-stack-lg pop-in" style="animation-delay: 0.4s; opacity: 0;">
+<div class="bg-surface-container-highest px-4 py-3 rounded-xl flex items-center gap-2 border border-surface-variant flex-1 justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Beats covered</span>
+<span class="font-label-md text-label-md text-on-surface">8</span>
+</div>
+</div>
+<div class="bg-surface-container-highest px-4 py-3 rounded-xl flex items-center gap-2 border border-surface-variant flex-1 justify-center shadow-sm">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">help</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Doubts asked</span>
+<span class="font-label-md text-label-md text-on-surface">2</span>
+</div>
+</div>
+</div>
+<!-- Bottom Actions -->
+<div class="w-full flex flex-col gap-4 pop-in" style="animation-delay: 0.5s; opacity: 0;">
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-4 rounded-xl flex items-center justify-center gap-2 border-b-[3px] border-[#2f2ebe] shadow-md hover:translate-y-[1px] hover:border-b-[2px] hover:shadow-sm active:translate-y-[3px] active:border-b-0 transition-all">
+<span>Next: Blood and Its Components</span>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="w-full bg-transparent text-primary font-label-md text-label-md py-4 rounded-xl flex items-center justify-center gap-2 border-2 border-outline-variant hover:bg-surface-container-low active:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span>Back home</span>
+</button>
+</div>
+</main>
+</body></html>

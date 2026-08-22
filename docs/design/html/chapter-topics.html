@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chapter: Life Processes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&amp;family=Lexend:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#4648d4",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c7c4d7",
+                        "outline": "#767586",
+                        "on-tertiary-fixed": "#301400",
+                        "on-primary-fixed": "#07006c",
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#855300",
+                        "primary-fixed": "#e1e0ff",
+                        "surface-container": "#eceef0",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed": "#ffdcc5",
+                        "tertiary-container": "#b55d00",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "tertiary": "#904900",
+                        "surface-variant": "#e0e3e5",
+                        "surface": "#f7f9fb",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary-container": "#fffbff",
+                        "on-surface": "#191c1e",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary-container": "#fea619",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#c0c1ff",
+                        "surface-dim": "#d8dadc",
+                        "primary-container": "#6063ee",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#464554",
+                        "on-secondary-container": "#684000",
+                        "inverse-surface": "#2d3133",
+                        "on-tertiary-container": "#fffbff",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-tint": "#494bd6",
+                        "success": "#10b981",
+                        "on-success": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "32px",
+                        "stack-sm": "12px",
+                        "margin-mobile": "16px",
+                        "base-unit": "8px",
+                        "gutter": "16px",
+                        "card-padding": "24px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Quicksand"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "label-md": ["Lexend"],
+                        "body-md": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "headline-xl": ["Quicksand"],
+                        "body-lg": ["Lexend"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pb-24 selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky bg-background shadow-sm z-40">
+<div class="flex items-center justify-between px-margin-mobile py-4 h-[64px]">
+<button class="text-primary p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<div class="flex-1 text-center pr-10">
+<h1 class="font-headline-md text-headline-md text-on-background">Life Processes</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Class 10 - Science</p>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-[1120px] mx-auto px-margin-mobile py-stack-md flex flex-col gap-stack-md md:hidden">
+<!-- Progress Summary -->
+<section class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] flex flex-col gap-stack-sm">
+<div class="flex justify-between items-center">
+<h2 class="font-label-md text-label-md text-on-surface-variant">Chapter Progress</h2>
+<span class="font-label-md text-label-md text-primary font-bold">2 of 5 done</span>
+</div>
+<div class="w-full bg-surface-container h-[12px] rounded-full overflow-hidden">
+<div class="bg-success h-full rounded-full w-[40%] flex items-center overflow-hidden relative">
+<div class="absolute inset-0 opacity-20" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #ffffff 10px, #ffffff 20px);"></div>
+</div>
+</div>
+</section>
+<!-- Topic List -->
+<section class="flex flex-col gap-stack-sm">
+<!-- Completed Topic 1 -->
+<button class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-lg active:scale-[1.02] transition-all duration-200 flex items-center justify-between text-left group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-[#d1fae5] text-success flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-success font-bold uppercase tracking-wider mb-1">TOPIC 1 - 15 MIN</span>
+<h3 class="font-headline-md text-[20px] leading-[28px] font-bold text-on-background group-hover:text-primary transition-colors">Nutrition</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<!-- Completed Topic 2 -->
+<button class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-lg active:scale-[1.02] transition-all duration-200 flex items-center justify-between text-left group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-[#d1fae5] text-success flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-success font-bold uppercase tracking-wider mb-1">TOPIC 2 - 12 MIN</span>
+<h3 class="font-headline-md text-[20px] leading-[28px] font-bold text-on-background group-hover:text-primary transition-colors">Respiration</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<!-- In-Progress Topic 3 -->
+<button class="bg-surface-container-lowest rounded-2xl p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] border-2 border-primary hover:shadow-lg active:scale-[1.02] transition-all duration-200 flex items-center justify-between text-left group relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md animate-pulse">
+<span class="material-symbols-outlined text-[24px] ml-1" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider mb-1 flex items-center gap-2">TOPIC 3 - 20 MIN <span class="w-2 h-2 rounded-full bg-secondary-container"></span></span>
+<h3 class="font-headline-md text-[20px] leading-[28px] font-bold text-on-background">Transportation</h3>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary relative z-10">chevron_right</span>
+</button>
+<!-- Locked Topic 4 -->
+<div class="bg-surface-container-low rounded-2xl p-card-padding opacity-60 flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant text-outline flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline font-bold uppercase tracking-wider mb-1">TOPIC 4 - 18 MIN</span>
+<h3 class="font-headline-md text-[20px] leading-[28px] font-bold text-on-surface-variant">Excretion</h3>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-medium italic">Coming soon</span>
+</div>
+<!-- Locked Topic 5 (Quiz) -->
+<div class="bg-surface-container-low rounded-2xl p-card-padding opacity-60 flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-variant text-outline flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline font-bold uppercase tracking-wider mb-1">QUIZ - 10 MIN</span>
+<h3 class="font-headline-md text-[20px] leading-[28px] font-bold text-on-surface-variant">Practice Test</h3>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-medium italic">Coming soon</span>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center py-2 px-margin-mobile bg-surface-container-lowest shadow-[0px_-4px_20px_rgba(99,102,241,0.08)] rounded-t-xl md:hidden">
+<!-- Active Nav Item (Semantic Intent: Since we are in a chapter detail, which implies learning/browsing content, defaulting back to Home is the safest global action if this was opened from a dashboard, but since no direct match exists and the user is 'browsing', Home acts as the fallback base. Alternatively, if this was accessed via 'Progress', that might be active, but 'Home' is requested as active in the prompt.) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<!-- Inactive Nav Item -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg p-2 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<!-- Inactive Nav Item -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg p-2 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">leaderboard</span>
+<span class="font-label-sm text-label-sm">Progress</span>
+</a>
+<!-- Inactive Nav Item -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-all rounded-lg p-2 active:scale-90" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+</body></html>
