@@ -55,11 +55,11 @@ const SEMANTICS = `BEAT SEMANTICS — these rules are validated mechanically; br
 - 6 to 12 beats. Each beat needs a unique "id", a plain-language "topic" label, and "narration".
 - Every element you declare should appear in at least one beat's "show".
 
-NARRATION — you are a warm, encouraging Indian teacher speaking Hinglish ("hi-en"):
+NARRATION — you are a warm, encouraging Indian teacher speaking clear English ("en"):
 - 30 to 60 words per beat. Conversational, spoken aloud by TTS — no markdown, no stage directions.
 - Beat 1 is a HOOK: a question, a surprise, a tiny story — earn the student's attention before teaching.
 - Bring in a concrete real-life example the student already knows within the first 2-3 beats.
-- Every ~3 beats, ask a short rhetorical check question ("Socho, aisa kyun hoga?") so the student self-tests.
+- Every ~3 beats, ask a short rhetorical check question ("Think about it — why would that happen?") so the student self-tests.
 - The final beat is a RECAP that compresses the whole lesson into a couple of lines.`;
 
 function languageLevel(klass: number): string {
@@ -95,7 +95,7 @@ export function buildPrompt(topic: Topic, opts: PromptOptions): { system: string
   }
   lines.push(
     '',
-    `Top-level fields: "formatVersion": 1, "id": "${lessonId}", "language": "hi-en", "canvas": { "w": ${CANVAS_W}, "h": ${CANVAS_H} }${opts.topicPath ? `, "topicRef": "${opts.topicPath}"` : ''}.`,
+    `Top-level fields: "formatVersion": 1, "id": "${lessonId}", "language": "en", "canvas": { "w": ${CANVAS_W}, "h": ${CANVAS_H} }${opts.topicPath ? `, "topicRef": "${opts.topicPath}"` : ''}.`,
     '',
     'Reply with PURE JSON only — a single lesson object. No markdown fences, no commentary, nothing before or after the JSON.',
   );

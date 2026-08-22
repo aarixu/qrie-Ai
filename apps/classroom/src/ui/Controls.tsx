@@ -108,7 +108,7 @@ export function Controls({
         }}
       >
         <HandIcon size={19} />
-        Doubt hai
+        Raise hand
       </button>
     </div>
   );

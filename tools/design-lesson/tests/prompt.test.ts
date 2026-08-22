@@ -29,7 +29,7 @@ describe('buildPrompt', () => {
     expect(system).toMatch(/subset of "show"/);
     expect(system).toMatch(/6 to 12 beats/);
     expect(system).toMatch(/30 to 60 words/);
-    expect(system).toMatch(/hi-en/);
+    expect(system).toMatch(/"en"/);
     expect(system).toMatch(/HOOK/);
     expect(system).toMatch(/real-life example/);
     expect(system).toMatch(/rhetorical check question/);

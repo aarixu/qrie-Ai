@@ -28,7 +28,7 @@ describe('Scene: visibility', () => {
     // Beat "pump" shows only the heart box and its caption.
     const html = render(['b_heart', 'x_pump']);
     expect(html).toContain('HEART');
-    expect(html).toContain('Ek pump');
+    expect(html).toContain('One pump');
     expect(html).not.toContain('LUNGS');
     expect(html).not.toContain('delivery kaun');
     expect(html).not.toContain('data-element-id="b_lungs"');
@@ -68,7 +68,7 @@ describe('Scene: focus', () => {
 
   it('still renders the dimmed element content (dim, never hide)', () => {
     const html = render(['b_heart', 'x_pump'], ['b_heart']);
-    expect(html).toContain('Ek pump');
+    expect(html).toContain('One pump');
   });
 });
 

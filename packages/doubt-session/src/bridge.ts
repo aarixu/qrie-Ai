@@ -23,20 +23,20 @@ const pick = <T>(variants: readonly T[], seed: string): T =>
 
 const ENTRY: readonly ((topic: string) => string)[] = [
   (t) =>
-    `Haan ruko, achha sawaal ho sakta hai yahan — '${t}' pe hi the hum. Bolo, kya doubt hai?`,
+    `Yes, go ahead — good place to stop, actually. We were right in the middle of '${t}'. What's your doubt?`,
   (t) =>
-    `Ek second, recording rok di maine. Abhi hum '${t}' dekh rahe the na — batao, kahan atke?`,
+    `One second, I've paused the class. We were just looking at '${t}' — tell me, where did you get stuck?`,
   (t) =>
-    `Ruk jao aaram se, koi jaldi nahi hai. '${t}' thoda tricky lag sakta hai — poochho, kya samajh nahi aaya?`,
+    `Take your time, no hurry at all. '${t}' can feel a little tricky — ask me, what didn't make sense?`,
   (t) =>
-    `Haan bolo bolo, isi liye toh main hoon. '${t}' chal raha tha abhi — kya poochhna hai?`,
+    `Yes yes, ask away — that's exactly what I'm here for. We were on '${t}' — what would you like to know?`,
 ];
 
 const EXIT: readonly string[] = [
-  `Clear hua? Chalo, wahin se aage chalte hain jahan ruke the.`,
-  `Samajh aa gaya na? Badhiya. Ab class wahin se continue karte hain jahan chhodi thi.`,
-  `Theek hai, ye doubt toh gaya. Chalo wapas lesson pe — jahan ruke the, wahin se.`,
-  `Aur kuch ho toh phir se haath utha dena, main yahin hoon. Abhi aage badhte hain.`,
+  `All clear? Good. Let's pick the class back up right where we left it.`,
+  `Makes sense now? Great. Let's continue from exactly where we stopped.`,
+  `Alright, that doubt is sorted. Back to the lesson — same spot we paused at.`,
+  `And if anything else comes up, just raise your hand again — I'm right here. Let's move on.`,
 ];
 
 export function entryLine(ctx: DoubtContext): string {

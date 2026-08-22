@@ -60,7 +60,7 @@ export interface Lesson {
   id: string;
   title: string;
   subtitle?: string;
-  /** 'hi-en' = Hinglish narration (default for Class 6-12 India), 'en' = English. */
+  /** 'en' = English (the product default). 'hi-en' (Hinglish) stays valid for future regional variants. */
   language: 'hi-en' | 'en';
   /** Optional back-reference to the syllabus topic this lesson teaches. */
   topicRef?: string;

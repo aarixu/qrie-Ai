@@ -125,7 +125,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
       >
         <button
           onClick={onExit}
-          aria-label="library mein wapas"
+          aria-label="back to library"
           style={{
             width: 40,
             height: 40,
@@ -220,7 +220,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
                   }}
                 >
                   {player.state === 'ended' ? <ReplayIcon /> : <PlayIcon />}
-                  {player.state === 'ended' ? 'Dobara dekho' : 'Class shuru karo'}
+                  {player.state === 'ended' ? 'Watch again' : 'Start class'}
                 </button>
               </div>
             )}

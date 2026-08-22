@@ -52,13 +52,13 @@ export function createStubAgent(): AgentAdapter {
         ctx.recentBeats.length >= 2 ? ctx.recentBeats[ctx.recentBeats.length - 2] : null;
 
       enqueue(() =>
-        io.say(`Haan, main sun raha hoon. '${ctx.beatTopic}' ke baare mein kya poochhna hai? Bolo.`),
+        io.say(`I'm listening. What would you like to ask about '${ctx.beatTopic}'? Go ahead.`),
       );
       if (prev !== null) {
         enqueue(async () => {
           io.recall(prev.id);
           await io.say(
-            `Yaad karo, isse pehle humne '${prev.topic}' dekha tha — wahi wapas le aaya hoon screen pe, isse jodkar samjhenge.`,
+            `Remember, just before this we saw '${prev.topic}' — I've brought it back on the board, we'll connect the two.`,
           );
         });
       }
@@ -70,12 +70,12 @@ export function createStubAgent(): AgentAdapter {
           if (userMessages === 1) {
             enqueue(() =>
               io.say(
-                `Achha sawaal hai, yahan confusion hona bilkul natural hai. Dekho, '${ctx.beatTopic}' ko aise samjho — jo screen pe hai usko dhyaan se dekho, main step by step samjhata hoon.`,
+                `Good question — it's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
               ),
             );
           } else if (userMessages === 2) {
             enqueue(async () => {
-              await io.say(`Badhiya, lagta hai clear ho gaya. Chalo, class aage badhaate hain.`);
+              await io.say(`Great, sounds like that's clear now. Let's get back to the class.`);
               // done() usually triggers our own stop() synchronously via the
               // handoff's leaving sequence — re-check before signalling.
               if (!stopped) io.done();

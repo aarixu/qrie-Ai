@@ -55,7 +55,7 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           }}
         />
         <span style={{ color: theme.good, font: `600 12.5px ${theme.font}`, letterSpacing: 0.4 }}>
-          {live ? 'LIVE · tutor sun rahi hai' : 'tutor aa rahi hai…'}
+          {live ? 'LIVE · your tutor is listening' : 'your tutor is joining…'}
         </span>
       </div>
 
@@ -79,8 +79,8 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && send()}
-          placeholder="Apna doubt likho…"
-          aria-label="doubt likho"
+          placeholder="Type your doubt…"
+          aria-label="type your doubt"
           disabled={!live}
           style={{
             flex: 1,
@@ -96,7 +96,7 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
         <button
           onClick={send}
           disabled={!live}
-          aria-label="doubt bhejo"
+          aria-label="send doubt"
           style={{
             width: 46,
             minHeight: 46,
@@ -131,7 +131,7 @@ export function DoubtPanel({ state, lines, onSend, onEnd }: DoubtPanelProps) {
           }}
         >
           <CheckIcon size={16} />
-          Clear ho gaya
+          Got it
         </button>
       </div>
     </div>

@@ -27,7 +27,7 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
     fetch('/index.json')
       .then((r) => r.json())
       .then((doc: { lessons: IndexEntry[] }) => setEntries(doc.lessons))
-      .catch((e) => setError(`Lessons load nahi hui: ${e}`));
+      .catch((e) => setError(`Couldn't load lessons: ${e}`));
   }, []);
 
   const open = async (entry: IndexEntry) => {
@@ -37,13 +37,13 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
       const raw = await (await fetch(`/${entry.path}`)).json();
       const result = validateLesson(raw);
       if (!result.ok) {
-        setError(`"${entry.title}" abhi available nahi hai (invalid lesson file).`);
+        setError(`"${entry.title}" isn't available right now (invalid lesson file).`);
         console.error('[library] lesson failed validation:', result.errors);
         return;
       }
       onOpen(result.lesson);
     } catch (e) {
-      setError(`"${entry.title}" load nahi hui: ${e}`);
+      setError(`Couldn't open "${entry.title}": ${e}`);
     } finally {
       setBusy(null);
     }
@@ -83,7 +83,7 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
           }}
         />
         <p style={{ color: theme.chalkDim, font: `15px ${theme.font}`, margin: '0 0 22px' }}>
-          Class chuno — doubt aaye to bas haath uthana.
+          Pick a class — and whenever you're stuck, just raise your hand.
         </p>
 
         {error && (
@@ -92,7 +92,7 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
           </div>
         )}
         {!entries && !error && (
-          <div style={{ color: theme.chalkDim, font: `14px ${theme.font}` }}>Board saaf ho raha hai…</div>
+          <div style={{ color: theme.chalkDim, font: `14px ${theme.font}` }}>Setting up the board…</div>
         )}
 
         <div style={{ display: 'grid', gap: 16 }}>
@@ -141,7 +141,7 @@ export function Library({ onOpen }: { onOpen(lesson: Lesson): void }) {
                   Class {entry.class} · {entry.subject}
                 </div>
                 <div style={{ color: theme.chalk, font: `700 22px ${theme.fontChalk}` }}>
-                  {busy === entry.id ? 'Board taiyaar ho raha hai…' : entry.title}
+                  {busy === entry.id ? 'Opening…' : entry.title}
                 </div>
                 {entry.subtitle && (
                   <div style={{ color: theme.chalkDim, font: `13px ${theme.font}` }}>

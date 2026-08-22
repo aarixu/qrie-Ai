@@ -8,7 +8,7 @@ function miniLesson(): Lesson {
     formatVersion: 1,
     id: 'mini',
     title: 'Mini',
-    language: 'hi-en',
+    language: 'en',
     canvas: { w: 1000, h: 620 },
     elements: [
       { kind: 'title', id: 'e1', x: 0, y: 0, text: 'T' },
