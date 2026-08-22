@@ -95,8 +95,8 @@ describe('Scene: frame and determinism', () => {
 
   it('maps tones to theme colors (content itself has no hex codes)', () => {
     const html = render(['b_lungs', 'b_heart', 'a_lungs_la']);
-    expect(html).toContain('#7ed491'); // good → lungs box + O2 arrow
-    expect(html).toContain('#ffb347'); // accent → heart box
+    expect(html).toContain('#8fd6a8'); // good → lungs box + O2 arrow
+    expect(html).toContain('#f5c84c'); // accent → heart box
     expect(JSON.stringify(lesson)).not.toContain('#');
   });
 });
@@ -168,7 +168,7 @@ describe('Scene: every element kind renders', () => {
     // Slice may also contain the arrow's sweep-mask line (stroke #fff); count
     // only the doc's own neutral-toned placeholder strokes.
     const docGroup = html.slice(html.indexOf('data-element-id="k_doc"'), html.indexOf('data-element-id="k_arrow"'));
-    expect(docGroup.match(/<line [^>]*stroke="#cfd4dc"/g)?.length).toBe(5);
+    expect(docGroup.match(/<line [^>]*stroke="#dfe5dd"/g)?.length).toBe(5);
   });
 
   it('arrow gets an arrowhead marker and a mid label', () => {

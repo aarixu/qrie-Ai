@@ -14,18 +14,19 @@ export interface SceneProps {
  * whole look of every lesson can be retuned in this one table.
  */
 const TONE_COLORS: Record<Tone, string> = {
-  neutral: '#cfd4dc',
-  good: '#7ed491',
-  bad: '#ff8a8a',
-  accent: '#ffb347',
+  neutral: '#dfe5dd',
+  good: '#8fd6a8',
+  bad: '#f09a9a',
+  accent: '#f5c84c',
 };
 
-/** The app's page background. Used only for text halos so labels stay readable over strokes. */
-const PAGE_BG = '#0f1116';
-/** Headline/formula ink — brighter than the neutral tone so titles pop on the dark page. */
-const INK = '#e9ecf3';
+/** The board's slate tone. Used only for text halos so labels stay readable over strokes. */
+const PAGE_BG = '#101a15';
+/** Headline/formula ink — brighter than the neutral tone so titles pop on the slate. */
+const INK = '#f3f5ef';
 
-const FONT_HAND = "'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif";
+/** Kalam is the app's chalk hand (Devanagari-capable); the rest are fallbacks. */
+const FONT_HAND = "'Kalam', 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 
 const DRAW_MS = 400;
@@ -118,6 +119,9 @@ const SCENE_CSS = `
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: stage-sweep ${DRAW_MS}ms ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-pop, .stage-sweep { animation-duration: 0.01ms; }
 }
 `;
 
@@ -403,7 +407,10 @@ export function Scene({ lesson, visible, focus }: SceneProps): ReactElement {
       viewBox={`0 0 ${lesson.canvas.w} ${lesson.canvas.h}`}
       role="img"
       aria-label={lesson.title}
-      style={{ display: 'block', width: '100%', height: 'auto', maxHeight: '100%' }}
+      // width AND height 100%: the SVG letterboxes inside whatever box the app
+      // gives it (preserveAspectRatio meet), so it can never push siblings —
+      // like the chalk tray — off the screen.
+      style={{ display: 'block', width: '100%', height: '100%' }}
     >
       <style>{SCENE_CSS}</style>
       <defs>{ARROW_MARKERS}</defs>

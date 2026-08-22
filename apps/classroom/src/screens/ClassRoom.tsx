@@ -11,6 +11,7 @@ import {
 import { Avatar, type AvatarMode } from '../ui/Avatar';
 import { Controls } from '../ui/Controls';
 import { DoubtPanel } from '../ui/DoubtPanel';
+import { BackIcon, PlayIcon, ReplayIcon } from '../ui/icons';
 import { theme } from '../ui/theme';
 
 const CONTROLS_HIDE_MS = 3000;
@@ -65,13 +66,13 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     };
   }, [handoff]);
 
-  // Auto-hiding controls: any touch shows them; silence hides them while playing.
-  const [controlsVisible, setControlsVisible] = useState(true);
+  // Auto-hiding chalk tray: any touch shows it; silence hides it while playing.
+  const [trayVisible, setTrayVisible] = useState(true);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const poke = () => {
-    setControlsVisible(true);
+    setTrayVisible(true);
     if (hideTimer.current) clearTimeout(hideTimer.current);
-    hideTimer.current = setTimeout(() => setControlsVisible(false), CONTROLS_HIDE_MS);
+    hideTimer.current = setTimeout(() => setTrayVisible(false), CONTROLS_HIDE_MS);
   };
   useEffect(() => {
     poke();
@@ -96,6 +97,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
       : 'idle';
 
   const caption = inDoubt ? (agentLines.at(-1) ?? '') : player.caption;
+  const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
 
   return (
     <div
@@ -111,34 +113,38 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
         overflow: 'hidden',
       }}
     >
-      {/* Topic bar */}
+      {/* Topic bar — chalk heading on the top of the board */}
       <header
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: 10,
-          padding: '12px 14px calc(0px + env(safe-area-inset-top))',
-          paddingTop: 'calc(12px + env(safe-area-inset-top))',
+          padding: '10px 14px',
+          paddingTop: 'calc(10px + env(safe-area-inset-top))',
         }}
       >
         <button
           onClick={onExit}
-          aria-label="back"
+          aria-label="library mein wapas"
           style={{
+            width: 40,
+            height: 40,
+            display: 'grid',
+            placeItems: 'center',
             border: 'none',
             background: 'none',
-            color: theme.textMuted,
-            fontSize: 18,
+            color: theme.chalkDim,
             cursor: 'pointer',
-            padding: 4,
           }}
         >
-          ←
+          <BackIcon />
         </button>
         <div style={{ minWidth: 0 }}>
-          <div style={{ color: theme.text, font: `600 15px ${theme.font}` }}>{lesson.title}</div>
+          <div style={{ color: theme.chalk, font: `700 17px ${theme.fontChalk}` }}>
+            {lesson.title}
+          </div>
           {lesson.subtitle && (
-            <div style={{ color: theme.textMuted, fontSize: 11 }}>{lesson.subtitle}</div>
+            <div style={{ color: theme.chalkDim, font: `12px ${theme.font}` }}>{lesson.subtitle}</div>
           )}
         </div>
         {inDoubt && (
@@ -146,44 +152,96 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
             style={{
               marginLeft: 'auto',
               color: theme.good,
-              font: `600 11px ${theme.font}`,
-              border: `1px solid ${theme.good}55`,
-              borderRadius: 12,
-              padding: '3px 10px',
+              font: `600 11.5px ${theme.font}`,
+              letterSpacing: 0.6,
+              border: `1.5px solid ${theme.good}66`,
+              borderRadius: 14,
+              padding: '3px 11px',
             }}
           >
-            ● LIVE
+            LIVE
           </span>
         )}
       </header>
 
-      {/* Canvas + avatar */}
-      <main style={{ flex: 1, position: 'relative', display: 'grid', placeItems: 'center', padding: 8 }}>
-        <div style={{ width: '100%', maxWidth: 900 }}>
-          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
+      {/* The board: wooden frame, green slate, chalk canvas. minHeight:0 is what
+          lets the board shrink instead of shoving the chalk tray off-screen. */}
+      <main style={{ flex: 1, minHeight: 0, position: 'relative', padding: '4px 12px 10px' }}>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            borderRadius: 14,
+            padding: 7,
+            background: theme.woodGrad,
+            boxShadow: 'inset 0 1px 0 rgba(255,220,180,0.25), 0 10px 30px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 9,
+              background: theme.board,
+              boxShadow: 'inset 0 0 60px rgba(0,0,0,0.55)',
+              display: 'grid',
+              placeItems: 'center',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
+
+            {/* Class not started / finished: one clear chalk action, centre-board. */}
+            {notStarted && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'grid',
+                  placeItems: 'center',
+                  background: 'rgba(9,14,11,0.45)',
+                }}
+              >
+                <button
+                  onClick={() => player.play()}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    padding: '14px 26px',
+                    borderRadius: 30,
+                    border: 'none',
+                    background: theme.accent,
+                    color: theme.accentInk,
+                    font: `700 17px ${theme.font}`,
+                    cursor: 'pointer',
+                    boxShadow: `0 4px 0 #b98f22, 0 10px 30px ${theme.accent}44`,
+                  }}
+                >
+                  {player.state === 'ended' ? <ReplayIcon /> : <PlayIcon />}
+                  {player.state === 'ended' ? 'Dobara dekho' : 'Class shuru karo'}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-        <div style={{ position: 'absolute', right: 14, bottom: 10 }}>
+
+        <div style={{ position: 'absolute', right: 24, bottom: 22 }}>
           <Avatar mode={avatarMode} />
         </div>
       </main>
 
-      {/* Captions */}
-      <div
-        style={{
-          minHeight: 58,
-          padding: '4px 20px 10px',
-          display: 'grid',
-          placeItems: 'center',
-        }}
-      >
+      {/* Captions — what she's saying, in her handwriting */}
+      <div style={{ minHeight: 56, padding: '2px 20px 8px', display: 'grid', placeItems: 'center' }}>
         {caption && (
           <div
             style={{
-              maxWidth: '68ch',
+              maxWidth: '64ch',
               textAlign: 'center',
-              color: theme.text,
-              font: `15px/1.5 ${theme.font}`,
-              opacity: 0.92,
+              color: theme.chalk,
+              font: `400 16px/1.5 ${theme.fontChalk}`,
+              opacity: 0.94,
             }}
           >
             {caption}
@@ -191,22 +249,20 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
         )}
       </div>
 
-      {/* Bottom layer: controls while teaching, doubt panel while live */}
-      <div style={{ position: 'relative', height: inDoubt ? 0 : 76 }}>
-        {!inDoubt && (
-          <Controls
-            visible={controlsVisible || player.state !== 'playing'}
-            playing={player.state === 'playing'}
-            beatIndex={player.beatIndex}
-            beatCount={lesson.beats.length}
-            canRaiseHand={player.state === 'playing' || player.state === 'paused'}
-            onPlayPause={() =>
-              player.state === 'playing' ? player.pause() : player.play()
-            }
-            onRaiseHand={() => handoff.raiseHand(buildContext(lesson, player.beatIndex))}
-          />
-        )}
-      </div>
+      {/* Bottom: chalk tray while teaching, doubt slate while live. The tray is
+          an overlay, never in flow — it can never be pushed off-screen. */}
+      <div style={{ height: 70 }} />
+      {!inDoubt && (
+        <Controls
+          visible={trayVisible || player.state !== 'playing'}
+          playing={player.state === 'playing'}
+          beatIndex={player.beatIndex}
+          beatCount={lesson.beats.length}
+          canRaiseHand={player.state === 'playing' || player.state === 'paused'}
+          onPlayPause={() => (player.state === 'playing' ? player.pause() : player.play())}
+          onRaiseHand={() => handoff.raiseHand(buildContext(lesson, player.beatIndex))}
+        />
+      )}
       {inDoubt && (
         <DoubtPanel
           state={handoffState}
