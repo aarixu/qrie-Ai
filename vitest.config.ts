@@ -18,6 +18,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: [
       'packages/*/tests/**/*.test.{ts,tsx}',
+      'apps/*/tests/**/*.test.{ts,tsx}',
       'tools/*/tests/**/*.test.ts',
     ],
   },

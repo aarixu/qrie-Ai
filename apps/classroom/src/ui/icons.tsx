@@ -87,3 +87,45 @@ export function ReplayIcon({ size = 20, style }: IconProps) {
     </svg>
   );
 }
+
+export function ChevronIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)} strokeWidth={2.5}>
+      <path d="M9 5l7 7-7 7" />
+    </svg>
+  );
+}
+
+export function UserIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <circle cx={12} cy={8} r={4} />
+      <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
+    </svg>
+  );
+}
+
+export function FlameIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <path d="M12 2.5c1 3-0.5 4.5-1.8 6C8.6 10.3 7 12 7 15a5 5 0 0 0 10 0c0-2.2-1-3.9-2.2-5.4-.6 1.2-1.3 1.9-2.3 2.4.3-2.8-.2-6.5-.5-9.5z" />
+    </svg>
+  );
+}
+
+export function LockIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <rect x={5} y={11} width={14} height={9} rx={2} />
+      <path d="M8 11V7.5a4 4 0 0 1 8 0V11" />
+    </svg>
+  );
+}
+
+export function HomeIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-5v-6h-5v6h-5a1 1 0 0 1-1-1z" />
+    </svg>
+  );
+}

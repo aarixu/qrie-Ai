@@ -1,17 +1,37 @@
-import { useState } from 'react';
-import type { Lesson } from '@ai-tutor/lesson-format';
-import { Library } from './screens/Library';
-import { ClassRoom } from './screens/ClassRoom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { settingsStore, isOnboarded } from './stores/settings';
+import { useStore } from './stores/localStore';
+import { Onboarding } from './screens/Onboarding';
+import { Home } from './screens/Home';
+import { Chapter } from './screens/Chapter';
+import { LessonRoute } from './screens/ClassRoom';
+import { LessonComplete } from './screens/LessonComplete';
+import { Profile } from './screens/Profile';
 
-/**
- * Two screens, one useState. A router earns its place when there are more
- * screens than this — not before.
- */
+/** First run goes to onboarding; everything else passes through untouched. */
+function Gate({ children }: { children: React.ReactNode }) {
+  const settings = useStore(settingsStore);
+  const location = useLocation();
+  if (!isOnboarded(settings) && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
+  return <>{children}</>;
+}
+
 export default function App() {
-  const [lesson, setLesson] = useState<Lesson | null>(null);
-  return lesson ? (
-    <ClassRoom lesson={lesson} onExit={() => setLesson(null)} />
-  ) : (
-    <Library onOpen={setLesson} />
+  return (
+    <BrowserRouter>
+      <Gate>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
+          <Route path="/lesson/:lessonId" element={<LessonRoute />} />
+          <Route path="/complete/:lessonId" element={<LessonComplete />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Gate>
+    </BrowserRouter>
   );
 }

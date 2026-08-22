@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { findBeat, type Lesson } from '@ai-tutor/lesson-format';
 import { Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
@@ -8,11 +9,58 @@ import {
   createStubAgent,
   type HandoffState,
 } from '@ai-tutor/doubt-session';
+import { findEntry, fetchLesson } from '../lib/content';
+import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
+import { logDoubt } from '../stores/doubtLog';
 import { Avatar, type AvatarMode } from '../ui/Avatar';
 import { Controls } from '../ui/Controls';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { BackIcon, PlayIcon, ReplayIcon } from '../ui/icons';
 import { theme, chunky } from '../ui/theme';
+
+/** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
+export function LessonRoute() {
+  const { lessonId } = useParams<{ lessonId: string }>();
+  const navigate = useNavigate();
+  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const entry = lessonId ? await findEntry(lessonId) : null;
+      if (!entry) throw new Error('This lesson does not exist.');
+      const loaded = await fetchLesson(entry);
+      if (!cancelled) setLesson(loaded);
+    })().catch((e) => {
+      if (!cancelled) setError(String(e instanceof Error ? e.message : e));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [lessonId]);
+
+  if (error) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center', background: theme.bg, fontFamily: theme.font, padding: 24 }}>
+        <div style={{ textAlign: 'center', display: 'grid', gap: 14, justifyItems: 'center' }}>
+          <div style={{ color: theme.text, font: `800 17px ${theme.font}` }}>{error}</div>
+          <button onClick={() => navigate('/')} style={{ ...chunky(theme.blue, theme.blueDark), minHeight: 46, padding: '10px 22px' }}>
+            Back home
+          </button>
+        </div>
+      </div>
+    );
+  }
+  if (!lesson) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, display: 'grid', placeItems: 'center', background: theme.bg, fontFamily: theme.font }}>
+        <div style={{ color: theme.textFaint, font: `700 15px ${theme.font}` }}>Loading…</div>
+      </div>
+    );
+  }
+  return <ClassRoom lesson={lesson} onExit={() => navigate('/')} />;
+}
 
 /**
  * The classroom. Wiring only — every decision this screen appears to make is
@@ -22,6 +70,7 @@ import { theme, chunky } from '../ui/theme';
  *   the raise-hand handoff → doubt-session
  */
 export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }) {
+  const navigate = useNavigate();
   const tts = useMemo(() => createBrowserTts({ lang: 'en-IN' }), []);
   const player = usePlayer(lesson, tts);
 
@@ -77,6 +126,33 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     : player.state === 'playing'
       ? 'teaching'
       : 'idle';
+
+  // Progress + the data spine: save position per beat; completion routes to
+  // the celebration screen; every raised hand is logged with its beat.
+  useEffect(() => {
+    if (player.state === 'playing') saveBeat(lesson.id, player.beatIndex);
+  }, [lesson.id, player.state, player.beatIndex]);
+
+  useEffect(() => {
+    if (player.state !== 'ended') return;
+    markCompleted(lesson.id);
+    navigate(`/complete/${lesson.id}`, { replace: true });
+  }, [lesson.id, player.state, navigate]);
+
+  const raiseHand = () => {
+    const ctx = buildContext(lesson, player.beatIndex);
+    logDoubt(lesson.id, ctx.beatId);
+    handoff.raiseHand(ctx);
+  };
+
+  // Resume: an unfinished lesson restarts from its saved beat, not the top.
+  const savedBeat = progressStore.get().lessons[lesson.id]?.beatIndex ?? 0;
+  const canResume =
+    player.state === 'idle' && savedBeat > 0 && !isCompleted(progressStore.get(), lesson.id);
+  const startClass = () => {
+    player.play();
+    if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
+  };
 
   const caption = inDoubt ? (agentLines.at(-1) ?? '') : player.caption;
   const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
@@ -196,7 +272,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
               }}
             >
               <button
-                onClick={() => player.play()}
+                onClick={startClass}
                 style={{
                   ...chunky(theme.green, theme.greenDark),
                   display: 'flex',
@@ -207,7 +283,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
                 }}
               >
                 {player.state === 'ended' ? <ReplayIcon /> : <PlayIcon />}
-                {player.state === 'ended' ? 'Watch again' : 'Start class'}
+                {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
               </button>
             </div>
           )}
@@ -240,7 +316,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
           playing={player.state === 'playing'}
           canRaiseHand={player.state === 'playing' || player.state === 'paused'}
           onPlayPause={() => (player.state === 'playing' ? player.pause() : player.play())}
-          onRaiseHand={() => handoff.raiseHand(buildContext(lesson, player.beatIndex))}
+          onRaiseHand={raiseHand}
         />
       ) : (
         <DoubtPanel
