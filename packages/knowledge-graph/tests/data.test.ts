@@ -10,7 +10,10 @@ import { GraphIndex, loadGraph } from '../src/graph';
  */
 
 const DATA_DIR = path.resolve(process.cwd(), 'packages/knowledge-graph/data');
-const files = fs.readdirSync(DATA_DIR).filter((f) => f.endsWith('.json'));
+// Probe banks live in the same folder and are linted separately, in probes.test.ts.
+const files = fs
+  .readdirSync(DATA_DIR)
+  .filter((f) => f.endsWith('.json') && !f.endsWith('.probes.json'));
 
 describe('committed knowledge graphs', () => {
   it('there is at least one', () => {

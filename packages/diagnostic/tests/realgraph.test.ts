@@ -24,17 +24,17 @@ const index = new GraphIndex(
   ),
 );
 
-/** One probe per node — the shape the generated bank will have. */
-const bank: ProbeBank = {
-  version: 1,
-  probes: index.ids().map((id) => ({
-    id: `p-${id}`,
-    nodeId: id,
-    question: `Question about ${id}`,
-    options: ['right', 'a', 'b', 'c'],
-    correctIndex: 0,
-  })),
-};
+/**
+ * The REAL generated probe bank, not a synthetic one. Running the diagnostic
+ * against the actual questions is what makes this an integration test rather
+ * than a restatement of the unit tests.
+ */
+const bank: ProbeBank = JSON.parse(
+  fs.readFileSync(
+    path.resolve(process.cwd(), 'packages/knowledge-graph/data/class10-science.probes.json'),
+    'utf8',
+  ),
+);
 
 /** Answers honestly except for the nodes in `weak`. */
 function simulate(weak: ReadonlySet<string>, maxQuestions = 20) {
@@ -44,7 +44,8 @@ function simulate(weak: ReadonlySet<string>, maxQuestions = 20) {
     const probe = selectNextProbe(s, index, bank);
     if (!probe) break;
     asked += 1;
-    s = answerProbe(s, index, probe, weak.has(probe.nodeId) ? 2 : probe.correctIndex);
+    const wrong = (probe.correctIndex + 1) % 4;
+    s = answerProbe(s, index, probe, weak.has(probe.nodeId) ? wrong : probe.correctIndex);
   }
   return { session: s, asked, result: buildPlan(s, index) };
 }
