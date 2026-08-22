@@ -69,7 +69,7 @@ export function parseAgentReply(raw: string, validBeatIds: ReadonlySet<string>):
 }
 
 export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
-  const model = opts.model ?? 'gemini-3.1-flash';
+  const model = opts.model ?? 'gemini-3.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${opts.apiKey}`;
 
   return {
