@@ -16,6 +16,8 @@ export default defineConfig({
       '@ai-tutor/player': pkg('player'),
       '@ai-tutor/doubt-session': pkg('doubt-session'),
       '@ai-tutor/syllabus': pkg('syllabus'),
+      '@ai-tutor/knowledge-graph': pkg('knowledge-graph'),
+      '@ai-tutor/diagnostic': pkg('diagnostic'),
     },
   },
   server: { port: 5173 },

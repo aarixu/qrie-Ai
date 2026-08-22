@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SYLLABI, topicsOf, type TopicRow } from '../lib/content';
 import { progressStore, isCompleted } from '../stores/progress';
 import { useStore } from '../stores/localStore';
-import { theme } from '../ui/theme';
-import { BackIcon, CheckIcon, ChevronIcon, LockIcon, PlayIcon } from '../ui/icons';
+import { Screen, EmptyState } from '../ui/Screen';
+import { Icon } from '../ui/Icon';
 
 /**
- * A chapter's topic list. Every topic from the syllabus appears; the ones
- * without a lesson yet show as "coming soon" — the list IS the syllabus, and
- * content fills it in over time with zero code changes.
+ * A chapter's topic list. Every syllabus topic appears; the ones without a
+ * lesson yet show as "coming soon" — the list IS the syllabus, and content
+ * fills it in over time with zero code changes.
  */
 export function Chapter() {
   const { syllabusId, chapterId } = useParams<{ syllabusId: string; chapterId: string }>();
@@ -27,138 +27,60 @@ export function Chapter() {
 
   if (!syllabus || !chapter) {
     return (
-      <Shell onBack={() => navigate('/')} title="Chapter not found">
-        <div style={{ color: theme.textMuted, font: `700 15px ${theme.font}` }}>
-          This chapter doesn't exist. Head back home.
-        </div>
-      </Shell>
+      <Screen title="Chapter" onBack={() => navigate('/')}>
+        <EmptyState icon="error" title="Chapter not found" body="This chapter doesn't exist any more." />
+      </Screen>
     );
   }
 
   return (
-    <Shell onBack={() => navigate('/')} title={chapter.title} subtitle={`Class ${syllabus.klass} · ${syllabus.subject}`}>
-      <div style={{ display: 'grid', gap: 12 }}>
+    <Screen
+      title={chapter.title}
+      subtitle={`Class ${syllabus.klass} · ${syllabus.subject}`}
+      onBack={() => navigate('/')}
+    >
+      <div className="grid gap-3">
         {(rows ?? []).map(({ path, topic, lesson }, i) => {
           const done = lesson ? isCompleted(progress, lesson.id) : false;
           const available = lesson !== null;
-          const tile = done ? theme.green : available ? theme.blue : theme.border;
 
           return (
             <button
               key={path}
               onClick={() => lesson && navigate(`/lesson/${lesson.id}`)}
               disabled={!available}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 14,
-                textAlign: 'left',
-                padding: 14,
-                borderRadius: 16,
-                border: `2px solid ${theme.border}`,
-                borderBottomWidth: 4,
-                background: theme.bg,
-                cursor: available ? 'pointer' : 'default',
-                opacity: available ? 1 : 0.75,
-                transition: 'background 150ms',
-              }}
-              onMouseEnter={(e) => {
-                if (available) e.currentTarget.style.background = theme.bgSoft;
-              }}
-              onMouseLeave={(e) => (e.currentTarget.style.background = theme.bg)}
+              className={`flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all ${
+                available ? 'hover:shadow-md hover:scale-[1.01] cursor-pointer' : 'opacity-70 cursor-default'
+              }`}
             >
               <div
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: '50%',
-                  background: tile,
-                  boxShadow: available ? 'inset 0 -4px 0 rgba(0,0,0,0.14)' : 'none',
-                  display: 'grid',
-                  placeItems: 'center',
-                  color: available ? '#fff' : theme.textFaint,
-                  flexShrink: 0,
-                }}
+                className={`w-12 h-12 rounded-full grid place-items-center shrink-0 ${
+                  done
+                    ? 'bg-[#dcfce7] text-[#166534]'
+                    : available
+                      ? 'bg-primary text-on-primary'
+                      : 'bg-surface-container text-on-surface-variant'
+                }`}
               >
-                {done ? (
-                  <CheckIcon size={20} />
-                ) : available ? (
-                  <PlayIcon size={18} style={{ marginLeft: 2 }} />
-                ) : (
-                  <LockIcon size={18} />
-                )}
+                <Icon name={done ? 'check' : available ? 'play_arrow' : 'lock'} filled={available && !done} />
               </div>
 
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div
-                  style={{
-                    color: theme.textFaint,
-                    font: `800 10.5px ${theme.font}`,
-                    letterSpacing: 0.8,
-                  }}
-                >
-                  TOPIC {i + 1}
-                  {topic.estMinutes ? ` · ~${topic.estMinutes} MIN` : ''}
+              <div className="min-w-0 flex-1">
+                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">
+                  Topic {i + 1}
+                  {topic.estMinutes ? ` · ~${topic.estMinutes} min` : ''}
                 </div>
-                <div style={{ color: theme.text, font: `800 16.5px ${theme.font}` }}>
-                  {topic.title}
-                </div>
+                <div className="font-headline-md text-[17px] leading-6 text-on-surface">{topic.title}</div>
                 {!available && (
-                  <div style={{ color: theme.textFaint, font: `700 12.5px ${theme.font}` }}>
-                    Coming soon
-                  </div>
+                  <div className="font-label-md text-label-md text-on-surface-variant">Coming soon</div>
                 )}
               </div>
 
-              {available && <ChevronIcon size={20} style={{ color: theme.textFaint }} />}
+              {available && <Icon name="chevron_right" className="text-on-surface-variant" />}
             </button>
           );
         })}
       </div>
-    </Shell>
-  );
-}
-
-function Shell({
-  title,
-  subtitle,
-  onBack,
-  children,
-}: {
-  title: string;
-  subtitle?: string;
-  onBack(): void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div style={{ position: 'fixed', inset: 0, background: theme.bg, overflowY: 'auto', fontFamily: theme.font }}>
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: 'calc(16px + env(safe-area-inset-top)) 18px 40px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
-          <button
-            onClick={onBack}
-            aria-label="back"
-            style={{
-              width: 42,
-              height: 42,
-              display: 'grid',
-              placeItems: 'center',
-              border: 'none',
-              background: 'none',
-              color: theme.textFaint,
-              cursor: 'pointer',
-            }}
-          >
-            <BackIcon />
-          </button>
-          <div>
-            <div style={{ color: theme.text, font: `900 22px ${theme.font}` }}>{title}</div>
-            {subtitle && (
-              <div style={{ color: theme.textMuted, font: `700 13px ${theme.font}` }}>{subtitle}</div>
-            )}
-          </div>
-        </div>
-        {children}
-      </div>
-    </div>
+    </Screen>
   );
 }

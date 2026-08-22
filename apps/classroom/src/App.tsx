@@ -7,6 +7,8 @@ import { Chapter } from './screens/Chapter';
 import { LessonRoute } from './screens/ClassRoom';
 import { LessonComplete } from './screens/LessonComplete';
 import { Profile } from './screens/Profile';
+import { Search } from './screens/Search';
+import { Progress } from './screens/Progress';
 
 /** First run goes to onboarding; everything else passes through untouched. */
 function Gate({ children }: { children: React.ReactNode }) {
@@ -28,6 +30,8 @@ export default function App() {
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/progress" element={<Progress />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

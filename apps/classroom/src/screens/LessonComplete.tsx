@@ -3,14 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { findEntry, nextLessonAfter, type CatalogEntry } from '../lib/content';
 import { progressStore, computeStreak } from '../stores/progress';
 import { useStore } from '../stores/localStore';
-import { theme } from '../ui/theme';
-import { Button } from '../ui/Button';
-import { CheckIcon, ChevronIcon, FlameIcon, HomeIcon } from '../ui/icons';
+import { Icon } from '../ui/Icon';
 
 /**
- * The moment of celebration after a lesson — the screen every established
- * learning app treats as sacred: a big win mark, the streak, and ONE clear
- * next action.
+ * The moment of celebration after a lesson — the screen every learning app
+ * treats as sacred: a big win mark, the streak, and ONE clear next action.
+ * Deliberately full-bleed with no nav: nothing competes with the next step.
  */
 export function LessonComplete() {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -28,72 +26,43 @@ export function LessonComplete() {
   const streak = computeStreak(progress);
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: theme.bg,
-        overflowY: 'auto',
-        fontFamily: theme.font,
-        display: 'grid',
-        placeItems: 'center',
-        padding: 24,
-      }}
-    >
-      <div style={{ width: '100%', maxWidth: 420, textAlign: 'center', display: 'grid', gap: 18, justifyItems: 'center' }}>
-        <div
-          style={{
-            width: 108,
-            height: 108,
-            borderRadius: '50%',
-            background: theme.green,
-            boxShadow: `0 6px 0 ${theme.greenDark}`,
-            display: 'grid',
-            placeItems: 'center',
-            color: '#fff',
-          }}
-        >
-          <CheckIcon size={54} />
+    <div className="bg-background text-on-background min-h-screen font-body-md grid place-items-center px-margin-mobile py-10">
+      <div className="w-full max-w-[420px] flex flex-col items-center text-center gap-5">
+        <div className="w-28 h-28 rounded-full bg-primary text-on-primary grid place-items-center shadow-[0px_8px_30px_rgba(99,102,241,0.28)]">
+          <Icon name="check" filled className="text-[64px]" />
         </div>
 
         <div>
-          <h1 style={{ color: theme.text, font: `900 26px ${theme.font}`, margin: '0 0 4px' }}>
-            Lesson complete!
-          </h1>
+          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-1">Lesson complete!</h1>
           {entry && (
-            <div style={{ color: theme.textMuted, font: `700 15px ${theme.font}` }}>{entry.title}</div>
+            <p className="font-body-md text-body-md text-on-surface-variant">{entry.title}</p>
           )}
         </div>
 
         {streak > 0 && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '10px 18px',
-              borderRadius: 14,
-              border: `2px solid ${theme.border}`,
-              color: '#ff9600',
-              font: `800 15px ${theme.font}`,
-            }}
-          >
-            <FlameIcon size={20} />
+          <div className="flex items-center gap-2 bg-secondary-container text-on-secondary-container rounded-full px-4 py-2 font-label-md text-label-md shadow-sm">
+            <Icon name="local_fire_department" filled />
             {streak}-day streak
           </div>
         )}
 
-        <div style={{ display: 'grid', gap: 10, width: '100%', marginTop: 6 }}>
+        <div className="grid gap-3 w-full mt-2">
           {next && (
-            <Button variant="green" onClick={() => navigate(`/lesson/${next.id}`)}>
+            <button
+              onClick={() => navigate(`/lesson/${next.id}`)}
+              className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-2 border-[#2f2ebe] hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
+            >
               Next: {next.title}
-              <ChevronIcon size={18} />
-            </Button>
+              <Icon name="chevron_right" />
+            </button>
           )}
-          <Button variant="outline" onClick={() => navigate('/')}>
-            <HomeIcon size={18} />
+          <button
+            onClick={() => navigate('/')}
+            className="bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md px-6 py-3 rounded-xl border-2 border-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center gap-2"
+          >
+            <Icon name="home" />
             Back home
-          </Button>
+          </button>
         </div>
       </div>
     </div>

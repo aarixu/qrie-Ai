@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Subject-tile tints. Stitch expresses these as arbitrary values per card; as
+   component classes they stay in one place and every subject card matches. */
+@layer components {
+  .tile-green  { @apply bg-[#f0fdf4]; }
+  .tile-blue   { @apply bg-[#eff6ff]; }
+  .tile-purple { @apply bg-[#faf5ff]; }
+  .tile-orange { @apply bg-[#fff7ed]; }
+}
+
+@layer base {
+  /* Material Symbols ships one variable font; these settings are what make the
+     icon render filled vs outlined at the right weight. */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    user-select: none;
+  }
+  .material-symbols-outlined.filled {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  :focus-visible {
+    outline: 2px solid #4648d4;
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

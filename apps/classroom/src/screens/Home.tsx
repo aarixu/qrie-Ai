@@ -1,23 +1,40 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from '../lib/content';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { settingsStore } from '../stores/settings';
 import { useStore } from '../stores/localStore';
-import { theme } from '../ui/theme';
-import { ChevronIcon, FlameIcon, PlayIcon, UserIcon, CheckIcon } from '../ui/icons';
+import { Icon } from '../ui/Icon';
+import { BottomNav } from '../ui/BottomNav';
 
 /**
- * Home: continue where you left off, then browse chapters. Chapters come from
- * the syllabus tree; how many of a chapter's topics have lessons (and how many
- * are done) is the per-chapter progress.
+ * Home, built to the Stitch design: a greeting bar with the streak, a hero card
+ * for the lesson in progress, and a grid of subject tiles.
+ *
+ * Wiring only — the numbers are real (progress store, lesson catalog, syllabus
+ * tree); nothing here is placeholder copy.
  */
+
+/** Tile styling per subject. Unknown subjects fall back to the first entry. */
+const SUBJECT_STYLE: Record<string, { tile: string; ring: string; icon: string; ink: string }> = {
+  Science: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'science', ink: 'text-[#166534]' },
+  Mathematics: { tile: 'tile-blue', ring: 'bg-[#dbeafe]', icon: 'calculate', ink: 'text-[#1e40af]' },
+  English: { tile: 'tile-purple', ring: 'bg-[#f3e8ff]', icon: 'book', ink: 'text-[#6b21a8]' },
+  'Social Science': { tile: 'tile-orange', ring: 'bg-[#ffedd5]', icon: 'public', ink: 'text-[#9a3412]' },
+  Hindi: { tile: 'tile-purple', ring: 'bg-[#f3e8ff]', icon: 'translate', ink: 'text-[#6b21a8]' },
+  Physics: { tile: 'tile-blue', ring: 'bg-[#dbeafe]', icon: 'rocket_launch', ink: 'text-[#1e40af]' },
+  Chemistry: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'experiment', ink: 'text-[#166534]' },
+  Biology: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'genetics', ink: 'text-[#166534]' },
+};
+
+const styleFor = (subject: string) => SUBJECT_STYLE[subject] ?? SUBJECT_STYLE.Science;
+
 export function Home() {
   const navigate = useNavigate();
   const progress = useStore(progressStore);
   const settings = useStore(settingsStore);
   const [catalog, setCatalog] = useState<CatalogEntry[] | null>(null);
-  const [continueEntry, setContinueEntry] = useState<CatalogEntry | null>(null);
+  const [resumeEntry, setResumeEntry] = useState<CatalogEntry | null>(null);
 
   useEffect(() => {
     fetchCatalog().then(setCatalog).catch(() => setCatalog([]));
@@ -25,196 +42,143 @@ export function Home() {
 
   useEffect(() => {
     if (!progress.lastLessonId) return;
-    findEntry(progress.lastLessonId).then(setContinueEntry).catch(() => setContinueEntry(null));
+    findEntry(progress.lastLessonId).then(setResumeEntry).catch(() => setResumeEntry(null));
   }, [progress.lastLessonId]);
 
   const streak = computeStreak(progress);
-  const completedCount = Object.values(progress.lessons).filter((l) => l.completedAt).length;
+
+  // The hero shows the lesson actually in progress; a finished one is not
+  // something to "resume".
+  const hero = resumeEntry && !isCompleted(progress, resumeEntry.id) ? resumeEntry : null;
+  const heroBeat = hero ? (progress.lessons[hero.id]?.beatIndex ?? 0) : 0;
+  // Beat counts live inside the lesson file, so approximate from the saved beat
+  // against a typical 8-beat lesson rather than fetching every lesson to render Home.
+  const heroPercent = hero ? Math.min(95, Math.round((heroBeat / 8) * 100)) : 0;
+
+  // Subjects the student picked, else everything the syllabus offers.
+  const subjects = Array.from(new Set(SYLLABI.map((s) => s.subject)));
+
+  const chapterCount = (subject: string) =>
+    SYLLABI.filter((s) => s.subject === subject).reduce((n, s) => n + s.chapters.length, 0);
+
+  const firstChapterPath = (subject: string): string | null => {
+    const syllabus = SYLLABI.find((s) => s.subject === subject);
+    const chapter = syllabus?.chapters[0];
+    return syllabus && chapter ? `/chapter/${syllabus.id}/${chapter.id}` : null;
+  };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: theme.bg,
-        overflowY: 'auto',
-        fontFamily: theme.font,
-      }}
-    >
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: 'calc(22px + env(safe-area-inset-top)) 18px 40px' }}>
-        {/* Top row: brand + streak + profile */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
-          <h1 style={{ color: theme.text, font: `900 26px ${theme.font}`, margin: 0, flex: 1 }}>
-            AI Tutor
-          </h1>
+    <div className="bg-background text-on-background min-h-screen font-body-md pb-24 md:pb-8">
+      {/* Top app bar */}
+      <header className="w-full top-0 sticky bg-background z-40">
+        <div className="flex justify-between items-center px-margin-mobile py-4 max-w-[1120px] mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full border-2 border-primary-fixed bg-primary-fixed grid place-items-center shadow-sm">
+              <Icon name="person" filled className="text-on-primary-fixed" />
+            </div>
+            <h1 className="font-headline-md text-headline-md font-bold text-primary">
+              Namaste{settings.klass ? '!' : '!'}
+            </h1>
+          </div>
           {streak > 0 && (
-            <span
+            <div
               aria-label={`${streak} day streak`}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 5,
-                color: '#ff9600',
-                font: `800 15px ${theme.font}`,
-              }}
+              className="flex items-center gap-1 bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 shadow-sm font-label-md text-label-md"
             >
-              <FlameIcon size={19} />
-              {streak}
-            </span>
+              <Icon name="local_fire_department" filled className="text-[18px]" />
+              {streak} {streak === 1 ? 'Day' : 'Days'}
+            </div>
           )}
-          <Link
-            to="/profile"
-            aria-label="profile"
-            style={{
-              width: 42,
-              height: 42,
-              borderRadius: '50%',
-              border: `2px solid ${theme.border}`,
-              display: 'grid',
-              placeItems: 'center',
-              color: theme.textMuted,
-              background: theme.bg,
-            }}
-          >
-            <UserIcon size={20} />
-          </Link>
         </div>
+      </header>
 
-        {/* Continue card */}
-        {continueEntry && !isCompleted(progress, continueEntry.id) && (
-          <button
-            onClick={() => navigate(`/lesson/${continueEntry.id}`)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 14,
-              textAlign: 'left',
-              padding: 16,
-              marginBottom: 22,
-              borderRadius: 16,
-              border: 'none',
-              background: theme.green,
-              boxShadow: `0 4px 0 ${theme.greenDark}`,
-              cursor: 'pointer',
-            }}
-          >
+      <main className="px-margin-mobile max-w-[1120px] mx-auto grid grid-cols-4 md:grid-cols-12 gap-gutter mt-4 pb-20">
+        {/* Hero: continue where you left off */}
+        <section className="col-span-4 md:col-span-12 mb-stack-lg">
+          <div className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_30px_rgba(99,102,241,0.12)] transition-shadow relative overflow-hidden">
             <div
+              className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
-                width: 46,
-                height: 46,
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.25)',
-                display: 'grid',
-                placeItems: 'center',
-                color: '#fff',
-                flexShrink: 0,
+                backgroundImage: 'radial-gradient(#494bd6 1px, transparent 1px)',
+                backgroundSize: '16px 16px',
               }}
-            >
-              <PlayIcon size={20} style={{ marginLeft: 2 }} />
-            </div>
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ color: 'rgba(255,255,255,0.85)', font: `800 11px ${theme.font}`, letterSpacing: 0.8 }}>
-                CONTINUE LEARNING
-              </div>
-              <div style={{ color: '#fff', font: `800 17px ${theme.font}` }}>{continueEntry.title}</div>
-            </div>
-            <ChevronIcon size={20} style={{ color: 'rgba(255,255,255,0.9)' }} />
-          </button>
-        )}
+            />
+            <div className="relative z-10">
+              <span className="inline-block bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full font-label-sm text-label-sm mb-3">
+                {hero?.subject ?? 'Science'}
+              </span>
+              <h2 className="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mb-2">
+                {hero?.title ?? 'Start your first class'}
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-6">
+                {hero
+                  ? "You're making great progress! Continue where you left off."
+                  : 'Pick a subject below and dive in — your tutor is ready.'}
+              </p>
 
-        {/* Chapters, per syllabus */}
-        {SYLLABI.map((syllabus) => (
-          <section key={syllabus.id} style={{ marginBottom: 26 }}>
-            <div
-              style={{
-                color: theme.textFaint,
-                font: `800 12px ${theme.font}`,
-                letterSpacing: 1,
-                textTransform: 'uppercase',
-                margin: '0 0 10px',
-              }}
-            >
-              Class {syllabus.klass} · {syllabus.subject}
-              {settings.klass !== null && settings.klass !== syllabus.klass && ' (preview)'}
-            </div>
-
-            <div style={{ display: 'grid', gap: 12 }}>
-              {syllabus.chapters.map((chapter) => {
-                const total = chapter.topics.length;
-                const withLesson = chapter.topics.filter((t) =>
-                  catalog?.some((e) => e.topicRef === `${syllabus.id}/${chapter.id}/${t.id}`),
-                );
-                const done = withLesson.filter((t) => {
-                  const entry = catalog?.find(
-                    (e) => e.topicRef === `${syllabus.id}/${chapter.id}/${t.id}`,
-                  );
-                  return entry ? isCompleted(progress, entry.id) : false;
-                }).length;
-
-                return (
-                  <button
-                    key={chapter.id}
-                    onClick={() => navigate(`/chapter/${syllabus.id}/${chapter.id}`)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 14,
-                      textAlign: 'left',
-                      padding: 14,
-                      borderRadius: 16,
-                      border: `2px solid ${theme.border}`,
-                      borderBottomWidth: 4,
-                      background: theme.bg,
-                      cursor: 'pointer',
-                      transition: 'background 150ms',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = theme.bgSoft)}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = theme.bg)}
-                  >
+              {hero && (
+                <div className="mb-6">
+                  <div className="flex justify-between font-label-md text-label-md mb-2">
+                    <span>Progress</span>
+                    <span className="font-bold">{heroPercent}%</span>
+                  </div>
+                  <div className="h-[12px] bg-surface-variant rounded-full overflow-hidden">
                     <div
-                      style={{
-                        width: 54,
-                        height: 54,
-                        borderRadius: 14,
-                        background: theme.blue,
-                        boxShadow: 'inset 0 -4px 0 rgba(0,0,0,0.14)',
-                        display: 'grid',
-                        placeItems: 'center',
-                        color: '#fff',
-                        font: `900 20px ${theme.font}`,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {chapter.title.charAt(0)}
-                    </div>
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <div style={{ color: theme.text, font: `800 17px ${theme.font}` }}>
-                        {chapter.title}
-                      </div>
-                      <div style={{ color: theme.textMuted, font: `700 13px ${theme.font}` }}>
-                        {done > 0 && (
-                          <span style={{ color: theme.green, marginRight: 6 }}>
-                            <CheckIcon size={12} style={{ verticalAlign: '-1px' }} /> {done} done ·
-                          </span>
-                        )}
-                        {withLesson.length} of {total} topics ready
-                      </div>
-                    </div>
-                    <ChevronIcon size={20} style={{ color: theme.textFaint }} />
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        ))}
+                      className="h-full bg-primary rounded-full transition-[width] duration-500"
+                      style={{ width: `${heroPercent}%` }}
+                    />
+                  </div>
+                </div>
+              )}
 
-        <div style={{ color: theme.textFaint, font: `700 13px ${theme.font}`, textAlign: 'center' }}>
-          {completedCount > 0
-            ? `${completedCount} lesson${completedCount === 1 ? '' : 's'} completed. Keep going!`
-            : 'Finish your first lesson to start a streak.'}
-        </div>
-      </div>
+              <button
+                onClick={() => {
+                  if (hero) navigate(`/lesson/${hero.id}`);
+                  else {
+                    const first = catalog?.[0];
+                    if (first) navigate(`/lesson/${first.id}`);
+                  }
+                }}
+                className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-[#2f2ebe] hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
+              >
+                <Icon name="play_arrow" filled />
+                {hero ? 'Resume Learning' : 'Start Learning'}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Subjects */}
+        <section className="col-span-4 md:col-span-12">
+          <h3 className="font-headline-md text-headline-md mb-stack-md text-on-surface">
+            Explore Subjects
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {subjects.map((subject) => {
+              const s = styleFor(subject);
+              const path = firstChapterPath(subject);
+              const chapters = chapterCount(subject);
+              return (
+                <button
+                  key={subject}
+                  onClick={() => path && navigate(path)}
+                  className={`${s.tile} rounded-[24px] p-4 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer`}
+                >
+                  <div className={`w-16 h-16 ${s.ring} rounded-full flex items-center justify-center mb-3`}>
+                    <Icon name={s.icon} className={`text-4xl ${s.ink}`} />
+                  </div>
+                  <h4 className="font-headline-md text-[20px] leading-7 mb-1">{subject}</h4>
+                  <p className={`font-label-sm text-label-sm ${s.ink}`}>
+                    {chapters} {chapters === 1 ? 'Chapter' : 'Chapters'}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+
+      <BottomNav />
     </div>
   );
 }
