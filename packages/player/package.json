@@ -1,0 +1,14 @@
+{
+  "name": "@ai-tutor/player",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@ai-tutor/lesson-format": "*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  }
+}

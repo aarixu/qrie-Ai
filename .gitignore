@@ -16,3 +16,4 @@ assets/build/
 .DS_Store
 Thumbs.db
 .claude/settings.local.json
+tools/bin/

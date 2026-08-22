@@ -1,0 +1,25 @@
+{
+  "name": "ai-tutor",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace @ai-tutor/classroom",
+    "build": "npm run build --workspace @ai-tutor/classroom",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.185.4",
+    "jsdom": "^26.1.0",
+    "typescript": "~6.0.2",
+    "vitest": "^4.1.11"
+  }
+}

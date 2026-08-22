@@ -1,0 +1,13 @@
+{
+  "lessons": [
+    {
+      "id": "class10-heart-mini",
+      "title": "Heart & Circulation",
+      "subtitle": "Class 10 · Life Processes",
+      "class": 10,
+      "subject": "Science",
+      "path": "class10-heart-mini/lesson.json",
+      "status": "dev-fixture"
+    }
+  ]
+}
