@@ -11,11 +11,18 @@ import {
 } from '@ai-tutor/doubt-session';
 import { findEntry, fetchLesson } from '../lib/content';
 import { createGeminiAgent } from '../lib/geminiAgent';
+import { createLiveAgent } from '../lib/liveAgent';
+import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { logDoubt } from '../stores/doubtLog';
 import { Avatar, type AvatarMode } from '../ui/Avatar';
 import { Controls } from '../ui/Controls';
 import { DoubtPanel } from '../ui/DoubtPanel';
+import {
+  VoiceDoubtPanel,
+  type VoiceDoubtState,
+  type VoiceTranscriptLine,
+} from '../ui/VoiceDoubtPanel';
 import { BackIcon, PlayIcon, ReplayIcon } from '../ui/icons';
 import { theme, chunky } from '../ui/theme';
 
@@ -83,12 +90,47 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
   const [agentLines, setAgentLines] = useState<string[]>([]);
   const [recallBeatId, setRecallBeatId] = useState<string | null>(null);
 
-  // The real tutor when a key is configured; the scripted stub otherwise, so
-  // the app runs (and the seam demos) with zero setup.
+  // Live-voice session state, fed by the live agent's callbacks.
+  const [liveState, setLiveState] = useState<VoiceDoubtState>('connecting');
+  const [transcript, setTranscript] = useState<VoiceTranscriptLine[]>([]);
+  const [micLevel, setMicLevel] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [voiceMode, setVoiceMode] = useState(false);
+  // The live session polls this per audio chunk, so it must read the latest
+  // value rather than the one captured when the agent was built.
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+
+  /**
+   * Three tutors behind one interface, best first:
+   *   voice  — Gemini Live, the student speaks and she speaks back (needs a key + mic)
+   *   text   — Gemini over REST, the student types (key, no mic)
+   *   stub   — a scripted script (no key at all), so the app always runs
+   */
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+
   const agent = useMemo(() => {
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
-    return apiKey ? createGeminiAgent({ apiKey }) : createStubAgent();
-  }, []);
+    if (!apiKey) return createStubAgent();
+    if (voiceMode) {
+      return createLiveAgent({
+        apiKey,
+        onState: setLiveState,
+        onMicLevel: setMicLevel,
+        isMuted: () => mutedRef.current,
+        onTranscript: (line) =>
+          // Non-final lines arrive as the whole line so far — replace the last
+          // entry in place rather than appending a growing pile of fragments.
+          setTranscript((prev) => {
+            const last = prev[prev.length - 1];
+            if (last && last.role === line.role && !last.final) {
+              return [...prev.slice(0, -1), line];
+            }
+            return [...prev, line];
+          }),
+      });
+    }
+    return createGeminiAgent({ apiKey });
+  }, [apiKey, voiceMode]);
 
   const handoff = useMemo(
     () =>
@@ -107,10 +149,21 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     [lesson, tts, agent],
   );
 
+  // raiseHand defers by a tick so the freshly-selected agent is in place; it
+  // must reach the handoff built from THAT agent, not the one it closed over.
+  const handoffRef = useRef(handoff);
+  handoffRef.current = handoff;
+
   useEffect(() => {
     const offState = handoff.on('statechange', () => {
       setHandoffState(handoff.state);
-      if (handoff.state === 'PLAYING') setAgentLines([]);
+      if (handoff.state === 'PLAYING') {
+        // Doubt over — clear the room so the next one starts fresh.
+        setAgentLines([]);
+        setTranscript([]);
+        setMicLevel(0);
+        setMuted(false);
+      }
     });
     const offSay = handoff.on('agent-say', (line) => {
       if (line) setAgentLines((prev) => [...prev, line]);
@@ -147,9 +200,28 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     navigate(`/complete/${lesson.id}`, { replace: true });
   }, [lesson.id, player.state, navigate]);
 
-  const raiseHand = () => {
+  /**
+   * Raise hand. The mic is requested BEFORE the session opens: a permission
+   * prompt appearing while the tutor is already greeting would swallow her
+   * first sentence. A refused mic silently falls back to the typed path.
+   */
+  const raiseHand = async () => {
     const ctx = buildContext(lesson, player.beatIndex);
     logDoubt(lesson.id, ctx.beatId);
+
+    if (apiKey) {
+      const status = await requestMic();
+      const useVoice = status === 'granted';
+      setVoiceMode(useVoice);
+      if (useVoice) {
+        setLiveState('connecting');
+        setTranscript([]);
+      }
+      // The agent is rebuilt from voiceMode, so hand off on the next tick with
+      // the correct one in place.
+      setTimeout(() => handoffRef.current.raiseHand(ctx), 0);
+      return;
+    }
     handoff.raiseHand(ctx);
   };
 
@@ -325,6 +397,18 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
           canRaiseHand={player.state === 'playing' || player.state === 'paused'}
           onPlayPause={() => (player.state === 'playing' ? player.pause() : player.play())}
           onRaiseHand={raiseHand}
+        />
+      ) : voiceMode ? (
+        <VoiceDoubtPanel
+          // Until the agent has actually connected, the seam is still speaking
+          // its bridge line — show "connecting" rather than the agent's state.
+          state={handoffState === 'LIVE' ? liveState : 'connecting'}
+          transcript={transcript}
+          micLevel={micLevel}
+          muted={muted}
+          onToggleMute={() => setMuted((m) => !m)}
+          onEnd={() => handoff.endDoubt()}
+          onSendText={(text) => handoff.sendUserText(text)}
         />
       ) : (
         <DoubtPanel

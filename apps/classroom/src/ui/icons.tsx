@@ -129,3 +129,35 @@ export function HomeIcon({ size = 20, style }: IconProps) {
     </svg>
   );
 }
+
+/** Live microphone — the voice doubt's primary control. */
+export function MicIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <rect x={9} y={3} width={6} height={11} rx={3} />
+      <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+      <path d="M12 18v3" />
+    </svg>
+  );
+}
+
+/** Muted microphone: the same glyph struck through, so the toggle reads as one object. */
+export function MicOffIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <rect x={9} y={3} width={6} height={11} rx={3} />
+      <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0" />
+      <path d="M12 18v3" />
+      <line x1={4.5} y1={3.5} x2={19.5} y2={20.5} strokeWidth={2.4} />
+    </svg>
+  );
+}
+
+/** Stop — ends a live voice session. Filled, like PlayIcon, so it reads as a transport control. */
+export function StopIcon({ size = 20, style }: IconProps) {
+  return (
+    <svg {...svgProps(size, style)}>
+      <rect x={6.5} y={6.5} width={11} height={11} rx={2.5} fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
