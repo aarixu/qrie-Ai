@@ -1,4 +1,11 @@
-import { GraphIndex, loadGraph, type KnowledgeGraph, type ProbeBank } from '@ai-tutor/knowledge-graph';
+import {
+  GraphIndex,
+  loadGraph,
+  type ClassLink,
+  type KnowledgeGraph,
+  type LearningNode,
+  type ProbeBank,
+} from '@ai-tutor/knowledge-graph';
 
 /**
  * The diagnostic's data layer: every authored Learning Outcome Map, merged to
@@ -43,6 +50,8 @@ const graphModules = import.meta.glob('../../../../packages/knowledge-graph/data
 interface AuthoredMap {
   graph: KnowledgeGraph;
   bank: ProbeBank;
+  /** Cross-class prerequisites, applied only when both ends are loaded. */
+  links: ClassLink[];
 }
 
 /** All authored maps, keyed by data-file id (e.g. "class10-science"), loaded once. */
@@ -50,13 +59,15 @@ function authoredMaps(): Map<string, AuthoredMap> {
   const maps = new Map<string, AuthoredMap>();
   for (const [path, module] of Object.entries(graphModules)) {
     const file = path.split('/').pop()!;
-    if (file.endsWith('.probes.json')) continue;
+    if (file.endsWith('.probes.json') || file.endsWith('.links.json')) continue;
     const id = file.replace(/\.json$/, '');
     try {
       const graph = loadGraph(module.default);
       const probes = graphModules[path.replace(/\.json$/, '.probes.json')];
       const bank = (probes?.default ?? { version: 1, probes: [] }) as ProbeBank;
-      maps.set(id, { graph, bank });
+      const sidecar = graphModules[path.replace(/\.json$/, '.links.json')];
+      const links = ((sidecar?.default ?? { links: [] }) as { links?: ClassLink[] }).links ?? [];
+      maps.set(id, { graph, bank, links });
     } catch (error) {
       // loadGraph fails fast on a malformed or cyclic map. The details are for
       // whoever authored it; the student just gets the "not ready yet" path.
@@ -91,6 +102,34 @@ export const lineageSubjects = (subjects: readonly string[]): string[] => {
   return [...expanded];
 };
 
+/**
+ * Fold cross-class links into a merged node set. Pure, and exported for tests.
+ *
+ * Every node is CLONED before an edge is added — the source arrays belong to
+ * eagerly-imported modules shared by every caller, and mutating one student's
+ * window into them would quietly rewrite everyone else's. A link is applied
+ * only when both of its ends are present: a window that stops at Class 8 must
+ * not carry edges dangling into Class 7.
+ */
+export function applyLinks(nodes: readonly LearningNode[], links: readonly ClassLink[]): LearningNode[] {
+  const present = new Set(nodes.map((n) => n.id));
+  const extra = new Map<string, string[]>();
+  for (const link of links) {
+    if (!present.has(link.nodeId) || !present.has(link.prerequisiteId)) continue;
+    const list = extra.get(link.nodeId) ?? [];
+    if (!list.includes(link.prerequisiteId)) list.push(link.prerequisiteId);
+    extra.set(link.nodeId, list);
+  }
+  return nodes.map((node) => {
+    const added = extra.get(node.id);
+    if (!added) return node;
+    return {
+      ...node,
+      prerequisites: [...node.prerequisites, ...added.filter((id) => !node.prerequisites.includes(id))],
+    };
+  });
+}
+
 const memo = new Map<string, DiagnosticData | null>();
 
 /**
@@ -109,25 +148,27 @@ export function loadDiagnosticDataFor(klass: number, subjects: readonly string[]
   const expanded = lineageSubjects(subjects);
   const wanted = expanded.length > 0 ? new Set(expanded) : null;
 
-  const nodes = [];
+  const nodes: LearningNode[] = [];
   const probes = [];
+  const links: ClassLink[] = [];
   let ownClassCovered = false;
   let minKlassSeen = klass;
 
-  for (const { graph, bank } of maps().values()) {
-    const sample = graph.nodes[0];
+  for (const map of maps().values()) {
+    const sample = map.graph.nodes[0];
     if (!sample) continue;
     if (sample.klass > klass || sample.klass < klass - LOOK_BACK) continue;
     if (wanted && !wanted.has(sample.subject)) continue;
-    nodes.push(...graph.nodes);
-    probes.push(...bank.probes);
+    nodes.push(...map.graph.nodes);
+    probes.push(...map.bank.probes);
+    links.push(...map.links);
     if (sample.klass === klass) ownClassCovered = true;
     minKlassSeen = Math.min(minKlassSeen, sample.klass);
   }
 
   const data: DiagnosticData | null = ownClassCovered
     ? {
-        index: new GraphIndex({ version: 1, nodes }),
+        index: new GraphIndex({ version: 1, nodes: applyLinks(nodes, links) }),
         bank: { version: 1, probes },
         subjects: expanded,
         lookBack: klass - minKlassSeen,

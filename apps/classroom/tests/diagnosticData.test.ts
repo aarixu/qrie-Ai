@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   LOOK_BACK,
+  applyLinks,
   lineageSubjects,
   loadDiagnosticData,
   loadDiagnosticDataFor,
@@ -80,5 +81,33 @@ describe('loadDiagnosticDataFor', () => {
     for (const klass of mappedClasses) {
       expect(loadDiagnosticData(klass)).not.toBeNull();
     }
+  });
+});
+
+describe('applyLinks', () => {
+  const node = (id: string, klass: number, prerequisites: string[] = []) => ({
+    id, klass, subject: 'Science', chapter: 'c', title: id,
+    outcome: 'state ' + id, prerequisites, difficulty: 2,
+  });
+
+  it('adds the edge when both ends are in the window, without touching the source', () => {
+    const c9 = node('c9-a', 9);
+    const merged = applyLinks([c9, node('c8-x', 8)], [{ nodeId: 'c9-a', prerequisiteId: 'c8-x' }]);
+    expect(merged.find((n) => n.id === 'c9-a')!.prerequisites).toEqual(['c8-x']);
+    // The module's own node object must stay untouched — it is shared.
+    expect(c9.prerequisites).toEqual([]);
+  });
+
+  it('drops a link whose far end fell outside the window', () => {
+    const merged = applyLinks([node('c9-a', 9)], [{ nodeId: 'c9-a', prerequisiteId: 'c7-gone' }]);
+    expect(merged.find((n) => n.id === 'c9-a')!.prerequisites).toEqual([]);
+  });
+
+  it('never doubles an edge the node already carries', () => {
+    const merged = applyLinks(
+      [node('c9-a', 9, ['c8-x']), node('c8-x', 8)],
+      [{ nodeId: 'c9-a', prerequisiteId: 'c8-x' }],
+    );
+    expect(merged.find((n) => n.id === 'c9-a')!.prerequisites).toEqual(['c8-x']);
   });
 });

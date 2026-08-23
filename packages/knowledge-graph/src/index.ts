@@ -1,5 +1,7 @@
 // Public surface of @ai-tutor/knowledge-graph. See README.md for the contract.
 export type {
+  ClassLink,
+  ClassLinks,
   LearningNode,
   KnowledgeGraph,
   Probe,

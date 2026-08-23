@@ -60,6 +60,33 @@ export interface ProbeBank {
   probes: Probe[];
 }
 
+/**
+ * One cross-class prerequisite: `nodeId` (in this map) genuinely cannot be
+ * done without `prerequisiteId` (in the map one class below).
+ *
+ * Links live in a SIDECAR file (<id>.links.json) rather than on the node,
+ * deliberately: each class's graph stays self-contained and valid on its own,
+ * and a link is applied only when both of its ends are actually loaded — a
+ * Class 10 window that stops at Class 8 must not carry edges dangling into
+ * Class 7.
+ */
+export interface ClassLink {
+  nodeId: string;
+  prerequisiteId: string;
+}
+
+export interface ClassLinks {
+  version: 1;
+  links: ClassLink[];
+  /**
+   * Tool bookkeeping: chapters the link pass has finished, INCLUDING those
+   * whose honest answer was zero links — without this, an unlinked chapter is
+   * indistinguishable from an unvisited one and gets re-asked every run.
+   * Consumers of the links ignore it.
+   */
+  chaptersDone?: string[];
+}
+
 /** Belief that the student holds each node: 0 (certainly not) .. 1 (certainly). */
 export type Mastery = Record<string, number>;
 

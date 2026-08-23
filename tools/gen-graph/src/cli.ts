@@ -3,8 +3,10 @@ import path from 'node:path';
 import { loadGraph } from '../../../packages/knowledge-graph/src/graph.ts';
 import type { KnowledgeGraph, ProbeBank } from '../../../packages/knowledge-graph/src/types.ts';
 import { loadSyllabus, type SubjectSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
+import type { ClassLinks } from '../../../packages/knowledge-graph/src/types.ts';
 import { createAdapterFromEnv, type LlmAdapter } from './llm.ts';
 import { generateNodes, generateProbes, mergeIntoGraph } from './generate.ts';
+import { foundationOf, generateLinks } from './link.ts';
 
 /**
  * Grow the Learning Outcome Map.
@@ -40,6 +42,7 @@ Usage:
   --count      target nodes per chapter (default ${DEFAULT_COUNT})
   --probes     also write <out-basename>.probes.json
   --probes-only  skip node generation; write probes for nodes in --out that lack one
+  --link-classes  connect each syllabus to the class below it; writes <out-basename>.links.json
   --dry-run    print the prompts and write nothing
 
 Env:
@@ -116,6 +119,88 @@ async function fillProbeGaps(
     }
   }
   return { added, failed };
+}
+
+function readLinks(file: string): ClassLinks {
+  if (!fs.existsSync(file)) return { version: 1, links: [] };
+  return JSON.parse(fs.readFileSync(file, 'utf8')) as ClassLinks;
+}
+
+/**
+ * The link-classes pass: one chapter of the syllabus at a time, offered the
+ * entire foundation map to point into. Resumable at chapter granularity, same
+ * as node generation — chaptersDone in the sidecar records what is finished,
+ * because "no links" is a completed answer too, not an unvisited chapter.
+ */
+async function linkSyllabus(
+  syllabus: SubjectSyllabus,
+  adapter: LlmAdapter,
+  opts: Pick<RunOptions, 'out' | 'dryRun'>,
+): Promise<RunTally> {
+  const tally: RunTally = { added: 0, probesAdded: 0, failed: 0 };
+  const graph = readGraph(opts.out);
+  if (graph.nodes.length === 0) {
+    console.log('  no nodes yet — generate the map before linking it.');
+    return tally;
+  }
+
+  const below = foundationOf(syllabus.klass, syllabus.subject);
+  if (!below) {
+    console.log(`  Class ${syllabus.klass} is the bottom of the map — nothing to link into.`);
+    return tally;
+  }
+  const foundationFile = path.join(
+    path.dirname(opts.out),
+    `class${below.klass}-${below.subject.toLowerCase()}.json`,
+  );
+  const foundationGraph = readGraph(foundationFile);
+  if (foundationGraph.nodes.length === 0) {
+    console.log(
+      `  foundation map ${path.basename(foundationFile)} has no nodes yet — generate it first.`,
+    );
+    return tally;
+  }
+
+  const linksFile = opts.out.replace(/\.json$/, '.links.json');
+  const bank = readLinks(linksFile);
+  bank.chaptersDone ??= [];
+  const done = new Set(bank.chaptersDone);
+
+  // The GRAPH's chapters, not the syllabus's — the map's chapter vocabulary is
+  // its own, and every node deserves a chance at a foundation.
+  const chapters = [...new Set(graph.nodes.map((n) => n.chapter))];
+
+  for (const chapterId of chapters) {
+    const chapterNodes = graph.nodes.filter((n) => n.chapter === chapterId);
+    if (done.has(chapterId)) {
+      console.log(`─── ${chapterId} — already linked, skipped`);
+      continue;
+    }
+    console.log(`─── ${chapterId} (${chapterNodes.length} nodes) ───`);
+    if (opts.dryRun) continue;
+
+    const result = await generateLinks(chapterNodes, foundationGraph.nodes, adapter, {
+      klass: syllabus.klass,
+      subject: syllabus.subject,
+      foundationKlass: below.klass,
+      foundationSubject: below.subject,
+    });
+    if (!result.ok) {
+      tally.failed += 1;
+      console.error(`  ✗ ${result.errors.slice(0, 3).join('; ')}`);
+      continue;
+    }
+    bank.links.push(...result.value);
+    bank.chaptersDone.push(chapterId);
+    tally.added += result.value.length;
+    fs.writeFileSync(linksFile, `${JSON.stringify(bank, null, 2)}\n`);
+    console.log(`  ✓ ${result.value.length} links (file is now ${bank.links.length})`);
+  }
+
+  if (!opts.dryRun) {
+    console.log(`  ${path.relative(process.cwd(), linksFile)}: ${bank.links.length} links.`);
+  }
+  return tally;
 }
 
 async function runSyllabus(
@@ -265,6 +350,7 @@ async function main(): Promise<void> {
   const dryRun = argv.includes('--dry-run');
   const wantProbes = argv.includes('--probes');
   const probesOnly = argv.includes('--probes-only');
+  const linkClasses = argv.includes('--link-classes');
   const targetCount = Number(flag(argv, '--count') ?? DEFAULT_COUNT);
 
   const availableIds = fs
@@ -273,8 +359,8 @@ async function main(): Promise<void> {
     .map((f) => f.replace('.json', ''));
 
   if (!syllabusArg) usage(`Missing --syllabus. Available: ${availableIds.join(', ')}, all`);
-  if (!chapterArg) usage('Missing --chapter (or "all").');
-  if (syllabusArg === 'all' && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
+  if (!chapterArg && !linkClasses) usage('Missing --chapter (or "all").');
+  if (syllabusArg === 'all' && !linkClasses && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
   if (syllabusArg === 'all' && outArg) usage('--syllabus all derives each out-file; drop --out.');
 
   const syllabusIds = syllabusArg === 'all' ? availableIds : [syllabusArg];
@@ -290,15 +376,18 @@ async function main(): Promise<void> {
     const syllabus = loadSyllabus(JSON.parse(fs.readFileSync(syllabusFile, 'utf8')));
 
     console.log(`\n════ ${syllabus.subject} — Class ${syllabus.klass} (${id}) ════`);
-    const tally = await runSyllabus(syllabus, adapter, {
-      chapterArg,
-      out: path.resolve(process.cwd(), outArg ?? path.join(GRAPH_DIR, `${id}.json`)),
-      dryRun,
-      wantProbes,
-      probesOnly,
-      targetCount,
-      skipDone: syllabusArg === 'all',
-    });
+    const out = path.resolve(process.cwd(), outArg ?? path.join(GRAPH_DIR, `${id}.json`));
+    const tally = linkClasses
+      ? await linkSyllabus(syllabus, adapter, { out, dryRun })
+      : await runSyllabus(syllabus, adapter, {
+          chapterArg: chapterArg!,
+          out,
+          dryRun,
+          wantProbes,
+          probesOnly,
+          targetCount,
+          skipDone: syllabusArg === 'all',
+        });
     total.added += tally.added;
     total.probesAdded += tally.probesAdded;
     total.failed += tally.failed;
