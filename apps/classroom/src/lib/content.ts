@@ -45,6 +45,16 @@ export async function fetchCatalog(): Promise<CatalogEntry[]> {
   return catalogCache;
 }
 
+/**
+ * Where a lesson's recorded narration sits, next to its lesson.json.
+ *
+ * Derived from the entry's path rather than the lesson id, because the id is
+ * ours and the path is the content author's — and it is the author who decides
+ * what a lesson folder is called.
+ */
+export const lessonAudioUrl = (entry: CatalogEntry): string =>
+  `/${entry.path.replace(/\/[^/]+$/, '')}/audio`;
+
 export async function fetchLesson(entry: CatalogEntry): Promise<Lesson> {
   const raw = await (await fetch(`/${entry.path}`)).json();
   const result = validateLesson(raw);

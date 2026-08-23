@@ -1,0 +1,38 @@
+{
+  "formatVersion": 1,
+  "lessonId": "class10-blood",
+  "voice": "Sulafat",
+  "model": "gemini-3.1-flash-tts-preview",
+  "beats": {
+    "hook": {
+      "file": "hook.m4a",
+      "durationMs": 19680,
+      "hash": "3b0c3b087d2d81ba"
+    },
+    "components": {
+      "file": "components.m4a",
+      "durationMs": 15560,
+      "hash": "da377ec9852efe77"
+    },
+    "plasma_rbc": {
+      "file": "plasma_rbc.m4a",
+      "durationMs": 21400,
+      "hash": "9f6fafccc2a7b4ea"
+    },
+    "wbc_platelets": {
+      "file": "wbc_platelets.m4a",
+      "durationMs": 18520,
+      "hash": "29fc107b9dc7edf9"
+    },
+    "vessels": {
+      "file": "vessels.m4a",
+      "durationMs": 25280,
+      "hash": "8f28b4e0bf12254a"
+    },
+    "recap": {
+      "file": "recap.m4a",
+      "durationMs": 21320,
+      "hash": "b9decb30de9b217e"
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { TUTOR } from '@ai-tutor/persona';
+
 /**
  * THE TEXT PART OF EVERY TTS CALL — and therefore the tutor's voice.
  *
@@ -28,16 +30,14 @@ export const SPEECH_PREAMBLE =
 export const TRANSCRIPT_LABEL = '### TRANSCRIPT';
 
 /**
- * The tutor, as this package knows her.
+ * The tutor, taken from the persona rather than described again here.
  *
- * MUST MOVE TO @ai-tutor/persona (TUTOR.name / TUTOR.voice) the moment this
- * package is allowed to depend on it — one tutor described in two files is two
- * tutors waiting to drift. Callers that already import the persona should pass
- * `speakerName` / `speakerDescription` and ignore these.
+ * TUTOR.voice is deliberately prose — it is the sentence a human would read to
+ * understand how she sounds — and that is exactly what a director's note wants,
+ * so it is passed straight through to the synthesiser's style block.
  */
-export const DEFAULT_SPEAKER_NAME = 'Meera';
-export const DEFAULT_SPEAKER_DESCRIPTION =
-  'a warm, patient school teacher who explains rather than lectures, and who is glad you asked';
+export const DEFAULT_SPEAKER_NAME = TUTOR.name;
+export const DEFAULT_SPEAKER_DESCRIPTION = TUTOR.voice;
 
 /** Google is explicit that a specific accent direction beats a generic one. */
 export const DEFAULT_ACCENT =

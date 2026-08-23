@@ -20,6 +20,7 @@
  */
 
 import type { TtsAdapter } from '@ai-tutor/player';
+import { TUTOR } from '@ai-tutor/persona';
 import { TUTOR_SAMPLE_RATE, createAudioPlayer, type AudioPlayer } from './audio';
 import { createCachedTts } from './cachedTts';
 import { buildSpeechPrompt, type SpeechStyle } from './speechPrompt';
@@ -36,13 +37,13 @@ import { createUtteranceQueue, defaultSchedule, type Schedule, type Utterance } 
 /**
  * The tutor's voice name.
  *
- * MUST MOVE TO @ai-tutor/persona as TUTOR.speechVoice as soon as this package
- * may depend on it — the live agent has to name the same voice, and a constant
- * living in two packages is a seam waiting to be heard. Sulafat is the only one
- * of the thirty prebuilt voices Google labels "Warm", and it is confirmed
- * working on both the TTS models and the Live API.
+ * Re-exported from the persona rather than declared here: the live doubt agent
+ * has to name the same voice, and a voice living in two packages is a seam
+ * waiting to be heard. Change it in packages/persona, not here — and note that
+ * changing it re-records nothing, so committed narration audio must be
+ * regenerated or the recording and the live tutor become two people.
  */
-export const DEFAULT_TUTOR_VOICE = 'Sulafat';
+export const DEFAULT_TUTOR_VOICE = TUTOR.speechVoiceName;
 
 /** The 2.5 TTS models can neither stream nor batch; this one does both. */
 export const DEFAULT_TTS_MODEL = 'gemini-3.1-flash-tts-preview';

@@ -1,4 +1,11 @@
-import type { AgentAdapter, AgentIO, AgentSession, DoubtContext } from '@ai-tutor/doubt-session';
+import {
+  buildDoubtBrief,
+  type AgentAdapter,
+  type AgentIO,
+  type AgentSession,
+  type DoubtContext,
+} from '@ai-tutor/doubt-session';
+import { TUTOR, type StudentContext } from '@ai-tutor/persona';
 import {
   MIC_SAMPLE_RATE,
   createAudioPlayer,
@@ -6,7 +13,7 @@ import {
   micLevelOf,
   int16ToBase64,
   type MicCapture,
-} from './audio';
+} from '@ai-tutor/voice';
 
 /**
  * The speech-to-speech live doubt tutor: Gemini Live over a WebSocket, behind
@@ -28,14 +35,34 @@ import {
  * twice. It is used only for the text-only fallback lines above.
  */
 
-/** Confirmed available on this key; overridable for experiments. */
-const DEFAULT_MODEL = 'gemini-3.1-flash-live-preview';
+/**
+ * The live models, in the order they are tried.
+ *
+ * 3.1 leads: it answers faster and its transcription arrives whole rather than
+ * a few characters at a time. 2.5 is the fallback because it is a different
+ * generation of the service — when one is refusing connections or has dropped a
+ * model id, the other has generally still been up.
+ *
+ * Both were verified on this key against real pushed speech. Neither is ever
+ * asked to greet: the bridge line belongs to the handoff, not to the model
+ * (see the setupComplete case below), which is also what keeps 3.1 usable —
+ * every path that makes a model speak first is blocked on 3.1 somewhere.
+ */
+export const LIVE_MODELS = [
+  'gemini-3.1-flash-live-preview',
+  'gemini-2.5-flash-native-audio-latest',
+] as const;
 
 const LIVE_ENDPOINT =
   'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent';
 
-/** Warm and unhurried — she is reassuring a stuck 14-year-old, not reading news. */
-const VOICE_NAME = 'Aoede';
+/**
+ * Her voice, from the one constant the recorded narration also reads. These two
+ * are synthesised by different APIs minutes apart inside a single lesson; a
+ * literal here rather than the persona is how the recording and the live tutor
+ * quietly become two different teachers.
+ */
+const VOICE_NAME = TUTOR.speechVoiceName;
 
 /** A socket that opens but never finishes setup is the worst case: silent. */
 const SETUP_TIMEOUT_MS = 10_000;
@@ -83,7 +110,14 @@ export interface TranscriptLine {
 
 export interface LiveAgentOptions {
   apiKey: string;
-  model?: string;
+  /**
+   * Who is in front of her. Forwarded to the persona exactly as measured — an
+   * unknown signal must stay unknown rather than be defaulted, or she adapts to
+   * a student who does not exist.
+   */
+  student: StudentContext;
+  /** Tried in order. Defaults to LIVE_MODELS. */
+  models?: readonly string[];
   /** Captions for both sides of the conversation. */
   onTranscript?: (line: TranscriptLine) => void;
   /** Room state for the avatar / mic indicator. */
@@ -128,37 +162,25 @@ export interface SetupFrame {
 }
 
 /**
- * The briefing. Every legal recall target is enumerated by id here because the
- * model can only be trusted to pick from a list it was shown — and the ids it
- * returns are still checked against the same set before the canvas moves.
+ * The briefing.
+ *
+ * Not a word of her character is written here any more. Three call sites used
+ * to hand-write this prompt — the typed agent, this one, and the LiveKit worker
+ * — and they had already drifted into three slightly different teachers. It all
+ * comes from @ai-tutor/persona now, assembled by doubt-session, which also
+ * enumerates the recall targets so the list she is offered and the set we
+ * accept back cannot disagree.
  */
-export function buildLiveSystemInstruction(ctx: DoubtContext): string {
-  const beats = ctx.recentBeats.map((b) => `- id "${b.id}": ${b.topic}`).join('\n');
-  return [
-    'You are a warm, patient Indian school tutor in a LIVE spoken doubt session. A student watching a pre-recorded class just raised their hand. The recording is paused and you have taken over the room. You can hear them and they can hear you.',
-    '',
-    `CURRENT MOMENT: the class was on "${ctx.beatTopic}".`,
-    'WHAT THE CLASS HAS COVERED SO FAR (the recording transcript):',
-    ctx.transcriptSoFar,
-    '',
-    'MOMENTS YOU CAN PULL BACK ONTO THE BOARD (only these ids are valid):',
-    beats,
-    '',
-    'HOW TO SPEAK:',
-    '- This is a real conversation out loud. Speak in short, natural spoken sentences — roughly 20 to 60 words per turn.',
-    '- Simple, clear English at a school level. Never read out markdown, lists, symbols or stage directions.',
-    '- Be encouraging. A student who raised their hand is already a little unsure; never make them feel slow.',
-    '- Answer from the class content and standard school science. If the question wanders far from the lesson, answer briefly and steer back.',
-    '- Ask one short check-for-understanding question when you finish explaining.',
-    '',
-    'TOOLS:',
-    `- ${RECALL_TOOL}: call it with a beatId from the list above to bring that earlier moment back onto the board. Use it whenever an earlier diagram would make the explanation land, and say what you are showing as you call it. NEVER invent a beatId that is not listed.`,
-    `- ${END_TOOL}: call it once the student says they have understood or has nothing more to ask. Say your short closing line first, then call it — the recording resumes right after.`,
-  ].join('\n');
+export function buildLiveSystemInstruction(ctx: DoubtContext, student: StudentContext): string {
+  return buildDoubtBrief(ctx, student, { moment: 'opening', surface: 'voice' });
 }
 
 /** The first frame on the socket. Nothing is sent before this is acknowledged. */
-export function buildSetupFrame(ctx: DoubtContext, model: string): SetupFrame {
+export function buildSetupFrame(
+  ctx: DoubtContext,
+  model: string,
+  student: StudentContext,
+): SetupFrame {
   return {
     setup: {
       model: `models/${model}`,
@@ -167,7 +189,7 @@ export function buildSetupFrame(ctx: DoubtContext, model: string): SetupFrame {
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_NAME } } },
         temperature: 0.8,
       },
-      systemInstruction: { parts: [{ text: buildLiveSystemInstruction(ctx) }] },
+      systemInstruction: { parts: [{ text: buildLiveSystemInstruction(ctx, student) }] },
       tools: [
         {
           functionDeclarations: [
@@ -312,11 +334,15 @@ export function pickRecallBeatId(
 // ---------------------------------------------------------------------------
 
 export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
-  const model = opts.model ?? DEFAULT_MODEL;
+  const models = opts.models ?? LIVE_MODELS;
 
   return {
     start(ctx: DoubtContext, io: AgentIO): AgentSession {
       let stopped = false;
+      // Which model this attempt is using. Only ever advances before the first
+      // frame comes back: once she is talking, a drop is a dropped call, not a
+      // reason to start again with someone else.
+      let modelIndex = 0;
       let handedBack = false;
       let ready = false;
       let endRequested = false;
@@ -373,9 +399,23 @@ export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
         }
       };
 
-      /** Rule 1: say one short line, then hand the room back. Never hold it. */
+      /**
+       * Rule 1: say one short line, then hand the room back. Never hold it.
+       *
+       * Unless there is another model left to try and this one never got as far
+       * as saying anything — then the student hears nothing at all and we
+       * quietly move down the list. A failover after she has already spoken
+       * would restart the conversation from nothing, which is worse than the
+       * apology.
+       */
       const fail = (line: string): void => {
         if (stopped || handedBack) return;
+        if (!ready && modelIndex + 1 < models.length) {
+          modelIndex += 1;
+          teardown();
+          void connect().catch(() => fail(CONNECT_FAIL_LINE));
+          return;
+        }
         handedBack = true;
         setState('error');
         // Tear down before speaking so her half-finished voice cannot talk over
@@ -471,23 +511,19 @@ export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
             ready = true;
             setupTimer = clearTimer(setupTimer);
             setState('listening');
-            // Open the way the text agent does: she greets first, so the
-            // student hears a person waiting rather than dead air.
-            send({
-              clientContent: {
-                turns: [
-                  {
-                    role: 'user',
-                    parts: [
-                      {
-                        text: `(The student just raised their hand during "${ctx.beatTopic}" and has not spoken yet. Greet them warmly in ONE short sentence and invite the doubt. Do not explain anything yet.)`,
-                      },
-                    ],
-                  },
-                ],
-                turnComplete: true,
-              },
-            });
+            // She does NOT greet here, and that is deliberate.
+            //
+            // The handoff has already spoken the bridge line — "Yes, go ahead,
+            // good place to stop. We were right in the middle of X. What's your
+            // doubt?" — in this same voice, before this session was even opened
+            // (see raiseHand in @ai-tutor/doubt-session). A model-side greeting
+            // on top of it is the student being welcomed twice in four seconds,
+            // at exactly the seam the whole product is built around.
+            //
+            // It also keeps every live model usable: asking a model to speak
+            // first is the one thing that is blocked on 3.1. Silence here is
+            // not dead air — she is listening, and the student was just asked a
+            // question.
             break;
           }
 
@@ -582,7 +618,7 @@ export function createLiveAgent(opts: LiveAgentOptions): AgentAdapter {
         const socket = new WebSocket(`${LIVE_ENDPOINT}?key=${encodeURIComponent(opts.apiKey)}`);
         ws = socket;
 
-        socket.onopen = (): void => send(buildSetupFrame(ctx, model));
+        socket.onopen = (): void => send(buildSetupFrame(ctx, models[modelIndex], opts.student));
         socket.onmessage = (ev: MessageEvent): void => {
           void readFrame(ev.data).then((raw) => {
             if (stopped) return; // frames still arriving after stop() are dropped

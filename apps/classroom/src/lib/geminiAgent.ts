@@ -1,4 +1,12 @@
-import type { AgentAdapter, AgentIO, AgentSession, DoubtContext } from '@ai-tutor/doubt-session';
+import {
+  buildDoubtBrief,
+  isRecallable,
+  type AgentAdapter,
+  type AgentIO,
+  type AgentSession,
+  type DoubtContext,
+} from '@ai-tutor/doubt-session';
+import type { StudentContext } from '@ai-tutor/persona';
 
 /**
  * The real live doubt tutor: Gemini behind the same AgentAdapter the stub
@@ -14,6 +22,8 @@ import type { AgentAdapter, AgentIO, AgentSession, DoubtContext } from '@ai-tuto
 
 export interface GeminiAgentOptions {
   apiKey: string;
+  /** Who is in front of her, forwarded to the persona exactly as measured. */
+  student: StudentContext;
   model?: string;
 }
 
@@ -23,32 +33,23 @@ interface AgentReply {
   done: boolean;
 }
 
-/** What the model must return. Kept strict so the UI never renders prose soup. */
-export function buildDoubtSystemPrompt(ctx: DoubtContext): string {
-  const beats = ctx.recentBeats.map((b) => `- id "${b.id}": ${b.topic}`).join('\n');
+/**
+ * The briefing, plus the one instruction the persona cannot give: the JSON
+ * shape this transport needs back. Her character, her rules and the legal
+ * recall targets all come from @ai-tutor/persona — nothing about who she is
+ * is written here.
+ */
+export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext): string {
   return [
-    'You are a warm, patient Indian school tutor in a LIVE doubt session. A student watching a pre-recorded class just raised their hand. The recording is paused; you have taken over the room.',
-    '',
-    `CURRENT MOMENT: the class was on "${ctx.beatTopic}".`,
-    'WHAT THE CLASS HAS COVERED SO FAR (the recording transcript):',
-    ctx.transcriptSoFar,
-    '',
-    'MOMENTS YOU CAN PULL BACK ON SCREEN (recall targets — only these ids are valid):',
-    beats,
-    '',
-    'RULES:',
-    '- Speak clear, simple English. 20-60 words per turn — this is spoken aloud by TTS. No markdown, no lists, no stage directions.',
-    '- Answer ONLY from the class content and standard school science. If the question is far outside this lesson, gently steer back.',
-    '- When an earlier diagram would help your explanation, set recallBeatId to that beat id — the canvas will jump to it.',
-    '- When the student confirms they understood (or asks nothing more), set done=true with a short closing line.',
-    '- NEVER invent a recallBeatId that is not in the list above.',
+    buildDoubtBrief(ctx, student, { moment: 'answering', surface: 'text' }),
     '',
     'Respond with ONLY a JSON object: {"say": string, "recallBeatId": string | null, "done": boolean}',
+    'Set recallBeatId to bring an earlier moment back onto the board, or null. Set done to true once the doubt is resolved.',
   ].join('\n');
 }
 
 /** Parse + sanitise a model reply. Unknown recall ids are dropped, never trusted. */
-export function parseAgentReply(raw: string, validBeatIds: ReadonlySet<string>): AgentReply {
+export function parseAgentReply(raw: string, canRecall: (beatId: string) => boolean): AgentReply {
   const fallback: AgentReply = {
     say: raw.replace(/```(?:json)?|```/g, '').trim().slice(0, 400),
     recallBeatId: null,
@@ -59,7 +60,7 @@ export function parseAgentReply(raw: string, validBeatIds: ReadonlySet<string>):
     const parsed = JSON.parse(cleaned) as Partial<AgentReply>;
     if (typeof parsed.say !== 'string' || parsed.say.length === 0) return fallback;
     const recall =
-      typeof parsed.recallBeatId === 'string' && validBeatIds.has(parsed.recallBeatId)
+      typeof parsed.recallBeatId === 'string' && canRecall(parsed.recallBeatId)
         ? parsed.recallBeatId
         : null;
     return { say: parsed.say, recallBeatId: recall, done: parsed.done === true };
@@ -76,7 +77,6 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
     start(ctx: DoubtContext, io: AgentIO): AgentSession {
       let stopped = false;
       const controller = new AbortController();
-      const validIds = new Set(ctx.recentBeats.map((b) => b.id));
       const history: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
 
       const call = async (userText: string): Promise<AgentReply> => {
@@ -86,7 +86,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           headers: { 'Content-Type': 'application/json' },
           signal: controller.signal,
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: buildDoubtSystemPrompt(ctx) }] },
+            systemInstruction: { parts: [{ text: buildDoubtSystemPrompt(ctx, opts.student) }] },
             contents: history,
             generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
           }),
@@ -97,7 +97,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
         };
         const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
         history.push({ role: 'model', parts: [{ text }] });
-        return parseAgentReply(text, validIds);
+        return parseAgentReply(text, (id) => isRecallable(ctx, id));
       };
 
       const deliver = async (reply: AgentReply): Promise<void> => {
@@ -123,10 +123,8 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           });
       };
 
-      // Open the session: the model greets and invites the doubt.
-      enqueue(
-        `(The student just raised their hand during "${ctx.beatTopic}" and hasn't typed yet. Greet them in one short line and invite the doubt.)`,
-      );
+      // No opening line: the handoff already spoke the bridge line in her
+      // voice before this session existed. See the same note in liveAgent.ts.
 
       return {
         sendUserText(text: string): void {

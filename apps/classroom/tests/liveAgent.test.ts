@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { DoubtContext } from '@ai-tutor/doubt-session';
+import type { StudentContext } from '@ai-tutor/persona';
 import {
   END_TOOL,
   RECALL_TOOL,
@@ -9,6 +10,7 @@ import {
   pickRecallBeatId,
   type LiveServerEvent,
 } from '../src/lib/liveAgent';
+import { TUTOR } from '@ai-tutor/persona';
 
 const ctx: DoubtContext = {
   lessonId: 'class10-heart',
@@ -23,8 +25,11 @@ const ctx: DoubtContext = {
   ],
 };
 
+/** Only what the app really measures — see lib/student.ts. */
+const student: StudentContext = { klass: 10, doubtCount: 2 };
+
 describe('buildSetupFrame', () => {
-  const frame = buildSetupFrame(ctx, 'gemini-3.1-flash-live-preview');
+  const frame = buildSetupFrame(ctx, 'gemini-3.1-flash-live-preview', student);
 
   it('names the model in the form the API expects', () => {
     expect(frame.setup.model).toBe('models/gemini-3.1-flash-live-preview');
@@ -61,12 +66,14 @@ describe('buildSetupFrame', () => {
   });
 
   it('puts the system instruction on the frame', () => {
-    expect(frame.setup.systemInstruction.parts[0].text).toBe(buildLiveSystemInstruction(ctx));
+    expect(frame.setup.systemInstruction.parts[0].text).toBe(
+      buildLiveSystemInstruction(ctx, student),
+    );
   });
 });
 
 describe('buildLiveSystemInstruction', () => {
-  const prompt = buildLiveSystemInstruction(ctx);
+  const prompt = buildLiveSystemInstruction(ctx, student);
 
   it('lists every recall target the student has seen', () => {
     // The model can only be trusted to pick from a list it was shown.
@@ -81,9 +88,26 @@ describe('buildLiveSystemInstruction', () => {
     expect(prompt).toContain('The heart is a pump.');
   });
 
-  it('names both tools', () => {
-    expect(prompt).toContain(RECALL_TOOL);
-    expect(prompt).toContain(END_TOOL);
+  it('leaves the tools to the frame, and says nothing about who she is', () => {
+    // Tool names belong in the function declarations, where the API actually
+    // reads them; repeating them in prose was a second place to drift.
+    const declared = buildSetupFrame(ctx, 'm', student).setup.tools[0].functionDeclarations.map(
+      (d) => d.name,
+    );
+    expect(declared).toEqual([RECALL_TOOL, END_TOOL]);
+    // And not a word of her character is written in this file any more.
+    expect(prompt).toContain(TUTOR.name);
+  });
+
+  it('says nothing about a signal the app did not measure', () => {
+    // Her standing rules legitimately mention mastery ("never read out internal
+    // scores"), so the check has to be the STUDENT section, not the whole
+    // prompt: what must be absent is a claim about THIS student.
+    const from = prompt.indexOf('THIS STUDENT');
+    const section = prompt.slice(from, prompt.indexOf('\n\n', from));
+    expect(from).toBeGreaterThan(-1);
+    expect(section).toContain('Class 10');
+    expect(section).not.toMatch(/mastery|wrong idea|misconception/i);
   });
 });
 

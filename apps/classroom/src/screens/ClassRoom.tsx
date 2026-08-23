@@ -2,19 +2,25 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { findBeat, type Lesson } from '@ai-tutor/lesson-format';
 import { Scene, computeVisible } from '@ai-tutor/stage';
-import { usePlayer, createBrowserTts } from '@ai-tutor/player';
+import { usePlayer, type TtsAdapter } from '@ai-tutor/player';
 import {
   buildContext,
   createHandoff,
   createStubAgent,
   type HandoffState,
 } from '@ai-tutor/doubt-session';
-import { findEntry, fetchLesson } from '../lib/content';
+import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
+import { useLessonVoice } from '../lib/lessonVoice';
+import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent } from '../lib/liveAgent';
 import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
-import { logDoubt } from '../stores/doubtLog';
+import { doubtLogStore, logDoubt } from '../stores/doubtLog';
+import { profileStore } from '../stores/profile';
+import { settingsStore } from '../stores/settings';
+import { preferencesStore } from '../stores/preferences';
+import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { TutorBadge, type TutorMode } from '../ui/TutorBadge';
 import {
@@ -23,20 +29,37 @@ import {
   type TranscriptLine,
 } from '../ui/VoiceDoubtSheet';
 
+/**
+ * How long the controls stay after the last touch. Long enough to find the
+ * raise-hand button without hunting, short enough that the canvas is not
+ * competing with a button bar for most of the class.
+ */
+const CONTROLS_IDLE_MS = 3_500;
+
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
 export function LessonRoute() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const preferences = useStore(preferencesStore);
+
+  // Resolved HERE rather than inside the classroom because usePlayer rebuilds
+  // its controller when the adapter's identity changes: a voice that arrived a
+  // moment late would restart the class from the top.
+  const tts = useLessonVoice(entry, lesson, { enabled: preferences.voice });
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const entry = lessonId ? await findEntry(lessonId) : null;
-      if (!entry) throw new Error('This lesson does not exist.');
-      const loaded = await fetchLesson(entry);
-      if (!cancelled) setLesson(loaded);
+      const found = lessonId ? await findEntry(lessonId) : null;
+      if (!found) throw new Error('This lesson does not exist.');
+      const loaded = await fetchLesson(found);
+      if (!cancelled) {
+        setEntry(found);
+        setLesson(loaded);
+      }
     })().catch((e) => {
       if (!cancelled) setError(String(e instanceof Error ? e.message : e));
     });
@@ -61,14 +84,14 @@ export function LessonRoute() {
       </div>
     );
   }
-  if (!lesson) {
+  if (!lesson || !tts) {
     return (
       <div className="bg-background min-h-screen grid place-items-center font-body-md">
         <p className="font-body-md text-body-md text-on-surface-variant">Loading…</p>
       </div>
     );
   }
-  return <ClassRoom lesson={lesson} onExit={() => navigate('/')} />;
+  return <ClassRoom lesson={lesson} tts={tts} onExit={() => navigate('/')} />;
 }
 
 /**
@@ -78,9 +101,17 @@ export function LessonRoute() {
  *   when beats advance     → player
  *   the raise-hand handoff → doubt-session
  */
-export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }) {
+export function ClassRoom({
+  lesson,
+  tts,
+  onExit,
+}: {
+  lesson: Lesson;
+  /** Resolved by the route: the recorded take, her live voice, or the browser's. */
+  tts: TtsAdapter;
+  onExit(): void;
+}) {
   const navigate = useNavigate();
-  const tts = useMemo(() => createBrowserTts({ lang: 'en-IN' }), []);
   const player = usePlayer(lesson, tts);
 
   // Refs so the (stable) handoff always calls the latest player controls.
@@ -97,6 +128,10 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
   const [micLevel, setMicLevel] = useState(0);
   const [muted, setMuted] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
+  // Controls fade out of a class in progress and come back on any touch. The
+  // canvas is the lesson; a permanent button bar on a phone screen is a strip
+  // of the lesson permanently covered.
+  const [controlsShown, setControlsShown] = useState(true);
   // The live session polls this per audio chunk, so it must read the latest
   // value rather than the one captured when the agent was built.
   const mutedRef = useRef(muted);
@@ -110,11 +145,33 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
    */
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
 
+  const profile = useStore(profileStore);
+  const settings = useStore(settingsStore);
+  const doubts = useStore(doubtLogStore);
+  const preferences = useStore(preferencesStore);
+
+  // What she is told about this student. Absent signals stay absent — see
+  // lib/student.ts for why a default here would be worse than silence.
+  const student = useMemo(
+    () =>
+      buildStudentContext({
+        profile,
+        klass: settings.klass,
+        progress: progressStore.get(),
+        doubts,
+        lessonId: lesson.id,
+      }),
+    [profile, settings.klass, doubts, lesson.id],
+  );
+
   const agent = useMemo(() => {
-    if (!apiKey) return createStubAgent();
+    // No class on file means nothing true to tell her about the student, and a
+    // guessed class is a tutor pitching a lesson at a child who is not there.
+    if (!apiKey || student === null) return createStubAgent();
     if (voiceMode) {
       return createLiveAgent({
         apiKey,
+        student,
         onState: setLiveState,
         onMicLevel: setMicLevel,
         isMuted: () => mutedRef.current,
@@ -130,8 +187,8 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
           }),
       });
     }
-    return createGeminiAgent({ apiKey });
-  }, [apiKey, voiceMode]);
+    return createGeminiAgent({ apiKey, student });
+  }, [apiKey, voiceMode, student]);
 
   const handoff = useMemo(
     () =>
@@ -175,6 +232,24 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     };
   }, [handoff]);
 
+  // Only a class that is actually playing hides its controls. Paused, finished,
+  // not yet started or mid-doubt, they stay: in every one of those states the
+  // student is looking for a button, not at a diagram.
+  const canHideControls = player.state === 'playing' && handoffState === 'PLAYING';
+
+  useEffect(() => {
+    if (!canHideControls || !controlsShown) return;
+    const timer = setTimeout(() => setControlsShown(false), CONTROLS_IDLE_MS);
+    return () => clearTimeout(timer);
+  }, [canHideControls, controlsShown]);
+
+  // Any sign of the student brings them back, and restarts the countdown.
+  const revealControls = () => setControlsShown(true);
+
+  useEffect(() => {
+    if (!canHideControls) setControlsShown(true);
+  }, [canHideControls]);
+
   // The canvas: during a recall, show the recalled beat; otherwise follow playback.
   const inDoubt = handoffState !== 'PLAYING';
   const recalled = recallBeatId ? findBeat(lesson, recallBeatId) : null;
@@ -210,7 +285,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
     const ctx = buildContext(lesson, player.beatIndex);
     logDoubt(lesson.id, ctx.beatId);
 
-    if (apiKey) {
+    if (apiKey && student !== null) {
       const status = await requestMic();
       const useVoice = status === 'granted';
       setVoiceMode(useVoice);
@@ -242,7 +317,12 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
 
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pb-[104px]">
+    <div
+      onPointerDown={revealControls}
+      onPointerMove={revealControls}
+      onKeyDown={revealControls}
+      className="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pb-[104px]"
+    >
       {/* Top: back, progress, title */}
       <header className="w-full px-margin-mobile pt-4 pb-3 bg-surface sticky top-0 z-10 flex flex-col gap-3 shadow-sm">
         <div className="flex items-center gap-3">
@@ -301,16 +381,23 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
         </section>
 
         {/* What she is saying right now */}
-        <section className="text-center px-4 max-w-2xl mx-auto mt-6 min-h-[64px]">
-          {caption && (
-            <p className="font-body-lg text-body-lg text-on-surface-variant">{caption}</p>
-          )}
-        </section>
+        {preferences.captions && (
+          <section className="text-center px-4 max-w-2xl mx-auto mt-6 min-h-[64px]">
+            {caption && (
+              <p className="font-body-lg text-body-lg text-on-surface-variant">{caption}</p>
+            )}
+          </section>
+        )}
       </main>
 
       {/* Bottom: lesson controls, or the live doubt sheet */}
       {!inDoubt ? (
-        <nav className="fixed bottom-0 left-0 w-full z-50 px-margin-mobile py-4 bg-surface-container rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-[calc(1rem+env(safe-area-inset-bottom))]">
+        <nav
+          aria-hidden={!controlsShown}
+          className={`fixed bottom-0 left-0 w-full z-50 px-margin-mobile py-4 bg-surface-container rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-[calc(1rem+env(safe-area-inset-bottom))] transition-[transform,opacity] duration-300 ease-out ${
+            controlsShown ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
+          }`}
+        >
           <div className="flex gap-4 items-center w-full max-w-[1120px] mx-auto">
             <button
               onClick={() => (player.state === 'playing' ? player.pause() : player.play())}

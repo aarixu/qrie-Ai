@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildDoubtSystemPrompt, parseAgentReply } from '../src/lib/geminiAgent';
 import type { DoubtContext } from '@ai-tutor/doubt-session';
+import type { StudentContext } from '@ai-tutor/persona';
 
 const ctx: DoubtContext = {
   lessonId: 'l1',
@@ -16,7 +17,7 @@ const ctx: DoubtContext = {
 
 describe('buildDoubtSystemPrompt', () => {
   it('carries the moment, the transcript and every recall target', () => {
-    const p = buildDoubtSystemPrompt(ctx);
+    const p = buildDoubtSystemPrompt(ctx, { klass: 10 } satisfies StudentContext);
     expect(p).toContain('Four chambers');
     expect(p).toContain('The heart is a pump.');
     expect(p).toContain('id "pump"');
@@ -26,7 +27,8 @@ describe('buildDoubtSystemPrompt', () => {
 });
 
 describe('parseAgentReply', () => {
-  const valid = new Set(['pump', 'chambers']);
+  const seen = new Set(['pump', 'chambers']);
+  const valid = (id: string): boolean => seen.has(id);
 
   it('parses a clean reply', () => {
     const r = parseAgentReply('{"say":"Look here.","recallBeatId":"pump","done":false}', valid);
