@@ -98,7 +98,7 @@ export function Onboarding() {
               <button
                 onClick={() => setStep('class')}
                 disabled={name.trim().length === 0}
-                className="w-full mt-stack-md bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
+                className="w-full mt-stack-md bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
               >
                 Continue
               </button>
@@ -165,7 +165,7 @@ export function Onboarding() {
               <button
                 onClick={() => setStep('ready')}
                 disabled={subjects.length === 0}
-                className="w-full mt-stack-lg bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
+                className="w-full mt-stack-lg bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
               >
                 Continue
               </button>
@@ -186,7 +186,7 @@ export function Onboarding() {
               </p>
               <button
                 onClick={() => finish(true)}
-                className="w-full bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all"
+                className="w-full bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
               >
                 Start
               </button>

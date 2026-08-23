@@ -36,20 +36,41 @@ export function Progress() {
   const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
   const streak = computeStreak(progress);
 
-  const stat = (icon: string, value: string, label: string, tint: string, ink: string) => (
-    <div className={`${tint} rounded-[20px] p-4 flex-1 min-w-[104px] flex flex-col items-center gap-1`}>
-      <Icon name={icon} filled className={`text-3xl ${ink}`} />
-      <span className="font-headline-md text-headline-md text-on-surface">{value}</span>
-      <span className="font-label-sm text-label-sm text-on-surface-variant text-center">{label}</span>
-    </div>
-  );
+  /**
+   * A tile is a button when there is somewhere to go and a plain div when
+   * there is not — rather than a button that looks live and does nothing.
+   */
+  const stat = (
+    icon: string,
+    value: string,
+    label: string,
+    tint: string,
+    ink: string,
+    to?: string,
+  ) => {
+    const body = (
+      <>
+        <Icon name={icon} filled className={`text-3xl ${ink}`} />
+        <span className="font-headline-md text-headline-md text-on-surface">{value}</span>
+        <span className="font-label-sm text-label-sm text-on-surface-variant text-center">{label}</span>
+      </>
+    );
+    const shape = `${tint} rounded-[20px] p-4 flex-1 min-w-[104px] flex flex-col items-center gap-1`;
+    return to === undefined ? (
+      <div className={shape}>{body}</div>
+    ) : (
+      <button onClick={() => navigate(to)} className={`${shape} hover:scale-[1.02] transition-transform`}>
+        {body}
+      </button>
+    );
+  };
 
   return (
     <Screen title="Your progress">
       <div className="flex gap-3 mb-stack-md">
         {stat('check_circle', String(completed), 'lessons done', 'tile-green', 'text-[#166534]')}
-        {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'text-[#9a3412]')}
-        {stat('back_hand', String(doubts.length), 'doubts asked', 'tile-blue', 'text-[#1e40af]')}
+        {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'text-[#9a3412]', '/streak')}
+        {stat('back_hand', String(doubts.length), 'doubts asked', 'tile-blue', 'text-[#1e40af]', '/doubts')}
       </div>
 
       {/* Per-chapter completion */}
@@ -89,9 +110,17 @@ export function Progress() {
       {/* Where hands went up — the signal that later tells the factory which beat to redo. */}
       {doubts.length > 0 && (
         <>
-          <h2 className="font-headline-md text-[20px] leading-7 text-on-surface mt-stack-md mb-stack-sm">
-            Where you asked the most
-          </h2>
+          <div className="flex items-baseline justify-between mt-stack-md mb-stack-sm">
+            <h2 className="font-headline-md text-[20px] leading-7 text-on-surface">
+              Where you asked the most
+            </h2>
+            <button
+              onClick={() => navigate('/doubts')}
+              className="font-label-md text-label-md text-primary underline underline-offset-2"
+            >
+              See all
+            </button>
+          </div>
           <div className="grid gap-2">
             {topDoubtSpots(doubts).map((spot) => (
               <div

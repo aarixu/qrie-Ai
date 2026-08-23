@@ -53,7 +53,7 @@ export function LessonRoute() {
           <p className="font-headline-md text-[18px] leading-6 text-on-surface">{error}</p>
           <button
             onClick={() => navigate('/')}
-            className="bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all"
+            className="bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
           >
             Back home
           </button>
@@ -285,7 +285,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
               <div className="absolute inset-0 grid place-items-center bg-surface-container-lowest/70 backdrop-blur-[2px]">
                 <button
                   onClick={startClass}
-                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all"
+                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
                 >
                   <Icon name={player.state === 'ended' ? 'replay' : 'play_arrow'} filled />
                   {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
@@ -322,7 +322,7 @@ export function ClassRoom({ lesson, onExit }: { lesson: Lesson; onExit(): void }
             <button
               onClick={raiseHand}
               disabled={player.state !== 'playing' && player.state !== 'paused'}
-              className="flex-grow flex items-center justify-center gap-2 bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-[#323499] active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:border-b-4 disabled:active:translate-y-0"
+              className="flex-grow flex items-center justify-center gap-2 bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:border-b-4 disabled:active:translate-y-0"
             >
               <Icon name="front_hand" filled />
               Raise hand

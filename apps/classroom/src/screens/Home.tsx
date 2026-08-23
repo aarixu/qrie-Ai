@@ -83,13 +83,14 @@ export function Home() {
             </h1>
           </div>
           {streak > 0 && (
-            <div
+            <button
+              onClick={() => navigate('/streak')}
               aria-label={`${streak} day streak`}
-              className="flex items-center gap-1 bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 shadow-sm font-label-md text-label-md"
+              className="flex items-center gap-1 bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 shadow-sm font-label-md text-label-md active:scale-95 transition-transform"
             >
               <Icon name="local_fire_department" filled className="text-[18px]" />
               {streak} {streak === 1 ? 'Day' : 'Days'}
-            </div>
+            </button>
           )}
         </div>
       </header>
@@ -141,7 +142,7 @@ export function Home() {
                     if (first) navigate(`/lesson/${first.id}`);
                   }
                 }}
-                className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-[#2f2ebe] hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
+                className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-on-primary-fixed-variant hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
               >
                 <Icon name="play_arrow" filled />
                 {hero ? 'Resume Learning' : 'Start Learning'}

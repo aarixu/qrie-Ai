@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { GraphIndex } from '@ai-tutor/knowledge-graph';
 import { settingsStore, isOnboarded } from './stores/settings';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticData } from './lib/diagnosticData';
 import { SYLLABI } from './lib/content';
+import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
 import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
@@ -17,25 +26,37 @@ import { Search } from './screens/Search';
 import { Progress } from './screens/Progress';
 import { Diagnostic } from './screens/Diagnostic';
 import { StudyPlan } from './screens/StudyPlan';
+import { PracticeQuiz } from './screens/PracticeQuiz';
+import { QuizResult } from './screens/QuizResult';
+import { Settings } from './screens/Settings';
+import { Help } from './screens/Help';
+import { DoubtHistory } from './screens/DoubtHistory';
+import { StreakDetail } from './screens/StreakDetail';
 
 /**
- * The subjects a student is being placed in. The settings store only holds a
- * class today, so the honest answer is "whatever the syllabus actually covers"
- * rather than a list we would be inventing.
+ * The subjects a student is being placed in.
+ *
+ * Their own choice from onboarding wins. Only when that is missing — a profile
+ * from before onboarding asked the question — do we fall back to whatever the
+ * syllabus covers for the class, which is the honest answer rather than a
+ * list we would be inventing.
  */
-const subjectsForClass = (klass: number): string[] =>
-  Array.from(new Set(SYLLABI.filter((s) => s.klass === klass).map((s) => s.subject)));
+const subjectsForClass = (klass: number, chosen: string[]): string[] =>
+  chosen.length > 0
+    ? chosen
+    : Array.from(new Set(SYLLABI.filter((s) => s.klass === klass).map((s) => s.subject)));
 
 /** /diagnostic — reads the class from settings and hands the engine to the screen. */
 function DiagnosticRoute() {
   const navigate = useNavigate();
   const settings = useStore(settingsStore);
+  const profile = useStore(profileStore);
   if (settings.klass === null) return <Navigate to="/onboarding" replace />;
 
   return (
     <Diagnostic
       klass={settings.klass}
-      subjects={subjectsForClass(settings.klass)}
+      subjects={subjectsForClass(settings.klass, profile.subjects)}
       onComplete={(result) => {
         saveDiagnostic(result);
         navigate('/plan', { replace: true });
@@ -61,6 +82,45 @@ function StudyPlanRoute() {
       onStartLesson={(lessonRef) => navigate(`/lesson/${lessonRef}`)}
       onHome={() => navigate('/')}
     />
+  );
+}
+
+/**
+ * /quiz/:lessonRef — the practice quiz, and its result in the same route.
+ *
+ * The result is held here rather than pushed as its own URL because a result
+ * belongs to one attempt: a student who reloads a /result URL, or reaches it
+ * with the back button, would be looking at a score for a quiz they are no
+ * longer taking. Both screens hand back to the lesson's completion screen,
+ * which is the hub that knows what comes next.
+ */
+function QuizRoute() {
+  const { lessonRef } = useParams<{ lessonRef: string }>();
+  const navigate = useNavigate();
+  const [outcome, setOutcome] = useState<QuizOutcome | null>(null);
+  // Retry remounts rather than resets: the quiz keeps per-question timing in
+  // refs, and only a fresh mount makes the clock honest on the second attempt.
+  const [attempt, setAttempt] = useState(0);
+
+  if (!lessonRef) return <Navigate to="/" replace />;
+  const leave = () => navigate(`/complete/${lessonRef}`, { replace: true });
+
+  if (outcome) {
+    return (
+      <QuizResult
+        outcome={outcome}
+        onContinue={leave}
+        onRetry={() => {
+          setOutcome(null);
+          setAttempt((n) => n + 1);
+        }}
+        onReview={() => navigate(`/lesson/${lessonRef}`)}
+      />
+    );
+  }
+
+  return (
+    <PracticeQuiz key={attempt} lessonRef={lessonRef} onComplete={setOutcome} onExit={leave} />
   );
 }
 
@@ -99,9 +159,14 @@ export default function App() {
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />
+          <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/search" element={<Search />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/doubts" element={<DoubtHistory />} />
+          <Route path="/streak" element={<StreakDetail />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Gate>

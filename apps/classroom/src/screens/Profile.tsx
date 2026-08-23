@@ -1,66 +1,93 @@
-import { progressStore } from '../stores/progress';
+import { useNavigate } from 'react-router-dom';
+import { progressStore, computeStreak } from '../stores/progress';
+import { profileStore, hasDiagnostic } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
 import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
 import { Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
 
-const CLASSES = [6, 7, 8, 9, 10, 11, 12];
+const ROW =
+  'w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center gap-4 shadow-soft-indigo text-left transition-colors hover:bg-surface-container';
 
+/**
+ * Who the student is, and the way into everything about them.
+ *
+ * It deliberately owns no settings of its own any more. It used to carry its
+ * own class switcher and its own reset button, which meant two screens wrote
+ * the class — and Profile wrote only half of it, leaving the profile store
+ * stale. Settings owns those controls now; this screen points at them.
+ */
 export function Profile() {
+  const navigate = useNavigate();
+  const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
+  const progress = useStore(progressStore);
+  const doubts = useStore(doubtLogStore);
+
+  // Settings is the copy every path has always written; see Settings.tsx.
+  const klass = settings.klass ?? profile.klass;
+  const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
+  const streak = computeStreak(progress);
+
+  const stat = (value: number, label: string) => (
+    <div className="flex-1 min-w-[92px] bg-surface-container-lowest rounded-[20px] py-4 flex flex-col items-center shadow-soft-indigo">
+      <span className="font-headline-lg text-[28px] leading-9 text-primary">{value}</span>
+      <span className="font-label-sm text-label-sm text-on-surface-variant text-center">{label}</span>
+    </div>
+  );
+
+  const row = (icon: string, label: string, hint: string, to: string) => (
+    <button onClick={() => navigate(to)} className={ROW}>
+      <div className="w-11 h-11 shrink-0 rounded-full bg-primary-fixed grid place-items-center">
+        <Icon name={icon} className="text-on-primary-fixed" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="font-label-md text-label-md text-on-surface">{label}</div>
+        <div className="font-body-md text-body-md text-on-surface-variant truncate">{hint}</div>
+      </div>
+      <Icon name="chevron_right" className="text-on-surface-variant shrink-0" />
+    </button>
+  );
 
   return (
     <Screen title="Profile">
       {/* Identity */}
-      <div className="flex items-center gap-4 bg-surface-container-lowest rounded-[24px] p-card-padding shadow-sm mb-stack-md">
+      <div className="flex items-center gap-4 bg-surface-container-lowest rounded-[24px] p-card-padding shadow-soft-indigo mb-stack-md">
         <div className="w-16 h-16 rounded-full bg-primary-fixed grid place-items-center shrink-0">
           <Icon name="person" filled className="text-3xl text-on-primary-fixed" />
         </div>
-        <div>
-          <div className="font-headline-md text-[20px] leading-7 text-on-surface">Student</div>
+        <div className="min-w-0">
+          <div className="font-headline-md text-[20px] leading-7 text-on-surface truncate">
+            {profile.name?.trim() || 'Student'}
+          </div>
           <div className="font-label-md text-label-md text-on-surface-variant">
-            {settings.klass ? `Class ${settings.klass}` : 'Class not set'}
+            {klass ? `Class ${klass}` : 'Class not set'}
+            {profile.subjects.length > 0 && ` · ${profile.subjects.length} subjects`}
           </div>
         </div>
       </div>
 
-      {/* Class switcher */}
-      <h2 className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide mb-stack-sm">
-        My class
-      </h2>
-      <div className="flex flex-wrap gap-2 mb-stack-md">
-        {CLASSES.map((k) => {
-          const active = settings.klass === k;
-          return (
-            <button
-              key={k}
-              onClick={() => settingsStore.update((s) => ({ ...s, klass: k }))}
-              className={`min-w-[52px] py-3 px-4 rounded-xl font-label-md text-label-md border-2 transition-colors ${
-                active
-                  ? 'bg-primary-fixed border-primary text-on-primary-fixed-variant'
-                  : 'bg-surface-container-lowest border-surface-variant text-on-surface-variant hover:bg-surface-container'
-              }`}
-            >
-              {k}
-            </button>
-          );
-        })}
+      <div className="flex gap-3 mb-stack-md">
+        {stat(completed, 'lessons done')}
+        {stat(streak, 'day streak')}
+        {stat(doubts.length, 'questions asked')}
       </div>
 
-      {/* Danger zone */}
-      <button
-        onClick={() => {
-          if (confirm('Reset all progress? This cannot be undone.')) {
-            progressStore.set({ lessons: {}, lastLessonId: null });
-            doubtLogStore.set([]);
-          }
-        }}
-        className="flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-error-container text-error font-label-md text-label-md hover:bg-error-container transition-colors"
-      >
-        <Icon name="restart_alt" />
-        Reset progress
-      </button>
+      <div className="flex flex-col gap-2">
+        {row('back_hand', 'Your questions', 'Every doubt you raised, and where', '/doubts')}
+        {row('local_fire_department', 'Streak', 'The days you showed up', '/streak')}
+        {row(
+          'explore',
+          hasDiagnostic(profile) ? 'Retake the placement test' : 'Take the placement test',
+          hasDiagnostic(profile)
+            ? 'Find out what has changed since last time'
+            : 'A few questions, so lessons start where you are',
+          '/diagnostic',
+        )}
+        {row('settings', 'Settings', 'Class, subjects, playback, reset', '/settings')}
+        {row('help', 'Help', 'How this works, and what to do when it does not', '/help')}
+      </div>
     </Screen>
   );
 }

@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { findEntry, nextLessonAfter, type CatalogEntry } from '../lib/content';
+import { buildQuiz } from '../lib/quiz';
 import { progressStore, computeStreak } from '../stores/progress';
+import { quizHistoryStore, bestScore } from '../stores/quizHistory';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 
@@ -9,11 +11,18 @@ import { Icon } from '../ui/Icon';
  * The moment of celebration after a lesson — the screen every learning app
  * treats as sacred: a big win mark, the streak, and ONE clear next action.
  * Deliberately full-bleed with no nav: nothing competes with the next step.
+ *
+ * Which action leads depends on what the student has not done yet. Before the
+ * quiz, practice leads, because a lesson watched and never tested is a video;
+ * once it has been taken, the next lesson leads and practice steps back to a
+ * secondary line carrying the best score. A lesson with no questions behind it
+ * shows no practice button at all rather than one that opens an empty quiz.
  */
 export function LessonComplete() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const progress = useStore(progressStore);
+  const quizHistory = useStore(quizHistoryStore);
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [next, setNext] = useState<CatalogEntry | null>(null);
 
@@ -24,6 +33,14 @@ export function LessonComplete() {
   }, [lessonId]);
 
   const streak = computeStreak(progress);
+  const hasQuiz = useMemo(() => (lessonId ? buildQuiz(lessonId) !== null : false), [lessonId]);
+  const best = lessonId ? bestScore(quizHistory, lessonId) : null;
+  const practiceLeads = hasQuiz && best === null;
+
+  const primary =
+    'bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2';
+  const secondary =
+    'bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md px-6 py-3 rounded-xl border-2 border-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center gap-2';
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body-md grid place-items-center px-margin-mobile py-10">
@@ -47,19 +64,29 @@ export function LessonComplete() {
         )}
 
         <div className="grid gap-3 w-full mt-2">
+          {hasQuiz && (
+            <button
+              onClick={() => navigate(`/quiz/${lessonId}`)}
+              className={practiceLeads ? primary : secondary}
+            >
+              <Icon name="quiz" filled={practiceLeads} />
+              {best === null
+                ? 'Practice what you learned'
+                : `Practice again · best ${best.score}/${best.total}`}
+            </button>
+          )}
+
           {next && (
             <button
               onClick={() => navigate(`/lesson/${next.id}`)}
-              className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-2 border-[#2f2ebe] hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
+              className={practiceLeads ? secondary : primary}
             >
               Next: {next.title}
               <Icon name="chevron_right" />
             </button>
           )}
-          <button
-            onClick={() => navigate('/')}
-            className="bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md px-6 py-3 rounded-xl border-2 border-surface-variant hover:bg-surface-container transition-colors flex items-center justify-center gap-2"
-          >
+
+          <button onClick={() => navigate('/')} className={secondary}>
             <Icon name="home" />
             Back home
           </button>
