@@ -73,10 +73,21 @@ describe('Scene: focus', () => {
 });
 
 describe('Scene: frame and determinism', () => {
-  it('uses the fixed 1000x620 viewBox and scales to its container', () => {
-    const html = render(['t_title']);
-    expect(html).toContain('viewBox="0 0 1000 620"');
+  it('frames the camera on the visible content, not the whole board', () => {
+    const html = render(['b_heart']);
+    const m = html.match(/viewBox="([\d.]+) ([\d.]+) ([\d.]+) ([\d.]+)"/);
+    expect(m).not.toBeNull();
+    // Zoomed in: the frame is smaller than the board, but never past MAX_ZOOM.
+    const [, , , w, h] = m!.map(Number);
+    expect(w).toBeLessThan(lesson.canvas.w);
+    expect(h).toBeLessThan(lesson.canvas.h);
+    expect(w).toBeGreaterThanOrEqual(lesson.canvas.w / 3 - 0.1); // toFixed(1) rounding
     expect(html).toContain('width:100%');
+  });
+
+  it('holds the whole board when `wide` is set', () => {
+    const html = renderToString(<Scene lesson={lesson} visible={['b_heart']} focus={[]} wide />);
+    expect(html).toContain(`viewBox="0.0 0.0 ${lesson.canvas.w}.0 ${lesson.canvas.h}.0"`);
   });
 
   it('is byte-identical across renders (no Math.random anywhere)', () => {

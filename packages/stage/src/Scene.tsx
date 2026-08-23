@@ -1,5 +1,6 @@
-import { useEffect, useRef, type CSSProperties, type ReactElement } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
+import { computeFrame, noteBoxHeight, type Rect } from './frame';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -7,6 +8,13 @@ export interface SceneProps {
   visible: string[];
   /** Element ids to emphasise; everything else dims (never hides). */
   focus: string[];
+  /**
+   * Hold the camera on the whole board instead of framing the beat.
+   *
+   * For the places that show a lesson at thumbnail size, where zooming in on
+   * two words would be a worse preview than a small complete board.
+   */
+  wide?: boolean;
 }
 
 /**
@@ -77,16 +85,6 @@ function centerOf(el: Element): Point {
       };
     }
   }
-}
-
-/**
- * Server/first-paint rendering cannot measure text, so the note's foreignObject
- * gets an overestimated height (plus overflow:visible) and the card inside it
- * hugs its real wrapped content — wrap can never clip.
- */
-function noteBoxHeight(text: string, w: number): number {
-  const charsPerLine = Math.max(6, Math.floor((w - 26) / 7));
-  return Math.ceil(text.length / charsPerLine) * 21 + 60;
 }
 
 const noteCardStyle = (color: string): CSSProperties => ({
@@ -384,12 +382,105 @@ function SceneElement({ el, isNew, dimmed, focused }: SceneElementProps): ReactE
   );
 }
 
+/** How long the camera takes to travel between two beats' frames. */
+const PAN_MS = 620;
+
+const easeInOut = (t: number): number =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+const lerpRect = (a: Rect, b: Rect, t: number): Rect => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+  w: a.w + (b.w - a.w) * t,
+  h: a.h + (b.h - a.h) * t,
+});
+
+const sameRect = (a: Rect, b: Rect): boolean =>
+  Math.abs(a.x - b.x) < 0.5 &&
+  Math.abs(a.y - b.y) < 0.5 &&
+  Math.abs(a.w - b.w) < 0.5 &&
+  Math.abs(a.h - b.h) < 0.5;
+
+/**
+ * The camera. Eases the viewBox from wherever it is to wherever the beat wants
+ * it, so a change of subject reads as the board being panned rather than as a
+ * cut to a different picture.
+ *
+ * viewBox is an attribute, not a style, so there is no CSS transition to lean
+ * on — this is the rAF loop that would otherwise not exist. It settles exactly
+ * on the target and then stops; there is no idle animation running behind a
+ * still class.
+ */
+function useCamera(target: Rect): Rect {
+  const [shown, setShown] = useState(target);
+  const shownRef = useRef(target);
+  shownRef.current = shown;
+
+  // First frame lands instantly: a class opening with a 620ms zoom from
+  // nowhere is a transition the student did not ask for.
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      setShown(target);
+      return;
+    }
+    if (sameRect(shownRef.current, target)) return;
+
+    const reduced =
+      typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      setShown(target);
+      return;
+    }
+
+    const from = shownRef.current;
+    const startedAt = performance.now();
+    let raf = requestAnimationFrame(function step(now) {
+      const t = Math.min(1, (now - startedAt) / PAN_MS);
+      setShown(t >= 1 ? target : lerpRect(from, target, easeInOut(t)));
+      if (t < 1) raf = requestAnimationFrame(step);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [target.x, target.y, target.w, target.h]);
+
+  return shown;
+}
+
+/**
+ * One canvas unit never renders wider than this many CSS pixels. The zoom that
+ * makes a note readable on a phone would set banner text on a desktop — past
+ * this density the camera simply stops coming closer.
+ */
+const MAX_UNIT_PX = 1.6;
+
+/** The rendered size of the SVG, so the frame can be shaped to the screen. */
+function useMeasure(
+  ref: React.RefObject<SVGSVGElement | null>,
+): { aspect?: number; width?: number } {
+  const [size, setSize] = useState<{ aspect?: number; width?: number }>({});
+  useEffect(() => {
+    const el = ref.current;
+    // jsdom has no ResizeObserver and no layout; tests fall through to the
+    // content's own shape, which is deterministic and is what they assert on.
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) setSize({ aspect: width / height, width });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return size;
+}
+
 /**
  * The SVG renderer. Renders; decides nothing — what is visible/focused was
- * decided upstream and arrives as props. All animation is CSS inside the SVG,
- * so there are no timers to leak past unmount.
+ * decided upstream and arrives as props, and where the camera points is
+ * computed by `computeFrame`. All element animation is CSS inside the SVG.
  */
-export function Scene({ lesson, visible, focus }: SceneProps): ReactElement {
+export function Scene({ lesson, visible, focus, wide = false }: SceneProps): ReactElement {
   // Previous render's visible set, committed after paint so the render pass can
   // tell which elements just appeared and animate only those. On the first
   // render (prev === null) everything draws in — the canvas is coming from blank.
@@ -403,14 +494,22 @@ export function Scene({ lesson, visible, focus }: SceneProps): ReactElement {
   const focusSet = new Set(focus);
   const dimming = focusSet.size > 0;
 
+  const svgRef = useRef<SVGSVGElement>(null);
+  const { aspect, width } = useMeasure(svgRef);
+  const target = wide
+    ? { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h }
+    : computeFrame(lesson, visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
+  const box = useCamera(target);
+
   return (
     <svg
-      viewBox={`0 0 ${lesson.canvas.w} ${lesson.canvas.h}`}
+      ref={svgRef}
+      viewBox={`${box.x.toFixed(1)} ${box.y.toFixed(1)} ${box.w.toFixed(1)} ${box.h.toFixed(1)}`}
       role="img"
       aria-label={lesson.title}
       // width AND height 100%: the SVG letterboxes inside whatever box the app
-      // gives it (preserveAspectRatio meet), so it can never push siblings —
-      // like the chalk tray — off the screen.
+      // gives it (preserveAspectRatio meet), so it can never push siblings off
+      // the screen even when a frame's aspect misses the box's.
       style={{ display: 'block', width: '100%', height: '100%' }}
     >
       <style>{SCENE_CSS}</style>

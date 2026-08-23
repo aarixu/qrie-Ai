@@ -65,6 +65,19 @@ export default {
 
         outline: '#767586',
         'outline-variant': '#c7c4d7',
+
+        // The classroom's call-screen palette, copied from Google Meet. Only
+        // the in-class screen uses these; every other screen stays light.
+        stage: '#202124',
+        'stage-surface': '#3c4043',
+        'stage-panel': '#2b2d31',
+        'stage-ink': '#e8eaed',
+        'stage-ink-dim': '#bdc1c6',
+        'stage-blue': '#8ab4f8',
+        'stage-green': '#34d872',
+        'stage-green-container': '#0f5c2e',
+        'stage-green-ink': '#7ce7a2',
+        'stage-red': '#ea4335',
       },
       borderRadius: {
         DEFAULT: '0.25rem',

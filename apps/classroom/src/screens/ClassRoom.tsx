@@ -13,26 +13,22 @@ import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
-import { createLiveAgent } from '../lib/liveAgent';
+import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
 import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
-import { preferencesStore } from '../stores/preferences';
+import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
-import { TutorBadge, type TutorMode } from '../ui/TutorBadge';
-import {
-  VoiceDoubtSheet,
-  type VoiceState,
-  type TranscriptLine,
-} from '../ui/VoiceDoubtSheet';
+import { TutorTile, type TutorMode } from '../ui/TutorTile';
+import { DoubtPanel } from '../ui/DoubtPanel';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
- * raise-hand button without hunting, short enough that the canvas is not
- * competing with a button bar for most of the class.
+ * raise-hand button without hunting, short enough that the class is not
+ * competing with its own toolbar for the screen.
  */
 const CONTROLS_IDLE_MS = 3_500;
 
@@ -94,9 +90,60 @@ export function LessonRoute() {
   return <ClassRoom lesson={lesson} tts={tts} onExit={() => navigate('/')} />;
 }
 
+/** m:ss, the way a call timer reads. */
+const formatClock = (totalSeconds: number): string => {
+  const m = Math.floor(totalSeconds / 60);
+  const s = totalSeconds % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+};
+
+/** One round Meet-style control. */
+function ToolButton({
+  icon,
+  label,
+  onClick,
+  disabled = false,
+  tone = 'plain',
+  big = false,
+}: {
+  icon: string;
+  label: string;
+  onClick(): void;
+  disabled?: boolean;
+  tone?: 'plain' | 'primary' | 'green' | 'red' | 'lit';
+  big?: boolean;
+}) {
+  const tones: Record<string, string> = {
+    plain: 'bg-stage-surface text-stage-ink',
+    primary: 'bg-primary text-on-primary',
+    green: 'bg-[#188038] text-white',
+    red: 'bg-stage-red text-white',
+    lit: 'bg-stage-blue text-stage',
+  };
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={label}
+      className={`rounded-full grid place-items-center shadow-md transition-transform active:scale-95 disabled:opacity-40 ${
+        big ? 'w-[62px] h-[62px]' : 'w-[50px] h-[50px]'
+      } ${tones[tone]}`}
+    >
+      <Icon name={icon} filled className={big ? 'text-[28px]' : 'text-[22px]'} />
+    </button>
+  );
+}
+
 /**
- * The classroom. Wiring only — every decision this screen appears to make is
- * actually made inside a package:
+ * The classroom — laid out the way Meet lays out a call with a presentation,
+ * because "a Google Meet where an AI teacher is taking a live class" is the
+ * product. The board is the shared screen and takes everything; Meera is a
+ * participant tile (side rail on wide screens, PiP on a phone); the top bar
+ * says whose class this is and whether it is the recording or the live tutor;
+ * the toolbar holds the controls and fades away like Meet's.
+ *
+ * Wiring only — every decision this screen appears to make is actually made
+ * inside a package:
  *   what's on the canvas   → stage (computeVisible / Scene)
  *   when beats advance     → player
  *   the raise-hand handoff → doubt-session
@@ -119,19 +166,21 @@ export function ClassRoom({
   playerRef.current = player;
 
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
-  const [agentLines, setAgentLines] = useState<string[]>([]);
+  const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
   const [recallBeatId, setRecallBeatId] = useState<string | null>(null);
 
   // Live-voice session state, fed by the live agent's callbacks.
-  const [liveState, setLiveState] = useState<VoiceState>('connecting');
+  const [liveState, setLiveState] = useState<LiveState>('connecting');
   const [transcript, setTranscript] = useState<TranscriptLine[]>([]);
-  const [micLevel, setMicLevel] = useState(0);
   const [muted, setMuted] = useState(false);
   const [voiceMode, setVoiceMode] = useState(false);
-  // Controls fade out of a class in progress and come back on any touch. The
-  // canvas is the lesson; a permanent button bar on a phone screen is a strip
-  // of the lesson permanently covered.
+  // The controls fade out of a class in progress and come back on any touch,
+  // exactly as Meet's do. The board never moves when they go — they only fade —
+  // so the camera is not re-framing every 3.5 seconds.
   const [controlsShown, setControlsShown] = useState(true);
+  // Typed-doubt input on a phone, where there is no side panel to type into.
+  const [typing, setTyping] = useState(false);
+  const [draft, setDraft] = useState('');
   // The live session polls this per audio chunk, so it must read the latest
   // value rather than the one captured when the agent was built.
   const mutedRef = useRef(muted);
@@ -173,7 +222,6 @@ export function ClassRoom({
         apiKey,
         student,
         onState: setLiveState,
-        onMicLevel: setMicLevel,
         isMuted: () => mutedRef.current,
         onTranscript: (line) =>
           // Non-final lines arrive as the whole line so far — replace the last
@@ -217,14 +265,15 @@ export function ClassRoom({
       setHandoffState(handoff.state);
       if (handoff.state === 'PLAYING') {
         // Doubt over — clear the room so the next one starts fresh.
-        setAgentLines([]);
+        setTextLines([]);
         setTranscript([]);
-        setMicLevel(0);
         setMuted(false);
+        setTyping(false);
+        setDraft('');
       }
     });
     const offSay = handoff.on('agent-say', (line) => {
-      if (line) setAgentLines((prev) => [...prev, line]);
+      if (line) setTextLines((prev) => [...prev, { role: 'tutor', text: line, final: true }]);
     });
     return () => {
       offState();
@@ -232,10 +281,12 @@ export function ClassRoom({
     };
   }, [handoff]);
 
+  const inDoubt = handoffState !== 'PLAYING';
+
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
   // student is looking for a button, not at a diagram.
-  const canHideControls = player.state === 'playing' && handoffState === 'PLAYING';
+  const canHideControls = player.state === 'playing' && !inDoubt;
 
   useEffect(() => {
     if (!canHideControls || !controlsShown) return;
@@ -250,15 +301,24 @@ export function ClassRoom({
     if (!canHideControls) setControlsShown(true);
   }, [canHideControls]);
 
+  // The class clock: ticking whenever the room is doing something — the
+  // recording playing, or the live tutor talking a doubt through.
+  const [elapsed, setElapsed] = useState(0);
+  const clockRunning = player.state === 'playing' || inDoubt;
+  useEffect(() => {
+    if (!clockRunning) return;
+    const timer = setInterval(() => setElapsed((s) => s + 1), 1_000);
+    return () => clearInterval(timer);
+  }, [clockRunning]);
+
   // The canvas: during a recall, show the recalled beat; otherwise follow playback.
-  const inDoubt = handoffState !== 'PLAYING';
   const recalled = recallBeatId ? findBeat(lesson, recallBeatId) : null;
   const canvas =
     inDoubt && recalled
       ? { visible: [...recalled.show], focus: [...(recalled.focus ?? [])] }
       : computeVisible(lesson, player.beatIndex);
 
-  const avatarMode: TutorMode = inDoubt
+  const tutorMode: TutorMode = inDoubt
     ? 'listening'
     : player.state === 'playing'
       ? 'teaching'
@@ -310,135 +370,247 @@ export function ClassRoom({
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
   };
 
-  const caption = inDoubt ? (agentLines.at(-1) ?? '') : player.caption;
-  const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
-  // Beat progress fills the top bar the way established lesson players do.
-  const progress = player.state === 'ended' ? 1 : (player.beatIndex + (player.state === 'idle' ? 0 : 1)) / lesson.beats.length;
+  const sendText = (text: string) => {
+    setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
+    handoff.sendUserText(text);
+  };
 
+  const endDoubt = () => handoff.endDoubt();
+
+  // The doubt conversation: the live session's transcript, or the typed one.
+  const doubtLines = voiceMode ? transcript : textLines;
+
+  // What the room is doing right now, for the panel's status line. Derived
+  // from the handoff first: the bridge line is spoken during AGENT_ENTERING,
+  // and calling that moment "connecting" would contradict the student's ears.
+  const doubtStatus =
+    handoffState === 'AGENT_ENTERING'
+      ? 'Meera is stepping in…'
+      : handoffState === 'AGENT_LEAVING' || handoffState === 'RESUMING' || handoffState === 'PAUSING'
+        ? 'Back to the class…'
+        : !voiceMode
+          ? 'Type your doubt — she reads it right away'
+          : liveState === 'connecting'
+            ? 'Connecting…'
+            : liveState === 'listening'
+              ? 'She is listening — speak, or type'
+              : liveState === 'speaking'
+                ? 'Meera is answering…'
+                : "Couldn't hear you — you can type instead";
+
+  const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
+  // Beat progress fills the top hairline the way established lesson players do.
+  const progress =
+    player.state === 'ended' ? 1 : (player.beatIndex + (player.state === 'idle' ? 0 : 1)) / lesson.beats.length;
+
+  // During a doubt the caption carries the conversation's latest line — on a
+  // phone it is the only place the conversation is visible.
+  const lastDoubtLine = doubtLines[doubtLines.length - 1];
+  const caption = inDoubt ? (lastDoubtLine?.text ?? '') : preferences.captions ? player.caption : '';
+
+  const barsShown = controlsShown || !canHideControls;
+  const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
 
   return (
     <div
       onPointerDown={revealControls}
       onPointerMove={revealControls}
       onKeyDown={revealControls}
-      className="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased pb-[104px]"
+      className="fixed inset-0 bg-stage text-stage-ink flex flex-col overflow-hidden font-body-md antialiased select-none"
     >
-      {/* Top: back, progress, title */}
-      <header className="w-full px-margin-mobile pt-4 pb-3 bg-surface sticky top-0 z-10 flex flex-col gap-3 shadow-sm">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onExit}
-            aria-label="Go back"
-            className="text-on-surface-variant hover:bg-surface-container-high p-2 rounded-full transition-colors flex-shrink-0"
-          >
-            <Icon name="arrow_back" />
-          </button>
-          <div className="flex-grow h-3 bg-surface-variant rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${Math.round(progress * 100)}%` }}
-            />
-          </div>
-          {inDoubt && (
-            <span className="flex items-center gap-1.5 bg-[#dcfce7] text-[#166534] rounded-full px-3 py-1 font-label-sm text-label-sm font-bold flex-shrink-0">
-              <span className="w-2 h-2 rounded-full bg-[#16a34a] animate-pulse" />
-              LIVE
-            </span>
-          )}
+      {/* Beat progress, a hairline at the very top */}
+      <div className="h-[3px] bg-white/15 flex-shrink-0">
+        <div
+          className="h-full bg-stage-blue rounded-r transition-all duration-500 ease-out"
+          style={{ width: `${Math.round(progress * 100)}%` }}
+        />
+      </div>
+
+      {/* Top bar: whose class, and whether this is the recording or the live tutor */}
+      <header
+        className={`flex items-center gap-2.5 px-3 py-2 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
+      >
+        <button
+          onClick={onExit}
+          aria-label="Leave the class"
+          className="w-9 h-9 rounded-full grid place-items-center hover:bg-white/10 transition-colors flex-shrink-0"
+        >
+          <Icon name="arrow_back" className="text-[22px]" />
+        </button>
+        <div className="min-w-0">
+          <h1 className="font-headline-md text-[15px] leading-5 font-semibold text-stage-ink truncate">
+            {lesson.title}
+          </h1>
+          <p className="font-label-sm text-[11.5px] leading-4 text-stage-ink-dim truncate">
+            {lesson.subtitle ? `${lesson.subtitle} · ` : ''}
+            {player.beatIndex + (player.state === 'idle' ? 0 : 1)}/{lesson.beats.length}
+          </p>
         </div>
-        <div className="flex flex-col">
-          <h1 className="font-headline-md text-headline-md font-bold text-on-surface">{lesson.title}</h1>
-          {lesson.subtitle && (
-            <p className="font-label-md text-label-md text-on-surface-variant mt-0.5">{lesson.subtitle}</p>
-          )}
-        </div>
+        <div className="flex-1" />
+        {inDoubt ? (
+          <span className="flex items-center gap-1.5 bg-stage-green-container text-stage-green-ink rounded-full px-2.5 py-1 font-label-sm text-label-sm font-bold tracking-wide flex-shrink-0">
+            <span className="w-[7px] h-[7px] rounded-full bg-stage-green animate-pulse" />
+            LIVE · DOUBT
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 bg-white/10 text-stage-ink rounded-full px-2.5 py-1 font-label-sm text-label-sm font-bold tracking-wide flex-shrink-0">
+            <span className="w-[7px] h-[7px] rounded-full bg-stage-red" />
+            REC
+          </span>
+        )}
+        <span className="font-label-md text-[13px] font-semibold tabular-nums flex-shrink-0">
+          {formatClock(elapsed)}
+        </span>
       </header>
 
-      {/* The canvas card */}
-      <main className="flex-grow flex flex-col px-margin-mobile py-stack-md gap-stack-md max-w-[1120px] mx-auto w-full">
-        <section className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-soft-indigo relative">
-          <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-surface-container-low grid place-items-center">
-            <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
+      {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
+      <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
+        <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
 
-            {/* Not started / finished: one clear action, centre-canvas. */}
-            {notStarted && (
-              <div className="absolute inset-0 grid place-items-center bg-surface-container-lowest/70 backdrop-blur-[2px]">
-                <button
-                  onClick={startClass}
-                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
-                >
-                  <Icon name={player.state === 'ended' ? 'replay' : 'play_arrow'} filled />
-                  {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
-                </button>
-              </div>
-            )}
-          </div>
+          {/* The caption: one line over the board, like Meet's captions. */}
+          {caption && (
+            <p
+              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white truncate ${
+                inDoubt ? 'bg-stage-green-container/95' : 'bg-stage/85'
+              }`}
+            >
+              {caption}
+            </p>
+          )}
 
-          {/* The tutor, sitting on the card's edge */}
-          <div className="absolute -bottom-6 right-4">
-            <TutorBadge mode={avatarMode} />
-          </div>
+          {/* Not started / finished: one clear action, centre-board. */}
+          {notStarted && (
+            <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
+              <button
+                onClick={startClass}
+                className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+              >
+                <Icon name={player.state === 'ended' ? 'replay' : 'play_arrow'} filled />
+                {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
+              </button>
+            </div>
+          )}
         </section>
 
-        {/* What she is saying right now */}
-        {preferences.captions && (
-          <section className="text-center px-4 max-w-2xl mx-auto mt-6 min-h-[64px]">
-            {caption && (
-              <p className="font-body-lg text-body-lg text-on-surface-variant">{caption}</p>
-            )}
-          </section>
-        )}
+        {/* The rail: Meera's window over the doubt conversation. Wide screens only. */}
+        <aside className="hidden lg:flex w-[300px] flex-shrink-0 flex-col gap-3">
+          <TutorTile mode={tutorMode} variant="rail" />
+          <DoubtPanel
+            active={inDoubt}
+            lines={doubtLines}
+            status={doubtStatus}
+            onSend={inDoubt ? sendText : undefined}
+            onDone={inDoubt ? endDoubt : undefined}
+          />
+        </aside>
       </main>
 
-      {/* Bottom: lesson controls, or the live doubt sheet */}
-      {!inDoubt ? (
-        <nav
-          aria-hidden={!controlsShown}
-          className={`fixed bottom-0 left-0 w-full z-50 px-margin-mobile py-4 bg-surface-container rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-[calc(1rem+env(safe-area-inset-bottom))] transition-[transform,opacity] duration-300 ease-out ${
-            controlsShown ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
-          }`}
-        >
-          <div className="flex gap-4 items-center w-full max-w-[1120px] mx-auto">
-            <button
+      {/* On a phone Meera floats over the board, Meet PiP style. */}
+      <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
+        <TutorTile mode={tutorMode} variant="pip" />
+      </div>
+
+      {/* Typed doubt on a phone: a slim input row the keyboard button summons. */}
+      {inDoubt && typing && (
+        <div className="lg:hidden flex gap-2 px-3 pb-2 z-30">
+          <input
+            autoFocus
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter' || !draft.trim()) return;
+              sendText(draft.trim());
+              setDraft('');
+            }}
+            placeholder="Type your doubt…"
+            aria-label="Type your doubt"
+            className="flex-1 min-w-0 h-11 px-3.5 rounded-xl bg-stage-surface text-stage-ink font-body-md text-[14px] placeholder:text-stage-ink-dim outline-none focus:ring-2 focus:ring-stage-blue"
+          />
+          <button
+            onClick={() => {
+              if (!draft.trim()) return;
+              sendText(draft.trim());
+              setDraft('');
+            }}
+            aria-label="Send doubt"
+            className="w-11 h-11 rounded-xl bg-primary text-on-primary grid place-items-center flex-shrink-0"
+          >
+            <Icon name="send" filled className="text-[18px]" />
+          </button>
+        </div>
+      )}
+
+      {/* The toolbar. It fades like Meet's — the board stays exactly where it is. */}
+      <nav
+        aria-hidden={!barsShown}
+        className={`flex justify-center items-center gap-3.5 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-1 flex-shrink-0 transition-opacity duration-300 ${barClasses}`}
+      >
+        {!inDoubt ? (
+          <>
+            <ToolButton
+              icon={player.state === 'playing' ? 'pause' : 'play_arrow'}
+              label={player.state === 'playing' ? 'Pause the class' : 'Play the class'}
               onClick={() => (player.state === 'playing' ? player.pause() : player.play())}
-              aria-label={player.state === 'playing' ? 'Pause lesson' : 'Play lesson'}
-              className="grid place-items-center text-on-surface-variant bg-surface rounded-full w-12 h-12 border-2 border-outline-variant hover:bg-surface-container-high transition-colors flex-shrink-0"
-            >
-              <Icon name={player.state === 'playing' ? 'pause' : 'play_arrow'} filled />
-            </button>
-            <button
+              disabled={notStarted}
+            />
+            <ToolButton
+              icon="front_hand"
+              label="Raise hand and ask a doubt"
+              tone="primary"
+              big
               onClick={raiseHand}
               disabled={player.state !== 'playing' && player.state !== 'paused'}
-              className="flex-grow flex items-center justify-center gap-2 bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:border-b-4 disabled:active:translate-y-0"
-            >
-              <Icon name="front_hand" filled />
-              Raise hand
-            </button>
-          </div>
-        </nav>
-      ) : voiceMode ? (
-        <VoiceDoubtSheet
-          handoff={handoffState}
-          voice={handoffState === 'LIVE' ? liveState : 'connecting'}
-          transcript={transcript}
-          micLevel={micLevel}
-          muted={muted}
-          onToggleMute={() => setMuted((m) => !m)}
-          onEnd={() => handoff.endDoubt()}
-          onSendText={(text) => handoff.sendUserText(text)}
-        />
-      ) : (
-        <VoiceDoubtSheet
-          handoff={handoffState}
-          voice={handoffState === 'LIVE' ? 'listening' : 'connecting'}
-          transcript={agentLines.map((text) => ({ role: 'tutor' as const, text, final: true }))}
-          micLevel={0}
-          muted
-          onToggleMute={() => {}}
-          onEnd={() => handoff.endDoubt()}
-          onSendText={(text) => handoff.sendUserText(text)}
-        />
-      )}
+            />
+            <ToolButton
+              icon="closed_caption"
+              label={preferences.captions ? 'Hide captions' : 'Show captions'}
+              tone={preferences.captions ? 'lit' : 'plain'}
+              onClick={() => setPreference('captions', !preferences.captions)}
+            />
+            <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} />
+          </>
+        ) : (
+          <>
+            {voiceMode ? (
+              <ToolButton
+                icon={muted ? 'mic_off' : 'mic'}
+                label={muted ? 'Unmute microphone' : 'Mute microphone'}
+                tone={muted ? 'plain' : 'primary'}
+                onClick={() => setMuted((m) => !m)}
+                disabled={handoffState !== 'LIVE'}
+              />
+            ) : (
+              <div className="lg:hidden">
+                <ToolButton
+                  icon="keyboard"
+                  label="Type your doubt"
+                  tone={typing ? 'lit' : 'plain'}
+                  onClick={() => setTyping((t) => !t)}
+                />
+              </div>
+            )}
+            {voiceMode && (
+              <div className="lg:hidden">
+                <ToolButton
+                  icon="keyboard"
+                  label="Type your doubt"
+                  tone={typing ? 'lit' : 'plain'}
+                  onClick={() => setTyping((t) => !t)}
+                />
+              </div>
+            )}
+            <ToolButton icon="check" label="Got it — back to the class" tone="green" big onClick={endDoubt} />
+            <ToolButton
+              icon="closed_caption"
+              label={preferences.captions ? 'Hide captions' : 'Show captions'}
+              tone={preferences.captions ? 'lit' : 'plain'}
+              onClick={() => setPreference('captions', !preferences.captions)}
+            />
+            <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} disabled />
+          </>
+        )}
+      </nav>
     </div>
   );
 }

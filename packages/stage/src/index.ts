@@ -14,3 +14,4 @@ export { Viewport } from './viewport';
 // Scene and computeVisible are implemented in Scene.tsx / visible.ts:
 export { Scene } from './Scene';
 export { computeVisible } from './visible';
+export { computeFrame, bboxOf, type Rect } from './frame';
