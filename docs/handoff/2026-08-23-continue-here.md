@@ -107,11 +107,17 @@ Three more things I found in the same look:
   `recon-5.md` and `avatar-0.md` … `avatar-3.md`. They were produced by reading
   shipped `.d.ts` files and running the real binaries.
 
-## Check before you start
+## Already closed out — don't redo it
 
-A background workflow may have landed `Notes`, `Bookmarks` and `Achievements`
-screens uncommitted. Run `git status`. They are NOT the priority — commit or
-stash them and move to the classroom.
+`Notes`, `Bookmarks` and `Achievements` landed, are routed, and are reachable
+from Profile. Achievements are derived only from real data — no points, XP,
+levels or leagues, and a test asserts those words never appear. The two dead
+preferences now do something: `autoplayNext` rolls into the next lesson behind a
+five-second countdown you can stop, and `reducedMotion` sets an attribute on the
+document root that can only ever quieten motion, never restore it. The recorder
+is de-duplicated against `@ai-tutor/voice`, tested and documented.
+
+None of that is the priority. The classroom is.
 
 ## How I work
 

@@ -85,6 +85,9 @@ export function Profile() {
             : 'A few questions, so lessons start where you are',
           '/diagnostic',
         )}
+        {row('bookmark', 'Saved lessons', 'The ones you kept for later', '/bookmarks')}
+        {row('edit_note', 'My notes', 'What you wrote down, at the moment you wrote it', '/notes')}
+        {row('trophy', 'Achievements', 'What you have earned so far', '/achievements')}
         {row('settings', 'Settings', 'Class, subjects, playback, reset', '/settings')}
         {row('help', 'Help', 'How this works, and what to do when it does not', '/help')}
       </div>

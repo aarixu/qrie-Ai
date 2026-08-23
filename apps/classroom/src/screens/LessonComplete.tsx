@@ -4,6 +4,7 @@ import { findEntry, nextLessonAfter, type CatalogEntry } from '../lib/content';
 import { buildQuiz } from '../lib/quiz';
 import { progressStore, computeStreak } from '../stores/progress';
 import { quizHistoryStore, bestScore } from '../stores/quizHistory';
+import { preferencesStore } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 
@@ -18,11 +19,20 @@ import { Icon } from '../ui/Icon';
  * secondary line carrying the best score. A lesson with no questions behind it
  * shows no practice button at all rather than one that opens an empty quiz.
  */
+/**
+ * Long enough to read the line and stop it, short enough that it still feels
+ * like one class rolling into the next.
+ */
+const AUTOPLAY_SECONDS = 5;
+
 export function LessonComplete() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const progress = useStore(progressStore);
   const quizHistory = useStore(quizHistoryStore);
+  const preferences = useStore(preferencesStore);
+  const [secondsLeft, setSecondsLeft] = useState(AUTOPLAY_SECONDS);
+  const [stayHere, setStayHere] = useState(false);
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [next, setNext] = useState<CatalogEntry | null>(null);
 
@@ -36,6 +46,25 @@ export function LessonComplete() {
   const hasQuiz = useMemo(() => (lessonId ? buildQuiz(lessonId) !== null : false), [lessonId]);
   const best = lessonId ? bestScore(quizHistory, lessonId) : null;
   const practiceLeads = hasQuiz && best === null;
+  const autoplaying = preferences.autoplayNext && next !== null && !stayHere;
+
+  /**
+   * The preference is a promise to keep going, not a promise to hurry. The
+   * countdown is on screen and one tap stops it, so a student is never carried
+   * into the next lesson without being shown it is about to happen. `next` is
+   * null until nextLessonAfter resolves, so the last lesson never autoplays.
+   */
+  useEffect(() => {
+    if (!autoplaying || next === null) return;
+    if (secondsLeft <= 0) {
+      // replace: a finished lesson's celebration is not somewhere the back
+      // button should land them in the middle of the next class.
+      navigate(`/lesson/${next.id}`, { replace: true });
+      return;
+    }
+    const timer = setTimeout(() => setSecondsLeft((left) => left - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [autoplaying, next, secondsLeft, navigate]);
 
   const primary =
     'bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all flex items-center justify-center gap-2';
@@ -64,6 +93,23 @@ export function LessonComplete() {
         )}
 
         <div className="grid gap-3 w-full mt-2">
+          {autoplaying && (
+            <div className="flex items-center justify-between gap-3 bg-surface-container-lowest rounded-xl px-4 py-3 shadow-sm">
+              <p
+                aria-live="polite"
+                className="font-label-md text-label-md text-on-surface-variant text-left"
+              >
+                Next lesson in {secondsLeft}s
+              </p>
+              <button
+                onClick={() => setStayHere(true)}
+                className="font-label-md text-label-md text-primary underline underline-offset-2"
+              >
+                Stay here
+              </button>
+            </div>
+          )}
+
           {hasQuiz && (
             <button
               onClick={() => navigate(`/quiz/${lessonId}`)}

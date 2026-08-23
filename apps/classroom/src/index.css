@@ -30,8 +30,26 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
+  }
+
+  /* The student's own switch, on top of the OS setting - see stores/preferences.
+     It may only ever QUIETEN motion: nothing anywhere turns animation back on,
+     so a device already asking for less through prefers-reduced-motion keeps its
+     answer whatever this attribute says. Keep this block identical to the media
+     query above - they are one rule with two triggers.
+     animation-iteration-count matters more than it looks: without it the tutor
+     badge's infinite pulse keeps looping, just very fast. */
+  :root[data-reduced-motion='true'] *,
+  :root[data-reduced-motion='true'] *::before,
+  :root[data-reduced-motion='true'] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

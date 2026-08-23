@@ -11,6 +11,7 @@ import {
 import { GraphIndex } from '@ai-tutor/knowledge-graph';
 import { settingsStore, isOnboarded } from './stores/settings';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
+import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticData } from './lib/diagnosticData';
 import { SYLLABI } from './lib/content';
@@ -32,6 +33,9 @@ import { Settings } from './screens/Settings';
 import { Help } from './screens/Help';
 import { DoubtHistory } from './screens/DoubtHistory';
 import { StreakDetail } from './screens/StreakDetail';
+import { Notes } from './screens/Notes';
+import { Bookmarks } from './screens/Bookmarks';
+import { Achievements } from './screens/Achievements';
 
 /**
  * The subjects a student is being placed in.
@@ -147,7 +151,25 @@ function Gate({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/**
+ * The student's reduced-motion switch, applied to the document root.
+ *
+ * ONE DIRECTION ONLY: the attribute goes on when they ask for less motion and
+ * comes off when they do not. Nothing in the stylesheet turns motion back on,
+ * so a device whose OS already asks for less keeps that answer either way —
+ * a preference may quieten motion, never restore it.
+ */
+function useReducedMotion(): void {
+  const preferences = useStore(preferencesStore);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (preferences.reducedMotion) root.setAttribute('data-reduced-motion', 'true');
+    else root.removeAttribute('data-reduced-motion');
+  }, [preferences.reducedMotion]);
+}
+
 export default function App() {
+  useReducedMotion();
   return (
     <BrowserRouter>
       <Gate>
@@ -165,6 +187,9 @@ export default function App() {
           <Route path="/progress" element={<Progress />} />
           <Route path="/doubts" element={<DoubtHistory />} />
           <Route path="/streak" element={<StreakDetail />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/achievements" element={<Achievements />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<Navigate to="/" replace />} />
