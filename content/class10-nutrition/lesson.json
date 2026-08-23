@@ -4,87 +4,307 @@
   "title": "Nutrition",
   "subtitle": "Class 10 · Life Processes",
   "language": "en",
-  "topicRef": "class10-science/life-processes/nutrition",
-  "canvas": { "w": 1000, "h": 620 },
+  "topicRef": "class10-science/life-processes/autotrophic-nutrition",
+  "canvas": {
+    "w": 1000,
+    "h": 620
+  },
   "elements": [
-    { "kind": "title", "id": "t_title", "x": 500, "y": 80, "text": "Nutrition", "sub": "How living things get their fuel" },
-
-    { "kind": "note", "id": "n_hook", "x": 110, "y": 240, "w": 240, "text": "You ate lunch today. A neem tree outside did not eat anything. Yet both of you are alive and growing. How?" },
-
-    { "kind": "box", "id": "b_auto", "x": 130, "y": 200, "w": 220, "h": 100, "label": "AUTOTROPHS\nmake their own food", "tone": "good" },
-    { "kind": "box", "id": "b_hetero", "x": 650, "y": 200, "w": 220, "h": 100, "label": "HETEROTROPHS\neat other organisms" },
-    { "kind": "text", "id": "x_examples", "x": 500, "y": 350, "text": "plants, algae  ←  →  animals, fungi, you", "muted": true },
-
-    { "kind": "formula", "id": "f_photo", "x": 500, "y": 250, "text": "6CO2 + 6H2O --sunlight/chlorophyll--> C6H12O6 + 6O2" },
-    { "kind": "note", "id": "n_photo", "x": 340, "y": 320, "w": 320, "text": "Carbon dioxide + water, powered by sunlight caught in chlorophyll, become glucose + oxygen", "tone": "good" },
-
-    { "kind": "box", "id": "b_leaf", "x": 140, "y": 210, "w": 180, "h": 100, "label": "LEAF", "tone": "good" },
-    { "kind": "arrow", "id": "a_co2", "from": { "x": 60, "y": 200 }, "to": { "x": 135, "y": 240 }, "label": "CO2 in" },
-    { "kind": "arrow", "id": "a_sun", "from": { "x": 230, "y": 110 }, "to": { "x": 230, "y": 205 }, "label": "sunlight", "tone": "accent" },
-    { "kind": "arrow", "id": "a_o2", "from": { "x": 325, "y": 240 }, "to": { "x": 420, "y": 200 }, "label": "O2 out", "tone": "good" },
-    { "kind": "text", "id": "x_stomata", "x": 240, "y": 360, "text": "Gases enter and leave through tiny pores: stomata", "muted": true },
-
-    { "kind": "box", "id": "b_mouth", "x": 90, "y": 250, "w": 130, "h": 70, "label": "MOUTH" },
-    { "kind": "box", "id": "b_stomach", "x": 300, "y": 250, "w": 150, "h": 70, "label": "STOMACH" },
-    { "kind": "box", "id": "b_intestine", "x": 530, "y": 250, "w": 200, "h": 70, "label": "SMALL INTESTINE", "tone": "accent" },
-    { "kind": "arrow", "id": "a_m_s", "from": { "x": 225, "y": 285 }, "to": { "x": 295, "y": 285 } },
-    { "kind": "arrow", "id": "a_s_i", "from": { "x": 455, "y": 285 }, "to": { "x": 525, "y": 285 } },
-    { "kind": "note", "id": "n_absorb", "x": 620, "y": 360, "w": 260, "text": "The small intestine is where digested food is finally ABSORBED into the blood — through millions of finger-like villi" },
-
-    { "kind": "note", "id": "n_recap", "x": 340, "y": 450, "w": 320, "text": "Plants trap energy from the sun; animals take it second-hand by eating. Either way, glucose is the fuel.", "tone": "accent" }
+    {
+      "kind": "title",
+      "id": "t_title",
+      "x": 500,
+      "y": 80,
+      "text": "Nutrition",
+      "sub": "How living things get their fuel"
+    },
+    {
+      "kind": "note",
+      "id": "n_hook",
+      "x": 110,
+      "y": 240,
+      "w": 240,
+      "text": "You ate lunch today. A neem tree outside did not eat anything. Yet both of you are alive and growing. How?"
+    },
+    {
+      "kind": "box",
+      "id": "b_auto",
+      "x": 130,
+      "y": 200,
+      "w": 220,
+      "h": 100,
+      "label": "AUTOTROPHS\nmake their own food",
+      "tone": "good"
+    },
+    {
+      "kind": "box",
+      "id": "b_hetero",
+      "x": 650,
+      "y": 200,
+      "w": 220,
+      "h": 100,
+      "label": "HETEROTROPHS\neat other organisms"
+    },
+    {
+      "kind": "text",
+      "id": "x_examples",
+      "x": 500,
+      "y": 350,
+      "text": "plants, algae  ←  →  animals, fungi, you",
+      "muted": true
+    },
+    {
+      "kind": "formula",
+      "id": "f_photo",
+      "x": 500,
+      "y": 250,
+      "text": "6CO2 + 6H2O --sunlight/chlorophyll--> C6H12O6 + 6O2"
+    },
+    {
+      "kind": "note",
+      "id": "n_photo",
+      "x": 340,
+      "y": 320,
+      "w": 320,
+      "text": "Carbon dioxide + water, powered by sunlight caught in chlorophyll, become glucose + oxygen",
+      "tone": "good"
+    },
+    {
+      "kind": "box",
+      "id": "b_leaf",
+      "x": 140,
+      "y": 210,
+      "w": 180,
+      "h": 100,
+      "label": "LEAF",
+      "tone": "good"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_co2",
+      "from": {
+        "x": 60,
+        "y": 200
+      },
+      "to": {
+        "x": 135,
+        "y": 240
+      },
+      "label": "CO2 in"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_sun",
+      "from": {
+        "x": 230,
+        "y": 110
+      },
+      "to": {
+        "x": 230,
+        "y": 205
+      },
+      "label": "sunlight",
+      "tone": "accent"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_o2",
+      "from": {
+        "x": 325,
+        "y": 240
+      },
+      "to": {
+        "x": 420,
+        "y": 200
+      },
+      "label": "O2 out",
+      "tone": "good"
+    },
+    {
+      "kind": "text",
+      "id": "x_stomata",
+      "x": 240,
+      "y": 360,
+      "text": "Gases enter and leave through tiny pores: stomata",
+      "muted": true
+    },
+    {
+      "kind": "box",
+      "id": "b_mouth",
+      "x": 90,
+      "y": 250,
+      "w": 130,
+      "h": 70,
+      "label": "MOUTH"
+    },
+    {
+      "kind": "box",
+      "id": "b_stomach",
+      "x": 300,
+      "y": 250,
+      "w": 150,
+      "h": 70,
+      "label": "STOMACH"
+    },
+    {
+      "kind": "box",
+      "id": "b_intestine",
+      "x": 530,
+      "y": 250,
+      "w": 200,
+      "h": 70,
+      "label": "SMALL INTESTINE",
+      "tone": "accent"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_m_s",
+      "from": {
+        "x": 225,
+        "y": 285
+      },
+      "to": {
+        "x": 295,
+        "y": 285
+      }
+    },
+    {
+      "kind": "arrow",
+      "id": "a_s_i",
+      "from": {
+        "x": 455,
+        "y": 285
+      },
+      "to": {
+        "x": 525,
+        "y": 285
+      }
+    },
+    {
+      "kind": "note",
+      "id": "n_absorb",
+      "x": 620,
+      "y": 360,
+      "w": 260,
+      "text": "The small intestine is where digested food is finally ABSORBED into the blood — through millions of finger-like villi"
+    },
+    {
+      "kind": "note",
+      "id": "n_recap",
+      "x": 340,
+      "y": 450,
+      "w": 320,
+      "text": "Plants trap energy from the sun; animals take it second-hand by eating. Either way, glucose is the fuel.",
+      "tone": "accent"
+    }
   ],
   "beats": [
     {
       "id": "hook",
       "topic": "Why nutrition",
       "narration": "Here's a puzzle. You ate lunch today. The neem tree outside your window ate nothing — no lunch, no dinner, ever. Yet both of you are alive, growing, and full of energy. How does that work? That's what nutrition is about.",
-      "show": ["t_title", "n_hook"],
-      "focus": ["n_hook"]
+      "show": [
+        "t_title",
+        "n_hook"
+      ],
+      "focus": [
+        "n_hook"
+      ]
     },
     {
       "id": "two_modes",
       "topic": "Autotrophs vs heterotrophs",
       "narration": "There are exactly two strategies for getting food. Autotrophs — plants and algae — build their own food from scratch. Heterotrophs — animals, fungi, and you — take it ready-made by eating others. Every living thing picks one of these two sides.",
-      "show": ["b_auto", "b_hetero", "x_examples"],
-      "focus": ["b_auto", "b_hetero"],
+      "show": [
+        "b_auto",
+        "b_hetero",
+        "x_examples"
+      ],
+      "focus": [
+        "b_auto",
+        "b_hetero"
+      ],
       "minMs": 2000
     },
     {
       "id": "photosynthesis",
       "topic": "Photosynthesis — the equation",
       "narration": "So how does a plant build food from scratch? Photosynthesis. Take carbon dioxide from the air, water from the soil, power it with sunlight trapped in chlorophyll — and out come glucose and oxygen. Read this equation carefully; it runs almost all life on Earth.",
-      "show": ["f_photo", "n_photo"],
-      "focus": ["f_photo"],
+      "show": [
+        "f_photo",
+        "n_photo"
+      ],
+      "focus": [
+        "f_photo"
+      ],
       "minMs": 2500
     },
     {
       "id": "leaf_factory",
       "topic": "The leaf as a factory",
       "narration": "Picture the leaf as a factory. Carbon dioxide walks in through tiny pores called stomata, sunlight streams in from above, and oxygen walks out. Think about it — the oxygen you are breathing right now left a leaf through one of these pores.",
-      "show": ["b_leaf", "a_co2", "a_sun", "a_o2", "x_stomata"],
-      "focus": ["a_sun", "b_leaf"]
+      "show": [
+        "b_leaf",
+        "a_co2",
+        "a_sun",
+        "a_o2",
+        "x_stomata"
+      ],
+      "focus": [
+        "a_sun",
+        "b_leaf"
+      ]
     },
     {
       "id": "human_digestion",
       "topic": "Human digestion path",
       "narration": "Now your side of the story. Food enters the mouth, where chewing and saliva begin breaking it down. The stomach churns it with acid and enzymes. But here's the surprise — almost nothing enters your blood until the small intestine.",
-      "show": ["b_mouth", "b_stomach", "b_intestine", "a_m_s", "a_s_i"],
-      "focus": ["b_mouth", "b_stomach"]
+      "show": [
+        "b_mouth",
+        "b_stomach",
+        "b_intestine",
+        "a_m_s",
+        "a_s_i"
+      ],
+      "focus": [
+        "b_mouth",
+        "b_stomach"
+      ]
     },
     {
       "id": "absorption",
       "topic": "Absorption in the small intestine",
       "narration": "The small intestine is the real hero. Its wall is covered with millions of tiny finger-like projections called villi, which give it a huge surface area. That is where digested food is finally absorbed into your blood and delivered to every cell.",
-      "show": ["b_mouth", "b_stomach", "b_intestine", "a_m_s", "a_s_i", "n_absorb"],
-      "focus": ["b_intestine", "n_absorb"],
+      "show": [
+        "b_mouth",
+        "b_stomach",
+        "b_intestine",
+        "a_m_s",
+        "a_s_i",
+        "n_absorb"
+      ],
+      "focus": [
+        "b_intestine",
+        "n_absorb"
+      ],
       "minMs": 2000
     },
     {
       "id": "recap",
       "topic": "Recap",
       "narration": "So, one line to remember: plants trap the sun's energy and build glucose; animals take that energy second-hand by eating. Either way, glucose is the fuel. And what does the body do with that fuel? That's our next lesson — respiration. Any doubts, raise your hand.",
-      "show": ["b_mouth", "b_stomach", "b_intestine", "a_m_s", "a_s_i", "n_absorb", "n_recap"],
-      "focus": ["n_recap"]
+      "show": [
+        "b_mouth",
+        "b_stomach",
+        "b_intestine",
+        "a_m_s",
+        "a_s_i",
+        "n_absorb",
+        "n_recap"
+      ],
+      "focus": [
+        "n_recap"
+      ]
     }
   ]
 }

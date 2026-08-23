@@ -1,0 +1,2100 @@
+{
+  "id": "class9-science",
+  "klass": 9,
+  "subject": "Science",
+  "chapters": [
+    {
+      "id": "matter-in-our-surroundings",
+      "title": "Matter in Our Surroundings",
+      "topics": [
+        {
+          "id": "physical-nature-of-matter",
+          "title": "Physical Nature of Matter",
+          "objectives": [
+            "Student can state that matter is made of tiny particles",
+            "Student can describe how serial dilution shows that particles are extremely small"
+          ],
+          "visualIdeas": [
+            "a beaker showing sugar dissolving in water with microscopic inset of water molecules and sugar particles",
+            "a sequence of beakers showing the fading pink color of potassium permanganate after multiple dilutions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "matter-is-made-up-of-particles",
+          "title": "Matter is Made up of Particles",
+          "objectives": [
+            "Student can demonstrate that the level of water does not change when salt is dissolved in it",
+            "Student can conclude that particles of matter have space between them"
+          ],
+          "visualIdeas": [
+            "a graduated cylinder showing water level remaining constant after adding salt",
+            "a simple particle animation of salt particles fitting into the spaces between water molecules"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-small-are-these-particles-of-matter",
+          "title": "How Small are these Particles of Matter?",
+          "objectives": [
+            "Student can calculate the dilution factor of a colored solution",
+            "Student can estimate the upper limit of particle size from experimental observations"
+          ],
+          "visualIdeas": [
+            "a diagram of a single drop of water containing millions of tiny particle dots",
+            "a scale bar showing meters down to nanometers with a particle of matter highlighted"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "characteristics-of-particles-of-matter",
+          "title": "Characteristics of Particles of Matter",
+          "objectives": [
+            "Student can list the three main characteristics of particles of matter",
+            "Student can relate everyday observations like the smell of hot food to particle properties"
+          ],
+          "visualIdeas": [
+            "a bulleted list with icon drawings next to each characteristic of matter particles",
+            "a cartoon showing a person smelling hot food from a distance vs cold food up close"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "particles-of-matter-have-space-between-them",
+          "title": "Particles of Matter have Space Between Them",
+          "objectives": [
+            "Student can identify everyday examples like tea, coffee, or lemonade showing space between particles",
+            "Student can explain why gas particles are easily compressed compared to solids"
+          ],
+          "visualIdeas": [
+            "a side-by-side molecular view of a solid, liquid, and gas showing changing spaces between particles",
+            "a syringe containing water being compressed vs a syringe containing air being compressed"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "particles-of-matter-are-continuously-moving",
+          "title": "Particles of Matter are Continuously Moving",
+          "objectives": [
+            "Student can define diffusion in terms of particle movement",
+            "Student can explain the effect of temperature on the rate of diffusion"
+          ],
+          "visualIdeas": [
+            "a drop of ink spreading in cold water versus hot water showing faster spreading in hot water",
+            "arrows showing random paths of moving particles colliding with each other"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "particles-of-matter-attract-each-other",
+          "title": "Particles of Matter Attract Each Other",
+          "objectives": [
+            "Student can compare the cohesive forces of different substances like iron, chalk, and rubber band",
+            "Student can describe why a stream of water cannot be cut easily with fingers"
+          ],
+          "visualIdeas": [
+            "a hand trying to cut through a stream of water from a tap",
+            "magnified views of iron atoms bound tightly vs chalk particles bound loosely"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "states-of-matter",
+          "title": "States of Matter",
+          "objectives": [
+            "Student can name the three physical states of matter",
+            "Student can explain why ice, water, and water vapor represent different states of the same substance"
+          ],
+          "visualIdeas": [
+            "three labeled flasks containing an ice cube, liquid water, and a gaseous cloud of steam",
+            "a comparative table of the physical properties of solids, liquids, and gases"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-solid-state",
+          "title": "The Solid State",
+          "objectives": [
+            "Student can list properties of solids such as definite shape, distinct boundaries, and fixed volume",
+            "Student can explain why solids are rigid and resist change of shape under force"
+          ],
+          "visualIdeas": [
+            "drawings of a book, a needle, and a wooden stick representing solids",
+            "a diagram showing a hammer striking a solid block without compressing it"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-liquid-state",
+          "title": "The Liquid State",
+          "objectives": [
+            "Student can describe properties of liquids such as fluid nature, variable shape, and fixed volume",
+            "Student can show how gases like oxygen and carbon dioxide diffuse into liquids"
+          ],
+          "visualIdeas": [
+            "water poured into different-shaped containers showing change of shape with constant volume",
+            "aquatic plants and fish in water with dissolved oxygen bubbles highlighted"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-gaseous-state",
+          "title": "The Gaseous State",
+          "objectives": [
+            "Student can describe the high compressibility of gases compared to solids and liquids",
+            "Student can identify applications of compressed gases such as LPG and CNG"
+          ],
+          "visualIdeas": [
+            "a piston compressing gas in a syringe to show dramatic volume reduction",
+            "sketches of an LPG cylinder and a CNG vehicle tank with labels"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "can-matter-change-its-state",
+          "title": "Can Matter Change its State?",
+          "objectives": [
+            "Student can trace the transformation of ice to water and then to steam through temperature changes",
+            "Student can sketch a diagram showing interconversion of the three states of matter"
+          ],
+          "visualIdeas": [
+            "a triangular cyclic flow chart showing melting, vaporization, condensation, freezing, sublimation, and deposition",
+            "an experimental setup with a laboratory burner, beaker, thermometer, and ice"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "effect-of-change-of-temperature",
+          "title": "Effect of Change of Temperature",
+          "objectives": [
+            "Student can define melting point, boiling point, latent heat of fusion, and latent heat of vaporization",
+            "Student can explain why the temperature remains constant during phase changes"
+          ],
+          "visualIdeas": [
+            "a line graph of temperature vs heating time showing flat horizontal regions during phase transitions",
+            "sublimation of ammonium chloride showing dry vapors condensing on an inverted funnel"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "effect-of-change-of-pressure",
+          "title": "Effect of Change of Pressure",
+          "objectives": [
+            "Student can explain how increasing pressure and reducing temperature can liquefy gases",
+            "Student can describe why solid carbon dioxide is called dry ice"
+          ],
+          "visualIdeas": [
+            "a cylinder with a piston compressing gas particles until they transition to a liquid phase",
+            "a block of dry ice subliming directly into carbon dioxide gas at standard atmospheric pressure"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "evaporation",
+          "title": "Evaporation",
+          "objectives": [
+            "Student can define evaporation as a surface phenomenon",
+            "Student can distinguish between boiling and evaporation based on temperature and mechanism"
+          ],
+          "visualIdeas": [
+            "a diagram contrasting boiling (bulk phenomenon) with evaporation (surface phenomenon)",
+            "water molecules escaping from the surface of a puddle under a shining sun"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-affecting-evaporation",
+          "title": "Factors Affecting Evaporation",
+          "objectives": [
+            "Student can list the four factors that affect the rate of evaporation",
+            "Student can predict how changes in humidity, wind speed, temperature, and surface area alter evaporation rates"
+          ],
+          "visualIdeas": [
+            "four cartoon panels showing: clothes spread out (surface area), sun shining (temperature), windy day (wind speed), and humid day (humidity)",
+            "a bar chart showing rate of evaporation versus each factor"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-evaporation-cause-cooling",
+          "title": "How does Evaporation Cause Cooling?",
+          "objectives": [
+            "Student can explain why water remains cool in an earthen pot",
+            "Student can describe why we feel cool when acetone or perfume is poured on our palm"
+          ],
+          "visualIdeas": [
+            "a cross-section of an earthen pot with arrows showing water seeping through pores and evaporating from the outer surface",
+            "a sketch of a human hand with droplets of acetone and arrows representing heat being absorbed from the skin"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "is-matter-around-us-pure",
+      "title": "Is Matter Around Us Pure",
+      "topics": [
+        {
+          "id": "what-is-a-mixture",
+          "title": "What is a Mixture?",
+          "objectives": [
+            "Student can define a mixture in terms of physical combinations of substances",
+            "Student can distinguish between pure substances and mixtures using examples"
+          ],
+          "visualIdeas": [
+            "a package labeled 'Pure Ghee' next to a molecular-level drawing showing different types of molecules in a mixture",
+            "a box of mixed dry fruits used as an analogy for a physical mixture"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-mixtures",
+          "title": "Types of Mixtures",
+          "objectives": [
+            "Student can classify mixtures as homogeneous or heterogeneous",
+            "Student can demonstrate the preparation of a salt solution vs a sand-and-water mixture"
+          ],
+          "visualIdeas": [
+            "two beakers: Beaker A showing a uniform blue copper sulfate solution, Beaker B showing distinct layers of oil and water",
+            "a classification tree splitting mixtures into homogeneous and heterogeneous categories"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-a-solution",
+          "title": "What is a Solution?",
+          "objectives": [
+            "Student can define solute, solvent, and solution",
+            "Student can list the key properties of solutions including particle size and stability"
+          ],
+          "visualIdeas": [
+            "an algebraic equation: Solute + Solvent = Solution, with labeled diagrams of sugar, water, and sweet water",
+            "a beam of light passing through a true solution without scattering (no Tyndall effect)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "concentration-of-a-solution",
+          "title": "Concentration of a Solution",
+          "objectives": [
+            "Student can calculate the mass-by-mass percentage of a solution",
+            "Student can distinguish between saturated, unsaturated, and supersaturated solutions"
+          ],
+          "visualIdeas": [
+            "a step-by-step math formulation showing the calculation of mass percentage of a salt solution",
+            "beakers showing: unsaturated solution (room to dissolve), saturated solution (undissolved solute at bottom)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-is-a-suspension",
+          "title": "What is a Suspension?",
+          "objectives": [
+            "Student can define a suspension as a heterogeneous mixture",
+            "Student can describe properties of suspensions, such as particle visibility and sedimentation"
+          ],
+          "visualIdeas": [
+            "a beaker containing a chalk powder-water mixture showing visible particles floating around",
+            "a sequence of diagrams showing suspension particles settling down over time"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "what-is-a-colloidal-solution",
+          "title": "What is a Colloidal Solution?",
+          "objectives": [
+            "Student can define colloids and identify dispersed phase and dispersion medium",
+            "Student can explain the Tyndall effect with a practical example"
+          ],
+          "visualIdeas": [
+            "a laser beam path clearly shining through milk/water (colloid) but invisible in pure water (true solution)",
+            "a thick canopy forest where sunlight rays scatter through mist"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "physical-and-chemical-changes",
+          "title": "Physical and Chemical Changes",
+          "objectives": [
+            "Student can classify common changes (e.g., rust, melting, burning) as physical or chemical",
+            "Student can define the difference between physical changes (reversible, no new substance) and chemical changes (irreversible, new substance)"
+          ],
+          "visualIdeas": [
+            "a comparison split-screen: melting of ice (physical) vs burning of wood (chemical)",
+            "a table summarizing differences in composition and reversibility"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-are-the-types-of-pure-substances",
+          "title": "What are the Types of Pure Substances?",
+          "objectives": [
+            "Student can classify pure substances into elements and compounds",
+            "Student can describe how elements are further classified into metals, non-metals, and metalloids"
+          ],
+          "visualIdeas": [
+            "a flow chart splitting matter into pure substances and mixtures, then dividing pure substances into elements and compounds",
+            "sketches of typical metallic (copper wire) and non-metallic (sulfur powder) elements"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "elements",
+          "title": "Elements",
+          "objectives": [
+            "Student can state the defining characteristics of an element as proposed by Robert Boyle and Antoine Lavoisier",
+            "Student can compare the physical properties of metals and non-metals"
+          ],
+          "visualIdeas": [
+            "a comparative table of properties: luster, conductivity, malleability, and ductility",
+            "a periodic table layout with regions for metals, non-metals, and metalloids colored differently"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "compounds",
+          "title": "Compounds",
+          "objectives": [
+            "Student can define a compound as a substance composed of two or more elements chemically combined",
+            "Student can distinguish between a mixture of iron and sulfur and the compound iron sulfide"
+          ],
+          "visualIdeas": [
+            "a magnet attracting iron filings from a mixture of iron and sulfur, but having no effect on the compound iron sulfide",
+            "molecular representations of free-floating elements vs bonded compound molecules"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "atoms-and-molecules",
+      "title": "Atoms and Molecules",
+      "topics": [
+        {
+          "id": "laws-of-chemical-combination",
+          "title": "Laws of Chemical Combination",
+          "objectives": [
+            "Student can state the Law of Conservation of Mass and the Law of Constant Proportions",
+            "Student can identify the scientists associated with these laws (Lavoisier and Proust)"
+          ],
+          "visualIdeas": [
+            "a timeline of chemical discoveries featuring Lavoisier and Proust",
+            "a balanced scale demonstrating conservation of mass before and after a chemical reaction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-conservation-of-mass",
+          "title": "Law of Conservation of Mass",
+          "objectives": [
+            "Student can verify the law of conservation of mass using chemical reaction data",
+            "Student can describe an experiment involving the reaction of barium chloride and sodium sulfate inside a sealed flask"
+          ],
+          "visualIdeas": [
+            "an H-shaped tube (Landolt's tube) containing two reactants before mixing, sitting on a digital scale",
+            "the same tube inverted and mixed, showing a white precipitate with the weight reading unchanged"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-constant-proportions",
+          "title": "Law of Constant Proportions",
+          "objectives": [
+            "Student can explain the law of constant proportions using the example of water (1:8 mass ratio of H to O)",
+            "Student can calculate the mass of one element in a compound given the mass of the other and their combining ratio"
+          ],
+          "visualIdeas": [
+            "visual breakdown of 9g of water yielding 1g of hydrogen and 8g of oxygen",
+            "a comparison of water sourced from a tap, a river, and a laboratory, all sharing the same 1:8 hydrogen-oxygen mass ratio"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-an-atom",
+          "title": "What is an Atom?",
+          "objectives": [
+            "Student can define an atom as the building block of all matter",
+            "Student can describe Dalton's atomic theory and list its main postulates"
+          ],
+          "visualIdeas": [
+            "a masonry wall analogy where individual bricks represent individual atoms",
+            "a list of Dalton's postulates next to simple sphere representations of indivisible atoms"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-are-the-modern-day-symbols-of-atoms-of-different-elements",
+          "title": "What are the Modern Day Symbols of Atoms of Different Elements?",
+          "objectives": [
+            "Student can recall the modern symbols of common elements as approved by IUPAC",
+            "Student can explain the origin of symbols derived from Latin names (e.g., Fe from Ferrum, Na from Natrium)"
+          ],
+          "visualIdeas": [
+            "Dalton's old pictorial symbols (circles with dots, lines) compared with modern IUPAC letter symbols",
+            "a chart mapping English names, Latin names, and symbols for Sodium, Potassium, Iron, and Copper"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atomic-mass",
+          "title": "Atomic Mass",
+          "objectives": [
+            "Student can define atomic mass unit (u) relative to the carbon-12 isotope",
+            "Student can explain why carbon-12 is used as the standard reference for atomic mass"
+          ],
+          "visualIdeas": [
+            "a watermelon slice analogy: dividing a whole watermelon into 12 equal slices to find relative weight",
+            "a balance scale weighing an atom of another element against carbon-12 mass unit fractions"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-do-atoms-exist",
+          "title": "How do Atoms Exist?",
+          "objectives": [
+            "Student can distinguish between monoatomic elements and those existing as molecules or ions",
+            "Student can state why most atoms cannot exist independently under normal conditions"
+          ],
+          "visualIdeas": [
+            "sketches of independent Helium atoms vs paired Hydrogen atoms (molecules)",
+            "a crystal lattice of table salt showing alternating Na+ and Cl- ions"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "what-is-a-molecule",
+          "title": "What is a Molecule?",
+          "objectives": [
+            "Student can define a molecule as a group of two or more chemically bonded atoms",
+            "Student can explain atomicity with examples of monoatomic, diatomic, triatomic, and polyatomic molecules"
+          ],
+          "visualIdeas": [
+            "models of oxygen (O2), ozone (O3), phosphorus (P4), and sulfur (S8) molecules",
+            "a table showing elements, their formulas, and their atomicity"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecules-of-elements",
+          "title": "Molecules of Elements",
+          "objectives": [
+            "Student can define molecules of elements as containing atoms of only one type",
+            "Student can classify molecules of elements based on their atomicity"
+          ],
+          "visualIdeas": [
+            "molecular drawings showing identical colored spheres linked together",
+            "a chart showing Nitrogen (N2), Chlorine (Cl2), and Argon (Ar) molecules"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "molecules-of-compounds",
+          "title": "Molecules of Compounds",
+          "objectives": [
+            "Student can define molecules of compounds as containing atoms of two or more different elements",
+            "Student can state the ratio by number of atoms in a water (H2O) and ammonia (NH3) molecule"
+          ],
+          "visualIdeas": [
+            "ball-and-stick models of H2O (one red sphere, two white spheres) and CO2 (one black sphere, two red spheres)",
+            "a step-by-step breakdown of water's mass ratio to atomic ratio conversion"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "what-is-an-ion",
+          "title": "What is an Ion?",
+          "objectives": [
+            "Student can define ions, cations, and anions with chemical examples",
+            "Student can list the constituent elements and charges of common polyatomic ions like ammonium, carbonate, and sulfate"
+          ],
+          "visualIdeas": [
+            "illustrations of sodium losing an electron to become a positive cation, and chlorine gaining an electron to become a negative anion",
+            "a clean table of common cations, anions, and polyatomic ions with their chemical symbols and valencies"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-chemical-formulae",
+          "title": "Writing Chemical Formulae",
+          "objectives": [
+            "Student can define valency as the combining capacity of an element",
+            "Student can apply rules of formula writing to balance charges when combining ions"
+          ],
+          "visualIdeas": [
+            "the crossover method (criss-cross) shown step-by-step with arrows for magnesium chloride (MgCl2) and aluminium oxide (Al2O3)",
+            "an illustrative guide on using parentheses for polyatomic ions like calcium hydroxide Ca(OH)2"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "formulae-of-simple-compounds",
+          "title": "Formulae of Simple Compounds",
+          "objectives": [
+            "Student can write the chemical formula of binary compounds using valency values",
+            "Student can translate common compound names (such as sodium oxide, calcium chloride) into molecular formulas"
+          ],
+          "visualIdeas": [
+            "a series of worked examples showing symbols, valencies, and final formulas for HCl, H2S, CCl4, and CO2",
+            "interactive quiz-like cards matching names to their correct chemical formulas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecular-mass-and-mole-concept",
+          "title": "Molecular Mass and Mole Concept",
+          "objectives": [
+            "Student can define molecular mass as the sum of atomic masses of all atoms in a molecule",
+            "Student can define formula unit mass and state when it is used instead of molecular mass"
+          ],
+          "visualIdeas": [
+            "a mathematical expansion calculating the molecular mass of HNO3: (1 x H) + (1 x N) + (3 x O)",
+            "a comparison of covalent molecules (H2O) and ionic crystals (NaCl) showing why 'formula unit mass' applies to ionic substances"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "molecular-mass",
+          "title": "Molecular Mass",
+          "objectives": [
+            "Student can calculate the molecular mass of chemical compounds from given atomic masses",
+            "Student can compare the molecular masses of water (H2O) and carbon dioxide (CO2)"
+          ],
+          "visualIdeas": [
+            "a balance scale with H2O (18 u) on one side and CO2 (44 u) on the other",
+            "a visual checklist adding atomic mass of constituent elements"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "formula-unit-mass",
+          "title": "Formula Unit Mass",
+          "objectives": [
+            "Student can calculate the formula unit mass of sodium chloride (NaCl) and calcium chloride (CaCl2)",
+            "Student can explain that the formula unit mass is calculated in the same manner as molecular mass"
+          ],
+          "visualIdeas": [
+            "an equation showing formula unit mass calculation of CaCl2: 40 + (2 x 35.5) = 111 u",
+            "a structural model of the NaCl crystal lattice showing alternating ions"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "structure-of-the-atom",
+      "title": "Structure of the Atom",
+      "topics": [
+        {
+          "id": "charged-particles-in-matter",
+          "title": "Charged Particles in Matter",
+          "objectives": [
+            "Student can explain how static electricity experiments (like rubbing a comb on dry hair) show that atoms are divisible",
+            "Student can identify the electron as the first discovered subatomic particle, credited to J.J. Thomson"
+          ],
+          "visualIdeas": [
+            "a comb attracting small bits of paper after being rubbed on hair",
+            "a schematic of a discharge tube showing canal rays and cathode rays"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-structure-of-an-atom",
+          "title": "The Structure of an Atom",
+          "objectives": [
+            "Student can list the three major subatomic particles: protons, neutrons, and electrons",
+            "Student can compare the charge and mass of a proton with those of an electron"
+          ],
+          "visualIdeas": [
+            "a tabular comparison of the mass, charge, and location of proton, neutron, and electron",
+            "a basic atom showing a central nucleus and orbiting negative electrons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thomsons-model-of-an-atom",
+          "title": "Thomson's Model of an Atom",
+          "objectives": [
+            "Student can describe Thomson's 'plum pudding' or 'watermelon' model of the atom",
+            "Student can state the two major postulates of Thomson's model"
+          ],
+          "visualIdeas": [
+            "a watermelon drawing cut in half, comparing the red edible part to positive charge and black seeds to negative electrons",
+            "a circular sphere of positive electricity with embedded negative electrons"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "rutherfords-model-of-an-atom",
+          "title": "Rutherford's Model of an Atom",
+          "objectives": [
+            "Student can describe the alpha-particle scattering experiment",
+            "Student can state Rutherford's observations and corresponding conclusions about the atomic nucleus"
+          ],
+          "visualIdeas": [
+            "a diagram of gold foil bombarded by alpha particles, showing most passing straight through, some deflecting, and a tiny fraction bouncing back",
+            "the planetary nuclear model of the atom proposed by Rutherford"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "bohrs-model-of-atom",
+          "title": "Bohr's Model of Atom",
+          "objectives": [
+            "Student can explain how Bohr's model overcomes the drawback of Rutherford's unstable electron orbits",
+            "Student can sketch Bohr's energy levels (K, L, M, N shells) with their corresponding shell numbers (n=1, 2, 3, 4)"
+          ],
+          "visualIdeas": [
+            "concentric circles representing discrete energy shells K, L, M, N around a central nucleus",
+            "an electron jumping between energy levels showing energy emission/absorption"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "neutrons",
+          "title": "Neutrons",
+          "objectives": [
+            "Student can identify the neutron as a neutral subatomic particle discovered by J. Chadwick",
+            "Student can state that the mass of an atom is concentrated in its nucleus containing protons and neutrons"
+          ],
+          "visualIdeas": [
+            "a close-up of a nucleus showing tightly packed protons (labeled '+') and neutrons (labeled '0')",
+            "an atomic mass balance scale showing mass concentrated solely in the nucleus"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "how-are-electrons-distributed-in-different-orbits-shells",
+          "title": "How are Electrons Distributed in Different Orbits (Shells)?",
+          "objectives": [
+            "Student can apply the Bohr-Bury rules (2n^2 rule) to calculate maximum electron capacity of shells",
+            "Student can draw the schematic atomic structure of the first 18 elements"
+          ],
+          "visualIdeas": [
+            "concentric shell schematics showing actual electron configurations of Hydrogen, Carbon, Oxygen, and Sodium",
+            "a calculation flow showing how the maximum capacity of K=2, L=8, M=18 is derived"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "valency",
+          "title": "Valency",
+          "objectives": [
+            "Student can define valence electrons and explain how valency is determined from electron configuration",
+            "Student can calculate the valency of elements with fully filled outer shells (noble gases) vs partially filled shells"
+          ],
+          "visualIdeas": [
+            "drawings of Sodium (1 valence electron) and Chlorine (7 valence electrons) highlighting their outermost shells",
+            "a step-by-step math diagram demonstrating valency calculation: valency = valence electrons (if <= 4) or 8 - valence electrons (if > 4)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atomic-number-and-mass-number",
+          "title": "Atomic Number and Mass Number",
+          "objectives": [
+            "Student can define Atomic Number (Z) and Mass Number (A)",
+            "Student can represent any element using the standard notation format"
+          ],
+          "visualIdeas": [
+            "the standard symbolic notation where Mass Number is superscript and Atomic Number is subscript of Element symbol",
+            "worked examples showing how to determine neutrons by subtracting atomic number from mass number (A - Z)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atomic-number",
+          "title": "Atomic Number",
+          "objectives": [
+            "Student can state that the atomic number is equal to the number of protons in an atom's nucleus",
+            "Student can identify an element based solely on its atomic number"
+          ],
+          "visualIdeas": [
+            "a simple formula: Atomic Number (Z) = Number of Protons = Number of Electrons (in neutral atom)",
+            "a series of atomic cards highlighting atomic numbers 1 to 10"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "mass-number",
+          "title": "Mass Number",
+          "objectives": [
+            "Student can state that protons and neutrons are collectively termed nucleons",
+            "Student can calculate the mass number of an element given its proton and neutron count"
+          ],
+          "visualIdeas": [
+            "a zoom-in of a Carbon-12 nucleus containing 6 protons and 6 neutrons",
+            "an addition equation: Protons + Neutrons = Mass Number (A)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "isotopes",
+          "title": "Isotopes",
+          "objectives": [
+            "Student can define isotopes as atoms of the same element with different mass numbers",
+            "Student can list key industrial and medical applications of isotopes (e.g., Uranium, Cobalt, Iodine)"
+          ],
+          "visualIdeas": [
+            "a comparison diagram of Protium, Deuterium, and Tritium (the three isotopes of hydrogen)",
+            "an illustration of medical cobalt therapy targeting cancer cells"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "isobars",
+          "title": "Isobars",
+          "objectives": [
+            "Student can define isobars as atoms of different elements with the same mass number",
+            "Student can compare isotopes and isobars based on atomic number, mass number, and chemical properties"
+          ],
+          "visualIdeas": [
+            "side-by-side diagrams of Argon-40 and Calcium-40 showing equal mass numbers but different proton counts",
+            "a comparison table highlighting differences between isotopes and isobars"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "the-fundamental-unit-of-life",
+      "title": "The Fundamental Unit of Life",
+      "topics": [
+        {
+          "id": "what-are-living-organisms-made-of",
+          "title": "What are Living Organisms Made of?",
+          "objectives": [
+            "Student can state that cells are the basic structural and functional unit of life",
+            "Student can describe Robert Hooke's discovery of cells in cork slice using a primitive microscope"
+          ],
+          "visualIdeas": [
+            "a comparison of honeycomb structure and cork cells as drawn by Hooke",
+            "a step-by-step diagram showing the preparation of a temporary mount of an onion peel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-a-cell-made-up-of",
+          "title": "What is a Cell Made Up of? What is the Structural Organisation of a Cell?",
+          "objectives": [
+            "Student can identify the three main functional regions of a cell: plasma membrane, nucleus, and cytoplasm",
+            "Student can state the primary roles of these three regions in maintaining life activities"
+          ],
+          "visualIdeas": [
+            "a generalised cell diagram highlighting the plasma membrane, nucleus, and cytoplasm with large leader lines",
+            "a three-way split screen showing zoom-ins of the outer boundary, inner fluid, and genetic center"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "plasma-membrane-or-cell-membrane",
+          "title": "Plasma Membrane or Cell Membrane",
+          "objectives": [
+            "Student can explain the terms selective permeability, diffusion, and osmosis",
+            "Student can predict the behavior of animal and plant cells when placed in hypotonic, isotonic, and hypertonic solutions"
+          ],
+          "visualIdeas": [
+            "three tubes showing red blood cells in hypotonic (swollen/burst), isotonic (normal), and hypertonic (shrunken) states",
+            "a diagram of simple diffusion of gas molecules across a membrane boundary"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cell-wall",
+          "title": "Cell Wall",
+          "objectives": [
+            "Student can locate the cell wall in plant cells relative to the plasma membrane",
+            "Student can define plasmolysis with reference to water loss in living plant cells"
+          ],
+          "visualIdeas": [
+            "a plant cell wall diagram showing its outer rigid cellulose layer enclosing the inner plasma membrane",
+            "a step-by-step sequence showing plasmolysis in a Rhoeo leaf cell as the cytoplasm shrinks away from the cell wall"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "nucleus",
+          "title": "Nucleus",
+          "objectives": [
+            "Student can describe the structure of the nucleus including nuclear membrane, pores, nucleolus, and chromatin",
+            "Student can distinguish between prokaryotic and eukaryotic cells based on the presence of a nuclear membrane"
+          ],
+          "visualIdeas": [
+            "a detailed drawing of a eukaryotic nucleus showing nuclear pores and chromatin threads",
+            "a comparison diagram of a prokaryotic bacterial cell (with nucleoid) and a eukaryotic cell"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "cytoplasm",
+          "title": "Cytoplasm",
+          "objectives": [
+            "Student can define cytoplasm as the fluid content inside the plasma membrane",
+            "Student can explain the importance of cytoplasmic organelles in performing specialized cellular activities"
+          ],
+          "visualIdeas": [
+            "a high-contrast diagram showing cytoplasm containing various floating membrane-bound organelles",
+            "an illustration representing the cytoplasm as a bustling cellular factory floor"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cell-organelles",
+          "title": "Cell Organelles",
+          "objectives": [
+            "Student can identify and state functions of endoplasmic reticulum, Golgi apparatus, lysosomes, mitochondria, plastids, and vacuoles",
+            "Student can explain why mitochondria are called 'powerhouses of the cell' and lysosomes are called 'suicide bags'"
+          ],
+          "visualIdeas": [
+            "a large comparison chart showing plant and animal cells side-by-side with all organelles labeled",
+            "individual organelle close-ups: mitochondria with double-membranes, Golgi apparatus stacks, and chloroplast thylakoids"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "tissues",
+      "title": "Tissues",
+      "topics": [
+        {
+          "id": "are-plants-and-animals-made-of-same-types-of-tissues",
+          "title": "Are Plants and Animals Made of Same Types of Tissues?",
+          "objectives": [
+            "Student can contrast plants and animals based on mobility, energy needs, and tissue types",
+            "Student can describe how localized growth in plants differs from uniform growth in animals"
+          ],
+          "visualIdeas": [
+            "a split infographic showing a stationary plant (with mostly dead, supportive tissues) next to an active animal (with living tissues)",
+            "growth curves representing localized meristems in plants vs proportional growth in animals"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "plant-tissues",
+          "title": "Plant Tissues",
+          "objectives": [
+            "Student can classify plant tissues into meristematic and permanent tissues",
+            "Student can identify the locations of apical, intercalary, and lateral meristems"
+          ],
+          "visualIdeas": [
+            "a longitudinal section of a stem tip showing apical, intercalary, and lateral meristematic zones",
+            "a taxonomic tree showing the classification of plant tissues into simple and complex types"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "meristematic-tissue",
+          "title": "Meristematic Tissue",
+          "objectives": [
+            "Student can describe the cellular characteristics of meristematic cells (thin walls, active cytoplasm, lack of vacuoles)",
+            "Student can explain the primary role of meristematic tissue in plant growth"
+          ],
+          "visualIdeas": [
+            "highly magnified drawings of dividing meristematic cells showing prominent nuclei and dense cytoplasm",
+            "an onion root tip experiment showing mitotic zones"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "permanent-tissue",
+          "title": "Permanent Tissue",
+          "objectives": [
+            "Student can define differentiation in plant tissues",
+            "Student can distinguish between simple permanent tissues (parenchyma, collenchyma, sclerenchyma) and complex permanent tissues (xylem, phloem)"
+          ],
+          "visualIdeas": [
+            "microscopic cross-sectional diagrams of parenchyma, collenchyma, and sclerenchyma showing cell wall thicknesses",
+            "elements of complex tissues: xylem tracheids and vessels, and phloem sieve tubes with companion cells"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "animal-tissues",
+          "title": "Animal Tissues",
+          "objectives": [
+            "Student can name the four basic types of animal tissues",
+            "Student can relate the structure of animal tissues to their specialized biological functions"
+          ],
+          "visualIdeas": [
+            "a human body diagram with arrows pointing to organs and showing their representative tissue types",
+            "a classification table displaying epithelial, connective, muscular, and nervous tissues"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "epithelial-tissue",
+          "title": "Epithelial Tissue",
+          "objectives": [
+            "Student can identify squamous, cuboidal, columnar, ciliated, and glandular epithelial tissues",
+            "Student can correlate the shape of epithelial cells with their physiological location (e.g., skin, kidney tubules, lung alveoli)"
+          ],
+          "visualIdeas": [
+            "sketches of flat squamous sheets, cubical cuboidal blocks, tall columnar pillars, and hair-like ciliated borders",
+            "a diagram of skin epidermis showing layered stratified squamous epithelium"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "connective-tissue",
+          "title": "Connective Tissue",
+          "objectives": [
+            "Student can describe the components and locations of blood, bone, cartilage, areolar, and adipose tissues",
+            "Student can explain how the matrix determines the properties of different connective tissues"
+          ],
+          "visualIdeas": [
+            "a blood smear diagram identifying red blood cells, white blood cells, platelets, and plasma",
+            "structural views of dense bone tissue osteons, flexible cartilage matrices, and lipid-storing adipose cells"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "muscular-tissue",
+          "title": "Muscular Tissue",
+          "objectives": [
+            "Student can compare striated (skeletal), unstriated (smooth), and cardiac muscles based on structure, nucleation, and control",
+            "Student can identify the rhythmic contraction of cardiac muscle as involuntary"
+          ],
+          "visualIdeas": [
+            "side-by-side microscopic drawings of long cylindrical striated fibers, spindle-shaped smooth muscle cells, and branched cardiac muscle networks with intercalated discs",
+            "a summary table comparing skeletal, smooth, and cardiac muscle features"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nervous-tissue",
+          "title": "Nervous Tissue",
+          "objectives": [
+            "Student can sketch and label a typical neuron (nerve cell) showing cell body, axon, and dendrites",
+            "Student can trace the path of a nerve impulse through a neuron"
+          ],
+          "visualIdeas": [
+            "a large, clear diagram of a neuron with arrows indicating the direction of signal conduction",
+            "a conceptual drawing of the brain and spinal cord connected to peripheral nerves"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "motion",
+      "title": "Motion",
+      "topics": [
+        {
+          "id": "describing-motion",
+          "title": "Describing Motion",
+          "objectives": [
+            "Student can explain the concept of motion with respect to a reference point (origin)",
+            "Student can distinguish between scalar and vector quantities using distance and displacement as examples"
+          ],
+          "visualIdeas": [
+            "a map showing a house as a reference origin, with displacement arrows pointing to a school",
+            "a path of a moving object showing curved distance vs straight-line displacement"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "motion-along-a-straight-line",
+          "title": "Motion Along a Straight Line",
+          "objectives": [
+            "Student can calculate distance and magnitude of displacement for an object moving along a linear path",
+            "Student can describe a situation where displacement is zero but distance traveled is non-zero"
+          ],
+          "visualIdeas": [
+            "a linear scale marked with points O, A, B, and C showing a journey forward and backward",
+            "a track runner returning to the starting block to show zero net displacement"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "uniform-motion-and-non-uniform-motion",
+          "title": "Uniform Motion and Non-uniform Motion",
+          "objectives": [
+            "Student can define uniform and non-uniform motion",
+            "Student can identify real-world examples of uniform and non-uniform movements"
+          ],
+          "visualIdeas": [
+            "two tables: Table A showing equal distances covered in equal time intervals, Table B showing unequal distances",
+            "a car moving smoothly on an empty highway vs a car navigating heavy traffic stops"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "measuring-the-rate-of-motion",
+          "title": "Measuring the Rate of Motion",
+          "objectives": [
+            "Student can define speed and state its SI unit",
+            "Student can calculate the average speed of an object from given total distance and total time"
+          ],
+          "visualIdeas": [
+            "the formula: Speed = Distance / Time, highlighted in a graphic box",
+            "an odometer/speedometer dial diagram showing instantaneous vs average readings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "speed-with-direction",
+          "title": "Speed with Direction",
+          "objectives": [
+            "Student can define velocity and write its algebraic formula",
+            "Student can explain how velocity can change by altering either speed or direction of motion"
+          ],
+          "visualIdeas": [
+            "a car negotiating a circular curve, showing changing velocity vectors despite constant speed",
+            "a formula layout: Average Velocity = (Initial Velocity + Final Velocity) / 2"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rate-of-change-of-velocity",
+          "title": "Rate of Change of Velocity",
+          "objectives": [
+            "Student can define acceleration and classify it as positive or negative (retardation)",
+            "Student can calculate average acceleration using the formula a = (v - u) / t"
+          ],
+          "visualIdeas": [
+            "a rocket taking off (positive acceleration) next to a car braking to a halt (negative acceleration)",
+            "a step-by-step numerical calculation solving for 'a' with given initial and final velocities"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "graphical-representation-of-motion",
+          "title": "Graphical Representation of Motion",
+          "objectives": [
+            "Student can list the benefits of using graphs to represent motion data",
+            "Student can interpret the state of motion (rest, uniform, non-uniform) from the shape of a line graph"
+          ],
+          "visualIdeas": [
+            "grid templates of Cartesian coordinates labeled with time on the horizontal axis",
+            "miniature curves illustrating various motion profiles"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "distance-time-graphs",
+          "title": "Distance-Time Graphs",
+          "objectives": [
+            "Student can plot a distance-time graph from raw tabular data",
+            "Student can calculate the speed of an object from the slope of a distance-time graph"
+          ],
+          "visualIdeas": [
+            "a distance-time graph showing a straight diagonal line, with a triangle highlighted to calculate the slope (s2 - s1) / (t2 - t1)",
+            "a horizontal line on a distance-time graph indicating an object at rest"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "velocity-time-graphs",
+          "title": "Velocity-Time Graphs",
+          "objectives": [
+            "Student can calculate the distance traveled by finding the area under a velocity-time graph",
+            "Student can determine acceleration from the slope of a velocity-time graph"
+          ],
+          "visualIdeas": [
+            "a velocity-time graph with a shaded rectangular and triangular area representing displacement",
+            "graphical comparisons of uniformly accelerated, non-uniformly accelerated, and uniformly decelerated motions"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "equations-of-motion-by-graphical-method",
+          "title": "Equations of Motion by Graphical Method",
+          "objectives": [
+            "Student can state the three standard equations of motion for uniform acceleration",
+            "Student can define each variable used in the three equations"
+          ],
+          "visualIdeas": [
+            "a master graphic displaying the three equations in bold frames",
+            "a diagram labeling initial velocity (u), final velocity (v), acceleration (a), distance (s), and time (t)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equation-for-velocity-time-relation",
+          "title": "Equation for Velocity-Time Relation",
+          "objectives": [
+            "Student can derive the first equation of motion, v = u + at, using a velocity-time graph",
+            "Student can solve numerical problems using the first equation of motion"
+          ],
+          "visualIdeas": [
+            "the derivation process showing v = BD = BC + CD = u + at step-by-step alongside the corresponding velocity-time graph",
+            "a worked example solving for final velocity of a train accelerating from rest"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equation-for-position-time-relation",
+          "title": "Equation for Position-Time Relation",
+          "objectives": [
+            "Student can derive the second equation of motion, s = ut + 0.5at^2, using the area of a trapezium under a velocity-time graph",
+            "Student can calculate displacement of an object from rest under constant acceleration using the second equation"
+          ],
+          "visualIdeas": [
+            "a velocity-time graph showing the shaded area broken down into a rectangle (area = ut) and a triangle (area = 0.5 * t * at)",
+            "the mathematical sum written out line-by-line"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "equation-for-position-velocity-relation",
+          "title": "Equation for Position-Velocity Relation",
+          "objectives": [
+            "Student can derive the third equation of motion, 2as = v^2 - u^2, by calculating the area of a trapezium",
+            "Student can apply the third equation of motion to determine stopping distance when deceleration is known"
+          ],
+          "visualIdeas": [
+            "a velocity-time graph highlighting the complete trapezoid shape with parallel sides 'u' and 'v' and height 't'",
+            "the derivation substituting t = (v - u) / a into the area formula s = 0.5 * (u + v) * t"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "uniform-circular-motion",
+          "title": "Uniform Circular Motion",
+          "objectives": [
+            "Student can explain why circular motion with constant speed is an accelerated motion",
+            "Student can calculate the speed of an object in uniform circular motion using the formula v = 2 * pi * r / T"
+          ],
+          "visualIdeas": [
+            "an athlete running along a rectangular, hexagonal, octagonal, and circular track, illustrating the increasing frequency of direction changes",
+            "a stone tied to a thread being whirled in a circle, showing velocity vectors perpendicular to the radius"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "force-and-laws-of-motion",
+      "title": "Force and Laws of Motion",
+      "topics": [
+        {
+          "id": "balanced-and-unbalanced-forces",
+          "title": "Balanced and Unbalanced Forces",
+          "objectives": [
+            "Student can distinguish between balanced and unbalanced forces in terms of net force and acceleration",
+            "Student can explain how unbalanced forces bring about a change in state of rest or motion of an object"
+          ],
+          "visualIdeas": [
+            "a wooden block on a table pulled by opposite strings with equal forces (balanced) vs unequal forces (unbalanced)",
+            "a tug-of-war match showing players in equilibrium vs one team pulling the other over the line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "first-law-of-motion",
+          "title": "First Law of Motion",
+          "objectives": [
+            "Student can state Galileo's observations of motion of objects on inclined planes",
+            "Student can state Newton's First Law of Motion (Law of Inertia)"
+          ],
+          "visualIdeas": [
+            "Galileo's inclined planes showing a marble rolling down one ramp and up another of equal inclination to the same height",
+            "a passenger jerking forward when a moving bus brakes suddenly, and backward when it starts"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "inertia-and-mass",
+          "title": "Inertia and Mass",
+          "objectives": [
+            "Student can define inertia and explain how mass is a measure of inertia",
+            "Student can compare the inertia of a toy car vs a real train, or a coin vs a plastic card"
+          ],
+          "visualIdeas": [
+            "a classic card-and-coin trick: flicking a card from a glass, leaving the heavy coin to fall vertically in",
+            "a comparison layout showing a small rock being kicked easily vs a huge boulder resisting force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "second-law-of-motion",
+          "title": "Second Law of Motion",
+          "objectives": [
+            "Student can define momentum (p = mv) and state its SI unit",
+            "Student can derive the mathematical formulation of the second law (F = ma) and explain its applications"
+          ],
+          "visualIdeas": [
+            "a cricketer pulling his hands backward while catching a fast ball to reduce impact force by increasing time",
+            "a step-by-step algebraic derivation of F proportional to change in momentum over time"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "third-law-of-motion",
+          "title": "Third Law of Motion",
+          "objectives": [
+            "Student can state Newton's Third Law of Motion",
+            "Student can describe action-reaction force pairs for everyday situations like walking, firing a gun, or rocket propulsion"
+          ],
+          "visualIdeas": [
+            "two spring balances hooked together, showing equal and opposite force readings when pulled",
+            "a gun recoiling backward as a bullet is fired forward, with large labeled force arrows"
+          ],
+          "estMinutes": 18
+        }
+      ]
+    },
+    {
+      "id": "gravitation",
+      "title": "Gravitation",
+      "topics": [
+        {
+          "id": "gravitation-intro",
+          "title": "Gravitation",
+          "objectives": [
+            "Student can explain that gravity is a universal attractive force operating between any two masses",
+            "Student can relate centripetal force to the moon's motion around the earth"
+          ],
+          "visualIdeas": [
+            "a falling apple from a tree next to the moon orbiting the earth with centripetal force vectors shown",
+            "a person whirling a stone in a circular path with tension in the string acting as the centripetal force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "universal-law-of-gravitation",
+          "title": "Universal Law of Gravitation",
+          "objectives": [
+            "Student can state the Universal Law of Gravitation",
+            "Student can write the mathematical expression F = G * M * m / d^2 and define the constant G"
+          ],
+          "visualIdeas": [
+            "two masses M and m separated by distance d with attractive force vectors F pointing towards each other",
+            "the formula appearing term-by-term with the value and units of the Universal Gravitational Constant G"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "importance-of-the-universal-law-of-gravitation",
+          "title": "Importance of the Universal Law of Gravitation",
+          "objectives": [
+            "Student can list key natural phenomena explained by the Universal Law of Gravitation",
+            "Student can explain the cause of tides on earth using planetary gravity"
+          ],
+          "visualIdeas": [
+            "a list of phenomena: bind us to earth, motion of moon, motion of planets, and tides",
+            "an exaggerated illustration of oceanic bulges on earth caused by the gravitational pull of the moon"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "free-fall",
+          "title": "Free Fall",
+          "objectives": [
+            "Student can define free fall and acceleration due to gravity (g)",
+            "Student can distinguish between universal constant G and local acceleration due to gravity g"
+          ],
+          "visualIdeas": [
+            "a feather and a stone falling together in a vacuum tube vs in air with drag force",
+            "a comparison table of 'G' and 'g' (value, units, constancy)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "to-calculate-the-value-of-g",
+          "title": "To Calculate the Value of g",
+          "objectives": [
+            "Student can calculate the numerical value of g on earth (~9.8 m/s^2) using mass, radius, and G",
+            "Student can explain why the value of g is greater at the poles than at the equator"
+          ],
+          "visualIdeas": [
+            "the calculation substituting values of G, Mass of Earth, and Radius of Earth to yield 9.8",
+            "an oblate spheroid earth model showing shorter polar radius leading to higher gravitational pull"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "motion-of-objects-under-the-influence-of-gravitational-force-of-the-earth",
+          "title": "Motion of Objects Under the Influence of Gravitational Force of the Earth",
+          "objectives": [
+            "Student can apply modified equations of motion replacing 'a' with 'g' and 's' with 'h'",
+            "Student can use correct signs (+g for downward, -g for upward) in kinematics calculations"
+          ],
+          "visualIdeas": [
+            "an object thrown upwards showing velocity decreasing to zero and reversing under -g",
+            "a table of kinematics equations with 'g' and 'h' substitutions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mass",
+          "title": "Mass",
+          "objectives": [
+            "Student can define mass as a measure of an object's inertia",
+            "Student can state that mass remains constant everywhere in the universe"
+          ],
+          "visualIdeas": [
+            "a balance scale weighing identical objects in different settings",
+            "a text card declaring 'Mass = constant everywhere'"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "weight",
+          "title": "Weight",
+          "objectives": [
+            "Student can define weight as the force with which an object is attracted to the earth (W = mg)",
+            "Student can state the SI unit of weight as the Newton"
+          ],
+          "visualIdeas": [
+            "a spring balance showing weight scale readings",
+            "the formula W = mg highlighted with units highlighted"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "weight-of-an-object-on-the-moon",
+          "title": "Weight of an Object on the Moon",
+          "objectives": [
+            "Student can derive the relation that weight on the moon is approximately 1/6th of weight on earth",
+            "Student can calculate the moon weight of a person given their earth mass or weight"
+          ],
+          "visualIdeas": [
+            "an astronaut weighing 600N on Earth and 100N on the Moon with mass remaining 60kg",
+            "numerical computation using moon's mass and radius relative to earth"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thrust-and-pressure",
+          "title": "Thrust and Pressure",
+          "objectives": [
+            "Student can define thrust and pressure with their SI units",
+            "Student can explain why school bag straps are wide and why camel feet don't sink in sand"
+          ],
+          "visualIdeas": [
+            "a block lying flat (large area, low pressure) vs standing on its edge (small area, high pressure)",
+            "a visual of a pin head vs its sharp tip being pushed into wood"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pressure-in-fluids",
+          "title": "Pressure in Fluids",
+          "objectives": [
+            "Student can state that fluids exert pressure on all surfaces of their container",
+            "Student can describe how fluid pressure increases with depth"
+          ],
+          "visualIdeas": [
+            "a container filled with water showing streams shooting furthest from the lowest nozzle",
+            "pressure vectors acting in all directions inside a balloon filled with liquid"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "buoyancy",
+          "title": "Buoyancy",
+          "objectives": [
+            "Student can define upthrust or buoyant force",
+            "Student can describe the upward force acting on an object immersed in a liquid"
+          ],
+          "visualIdeas": [
+            "a cork pushed into water popping back up with an upward buoyant force arrow",
+            "a container showing a submerged block with upward buoyancy opposing downward gravity"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "why-objects-float-or-sink-when-placed-on-the-surface-of-water",
+          "title": "Why Objects Float or Sink when Placed on the Surface of Water?",
+          "objectives": [
+            "Student can explain floating and sinking in terms of density comparisons",
+            "Student can predict if an object will float given its density relative to water"
+          ],
+          "visualIdeas": [
+            "an iron nail sinking in water next to a cork floating on the surface",
+            "a diagram displaying buoyant force > gravitational force (float) and vice versa (sink)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "archimedes-principle",
+          "title": "Archimedes' Principle",
+          "objectives": [
+            "Student can state Archimedes' Principle",
+            "Student can list practical applications of Archimedes' principle (lactometers, hydrometers, submarines)"
+          ],
+          "visualIdeas": [
+            "an object lowered into an overflow (Eureka) can, showing the weight of displaced water matching the loss of weight on the spring balance",
+            "a schematic of a submarine adjusting ballast tank water levels"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "relative-density",
+          "title": "Relative Density",
+          "objectives": [
+            "Student can define relative density and state why it has no units",
+            "Student can calculate the relative density of a substance from its density and water's density"
+          ],
+          "visualIdeas": [
+            "the ratio formula: Relative Density = Density of Substance / Density of Water",
+            "a comparison column showing substances with relative densities < 1 (float) and > 1 (sink)"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "work-and-energy",
+      "title": "Work and Energy",
+      "topics": [
+        {
+          "id": "work",
+          "title": "Work",
+          "objectives": [
+            "Student can define mechanical work in physics",
+            "Student can identify situations where work is done or not done based on physical displacement"
+          ],
+          "visualIdeas": [
+            "a student studying hard at a desk (no mechanical work done) vs someone climbing stairs (work done)",
+            "a diagram of a force pulling an object across a surface"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "not-much-work-in-spite-of-working-hard",
+          "title": "Not Much 'Work' in Spite of Working Hard!",
+          "objectives": [
+            "Student can explain why holding a heavy weight stationary does not constitute work in physics",
+            "Student can contrast the colloquial meaning of 'work' with its scientific definition"
+          ],
+          "visualIdeas": [
+            "a person pushing hard against a concrete wall (wall does not move; zero work)",
+            "a comparison cartoon of mental study work vs manual pushcart work"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "scientific-conception-of-work",
+          "title": "Scientific Conception of Work",
+          "objectives": [
+            "Student can state the two necessary conditions for work to be done",
+            "Student can identify positive, negative, and zero work based on the angle between force and displacement"
+          ],
+          "visualIdeas": [
+            "a checklist: 1. Force must act, 2. Object must be displaced",
+            "a person pulling a toy cart (positive work), gravity on a satellite (zero work), and friction on a sliding block (negative work)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "work-done-by-a-constant-force",
+          "title": "Work Done by a Constant Force",
+          "objectives": [
+            "Student can write the formula W = F * s and state its SI unit as Joules (J)",
+            "Student can calculate work done when force and displacement are in the same or opposite directions"
+          ],
+          "visualIdeas": [
+            "a worked algebraic calculation showing W = 7 N * 8 m = 56 J",
+            "directional arrows for Force (F) and Displacement (s) shown parallel vs anti-parallel"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "energy",
+          "title": "Energy",
+          "objectives": [
+            "Student can define energy as the capacity to do work and state its SI unit",
+            "Student can describe how an object possessing energy can exert force on another object"
+          ],
+          "visualIdeas": [
+            "a raised hammer about to hit a nail, transferring its stored energy to drive the nail in",
+            "a glowing battery icon linked to work output"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "forms-of-energy",
+          "title": "Forms of Energy",
+          "objectives": [
+            "Student can list different forms of energy (kinetic, potential, chemical, thermal, electrical)",
+            "Student can classify mechanical energy as the sum of kinetic and potential energy"
+          ],
+          "visualIdeas": [
+            "a collage of energy sources: solar panel, wind turbine, fire, and a compressed spring",
+            "an equation: Mechanical Energy = Kinetic Energy + Potential Energy"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "kinetic-energy",
+          "title": "Kinetic Energy",
+          "objectives": [
+            "Student can define kinetic energy as energy possessed by an object by virtue of its motion",
+            "Student can derive the equation E_k = 0.5 * m * v^2 and solve numerical problems"
+          ],
+          "visualIdeas": [
+            "a speeding bullet vs a stationary bullet illustrating kinetic dependency on speed",
+            "derivation showing work done W = F * s where F = ma and s = (v^2 - u^2)/2a"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "potential-energy",
+          "title": "Potential Energy",
+          "objectives": [
+            "Student can define potential energy as energy stored by virtue of position or configuration",
+            "Student can explain elastic potential energy using a stretched bow or rubber band"
+          ],
+          "visualIdeas": [
+            "an archer drawing a bow, showing energy transfer from muscles to the bowstring's elastic shape",
+            "a slinky spring compressed vs relaxed"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "potential-energy-of-an-object-at-a-height",
+          "title": "Potential Energy of an Object at a Height",
+          "objectives": [
+            "Student can derive the formula E_p = mgh for gravitational potential energy",
+            "Student can explain that potential energy depends only on vertical height and not the path taken"
+          ],
+          "visualIdeas": [
+            "an object raised straight up to height h vs moved along a winding ramp to the same height",
+            "a block falling from a shelf with potential energy transforming to kinetic energy"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "are-various-energy-forms-interconvertible",
+          "title": "Are Various Energy Forms Interconvertible?",
+          "objectives": [
+            "Student can describe energy conversions in appliances (e.g., bulb, green plant, steam engine)",
+            "Student can trace energy flow in a simple pendulum"
+          ],
+          "visualIdeas": [
+            "a flowchart tracking energy transformations: electrical -> light -> thermal",
+            "a swinging pendulum showing potential energy maximums at extreme ends and kinetic energy maximum at the mean position"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "law-of-conservation-of-energy",
+          "title": "Law of Conservation of Energy",
+          "objectives": [
+            "Student can state the Law of Conservation of Energy",
+            "Student can demonstrate that the sum of kinetic and potential energy (mgh + 0.5mv^2) remains constant for a free-falling body"
+          ],
+          "visualIdeas": [
+            "a bar chart showing changing proportions of PE and KE as a ball falls, with Total Energy remaining a constant height bar",
+            "the formula E_p + E_k = Constant displayed in a distinct color block"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "rate-of-doing-work",
+          "title": "Rate of Doing Work",
+          "objectives": [
+            "Student can define power as the rate of doing work",
+            "Student can calculate power using P = W/t and state its SI unit (Watt) and commercial unit (kWh)"
+          ],
+          "visualIdeas": [
+            "two people climbing a cliff, one quickly (high power) and one slowly (low power) to show work vs power",
+            "the unit equivalence conversion step: 1 kWh = 3.6 x 10^6 Joules"
+          ],
+          "estMinutes": 18
+        }
+      ]
+    },
+    {
+      "id": "sound",
+      "title": "Sound",
+      "topics": [
+        {
+          "id": "production-of-sound",
+          "title": "Production of Sound",
+          "objectives": [
+            "Student can demonstrate that sound is produced by vibrating bodies",
+            "Student can list multiple musical instruments and identify their vibrating parts"
+          ],
+          "visualIdeas": [
+            "a struck tuning fork making small waves when placed in water",
+            "a vibrating guitar string showing blurred dual-images of high displacement"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "propagation-of-sound",
+          "title": "Propagation of Sound",
+          "objectives": [
+            "Student can describe how sound travels as a series of compressions and rarefactions",
+            "Student can define wave motion as energy transfer without bulk transport of matter"
+          ],
+          "visualIdeas": [
+            "a vibrating tuning fork creating alternate dark bands (compressions) and light bands (rarefactions) in air",
+            "a slinky spring showing compressed and stretched coils traveling along its length"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sound-needs-a-medium-to-travel",
+          "title": "Sound Needs a Medium to Travel",
+          "objectives": [
+            "Student can describe the bell-jar experiment to show that sound cannot travel through vacuum",
+            "Student can state why sound travels faster in solids than in gases"
+          ],
+          "visualIdeas": [
+            "an electric bell inside a glass jar connected to a vacuum pump, showing sound disappearing as air is evacuated",
+            "molecular models of gas, liquid, and solid showing particle packing density relative to speed of sound"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sound-waves-are-longitudinal-waves",
+          "title": "Sound Waves are Longitudinal Waves",
+          "objectives": [
+            "Student can distinguish between longitudinal and transverse waves based on particle vibration direction",
+            "Student can classify water ripples and light as transverse, and sound in air as longitudinal"
+          ],
+          "visualIdeas": [
+            "a comparison diagram showing longitudinal waves (displacement parallel to propagation) and transverse waves (displacement perpendicular to propagation)",
+            "dust particles vibrating back and forth along the path of a sound wave"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "characteristics-of-a-sound-wave",
+          "title": "Characteristics of a Sound Wave",
+          "objectives": [
+            "Student can define frequency, amplitude, wavelength, time period, and speed of a sound wave",
+            "Student can relate pitch to frequency, and loudness to amplitude of a sound wave"
+          ],
+          "visualIdeas": [
+            "a transverse wave-like graph with crests and troughs labeled as compressions and rarefactions, with arrows indicating amplitude and wavelength",
+            "side-by-side waveforms of a high-pitch whistle (closely spaced) vs a low-pitch drum (spaced out)"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "speed-of-sound-in-different-media",
+          "title": "Speed of Sound in Different Media",
+          "objectives": [
+            "Student can compare the speed of sound in solids, liquids, and gases at a given temperature",
+            "Student can explain the effect of temperature on the speed of sound"
+          ],
+          "visualIdeas": [
+            "a bar chart comparing speed values in aluminum, water, and air",
+            "a graphic illustrating why thunder is heard seconds after lightning is seen due to speed difference"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "reflection-of-sound",
+          "title": "Reflection of Sound",
+          "objectives": [
+            "Student can state the laws of reflection of sound",
+            "Student can describe an experiment using two hollow tubes to verify the angle of incidence equals angle of reflection"
+          ],
+          "visualIdeas": [
+            "two pipes aligned on a board with a clock ticking at one end, reflecting off a flat wall to an ear at the other end",
+            "a geometric ray diagram of sound reflecting off a hard barrier"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "echo",
+          "title": "Echo",
+          "objectives": [
+            "Student can calculate the minimum distance (17.2m at 22 degrees C) required to hear a distinct echo",
+            "Student can solve echo distance problems using the formula v = 2d / t"
+          ],
+          "visualIdeas": [
+            "a person standing in front of a cliff showing the sound traveling distance d to the cliff and d back",
+            "step-by-step mathematical calculation using the speed of sound and the human brain persistence of hearing limit (0.1s)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reverberation",
+          "title": "Reverberation",
+          "objectives": [
+            "Student can define reverberation as multiple reflections of sound in an enclosed space",
+            "Student can list methods to reduce reverberation in auditoriums and cinema halls"
+          ],
+          "visualIdeas": [
+            "a cross-section of a theater showing multiple reflections of sound from walls and ceiling to the audience",
+            "sketches of sound-absorbing materials like heavy fiberboard, draperies, and cushioned seats"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "uses-of-multiple-reflection-of-sound",
+          "title": "Uses of Multiple Reflection of Sound",
+          "objectives": [
+            "Student can describe how megaphones, horns, and stethoscopes use multiple reflections",
+            "Student can explain why the ceilings of concert halls are curved"
+          ],
+          "visualIdeas": [
+            "a cutaway view of a stethoscope showing sound waves reflecting down the tube",
+            "a curved ceiling of an auditorium reflecting sound waves uniformly across all rows"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "range-of-hearing",
+          "title": "Range of Hearing",
+          "objectives": [
+            "Student can state the audible range of hearing for normal human ears (20 Hz to 20,000 Hz)",
+            "Student can define infrasound and ultrasound with examples of animals that communicate using them"
+          ],
+          "visualIdeas": [
+            "a frequency line with labeled regions: Infrasound (<20Hz), Audible (20-20,000Hz), and Ultrasound (>20kHz)",
+            "sketches of a bat, rhinoceros, and dolphin matched with their frequency emissions"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "applications-of-ultrasound",
+          "title": "Applications of Ultrasound",
+          "objectives": [
+            "Student can list industrial and medical applications of ultrasound (cleaning, crack detection, echocardiography)",
+            "Student can explain how ultrasonography is used to image internal body organs"
+          ],
+          "visualIdeas": [
+            "ultrasound waves reflecting from a hidden crack in a metal block, leaving a gap in the detector signals",
+            "a medical professional using an ultrasound probe on a patient's abdomen with the screen showing an internal scan"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "sonar",
+          "title": "Sonar",
+          "objectives": [
+            "Student can state the full form of SONAR (SOund Navigation And Ranging)",
+            "Student can calculate ocean depth using SONAR transmission and reception times"
+          ],
+          "visualIdeas": [
+            "a ship sending out ultrasonic pulses that reflect off the seabed back to a receiver, labeled with depth 'd' and velocity 'v'",
+            "worked out numerical examples of submarine-to-obstacle distance calculations"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "structure-of-the-human-ear",
+          "title": "Structure of Human Ear",
+          "objectives": [
+            "Student can label the outer ear, middle ear, and inner ear on a diagram",
+            "Student can trace the path of sound energy transformation from acoustic vibrations to electrical signals"
+          ],
+          "visualIdeas": [
+            "a detailed anatomical drawing of the human ear identifying the pinna, auditory canal, tympanic membrane (eardrum), three bones (hammer, anvil, stirrup), cochlea, and auditory nerve",
+            "a block diagram showing flow of vibration through different parts"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "natural-resources",
+      "title": "Natural Resources",
+      "topics": [
+        {
+          "id": "the-breath-of-life-air",
+          "title": "The Breath of Life: Air",
+          "objectives": [
+            "Student can list the gaseous composition of air and explain its role in sustaining life",
+            "Student can compare the atmosphere of earth with Venus and Mars where carbon dioxide dominates"
+          ],
+          "visualIdeas": [
+            "a pie chart of Earth's atmospheric gases next to the composition profiles of Mars and Venus",
+            "a diagram showing cellular respiration and combustion consuming oxygen and releasing carbon dioxide"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-role-of-the-atmosphere-in-climate-control",
+          "title": "The Role of the Atmosphere in Climate Control",
+          "objectives": [
+            "Student can explain how the atmosphere acts as a blanket to prevent sudden temperature swings",
+            "Student can compare daily temperature ranges of the Earth and the Moon"
+          ],
+          "visualIdeas": [
+            "a diagram of Earth under its atmosphere maintaining a narrow temperature range vs the barren Moon reaching extremes of -190°C to 110°C",
+            "sunlight reflecting and trapping mechanisms in the atmosphere"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-movement-of-air-winds",
+          "title": "The Movement of Air: Winds",
+          "objectives": [
+            "Student can explain how unequal heating of land and water bodies creates air currents",
+            "Student can diagram the direction of sea breezes and land breezes"
+          ],
+          "visualIdeas": [
+            "a day scenario showing hot air rising over land and cool air blowing from the sea (sea breeze)",
+            "a night scenario showing hot air rising over the sea and cool air blowing from land (land breeze)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rain",
+          "title": "Rain",
+          "objectives": [
+            "Student can describe the formation of clouds and rain from water vapor condensation",
+            "Student can identify the role of dust particles as condensation nuclei"
+          ],
+          "visualIdeas": [
+            "a cycle showing water evaporating, rising, cooling, condensing around dust particles to form droplets, and falling as rain",
+            "a laboratory model illustration of cloud formation in a plastic bottle"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "air-pollution",
+          "title": "Air Pollution",
+          "objectives": [
+            "Student can list the harmful effects of suspended particulate matter and sulfur/nitrogen oxides",
+            "Student can describe the formation of smog and its impact on visibility and health"
+          ],
+          "visualIdeas": [
+            "industrial chimneys emitting smoke next to a foggy city street labeled 'Smog = Smoke + Fog'",
+            "a health diagram showing inhalation of pollutants leading to respiratory illness"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "water-a-wonder-liquid",
+          "title": "Water: A Wonder Liquid",
+          "objectives": [
+            "Student can state why water is essential for cellular activities and metabolic reactions",
+            "Student can relate water availability to the biodiversity of a geographic region"
+          ],
+          "visualIdeas": [
+            "a cell map showing chemical reactions occurring in the aqueous medium of cytoplasm",
+            "a comparison of a lush rainforest (high water) and a sparse desert (low water) showcasing biodiversity levels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "water-pollution",
+          "title": "Water Pollution",
+          "objectives": [
+            "Student can identify major sources of water pollution (fertilizers, sewage, industrial waste)",
+            "Student can explain the effect of thermal pollution and oxygen depletion on aquatic organisms"
+          ],
+          "visualIdeas": [
+            "runoff from agricultural fields carrying fertilizers into a pond, causing algal bloom",
+            "a river thermometer showing hot water discharged from a factory and dead fish floating due to low dissolved oxygen"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mineral-riches-in-the-soil",
+          "title": "Mineral Riches in the Soil",
+          "objectives": [
+            "Student can define soil and list physical, chemical, and biological factors that lead to soil formation (weathering)",
+            "Student can describe how lichens and mosses contribute to the breaking down of rocks"
+          ],
+          "visualIdeas": [
+            "boulders splitting due to water freezing in cracks, and a tree's roots forcing rock layers apart",
+            "lichens growing on a rock surface secreting chemical substances to erode the mineral surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "biogeochemical-cycles",
+          "title": "Biogeochemical Cycles",
+          "objectives": [
+            "Student can explain the term biogeochemical cycle as a constant interaction between biotic and abiotic components",
+            "Student can name the four main cycles operating in nature"
+          ],
+          "visualIdeas": [
+            "a cycle showing basic flow lines connecting reservoir pools, biological organisms, and atmospheric gases",
+            "a concept map linking biosphere, lithosphere, hydrosphere, and atmosphere"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-water-cycle",
+          "title": "The Water-Cycle",
+          "objectives": [
+            "Student can trace the movement of water through evaporation, transpiration, condensation, precipitation, and groundwater runoff",
+            "Student can identify the pathways of water absorption by plants and consumption by animals"
+          ],
+          "visualIdeas": [
+            "a detailed landscape diagram tracing the complete water cycle including underground aquifers and transpiration from forest canopies",
+            "simplified flow boxes indicating state changes of water during the cycle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-nitrogen-cycle",
+          "title": "The Nitrogen-Cycle",
+          "objectives": [
+            "Student can describe the processes of nitrogen fixation, nitrification, ammonification, and denitrification",
+            "Student can identify nitrogen-fixing bacteria like Rhizobium in the root nodules of leguminous plants"
+          ],
+          "visualIdeas": [
+            "a complete nitrogen cycle flowchart linking atmospheric nitrogen, lightning, soil nitrates, plants, animals, and denitrifying bacteria",
+            "a sketch of leguminous roots showing swollen pinkish nodules"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-carbon-cycle",
+          "title": "The Carbon-Cycle",
+          "objectives": [
+            "Student can describe the balancing processes of photosynthesis and respiration in the carbon cycle",
+            "Student can explain how greenhouse gases like carbon dioxide lead to global warming"
+          ],
+          "visualIdeas": [
+            "a carbon cycle showing carbon dioxide in the atmosphere being absorbed by trees and released by animal respiration, decomposition, and factory combustion",
+            "the greenhouse effect: solar radiation passing through the atmosphere but being trapped as heat by greenhouse gas molecules"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "the-oxygen-cycle",
+          "title": "The Oxygen-Cycle",
+          "objectives": [
+            "Student can list the major biological processes that consume oxygen (respiration, combustion, oxides of nitrogen formation)",
+            "Student can name photosynthesis as the primary process that returns oxygen to the atmosphere"
+          ],
+          "visualIdeas": [
+            "an oxygen cycle diagram focusing on the atmosphere, photosynthesis (release), and respiration/combustion (consumption)",
+            "a balance sheet showing oxygen inputs and outputs in the biosphere"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ozone-layer",
+          "title": "Ozone Layer",
+          "objectives": [
+            "Student can describe the chemical formula of ozone (O3) and its role in shielding the earth from harmful UV radiation",
+            "Student can identify chlorofluorocarbons (CFCs) as the primary cause of ozone depletion"
+          ],
+          "visualIdeas": [
+            "an atmospheric layer diagram showing the stratosphere stopping UV rays while letting light through to the troposphere",
+            "a map of the ozone hole over Antarctica highlighted in blue and purple colors"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "improvement-in-food-resources",
+      "title": "Improvement in Food Resources",
+      "topics": [
+        {
+          "id": "improvement-in-crop-yields",
+          "title": "Improvement in Crop Yields",
+          "objectives": [
+            "Student can distinguish between Kharif and Rabi crops with seasonal examples",
+            "Student can name the three main groups of activities for improving crop yields"
+          ],
+          "visualIdeas": [
+            "a seasonal calendar showing June-October (Kharif: paddy, soyabean) and November-April (Rabi: wheat, gram)",
+            "a three-step flow chart: Crop Variety Improvement -> Crop Production Improvement -> Crop Protection Management"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "crop-variety-improvement",
+          "title": "Crop Variety Improvement",
+          "objectives": [
+            "Student can explain hybridization and genetic modification as methods to achieve desirable agronomic traits",
+            "Student can list key breeding objectives such as high yield, biotic/abiotic resistance, and wider adaptability"
+          ],
+          "visualIdeas": [
+            "a cross-pollination diagram between two varieties with different desirable traits to yield a superior hybrid seed",
+            "a list of traits (dwarfness in cereals, tallness in fodder) represented with icons"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "crop-production-management",
+          "title": "Crop Production Management",
+          "objectives": [
+            "Student can compare macro-nutrients and micro-nutrients required by plants",
+            "Student can distinguish between manure and fertilizers based on composition, organic matter, and nutrient specificity"
+          ],
+          "visualIdeas": [
+            "a periodic-style chart of 16 essential nutrients classified into air/water sources, macro-nutrients, and micro-nutrients",
+            "a comparison table of manure (compost, vermicompost) and synthetic fertilizers (NPK)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "crop-protection-management",
+          "title": "Crop Protection Management",
+          "objectives": [
+            "Student can identify different crop pests (weeds, insects, pathogens) and their control methods",
+            "Student can describe safe storage practices for food grains to prevent biotic and abiotic damage"
+          ],
+          "visualIdeas": [
+            "drawings of common weeds (Xanthium, Parthenium) growing alongside healthy crop plants",
+            "a grain silo cross-section showing moisture control, fumigation, and temperature maintenance"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "animal-husbandry",
+          "title": "Animal Husbandry",
+          "objectives": [
+            "Student can define animal husbandry",
+            "Student can explain the need for scientific management of livestock to meet increasing human demands"
+          ],
+          "visualIdeas": [
+            "a mind map branching from 'Animal Husbandry' to Cattle, Poultry, Fish, and Bee-keeping",
+            "a statistic graph showing the rise in milk and egg demand over recent decades"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "cattle-farming",
+          "title": "Cattle Farming",
+          "objectives": [
+            "Student can distinguish between milch animals (dairy) and draught animals (labor)",
+            "Student can compare the traits of exotic breeds (Jersey, Brown Swiss) and local breeds (Red Sindhi, Sahiwal)"
+          ],
+          "visualIdeas": [
+            "sketches of a dairy cow (milch) and a working bullock pulling a plow (draught)",
+            "a shelter schematic showing a clean, well-ventilated cattle shed with sloping floors"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "poultry-farming",
+          "title": "Poultry Farming",
+          "objectives": [
+            "Student can distinguish between layers (egg production) and broilers (meat production) based on feeding and housing requirements",
+            "Student can describe traits of the indigenous Aseel breed and the exotic Leghorn breed"
+          ],
+          "visualIdeas": [
+            "a comparative drawing showing a broiler chicken (high protein feed, heavy mass) and a layer hen (egg collection cages)",
+            "a checklist of disease prevention steps (vaccination, cleaning) in a poultry farm"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fish-production",
+          "title": "Fish Production",
+          "objectives": [
+            "Student can differentiate between capture fishery and culture fishery",
+            "Student can explain the management of composite fish culture systems using five or six species"
+          ],
+          "visualIdeas": [
+            "a marine trawler casting nets (capture) vs a managed inland pond (culture)",
+            "a cross-section of a composite fish pond showing Catlas (surface), Rohus (middle zone), Mrigals/Common Carps (bottom), feeding without competition"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "bee-keeping",
+          "title": "Bee-keeping",
+          "objectives": [
+            "Student can identify Apis cerana indica and Apis mellifera as common honeybee species used in apiculture",
+            "Student can explain how the quality and taste of honey depend on the pasturage or flora available to the bees"
+          ],
+          "visualIdeas": [
+            "an artificial wooden beehive showing movable frames filled with honeycomb",
+            "a bee flying from colorful wildflower pasturage back to its hive with nectar collectors"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    }
+  ]
+}

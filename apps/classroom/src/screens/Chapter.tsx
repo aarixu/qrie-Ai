@@ -40,14 +40,19 @@ export function Chapter() {
       onBack={() => navigate('/')}
     >
       <div className="grid gap-3">
-        {(rows ?? []).map(({ path, topic, lesson }, i) => {
-          const done = lesson ? isCompleted(progress, lesson.id) : false;
-          const available = lesson !== null;
+        {(rows ?? []).map(({ path, topic, lessons }, i) => {
+          // A topic is done only when every lesson under it is — half a topic
+          // is not a finished topic.
+          const available = lessons.length > 0;
+          const done = available && lessons.every((l) => isCompleted(progress, l.id));
+          // Open the first unfinished lesson, so tapping a part-done topic
+          // continues rather than restarting it.
+          const next = lessons.find((l) => !isCompleted(progress, l.id)) ?? lessons[0];
 
           return (
             <button
               key={path}
-              onClick={() => lesson && navigate(`/lesson/${lesson.id}`)}
+              onClick={() => next && navigate(`/lesson/${next.id}`)}
               disabled={!available}
               className={`flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all ${
                 available ? 'hover:shadow-md hover:scale-[1.01] cursor-pointer' : 'opacity-70 cursor-default'
@@ -71,8 +76,14 @@ export function Chapter() {
                   {topic.estMinutes ? ` · ~${topic.estMinutes} min` : ''}
                 </div>
                 <div className="font-headline-md text-[17px] leading-6 text-on-surface">{topic.title}</div>
-                {!available && (
+                {!available ? (
                   <div className="font-label-md text-label-md text-on-surface-variant">Coming soon</div>
+                ) : (
+                  lessons.length > 1 && (
+                    <div className="font-label-md text-label-md text-on-surface-variant">
+                      {lessons.filter((l) => isCompleted(progress, l.id)).length} of {lessons.length} lessons done
+                    </div>
+                  )
                 )}
               </div>
 

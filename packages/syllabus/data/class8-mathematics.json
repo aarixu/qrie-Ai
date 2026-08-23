@@ -1,0 +1,668 @@
+{
+  "id": "class8-mathematics",
+  "klass": 8,
+  "subject": "Mathematics",
+  "chapters": [
+    {
+      "id": "rational-numbers",
+      "title": "Rational Numbers",
+      "topics": [
+        {
+          "id": "properties-of-rational-numbers",
+          "title": "Properties of Rational Numbers",
+          "objectives": [
+            "Student can identify if rational numbers are closed under addition, subtraction, multiplication, and division",
+            "Student can apply commutative and associative properties to simplify calculations involving rational numbers",
+            "Student can state the roles of zero and one as additive and multiplicative identities respectively"
+          ],
+          "visualIdeas": [
+            "a grid table with operations as columns and number systems as rows, populated with green checkmarks and red crosses for closure",
+            "an animation of terms swapping places with a curved arrow to illustrate commutativity"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "distributivity-and-inverse",
+          "title": "Distributivity and Inverse",
+          "objectives": [
+            "Student can find the additive inverse and multiplicative inverse of a given rational number",
+            "Student can calculate products of rational numbers using the distributive property of multiplication over addition"
+          ],
+          "visualIdeas": [
+            "a number line highlighting a number and its negative at equal distances from zero",
+            "the distributive formula with colored arrows distributing a factor to two terms inside parentheses"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    },
+    {
+      "id": "linear-equations-in-one-variable",
+      "title": "Linear Equations in One Variable",
+      "topics": [
+        {
+          "id": "equations-with-variable-on-both-sides",
+          "title": "Solving Equations having the Variable on both Sides",
+          "objectives": [
+            "Student can solve linear equations in one variable where the variable terms appear on both sides",
+            "Student can construct and solve linear equations representing word problems about numbers, ages, or currencies"
+          ],
+          "visualIdeas": [
+            "a balance scale with variable boxes and unit weights on both sides, showing the step-by-step subtraction of boxes from one side",
+            "a two-column table comparing the verbal phrases of a word problem with their corresponding algebraic expressions"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "reducing-equations-to-simpler-form",
+          "title": "Reducing Equations to Simpler Form",
+          "objectives": [
+            "Student can solve complex linear equations by clearing fractions and parentheses",
+            "Student can apply cross-multiplication to reduce equations of the form (ax + b)/(cx + d) = k to a linear form"
+          ],
+          "visualIdeas": [
+            "a step-by-step algebraic simplification where the least common multiple is multiplied with every term, highlighted in red",
+            "a diagonal arrows overlay showing the cross-multiplication of numerator and denominator"
+          ],
+          "estMinutes": 50
+        }
+      ]
+    },
+    {
+      "id": "understanding-quadrilaterals",
+      "title": "Understanding Quadrilaterals",
+      "topics": [
+        {
+          "id": "polygons-and-classification",
+          "title": "Polygons and Classification",
+          "objectives": [
+            "Student can classify curves as open, closed, simple, or non-simple",
+            "Student can categorize polygons based on the number of vertices or sides",
+            "Student can differentiate between convex and concave polygons as well as regular and irregular polygons"
+          ],
+          "visualIdeas": [
+            "a classification chart showing shapes grouped under convex and concave with diagonals drawn to show if they lie outside the shape",
+            "a comparison side-by-side of a regular hexagon with equal sides/angles and an irregular hexagon"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "angle-sum-properties",
+          "title": "Angle Sum Properties",
+          "objectives": [
+            "Student can calculate the sum of interior angles of any polygon with n sides using the formula (n-2) x 180 degrees",
+            "Student can solve for unknown interior angles in given polygons"
+          ],
+          "visualIdeas": [
+            "a pentagon divided into three triangles by drawing diagonals from a single vertex, showing how the sum is 3 x 180 degrees",
+            "a worked geometric problem where an unknown angle x in a pentagon is solved step-by-step"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "exterior-angles",
+          "title": "Sum of the Measures of the Exterior Angles",
+          "objectives": [
+            "Student can state that the sum of the exterior angles of any polygon is 360 degrees",
+            "Student can calculate the measure of each exterior angle of a regular polygon with n sides"
+          ],
+          "visualIdeas": [
+            "a polygon with its sides extended in a clockwise direction, showing the exterior angles colored to form a complete circle of 360 degrees",
+            "a step-by-step formula derivation for the exterior angle of a regular octagon"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "kinds-of-quadrilaterals",
+          "title": "Kinds of Quadrilaterals",
+          "objectives": [
+            "Student can identify the defining properties of a trapezium, a kite, and a parallelogram",
+            "Student can apply properties of sides, angles, and diagonals of a parallelogram to find unknown lengths and angles"
+          ],
+          "visualIdeas": [
+            "a family tree diagram of quadrilaterals branching into trapezium, kite, and parallelogram",
+            "a parallelogram with opposite sides marked equal, opposite angles marked equal, and consecutive angles shown as supplementary"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "special-parallelograms",
+          "title": "Special Parallelograms",
+          "objectives": [
+            "Student can list the special properties of a rhombus, a rectangle, and a square",
+            "Student can apply the diagonal properties of special parallelograms to calculate missing lengths and perpendicularity"
+          ],
+          "visualIdeas": [
+            "a Venn diagram showing the nested relationship between parallelograms, rectangles, rhombuses, and squares",
+            "a diagram of a rhombus showing its diagonals bisecting each other at a right angle symbol"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "data-handling",
+      "title": "Data Handling",
+      "topics": [
+        {
+          "id": "organising-and-grouping-data",
+          "title": "Organising and Grouping Data",
+          "objectives": [
+            "Student can construct a frequency distribution table with tally marks for a given raw data set",
+            "Student can group raw data into class intervals and identify lower limits, upper limits, and class width"
+          ],
+          "visualIdeas": [
+            "a split screen showing a list of numbers on the left and a tally table filling up on the right",
+            "a diagram highlighting the upper limit, lower limit, and size of a class interval like 20-30"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "histograms",
+          "title": "Bars with a Difference (Histograms)",
+          "objectives": [
+            "Student can construct a histogram for a grouped frequency distribution",
+            "Student can interpret data presented in a histogram, including identifying intervals with peak frequencies"
+          ],
+          "visualIdeas": [
+            "a histogram showing adjacent bars with no spaces between them, highlighting the continuous nature of the x-axis",
+            "a histogram with a jagged line (broken line) near the origin to show a jump in scale"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "pie-charts",
+          "title": "Circle Graph or Pie Chart",
+          "objectives": [
+            "Student can calculate the central angle of sectors in a pie chart given categorical data percentages or fractions",
+            "Student can construct a pie chart using a protractor and compass to represent a given dataset",
+            "Student can interpret information from a given pie chart to answer comparative questions"
+          ],
+          "visualIdeas": [
+            "a circular pizza with slices representing different data proportions alongside a table calculating central angles",
+            "a protractor aligned to a circle's radius showing how to draw a sector of exactly 120 degrees"
+          ],
+          "estMinutes": 55
+        },
+        {
+          "id": "chance-and-probability",
+          "title": "Chance and Probability",
+          "objectives": [
+            "Student can list all possible outcomes of a simple random experiment like flipping a coin or rolling a die",
+            "Student can calculate the probability of a specific event using the formula: Number of favorable outcomes divided by the Total number of outcomes"
+          ],
+          "visualIdeas": [
+            "a spinning wheel with colored sectors, showing the outcomes as a fraction",
+            "a tree diagram showing the two branches of a coin flip (Heads and Tails) with 1/2 probability annotated on each"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "squares-and-square-roots",
+      "title": "Squares and Square Roots",
+      "topics": [
+        {
+          "id": "properties-of-square-numbers",
+          "title": "Properties of Square Numbers",
+          "objectives": [
+            "Student can determine if a number is a perfect square by analyzing its unit digit",
+            "Student can state the pattern relating the number of zeros at the end of a square number to its square root"
+          ],
+          "visualIdeas": [
+            "a table of numbers 1 to 20 with their squares, highlighting unit digits in yellow",
+            "a visual grid of square arrays showing the sum of consecutive odd numbers forming perfect squares"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "finding-squares-and-pythagorean-triplets",
+          "title": "Finding Squares and Pythagorean Triplets",
+          "objectives": [
+            "Student can calculate the square of a large number without actual multiplication using algebraic expansion",
+            "Student can generate a Pythagorean triplet when given one of its members using the general form (2m, m^2 - 1, m^2 + 1)"
+          ],
+          "visualIdeas": [
+            "an algebraic splitting of 42 squared into (40+2) squared, solved step-by-step using binomial expansion",
+            "a right-angled triangle with side lengths corresponding to a generated Pythagorean triplet"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "square-roots-by-prime-factorisation",
+          "title": "Square Roots by Prime Factorisation",
+          "objectives": [
+            "Student can define the square root as the inverse operation of squaring",
+            "Student can calculate the square root of a perfect square using the prime factorisation method",
+            "Student can determine the smallest number by which a given non-perfect square must be multiplied or divided to make it a perfect square"
+          ],
+          "visualIdeas": [
+            "a factor tree showing prime factors grouped in pairs of two",
+            "a mathematical division stack showing prime factorisation with paired primes circled"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "square-roots-by-division-method",
+          "title": "Square Roots by Division Method",
+          "objectives": [
+            "Student can calculate the square root of large numbers using the long division method",
+            "Student can estimate the square root of a non-perfect square to the nearest whole number"
+          ],
+          "visualIdeas": [
+            "a step-by-step animated layout of the square root long division showing how digits are paired under bars",
+            "a comparison scale placing a non-perfect square between its two closest perfect square neighbors"
+          ],
+          "estMinutes": 55
+        },
+        {
+          "id": "square-roots-of-decimals",
+          "title": "Square Roots of Decimals",
+          "objectives": [
+            "Student can calculate the square root of a decimal number using the long division method with correct placement of decimal points",
+            "Student can apply square roots to solve real-life geometry problems involving areas of squares"
+          ],
+          "visualIdeas": [
+            "a decimal square root long division showing the placement of bars on integral parts and decimal parts",
+            "a square field diagram labeled with its area, showing the arrow transition to its side length via square root"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "cubes-and-cube-roots",
+      "title": "Cubes and Cube Roots",
+      "topics": [
+        {
+          "id": "cubes-and-patterns",
+          "title": "Cubes and Perfect Cubes",
+          "objectives": [
+            "Student can identify perfect cubes by checking if prime factors can be grouped in triplets",
+            "Student can calculate the smallest number that must be multiplied or divided by a number to make it a perfect cube"
+          ],
+          "visualIdeas": [
+            "a comparison diagram showing a 1x1x1 cube, 2x2x2 cube, and 3x3x3 cube built of unit blocks",
+            "prime factor grouping where triplets of prime factors are circled in groups of three"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "cube-roots-by-prime-factorisation",
+          "title": "Cube Roots by Prime Factorisation",
+          "objectives": [
+            "Student can calculate the cube root of a perfect cube using the prime factorisation method",
+            "Student can identify the unit digit of a cube root by observing the unit digit of its cube"
+          ],
+          "visualIdeas": [
+            "a table mapping the units digit of numbers to the units digit of their cubes, showing patterns like 2-to-8 and 3-to-7",
+            "a prime factorisation chain showing one factor pulled out from each group of three identical factors"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "cube-roots-of-cube-numbers",
+          "title": "Cube Roots of Cube Numbers by Estimation",
+          "objectives": [
+            "Student can estimate the cube root of a perfect cube number by dividing its digits into groups of three starting from the right"
+          ],
+          "visualIdeas": [
+            "a visual division of a six-digit cube number into two groups, showing how the first group gives the units digit and the second group gives the tens digit"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "comparing-quantities",
+      "title": "Comparing Quantities",
+      "topics": [
+        {
+          "id": "recalling-ratios-and-percentages",
+          "title": "Recalling Ratios and Percentages",
+          "objectives": [
+            "Student can convert ratios into percentages and vice versa",
+            "Student can calculate percentage increases and decreases in real-life quantities"
+          ],
+          "visualIdeas": [
+            "a comparative bar showing fractional parts, ratio, and percentage representation of the same quantity",
+            "a price tag showing a transition from old price to new price with the calculation of percent increase"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "discounts-and-gst",
+          "title": "Finding Discounts and GST",
+          "objectives": [
+            "Student can calculate discount and discount percentage based on Marked Price and Selling Price",
+            "Student can calculate the value-added tax or Goods and Services Tax (GST) and find the final billing amount"
+          ],
+          "visualIdeas": [
+            "an item tag showing Marked Price, Discount subtracted, and final Sale Price clearly labeled",
+            "a receipt breakdown showing Sales Price, GST percentage added, and final amount paid"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "profit-and-loss",
+          "title": "Prices Related to Buying and Selling",
+          "objectives": [
+            "Student can calculate profit or loss percentage based on Cost Price and Selling Price",
+            "Student can solve multi-step problems involving overhead expenses added to the Cost Price"
+          ],
+          "visualIdeas": [
+            "a block diagram showing Cost Price + Overhead Expenses = Total Cost Price",
+            "a flow chart showing the formulas for Profit% and Loss% based on Total Cost Price"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "compound-interest",
+          "title": "Compound Interest",
+          "objectives": [
+            "Student can differentiate between Simple Interest and Compound Interest with calculations over multiple periods",
+            "Student can calculate compound interest and amount using the standard formula for annual and semi-annual compounding"
+          ],
+          "visualIdeas": [
+            "a comparative line chart showing simple interest growing linearly while compound interest curves upwards over time",
+            "a table showing interest being added back to the principal at the end of each year to form the new principal"
+          ],
+          "estMinutes": 60
+        }
+      ]
+    },
+    {
+      "id": "algebraic-expressions-and-identities",
+      "title": "Algebraic Expressions and Identities",
+      "topics": [
+        {
+          "id": "terms-factors-and-coefficients",
+          "title": "Terms, Factors and Coefficients",
+          "objectives": [
+            "Student can identify terms, factors, and numerical coefficients in a given algebraic expression",
+            "Student can classify expressions as monomials, binomials, trinomials, or general polynomials",
+            "Student can differentiate between like and unlike algebraic terms"
+          ],
+          "visualIdeas": [
+            "a tree diagram showing an expression branching into terms, and terms branching into numerical and variable factors",
+            "a sorting game style visual with different colored baskets for grouping like terms"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "addition-and-subtraction-of-expressions",
+          "title": "Addition and Subtraction of Algebraic Expressions",
+          "objectives": [
+            "Student can add and subtract algebraic expressions by aligning like terms horizontally or vertically"
+          ],
+          "visualIdeas": [
+            "a column-wise addition grid where like variables are perfectly aligned vertically with space left for missing powers",
+            "a subtraction flow diagram showing how signs of the lower polynomial terms are reversed before adding"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "multiplication-of-algebraic-expressions",
+          "title": "Multiplication of Algebraic Expressions",
+          "objectives": [
+            "Student can multiply a monomial by another monomial or three or more monomials",
+            "Student can multiply a monomial by a polynomial using the distributive law",
+            "Student can multiply two binomials or a binomial by a trinomial term-by-term"
+          ],
+          "visualIdeas": [
+            "an area model of a rectangle divided into four smaller boxes illustrating the multiplication of two binomials (x+a) and (y+b)",
+            "arched distribution lines connecting terms of a binomial to each term of a trinomial"
+          ],
+          "estMinutes": 55
+        },
+        {
+          "id": "algebraic-identities",
+          "title": "Standard Identities",
+          "objectives": [
+            "Student can state the standard algebraic identities including (a+b)^2, (a-b)^2, (a^2-b^2), and (x+a)(x+b)",
+            "Student can apply these identities to calculate numerical products and simplify algebraic products efficiently"
+          ],
+          "visualIdeas": [
+            "a geometric dissection square of side (a+b) partitioned into squares of area a^2, b^2 and two rectangles of area ab",
+            "a worked example where 103 x 97 is transformed into (100 + 3)(100 - 3) and solved using the difference of squares"
+          ],
+          "estMinutes": 55
+        }
+      ]
+    },
+    {
+      "id": "mensuration",
+      "title": "Mensuration",
+      "topics": [
+        {
+          "id": "area-of-trapezium-and-quadrilaterals",
+          "title": "Area of Trapezium and General Quadrilaterals",
+          "objectives": [
+            "Student can calculate the area of a trapezium using the formula 1/2 * (sum of parallel sides) * height",
+            "Student can calculate the area of any general quadrilateral or a rhombus using diagonal lengths"
+          ],
+          "visualIdeas": [
+            "a trapezium split into a rectangle and two triangles, demonstrating the physical basis of its area formula",
+            "a general quadrilateral split by a diagonal into two triangles with perpendicular heights h1 and h2 labeled"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "area-of-a-polygon",
+          "title": "Area of a Polygon",
+          "objectives": [
+            "Student can determine the total area of an irregular polygon by triangulating it or splitting it into trapeziums"
+          ],
+          "visualIdeas": [
+            "a field layout diagram (pentagonal or hexagonal) split into triangles and trapeziums with all raw measurements annotated along a central base line"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "surface-area-of-solids",
+          "title": "Surface Area of Cube, Cuboid and Cylinder",
+          "objectives": [
+            "Student can differentiate between lateral/curved surface area and total surface area of cubes, cuboids, and cylinders",
+            "Student can calculate the surface area of cubes, cuboids, and cylinders to solve real-world packaging or painting problems"
+          ],
+          "visualIdeas": [
+            "the unfolded net views of a cuboid and a cylinder showing the flat shapes that form the total surface area",
+            "a cylinder net consisting of a rectangle with sides equal to height and circumference, and two circular bases"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "volume-and-capacity",
+          "title": "Volume of Solids and Capacity",
+          "objectives": [
+            "Student can calculate the volume of a cuboid, cube, and right circular cylinder using standard formulas",
+            "Student can convert between volume and capacity units such as cubic centimeters, cubic meters, milliliters, and liters"
+          ],
+          "visualIdeas": [
+            "a container filled with unit cubic blocks showing the space occupied (volume) compared with liquid filling (capacity)",
+            "a units conversion ladder showing links between 1 mL = 1 cm^3 and 1 m^3 = 1000 Liters"
+          ],
+          "estMinutes": 50
+        }
+      ]
+    },
+    {
+      "id": "exponents-and-powers",
+      "title": "Exponents and Powers",
+      "topics": [
+        {
+          "id": "powers-with-negative-exponents",
+          "title": "Powers with Negative Exponents",
+          "objectives": [
+            "Student can state the meaning of negative exponents as reciprocals of positive powers",
+            "Student can convert terms with negative exponents to positive exponents"
+          ],
+          "visualIdeas": [
+            "a pattern sequence showing powers of 10 decreasing: 10^2, 10^1, 10^0, 10^-1, 10^-2 with corresponding divisions by 10",
+            "a flip card visual showing a^-m becoming 1 / a^m"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "laws-of-exponents",
+          "title": "Laws of Exponents",
+          "objectives": [
+            "Student can apply exponent laws for multiplication, division, power of a power, and power of a product with integral exponents to simplify expressions"
+          ],
+          "visualIdeas": [
+            "a summary cheat-sheet graphic showing all laws of exponents with colorful examples for each rule",
+            "a step-by-step mathematical reduction where negative exponents are systematically simplified to positive exponents"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "standard-form",
+          "title": "Use of Exponents to Express Small Numbers in Standard Form",
+          "objectives": [
+            "Student can convert very small decimal numbers and very large numbers into standard scientific notation",
+            "Student can compare extremely small or large numbers by analyzing their exponent values"
+          ],
+          "visualIdeas": [
+            "an animation of a decimal point hopping over zero digits to the right, showing how the power of 10 decreases with each hop",
+            "a comparative slide of the size of a plant cell versus a red blood cell written in standard form"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "direct-and-inverse-proportions",
+      "title": "Direct and Inverse Proportions",
+      "topics": [
+        {
+          "id": "direct-proportion",
+          "title": "Direct Proportion",
+          "objectives": [
+            "Student can define direct proportion as a relation where the ratio of corresponding values remains constant",
+            "Student can solve real-life unitary problems involving direct variations, such as distance-time and map scales"
+          ],
+          "visualIdeas": [
+            "a table of values for gasoline volume and cost, demonstrating that x/y remains constant",
+            "a graph of direct proportion showing a straight line passing through the origin"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "inverse-proportion",
+          "title": "Inverse Proportion",
+          "objectives": [
+            "Student can define inverse proportion as a relation where the product of corresponding values remains constant",
+            "Student can solve real-life problems where an increase in one quantity leads to a proportional decrease in another, like workers and days"
+          ],
+          "visualIdeas": [
+            "a diagram comparing 2 workers taking 6 hours with 4 workers taking 3 hours to complete the same wall",
+            "a value table where the product x * y is shown to be constant across all entries"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "factorisation",
+      "title": "Factorisation",
+      "topics": [
+        {
+          "id": "factorisation-by-common-factors-and-regrouping",
+          "title": "Factorisation by Common Factors and Regrouping",
+          "objectives": [
+            "Student can express a monomial as a product of its irreducible factors",
+            "Student can factorise algebraic expressions by taking out common factors or by regrouping terms"
+          ],
+          "visualIdeas": [
+            "a factorization tree of an algebraic term like 12x^2y into its irreducible factors",
+            "color-coded regrouping steps showing binomial brackets becoming a common factor"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "factorisation-using-identities",
+          "title": "Factorisation using Identities",
+          "objectives": [
+            "Student can factorise trinomial expressions using standard algebraic identities",
+            "Student can factorise quadratics of the form x^2 + (a+b)x + ab by splitting the middle term"
+          ],
+          "visualIdeas": [
+            "a trinomial mapped to the templates of (a+b)^2 or (a-b)^2 with arrows showing the square root extraction of terms",
+            "a flow diagram demonstrating how to split the middle coefficient into two factors whose product equals the constant term"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "division-of-algebraic-expressions",
+          "title": "Division of Algebraic Expressions",
+          "objectives": [
+            "Student can divide a monomial by another monomial by canceling common factors",
+            "Student can divide a polynomial by a monomial or another polynomial by factorising the numerator first"
+          ],
+          "visualIdeas": [
+            "a fraction format division where common terms in numerator and denominator are crossed out in red",
+            "a polynomial division step where the quadratic numerator is first rewritten in its factorised binomial form before cancellation"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "finding-errors-in-algebra",
+          "title": "Can you Find the Error?",
+          "objectives": [
+            "Student can identify and correct common mathematical errors in algebraic expansions, substitution, and division"
+          ],
+          "visualIdeas": [
+            "a 'Spot the Mistake' scoreboard showing a wrong statement like 3(x-4) = 3x - 4 side-by-side with its correct version 3x - 12"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-graphs",
+      "title": "Introduction to Graphs",
+      "topics": [
+        {
+          "id": "types-of-graphs",
+          "title": "Types of Graphs",
+          "objectives": [
+            "Student can compare the uses of bar graphs, pie graphs, histograms, and line graphs",
+            "Student can interpret continuous changes over time represented by a line graph"
+          ],
+          "visualIdeas": [
+            "a grid presenting 4 different chart types for the same raw temperature data to show when each is best utilized",
+            "a temperature line graph showing peaks and valleys with specific coordinate points highlighted"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "linear-graphs-and-coordinates",
+          "title": "Linear Graphs and Coordinates",
+          "objectives": [
+            "Student can plot a point on a Cartesian plane when given its coordinates (x, y)",
+            "Student can identify the coordinates of a plotted point by reading values from the axes",
+            "Student can construct a linear graph by joining plotted points that lie on a single line"
+          ],
+          "visualIdeas": [
+            "a coordinate grid with animated arrows showing travel along the x-axis (run) followed by travel along the y-axis (rise) to plot a point",
+            "a straight line drawn through three collinear coordinate points, highlighting the linear relationship"
+          ],
+          "estMinutes": 50
+        },
+        {
+          "id": "applications-of-graphs",
+          "title": "Some Applications of Graphs",
+          "objectives": [
+            "Student can construct graphs representing independent and dependent variables, such as quantity-cost or time-interest",
+            "Student can read values from a graph to answer intermediate interpolation questions"
+          ],
+          "visualIdeas": [
+            "a graph of liters of milk vs cost, with dashed lines projecting from a point on the line to both axes to find the cost of a non-integer volume"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    }
+  ]
+}

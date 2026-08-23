@@ -8,12 +8,12 @@ const root = process.cwd();
 const syllabus = loadSyllabus(
   JSON.parse(fs.readFileSync(path.resolve(root, 'packages/syllabus/data/class10-science.json'), 'utf8')),
 );
-const topic = getTopic(syllabus, 'class10-science/life-processes/heart-circulation')!;
+const topic = getTopic(syllabus, 'class10-science/life-processes/transportation-in-human-beings')!;
 
 describe('buildPrompt', () => {
   const { system, user } = buildPrompt(topic, {
     klass: 10,
-    topicPath: 'class10-science/life-processes/heart-circulation',
+    topicPath: 'class10-science/life-processes/transportation-in-human-beings',
   });
 
   it('embeds the full closed element vocabulary and coordinate space', () => {
@@ -54,8 +54,8 @@ describe('buildPrompt', () => {
     expect(user).toContain(topic.title);
     for (const objective of topic.objectives) expect(user).toContain(objective);
     for (const idea of topic.visualIdeas ?? []) expect(user).toContain(idea);
-    expect(user).toContain('about 10 minutes');
-    expect(user).toContain('"topicRef": "class10-science/life-processes/heart-circulation"');
+    expect(user).toContain(`about ${topic.estMinutes} minutes`);
+    expect(user).toContain('"topicRef": "class10-science/life-processes/transportation-in-human-beings"');
   });
 
   it('demands pure JSON output', () => {

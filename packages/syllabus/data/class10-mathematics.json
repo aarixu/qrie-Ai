@@ -1,0 +1,677 @@
+{
+  "id": "class10-mathematics",
+  "klass": 10,
+  "subject": "Mathematics",
+  "chapters": [
+    {
+      "id": "real-numbers",
+      "title": "Real Numbers",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can classify real numbers into rational and irrational categories",
+            "Student can identify terminating and non-terminating repeating decimals"
+          ],
+          "visualIdeas": [
+            "A tree diagram showing Real Numbers splitting into Rational and Irrational, with examples of each",
+            "A number line highlighting key positions for integers, fractions, and square roots"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fundamental-theorem-of-arithmetic",
+          "title": "The Fundamental Theorem of Arithmetic",
+          "objectives": [
+            "Student can express any composite number as a product of its prime factors",
+            "Student can calculate the HCF and LCM of two positive integers using prime factorisation",
+            "Student can verify the relationship between HCF, LCM and the product of two numbers"
+          ],
+          "visualIdeas": [
+            "A factor tree for a composite number like 120 showing step-by-step factorization into prime nodes",
+            "A Venn diagram comparing prime factors of two numbers to find their HCF and LCM"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "revisiting-irrational-numbers",
+          "title": "Revisiting Irrational Numbers",
+          "objectives": [
+            "Student can prove the irrationality of square root of 2, 3, and 5 using proof by contradiction",
+            "Student can identify the sum or difference of a rational and an irrational number as irrational"
+          ],
+          "visualIdeas": [
+            "A step-by-step logic flowchart showing the contradiction assumption that root 2 equals p over q",
+            "A algebraic identity layout demonstrating why a rational multiplied by an irrational is irrational"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "polynomials",
+      "title": "Polynomials",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can identify the degree of a given polynomial",
+            "Student can classify polynomials into linear, quadratic, and cubic based on their degrees"
+          ],
+          "visualIdeas": [
+            "A three-column layout presenting linear, quadratic, and cubic polynomials with their corresponding algebraic forms",
+            "A visual matching game linking algebraic expressions to their polynomial classification"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "geometrical-meaning-of-zeroes",
+          "title": "Geometrical Meaning of the Zeroes of a Polynomial",
+          "objectives": [
+            "Student can locate the zeroes of a polynomial from its graphical representation",
+            "Student can state the relationship between the degree of a polynomial and the maximum number of zeroes it can have"
+          ],
+          "visualIdeas": [
+            "A 2D coordinate plane showing a parabola intersecting the x-axis at two distinct points, highlighted with bright circles",
+            "A series of graphs showing curves with 0, 1, 2, and 3 x-axis intersections to compare the count of zeroes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "zeroes-and-coefficients",
+          "title": "Relationship between Zeroes and Coefficients of a Quadratic Polynomial",
+          "objectives": [
+            "Student can calculate the sum and product of zeroes of a quadratic polynomial using its coefficients",
+            "Student can construct a quadratic polynomial given the sum and product of its zeroes"
+          ],
+          "visualIdeas": [
+            "A side-by-side algebraic expansion matching the generic quadratic equation with the sum and product of alpha and beta",
+            "A worked solution table demonstrating the coefficient verification process for several quadratic examples"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "pair-of-linear-equations-in-two-variables",
+      "title": "Pair of Linear Equations in Two Variables",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can represent a practical situation algebraically as a pair of linear equations",
+            "Student can identify the conditions for consistent, inconsistent, and dependent systems using ratio comparison"
+          ],
+          "visualIdeas": [
+            "A matrix of three scenarios comparing a1/a2, b1/b2, and c1/c2 to indicate intersection, parallelism, or coincidence",
+            "Two speech bubbles of real-life word problems showing their transformation into a pair of equations"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "graphical-method-of-solution",
+          "title": "Graphical Method of Solution of a Pair of Linear Equations",
+          "objectives": [
+            "Student can solve a pair of linear equations by plotting them on a coordinate grid",
+            "Student can identify the coordinates of the point of intersection of two plotted lines"
+          ],
+          "visualIdeas": [
+            "An animated coordinate grid where two lines are plotted point-by-point, meeting at a highlighted intersection",
+            "A visual table showing the coordinates of points that satisfy both equations simultaneously"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "substitution-method",
+          "title": "Substitution Method",
+          "objectives": [
+            "Student can solve a pair of linear equations by substituting one variable in terms of the other",
+            "Student can check the solution by substituting the obtained values back into the original equations"
+          ],
+          "visualIdeas": [
+            "An equation flow diagram showing the variable x from the first equation being boxed and carried into the x-variable spot of the second",
+            "A step-by-step algebraic column tracing the variable isolation process with highlighted substitutions"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "elimination-method",
+          "title": "Elimination Method",
+          "objectives": [
+            "Student can solve a pair of linear equations by eliminating one variable using multiplication",
+            "Student can select the most appropriate variable to eliminate based on coefficient simplicity"
+          ],
+          "visualIdeas": [
+            "Two stacked equations with a highlighted multiplier bracket next to each, followed by a vertical addition line that cancels one term",
+            "A side-by-side comparison of eliminating x versus eliminating y to show which path requires fewer operations"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "quadratic-equations",
+      "title": "Quadratic Equations",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define a quadratic equation and write its standard form",
+            "Student can formulate a quadratic equation to represent a real-world scenario"
+          ],
+          "visualIdeas": [
+            "The standard quadratic equation written in large text with colored pointers showing the roles of coefficients a, b, and c",
+            "A geometric diagram of a rectangular field showing how area leads to a quadratic equation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "quadratic-equations-definition",
+          "title": "Quadratic Equations",
+          "objectives": [
+            "Student can verify whether a given equation is a quadratic equation by simplifying it",
+            "Student can distinguish a quadratic equation from linear or cubic equations"
+          ],
+          "visualIdeas": [
+            "An algebraic simplification animation showing terms moving to one side to reveal the highest power of x",
+            "A classification chart sorting mixed algebraic equations into 'Quadratic' and 'Not Quadratic' bins"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "solution-by-factorisation",
+          "title": "Solution of a Quadratic Equation by Factorisation",
+          "objectives": [
+            "Student can solve a quadratic equation by splitting the middle term",
+            "Student can factorise quadratic trinomials to determine their real roots"
+          ],
+          "visualIdeas": [
+            "A splitting animation of the middle term bx into mx + nx showing how the sum equals b and the product equals ac",
+            "Two bracketed factors equal to zero showing the splitting of the equation into two independent linear solutions"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "nature-of-roots",
+          "title": "Nature of Roots",
+          "objectives": [
+            "Student can calculate the discriminant of a quadratic equation",
+            "Student can determine the nature of roots based on the sign of the discriminant"
+          ],
+          "visualIdeas": [
+            "A flowchart branching into three paths based on whether the discriminant is positive, zero, or negative",
+            "A visual graphic linking three different parabolas (intersecting twice, touching once, not touching) to the value of the discriminant"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "arithmetic-progressions",
+      "title": "Arithmetic Progressions",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can identify patterns in a sequence of numbers to determine if they form an arithmetic progression",
+            "Student can state the definition of an AP in terms of initial term and common difference"
+          ],
+          "visualIdeas": [
+            "A vertical staircase where each step height increases by a constant common difference of d",
+            "A list of numerical sequences with green checkmarks or red crosses indicating if they form an AP"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "arithmetic-progressions-terms",
+          "title": "Arithmetic Progressions",
+          "objectives": [
+            "Student can find the common difference of a given arithmetic progression",
+            "Student can write down the next consecutive terms of an AP given its first term and common difference"
+          ],
+          "visualIdeas": [
+            "A sequence of blocks labeled a, a+d, a+2d, a+3d with arrows pointing between them labeled +d",
+            "A calculation step showing the difference of consecutive terms being computed and checked for equality"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nth-term-of-an-ap",
+          "title": "nth Term of an AP",
+          "objectives": [
+            "Student can derive the formula for the nth term of an AP",
+            "Student can calculate the nth term of an AP given its first term, common difference, and index"
+          ],
+          "visualIdeas": [
+            "The formula for the nth term with each parameter (a, n, d) highlighted and linked to its physical meaning in the sequence",
+            "A horizontal timeline of terms showing how the number of common differences added is always one less than the term position"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "sum-of-first-n-terms",
+          "title": "Sum of First n Terms of an AP",
+          "objectives": [
+            "Student can compute the sum of the first n terms of an AP using the summation formula",
+            "Student can solve practical problems involving the sum of terms in a real-world progression"
+          ],
+          "visualIdeas": [
+            "A grid pairing the first and last terms, second and second-to-last terms, illustrating why the sum formula works",
+            "A step-by-step evaluation of the summation formula for a given AP with variables color-coded to their values"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "triangles",
+      "title": "Triangles",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can distinguish between congruent figures and similar figures",
+            "Student can state the conditions for similarity of two polygons"
+          ],
+          "visualIdeas": [
+            "A side-by-side comparison of congruent circles of the same radius and similar circles of different radii",
+            "An overlay animation demonstrating how congruent shapes match perfectly while similar shapes require scaling"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "similar-figures",
+          "title": "Similar Figures",
+          "objectives": [
+            "Student can verify the similarity of two given geometric figures by checking corresponding angles and sides",
+            "Student can explain why all regular polygons with the same number of sides are similar"
+          ],
+          "visualIdeas": [
+            "Two triangles of different sizes with corresponding angles highlighted in matching colors and corresponding side ratios shown next to them",
+            "A scale transformation diagram showing a polygon expanding proportionally about a center of dilation"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "similarity-of-triangles",
+          "title": "Similarity of Triangles",
+          "objectives": [
+            "Student can state the Basic Proportionality Theorem (Thales Theorem) and its converse",
+            "Student can apply the Basic Proportionality Theorem to find unknown lengths in triangles"
+          ],
+          "visualIdeas": [
+            "A triangle ABC with a line DE parallel to BC intersecting AB and AC, with ratio segments colored for easy tracking",
+            "An interactive sliding animation showing the line DE moving while maintaining the proportional ratio of the split sides"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "criteria-for-similarity",
+          "title": "Criteria for Similarity of Triangles",
+          "objectives": [
+            "Student can identify the AAA, SAS, and SSS similarity criteria for two triangles",
+            "Student can prove the similarity of two triangles using the appropriate similarity criterion"
+          ],
+          "visualIdeas": [
+            "Three visual flashcards, each illustrating one of the similarity criteria with matching colored sides and angles",
+            "A step-by-step geometric proof template matching given statements with geometric similarity reasons"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "coordinate-geometry",
+      "title": "Coordinate Geometry",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can locate points on a Cartesian coordinate plane",
+            "Student can state the distance of a point from the x-axis and y-axis"
+          ],
+          "visualIdeas": [
+            "A grid showing four quadrants with coordinate signs (+,+), (-,+), (-,-), (+,-) marked clearly",
+            "Points plotted with perpendicular dashed projection lines to both axes to show how the coordinates are measured"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "distance-formula",
+          "title": "Distance Formula",
+          "objectives": [
+            "Student can calculate the distance between two points on a plane using the Distance Formula",
+            "Student can apply the distance formula to determine if three points are collinear"
+          ],
+          "visualIdeas": [
+            "A right-angled triangle formed between two arbitrary coordinates on a grid, showing how the distance formula represents Pythagoras' theorem",
+            "A step-by-step worked example inserting coordinates into the square root formula, tracking sign changes"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "section-formula",
+          "title": "Section Formula",
+          "objectives": [
+            "Student can compute the coordinates of a point that divides a line segment in a given ratio internally",
+            "Student can find the midpoint of a line segment using the midpoint formula"
+          ],
+          "visualIdeas": [
+            "A line segment with endpoints labeled and a division point P dividing the line, with segments color-coded to ratios m1 and m2",
+            "A coordinate averaging diagram showing how the midpoint coordinates are the arithmetic means of the endpoints"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-trigonometry",
+      "title": "Introduction to Trigonometry",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define trigonometric ratios with respect to an acute angle of a right-angled triangle",
+            "Student can identify the perpendicular, base, and hypotenuse of a right triangle for a given reference angle"
+          ],
+          "visualIdeas": [
+            "A right-angled triangle with the reference angle theta marked, showing how the label of opposite and adjacent swaps when the angle changes",
+            "A diagram of a right triangle with colored sides matching terms: Side Opposite, Side Adjacent, and Hypotenuse"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "trigonometric-ratios",
+          "title": "Trigonometric Ratios",
+          "objectives": [
+            "Student can calculate all six trigonometric ratios for a given right triangle",
+            "Student can solve for unknown side lengths using known trigonometric ratios"
+          ],
+          "visualIdeas": [
+            "A split graphic showing the reciprocal relationships between sin/cosec, cos/sec, and tan/cot",
+            "A worked algebraic calculation showing how to find the remaining trigonometric ratios when one is given as a fraction"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "trigonometric-ratios-of-specific-angles",
+          "title": "Trigonometric Ratios of Some Specific Angles",
+          "objectives": [
+            "Student can state the values of trigonometric ratios for 0, 30, 45, 60, and 90 degrees",
+            "Student can evaluate numerical expressions involving specific trigonometric ratios"
+          ],
+          "visualIdeas": [
+            "A clean grid table displaying angles along the top and sin, cos, tan along the side, showing the pattern of values",
+            "A geometric derivation of the 45-degree and 30-60 degree ratios using isosceles and equilateral triangles"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "trigonometric-identities",
+          "title": "Trigonometric Identities",
+          "objectives": [
+            "Student can prove standard trigonometric identities starting from fundamental definitions",
+            "Student can simplify trigonometric expressions using algebraic manipulation and identities"
+          ],
+          "visualIdeas": [
+            "The derivation of the Pythagorean identity shown by applying Pythagoras' theorem to a right triangle and dividing by the square of the hypotenuse",
+            "A transformation tree showing a complex trigonometric fraction simplifying step-by-step to a single ratio"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "some-applications-of-trigonometry",
+      "title": "Some Applications of Trigonometry",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can identify the line of sight, angle of elevation, and angle of depression in real-life problems",
+            "Student can draw a correct geometric diagram from a verbal description of a heights and distances problem"
+          ],
+          "visualIdeas": [
+            "An observer looking up at a tower and down at a boat, with horizontal dashed lines, line of sight, and angles of elevation and depression labeled",
+            "A template showing the transition from a realistic landscape sketch to a simple right triangle geometric model"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "heights-and-distances",
+          "title": "Heights and Distances",
+          "objectives": [
+            "Student can calculate the height of an object or distance from an observer using trigonometric ratios",
+            "Student can solve multi-step problems involving both angles of elevation and depression"
+          ],
+          "visualIdeas": [
+            "A worked solution diagram using the tangent ratio to find the height of a balloon when observed from two different points",
+            "A multi-triangle geometry problem showing common shared sides highlighted in red, linking two calculations"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "circles",
+      "title": "Circles",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define a tangent and a secant to a circle",
+            "Student can distinguish between a secant, chord, and tangent of a circle"
+          ],
+          "visualIdeas": [
+            "A circle with three color-coded lines: a secant cutting through, a chord inside, and a tangent touching at exactly one point",
+            "An animation showing a secant line rotating about a point on the circle until its two intersection points merge into a single point"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tangent-to-a-circle",
+          "title": "Tangent to a Circle",
+          "objectives": [
+            "Student can prove that the tangent at any point of a circle is perpendicular to the radius through the point of contact",
+            "Student can calculate the length of a radius or tangent using the perpendicularity theorem"
+          ],
+          "visualIdeas": [
+            "A circle with a radius meeting a tangent line at a point of contact, with a right angle symbol and a 90-degree callout",
+            "A right triangle formed by the radius, tangent segment, and distance to center, showing Pythagoras' theorem being applied"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "number-of-tangents-from-a-point",
+          "title": "Number of Tangents from a Point on a Circle",
+          "objectives": [
+            "Student can state the number of tangents that can be drawn to a circle from points inside, on, and outside the circle",
+            "Student can prove that the lengths of tangents drawn from an external point to a circle are equal"
+          ],
+          "visualIdeas": [
+            "Three panels showing a point inside the circle (0 tangents), on the circle (1 tangent), and outside the circle (2 tangents)",
+            "A geometric proof setup showing congruent triangles formed by radii, tangents, and a line to the external point"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "areas-related-to-circles",
+      "title": "Areas Related to Circles",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can recall the formulas for perimeter and area of a circle",
+            "Student can calculate the area or circumference of a circle given its radius or diameter"
+          ],
+          "visualIdeas": [
+            "A circular disk being unrolled to show its circumference as a straight line segment of length 2*pi*r",
+            "A circle sliced into many small sectors arranged to approximate a rectangle of base pi*r and height r"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "areas-of-sector-and-segment",
+          "title": "Areas of Sector and Segment of a Circle",
+          "objectives": [
+            "Student can calculate the area of a sector of a circle with a given central angle",
+            "Student can calculate the area of a segment of a circle by subtracting the area of the corresponding triangle from the sector area"
+          ],
+          "visualIdeas": [
+            "A circle with a shaded sector highlighted, showing the proportion theta/360 multiplied by the total area",
+            "A step-by-step subtraction graphic: Shaded Sector minus Unshaded Triangle equals Shaded Segment"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "surface-areas-and-volumes",
+      "title": "Surface Areas and Volumes",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can identify different 3D solid shapes such as cylinders, cones, spheres, and hemispheres",
+            "Student can recall formulas for the surface area and volume of standard 3D solids"
+          ],
+          "visualIdeas": [
+            "A gallery of 3D solids with dashed lines indicating hidden edges and dimensions like radius and height labeled",
+            "A reference chart showing standard 3D solids next to their curved and total surface area formulas"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "surface-area-of-combination",
+          "title": "Surface Area of a Combination of Solids",
+          "objectives": [
+            "Student can calculate the total surface area of a composite solid made of two or more basic shapes",
+            "Student can identify which surfaces of individual components are hidden when combined"
+          ],
+          "visualIdeas": [
+            "An exploded view diagram of a test tube (cylinder + hemisphere) showing how the flat touching faces are omitted from the total surface area",
+            "A worked formula example highlighting the addition of the curved surface areas of constituent solids"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "volume-of-combination",
+          "title": "Volume of a Combination of Solids",
+          "objectives": [
+            "Student can calculate the total volume of a composite solid by adding the volumes of its constituent shapes",
+            "Student can solve word problems involving the volume of combined 3D shapes"
+          ],
+          "visualIdeas": [
+            "A 3D rendering of a toy cone on a hemisphere, showing the formula adding the volumes of both shapes directly",
+            "A liquid pouring simulation from a cylinder into a cone, with algebraic volume representations"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can distinguish between ungrouped and grouped frequency distributions",
+            "Student can identify the mid-point (class mark) of a class interval"
+          ],
+          "visualIdeas": [
+            "A transformation graphic converting a messy list of exam scores into a structured grouped frequency table",
+            "The class mark formula shown inside a box with an example class interval to calculate the mid-value"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mean-of-grouped-data",
+          "title": "Mean of Grouped Data",
+          "objectives": [
+            "Student can calculate the mean of grouped data using the Direct Method",
+            "Student can calculate the mean of grouped data using the Assumed Mean Method"
+          ],
+          "visualIdeas": [
+            "A detailed table showing columns for class intervals, frequencies, class marks, and the final column of product terms",
+            "A comparative table showing calculations of the same mean using both the direct and assumed mean methods to demonstrate matching results"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "mode-of-grouped-data",
+          "title": "Mode of Grouped Data",
+          "objectives": [
+            "Student can locate the modal class of a grouped frequency distribution",
+            "Student can calculate the mode of grouped data using the modal formula"
+          ],
+          "visualIdeas": [
+            "A frequency table with the row containing the maximum frequency highlighted as the modal class",
+            "The modal formula with arrows pointing to what each variable (l, h, f0, f1, f2) represents in the modal row"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "median-of-grouped-data",
+          "title": "Median of Grouped Data",
+          "objectives": [
+            "Student can calculate the cumulative frequencies of a grouped data set",
+            "Student can determine the median class and calculate the median using the median formula"
+          ],
+          "visualIdeas": [
+            "A frequency table alongside a cumulative frequency column, highlighting how the median class is determined by finding N/2",
+            "The median formula with variables labeled and highlighted according to their position in the selected median class row"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "topics": [
+        {
+          "id": "introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define experimental and theoretical probabilities of an event",
+            "Student can state the range of probability values for any event"
+          ],
+          "visualIdeas": [
+            "A probability number line running from 0 (impossible) to 1 (certain) with fractions, decimals, and percentages marked",
+            "A graphic showing a coin toss experiment comparing actual observed heads with the theoretical probability of half"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "probability-theoretical-approach",
+          "title": "Probability — A Theoretical Approach",
+          "objectives": [
+            "Student can calculate the probability of simple and compound events using equally likely outcomes",
+            "Student can define complementary events and solve problems using the sum equation of probabilities"
+          ],
+          "visualIdeas": [
+            "An array representing the 36 possible outcomes of throwing two dice, with favorable outcomes highlighted in green",
+            "A diagram of a deck of 52 cards showing distributions by suit and color to aid in probability calculations"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    }
+  ]
+}

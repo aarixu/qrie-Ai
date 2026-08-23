@@ -1,9 +1,14 @@
+<!-- Maskable variant: full-bleed background because the launcher crops to its
+     own shape, and the mark scaled down so every point of it stays inside the
+     safe circle (the middle 80%) whatever mask Android applies. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#58cc02"/>
-  <g fill="none" stroke="#ffffff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" transform="translate(51.2 51.2) scale(0.8)">
-    <path d="M172 262V142a26 26 0 0 1 52 0v104"/>
-    <path d="M224 238V118a26 26 0 0 1 52 0v120"/>
-    <path d="M276 238V138a26 26 0 0 1 52 0v128"/>
-    <path d="M328 266v-76a26 26 0 0 1 52 0v122a126 126 0 0 1-126 126h-12a126 126 0 0 1-126-126v-44a26 26 0 0 1 52 0"/>
+  <rect width="512" height="512" fill="#4648d4"/>
+  <g transform="translate(256 256) scale(11.5)">
+    <g fill="none" stroke="#ffffff" stroke-width="2.4">
+      <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
+      <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+    </g>
+    <circle r="4" fill="#ffffff"/>
+    <circle cx="9.9" cy="-9.9" r="2.2" fill="#ffffff"/>
   </g>
 </svg>

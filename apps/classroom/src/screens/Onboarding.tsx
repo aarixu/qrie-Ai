@@ -17,7 +17,10 @@ export function Onboarding() {
 
   const pick = (klass: number) => {
     settingsStore.update((s) => ({ ...s, klass }));
-    navigate('/', { replace: true });
+    // Straight into the placement test: knowing where a student actually stands
+    // is what makes everything after this personal rather than generic. The
+    // test itself offers a way out, so this is an invitation, not a gate.
+    navigate('/diagnostic', { replace: true });
   };
 
   return (

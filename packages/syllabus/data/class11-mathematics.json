@@ -1,0 +1,898 @@
+{
+  "id": "class11-mathematics",
+  "klass": 11,
+  "subject": "Mathematics",
+  "chapters": [
+    {
+      "id": "sets",
+      "title": "Sets",
+      "topics": [
+        {
+          "id": "sets-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define a set as a well-defined collection of objects",
+            "Student can identify whether a given collection of objects constitutes a set"
+          ],
+          "visualIdeas": [
+            "a illustration comparing a collection of 'three best novelists' vs 'vowels in the English alphabet' to show well-defined collections"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sets-and-their-representations",
+          "title": "Sets and their Representations",
+          "objectives": [
+            "Student can write a set in Roaster or Tabular form",
+            "Student can write a set in Set-builder form",
+            "Student can convert a set from Roster form to Set-builder form and vice versa"
+          ],
+          "visualIdeas": [
+            "a table showing the dual representation of sets, with matching arrows between roster forms like {2, 4, 6, 8} and set-builder forms"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-empty-set",
+          "title": "The Empty Set",
+          "objectives": [
+            "Student can define the empty set with standard notation",
+            "Student can identify situations and equations that yield empty sets"
+          ],
+          "visualIdeas": [
+            "an empty basket labeled with the symbol phi and curly braces containing nothing"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "finite-and-infinite-sets",
+          "title": "Finite and Infinite Sets",
+          "objectives": [
+            "Student can classify a given set as either finite or infinite",
+            "Student can calculate the cardinal number of a finite set"
+          ],
+          "visualIdeas": [
+            "a side-by-side comparison of a set with bounded elements vs a set with ellipsis showing unending elements"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equal-sets",
+          "title": "Equal Sets",
+          "objectives": [
+            "Student can determine if two given sets are equal by comparing their elements",
+            "Student can explain why order and repetition of elements do not affect set equality"
+          ],
+          "visualIdeas": [
+            "two identical lists of items shuffled in order and repeated to show they contain the exact same set of unique items"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "subsets",
+          "title": "Subsets",
+          "objectives": [
+            "Student can define a subset and use the subset inclusion symbols correctly",
+            "Student can identify the subsets of real numbers like natural numbers, integers, and rationals",
+            "Student can write subsets of a given set as intervals on a real number line"
+          ],
+          "visualIdeas": [
+            "nested concentric circles showing the hierarchy of real number subsets",
+            "a number line highlighting open and closed intervals"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "power-set",
+          "title": "Power Set",
+          "objectives": [
+            "Student can define the power set of a given set",
+            "Student can compute the number of elements in the power set of a set with n elements"
+          ],
+          "visualIdeas": [
+            "a tree diagram generating all subsets of a 3-element set, grouped together into a single large set container"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "universal-set",
+          "title": "Universal Set",
+          "objectives": [
+            "Student can identify an appropriate universal set for a given context of multiple sets",
+            "Student can represent a universal set as a foundational frame of reference"
+          ],
+          "visualIdeas": [
+            "a large rectangular box containing smaller circles of distinct sets to show context"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "venn-diagrams",
+          "title": "Venn Diagrams",
+          "objectives": [
+            "Student can construct a Venn diagram to represent relations between sets",
+            "Student can label the universal set, subsets, and their elements on a Venn diagram diagrammatically"
+          ],
+          "visualIdeas": [
+            "a classic Venn diagram layout with a rectangle U and overlapping circles A and B, with elements placed in their correct zones"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "operations-on-sets",
+          "title": "Operations on Sets",
+          "objectives": [
+            "Student can compute the union, intersection, and difference of two sets",
+            "Student can shade regions corresponding to basic set operations on a Venn diagram"
+          ],
+          "visualIdeas": [
+            "a sequence of Venn diagrams highlighting union, intersection, and relative difference regions in bright colors"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "complement-of-a-set",
+          "title": "Complement of a Set",
+          "objectives": [
+            "Student can calculate the complement of a set with respect to a universal set",
+            "Student can verify De Morgan's laws using specific set examples"
+          ],
+          "visualIdeas": [
+            "a Venn diagram showing the region outside set A shaded inside the rectangle",
+            "a split screen visual demonstrating the equivalence of the complement of a union and the intersection of complements"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "relations-and-functions",
+      "title": "Relations and Functions",
+      "topics": [
+        {
+          "id": "relations-and-functions-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can identify real-world examples of relationships between pairs of objects",
+            "Student can define the concept of ordered pairs"
+          ],
+          "visualIdeas": [
+            "pairs of connected items like states with their capitals, linked with dashed lines"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cartesian-product-of-sets",
+          "title": "Cartesian Product of Sets",
+          "objectives": [
+            "Student can calculate the Cartesian product of two non-empty sets",
+            "Student can find the number of elements in the Cartesian product of two finite sets",
+            "Student can plot ordered pairs of a Cartesian product on a coordinate grid"
+          ],
+          "visualIdeas": [
+            "a grid table where row elements from set A cross with column elements from set B to form ordered pairs",
+            "a graphical coordinate plane showing points representing elements of the product"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "relations",
+          "title": "Relations",
+          "objectives": [
+            "Student can define a relation from set A to set B as a subset of their Cartesian product",
+            "Student can determine the domain, co-domain, and range of a given relation",
+            "Student can represent relations using arrow diagrams and roster forms"
+          ],
+          "visualIdeas": [
+            "an arrow diagram showing inputs from domain set mapping to output values in codomain set",
+            "a nested diagram illustrating how range is a subset of the co-domain"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "functions",
+          "title": "Functions",
+          "objectives": [
+            "Student can distinguish a function from a general relation based on uniqueness of outputs",
+            "Student can identify domain and range of standard real functions",
+            "Student can plot the graphs of identity, constant, polynomial, rational, modulus, signum, and greatest integer functions"
+          ],
+          "visualIdeas": [
+            "an arrow diagram comparison showing a valid function mapping vs a relation violating uniqueness",
+            "interactive sketches of modulus, signum, and step (greatest integer) function graphs"
+          ],
+          "estMinutes": 40
+        }
+      ]
+    },
+    {
+      "id": "trigonometric-functions",
+      "title": "Trigonometric Functions",
+      "topics": [
+        {
+          "id": "trigonometric-functions-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can trace the history of trigonometry from triangles to circular functions",
+            "Student can list common practical fields where trigonometric concepts are applied"
+          ],
+          "visualIdeas": [
+            "a historic drawing of a right triangle inside a circle alongside modern signal waves"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "angles",
+          "title": "Angles",
+          "objectives": [
+            "Student can define positive and negative angles based on rotation direction",
+            "Student can convert angle measurements between degrees and radians",
+            "Student can apply the formula relating arc length, radius, and central angle"
+          ],
+          "visualIdeas": [
+            "a circle showing counter-clockwise rotation as positive and clockwise as negative",
+            "a direct comparison ruler or dial matching degree values to radian equivalents"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "trigonometric-functions-definition",
+          "title": "Trigonometric Functions",
+          "objectives": [
+            "Student can define trigonometric functions using a unit circle",
+            "Student can determine the signs of trigonometric functions in different quadrants",
+            "Student can sketch the periodic graphs of sine, cosine, tangent, and their reciprocals"
+          ],
+          "visualIdeas": [
+            "a unit circle split into four quadrants, showing coordinate signs (cos x, sin x) as a point rotates",
+            "sine and cosine wave graphs on a grid showing period and amplitude"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "trigonometric-functions-of-sum-and-difference-of-two-angles",
+          "title": "Trigonometric Functions of Sum and Difference of Two Angles",
+          "objectives": [
+            "Student can derive the formulas for cos(x + y) and sin(x + y)",
+            "Student can apply compound angle, double angle, and triple angle formulas to simplify expressions",
+            "Student can evaluate trigonometric values of non-standard angles like 15 degrees or 75 degrees"
+          ],
+          "visualIdeas": [
+            "algebraic flowcharts of formula transformations from sum to product forms",
+            "a geometric construction on a unit circle illustrating sum angles"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "complex-numbers-and-quadratic-equations",
+      "title": "Complex Numbers and Quadratic Equations",
+      "topics": [
+        {
+          "id": "complex-numbers-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can explain the necessity of complex numbers arising from non-real roots of real quadratic equations"
+          ],
+          "visualIdeas": [
+            "a flow diagram leading from positive squares to the square root of negative numbers, showing the block in the real number system"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "complex-numbers",
+          "title": "Complex Numbers",
+          "objectives": [
+            "Student can define a complex number in terms of real and imaginary parts",
+            "Student can identify the imaginary unit i (iota) and compute its integral powers"
+          ],
+          "visualIdeas": [
+            "a block equation highlighting real and imaginary parts of z = a + ib with contrasting highlights",
+            "a cyclical loop diagram of the powers of i (i, -1, -i, 1)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "algebra-of-complex-numbers",
+          "title": "Algebra of Complex Numbers",
+          "objectives": [
+            "Student can perform addition, subtraction, multiplication, and division of complex numbers",
+            "Student can state the algebraic properties of complex numbers including commutativity and distributivity"
+          ],
+          "visualIdeas": [
+            "algebraic steps showing foil-like multiplication of (a+ib)(c+id) with arrows matching the grouping of real and imaginary terms"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "modulus-and-conjugate-of-complex-number",
+          "title": "The Modulus and the Conjugate of a Complex Number",
+          "objectives": [
+            "Student can calculate the modulus and conjugate of a given complex number",
+            "Student can prove properties of modulus and conjugate under multiplication and division"
+          ],
+          "visualIdeas": [
+            "a diagram of a complex number z and its mirror reflection z-bar across the horizontal axis on a coordinate grid"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "argand-plane-and-polar-representation",
+          "title": "Argand Plane and Polar Representation",
+          "objectives": [
+            "Student can represent complex numbers as points and vectors in the Argand plane",
+            "Student can convert a complex number from algebraic form to polar form"
+          ],
+          "visualIdeas": [
+            "an Argand diagram showing the distance r (modulus) and angle theta (argument) from the origin to point (x, y)"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "linear-inequalities",
+      "title": "Linear Inequalities",
+      "topics": [
+        {
+          "id": "linear-inequalities-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can recognize inequalities in daily life quantitative comparisons",
+            "Student can define linear inequalities of one and two variables"
+          ],
+          "visualIdeas": [
+            "pictorial balance scale tipping to one side showing unequal quantities"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "inequalities",
+          "title": "Inequalities",
+          "objectives": [
+            "Student can classify inequalities as strict, slack, numerical, or literal",
+            "Student can write verbal conditions as mathematical inequalities"
+          ],
+          "visualIdeas": [
+            "a table mapping verbal phrases like 'at least', 'at most' to mathematical symbols (<, >, <=, >=)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "algebraic-solutions-and-graphical-representation",
+          "title": "Algebraic Solutions of Linear Inequalities in One Variable and their Graphical Representation",
+          "objectives": [
+            "Student can solve linear inequalities in one variable algebraicly",
+            "Student can graph the solution set of a one-variable inequality on a real number line"
+          ],
+          "visualIdeas": [
+            "a real number line showing open circles and closed circles with shaded arrows representing the solution sets"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "permutations-and-combinations",
+      "title": "Permutations and Combinations",
+      "topics": [
+        {
+          "id": "permutations-and-combinations-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can compare the difference between order-sensitive arrangements and order-insensitive selections"
+          ],
+          "visualIdeas": [
+            "a diagram of a combination lock where order matters versus choosing a team of players where order doesn't matter"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fundamental-principle-of-counting",
+          "title": "Fundamental Principle of Counting",
+          "objectives": [
+            "Student can apply the multiplication principle to solve sequential choice problems",
+            "Student can apply the addition principle to independent choice problems"
+          ],
+          "visualIdeas": [
+            "a tree diagram detailing paths for dressing up with 3 shirts and 2 pants"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "permutations",
+          "title": "Permutations",
+          "objectives": [
+            "Student can define factorial notation and compute factorials of positive integers",
+            "Student can calculate the number of permutations of n distinct objects taken r at a time",
+            "Student can solve permutation problems involving repeated objects"
+          ],
+          "visualIdeas": [
+            "a linear slot arrangement visualization showing a diminishing number of choice options for successive slots"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "combinations",
+          "title": "Combinations",
+          "objectives": [
+            "Student can define combinations and calculate the number of selections of n objects taken r at a time",
+            "Student can prove fundamental identities relating permutations and combinations"
+          ],
+          "visualIdeas": [
+            "a comparative chart showing how one combination of 3 items corresponds to 6 different permutations"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "binomial-theorem",
+      "title": "Binomial Theorem",
+      "topics": [
+        {
+          "id": "binomial-theorem-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can recognize patterns in the expansion of (a+b)^n for small values of n"
+          ],
+          "visualIdeas": [
+            "a progression of algebraic expansions of binomial powers highlighting the coefficient values"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "binomial-theorem-for-positive-integral-indices",
+          "title": "Binomial Theorem for Positive Integral Indices",
+          "objectives": [
+            "Student can state the Binomial Theorem for any positive integer exponent",
+            "Student can construct Pascal's Triangle to obtain binomial coefficients",
+            "Student can expand any binomial expression and identify general and middle terms"
+          ],
+          "visualIdeas": [
+            "Pascal's Triangle showing how adding adjacent numbers yields the coefficient of the row below it",
+            "the general formula highlighted with terms colored according to their components"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "sequences-and-series",
+      "title": "Sequences and Series",
+      "topics": [
+        {
+          "id": "sequences-and-series-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can define a sequence as a function whose domain is the set of natural numbers",
+            "Student can explain the difference between a sequence and a series"
+          ],
+          "visualIdeas": [
+            "a collection of numbered boxes representing a sequence versus those same boxes with plus signs between them"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sequences",
+          "title": "Sequences",
+          "objectives": [
+            "Student can generate the terms of a sequence given its general term formula",
+            "Student can calculate terms of a sequence defined recursively"
+          ],
+          "visualIdeas": [
+            "a machine diagram taking natural numbers n as inputs and outputting sequence values"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "series",
+          "title": "Series",
+          "objectives": [
+            "Student can represent the sum of a sequence using sigma notation",
+            "Student can compute the partial sum of a given sequence series"
+          ],
+          "visualIdeas": [
+            "a large Greek letter Sigma showing lower limit, upper limit, and general term with callout lines"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "geometric-progression",
+          "title": "Geometric Progression (G.P.)",
+          "objectives": [
+            "Student can define a Geometric Progression and identify its first term and common ratio",
+            "Student can calculate the general term of a G.P.",
+            "Student can derive and apply the formula for the sum of the first n terms of a G.P."
+          ],
+          "visualIdeas": [
+            "a geometric representation showing rectangles or circles scaling in size by a constant ratio at each step",
+            "algebraic steps showing the multiplication-subtraction trick to find the sum of a G.P."
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "relationship-between-am-and-gm",
+          "title": "Relationship Between A.M. and G.M.",
+          "objectives": [
+            "Student can calculate the Arithmetic Mean (A.M.) and Geometric Mean (G.M.) of two positive numbers",
+            "Student can prove that the Arithmetic Mean is always greater than or equal to the Geometric Mean"
+          ],
+          "visualIdeas": [
+            "a geometric proof showing a semicircle where the radius represents the A.M. and a perpendicular line segment represents the G.M."
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "straight-lines",
+      "title": "Straight Lines",
+      "topics": [
+        {
+          "id": "straight-lines-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can recall basic 2D geometry formulas including distance and section formulas"
+          ],
+          "visualIdeas": [
+            "a coordinate grid highlighting a line segment with distance and midpoint labels"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "slope-of-a-line",
+          "title": "Slope of a Line",
+          "objectives": [
+            "Student can calculate the slope of a line given its inclination angle",
+            "Student can compute the slope of a line passing through two given points",
+            "Student can determine parallel and perpendicular relationships between lines based on their slopes",
+            "Student can calculate the angle between two lines"
+          ],
+          "visualIdeas": [
+            "a line on coordinate axes showing rise over run triangles",
+            "two lines crossing showing the acute angle between them and their slopes"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "various-forms-of-the-equation-of-a-line",
+          "title": "Various Forms of the Equation of a Line",
+          "objectives": [
+            "Student can derive and write equations of lines in point-slope form, two-point form, slope-intercept form, and intercept form",
+            "Student can convert a general linear equation into various standard forms"
+          ],
+          "visualIdeas": [
+            "a visual matrix displaying each equation form alongside a graph highlighting its unique parameter (intercepts, point, or slope)"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "distance-of-a-point-from-a-line",
+          "title": "Distance of a Point From a Line",
+          "objectives": [
+            "Student can calculate the perpendicular distance from a given point to a line",
+            "Student can calculate the distance between two parallel lines"
+          ],
+          "visualIdeas": [
+            "a point and line with a dashed perpendicular segment dropped, labeled with the distance formula"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "conic-sections",
+      "title": "Conic Sections",
+      "topics": [
+        {
+          "id": "conic-sections-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can describe conic sections as geometric curves formed by intersection of a plane with a double cone"
+          ],
+          "visualIdeas": [
+            "a beautiful double-napped cone diagram being sliced by intersecting planes at varying inclinations"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sections-of-a-cone",
+          "title": "Sections of a Cone",
+          "objectives": [
+            "Student can classify sections of a cone into circles, ellipses, parabolas, and hyperbolas based on cutting angles"
+          ],
+          "visualIdeas": [
+            "a graphic showing 4 cones, each sliced at different angles, labeled with the resulting conic section names"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "circle",
+          "title": "Circle",
+          "objectives": [
+            "Student can derive the standard equation of a circle",
+            "Student can find the center and radius of a circle from its algebraic equation"
+          ],
+          "visualIdeas": [
+            "a circle on coordinates with center (h, k) and radius r, applying Pythagoras theorem"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "parabola",
+          "title": "Parabola",
+          "objectives": [
+            "Student can define a parabola in terms of focus and directrix",
+            "Student can write the standard equations of parabolas and identify their axis, focus, directrix, and latus rectum length"
+          ],
+          "visualIdeas": [
+            "a plot of a standard parabola showing focus, directrix line, and equal distance lines from any point"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "ellipse",
+          "title": "Ellipse",
+          "objectives": [
+            "Student can define an ellipse in terms of foci",
+            "Student can identify the major axis, minor axis, eccentricity, foci, and vertices of an ellipse from its standard equation"
+          ],
+          "visualIdeas": [
+            "an ellipse diagram showing major and minor axes, foci F1 and F2, and a string concept visualization"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "hyperbola",
+          "title": "Hyperbola",
+          "objectives": [
+            "Student can define a hyperbola in terms of foci",
+            "Student can solve for vertices, foci, eccentricity, and latus rectum of a hyperbola given its equation"
+          ],
+          "visualIdeas": [
+            "a hyperbola with its two branches, asymptotes, transverse axis, conjugate axis, and foci"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "introduction-to-three-dimensional-geometry",
+      "title": "Introduction to Three Dimensional Geometry",
+      "topics": [
+        {
+          "id": "three-dimensional-geometry-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can explain the transition from coordinates in a plane to coordinates in three-dimensional space"
+          ],
+          "visualIdeas": [
+            "a 2D plane rotating in space to reveal a third axis rising perpendicular from the flat sheet"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "coordinate-axes-and-coordinate-planes",
+          "title": "Coordinate Axes and Coordinate Planes in Three Dimensional Space",
+          "objectives": [
+            "Student can define the three mutually perpendicular coordinate axes and planes",
+            "Student can identify the eight octants into which coordinate planes divide space"
+          ],
+          "visualIdeas": [
+            "a 3D coordinate system showing planes XY, YZ, ZX dividing space into eight labeled octants"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "coordinates-of-a-point-in-space",
+          "title": "Coordinates of a Point in Space",
+          "objectives": [
+            "Student can determine coordinates of a point in 3D space by dropping perpendiculars",
+            "Student can state sign combinations of coordinates in different octants"
+          ],
+          "visualIdeas": [
+            "a 3D box where the coordinates of opposite vertices are traced from origin along X, Y, and Z axes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "distance-between-two-points",
+          "title": "Distance between Two Points",
+          "objectives": [
+            "Student can derive the distance formula in three dimensions",
+            "Student can calculate the distance between two points in 3D space"
+          ],
+          "visualIdeas": [
+            "a cuboid showing the space diagonal as the distance between two opposite corners with formula labels"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "limits-and-derivatives",
+      "title": "Limits and Derivatives",
+      "topics": [
+        {
+          "id": "limits-and-derivatives-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can describe calculus as the study of change and motion"
+          ],
+          "visualIdeas": [
+            "a curve with secant lines tilting to become a tangent line"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "limits",
+          "title": "Limits",
+          "objectives": [
+            "Student can define the limit of a function intuitively",
+            "Student can calculate left-hand and right-hand limits of a function at a point",
+            "Student can apply algebraic limit theorems to evaluate polynomial and rational limits"
+          ],
+          "visualIdeas": [
+            "a graph of a function with a hole in it, with arrows approaching the hole from both sides on the x-axis"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "limits-of-trigonometric-functions",
+          "title": "Limits of Trigonometric Functions",
+          "objectives": [
+            "Student can prove standard trigonometric limits like sin(x)/x as x approaches 0",
+            "Student can evaluate limits involving trigonometric expressions"
+          ],
+          "visualIdeas": [
+            "a unit circle showing sandwich theorem geometry where the sector area is bounded by two triangles"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "derivatives",
+          "title": "Derivatives",
+          "objectives": [
+            "Student can define the derivative of a function at a point as a rate of change",
+            "Student can compute the derivative of a function using the first principle",
+            "Student can apply rules of differentiation including sum, product, and quotient rules"
+          ],
+          "visualIdeas": [
+            "the mathematical limit formula of quotient difference highlighted with its geometric counterpart of rise/run"
+          ],
+          "estMinutes": 45
+        }
+      ]
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "topics": [
+        {
+          "id": "statistics-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can compare measures of central tendency with measures of dispersion"
+          ],
+          "visualIdeas": [
+            "two frequency curves with identical means but vastly different spreads to show dispersion"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "measures-of-dispersion",
+          "title": "Measures of Dispersion",
+          "objectives": [
+            "Student can define dispersion in a dataset",
+            "Student can list the different types of measures of dispersion"
+          ],
+          "visualIdeas": [
+            "a mindmap highlighting range, quartile deviation, mean deviation, and standard deviation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "range",
+          "title": "Range",
+          "objectives": [
+            "Student can calculate the range of ungrouped and grouped data"
+          ],
+          "visualIdeas": [
+            "a horizontal data plot showing maximum value and minimum value highlighted at opposite ends"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mean-deviation",
+          "title": "Mean Deviation",
+          "objectives": [
+            "Student can calculate the mean deviation about the mean for ungrouped and grouped data",
+            "Student can calculate the mean deviation about the median for ungrouped and grouped data"
+          ],
+          "visualIdeas": [
+            "a table showing data points, their absolute deviations from a central value, and the average of those deviations"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "variance-and-standard-deviation",
+          "title": "Variance and Standard Deviation",
+          "objectives": [
+            "Student can calculate the variance and standard deviation of ungrouped and grouped frequency distributions",
+            "Student can apply short-cut methods to compute variance and standard deviation"
+          ],
+          "visualIdeas": [
+            "a flowchart detail showing steps: mean calculation, squaring deviations, finding their mean, and taking square root"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "analysis-of-frequency-distributions",
+          "title": "Analysis of Frequency Distributions",
+          "objectives": [
+            "Student can compare the variability of two frequency distributions using the Coefficient of Variation (C.V.)"
+          ],
+          "visualIdeas": [
+            "a comparative table of two distributions showing how standard deviation normalized by mean assists comparison"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "topics": [
+        {
+          "id": "probability-introduction",
+          "title": "Introduction",
+          "objectives": [
+            "Student can trace the evolution of probability from classical views to the modern axiomatic system"
+          ],
+          "visualIdeas": [
+            "a visual timeline showing roll of dice transitioning into mathematical set structures"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "random-experiments",
+          "title": "Random Experiments",
+          "objectives": [
+            "Student can define a random experiment, outcomes, and sample space",
+            "Student can write down the sample space for compound experiments"
+          ],
+          "visualIdeas": [
+            "a coin toss and die roll combination leading to a set of outcomes like H1, H2... represented in a circle"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "event",
+          "title": "Event",
+          "objectives": [
+            "Student can define an event as a subset of the sample space",
+            "Student can classify events as simple, compound, mutually exclusive, and exhaustive events"
+          ],
+          "visualIdeas": [
+            "a Venn diagram of a sample space with non-overlapping event boundaries to illustrate mutually exclusive events"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "axiomatic-approach-to-probability",
+          "title": "Axiomatic Approach to Probability",
+          "objectives": [
+            "Student can apply probability axioms to assign weights to outcomes",
+            "Student can calculate the probability of events using set operations (A union B, A intersection B, not-A)"
+          ],
+          "visualIdeas": [
+            "a visual derivation of the addition rule P(A or B) = P(A) + P(B) - P(A and B) using overlapping shaded regions"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    }
+  ]
+}

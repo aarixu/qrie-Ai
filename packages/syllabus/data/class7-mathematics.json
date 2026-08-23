@@ -1,0 +1,565 @@
+{
+  "id": "class7-mathematics",
+  "klass": 7,
+  "subject": "Mathematics",
+  "chapters": [
+    {
+      "id": "integers",
+      "title": "Integers",
+      "topics": [
+        {
+          "id": "properties-of-addition-and-subtraction-of-integers",
+          "title": "Properties of Addition and Subtraction of Integers",
+          "objectives": [
+            "Student can verify the closure property under addition and subtraction for any given pair of integers",
+            "Student can apply the commutative and associative properties of addition to simplify integer expressions",
+            "Student can identify zero as the additive identity for integers"
+          ],
+          "visualIdeas": [
+            "a horizontal number line demonstrating that adding a negative integer moves to the left",
+            "a balance scale with positive charges (blue circles) and negative charges (red circles) showing additive inverse pairing to zero"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "multiplication-of-integers",
+          "title": "Multiplication of Integers",
+          "objectives": [
+            "Student can calculate the product of a positive integer and a negative integer",
+            "Student can determine the sign of the product of three or more negative integers",
+            "Student can calculate the product of two negative integers"
+          ],
+          "visualIdeas": [
+            "a series of multiplication equations like 3 multiplied by negative 2 showing the decreasing pattern",
+            "a number line showing repeating backward jumps of equal size to represent integer multiplication"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "properties-of-multiplication-of-integers",
+          "title": "Properties of Multiplication of Integers",
+          "objectives": [
+            "Student can state the closure, commutative, and associative properties under multiplication of integers",
+            "Student can demonstrate the distributive property of multiplication over addition for integers",
+            "Student can use properties of multiplication to simplify numerical computations with integers"
+          ],
+          "visualIdeas": [
+            "an area model box split into two sections showing the distributive law with integer values",
+            "a table comparing commutative and non-commutative operations with side-by-side integer examples"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "division-of-integers",
+          "title": "Division of Integers",
+          "objectives": [
+            "Student can compute the quotient when a negative integer is divided by a positive integer",
+            "Student can calculate the quotient when a negative integer is divided by another negative integer"
+          ],
+          "visualIdeas": [
+            "a comparison block linking division to multiplication, showing inverse relations",
+            "a diagram showing grouped negative counters being shared into equal sets"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-division-of-integers",
+          "title": "Properties of Division of Integers",
+          "objectives": [
+            "Student can verify that division of integers is not commutative using numerical counter-examples",
+            "Student can evaluate integer division expressions involving divisor zero and dividend zero"
+          ],
+          "visualIdeas": [
+            "a prohibited symbol over the division by zero fraction",
+            "equations showing that integer division does not distribute over addition"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "fractions-and-decimals",
+      "title": "Fractions and Decimals",
+      "topics": [
+        {
+          "id": "multiplication-of-fractions",
+          "title": "Multiplication of Fractions",
+          "objectives": [
+            "Student can compute the product of a fraction and a whole number",
+            "Student can represent the multiplication of two fractions visually using overlapping shaded regions",
+            "Student can find the product of two fractions by multiplying their numerators and denominators"
+          ],
+          "visualIdeas": [
+            "a grid of squares where vertical stripes represent one fraction and horizontal stripes represent another, showing the overlapping region",
+            "a circular fraction pie repeated three times to represent multiplying a fraction by the whole number three"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "division-of-fractions",
+          "title": "Division of Fractions",
+          "objectives": [
+            "Student can find the reciprocal of a given proper, improper, or mixed fraction",
+            "Student can divide a whole number by a fraction by multiplying with its reciprocal",
+            "Student can calculate the quotient of two fractions"
+          ],
+          "visualIdeas": [
+            "an arrow diagram showing a fraction flipping upside down to represent its reciprocal",
+            "a line segment of length three divided into steps of half size, showing there are six such steps"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "multiplication-of-decimal-numbers",
+          "title": "Multiplication of Decimal Numbers",
+          "objectives": [
+            "Student can calculate the product of two decimal numbers",
+            "Student can locate the correct position of the decimal point in the product of decimals",
+            "Student can multiply a decimal number by ten, hundred, and thousand by shifting the decimal point to the right"
+          ],
+          "visualIdeas": [
+            "a ten-by-ten decimal grid showing point three of point seven as twenty-one shaded hundredths squares",
+            "a slider animation showing the decimal point jumping to the right as a number is multiplied by powers of ten"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "division-of-decimal-numbers",
+          "title": "Division of Decimal Numbers",
+          "objectives": [
+            "Student can divide a decimal number by ten, hundred, and thousand by shifting the decimal point to the left",
+            "Student can compute the quotient of a decimal number divided by a whole number",
+            "Student can calculate the division of one decimal number by another"
+          ],
+          "visualIdeas": [
+            "an equation layout where the divisor's decimal point is moved to the right to make it a whole number",
+            "a place value chart showing digit positions shifting left relative to a fixed decimal point"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "data-handling",
+      "title": "Data Handling",
+      "topics": [
+        {
+          "id": "collecting-and-organising-data",
+          "title": "Collecting and Organising Data",
+          "objectives": [
+            "Student can organize raw data into a structured tabular form using tally marks",
+            "Student can identify the range of a given set of data as the difference between the highest and lowest values"
+          ],
+          "visualIdeas": [
+            "a raw list of test scores being crossed out one-by-one as they are added to a tally chart",
+            "a line indicating the minimum and maximum values in a data set with a bracket spanning the distance labelled as Range"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "arithmetic-mean",
+          "title": "Arithmetic Mean",
+          "objectives": [
+            "Student can calculate the arithmetic mean of a given set of observations",
+            "Student can solve problems to find a missing observation given the mean and other observations"
+          ],
+          "visualIdeas": [
+            "stacks of blocks of different heights being rearranged to have equal heights to represent averaging",
+            "the formula for arithmetic mean written with color-coded sum of observations in the numerator"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mode-and-median",
+          "title": "Mode and Median",
+          "objectives": [
+            "Student can determine the mode of a set of data by identifying the observation with the highest frequency",
+            "Student can find the median of a given set of data by arranging the observations in ascending order and locating the middle value"
+          ],
+          "visualIdeas": [
+            "a list of numbers with the most repeated number highlighted in a bright color",
+            "an ordered list of data points where the central number is highlighted with equal numbers of data points to its left and right"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bar-graphs-with-different-purpose",
+          "title": "Bar Graphs with Different Purpose",
+          "objectives": [
+            "Student can choose a suitable scale to draw a bar graph for a given set of data",
+            "Student can construct a double bar graph to compare two sets of data side-by-side",
+            "Student can interpret information presented in a double bar graph"
+          ],
+          "visualIdeas": [
+            "a double bar graph showing performance of students in two terms with a legend explaining the colors",
+            "a coordinate axis indicating how a scale of one unit equal to ten students is marked on the vertical axis"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chance-and-probability",
+          "title": "Chance and Probability",
+          "objectives": [
+            "Student can classify events as certain to happen, impossible, or may or may not happen",
+            "Student can calculate the probability of an event in simple situations like tossing a coin or rolling a die"
+          ],
+          "visualIdeas": [
+            "a probability scale from zero to one with markings at half illustrated with a coin toss",
+            "a spinning wheel with colored sectors showing the fraction of the total wheel that each color occupies"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "simple-equations",
+      "title": "Simple Equations",
+      "topics": [
+        {
+          "id": "setting-up-of-an-equation",
+          "title": "Setting up of an Equation",
+          "objectives": [
+            "Student can translate a word statement into an algebraic equation",
+            "Student can convert a given algebraic equation into a statement in plain language"
+          ],
+          "visualIdeas": [
+            "a balance scale where one side has a box x and three units and the other side has ten units representing x plus three equals ten",
+            "comparison tables showing mathematical phrases on the left and their algebraic counterparts on the right"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "solving-an-equation",
+          "title": "Solving an Equation",
+          "objectives": [
+            "Student can solve an equation using the balancing method by performing the same operation on both sides",
+            "Student can solve an equation using the transposition method by moving terms from one side to another with a change of sign"
+          ],
+          "visualIdeas": [
+            "a step-by-step algebraic solution where subtracting five from both sides is highlighted in red",
+            "an arrow showing a term crossing the equal-to sign and changing its sign from positive to negative"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "applications-of-simple-equations",
+          "title": "Applications of Simple Equations to Practical Situations",
+          "objectives": [
+            "Student can formulate an equation to model a practical real-life word problem",
+            "Student can solve word problems using linear equations in one variable and interpret the result"
+          ],
+          "visualIdeas": [
+            "a diagram of a word problem scenario annotated with algebraic variables",
+            "a flowchart tracing the path from raw text to equation setup to final step-by-step solution"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "lines-and-angles",
+      "title": "Lines and Angles",
+      "topics": [
+        {
+          "id": "complementary-and-supplementary-angles",
+          "title": "Complementary and Supplementary Angles",
+          "objectives": [
+            "Student can identify whether a given pair of angles is complementary or supplementary",
+            "Student can calculate the complement or supplement of a given angle"
+          ],
+          "visualIdeas": [
+            "two adjacent angles forming a perfect right angle of ninety degrees with a square corner mark",
+            "two angles forming a straight line of one hundred eighty degrees with a protractor graphic overlaid"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "adjacent-angles-and-linear-pair",
+          "title": "Adjacent Angles and Linear Pair",
+          "objectives": [
+            "Student can identify adjacent angles by checking for a common vertex, common arm, and non-common arms on opposite sides",
+            "Student can define a linear pair of angles as adjacent angles whose non-common arms are opposite rays",
+            "Student can calculate the measure of an unknown angle in a linear pair"
+          ],
+          "visualIdeas": [
+            "a diagram of three rays from a common vertex highlighting the common arm in a contrasting color",
+            "a straight line cut by a ray showing the two angles summing to one hundred eighty degrees"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vertically-opposite-angles",
+          "title": "Vertically Opposite Angles",
+          "objectives": [
+            "Student can identify vertically opposite angles in a pair of intersecting lines",
+            "Student can prove that vertically opposite angles are equal using the linear pair property"
+          ],
+          "visualIdeas": [
+            "two intersecting lines with vertically opposite angles marked in matching colors to show equality",
+            "a proof diagram showing adjacent and vertically opposite angle equations side by side"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pairs-of-lines-and-transversals",
+          "title": "Pairs of Lines and Transversals",
+          "objectives": [
+            "Student can identify a transversal line intersecting two or more lines at distinct points",
+            "Student can classify the angles formed by a transversal into interior, exterior, corresponding, and alternate angles"
+          ],
+          "visualIdeas": [
+            "a transversal cutting two lines with all eight angles numbered and color-coded based on their category",
+            "letter templates like F for corresponding angles and Z for alternate interior angles overlaid on transversal lines"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "transversal-of-parallel-lines",
+          "title": "Transversal of Parallel Lines",
+          "objectives": [
+            "Student can apply the properties of angles formed by a transversal of parallel lines to find unknown angle measures",
+            "Student can check if two lines are parallel by verifying if alternate interior or corresponding angles are equal"
+          ],
+          "visualIdeas": [
+            "two parallel lines with a transversal where equal angles are marked with identical arcs",
+            "a diagram illustrating interior angles on the same side of the transversal adding up to one hundred eighty degrees"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-triangle-and-its-properties",
+      "title": "The Triangle and its Properties",
+      "topics": [
+        {
+          "id": "medians-and-altitudes-of-a-triangle",
+          "title": "Medians and Altitudes of a Triangle",
+          "objectives": [
+            "Student can define and draw a median from a vertex to the opposite side of a triangle",
+            "Student can define and construct an altitude from a vertex to the opposite side of a triangle",
+            "Student can contrast medians and altitudes by identifying their geometric differences in obtuse-angled triangles"
+          ],
+          "visualIdeas": [
+            "a triangle with a line from a vertex to the midpoint of the opposite side which is marked with equal length indicators",
+            "an obtuse triangle showing an altitude drawn from a vertex to an extended opposite side with a ninety degree square symbol"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "exterior-angle-of-a-triangle-and-its-property",
+          "title": "Exterior Angle of a Triangle and its Property",
+          "objectives": [
+            "Student can identify the exterior angle of a triangle and its two interior opposite angles",
+            "Student can prove that the measure of an exterior angle of a triangle is equal to the sum of the measures of its two interior opposite angles"
+          ],
+          "visualIdeas": [
+            "a triangle with one side extended to form an exterior angle with interior opposite angles colored and matching the split parts of the exterior angle",
+            "an algebraic label showing exterior angle d equals a plus b where a and b are the interior opposite angles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "angle-sum-property-of-a-triangle",
+          "title": "Angle Sum Property of a Triangle",
+          "objectives": [
+            "Student can state that the sum of the three angles of any triangle is one hundred eighty degrees",
+            "Student can calculate the measure of a missing angle in a triangle when the other two angle measures are given"
+          ],
+          "visualIdeas": [
+            "a triangle whose three corners are torn off and arranged together along a straight line to form a straight angle",
+            "a step-by-step calculation showing unknown x plus fifty plus sixty equals one hundred eighty"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "equilateral-and-isosceles-triangles",
+          "title": "Equilateral and Isosceles Triangles",
+          "objectives": [
+            "Student can classify a triangle as equilateral if all three sides are equal and each angle is sixty degrees",
+            "Student can identify an isosceles triangle by checking if it has two equal sides",
+            "Student can apply the property that angles opposite to equal sides of an isosceles triangle are equal to find unknown angles"
+          ],
+          "visualIdeas": [
+            "an equilateral triangle with tick marks on all three sides and sixty degrees written inside all three corners",
+            "an isosceles triangle with tick marks on two sides and matching variable x on the base angles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sum-of-the-lengths-of-two-sides-of-a-triangle",
+          "title": "Sum of the Lengths of Two Sides of a Triangle",
+          "objectives": [
+            "Student can state the property that the sum of the lengths of any two sides of a triangle is greater than the length of the third side",
+            "Student can determine if a triangle can be formed given three side lengths"
+          ],
+          "visualIdeas": [
+            "a diagram showing two short segments of length two and three that cannot meet to form a triangle with a base of length six",
+            "a set of inequalities showing a plus b is greater than c for a valid triangle"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "right-angled-triangles-and-pythagoras-property",
+          "title": "Right-Angled Triangles and Pythagoras Property",
+          "objectives": [
+            "Student can identify the hypotenuse and legs of a right-angled triangle",
+            "Student can state and apply the Pythagoras property to find the length of an unknown side of a right-angled triangle",
+            "Student can verify if a given triplet of numbers forms a Pythagorean triplet"
+          ],
+          "visualIdeas": [
+            "a right-angled triangle with squares drawn on all three sides showing the sum of area of smaller squares equals the area of the largest square",
+            "a formula block displaying a-squared plus b-squared equals c-squared with worked steps calculating the hypotenuse"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "comparing-quantities",
+      "title": "Comparing Quantities",
+      "topics": [
+        {
+          "id": "equivalent-ratios-and-meaning-of-percentage",
+          "title": "Equivalent Ratios and Meaning of Percentage",
+          "objectives": [
+            "Student can check if two given ratios are equivalent by writing them in the simplest fraction form",
+            "Student can define percentage as a fraction with a denominator of one hundred"
+          ],
+          "visualIdeas": [
+            "two fraction bars divided into different parts with equivalent shaded portions demonstrating equivalent ratios",
+            "a grid of one hundred squares with a portion shaded showing the fraction, decimal, and percentage representations next to it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "converting-fractions-and-decimals-to-percentage",
+          "title": "Converting Fractions and Decimals to Percentage",
+          "objectives": [
+            "Student can convert any fraction to a percentage by multiplying by one hundred and appending the percent sign",
+            "Student can convert a decimal number to a percentage",
+            "Student can convert a percentage back to a fraction or decimal in its simplest form"
+          ],
+          "visualIdeas": [
+            "a flow chart showing the conversion steps to and from percentages",
+            "a worked mathematical line showing fraction conversion using multiplication by one hundred percent"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "profit-or-loss-as-a-percentage",
+          "title": "Profit or Loss as a Percentage",
+          "objectives": [
+            "Student can compute the cost price or selling price given relevant financial data",
+            "Student can determine whether there is a profit or loss in a transaction by comparing selling price and cost price",
+            "Student can calculate profit percentage or loss percentage"
+          ],
+          "visualIdeas": [
+            "a scale comparing cost price and selling price indicating profit when selling price is higher",
+            "the formulas for profit and loss percent highlighted in color-coded boxes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "simple-interest",
+          "title": "Simple Interest",
+          "objectives": [
+            "Student can define principal, interest, rate of interest, time period, and amount",
+            "Student can compute the simple interest using the interest formula",
+            "Student can calculate the total amount to be paid at the end of a given time period"
+          ],
+          "visualIdeas": [
+            "a tree diagram showing how a principal sum grows over time with added interest at a constant rate",
+            "a worked example displaying variable definitions and step-by-step computation of interest and amount"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "rational-numbers",
+      "title": "Rational Numbers",
+      "topics": [
+        {
+          "id": "introduction-and-need-for-rational-numbers",
+          "title": "Introduction and Need for Rational Numbers",
+          "objectives": [
+            "Student can define a rational number as a number that can be expressed in the form p/q, where p and q are integers and q is not equal to zero",
+            "Student can identify situations where integers alone are insufficient, such as representing fractional opposite directions"
+          ],
+          "visualIdeas": [
+            "a Venn diagram showing integers nested inside the larger circle of rational numbers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "positive-and-negative-rational-numbers",
+          "title": "Positive and Negative Rational Numbers",
+          "objectives": [
+            "Student can classify rational numbers as positive, negative, or zero based on the signs of their numerator and denominator"
+          ],
+          "visualIdeas": [
+            "two sorted columns containing positive rational numbers like 3/5 and -2/-7 versus negative rational numbers like -3/4 and 8/-9"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rational-numbers-on-a-number-line",
+          "title": "Rational Numbers on a Number Line",
+          "objectives": [
+            "Student can represent any given rational number on a calibrated horizontal number line"
+          ],
+          "visualIdeas": [
+            "a number line between 0 and 1 divided into three equal segments to show the position of 1/3 and 2/3"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rational-numbers-in-standard-form",
+          "title": "Rational Numbers in Standard Form",
+          "objectives": [
+            "Student can convert a rational number into standard form by ensuring the denominator is positive and the numerator and denominator have no common factors other than one"
+          ],
+          "visualIdeas": [
+            "a simplification track dividing both numerator and denominator of -18/45 by their HCF of 9 to get -2/5"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "comparison-of-rational-numbers",
+          "title": "Comparison of Rational Numbers",
+          "objectives": [
+            "Student can compare two rational numbers by converting them to equivalent forms with a positive common denominator"
+          ],
+          "visualIdeas": [
+            "a comparison layout using inequality symbols between the two converted fractions with matching common denominators"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rational-numbers-between-two-rational-numbers",
+          "title": "Rational Numbers Between Two Rational Numbers",
+          "objectives": [
+            "Student can identify and list multiple rational numbers lying between any two given rational numbers"
+          ],
+          "visualIdeas": [
+            "a magnifying glass effect over a number line interval, revealing hidden rational values between two consecutive markers"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "operations-on-rational-numbers",
+          "title": "Operations on Rational Numbers",
+          "objectives": [
+            "Student can add, subtract, multiply, and divide any two rational numbers",
+            "Student can find the additive inverse and multiplicative reciprocal of a rational number"
+          ],
+          "visualIdeas": [
+            "a summary matrix of mathematical operations on fractions, showing formulas for addition, subtraction, multiplication, and division"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    }
+  ]
+}

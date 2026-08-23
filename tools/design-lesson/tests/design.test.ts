@@ -11,8 +11,8 @@ const fixtureJson = fs.readFileSync(path.resolve(root, 'content/class10-heart-mi
 const syllabus = loadSyllabus(
   JSON.parse(fs.readFileSync(path.resolve(root, 'packages/syllabus/data/class10-science.json'), 'utf8')),
 );
-const topic = getTopic(syllabus, 'class10-science/life-processes/heart-circulation')!;
-const opts = { klass: 10, topicPath: 'class10-science/life-processes/heart-circulation' };
+const topic = getTopic(syllabus, 'class10-science/life-processes/transportation-in-human-beings')!;
+const opts = { klass: 10, topicPath: 'class10-science/life-processes/transportation-in-human-beings' };
 
 /** Scripted adapter: returns each reply in turn and records every prompt it saw. */
 class FakeAdapter implements LlmAdapter {

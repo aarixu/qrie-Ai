@@ -4,95 +4,1632 @@
   "subject": "Science",
   "chapters": [
     {
+      "id": "chemical-reactions-and-equations",
+      "title": "Chemical Reactions and Equations",
+      "topics": [
+        {
+          "id": "chemical-equations",
+          "title": "Chemical Equations",
+          "objectives": [
+            "Student can identify the reactants and products in a chemical reaction from a written description",
+            "Student can write a word equation to represent a chemical change"
+          ],
+          "visualIdeas": [
+            "two boxes labeled reactants pointing to a single box labeled products",
+            "a split screen showing a physical state transition versus a chemical transformation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "writing-a-chemical-equation",
+          "title": "Writing a Chemical Equation",
+          "objectives": [
+            "Student can write chemical formulae of common elements and compounds in an equation",
+            "Student can include state symbols such as solid, liquid, gas, and aqueous in a chemical equation"
+          ],
+          "visualIdeas": [
+            "a chemical formula with subscripts highlighted to show atom counts",
+            "the unbalanced skeletal equation for the reaction of magnesium with oxygen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "balanced-chemical-equations",
+          "title": "Balanced Chemical Equations",
+          "objectives": [
+            "Student can state the law of conservation of mass as it applies to a chemical reaction",
+            "Student can balance a skeletal chemical equation by adjusting stoichiometric coefficients"
+          ],
+          "visualIdeas": [
+            "a balance scale comparing the total mass and atoms of reactants against products",
+            "a step-by-step coefficient adjustment table for balancing the iron and water reaction"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "combination-reaction",
+          "title": "Combination Reaction",
+          "objectives": [
+            "Student can define a combination reaction and state its general formula",
+            "Student can describe the reaction of quicklime with water including its thermal observation"
+          ],
+          "visualIdeas": [
+            "an animation showing two separate reactant spheres merging into a single compound sphere",
+            "a beaker showing quicklime reacting with water, steam rising, and a thermometer showing temperature rise"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "decomposition-reaction",
+          "title": "Decomposition Reaction",
+          "objectives": [
+            "Student can define a decomposition reaction with a general chemical equation",
+            "Student can compare thermal, electrolytic, and photolytic decomposition reactions with examples"
+          ],
+          "visualIdeas": [
+            "one compound breaking into two simpler substances illustrated with color-coded blocks",
+            "a diagram of the electrolysis of water setup with hydrogen and oxygen gas bubbles labeled"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "displacement-reaction",
+          "title": "Displacement Reaction",
+          "objectives": [
+            "Student can define a displacement reaction using the reactivity of metals",
+            "Student can predict the products of a reaction between an iron nail and copper sulphate solution"
+          ],
+          "visualIdeas": [
+            "an iron nail in blue copper sulphate solution turning brown, and the solution changing to green",
+            "a cartoon of a more reactive element kicking out a less reactive partner from a compound"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "double-displacement-reaction",
+          "title": "Double Displacement Reaction",
+          "objectives": [
+            "Student can define a double displacement reaction",
+            "Student can identify the precipitate formed in the reaction of sodium sulphate and barium chloride"
+          ],
+          "visualIdeas": [
+            "two ionic compound pairs swapping partners shown with color-coded ions",
+            "a white precipitate of barium sulphate settling at the bottom of a test tube"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "oxidation-and-reduction",
+          "title": "Oxidation and Reduction",
+          "objectives": [
+            "Student can identify the oxidized substance, reduced substance, oxidizing agent, and reducing agent in a redox equation",
+            "Student can define oxidation and reduction in terms of gain or loss of oxygen"
+          ],
+          "visualIdeas": [
+            "the equation CuO + H2 -> Cu + H2O with curved arrows showing oxygen transfer",
+            "a before-and-after diagram of black copper oxide turning brown when heated with hydrogen"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "corrosion",
+          "title": "Corrosion",
+          "objectives": [
+            "Student can define corrosion and explain its chemical causes",
+            "Student can list common examples of corrosion such as rusting of iron, blackening of silver, and green coating on copper"
+          ],
+          "visualIdeas": [
+            "a close-up of iron rusting showing layers of red-brown flaky oxide",
+            "a silver spoon next to a tarnished black silver spoon"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rancidity",
+          "title": "Rancidity",
+          "objectives": [
+            "Student can define rancidity and explain its cause in fat-containing foods",
+            "Student can state methods to prevent rancidity, such as packing food with nitrogen gas"
+          ],
+          "visualIdeas": [
+            "a bag of potato chips showing nitrogen gas acting as a protective barrier against oxidation",
+            "a chemical structure of oil reacting with oxygen molecules"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "acids-bases-and-salts",
+      "title": "Acids, Bases and Salts",
+      "topics": [
+        {
+          "id": "acids-and-bases-in-the-laboratory",
+          "title": "Acids and Bases in the Laboratory",
+          "objectives": [
+            "Student can classify laboratory chemical samples using indicators like litmus, methyl orange, and phenolphthalein",
+            "Student can identify olfactory indicators and explain how their odor changes with acids and bases"
+          ],
+          "visualIdeas": [
+            "a table showing color changes of litmus, phenolphthalein, and methyl orange in acid and base",
+            "droppers adding indicator to test tubes with clear color changes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-do-acids-and-bases-react-with-metals",
+          "title": "How do Acids and Bases React with Metals?",
+          "objectives": [
+            "Student can write the general word equation for the reaction of an acid with a metal",
+            "Student can describe the soap bubble test for confirming the presence of hydrogen gas"
+          ],
+          "visualIdeas": [
+            "a laboratory setup for testing hydrogen gas with a delivery tube, soap solution, and burning candle popping",
+            "a word equation of Metal + Acid -> Salt + Hydrogen gas"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-do-metal-carbonates-and-metal-hydrogencarbonates-react-with-acids",
+          "title": "How do Metal Carbonates and Metal Hydrogencarbonates React with Acids?",
+          "objectives": [
+            "Student can write balanced chemical equations for reactions of sodium carbonate and sodium hydrogencarbonate with hydrochloric acid",
+            "Student can describe the test for carbon dioxide using lime water"
+          ],
+          "visualIdeas": [
+            "a delivery tube carrying gas into lime water turning it milky white",
+            "a chemical equation showing the formation of carbon dioxide and water alongside a salt"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "how-do-acids-and-bases-react-with-each-other",
+          "title": "How do Acids and Bases React with each other?",
+          "objectives": [
+            "Student can define neutralization reaction",
+            "Student can write the general chemical equation for a reaction between an acid and a base"
+          ],
+          "visualIdeas": [
+            "acid and base combining in a flask to form salt and water molecules",
+            "pH indicator changing to neutral green during a titration setup"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reaction-of-metallic-oxides-with-acids",
+          "title": "Reaction of Metallic Oxides with Acids",
+          "objectives": [
+            "Student can classify metallic oxides as basic oxides based on their reaction with acids",
+            "Student can write a balanced equation for copper oxide reacting with hydrochloric acid"
+          ],
+          "visualIdeas": [
+            "black copper oxide powder dissolving in dilute acid to form a blue-green solution",
+            "the word equation of Metal Oxide + Acid -> Salt + Water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reaction-of-a-non-metallic-oxide-with-base",
+          "title": "Reaction of a Non-metallic Oxide with Base",
+          "objectives": [
+            "Student can classify non-metallic oxides as acidic based on their reaction with bases",
+            "Student can relate the reaction of carbon dioxide with calcium hydroxide to a neutralization reaction"
+          ],
+          "visualIdeas": [
+            "non-metal oxide reacting with base to produce salt and water",
+            "a molecular model diagram comparing acidic oxide behaviors with typical acids"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-do-all-acids-and-all-bases-have-in-common",
+          "title": "What do all Acids and all Bases have in Common?",
+          "objectives": [
+            "Student can explain why acid solutions conduct electricity while glucose and alcohol solutions do not",
+            "Student can identify the common ions released by acids and bases in solution"
+          ],
+          "visualIdeas": [
+            "an electrical circuit with a bulb glowing in hydrochloric acid solution but not in glucose solution",
+            "diagrams of H+ and OH- ions dispersing in water"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "what-happens-to-an-acid-or-a-base-in-a-water-solution",
+          "title": "What Happens to an Acid or a Base in a Water Solution?",
+          "objectives": [
+            "Student can explain the role of water in the dissociation of acids and bases",
+            "Student can outline the precautions needed during the dilution of concentrated acids"
+          ],
+          "visualIdeas": [
+            "a hydronium ion H3O+ formed by the combination of H+ and H2O",
+            "a diagram of slowly adding acid to water with constant stirring versus the incorrect way of adding water to acid"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "how-strong-are-acid-or-base-solutions",
+          "title": "How Strong are Acid or Base Solutions?",
+          "objectives": [
+            "Student can define pH on a scale from 0 to 14",
+            "Student can correlate pH values with acidic, basic, and neutral solutions"
+          ],
+          "visualIdeas": [
+            "a colorful pH scale strip from 0 to 14 with corresponding hydrogen ion concentration trends",
+            "common substances like lemon juice, pure water, and sodium hydroxide mapped onto a pH scale"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "importance-of-ph-in-everyday-life",
+          "title": "Importance of pH in Everyday Life",
+          "objectives": [
+            "Student can explain the cause and remedy of tooth decay in terms of pH",
+            "Student can explain how plants and animals defend themselves using acidic or basic secretions"
+          ],
+          "visualIdeas": [
+            "a diagram of a tooth with enamel decay at pH below 5.5",
+            "an illustration of a honeybee sting injecting formic acid and neutralization with baking soda"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "family-of-salts",
+          "title": "Family of Salts",
+          "objectives": [
+            "Student can identify the parent acid and base for a given salt",
+            "Student can group salts into families based on common positive or negative radicals"
+          ],
+          "visualIdeas": [
+            "a classification tree grouping sodium chloride and sodium sulphate into the sodium salt family",
+            "a table mapping salts to their precursor acids and bases"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ph-of-salts",
+          "title": "pH of Salts",
+          "objectives": [
+            "Student can predict whether a salt solution will be acidic, basic, or neutral based on the strength of its parent acid and base",
+            "Student can write equations for the hydrolysis of salts"
+          ],
+          "visualIdeas": [
+            "test tubes with salt solutions showing different litmus colors representing acidic, basic, and neutral salts",
+            "a concept map showing how strong acid + weak base yields an acidic salt"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemicals-from-common-salt",
+          "title": "Chemicals from Common Salt",
+          "objectives": [
+            "Student can describe the chlor-alkali process including its reactants and products",
+            "Student can list the chemical formulae and uses of bleaching powder, baking soda, washing soda, and plaster of paris"
+          ],
+          "visualIdeas": [
+            "an industrial cell for chlor-alkali process showing anode (Cl2), cathode (H2), and NaOH output",
+            "a flowchart showing common salt converting into baking soda and washing soda"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "are-the-crystals-of-salts-really-dry",
+          "title": "Are the Crystals of Salts really Dry?",
+          "objectives": [
+            "Student can define water of crystallization with an example",
+            "Student can explain the chemical change when blue copper sulphate crystals are heated"
+          ],
+          "visualIdeas": [
+            "heating blue copper sulphate in a boiling tube, water droplets condensing, and solid turning white",
+            "a molecular lattice showing water molecules trapped within copper sulphate crystals"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "metals-and-non-metals",
+      "title": "Metals and Non-metals",
+      "topics": [
+        {
+          "id": "physical-properties",
+          "title": "Physical Properties",
+          "objectives": [
+            "Student can contrast physical properties of metals and non-metals",
+            "Student can state exceptional behaviors of metals and non-metals such as mercury, iodine, sodium, and graphite"
+          ],
+          "visualIdeas": [
+            "a comparison table of malleability, ductility, conductivity, and sonority",
+            "an electrical circuit testing graphite conductivity"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "chemical-properties-of-metals",
+          "title": "Chemical Properties of Metals",
+          "objectives": [
+            "Student can write balanced equations for reactions of metals like copper and aluminum with oxygen",
+            "Student can define amphoteric oxides and write their reactions with acids and bases"
+          ],
+          "visualIdeas": [
+            "copper powder changing from reddish-brown to black copper oxide when heated",
+            "chemical equations of Al2O3 reacting with HCl and NaOH"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "what-happens-when-metals-react-with-water",
+          "title": "What happens when Metals react with Water?",
+          "objectives": [
+            "Student can order metals according to their reactivity with cold water, hot water, and steam",
+            "Student can write chemical equations for the reaction of sodium, calcium, and iron with water"
+          ],
+          "visualIdeas": [
+            "a comparative ladder showing potassium exploding in cold water, calcium floating, and iron reacting only with steam",
+            "a laboratory setup for heating metal and passing steam over it"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "what-happens-when-metals-react-with-acids",
+          "title": "What happens when Metals react with Acids?",
+          "objectives": [
+            "Student can describe the reaction of metals with dilute hydrochloric acid and sulfuric acid",
+            "Student can explain why hydrogen gas is not evolved when a metal reacts with nitric acid"
+          ],
+          "visualIdeas": [
+            "test tubes with different metals in HCl showing varying rates of bubble formation",
+            "a diagram illustrating nitric acid acting as a strong oxidizing agent on hydrogen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-do-metals-react-with-solutions-of-other-metal-salts",
+          "title": "How do Metals react with Solutions of other Metal Salts?",
+          "objectives": [
+            "Student can explain the mechanism of displacement using metal salt solutions",
+            "Student can deduce relative reactivity of two metals from a given displacement reaction"
+          ],
+          "visualIdeas": [
+            "copper wire placed in silver nitrate solution showing silver crystals growing and solution turning blue",
+            "molecular representation of zinc ions displacing copper ions from a solution"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-reactivity-series",
+          "title": "The Reactivity Series",
+          "objectives": [
+            "Student can list major metals in the decreasing order of their chemical reactivity",
+            "Student can predict whether a displacement reaction will occur given two metals and their salts"
+          ],
+          "visualIdeas": [
+            "a vertical ladder displaying metals from highly reactive potassium at the top to gold at the bottom",
+            "interactive quiz-style matches of metal pairs with expected reaction outcomes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-do-metals-and-non-metals-react",
+          "title": "How do Metals and Non-metals React?",
+          "objectives": [
+            "Student can explain the formation of ionic bonds using electron dot structures",
+            "Student can write the electron dot representation for the formation of NaCl and MgCl2"
+          ],
+          "visualIdeas": [
+            "valence electrons transferring from a sodium atom to a chlorine atom using arrows",
+            "crystal lattice representation showing sodium and chloride ions held by electrostatic forces"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "properties-of-ionic-compounds",
+          "title": "Properties of Ionic Compounds",
+          "objectives": [
+            "Student can list physical properties of ionic compounds including melting point, solubility, and electrical conductivity",
+            "Student can explain why ionic compounds conduct electricity only in molten or aqueous states"
+          ],
+          "visualIdeas": [
+            "a graphical comparison of high melting points of ionic compounds versus covalent compounds",
+            "a circuit showing current flow in a salt solution versus no flow in solid salt crystals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "occurrence-of-metals",
+          "title": "Occurrence of Metals",
+          "objectives": [
+            "Student can define minerals, ores, and gangue",
+            "Student can classify extraction techniques based on the position of metals in the reactivity series"
+          ],
+          "visualIdeas": [
+            "a flowchart breaking down steps for concentrated ore extraction depending on high, medium, or low reactivity",
+            "a physical representation of gangue particles mixed with valuable ore minerals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "extraction-of-metals",
+          "title": "Extraction of Metals",
+          "objectives": [
+            "Student can compare roasting and calcination reactions with balanced equations",
+            "Student can explain the reduction of metal oxides using carbon or displacement reactions"
+          ],
+          "visualIdeas": [
+            "equations showing zinc carbonate heated without oxygen (calcination) versus zinc sulphide heated with oxygen (roasting)",
+            "the thermite reaction of iron oxide with aluminum producing molten iron"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "refining-of-metals",
+          "title": "Refining of Metals",
+          "objectives": [
+            "Student can describe the electrolytic refining process for copper",
+            "Student can identify the anode, cathode, electrolyte, and anode mud in an electrolytic refining tank"
+          ],
+          "visualIdeas": [
+            "a labeled cross-section of an electrolytic tank showing copper transfer from impure anode to pure cathode",
+            "anode mud accumulating at the bottom of the refining cell"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "corrosion-prevention",
+          "title": "Prevention of Corrosion",
+          "objectives": [
+            "Student can list methods of preventing corrosion such as painting, oiling, galvanizing, chrome plating, and alloying",
+            "Student can state the composition and advantages of alloys like steel, brass, bronze, and solder"
+          ],
+          "visualIdeas": [
+            "a layer of zinc covering an iron sheet to explain galvanizing protection",
+            "microscopic comparison of a pure metal lattice versus an alloy lattice with mixed atoms"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "carbon-and-its-compounds",
+      "title": "Carbon and its Compounds",
+      "topics": [
+        {
+          "id": "bonding-in-carbon-covalent-bond",
+          "title": "Bonding in Carbon – The Covalent Bond",
+          "objectives": [
+            "Student can explain why carbon forms covalent bonds instead of ionic bonds",
+            "Student can draw electron dot structures for simple molecules like hydrogen, oxygen, nitrogen, water, ammonia, and methane"
+          ],
+          "visualIdeas": [
+            "a carbon atom model showing its four valence electrons needing a octet configuration",
+            "overlapping electron circles representing shared pairs in oxygen and nitrogen double/triple bonds"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "versatile-nature-of-carbon",
+          "title": "Versatile Nature of Carbon",
+          "objectives": [
+            "Student can define catenation and tetravalency as the dual properties responsible for carbon's versatility",
+            "Student can explain why carbon-carbon covalent bonds are exceptionally strong and stable"
+          ],
+          "visualIdeas": [
+            "a long chain of carbon atoms bonding to illustrate catenation",
+            "a central carbon atom forming four distinct single bonds to illustrate tetravalency"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "saturated-and-unsaturated-carbon-compounds",
+          "title": "Saturated and Unsaturated Carbon Compounds",
+          "objectives": [
+            "Student can distinguish between saturated (alkanes) and unsaturated (alkenes, alkynes) carbon compounds",
+            "Student can draw the electron dot structures of ethane, ethene, and ethyne"
+          ],
+          "visualIdeas": [
+            "structural models of single-bonded ethane versus double-bonded ethene",
+            "a checklist comparing the chemical stability and flame colors of saturated and unsaturated compounds"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "chains-branches-and-rings",
+          "title": "Chains, Branches and Rings",
+          "objectives": [
+            "Student can draw structural isomers for butane and pentane",
+            "Student can represent cyclic carbon structures like cyclohexane and benzene"
+          ],
+          "visualIdeas": [
+            "straight-chain pentane contrasted next to branched-chain isopentane",
+            "the ring shapes of cyclohexane and benzene with alternating double bonds highlighted"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "homologous-series",
+          "title": "Homologous Series",
+          "objectives": [
+            "Student can define a homologous series and state its core characteristics",
+            "Student can calculate the difference in molecular mass and formula units between successive members of a homologous series"
+          ],
+          "visualIdeas": [
+            "a vertical ladder of alkanes from methane to butane, highlighting the constant CH2 increment",
+            "a graph of physical properties showing boiling point increasing with molecular mass"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nomenclature-of-carbon-compounds",
+          "title": "Nomenclature of Carbon Compounds",
+          "objectives": [
+            "Student can name carbon compounds containing functional groups like halogens, alcohols, aldehydes, ketones, carboxylic acids, and double/triple bonds",
+            "Student can convert a given chemical name into its corresponding structural formula"
+          ],
+          "visualIdeas": [
+            "a prefix-suffix assembly block diagram showing how 'propanone' is formed from 'propane' and 'one'",
+            "highlighted functional groups on carbon skeletons using different colors"
+          ],
+          "estMinutes": 40
+        },
+        {
+          "id": "chemical-properties-of-carbon-compounds",
+          "title": "Chemical Properties of Carbon Compounds",
+          "objectives": [
+            "Student can write chemical equations for combustion, oxidation, addition, and substitution reactions of carbon compounds",
+            "Student can explain the commercial significance of the hydrogenation of vegetable oils"
+          ],
+          "visualIdeas": [
+            "combustion equations showing carbon dioxide, water, heat, and light release",
+            "an addition reaction of ethene with hydrogen in the presence of nickel catalyst"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "properties-of-ethanol",
+          "title": "Properties of Ethanol",
+          "objectives": [
+            "Student can describe physical properties and chemical reactions of ethanol with sodium and hot concentrated sulfuric acid",
+            "Student can state the harmful effects of consuming ethanol"
+          ],
+          "visualIdeas": [
+            "a reaction diagram of ethanol reacting with sodium to release hydrogen bubbles",
+            "the dehydration of ethanol to ethene with hot concentrated sulfuric acid shown as water loss"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "properties-of-ethanoic-acid",
+          "title": "Properties of Ethanoic Acid",
+          "objectives": [
+            "Student can describe esterification and saponification reactions with balanced chemical equations",
+            "Student can contrast reactions of ethanoic acid with bases, sodium carbonates, and sodium hydrogencarbonates"
+          ],
+          "visualIdeas": [
+            "an esterification reaction showing ethanoic acid and ethanol combining to form sweet-smelling ethyl ethanoate",
+            "effervescence of carbon dioxide gas from a tube of ethanoic acid mixed with sodium carbonate"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "soaps-and-detergents",
+          "title": "Soaps and Detergents",
+          "objectives": [
+            "Student can explain the structure of a soap molecule in terms of hydrophilic and hydrophobic parts",
+            "Student can describe micelle formation and the mechanism of dirt removal by soap",
+            "Student can compare the effectiveness of soaps and synthetic detergents in hard water"
+          ],
+          "visualIdeas": [
+            "a soap molecule modeled as a tadpole with a polar head and non-polar tail",
+            "a spherical micelle cluster surrounding a central dirt droplet, hydrophobic tails pointed inward",
+            "precipitated scum forming when soap reacts with calcium/magnesium ions in hard water"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
       "id": "life-processes",
       "title": "Life Processes",
       "topics": [
         {
-          "id": "nutrition",
-          "title": "Nutrition in Plants and Animals",
+          "id": "what-are-life-processes",
+          "title": "What are Life Processes?",
           "objectives": [
-            "Student can distinguish autotrophic from heterotrophic nutrition with one everyday example of each.",
-            "Student can state the raw materials and products of photosynthesis and build its word equation.",
-            "Student can explain what stomata do and why guard cells close them when the plant risks losing too much water.",
-            "Student can trace food through the human alimentary canal and name what acts on it at each stop — saliva in the mouth, acid and pepsin in the stomach, intestinal juices in the small intestine.",
-            "Student can explain why villi make the small intestine the main site of absorption."
+            "Student can state nutrition, respiration, transportation, and excretion as the four essential life processes",
+            "Student can explain why simple diffusion is insufficient to meet oxygen requirements of multicellular organisms"
           ],
           "visualIdeas": [
-            "Leaf cross-section as a box with labelled arrows: CO2 in, O2 out, sunlight from above, water arriving from the roots",
-            "Photosynthesis word equation assembled term by term as a formula element",
-            "Alimentary canal as a chain of boxes mouth → oesophagus → stomach → small intestine → large intestine, with a note appearing beside each stop naming its juice or enzyme",
-            "Zoom-in box on villi drawn with pen strokes to show how folding multiplies surface area"
+            "four connected icons around a human figure representing the four key life processes",
+            "a comparison diagram of diffusion distance in a single cell versus a thick tissue layer"
           ],
-          "estMinutes": 12
+          "estMinutes": 15
+        },
+        {
+          "id": "autotrophic-nutrition",
+          "title": "Autotrophic Nutrition",
+          "objectives": [
+            "Student can write the balanced chemical equation for photosynthesis",
+            "Student can describe the three essential steps of photosynthesis and explain how stomata open and close"
+          ],
+          "visualIdeas": [
+            "a cross-section of a green leaf showing chloroplasts, vascular bundles, and stomatal pores",
+            "guard cells swelling with water to open the stomatal pore versus shrinking to close it"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "heterotrophic-nutrition",
+          "title": "Heterotrophic Nutrition",
+          "objectives": [
+            "Student can classify heterotrophic nutrition into holozoic, saprophytic, and parasitic modes",
+            "Student can trace the ingestion and digestion of food in Amoeba using pseudopodia"
+          ],
+          "visualIdeas": [
+            "a graphic organizer showing different modes of heterotrophic feeding with examples",
+            "a sequential diagram of an Amoeba engulfing a food particle to form a food vacuole"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nutrition-in-human-beings",
+          "title": "Nutrition in Human Beings",
+          "objectives": [
+            "Student can label parts of the human alimentary canal and associated digestive glands",
+            "Student can list the digestive enzymes secreted by the salivary glands, stomach, pancreas, and small intestine along with their substrates"
+          ],
+          "visualIdeas": [
+            "a full schematic diagram of the human digestive system from mouth to anus",
+            "a chart mapping enzymes (amylase, pepsin, trypsin, lipase) to their respective target food molecules"
+          ],
+          "estMinutes": 45
         },
         {
           "id": "respiration",
           "title": "Respiration",
           "objectives": [
-            "Student can explain why respiration is a cellular process — every cell burns glucose, breathing only supplies the oxygen.",
-            "Student can compare aerobic and anaerobic respiration by their end products and the energy each releases.",
-            "Student can explain muscle cramps after a sprint using lactic acid build-up, and name what yeast makes instead.",
-            "Student can describe how millions of alveoli give the lungs a huge exchange surface and trace oxygen and carbon dioxide across it.",
-            "Student can state why ATP is called the energy currency of the cell."
+            "Student can compare aerobic and anaerobic respiration",
+            "Student can draw the pathway diagram for the breakdown of glucose in cytoplasm and mitochondria under different oxygen conditions"
           ],
           "visualIdeas": [
-            "Glucose box splitting into pyruvate, then three branching arrow paths: with oxygen (CO2 + water + lots of energy), without oxygen in muscle (lactic acid), in yeast (alcohol + CO2)",
-            "Sprinter example: run → cramp as a 'bad'-tone note on the lactic acid branch",
-            "Lungs box with a zoom-in on one alveolus and a paired set of arrows, O2 in and CO2 out",
-            "ATP drawn as a small coin note that reappears whenever energy is spent"
+            "a flowchart of glucose (6-carbon) splitting to pyruvate (3-carbon) and its three different cellular fates",
+            "a detailed diagram of the human respiratory system with alveolar sacs showing gas exchange"
           ],
-          "estMinutes": 10
+          "estMinutes": 35
         },
         {
-          "id": "heart-circulation",
-          "title": "The Heart and Double Circulation",
+          "id": "transportation-in-human-beings",
+          "title": "Transportation in Human Beings",
           "objectives": [
-            "Student can name the four chambers of the heart and the receiving job of atria versus the pumping job of ventricles.",
-            "Student can trace double circulation — the short lung loop and the long body loop — and explain why blood passes through the heart twice in one full round.",
-            "Student can explain why the left ventricle wall is thicker than the right: it must push blood to the whole body, not just the nearby lungs.",
-            "Student can compare arteries and veins by wall thickness, blood pressure, valves, and direction of flow.",
-            "Student can explain why keeping oxygenated and deoxygenated blood separate suits warm-blooded animals with high energy needs."
+            "Student can trace the path of blood through the four chambers of the human heart",
+            "Student can explain the functional significance of double circulation and compare arteries, veins, and capillaries"
           ],
           "visualIdeas": [
-            "Four-chamber grid of boxes RA / LA / RV / LV inside a heart outline",
-            "Two arrow loops colour-coded by tone: a short lungs loop and a long body loop, oxygenated legs in 'good' tone",
-            "Side-by-side artery vs vein boxes with notes: thick elastic wall under high pressure vs thin wall with valves",
-            "Pen stroke thickening the LV wall while the narration explains the pressure difference"
+            "a schematic cross-section of the human heart with blue/red color coding for deoxygenated/oxygenated blood",
+            "a flowchart demonstrating double circulation through pulmonary and systemic circuits"
           ],
-          "estMinutes": 10
+          "estMinutes": 45
         },
         {
-          "id": "blood-components",
-          "title": "Blood and Its Components",
+          "id": "transportation-in-plants",
+          "title": "Transportation in Plants",
           "objectives": [
-            "Student can name the four components of blood — plasma, red cells, white cells, platelets — and one job of each.",
-            "Student can explain why haemoglobin makes red blood cells such efficient oxygen carriers.",
-            "Student can describe how platelets plug a cut and start the clot that stops bleeding.",
-            "Student can state what lymph is and how it differs from blood."
+            "Student can explain the transport of water and minerals through xylem using transpirational pull and root pressure",
+            "Student can define translocation and describe the transport of food in phloem using osmotic pressure"
           ],
           "visualIdeas": [
-            "Blood in a test-tube box: pale plasma layer on top, cell layer below, labels appearing one by one",
-            "Three character boxes with jobs: RBC as delivery van, WBC as security guard, platelet as repair crew",
-            "A cut drawn as a pen stroke with platelet arrows converging on it and a 'good'-tone clot note",
-            "Dashed arrow leaking plasma out of a capillary to show where lymph comes from"
+            "a continuous water column climbing up a tree trunk from roots to leaves to illustrate transpiration pull",
+            "active loading of sucrose into phloem sieve tubes causing water entry and pressure flow"
           ],
-          "estMinutes": 8
+          "estMinutes": 25
         },
         {
-          "id": "excretion",
-          "title": "Excretion — Kidneys and Nephrons",
+          "id": "excretion-in-human-beings",
+          "title": "Excretion in Human Beings",
           "objectives": [
-            "Student can explain why the body must remove urea, naming the liver as where it is made and the kidney as where it is filtered out.",
-            "Student can trace urine from kidney → ureter → bladder → urethra.",
-            "Student can describe filtration and selective reabsorption in a nephron — glucose and most water return to the blood, urea does not.",
-            "Student can explain what dialysis does for a patient whose kidneys have failed."
+            "Student can label the organs of the human excretory system",
+            "Student can describe the structure and filtration function of a nephron"
           ],
           "visualIdeas": [
-            "Body outline with two kidney boxes and ureter arrows running down to a bladder box",
-            "Nephron zoom box: blood in, filtrate arrow out, reabsorption arrows returning glucose and water in 'good' tone, urea arrow leaving in 'bad' tone",
-            "Dialysis machine as an external box plumbed to the arm with dashed arrows, labelled as an artificial kidney"
+            "a system diagram of kidneys, ureters, urinary bladder, and urethra",
+            "a detailed drawing of a nephron showing Bowman's capsule, glomerulus, and the tubular reabsorption path"
           ],
-          "estMinutes": 10
+          "estMinutes": 35
+        },
+        {
+          "id": "excretion-in-plants",
+          "title": "Excretion in Plants",
+          "objectives": [
+            "Student can list various mechanisms plants use to eliminate wastes",
+            "Student can describe how plants store waste in vacuoles, dead leaves, resins, and gums"
+          ],
+          "visualIdeas": [
+            "an illustration of a plant shedding old yellow leaves, releasing oxygen from stomata, and oozing gum",
+            "a root tip expelling waste products into the surrounding soil"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "control-and-coordination",
+      "title": "Control and Coordination",
+      "topics": [
+        {
+          "id": "animals-nervous-system",
+          "title": "Animals – Nervous System",
+          "objectives": [
+            "Student can label the structure of a neuron and describe how electrical impulses travel across a synapse",
+            "Student can list major receptors in animals and their corresponding stimuli"
+          ],
+          "visualIdeas": [
+            "a detailed neuron showing dendrites, cell body, axon, and nerve endings",
+            "magnified view of a synaptic cleft with neurotransmitters traveling across"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "reflex-actions",
+          "title": "What happens in Reflex Actions?",
+          "objectives": [
+            "Student can define reflex action and trace the components of a reflex arc",
+            "Student can explain why reflex arcs have evolved in animals"
+          ],
+          "visualIdeas": [
+            "a diagram of a hand touching a hot pan, showing the pathway from sensory receptor to spinal cord and back to effector muscle",
+            "a fast-pathway flowchart bypassing the brain's conscious analysis"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "human-brain",
+          "title": "Human Brain",
+          "objectives": [
+            "Student can identify the forebrain, midbrain, and hindbrain on a sagittal diagram of the human brain",
+            "Student can state the functions of cerebrum, cerebellum, medulla, and hypothalamus"
+          ],
+          "visualIdeas": [
+            "a color-coded sagittal view of the human brain with labels",
+            "a functional matrix connecting cognitive, sensory, and involuntary tasks to specific brain centers"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "how-are-these-tissues-protected",
+          "title": "How are these Tissues protected?",
+          "objectives": [
+            "Student can describe the anatomical protection of the brain and spinal cord",
+            "Student can identify the role of cerebrospinal fluid and the vertebral column"
+          ],
+          "visualIdeas": [
+            "a diagram highlighting the skull cranium, protective meninges, and the fluid cushion around the brain",
+            "cross-section of the vertebral column protecting the delicate spinal cord"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-does-the-nervous-tissue-cause-action",
+          "title": "How does the Nervous Tissue cause Action?",
+          "objectives": [
+            "Student can explain how muscle cells change their shape and arrangement in response to nervous electrical signals",
+            "Student can describe the junction where a nerve impulse meets a muscle fiber"
+          ],
+          "visualIdeas": [
+            "a neuromuscular junction showing chemical release triggering muscle action",
+            "microscopic visualization of muscle proteins sliding past each other to cause contraction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "coordination-in-plants",
+          "title": "Coordination in Plants",
+          "objectives": [
+            "Student can distinguish between immediate stimulus response and growth-dependent movements in plants",
+            "Student can describe how the sensitive plant Mimosa pudica responds to touch"
+          ],
+          "visualIdeas": [
+            "a side-by-side demonstration of sensitive plant leaves folding immediately when touched",
+            "diagram showing changes in turgor pressure of cells at leaf bases causing movement"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "movement-due-to-growth",
+          "title": "Movement Due to Growth",
+          "objectives": [
+            "Student can classify plant tropic movements into phototropism, geotropism, chemotropism, and hydrotropism",
+            "Student can explain how auxins accumulate to cause phototropic bending of a stem"
+          ],
+          "visualIdeas": [
+            "a plant shoot bending towards a light source with shaded-side auxins elongating cells faster",
+            "a seed germinating with roots curving downwards (positive geotropism) and shoot curving upwards"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "hormones-in-animals",
+          "title": "Hormones in Animals",
+          "objectives": [
+            "Student can locate major endocrine glands (pituitary, thyroid, adrenal, pancreas, testes, ovaries) on a human body outline",
+            "Student can state the functions of adrenaline, thyroxine, growth hormone, insulin, testosterone, and progesterone",
+            "Student can explain the feedback mechanism of hormone regulation using the example of blood sugar level control"
+          ],
+          "visualIdeas": [
+            "a human outline showing the anatomical locations of major endocrine glands",
+            "a feedback loop diagram showing blood sugar rise triggering insulin release and its subsequent shutoff when balance is restored"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "how-do-organisms-reproduce",
+      "title": "How do Organisms Reproduce?",
+      "topics": [
+        {
+          "id": "exact-copies-and-variation",
+          "title": "Do Organisms Create Exact Copies of Themselves?",
+          "objectives": [
+            "Student can explain the role of DNA copying in reproduction",
+            "Student can describe why variation is important for the long-term survival of species in changing environments"
+          ],
+          "visualIdeas": [
+            "a double helix replicating into two matching strands with a slight mutation highlighted in one",
+            "a colony of bacteria, where a few heat-resistant variants survive a sudden temperature rise"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "modes-of-reproduction-used-by-single-organisms",
+          "title": "Modes of Reproduction Used by Single Organisms",
+          "objectives": [
+            "Student can compare binary and multiple fission with examples",
+            "Student can describe fragmentation, regeneration, budding, vegetative propagation, and spore formation with biological examples"
+          ],
+          "visualIdeas": [
+            "sequential stages of Hydra budding and developing into a separate miniature organism",
+            "a Rhizopus bread mold diagram displaying sporangia releasing reproductive spores"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "sexual-reproduction-flowering-plants",
+          "title": "Sexual Reproduction in Flowering Plants",
+          "objectives": [
+            "Student can label parts of a typical bisexual flower",
+            "Student can trace the pathway of double fertilization from pollen grain germination to zygote formation"
+          ],
+          "visualIdeas": [
+            "cross-section of a flower showing sepal, petal, stamen (anther, filament), and pistil (stigma, style, ovary)",
+            "a pollen tube growing down a style to enter an ovule containing egg and polar nuclei"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "reproduction-in-human-beings",
+          "title": "Reproduction in Human Beings",
+          "objectives": [
+            "Student can list physical changes that occur during adolescence and puberty in boys and girls",
+            "Student can explain why sexual maturation requires coordinated physiological changes"
+          ],
+          "visualIdeas": [
+            "a timelines of puberty, contrasting hormonal signals in males and females",
+            "infographics mapping physiological developments to pituitary and gonadal hormone releases"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "male-reproductive-system",
+          "title": "Male Reproductive System",
+          "objectives": [
+            "Student can label anatomical parts of the male reproductive system",
+            "Student can state functions of testes, scrotum, vas deferens, prostate gland, seminal vesicles, and urethra"
+          ],
+          "visualIdeas": [
+            "sagittal and front views of the male reproductive tract with pathways of sperm transfer",
+            "a close-up highlighting glands contributing nutrition and fluidity to semen"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "female-reproductive-system",
+          "title": "Female Reproductive System",
+          "objectives": [
+            "Student can label anatomical parts of the female reproductive system",
+            "Student can describe the ovaries, fallopian tubes, uterus, and vagina"
+          ],
+          "visualIdeas": [
+            "sagittal and front views of the female reproductive tract showing egg release and implantation zone",
+            "a zoom diagram showing a single egg traveling through a fallopian tube"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-happens-when-the-egg-is-not-fertilised",
+          "title": "What happens when the Egg is not Fertilised?",
+          "objectives": [
+            "Student can explain the uterine changes that occur during menstruation",
+            "Student can outline the monthly cycle of lining enrichment and shedding"
+          ],
+          "visualIdeas": [
+            "a circular menstrual calendar showing hormone fluctuations and uterine wall thickness across 28 days",
+            "cross-section of the uterine wall thickening with blood vessels and shedding"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reproductive-health",
+          "title": "Reproductive Health",
+          "objectives": [
+            "Student can categorize barrier, chemical, intrauterine, and surgical methods of contraception",
+            "Student can list common sexually transmitted infections and explain how to prevent them"
+          ],
+          "visualIdeas": [
+            "a sorting chart classifying condoms, pills, copper-T, and vasectomy/tubectomy",
+            "icons indicating safety boundaries of barrier methods against bacterial and viral STDs"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "heredity",
+      "title": "Heredity",
+      "topics": [
+        {
+          "id": "accumulation-of-variation-during-reproduction",
+          "title": "Accumulation of Variation during Reproduction",
+          "objectives": [
+            "Student can explain how sexual reproduction creates greater diversity than asexual reproduction",
+            "Student can trace the accumulation of minor physical differences across multiple generations"
+          ],
+          "visualIdeas": [
+            "a genealogy tree of an asexually reproducing microbe showing identical clones vs a small mutation branching out",
+            "a family comparison chart highlighting varied traits inherited from parents"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "inherited-traits",
+          "title": "Inherited Traits",
+          "objectives": [
+            "Student can distinguish between inherited traits and acquired traits with examples",
+            "Student can explain why acquired traits do not bring about changes in germ cells"
+          ],
+          "visualIdeas": [
+            "a diagram contrasting earlobe attachment (inherited) with muscle building or scar tissue (acquired)",
+            "a flowchart showing somatic cell modifications staying localized while only germ cell changes pass to offspring"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "rules-for-the-inheritance-of-traits-mendels-contributions",
+          "title": "Rules for the Inheritance of Traits – Mendel's Contributions",
+          "objectives": [
+            "Student can construct Punnett squares to predict genotypes and phenotypes for monohybrid and dihybrid crosses",
+            "Student can state the ratio of traits found in Mendel's F1 and F2 generations of garden peas"
+          ],
+          "visualIdeas": [
+            "a Punnett square for crossing tall (TT) and dwarf (tt) pea plants yielding F1 and F2 generations",
+            "a dihybrid cross matrix showcasing the 9:3:3:1 phenotypic ratio of seed shape and color"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "how-do-these-traits-get-expressed",
+          "title": "How do these Traits get Expressed?",
+          "objectives": [
+            "Student can explain the molecular pathway from a gene (DNA section) to a physical trait through enzyme activity",
+            "Student can explain how chromosomes function in pairs to provide dual versions of gene instructions"
+          ],
+          "visualIdeas": [
+            "a simple central dogma diagram showing a DNA segment yielding an enzyme which drives plant height hormone synthesis",
+            "homologous chromosome pairs showing dominant and recessive alleles at matching loci"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "sex-determination",
+          "title": "Sex Determination",
+          "objectives": [
+            "Student can explain how sex is determined genetically in human beings",
+            "Student can write the cross diagram showing XX and XY chromosome distribution from parents to offspring"
+          ],
+          "visualIdeas": [
+            "a genetic cross showing sperm (X or Y) fertilizing eggs (always X) to produce male or female zygotes",
+            "a circle graph representing the equal 50% probability of having a boy or a girl"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "light-reflection-and-refraction",
+      "title": "Light – Reflection and Refraction",
+      "topics": [
+        {
+          "id": "reflection-of-light",
+          "title": "Reflection of Light",
+          "objectives": [
+            "Student can state the two laws of reflection of light",
+            "Student can list properties of images formed by a plane mirror"
+          ],
+          "visualIdeas": [
+            "a ray diagram with incident ray, reflected ray, normal line, and equal angles labeled",
+            "a person looking at their mirror image showing virtual, upright, and laterally inverted features"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "spherical-mirrors",
+          "title": "Spherical Mirrors",
+          "objectives": [
+            "Student can define center of curvature, radius of curvature, principal axis, pole, aperture, principal focus, and focal length for concave and convex mirrors",
+            "Student can explain the relationship between radius of curvature and focal length (R = 2f)"
+          ],
+          "visualIdeas": [
+            "a concave mirror cutout highlighting the original hollow sphere of glass with radius R and center C",
+            "parallel light rays converging to a focal point in front of a concave mirror"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "image-formation-by-spherical-mirrors",
+          "title": "Image Formation by Spherical Mirrors",
+          "objectives": [
+            "Student can summarize the nature, size, and position of images formed by concave and convex mirrors for different object positions",
+            "Student can identify real-life applications of concave and convex mirrors"
+          ],
+          "visualIdeas": [
+            "a reference table mapping object position (e.g. at infinity, C, between F and P) to image properties",
+            "drawings of car side mirrors (convex) showing wide rear-views and makeup/dentist mirrors (concave) showing magnified views"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "representation-of-images-using-ray-diagrams",
+          "title": "Representation of Images Formed by Spherical Mirrors Using Ray Diagrams",
+          "objectives": [
+            "Student can apply standard ray tracing rules to construct image formations of spherical mirrors",
+            "Student can trace at least four alternative rays starting from a point on an object"
+          ],
+          "visualIdeas": [
+            "concave mirror ray trace showing a ray parallel to principal axis passing through focus F",
+            "a ray passing through center of curvature C reflecting back along the same path"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "sign-convention-for-reflection",
+          "title": "Sign Convention for Reflection by Spherical Mirrors",
+          "objectives": [
+            "Student can apply New Cartesian Sign Convention to determine signs of object distance, image distance, and focal length",
+            "Student can identify signs for positive and negative heights of virtual and real images"
+          ],
+          "visualIdeas": [
+            "a coordinate system over a mirror showing light coming from left as positive direction",
+            "vertical heights above principal axis marked positive and below marked negative"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mirror-formula-and-magnification",
+          "title": "Mirror Formula and Magnification",
+          "objectives": [
+            "Student can recall the mirror formula and write its mathematical equation",
+            "Student can calculate image distance and magnification for a given object distance and focal length of spherical mirrors"
+          ],
+          "visualIdeas": [
+            "the formula 1/f = 1/v + 1/u showing variable placements",
+            "a numerical calculation block with sign variables substituted into mirror equations"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "refraction-of-light",
+          "title": "Refraction of Light",
+          "objectives": [
+            "Student can explain refraction as a consequence of light changing speed between optical media",
+            "Student can state the laws of refraction and write Snell's law equation"
+          ],
+          "visualIdeas": [
+            "a coin in water appearing raised, or a pencil bent at the water-air boundary",
+            "light ray bending towards the normal when passing from air to water"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction-through-a-rectangular-glass-slab",
+          "title": "Refraction through a Rectangular Glass Slab",
+          "objectives": [
+            "Student can trace the path of a light ray passing through a glass slab, labeling incident, refracted, and emergent rays",
+            "Student can define lateral displacement and show it on a glass slab ray diagram"
+          ],
+          "visualIdeas": [
+            "a ray tracing diagram showing parallel entry and exit rays shifted by distance d",
+            "a light beam passing through glass block, emphasizing double refraction"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-refractive-index",
+          "title": "The Refractive Index",
+          "objectives": [
+            "Student can define refractive index as a ratio of light speeds in different media",
+            "Student can calculate the relative refractive index between two media given their absolute refractive indices"
+          ],
+          "visualIdeas": [
+            "the formula n21 = v1 / v2 with speed of light values compared side by side",
+            "a table list of indices for water, crown glass, and diamond"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "refraction-by-spherical-lenses",
+          "title": "Refraction by Spherical Lenses",
+          "objectives": [
+            "Student can compare convex and concave lenses in terms of convergent and divergent behaviors",
+            "Student can define optical center, principal axis, principal focus, and focal length of spherical lenses"
+          ],
+          "visualIdeas": [
+            "a double convex lens focusing parallel beams to a single spot",
+            "a double concave lens spreading parallel beams outward, tracing virtual focus behind the lens"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "image-formation-by-lenses",
+          "title": "Image Formation by Lenses",
+          "objectives": [
+            "Student can describe the nature, relative size, and position of images formed by convex and concave lenses for various object positions",
+            "Student can list practical instruments utilizing convex and concave lenses"
+          ],
+          "visualIdeas": [
+            "a comparative matrix of convex lens setups as the object moves from infinity to F",
+            "sketches of magnifying glasses and camera lenses in action"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "image-formation-in-lenses-using-ray-diagrams",
+          "title": "Image Formation in Lenses Using Ray Diagrams",
+          "objectives": [
+            "Student can apply standard ray rules to construct image formation ray diagrams for spherical lenses",
+            "Student can identify the focal point destination of parallel, central, and focus-bound incident rays"
+          ],
+          "visualIdeas": [
+            "a convex lens ray diagram with incident ray parallel to principal axis refracting through focus F2",
+            "an incident ray passing directly through optical center O without deviation"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "sign-convention-for-spherical-lenses",
+          "title": "Sign Convention for Spherical Lenses",
+          "objectives": [
+            "Student can apply Cartesian Sign Convention rules to spherical lens measurements",
+            "Student can determine appropriate signs of u, v, f, and heights for real and virtual setups of lenses"
+          ],
+          "visualIdeas": [
+            "a lens diagram mapped on a grid coordinate system to illustrate coordinate rules",
+            "convex lens (positive f) versus concave lens (negative f) sign comparison panels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lens-formula-and-magnification",
+          "title": "Lens Formula and Magnification",
+          "objectives": [
+            "Student can write the lens formula and magnification equations",
+            "Student can calculate object/image positions and sizes using the lens formula"
+          ],
+          "visualIdeas": [
+            "the formula 1/v - 1/u = 1/f with highlighted sign details",
+            "a calculation flow template showing sign-checked values substituted to find image height"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "power-of-a-lens",
+          "title": "Power of a Lens",
+          "objectives": [
+            "Student can define power of a lens and state its unit as Dioptres",
+            "Student can calculate the combined power of thin lenses placed in contact"
+          ],
+          "visualIdeas": [
+            "the formula P = 1 / f (in meters) with inverse proportional graphs",
+            "two lenses in contact showing total power adding up (P = P1 + P2)"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "the-human-eye-and-the-colorful-world",
+      "title": "The Human Eye and the Colorful World",
+      "topics": [
+        {
+          "id": "the-human-eye",
+          "title": "The Human Eye",
+          "objectives": [
+            "Student can label key anatomical components of the human eye",
+            "Student can state functions of cornea, iris, pupil, crystalline lens, ciliary muscles, and retina"
+          ],
+          "visualIdeas": [
+            "a detailed anatomical horizontal section diagram of the human eye",
+            "a function chart linking pupil diameter changes to iris muscle movements"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "power-of-accommodation",
+          "title": "Power of Accommodation",
+          "objectives": [
+            "Student can define accommodation of the eye and explain how ciliary muscles adjust the focal length of the eye lens",
+            "Student can state the near point (least distance of distinct vision) and far point of a normal human eye"
+          ],
+          "visualIdeas": [
+            "a side-by-side comparison of a thick lens focusing on a near object versus a thin lens focusing on a distant object",
+            "a ruler scale highlighting 25cm to infinity boundaries"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "defects-of-vision-and-their-correction",
+          "title": "Defects of Vision and their Correction",
+          "objectives": [
+            "Student can identify the causes of myopia, hypermetropia, and presbyopia",
+            "Student can draw ray diagrams depicting defected eyes and their corresponding lens corrections"
+          ],
+          "visualIdeas": [
+            "a myopic eye focusing rays in front of retina, corrected with a concave lens",
+            "a hypermetropic eye focusing rays behind retina, corrected with a convex lens"
+          ],
+          "estMinutes": 45
+        },
+        {
+          "id": "refraction-of-light-through-a-prism",
+          "title": "Refraction of Light through a Prism",
+          "objectives": [
+            "Student can trace the path of light through a glass prism, labeling angle of incidence, angle of refraction, angle of emergence, and angle of deviation",
+            "Student can explain why the ray bends toward the base of the prism"
+          ],
+          "visualIdeas": [
+            "a colored ray diagram of a triangular prism with all boundaries and angles labeled",
+            "incident and emergent vectors extended to show the angle of deviation D"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "dispersion-of-white-light-by-a-glass-prism",
+          "title": "Dispersion of White Light by a Glass Prism",
+          "objectives": [
+            "Student can explain dispersion in terms of different wavelengths of light traveling at different speeds in glass",
+            "Student can describe Newton's double-prism experiment demonstrating recombination of the spectrum",
+            "Student can explain the formation of a rainbow in the atmosphere"
+          ],
+          "visualIdeas": [
+            "a white light beam entering a prism and splitting into the VIBGYOR rainbow spectrum",
+            "Newton's setup with one upright prism and an identical inverted prism recombining colors back into white light",
+            "a single spherical raindrop acting as a tiny prism showing internal reflection and dispersion"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "atmospheric-refraction",
+          "title": "Atmospheric Refraction",
+          "objectives": [
+            "Student can explain how atmospheric refraction causes twinkling of stars and apparent position shifts",
+            "Student can explain why the Sun appears slightly before actual sunrise and remains visible after actual sunset"
+          ],
+          "visualIdeas": [
+            "star light passing through layered atmosphere of varying density, bending its path, causing apparent shift",
+            "the curved horizon line showing real Sun below the horizon and its apparent image visible above"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "scattering-of-light",
+          "title": "Scattering of Light",
+          "objectives": [
+            "Student can explain the Tyndall effect with liquid colloid examples",
+            "Student can explain why the clear sky is blue and why the sun appears reddish at sunrise and sunset"
+          ],
+          "visualIdeas": [
+            "a flashlight beam visible through a beaker of colloidal milk solution but invisible in pure water",
+            "dust and air molecules scattering short blue wavelengths in all directions of sky, while red rays pass direct"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "electricity",
+      "title": "Electricity",
+      "topics": [
+        {
+          "id": "electric-current-and-circuit",
+          "title": "Electric Current and Circuit",
+          "objectives": [
+            "Student can define electric current as rate of flow of charge and state its SI unit Ampere",
+            "Student can trace direction of conventional current relative to electron flow in a circuit diagram"
+          ],
+          "visualIdeas": [
+            "the formula I = Q / t with charge boxes passing through a conductor cross-section",
+            "a circuit showing current flowing from positive terminal to negative, and electrons traveling in reverse"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electric-potential-and-potential-difference",
+          "title": "Electric Potential and Potential Difference",
+          "objectives": [
+            "Student can define potential difference and state its SI unit Volt",
+            "Student can calculate work done in moving a charge between two points with a given potential difference"
+          ],
+          "visualIdeas": [
+            "the formula V = W / Q shown with energy-work converters",
+            "a gravity analogy comparing water flow down a height to charge flow through a potential gradient"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "circuit-diagram",
+          "title": "Circuit Diagram",
+          "objectives": [
+            "Student can draw symbols for batteries, switches, resistors, rheostats, ammeters, voltmeters, and wire joints",
+            "Student can connect an ammeter in series and a voltmeter in parallel within a circuit diagram"
+          ],
+          "visualIdeas": [
+            "a grid of standard electrical schematic symbols alongside their physical counterparts",
+            "a simple complete loop schematic illustrating correct series/parallel placement of measurement meters"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "ohms-law",
+          "title": "Ohm's Law",
+          "objectives": [
+            "Student can state Ohm's law and write its mathematical equation",
+            "Student can construct and interpret a V-I graph for a conductor to find its resistance"
+          ],
+          "visualIdeas": [
+            "a linear V-I graph showing a straight slope labeled as resistance R",
+            "the classic V-I-R formula triangle diagram"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "factors-on-which-the-resistance-of-a-conductor-depends",
+          "title": "Factors on which the Resistance of a Conductor Depends",
+          "objectives": [
+            "Student can state how resistance depends on length, cross-sectional area, and material of a conductor",
+            "Student can define resistivity and calculate the resistance of a wire of given dimensions"
+          ],
+          "visualIdeas": [
+            "long/short and thick/thin pipe models showing resistance to water flow",
+            "the formula R = rho * (l / A) with dimensional parameters highlighted"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "resistors-in-series",
+          "title": "Resistors in Series",
+          "objectives": [
+            "Student can derive the expression for equivalent resistance of resistors connected in series",
+            "Student can calculate current, potential drops, and total resistance for a series circuit"
+          ],
+          "visualIdeas": [
+            "three resistors linked end-to-end with a single path for current to flow",
+            "the derivation equation layout Rs = R1 + R2 + R3 appearing step-by-step"
+          ],
+          "estMinutes": 30
+        },
+        {
+          "id": "resistors-in-parallel",
+          "title": "Resistors in Parallel",
+          "objectives": [
+            "Student can derive the expression for equivalent resistance of resistors connected in parallel",
+            "Student can calculate branch currents and total resistance for a parallel circuit"
+          ],
+          "visualIdeas": [
+            "three stacked parallel branch resistors connected to two main junctions",
+            "the derivation equation 1/Rp = 1/R1 + 1/R2 + 1/R3 showing reciprocal addition"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "heating-effect-of-electric-current",
+          "title": "Heating Effect of Electric Current",
+          "objectives": [
+            "Student can derive Joule's law of heating (H = I^2 R t)",
+            "Student can calculate heat energy produced in a resistor given current, resistance, and time"
+          ],
+          "visualIdeas": [
+            "the mathematical derivation steps from electric power formula to thermal heat",
+            "a heated wire coils glowing red-orange under heavy current"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "practical-applications-of-heating-effect",
+          "title": "Practical Applications of Heating Effect",
+          "objectives": [
+            "Student can explain how electric heaters, irons, toasters, and ovens make use of high-resistance alloys",
+            "Student can describe the safety function of an electric fuse in terms of melting point and rating"
+          ],
+          "visualIdeas": [
+            "an electric bulb filament glowing in inert gas environment",
+            "a thin wire of a fuse melting when current exceeds specified rating"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electric-power",
+          "title": "Electric Power",
+          "objectives": [
+            "Student can express electric power using equations involving V, I, R, and calculate electrical energy consumption",
+            "Student can convert electrical energy between Joules and commercial Kilowatt-hour (kWh) units"
+          ],
+          "visualIdeas": [
+            "equations showing P = VI, P = I^2R, and P = V^2/R",
+            "a typical household utility meter displaying active consumption in kilowatt-hours"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "magnetic-effects-of-electric-current",
+      "title": "Magnetic Effects of Electric Current",
+      "topics": [
+        {
+          "id": "magnetic-field-and-field-lines",
+          "title": "Magnetic Field and Field Lines",
+          "objectives": [
+            "Student can describe a magnetic field and list properties of magnetic field lines",
+            "Student can plot magnetic field lines around a bar magnet using iron filings or a compass"
+          ],
+          "visualIdeas": [
+            "a bar magnet surrounded by curved closed magnetic field loops directed from North to South",
+            "a close-up of field lines showing they never cross each other"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-field-due-to-current-carrying-conductor",
+          "title": "Magnetic Field due to a Current-Carrying Conductor",
+          "objectives": [
+            "Student can describe the pattern of magnetic field lines around a straight current-carrying wire",
+            "Student can apply the Right-Hand Thumb Rule to determine field direction"
+          ],
+          "visualIdeas": [
+            "concentric circular field loops formed on a cardboard perpendicular to a vertical wire",
+            "a hand graphic clutching a wire with the thumb pointing up along the current and fingers curling"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "magnetic-field-due-to-current-through-a-circular-loop",
+          "title": "Magnetic Field due to a Current through a Circular Loop",
+          "objectives": [
+            "Student can trace the magnetic field lines inside and outside a current-carrying circular loop",
+            "Student can explain how the field strength at the center changes with the number of turns in the loop"
+          ],
+          "visualIdeas": [
+            "magnetic field lines passing perpendicularly through the plane of a flat circular loop",
+            "overlapping parallel vectors representing additive fields of multiple wire turns"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-field-due-to-current-in-a-solenoid",
+          "title": "Magnetic Field due to a Current in a Solenoid",
+          "objectives": [
+            "Student can describe the magnetic field pattern inside and outside a solenoid",
+            "Student can explain how an electromagnet is constructed using a soft iron core inside a solenoid"
+          ],
+          "visualIdeas": [
+            "a solenoid coil showing uniform parallel field lines running inside the hollow space",
+            "an electromagnet picking up steel paperclips when current is switched on"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "force-on-a-current-carrying-conductor-in-a-magnetic-field",
+          "title": "Force on a Current-Carrying Conductor in a Magnetic Field",
+          "objectives": [
+            "Student can describe the motor effect where a current-carrying wire experiences force in a magnetic field",
+            "Student can apply Fleming's Left-Hand Rule to predict the direction of force on a conductor"
+          ],
+          "visualIdeas": [
+            "a light aluminum rod suspended between poles of a strong horseshoe magnet swinging when current is applied",
+            "the three orthogonal fingers of a left hand labeled as Force (thumb), Magnetic Field (index), and Current (middle)"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "domestic-electric-circuits",
+          "title": "Domestic Electric Circuits",
+          "objectives": [
+            "Student can describe the function and color-coding of live, neutral, and earth wires in a household circuit",
+            "Student can explain overloading, short-circuiting, and the critical protective role of earthing"
+          ],
+          "visualIdeas": [
+            "a layout schematic of a domestic service entry showing live, neutral, and earth connections to a three-pin socket",
+            "a short circuit schematic showing low resistance path bypass, resulting in excessive sparks"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "our-environment",
+      "title": "Our Environment",
+      "topics": [
+        {
+          "id": "add-waste-to-environment",
+          "title": "What Happens When We Add Our Waste To The Environment?",
+          "objectives": [
+            "Student can classify common wastes into biodegradable and non-biodegradable substances",
+            "Student can explain why plastic bags and certain synthetic chemicals persist in the environment"
+          ],
+          "visualIdeas": [
+            "a split visual showing food scraps decomposing in soil versus plastic cups remaining unchanged over time",
+            "an enzyme puzzle graphic showing that specialized biological catalysts cannot break down synthetic bonds"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "ecosystem-components",
+          "title": "Eco-system — What Are Its Components?",
+          "objectives": [
+            "Student can define an ecosystem and distinguish between biotic and abiotic components",
+            "Student can classify biotic members into producers, consumers, and decomposers"
+          ],
+          "visualIdeas": [
+            "a forest scene with air, soil, and water labeled abiotic, alongside trees, deer, and bacteria labeled biotic",
+            "a cycle showing green plants trapping solar energy, feeding herbivores, and waste returned by fungi"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "food-chains-and-webs",
+          "title": "Food Chains and Webs",
+          "objectives": [
+            "Student can construct food chains and food webs representing energy transfer across trophic levels",
+            "Student can state the 10 percent law of energy transfer and explain biological magnification of toxic substances"
+          ],
+          "visualIdeas": [
+            "an energy pyramid with 10,000J at producer level dropping to 1,000J, 100J, and 10J at higher levels",
+            "magnified levels of pesticide concentration increasing in tissues from water to plankton, small fish, and apex birds"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "ozone-layer-depletion",
+          "title": "Ozone Layer and How it is Getting Depleted",
+          "objectives": [
+            "Student can write the chemical reactions of ozone formation from atmospheric oxygen under UV radiation",
+            "Student can explain how chlorofluorocarbons (CFCs) cause depletion of the ozone layer"
+          ],
+          "visualIdeas": [
+            "UV light splitting O2 into individual O atoms, which then bind with O2 to form ozone O3 molecules",
+            "a CFC molecule releasing chlorine radicals that attack and break apart ozone groupings in stratosphere"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "managing-garbage",
+          "title": "Managing the Garbage We Produce",
+          "objectives": [
+            "Student can describe municipal solid waste management practices like landfills, composting, and recycling",
+            "Student can explain how simple lifestyle modifications like the 'Three Rs' reduce garbage footprints"
+          ],
+          "visualIdeas": [
+            "a sequential infographic of raw garbage processed into separate recyclable plastics, organic compost, and safe landfills",
+            "the classic Reduce, Reuse, Recycle circular arrows with representative actions"
+          ],
+          "estMinutes": 20
         }
       ]
     }

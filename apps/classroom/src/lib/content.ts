@@ -24,8 +24,14 @@ export interface CatalogEntry {
 export interface TopicRow {
   path: string;
   topic: Topic;
-  /** The catalog entry teaching this topic, when one exists. */
-  lesson: CatalogEntry | null;
+  /**
+   * Every lesson that teaches this topic, in catalogue order.
+   *
+   * Plural because NCERT's sections are coarser than our lessons: its single
+   * "Transportation in Human Beings" covers both the heart and blood, which we
+   * teach as two lessons. Collapsing that to one would orphan the other.
+   */
+  lessons: CatalogEntry[];
 }
 
 export const SYLLABI: SubjectSyllabus[] = [loadSyllabus(class10ScienceJson)];
@@ -62,7 +68,7 @@ export async function topicsOf(syllabus: SubjectSyllabus, chapterId: string): Pr
   if (!chapter) return [];
   return chapter.topics.map((topic) => {
     const path = `${syllabus.id}/${chapterId}/${topic.id}`;
-    return { path, topic, lesson: catalog.find((e) => e.topicRef === path) ?? null };
+    return { path, topic, lessons: catalog.filter((e) => e.topicRef === path) };
   });
 }
 
@@ -75,5 +81,10 @@ export async function nextLessonAfter(lessonId: string): Promise<CatalogEntry | 
   if (!syllabus) return null;
   const rows = await topicsOf(syllabus, chapterId);
   const i = rows.findIndex((r) => r.path === entry.topicRef);
-  return rows.slice(i + 1).find((r) => r.lesson !== null)?.lesson ?? null;
+  // Later lessons under the SAME topic come first — finishing the heart lesson
+  // should offer blood, not skip to the next section.
+  const here = rows[i]?.lessons ?? [];
+  const after = here.slice(here.findIndex((l) => l.id === lessonId) + 1);
+  if (after.length > 0) return after[0];
+  return rows.slice(i + 1).flatMap((r) => r.lessons)[0] ?? null;
 }

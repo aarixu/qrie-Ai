@@ -4,73 +4,230 @@
   "title": "Excretion",
   "subtitle": "Class 10 · Life Processes",
   "language": "en",
-  "topicRef": "class10-science/life-processes/excretion",
-  "canvas": { "w": 1000, "h": 620 },
+  "topicRef": "class10-science/life-processes/excretion-in-human-beings",
+  "canvas": {
+    "w": 1000,
+    "h": 620
+  },
   "elements": [
-    { "kind": "title", "id": "t_title", "x": 500, "y": 80, "text": "Excretion", "sub": "The body's cleanup system" },
-
-    { "kind": "note", "id": "n_hook", "x": 110, "y": 240, "w": 250, "text": "Every factory produces waste. Your cells are factories — so where does their toxic waste go?" },
-
-    { "kind": "box", "id": "b_kidney_l", "x": 380, "y": 200, "w": 110, "h": 130, "label": "KIDNEY", "tone": "accent" },
-    { "kind": "box", "id": "b_kidney_r", "x": 510, "y": 200, "w": 110, "h": 130, "label": "KIDNEY", "tone": "accent" },
-    { "kind": "arrow", "id": "a_blood_in", "from": { "x": 280, "y": 230 }, "to": { "x": 375, "y": 250 }, "label": "dirty blood in", "tone": "bad" },
-    { "kind": "arrow", "id": "a_blood_out", "from": { "x": 625, "y": 250 }, "to": { "x": 720, "y": 230 }, "label": "clean blood out", "tone": "good" },
-    { "kind": "arrow", "id": "a_urine", "from": { "x": 500, "y": 335 }, "to": { "x": 500, "y": 420 }, "label": "urine", "dashed": true },
-    { "kind": "box", "id": "b_bladder", "x": 430, "y": 425, "w": 140, "h": 75, "label": "BLADDER" },
-
-    { "kind": "box", "id": "b_nephron", "x": 150, "y": 190, "w": 240, "h": 160, "label": "NEPHRON\n(filter unit)", "tone": "good" },
-    { "kind": "note", "id": "n_nephron", "x": 440, "y": 200, "w": 300, "text": "Each kidney packs about 1 MILLION nephrons. Each one filters blood like a super-fine sieve.", "tone": "good" },
-    { "kind": "note", "id": "n_reabsorb", "x": 440, "y": 330, "w": 300, "text": "Smart filtering: useful things — glucose, salts, most water — are absorbed BACK. Only true waste (urea) leaves." },
-
-    { "kind": "text", "id": "x_dialysis", "x": 500, "y": 500, "text": "When kidneys fail, a dialysis machine does this filtering outside the body", "muted": true },
-
-    { "kind": "note", "id": "n_recap", "x": 340, "y": 450, "w": 320, "text": "Kidneys filter the blood; nephrons do the filtering; useful things return, urea leaves.", "tone": "accent" }
+    {
+      "kind": "title",
+      "id": "t_title",
+      "x": 500,
+      "y": 80,
+      "text": "Excretion",
+      "sub": "The body's cleanup system"
+    },
+    {
+      "kind": "note",
+      "id": "n_hook",
+      "x": 110,
+      "y": 240,
+      "w": 250,
+      "text": "Every factory produces waste. Your cells are factories — so where does their toxic waste go?"
+    },
+    {
+      "kind": "box",
+      "id": "b_kidney_l",
+      "x": 380,
+      "y": 200,
+      "w": 110,
+      "h": 130,
+      "label": "KIDNEY",
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "b_kidney_r",
+      "x": 510,
+      "y": 200,
+      "w": 110,
+      "h": 130,
+      "label": "KIDNEY",
+      "tone": "accent"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_blood_in",
+      "from": {
+        "x": 280,
+        "y": 230
+      },
+      "to": {
+        "x": 375,
+        "y": 250
+      },
+      "label": "dirty blood in",
+      "tone": "bad"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_blood_out",
+      "from": {
+        "x": 625,
+        "y": 250
+      },
+      "to": {
+        "x": 720,
+        "y": 230
+      },
+      "label": "clean blood out",
+      "tone": "good"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_urine",
+      "from": {
+        "x": 500,
+        "y": 335
+      },
+      "to": {
+        "x": 500,
+        "y": 420
+      },
+      "label": "urine",
+      "dashed": true
+    },
+    {
+      "kind": "box",
+      "id": "b_bladder",
+      "x": 430,
+      "y": 425,
+      "w": 140,
+      "h": 75,
+      "label": "BLADDER"
+    },
+    {
+      "kind": "box",
+      "id": "b_nephron",
+      "x": 150,
+      "y": 190,
+      "w": 240,
+      "h": 160,
+      "label": "NEPHRON\n(filter unit)",
+      "tone": "good"
+    },
+    {
+      "kind": "note",
+      "id": "n_nephron",
+      "x": 440,
+      "y": 200,
+      "w": 300,
+      "text": "Each kidney packs about 1 MILLION nephrons. Each one filters blood like a super-fine sieve.",
+      "tone": "good"
+    },
+    {
+      "kind": "note",
+      "id": "n_reabsorb",
+      "x": 440,
+      "y": 330,
+      "w": 300,
+      "text": "Smart filtering: useful things — glucose, salts, most water — are absorbed BACK. Only true waste (urea) leaves."
+    },
+    {
+      "kind": "text",
+      "id": "x_dialysis",
+      "x": 500,
+      "y": 500,
+      "text": "When kidneys fail, a dialysis machine does this filtering outside the body",
+      "muted": true
+    },
+    {
+      "kind": "note",
+      "id": "n_recap",
+      "x": 340,
+      "y": 450,
+      "w": 320,
+      "text": "Kidneys filter the blood; nephrons do the filtering; useful things return, urea leaves.",
+      "tone": "accent"
+    }
   ],
   "beats": [
     {
       "id": "hook",
       "topic": "Why excretion",
       "narration": "Think of any factory — it always produces waste, and if the waste piles up, the factory stops. Your cells are factories too. Respiration and other reactions leave behind toxic wastes like urea. Where does it all go? Meet your body's cleanup system.",
-      "show": ["t_title", "n_hook"],
-      "focus": ["n_hook"]
+      "show": [
+        "t_title",
+        "n_hook"
+      ],
+      "focus": [
+        "n_hook"
+      ]
     },
     {
       "id": "kidneys",
       "topic": "Kidneys — the filters",
       "narration": "The main cleanup organs are your two kidneys, sitting just below your ribs at the back. Dirty blood flows in, the kidneys filter out the waste, and clean blood flows back out. The waste leaves as urine, stored in the bladder until you go.",
-      "show": ["b_kidney_l", "b_kidney_r", "a_blood_in", "a_blood_out", "a_urine", "b_bladder"],
-      "focus": ["b_kidney_l", "b_kidney_r"],
+      "show": [
+        "b_kidney_l",
+        "b_kidney_r",
+        "a_blood_in",
+        "a_blood_out",
+        "a_urine",
+        "b_bladder"
+      ],
+      "focus": [
+        "b_kidney_l",
+        "b_kidney_r"
+      ],
       "minMs": 2500
     },
     {
       "id": "nephron",
       "topic": "The nephron — filter unit",
       "narration": "Now zoom inside a kidney. The actual filtering is done by tiny units called nephrons — and each kidney has about one million of them. Each nephron is a microscopic sieve wrapped around blood capillaries, straining the blood drop by drop.",
-      "show": ["b_nephron", "n_nephron"],
-      "focus": ["b_nephron", "n_nephron"],
+      "show": [
+        "b_nephron",
+        "n_nephron"
+      ],
+      "focus": [
+        "b_nephron",
+        "n_nephron"
+      ],
       "minMs": 2000
     },
     {
       "id": "reabsorption",
       "topic": "Selective reabsorption",
       "narration": "But here's the clever part. The first filtrate contains useful things too — glucose, salts, lots of water. Throwing those away would be a disaster. So the nephron absorbs the useful things back into the blood, and lets only the true waste, mainly urea, pass on as urine. Think about it — why would losing glucose be dangerous?",
-      "show": ["b_nephron", "n_nephron", "n_reabsorb"],
-      "focus": ["n_reabsorb"],
+      "show": [
+        "b_nephron",
+        "n_nephron",
+        "n_reabsorb"
+      ],
+      "focus": [
+        "n_reabsorb"
+      ],
       "minMs": 2000
     },
     {
       "id": "dialysis",
       "topic": "Dialysis",
       "narration": "And when kidneys fail? Doctors connect the patient's blood to a dialysis machine — an artificial kidney that filters the blood outside the body, a few hours at a time. It is a life-saver, but it also shows you how precious these two fist-sized filters are.",
-      "show": ["b_nephron", "n_nephron", "n_reabsorb", "x_dialysis"],
-      "focus": ["x_dialysis"]
+      "show": [
+        "b_nephron",
+        "n_nephron",
+        "n_reabsorb",
+        "x_dialysis"
+      ],
+      "focus": [
+        "x_dialysis"
+      ]
     },
     {
       "id": "recap",
       "topic": "Recap",
       "narration": "So: cells make waste, blood carries it, kidneys filter it, nephrons do the actual work, useful things return, and urea leaves as urine. That completes Life Processes — nutrition, respiration, transport, and now excretion. Any doubt about any of it, raise your hand.",
-      "show": ["b_nephron", "n_nephron", "n_reabsorb", "n_recap"],
-      "focus": ["n_recap"]
+      "show": [
+        "b_nephron",
+        "n_nephron",
+        "n_reabsorb",
+        "n_recap"
+      ],
+      "focus": [
+        "n_recap"
+      ]
     }
   ]
 }

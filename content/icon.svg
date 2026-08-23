@@ -1,10 +1,14 @@
+<!-- The Curie mark from apps/classroom/src/ui/Logo.tsx. The geometry below is
+     the component's 32-unit drawing placed by one transform, so the icon and the
+     in-app logo can never drift; only the scale factor differs. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#58cc02"/>
-  <rect y="404" width="512" height="108" rx="54" fill="#58a700" opacity="0.55"/>
-  <g fill="none" stroke="#ffffff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M172 262V142a26 26 0 0 1 52 0v104"/>
-    <path d="M224 238V118a26 26 0 0 1 52 0v120"/>
-    <path d="M276 238V138a26 26 0 0 1 52 0v128"/>
-    <path d="M328 266v-76a26 26 0 0 1 52 0v122a126 126 0 0 1-126 126h-12a126 126 0 0 1-126-126v-44a26 26 0 0 1 52 0"/>
+  <rect width="512" height="512" rx="112" fill="#4648d4"/>
+  <g transform="translate(256 256) scale(13.5)">
+    <g fill="none" stroke="#ffffff" stroke-width="2.4">
+      <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
+      <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+    </g>
+    <circle r="4" fill="#ffffff"/>
+    <circle cx="9.9" cy="-9.9" r="2.2" fill="#ffffff"/>
   </g>
 </svg>

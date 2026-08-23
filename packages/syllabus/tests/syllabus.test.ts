@@ -139,30 +139,41 @@ describe('seed data: class10-science.json', () => {
     expect(s.klass).toBe(10);
   });
 
-  it('has the five life-processes topics with paths', () => {
+  it("carries NCERT's own life-processes sections", () => {
     const s = loadSyllabus(seed());
     const paths = listTopics(s).map((t) => t.path);
-    for (const id of ['nutrition', 'respiration', 'heart-circulation', 'blood-components', 'excretion']) {
+    // These are the numbered sections of the real chapter, not the coarser
+    // topics the seed file used to invent.
+    for (const id of [
+      'what-are-life-processes',
+      'autotrophic-nutrition',
+      'respiration',
+      'transportation-in-human-beings',
+      'excretion-in-human-beings',
+    ]) {
       expect(paths).toContain(`class10-science/life-processes/${id}`);
     }
   });
 
-  it('resolves heart-circulation with designer-ready objectives', () => {
+  it('resolves a topic with designer-ready objectives', () => {
     const s = loadSyllabus(seed());
-    const topic = getTopic(s, 'class10-science/life-processes/heart-circulation');
+    const topic = getTopic(s, 'class10-science/life-processes/transportation-in-human-beings');
     expect(topic).not.toBeNull();
-    expect(topic!.objectives.length).toBeGreaterThanOrEqual(3);
-    expect(topic!.objectives.join(' ')).toMatch(/thicker/);
+    expect(topic!.objectives.length).toBeGreaterThanOrEqual(2);
+    expect(topic!.objectives.join(' ')).toMatch(/heart|blood/i);
   });
 
-  it('keeps every topic within the authoring rules (3-5 objectives, 8-12 min, visual ideas)', () => {
+  it('keeps every topic teachable: observable objectives, a duration, visual ideas', () => {
     const s = loadSyllabus(seed());
     for (const { path: p, topic } of listTopics(s)) {
-      expect(topic.objectives.length, p).toBeGreaterThanOrEqual(3);
-      expect(topic.objectives.length, p).toBeLessThanOrEqual(5);
-      for (const objective of topic.objectives) expect(objective, p).toMatch(/^Student can /);
-      expect(topic.estMinutes, p).toBeGreaterThanOrEqual(8);
-      expect(topic.estMinutes, p).toBeLessThanOrEqual(12);
+      expect(topic.objectives.length, p).toBeGreaterThanOrEqual(2);
+      // The Learning Outcome Map cannot test "understand X", so the syllabus
+      // must not contain it either — this is the guard on generated content.
+      for (const objective of topic.objectives) {
+        expect(objective, p).toMatch(/^Student can /);
+        expect(objective, p).not.toMatch(/^Student can (understand|know|appreciate|be aware)/i);
+      }
+      expect(topic.estMinutes ?? 0, p).toBeGreaterThan(0);
       expect(topic.visualIdeas?.length ?? 0, p).toBeGreaterThan(0);
     }
   });

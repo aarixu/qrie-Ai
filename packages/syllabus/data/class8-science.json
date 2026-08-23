@@ -1,0 +1,1292 @@
+{
+  "id": "class8-science",
+  "klass": 8,
+  "subject": "Science",
+  "chapters": [
+    {
+      "id": "crop-production-and-management",
+      "title": "Crop Production and Management",
+      "topics": [
+        {
+          "id": "agricultural-practices",
+          "title": "Agricultural Practices",
+          "objectives": [
+            "Student can define crop and classify crops into Kharif and Rabi categories based on the season of sowing",
+            "Student can list the seven basic agricultural practices in their chronological order of execution"
+          ],
+          "visualIdeas": [
+            "A timeline showing the calendar months of Kharif (June to October) and Rabi (November to April) with icons of maize and wheat respectively",
+            "A sequential list with modern icons representing each step of crop production from soil preparation to storage"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "basic-practices-of-crop-production",
+          "title": "Basic Practices of Crop Production",
+          "objectives": [
+            "Student can explain why certain crops cannot be grown in the winter season",
+            "Student can outline the overall requirement of continuous water, nutrients, and soil upkeep for crop survival"
+          ],
+          "visualIdeas": [
+            "An illustration of a paddy field flooded with water, contrasted with dry cracked soil, to show why paddy requires specific monsoon seasons"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "preparation-of-soil",
+          "title": "Preparation of Soil",
+          "objectives": [
+            "Student can explain why loosening and turning the soil is necessary for root respiration, water absorption, and earthworm growth",
+            "Student can identify agricultural implements like the plough, hoe, and tractor-driven cultivator from diagrams"
+          ],
+          "visualIdeas": [
+            "A close-up diagram showing earthworms in porous, loosened soil with arrows pointing to the roots of a plant representing air passage",
+            "A split-screen drawing comparing a traditional wooden plough drawn by bulls with a modern tractor-mounted cultivator"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "sowing",
+          "title": "Sowing",
+          "objectives": [
+            "Student can explain the water flotation method of separating healthy seeds from damaged ones",
+            "Student can compare the traditional funnel-shaped sowing tool with a modern seed drill in terms of spacing, depth, and protection from birds"
+          ],
+          "visualIdeas": [
+            "An animation showing damaged hollow seeds floating on water while healthy dense seeds sink to the bottom of a beaker",
+            "A diagram of a seed drill showing the funnel, tubes, and seed placement at uniform depth inside the soil furrow"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "adding-manure-and-fertilizers",
+          "title": "Adding Manure and Fertilizers",
+          "objectives": [
+            "Student can define manure and fertilizers and list three differences between them",
+            "Student can explain the process of crop rotation and state how it naturally replenishes soil nitrogen"
+          ],
+          "visualIdeas": [
+            "A comparison table detailing the organic nature and humus contribution of manure versus chemical fertilizers like urea, NPK, and superphosphate",
+            "A crop rotation cycle diagram alternating between a legume crop (with root nodules) and a cereal crop"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "irrigation",
+          "title": "Irrigation",
+          "objectives": [
+            "Student can define irrigation and list traditional methods of water supply",
+            "Student can describe the working mechanisms of modern water-saving irrigation systems: sprinkler and drip irrigation"
+          ],
+          "visualIdeas": [
+            "Schematic diagrams of a sprinkler system showing a central pump, main pipe, lateral pipes, and rotating nozzles spraying water",
+            "A close-up diagram of a drip irrigation pipe delivering water drops directly at the base or root zone of a plant"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "protection-from-weeds",
+          "title": "Protection from Weeds",
+          "objectives": [
+            "Student can define weeds and explain their competitive effect on crop plants for light, space, and nutrients",
+            "Student can list methods of weeding, including manual removal, tilling, and chemical weedicides like 2,4-D"
+          ],
+          "visualIdeas": [
+            "A diagram showing a crop plant crowded by weeds, with arrows showing competing demands for sunlight, water, and minerals",
+            "An illustration of a farmer wearing a protective mask spraying weedicide selectively on wild grass between crops"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "harvesting",
+          "title": "Harvesting",
+          "objectives": [
+            "Student can define harvesting, threshing, and winnowing",
+            "Student can identify the dual role of a 'Combine' machine in harvesting and threshing"
+          ],
+          "visualIdeas": [
+            "An illustration of a combine harvester with labels pointing to the cutting assembly and the grain-separating drum",
+            "A diagram showing the process of winnowing where grain falls vertically while lighter chaff is blown away by the wind"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "storage",
+          "title": "Storage",
+          "objectives": [
+            "Student can state the preventive measures required before storing grains to protect them from moisture, insects, and microorganisms",
+            "Student can differentiate between domestic storage using dried neem leaves and large-scale storage in silos and granaries"
+          ],
+          "visualIdeas": [
+            "A cross-section of a tall steel silo showing aeration vents and grain level indicators",
+            "A contrast drawing of a dry, well-ventilated granary with neatly stacked gunny bags versus a moldy wet pile showing fungal growth"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "food-from-animals",
+          "title": "Food from Animals",
+          "objectives": [
+            "Student can define animal husbandry",
+            "Student can list food products obtained from animals along with their main nutritional benefits"
+          ],
+          "visualIdeas": [
+            "A mind map with 'Animal Husbandry' at the center, branching into dairy, poultry, and fish culture, listing major products and nutrients"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "microorganisms-friend-and-foe",
+      "title": "Microorganisms: Friend and Foe",
+      "topics": [
+        {
+          "id": "microorganisms",
+          "title": "Microorganisms",
+          "objectives": [
+            "Student can classify microorganisms into four major groups: bacteria, fungi, protozoa, and algae",
+            "Student can describe the unique characteristics of viruses that distinguish them from other living organisms"
+          ],
+          "visualIdeas": [
+            "A grid layout showing sketches of Chlamydomonas, Amoeba, Penicillium, and rod-shaped bacteria",
+            "A diagram of a bacteriophage virus showing its protein coat and inner genetic material, with an arrow indicating host cell entry"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "where-do-microorganisms-live",
+          "title": "Where do Microorganisms Live?",
+          "objectives": [
+            "Student can identify the diverse environments, ranging from ice-cold climates to hot springs, where microorganisms survive",
+            "Student can explain how single-celled versus multicellular microorganisms differ in their living patterns (isolated vs. colonial)"
+          ],
+          "visualIdeas": [
+            "An Earth landscape scene highlighting extreme habitats (hot springs, desert sand, polar ice, deep ocean) where microbes are found"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "friendly-microorganisms",
+          "title": "Friendly Microorganisms",
+          "objectives": [
+            "Student can describe the role of Lactobacillus in converting milk to curd",
+            "Student can explain the process of fermentation in bread making and alcohol production by yeast",
+            "Student can define antibiotics and describe how a vaccine helps the body build antibodies"
+          ],
+          "visualIdeas": [
+            "A step-by-step cartoon of yeast cells undergoing budding, releasing carbon dioxide bubbles to make dough rise",
+            "A timeline of memory cells forming after a weakened pathogen (vaccine) is introduced to the body"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "harmful-microorganisms",
+          "title": "Harmful Microorganisms",
+          "objectives": [
+            "Student can identify common plant and animal diseases caused by pathogens (e.g., Citrus canker, Rust of wheat, Anthrax)",
+            "Student can list carriers of disease-causing microbes like the female Anopheles mosquito and the housefly"
+          ],
+          "visualIdeas": [
+            "A table matching pathogens (bacteria, fungi, virus) with their respective plant and human diseases and mode of transmission",
+            "An illustration of a housefly sitting on refuse and then on uncovered food, showing mechanical transfer of pathogens"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "food-preservation",
+          "title": "Food Preservation",
+          "objectives": [
+            "Student can list five common methods of food preservation including salting, sugaring, oil/vinegar, and pasteurization",
+            "Student can explain the mechanism of pasteurization of milk in terms of heating temperature and rapid cooling"
+          ],
+          "visualIdeas": [
+            "A schematic of a milk pasteurizer heating milk to 70 degrees Celsius for 15-30 seconds, followed by a blue arrow showing sudden chilling",
+            "A visual guide of different preserved items (pickles in oil, jam in heavy sugar syrup, salted fish) with labels explaining how water activity is lowered"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nitrogen-fixation",
+          "title": "Nitrogen Fixation",
+          "objectives": [
+            "Student can identify the symbiotic relationship between Rhizobium bacteria and the root nodules of leguminous plants",
+            "Student can state the role of lightning in atmospheric nitrogen fixation"
+          ],
+          "visualIdeas": [
+            "A close-up drawing of a leguminous root system showing pinkish nodules containing Rhizobium bacteria"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "nitrogen-cycle",
+          "title": "Nitrogen Cycle",
+          "objectives": [
+            "Student can trace the path of nitrogen from the atmosphere through soil, plants, animals, and back to the atmosphere",
+            "Student can explain the role of denitrifying bacteria in maintaining a constant percentage of nitrogen in the atmosphere"
+          ],
+          "visualIdeas": [
+            "A comprehensive nitrogen cycle flow diagram showing lightning, nitrogen-fixing bacteria, ammonia/nitrate conversion in soil, plant uptake, animal consumption, and denitrifying bacteria releasing N2"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "coal-and-petroleum",
+      "title": "Coal and Petroleum",
+      "topics": [
+        {
+          "id": "coal",
+          "title": "Coal",
+          "objectives": [
+            "Student can define carbonisation as the slow process of conversion of dead vegetation into coal",
+            "Student can state the uses of coke, coal tar, and coal gas obtained by processing coal"
+          ],
+          "visualIdeas": [
+            "A geological cross-section diagram showing layers of ancient swamp forest buried under high pressure and temperature turning into coal",
+            "A branching tree diagram of Coal products: Coke (reductant in metallurgy), Coal Tar (synthetic dyes/perfumes), and Coal Gas (fuel)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "petroleum",
+          "title": "Petroleum",
+          "objectives": [
+            "Student can describe the formation of petroleum and natural gas from organisms living in the sea",
+            "Student can explain the process of fractional distillation used in refining petroleum to obtain products like petrol, kerosene, and diesel"
+          ],
+          "visualIdeas": [
+            "A diagram of an oil trap showing underground layers of water, oil, and gas beneath an impervious rock cap with a drilling rig",
+            "A simplified fractionating column showing different temperature zones and corresponding products collected at each level"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "natural-gas",
+          "title": "Natural Gas",
+          "objectives": [
+            "Student can list the advantages of using Compressed Natural Gas (CNG) as a cleaner fuel",
+            "Student can explain why natural gas is transported through pipes over long distances"
+          ],
+          "visualIdeas": [
+            "A comparison chart of emissions (soot, carbon monoxide, sulphur dioxide) from burning coal vs. burning CNG"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "some-natural-resources-are-limited",
+          "title": "Some Natural Resources are Limited",
+          "objectives": [
+            "Student can explain why fossil fuels are exhaustible resources based on their formation time",
+            "Student can state key guidelines recommended by the Petroleum Conservation Research Association (PCRA) to save petrol/diesel while driving"
+          ],
+          "visualIdeas": [
+            "An hourglass visual representing millions of years to form fossil fuels versus seconds to burn them",
+            "A set of cartoon panels showing PCRA tips: driving at constant speed, switching off engine at traffic lights, and maintaining correct tyre pressure"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "combustion-and-flame",
+      "title": "Combustion and Flame",
+      "topics": [
+        {
+          "id": "what-is-combustion",
+          "title": "What is Combustion?",
+          "objectives": [
+            "Student can define combustion as a chemical process in which a substance reacts with oxygen to give off heat",
+            "Student can define ignition temperature and explain why a substance does not catch fire if its temperature is below this limit",
+            "Student can identify inflammable substances based on their low ignition temperature"
+          ],
+          "visualIdeas": [
+            "An experiment showing a paper cup with water being heated over a candle flame without burning, contrasted with an empty paper cup catching fire immediately",
+            "A molecular cartoon of fuel molecules reacting with oxygen molecules to release carbon dioxide, water vapor, and energy sparks"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-do-we-control-fire",
+          "title": "How Do We Control Fire?",
+          "objectives": [
+            "Student can list the three essential requirements for producing fire (fuel, air, heat)",
+            "Student can explain how carbon dioxide acts as an effective fire extinguisher by cutting off the oxygen supply and cooling the fuel"
+          ],
+          "visualIdeas": [
+            "A fire triangle showing 'Fuel', 'Oxygen', and 'Heat' at the vertices, with an eraser crossing out one vertex to show how extinction works",
+            "A cross-section of a chemical fire extinguisher showing the cylinder, plunger, and the carbon dioxide blanket smothering a fire"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "types-of-combustion",
+          "title": "Types of Combustion",
+          "objectives": [
+            "Student can classify combustion into rapid, spontaneous, and explosion with real-world examples",
+            "Student can compare spontaneous combustion of phosphorus with the explosion of a firecracker"
+          ],
+          "visualIdeas": [
+            "Three illustrative panels: a gas stove burner igniting instantly (rapid), a piece of white phosphorus catching fire on its own at room temperature (spontaneous), and a firecracker bursting with sound, heat, and gas release (explosion)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "flame",
+          "title": "Flame",
+          "objectives": [
+            "Student can identify which substances produce a flame during combustion based on their ability to vaporize",
+            "Student can compare a candle flame, an LPG burner flame, and a kerosene lamp flame"
+          ],
+          "visualIdeas": [
+            "An illustration showing vaporizing wax rising from a candle wick to form a flame, contrasted with glowing charcoal which does not vaporize or produce a flame"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "structure-of-a-flame",
+          "title": "Structure of a Flame",
+          "objectives": [
+            "Student can draw and label the three distinct zones of a candle flame: outer zone of complete combustion, middle zone of partial combustion, and innermost zone of unburnt wax vapours",
+            "Student can correlate the color of each zone with its temperature (blue - hottest, yellow - moderately hot, black - least hot)"
+          ],
+          "visualIdeas": [
+            "A detailed, large diagram of a candle flame with color coding: blue outer envelope, yellow middle mantle, black inner core around the wick",
+            "A demonstration drawing showing a glass tube inserted into the dark zone of a flame, conducting unburnt wax vapors to ignite at the other end"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-is-fuel",
+          "title": "What is a Fuel?",
+          "objectives": [
+            "Student can list characteristics of a good/ideal fuel",
+            "Student can classify common fuels into solid, liquid, and gaseous states"
+          ],
+          "visualIdeas": [
+            "A checklist comparing wood, kerosene, and natural gas against 'ideal fuel' criteria (cheap, readily available, high heat value, clean-burning)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "fuel-efficiency",
+          "title": "Fuel Efficiency",
+          "objectives": [
+            "Student can define calorific value of a fuel and state its unit as kilojoules per kg (kJ/kg)",
+            "Student can explain the environmental hazards of burning fuels, including acid rain, carbon monoxide poisoning, and global warming"
+          ],
+          "visualIdeas": [
+            "A bar chart comparing the calorific values of various fuels like cow dung cake, coal, petrol, CNG, and hydrogen",
+            "A sequence map showing sulfur dioxide and nitrogen oxides rising from factories, combining with clouds, and falling as acid rain onto trees and buildings"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "conservation-of-plants-and-animals",
+      "title": "Conservation of Plants and Animals",
+      "topics": [
+        {
+          "id": "deforestation-and-its-causes",
+          "title": "Deforestation and Its Causes",
+          "objectives": [
+            "Student can list the natural and man-made causes of deforestation",
+            "Student can identify industrialization, agriculture, forest fires, and droughts as key drivers of forest loss"
+          ],
+          "visualIdeas": [
+            "A split illustration showing a lush forest on one side and a cleared land with tree stumps, factories, and agricultural fields on the other"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "consequences-of-deforestation",
+          "title": "Consequences of Deforestation",
+          "objectives": [
+            "Student can explain how deforestation leads to global warming by increasing carbon dioxide levels in the atmosphere",
+            "Student can describe desertification in terms of soil erosion, loss of humus, and changes in soil properties"
+          ],
+          "visualIdeas": [
+            "A diagram showing trees absorbing CO2 (photosynthesis) vs. a deforested land where CO2 accumulates in the atmosphere, trapping heat",
+            "A sequence showing soil erosion: rain washing away topsoil on barren land, leading to exposed rocky layers beneath"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "conservation-of-forest-and-wildlife",
+          "title": "Conservation of Forest and Wildlife",
+          "objectives": [
+            "Student can define biosphere reserves, national parks, and wildlife sanctuaries",
+            "Student can compare the degree of protection and permissible human activities in protected areas vs. general areas"
+          ],
+          "visualIdeas": [
+            "A concentric rings diagram showing different zones of conservation, with labels explaining protected areas"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "biosphere-reserve",
+          "title": "Biosphere Reserve",
+          "objectives": [
+            "Student can describe the structure of a biosphere reserve including its role in conserving biodiversity and tribal culture",
+            "Student can identify the components of the Pachmarhi Biosphere Reserve"
+          ],
+          "visualIdeas": [
+            "A map layout of Pachmarhi Biosphere Reserve showing Satpura National Park and Bori and Pachmarhi Sanctuaries nested within it"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "flora-and-fauna",
+          "title": "Flora and Fauna",
+          "objectives": [
+            "Student can define flora and fauna with local examples from a protected area",
+            "Student can list representative flora (e.g., sal, teak, wild mango) and fauna (e.g., chinkara, blue-bull, leopard) of the Pachmarhi Biosphere Reserve"
+          ],
+          "visualIdeas": [
+            "A pictorial collage separating plant species (Flora) and animal species (Fauna) with scientific or common name labels"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "endemic-species",
+          "title": "Endemic Species",
+          "objectives": [
+            "Student can define endemic species as those found exclusively in a particular area",
+            "Student can name examples of endemic flora and fauna (e.g., giant squirrel, wild mango) of the Pachmarhi area"
+          ],
+          "visualIdeas": [
+            "A spotlight map highlighting an isolated geographic area with a drawing of the Indian Giant Squirrel showing it exists nowhere else"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "wildlife-sanctuary",
+          "title": "Wildlife Sanctuary",
+          "objectives": [
+            "Student can explain the primary purpose of a wildlife sanctuary as providing protection and suitable living conditions to wild animals",
+            "Student can state how poaching and capturing of animals are strictly prohibited and punishable by law"
+          ],
+          "visualIdeas": [
+            "A sketch of a tranquil forest landscape with deer and birds roaming freely, with a 'No Hunting' sign posted clearly at the boundary"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "national-park",
+          "title": "National Park",
+          "objectives": [
+            "Student can define national parks as reserves large enough to protect entire ecosystems including flora, fauna, landscape, and historic objects",
+            "Student can describe Project Tiger and its objective in ensuring the survival and maintenance of the tiger population"
+          ],
+          "visualIdeas": [
+            "An illustration of a tiger in Satpura National Park, along with symbols representing rock shelters and prehistoric paintings protected inside the park"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "red-data-book",
+          "title": "Red Data Book",
+          "objectives": [
+            "Student can define the Red Data Book and state its purpose in keeping a record of endangered species",
+            "Student can explain the difference between extinct and endangered species"
+          ],
+          "visualIdeas": [
+            "A catalog-style illustration labeled 'Red Data Book' with pages showing profiles of endangered animals like the red panda or tiger with their threat status"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "migration",
+          "title": "Migration",
+          "objectives": [
+            "Student can define migration as the seasonal movement of animals or birds to escape inhospitable climates or for breeding",
+            "Student can identify the Siberian crane as a migratory bird that visits India annually"
+          ],
+          "visualIdeas": [
+            "A map of the globe showing a dotted arrow path from cold Siberia to warm wetland sanctuaries in India with flying birds illustrated overhead"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "recycling-of-paper",
+          "title": "Recycling of Paper",
+          "objectives": [
+            "Student can explain why saving and recycling paper is crucial for conserving trees, energy, and water",
+            "Student can calculate the number of trees saved if paper is recycled up to 5 to 7 times"
+          ],
+          "visualIdeas": [
+            "A circular loop diagram showing: wood pulp -> paper production -> usage -> recycling -> new paper, highlighting the bypass of cutting fresh trees"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "reforestation",
+          "title": "Reforestation",
+          "objectives": [
+            "Student can define reforestation as the stocking of destroyed forests by planting new trees",
+            "Student can compare reforestation with natural afforestation"
+          ],
+          "visualIdeas": [
+            "A step-by-step cartoon showing children planting saplings of the same species originally present in the forest, leading to a restored forest ecosystem years later"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "reproduction-in-animals",
+      "title": "Reproduction in Animals",
+      "topics": [
+        {
+          "id": "modes-of-reproduction",
+          "title": "Modes of Reproduction",
+          "objectives": [
+            "Student can classify animal reproduction into sexual and asexual modes",
+            "Student can compare the basic differences in parental involvement between sexual and asexual reproduction"
+          ],
+          "visualIdeas": [
+            "A simple flow diagram splitting 'Reproduction' into 'Sexual (two parents, fusion of gametes)' and 'Asexual (single parent, no gamete fusion)'"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "sexual-reproduction",
+          "title": "Sexual Reproduction",
+          "objectives": [
+            "Student can identify and label male reproductive organs (testes, sperm ducts, penis) and female reproductive organs (ovaries, oviducts, uterus)",
+            "Student can define fertilization and distinguish between internal and external fertilization with examples",
+            "Student can trace the development of a zygote into an embryo and its implantation in the uterus",
+            "Student can classify animals into oviparous and viviparous based on whether they lay eggs or give birth to young ones"
+          ],
+          "visualIdeas": [
+            "Schematic diagrams of the male and female human reproductive systems with key parts clearly labeled",
+            "An animation sequence showing a sperm cell fusing with an ovum to form a zygote (fertilization), followed by mitotic divisions forming an embryo",
+            "A visual timeline comparing development of a chick inside an egg shell (oviparous) versus a human fetus inside the womb (viviparous)"
+          ],
+          "estMinutes": 35
+        },
+        {
+          "id": "asexual-reproduction",
+          "title": "Asexual Reproduction",
+          "objectives": [
+            "Student can describe the process of budding in Hydra with a neat sequence diagram",
+            "Student can explain binary fission in Amoeba as a process of division of a single cell into two equal individuals",
+            "Student can state the significance of cloning and identify Dolly the sheep as the first cloned mammal"
+          ],
+          "visualIdeas": [
+            "A multi-stage sequence diagram of Hydra showing a tiny bulb-like projection (bud) growing, developing tentacles, and detaching from the parent",
+            "A sequence showing an Amoeba cell: nucleus elongating, dividing (karyokinesis), cytoplasm pinching (cytokinesis), and forming two daughter amoebae"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "reaching-the-age-of-adolescence",
+      "title": "Reaching the Age of Adolescence",
+      "topics": [
+        {
+          "id": "adolescence-and-puberty",
+          "title": "Adolescence and Puberty",
+          "objectives": [
+            "Student can define adolescence as the period of life leading to reproductive maturity",
+            "Student can define puberty as the stage during which human bodies undergo changes to become capable of reproduction"
+          ],
+          "visualIdeas": [
+            "A human life stage timeline from infancy to childhood, highlighting the 11-19 age bracket as adolescence"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "changes-at-puberty",
+          "title": "Changes at Puberty",
+          "objectives": [
+            "Student can describe physical changes during puberty including sudden increase in height, changes in body shape, and voice change (Adam's apple)",
+            "Student can explain the increased activity of sweat and sebaceous glands leading to acne"
+          ],
+          "visualIdeas": [
+            "A line graph showing the rate of growth in height for boys and girls with age (9 to 18 years)",
+            "A diagram of the human throat showing the protruding larynx (Adam's apple) in a male adolescent"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "secondary-sexual-characters",
+          "title": "Secondary Sexual Characters",
+          "objectives": [
+            "Student can list the secondary sexual characters that distinguish males (facial hair, deep voice) from females (development of breasts, high voice)",
+            "Student can explain how secondary sexual characters are controlled by hormones (testosterone and estrogen)"
+          ],
+          "visualIdeas": [
+            "A comparison chart matching male and female secondary sexual characters along with the respective hormones driving them"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "role-of-hormones-in-initiating-reproductive-function",
+          "title": "Role of Hormones in Initiating Reproductive Function",
+          "objectives": [
+            "Student can trace the pathway of hormonal control from the pituitary gland to the testes/ovaries to release sex hormones into the bloodstream",
+            "Student can explain how endocrine glands release hormones directly into the blood to reach target sites"
+          ],
+          "visualIdeas": [
+            "A flow diagram showing: Pituitary Gland -> secretes hormones -> stimulates Testes/Ovaries -> release Testosterone/Estrogen -> reach Target Organs via blood -> trigger changes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reproductive-phase-of-life-in-humans",
+          "title": "Reproductive Phase of Life in Humans",
+          "objectives": [
+            "Student can describe the menstrual cycle including ovulation, thickening of uterine wall, menstruation, menarche, and menopause",
+            "Student can state the typical age range of the reproductive phase in human females"
+          ],
+          "visualIdeas": [
+            "A calendar-based sequence diagram illustrating the phases of a 28-day menstrual cycle showing uterine lining thickening and shedding"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "how-is-the-sex-of-the-baby-determined",
+          "title": "How is the Sex of the Baby Determined?",
+          "objectives": [
+            "Student can explain how sex chromosomes (X and Y) determine the sex of an unborn baby",
+            "Student can prove using a genetic cross why the father's sperm determines the sex of the child, dispelling the myth that mothers are responsible"
+          ],
+          "visualIdeas": [
+            "A genetic cross diagram showing female gametes (all X) and male gametes (X and Y) combining to produce XX (female) and XY (male) with 50% probability each"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hormones-other-than-sex-hormones",
+          "title": "Hormones other than Sex Hormones",
+          "objectives": [
+            "Student can locate major endocrine glands on a human body outline (pituitary, thyroid, adrenal, pancreas)",
+            "Student can match endocrine glands with their hormones (thyroxine, adrenaline, insulin, growth hormone) and their corresponding target roles or deficiency diseases"
+          ],
+          "visualIdeas": [
+            "An outline of a human body with endocrine glands highlighted: brain (pituitary), neck (thyroid), kidneys (adrenals), stomach area (pancreas)",
+            "A quick matching table showing Thyroid -> Thyroxine -> Goitre, and Pancreas -> Insulin -> Diabetes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "role-of-hormones-in-completing-the-life-history-of-insects-and-frogs",
+          "title": "Role of Hormones in Completing the Life History of Insects and Frogs",
+          "objectives": [
+            "Student can state the role of insect hormones in insect metamorphosis",
+            "Student can explain the critical role of thyroxine and iodine in water for the metamorphosis of tadpoles into frogs"
+          ],
+          "visualIdeas": [
+            "A split cartoon of a tadpole growing in iodine-rich water (metamorphoses into a frog) versus iodine-deficient water (remains a giant tadpole, cannot mature)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "reproductive-health",
+          "title": "Reproductive Health",
+          "objectives": [
+            "Student can list the key components of reproductive health: nutritional needs, personal hygiene, and physical exercise",
+            "Student can state the risks of adolescent pregnancy and explain the modes of transmission of HIV/AIDS"
+          ],
+          "visualIdeas": [
+            "A balanced diet plate tailored for adolescents containing iron, calcium, and proteins, next to a list of hygiene practices"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "force-and-pressure",
+      "title": "Force and Pressure",
+      "topics": [
+        {
+          "id": "force-push-or-pull",
+          "title": "Force – A Push or a Pull",
+          "objectives": [
+            "Student can define force in terms of a push or a pull acting on an object",
+            "Student can classify daily activities like opening a door, kicking a ball, and lifting a bucket as pushes or pulls"
+          ],
+          "visualIdeas": [
+            "Two panels: a person pushing a heavy cart with an arrow pointing forward, and a person pulling a drawer with an arrow pointing backward"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "forces-due-to-interaction",
+          "title": "Forces are due to an Interaction",
+          "objectives": [
+            "Student can explain how an interaction between at least two objects is necessary for a force to come into play",
+            "Student can predict what happens to objects in contact or proximity when there is no interaction"
+          ],
+          "visualIdeas": [
+            "A drawing of a man standing behind a stationary car (no movement), followed by the man pushing against the car (interaction and movement)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "exploring-forces",
+          "title": "Exploring Forces",
+          "objectives": [
+            "Student can calculate the net force when two forces act on an object in the same direction",
+            "Student can calculate the net force when two forces act on an object in opposite directions"
+          ],
+          "visualIdeas": [
+            "An object with two arrows of 5N and 3N pointing right (Net = 8N to the right), and another with 5N right and 3N left (Net = 2N to the right)",
+            "A depiction of a tug-of-war where both teams pull with equal force, resulting in a net force of zero and no movement of the rope's center"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "force-can-change-state-of-motion",
+          "title": "A Force can Change the State of Motion",
+          "objectives": [
+            "Student can define state of motion of an object in terms of its speed and direction of movement",
+            "Student can explain how applying a force can increase speed, decrease speed, stop a moving object, or change its direction"
+          ],
+          "visualIdeas": [
+            "An animation sequence of a moving ball: a hand taps it in the direction of motion (speeds up), a hand blocks it (stops), or a hockey stick strikes it sideways (changes direction)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "force-can-change-shape",
+          "title": "Force can Change the Shape of an Object",
+          "objectives": [
+            "Student can demonstrate how force can alter the shape of non-rigid objects",
+            "Student can list examples of shape changes due to force such as stretching a rubber band, pressing a lump of dough, or compressing a spring"
+          ],
+          "visualIdeas": [
+            "A series of small sketches: hands stretching a spring, a roller pressing dough on a board, and a finger pushing into a soft sponge"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "contact-forces",
+          "title": "Contact Forces",
+          "objectives": [
+            "Student can define contact forces and classify muscular force and friction under this category",
+            "Student can explain how muscular force operates through physical contact and how friction always opposes motion"
+          ],
+          "visualIdeas": [
+            "An illustration of a bull pulling a cart (muscular force in contact) and a rolling ball slowing down on a rough floor with a friction arrow pointing backwards"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "non-contact-forces",
+          "title": "Non-contact Forces",
+          "objectives": [
+            "Student can define non-contact forces and identify magnetic, electrostatic, and gravitational forces as examples",
+            "Student can describe how these forces act over a distance without physical contact"
+          ],
+          "visualIdeas": [
+            "A bar magnet attracting iron paper clips from a distance without touching them",
+            "A plastic comb rubbed with hair attracting small dry bits of paper (electrostatic force)",
+            "An apple falling vertically down from a tree branch (gravitational force)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pressure",
+          "title": "Pressure",
+          "objectives": [
+            "Student can define pressure as force per unit area and state its formula as P = Force / Area",
+            "Student can explain why shoulder bags have broad straps and why a porter places a round piece of cloth on their head based on the area-pressure relationship"
+          ],
+          "visualIdeas": [
+            "A comparison of a sharp nail and a blunt nail being hammered, showing that the smaller area of the sharp tip concentrates force to yield higher pressure",
+            "A formula breakdown box showing that as Area (denominator) increases, Pressure decreases for the same Force"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pressure-by-liquids-and-gases",
+          "title": "Pressure Exerted by Liquids and Gases",
+          "objectives": [
+            "Student can demonstrate that liquid pressure increases with depth and acts equally in all directions at a given depth",
+            "Student can show that gases also exert pressure on the walls of their container"
+          ],
+          "visualIdeas": [
+            "A tall plastic bottle filled with water, showing three water jets spewing from holes at different heights; the bottom-most jet shoots out the furthest due to maximum pressure",
+            "A drawing of a fully inflated balloon with arrows pointing outwards in all directions, representing gas pressure on the inner walls"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "atmospheric-pressure",
+          "title": "Atmospheric Pressure",
+          "objectives": [
+            "Student can define atmosphere and atmospheric pressure",
+            "Student can explain the working of a rubber sucker in terms of atmospheric pressure difference"
+          ],
+          "visualIdeas": [
+            "A drawing of a rubber sucker pressed against a flat glass surface, with arrows showing external atmospheric pressure holding it in place",
+            "A cartoon showing a long column of air extending from the top of the atmosphere down to a person's head"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "friction",
+      "title": "Friction",
+      "topics": [
+        {
+          "id": "force-of-friction",
+          "title": "Force of Friction",
+          "objectives": [
+            "Student can define the force of friction as a contact force that always opposes relative motion between two surfaces",
+            "Student can predict the direction of frictional force given the direction of an applied force"
+          ],
+          "visualIdeas": [
+            "A block being pushed to the right, with a large blue arrow showing 'Applied Force' and a smaller red arrow at the contact surface pointing left showing 'Frictional Force'"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "factors-affecting-friction",
+          "title": "Factors affecting Friction",
+          "objectives": [
+            "Student can explain how surface roughness and interlocking of micro-irregularities cause friction",
+            "Student can differentiate between static friction, sliding friction, and rolling friction in terms of magnitude"
+          ],
+          "visualIdeas": [
+            "A highly magnified view of two flat surfaces in contact, revealing hills and valleys interlocking like teeth",
+            "A spring balance pulling a wooden block over a smooth glass sheet versus a rough sandpaper sheet, showing different force readings"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "friction-necessary-evil",
+          "title": "Friction : A Necessary Evil",
+          "objectives": [
+            "Student can list three advantages of friction (walking, writing with a pen, stopping vehicles with brakes)",
+            "Student can list three disadvantages of friction (wear and tear of soles/tyres, heat generation in machinery, energy loss)"
+          ],
+          "visualIdeas": [
+            "A split screen showing: (A) a matchstick striking and catching fire (useful friction) and (B) worn-out soles of shoes and bald car tyres (harmful friction)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "increasing-and-reducing-friction",
+          "title": "Increasing and Reducing Friction",
+          "objectives": [
+            "Student can state how grooving of tyres and treading of shoe soles increase grip/friction",
+            "Student can explain how lubricants (oil, grease, powder) reduce friction by forming a thin layer between surfaces"
+          ],
+          "visualIdeas": [
+            "A car tyre with deep tread grooves next to an athlete's spiked running shoe",
+            "A carrom board with talcum powder being sprinkled, showing a striker sliding much smoother across the surface"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "wheels-reduce-friction",
+          "title": "Wheels Reduce Friction",
+          "objectives": [
+            "Student can explain why rolling friction is much smaller than sliding friction",
+            "Student can describe how ball bearings are used in ceiling fans and bicycles to replace sliding friction with rolling friction"
+          ],
+          "visualIdeas": [
+            "An illustration of a suitcase with tiny wheels being pulled effortlessly, compared to dragging a flat-bottomed suitcase",
+            "A detailed cutaway diagram of a ball bearing assembly showing metallic balls rolling between inner and outer rings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "fluid-friction",
+          "title": "Fluid Friction",
+          "objectives": [
+            "Student can define fluid friction (drag) and list factors affecting it",
+            "Student can explain why airplanes, birds, and fish have streamlined body shapes"
+          ],
+          "visualIdeas": [
+            "A comparison of a modern airplane profile with the streamlined body of a bird in flight, showing smooth airflow lines wrapping around them"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "sound",
+      "title": "Sound",
+      "topics": [
+        {
+          "id": "sound-by-vibrating-body",
+          "title": "Sound is Produced by a Vibrating Body",
+          "objectives": [
+            "Student can define vibration as the rapid to-and-fro motion of an object",
+            "Student can identify the vibrating parts of musical instruments like the sitar, mridangam, and flute"
+          ],
+          "visualIdeas": [
+            "An illustration of a metallic school bell being struck, with wavy lines radiating outwards, and a finger touching the rim to feel the vibration",
+            "A table matching musical instruments (Sitar, Tabla, Flute) with their vibrating components (stretched string, stretched membrane, air column)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sound-produced-by-humans",
+          "title": "Sound Produced by Humans",
+          "objectives": [
+            "Student can locate the larynx (voice box) and explain how vocal cords vibrate to produce speech",
+            "Student can explain how the tightness or thickness of vocal cords alters voice quality"
+          ],
+          "visualIdeas": [
+            "A biological diagram of the human larynx, showing the two vocal cords with a narrow slit between them for air passage"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "sound-needs-medium",
+          "title": "Sound Needs a Medium for Propagation",
+          "objectives": [
+            "Student can prove that sound requires a material medium (solid, liquid, or gas) to travel and cannot propagate in a vacuum",
+            "Student can explain the classic bell jar experiment demonstrating sound attenuation in a vacuum"
+          ],
+          "visualIdeas": [
+            "A diagram of the electric bell jar experiment, showing a ringing bell inside a glass jar connected to a vacuum pump; as air is removed, sound fades out",
+            "Two children talking through a toy telephone made of paper cups and a stretched string, showing sound propagation through a solid"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "we-hear-sound-through-ears",
+          "title": "We Hear Sound through Our Ears",
+          "objectives": [
+            "Student can label the outer ear, eardrum (tympanic membrane), middle ear, and inner ear on a diagram",
+            "Student can trace how sound vibrations pass from the eardrum to the inner ear and on to the brain as nerve impulses"
+          ],
+          "visualIdeas": [
+            "A cross-sectional diagram of the human ear with arrows tracking a sound wave entering the ear canal, hitting the thin eardrum membrane, and transmitting vibrations to the inner ear cochlea"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "amplitude-time-period-frequency",
+          "title": "Amplitude, Time Period and Frequency of a Vibration",
+          "objectives": [
+            "Student can define amplitude, frequency (in Hertz), and time period of a vibrating body",
+            "Student can relate the loudness of a sound to its amplitude and pitch/shrillness to its frequency"
+          ],
+          "visualIdeas": [
+            "A simple pendulum swinging, with labels for maximum displacement (amplitude) and one complete to-and-fro oscillation (time period)",
+            "Two wave diagrams on an oscilloscope: one with tall waves (loud sound) and one with short waves (soft sound); and another pair showing low-frequency waves (low pitch/drum) versus high-frequency waves (high pitch/whistle)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "audible-and-inaudible-sounds",
+          "title": "Audible and Inaudible Sounds",
+          "objectives": [
+            "Student can state the range of audible frequencies for the human ear (20 Hz to 20,000 Hz)",
+            "Student can define ultrasound and infrasound, listing animals that can hear or produce them"
+          ],
+          "visualIdeas": [
+            "A spectrum scale showing the audible frequency band (20 Hz - 20 kHz) with 'Infrasonic' to the left and 'Ultrasonic' to the right, decorated with icons of elephants and bats respectively"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "noise-and-music",
+          "title": "Noise and Music",
+          "objectives": [
+            "Student can differentiate between noise (unpleasant, irregular sounds) and music (pleasing, regular periodic sounds)",
+            "Student can identify regular vs. erratic wave patterns on a sound visualizer"
+          ],
+          "visualIdeas": [
+            "A visual comparison of a smooth, regular sinusoidal wave (musical note) next to a highly jagged, chaotic and random waveform (construction noise)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "noise-pollution",
+          "title": "Noise Pollution",
+          "objectives": [
+            "Student can list major sources of noise pollution in surroundings and describe their health hazards (hearing impairment, hypertension, lack of sleep)",
+            "Student can suggest measures to control and limit noise pollution in residential areas"
+          ],
+          "visualIdeas": [
+            "An urban street scene showing sources of noise pollution (honking cars, loudspeakers, construction drill) with callouts showing physiological effects like stress or ear damage",
+            "A list of remedial steps: planting trees along roads (noise buffers), installing silencers, and restricting loudspeaker hours"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "chemical-effects-of-electric-current",
+      "title": "Chemical Effects of Electric Current",
+      "topics": [
+        {
+          "id": "do-liquids-conduct-electricity",
+          "title": "Do Liquids Conduct Electricity?",
+          "objectives": [
+            "Student can construct a simple tester using an LED or magnetic compass needle to test the electrical conductivity of liquids",
+            "Student can classify common liquids (lemon juice, vinegar, tap water, distilled water) into good conductors and poor conductors of electricity"
+          ],
+          "visualIdeas": [
+            "A circuit diagram of a liquid tester containing a cell, an LED, and two free wire ends dipped in a beaker of liquid",
+            "A split-screen drawing showing the magnetic needle deflecting when dipped in salt water (good conductor) versus no deflection in pure distilled water (poor conductor)"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "chemical-effects-of-electric-current-topic",
+          "title": "Chemical Effects of Electric Current",
+          "objectives": [
+            "Student can describe the chemical changes that occur when an electric current passes through a conducting solution (gas bubbles, metal deposition, color changes)",
+            "Student can identify the gases evolved at the anode and cathode during the electrolysis of water"
+          ],
+          "visualIdeas": [
+            "A water electrolysis setup with carbon rods dipped in acidified water, connected to a battery, showing oxygen bubbles forming at the positive terminal (anode) and hydrogen bubbles at the negative terminal (cathode)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "electroplating",
+          "title": "Electroplating",
+          "objectives": [
+            "Student can define electroplating as the process of depositing a layer of any desired metal on another material by means of electricity",
+            "Student can explain the movement of copper ions from a copper plate to a carbon/steel electrode in a copper sulphate bath",
+            "Student can list commercial applications of electroplating (chrome plating on bicycle handlebars, gold-plating on cheap jewellery)"
+          ],
+          "visualIdeas": [
+            "A detailed electroplating circuit showing a copper plate connected to the positive terminal of a battery and a brass key connected to the negative terminal, both submerged in a blue copper sulphate solution, with copper ions migrating to coat the key"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "some-natural-phenomena",
+      "title": "Some Natural Phenomena",
+      "topics": [
+        {
+          "id": "lightning",
+          "title": "Lightning",
+          "objectives": [
+            "Student can define lightning as a massive scale natural electrostatic discharge",
+            "Student can explain the historical discovery by Benjamin Franklin that sparks from clothing and lightning are the same phenomenon"
+          ],
+          "visualIdeas": [
+            "An illustration of Benjamin Franklin flying a kite in a thunderstorm to collect electric charge"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "charging-by-rubbing",
+          "title": "Charging by Rubbing",
+          "objectives": [
+            "Student can explain how certain objects acquire electric charge when rubbed against specific materials",
+            "Student can demonstrate charge acquisition using a plastic refill rubbed with polythene or a balloon rubbed with wool"
+          ],
+          "visualIdeas": [
+            "A balloon being rubbed with a woolen cloth, showing static charge icons ('+' and '-') accumulating on the balloon surface"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "types-of-charges-interaction",
+          "title": "Types of Charges and Their Interaction",
+          "objectives": [
+            "Student can state that there are two types of charges: positive and negative",
+            "Student can formulate the law of electrostatics: like charges repel each other, and unlike charges attract each other"
+          ],
+          "visualIdeas": [
+            "Two inflated balloons rubbed with wool hanging near each other showing repulsion (arrows pointing away)",
+            "A charged balloon hanging near a charged plastic refill showing attraction (arrows pointing towards each other)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transfer-of-charge",
+          "title": "Transfer of Charge",
+          "objectives": [
+            "Student can build a simple gold-leaf electroscope to detect the presence of electric charge on a body",
+            "Student can define earthing as the process of transferring charge from a charged object to the earth"
+          ],
+          "visualIdeas": [
+            "A diagram of a home-made electroscope using a glass jar, a metal paperclip, and two small aluminium foil strips; when touched by a charged body, the foil strips diverge"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "story-of-lightning",
+          "title": "Story of Lightning",
+          "objectives": [
+            "Student can explain the accumulation of positive charges at the upper edges of clouds and negative charges at the lower edges",
+            "Student can define lightning strike as the process of electric discharge between clouds and the earth"
+          ],
+          "visualIdeas": [
+            "A towering storm cloud with '+' charges accumulated at the top, '-' charges at the bottom, and induced '+' charges on the ground below, with a jagged lightning bolt connecting the '-' cloud base to a tree"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lightning-safety",
+          "title": "Lightning Safety",
+          "objectives": [
+            "Student can list safe behaviors during a thunderstorm (staying indoors, avoiding open fields, crouching low)",
+            "Student can describe the design and function of a lightning conductor in protecting tall buildings from damage"
+          ],
+          "visualIdeas": [
+            "An outline of a tall building with a metallic lightning rod on top, connected via a thick copper strip down the side wall to a copper plate buried deep in the earth",
+            "A cartoon showing safe 'crouching' posture (head tucked between knees, hands on knees) for someone caught in the open"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "earthquakes",
+          "title": "Earthquakes",
+          "objectives": [
+            "Student can define an earthquake and explain its cause due to the movement or collision of tectonic plates of the Earth's crust",
+            "Student can define the terms: seismic zones, focus, epicenter, seismograph, and Richter scale",
+            "Student can list three safety measures to protect oneself during an earthquake both indoors and outdoors"
+          ],
+          "visualIdeas": [
+            "A cross-section of the Earth showing tectonic plate boundaries sliding past or colliding, generating shockwaves",
+            "A diagram showing the Focus (origin point deep down), Epicenter (directly above on the surface), and concentric circles of seismic waves radiating outwards",
+            "A schematic of a seismograph showing a heavy pendulum with a pen trace on a rotating drum"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "light",
+      "title": "Light",
+      "topics": [
+        {
+          "id": "what-makes-things-visible",
+          "title": "What makes Things Visible",
+          "objectives": [
+            "Student can explain that objects become visible only when light from a source or reflected from the object enters our eyes",
+            "Student can differentiate between luminous and non-luminous objects"
+          ],
+          "visualIdeas": [
+            "A diagram showing a light ray traveling from a lightbulb, hitting a book (non-luminous), and reflecting into a human eye to show the pathway of sight"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "laws-of-reflection",
+          "title": "Laws of Reflection",
+          "objectives": [
+            "Student can identify the incident ray, reflected ray, normal, angle of incidence, and angle of reflection on a ray diagram",
+            "Student can state the two laws of reflection: angle of incidence equals angle of reflection, and all three rays lie in the same plane",
+            "Student can define lateral inversion in a plane mirror"
+          ],
+          "visualIdeas": [
+            "A clean ray diagram of reflection off a flat mirror surface, with a dashed line for the normal, showing angle i = angle r",
+            "An illustration of a person standing in front of a plane mirror, raising their right hand while their mirror image raises its left hand (lateral inversion)"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "regular-and-diffused-reflection",
+          "title": "Regular and Diffused Reflection",
+          "objectives": [
+            "Student can compare regular reflection (smooth surface) and diffused/irregular reflection (rough surface)",
+            "Student can explain why diffused reflection does not mean the failure of the laws of reflection"
+          ],
+          "visualIdeas": [
+            "Parallel rays hitting a perfectly flat mirror and reflecting as parallel rays (regular)",
+            "Parallel rays hitting a bumpy, wavy surface and scattering in different directions, with normal drawn at each individual point to show angle i still equals angle r locally (diffused)"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "reflected-light-reflected-again",
+          "title": "Reflected Light Can be Reflected Again",
+          "objectives": [
+            "Student can explain how multiple reflections are utilized in a periscope to view objects not in direct line of sight",
+            "Student can state the arrangement of mirrors in a barber's shop to see the back of the head"
+          ],
+          "visualIdeas": [
+            "A Z-shaped periscope tube showing two parallel plane mirrors fixed at 45-degree angles, tracing a light ray bouncing twice to reach the viewer's eye"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "multiple-images",
+          "title": "Multiple Images",
+          "objectives": [
+            "Student can calculate the number of images formed when two plane mirrors are placed at specific angles to each other",
+            "Student can describe the construction and beautiful patterns formed in a kaleidoscope using three mirror strips"
+          ],
+          "visualIdeas": [
+            "Two mirrors placed at 90 degrees showing three images of an object placed between them",
+            "A three-dimensional cutaway of a triangular kaleidoscope tube containing mirrors and colorful broken glass pieces at one end"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "sunlight-white-or-coloured",
+          "title": "Sunlight — White or Coloured",
+          "objectives": [
+            "Student can define dispersion of light as the splitting of white light into its constituent colors",
+            "Student can describe a simple experiment using a glass prism or a water-and-mirror setup to demonstrate dispersion"
+          ],
+          "visualIdeas": [
+            "A narrow beam of white light entering a glass prism and fanning out into a rainbow spectrum (VIBGYOR) on the other side"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "what-is-inside-our-eyes",
+          "title": "What is inside Our Eyes?",
+          "objectives": [
+            "Student can draw and label the cross-section of a human eye including cornea, iris, pupil, lens, retina, and optic nerve",
+            "Student can explain the functions of the iris, pupil, rods, and cones in light regulation and image perception",
+            "Student can define blind spot as the junction of the optic nerve and the retina where no sensory cells exist"
+          ],
+          "visualIdeas": [
+            "A detailed, large cross-sectional diagram of the human eye ball with all major parts clearly labeled",
+            "An illustration showing the pupil dilating in dim light and constricting in bright light to control light entry"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "care-of-the-eyes",
+          "title": "Care of the Eyes",
+          "objectives": [
+            "Student can list three healthy habits to prevent eye strain or damage (proper reading distance, avoiding looking directly at the sun, washing eyes with clean water)",
+            "Student can state the symptoms and cause of night blindness due to Vitamin A deficiency"
+          ],
+          "visualIdeas": [
+            "A comparison showing a student reading a book under low light at a bad angle vs. a student sitting straight in well-illuminated surroundings at a 25 cm reading distance"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "visually-impaired-persons-can-read",
+          "title": "Visually Impaired Persons Can Read and Write",
+          "objectives": [
+            "Student can differentiate between optical aids (bifocal lenses, contact lenses) and non-optical aids (tactile, auditory, electronic aids) used by visually impaired persons"
+          ],
+          "visualIdeas": [
+            "A grid comparing non-optical aids such as tactile aids (Braillewriter) and auditory aids (audiobooks) with optical lens aids"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "braille-system",
+          "title": "What is Braille System?",
+          "objectives": [
+            "Student can describe the Braille system as a tactile writing system featuring raised dots in cells",
+            "Student can identify that the Braille system has 63 dot patterns representing letters, numbers, and punctuation marks"
+          ],
+          "visualIdeas": [
+            "A close-up of a Braille cell showing the 6-dot grid layout, with examples of patterns representing 'A', 'B', 'C' highlighted using raised red dots"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    }
+  ]
+}

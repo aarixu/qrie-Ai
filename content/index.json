@@ -7,7 +7,7 @@
       "class": 10,
       "subject": "Science",
       "path": "class10-nutrition/lesson.json",
-      "topicRef": "class10-science/life-processes/nutrition"
+      "topicRef": "class10-science/life-processes/autotrophic-nutrition"
     },
     {
       "id": "class10-respiration",
@@ -25,7 +25,7 @@
       "class": 10,
       "subject": "Science",
       "path": "class10-heart-mini/lesson.json",
-      "topicRef": "class10-science/life-processes/heart-circulation"
+      "topicRef": "class10-science/life-processes/transportation-in-human-beings"
     },
     {
       "id": "class10-blood",
@@ -34,7 +34,7 @@
       "class": 10,
       "subject": "Science",
       "path": "class10-blood/lesson.json",
-      "topicRef": "class10-science/life-processes/blood-components"
+      "topicRef": "class10-science/life-processes/transportation-in-human-beings"
     },
     {
       "id": "class10-excretion",
@@ -43,7 +43,7 @@
       "class": 10,
       "subject": "Science",
       "path": "class10-excretion/lesson.json",
-      "topicRef": "class10-science/life-processes/excretion"
+      "topicRef": "class10-science/life-processes/excretion-in-human-beings"
     }
   ]
 }

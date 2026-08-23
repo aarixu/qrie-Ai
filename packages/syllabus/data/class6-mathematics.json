@@ -1,0 +1,639 @@
+{
+  "id": "class6-mathematics",
+  "klass": 6,
+  "subject": "Mathematics",
+  "chapters": [
+    {
+      "id": "patterns-in-mathematics",
+      "title": "Patterns in Mathematics",
+      "topics": [
+        {
+          "id": "patterns-introduction",
+          "title": "Introduction to Patterns",
+          "objectives": [
+            "Student can identify repeating visual patterns in physical designs and daily life",
+            "Student can predict the next element in a simple repeating sequence of objects or shapes"
+          ],
+          "visualIdeas": [
+            "a sequence of repeating geometric shapes like triangle, square, circle with the next slot blank",
+            "a border design showing alternating colors and orientations of leaf shapes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "patterns-in-numbers",
+          "title": "Patterns in Numbers",
+          "objectives": [
+            "Student can identify arithmetic patterns in sequences of numbers",
+            "Student can calculate the missing terms in growing or shrinking number sequences"
+          ],
+          "visualIdeas": [
+            "a list of numbers 2, 4, 6, 8 with arrows showing addition of 2 at each step",
+            "a hundred grid table highlighting multiples of 5 to show diagonal patterns"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rules-from-patterns",
+          "title": "Rules from Patterns",
+          "objectives": [
+            "Student can express a pattern rule using words",
+            "Student can determine the general rule of a sequence using variable placeholders like 'n'"
+          ],
+          "visualIdeas": [
+            "a table mapping step number to the number of matchsticks used to make a chain of triangles",
+            "a formula box highlighting the rule 'Number of matchsticks = 2n + 1'"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "visualizing-patterns",
+          "title": "Visualizing Patterns",
+          "objectives": [
+            "Student can draw geometric representations of square numbers and triangular numbers",
+            "Student can relate spatial arrangements of dots to numerical values"
+          ],
+          "visualIdeas": [
+            "dots arranged in triangles of size 1, 3, 6, 10 with equations underneath",
+            "a grid showing square numbers represented as L-shaped additions of dots"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "lines-and-angles",
+      "title": "Lines and Angles",
+      "topics": [
+        {
+          "id": "lines-and-angles-introduction",
+          "title": "Introduction to Geometry in Our Environment",
+          "objectives": [
+            "Student can point out examples of lines, intersections, and angles in physical classroom surroundings",
+            "Student can describe how shapes are made of lines and vertices"
+          ],
+          "visualIdeas": [
+            "a sketch of a window frame with horizontal, vertical, and intersecting lines highlighted",
+            "a photo of a scissor showing different openings forming varying gap sizes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "points-lines-segments",
+          "title": "Points, Lines, and Line Segments",
+          "objectives": [
+            "Student can define the difference between a point, a line segment, and an infinite line",
+            "Student can label geometric lines and line segments using uppercase letter pairs with correct notation"
+          ],
+          "visualIdeas": [
+            "a comparison chart with a point, a line segment with two endpoints, and a line with double arrows",
+            "a ruler aligned with a line segment showing its definite measurable length"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rays-and-angles",
+          "title": "Rays and Angles",
+          "objectives": [
+            "Student can define a ray as starting from one point and extending infinitely in one direction",
+            "Student can label an angle formed by two rays sharing a common vertex"
+          ],
+          "visualIdeas": [
+            "a light beam emerging from a torch to illustrate a ray starting at a point",
+            "two rays sharing vertex O, with arrows pointing to the arms and vertex"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "measuring-angles",
+          "title": "Measuring Angles",
+          "objectives": [
+            "Student can line up a protractor baseline and center mark with an angle's vertex and arm",
+            "Student can read the degree measurement of a given angle on both scales of a protractor"
+          ],
+          "visualIdeas": [
+            "a step-by-step diagram of a protractor aligned to an angle showing the inner and outer scales",
+            "an angle of 60 degrees with the arc labeled with degree symbol"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "classification-of-angles",
+          "title": "Classification of Angles",
+          "objectives": [
+            "Student can classify angles as acute, right, obtuse, straight, or reflex based on their degree measure",
+            "Student can draw angles belonging to each classification using a ruler and protractor"
+          ],
+          "visualIdeas": [
+            "a chart dividing angles into 5 types with representative drawings and their range inequalities",
+            "a rotating clock hand demonstrating acute, right, obtuse, straight, and reflex angle ranges"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "number-play",
+      "title": "Number Play",
+      "topics": [
+        {
+          "id": "number-play-introduction",
+          "title": "Introduction to Play with Numbers",
+          "objectives": [
+            "Student can define natural numbers and whole numbers",
+            "Student can arrange a set of multi-digit whole numbers in ascending and descending order"
+          ],
+          "visualIdeas": [
+            "a number line starting from zero to show whole numbers and highlighting natural numbers starting from one",
+            "a staircase visual where higher steps correspond to larger numbers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-and-multiples",
+          "title": "Factors and Multiples",
+          "objectives": [
+            "Student can list all the factors of any given number up to 100",
+            "Student can write down the first five multiples of a given single-digit number"
+          ],
+          "visualIdeas": [
+            "an array of 12 dots arranged in different rectangular layouts (1x12, 2x6, 3x4) to show factors",
+            "a number track showing skip jumping by 3s to represent multiples of 3"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "common-factors-multiples",
+          "title": "Common Factors and Common Multiples",
+          "objectives": [
+            "Student can identify common factors between two given numbers",
+            "Student can identify the first few common multiples of two given numbers"
+          ],
+          "visualIdeas": [
+            "a Venn diagram showing factors of 12 and 18 with their common factors in the overlap region",
+            "parallel number tracks for 4 and 6 with common multiples highlighted on both tracks"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "prime-composite-numbers",
+          "title": "Prime and Composite Numbers",
+          "objectives": [
+            "Student can classify any given integer up to 100 as either prime or composite",
+            "Student can explain why 1 is neither prime nor composite"
+          ],
+          "visualIdeas": [
+            "a grid representation of the Sieve of Eratosthenes showing crossed-out composites and circled primes",
+            "a definition block highlighting the two-factor rule for primes versus multiple factors for composites"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "divisibility-rules",
+          "title": "Divisibility Rules",
+          "objectives": [
+            "Student can test if a number is divisible by 2, 3, 5, 9, or 10 without performing complete division",
+            "Student can apply combination divisibility tests like divisibility by 6"
+          ],
+          "visualIdeas": [
+            "a flowchart outlining yes/no questions to test divisibility for 2, 3, 5, and 10",
+            "a color-coded breakdown of a number like 345 showing how the sum of digits 3+4+5=12 relates to divisibility by 3"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "data-handling",
+      "title": "Data Handling and Presentation",
+      "topics": [
+        {
+          "id": "data-handling-introduction",
+          "title": "Introduction to Data",
+          "objectives": [
+            "Student can explain what data is and identify examples of data collected in school and life",
+            "Student can recognize raw data versus organized data"
+          ],
+          "visualIdeas": [
+            "a random list of classroom favorite fruits compared side-by-side with a sorted list of the same fruits",
+            "a definition bubble explaining the terms 'Data', 'Information', and 'Observations'"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "collecting-recording-data",
+          "title": "Collecting and Recording Data",
+          "objectives": [
+            "Student can construct a tally marks table to organize raw observations into grouped counts",
+            "Student can read a tally frequency table to state which item occurs most or least frequently"
+          ],
+          "visualIdeas": [
+            "a dynamic step-by-step tally counter showing how four vertical lines are crossed by a fifth diagonal stroke",
+            "a complete tally table showing standard groupings of five for listing favorite sports of class students"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "pictographs",
+          "title": "Pictographs",
+          "objectives": [
+            "Student can interpret information represented by symbols in a pictograph",
+            "Student can construct a pictograph from a given table using an appropriate scale key"
+          ],
+          "visualIdeas": [
+            "a pictograph representing number of books with a book symbol equal to 5 books",
+            "a fraction of a symbol showing half the value of the standard key symbol"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "bar-graphs",
+          "title": "Bar Graphs",
+          "objectives": [
+            "Student can read a bar graph to determine quantities along the vertical and horizontal axes",
+            "Student can construct a bar graph with uniform width bars, correct labels, and equal spacing"
+          ],
+          "visualIdeas": [
+            "a labeled bar graph with colored vertical bars, horizontal grid lines, and a defined vertical axis scale",
+            "a checklist showing the essential elements of a bar graph: Title, Axes, Scale, and Uniform Spacing"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    },
+    {
+      "id": "prime-numbers-and-fractions",
+      "title": "Prime Numbers and Fractions",
+      "topics": [
+        {
+          "id": "prime-fractions-introduction",
+          "title": "Introduction to Fractions and Factors",
+          "objectives": [
+            "Student can link the concept of factors to division of objects",
+            "Student can identify a fraction as a part of a whole group or whole shape"
+          ],
+          "visualIdeas": [
+            "a whole square divided into equal parts, with some parts shaded to show the fraction concept",
+            "a collection of items grouped into subsets to illustrate part-of-a-collection fractions"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "prime-factorisation",
+          "title": "Prime Factorisation",
+          "objectives": [
+            "Student can factorise any composite number into a product of prime numbers using a factor tree",
+            "Student can write down the prime factorisation of a number in power or product format"
+          ],
+          "visualIdeas": [
+            "a factor tree branching out from 36 down to its prime factors 2, 2, 3, 3",
+            "a division ladder displaying division by consecutive prime numbers to reach prime factorisation"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "highest-common-factor",
+          "title": "Highest Common Factor (HCF)",
+          "objectives": [
+            "Student can calculate the Highest Common Factor (HCF) of two or three numbers using prime factorisation",
+            "Student can solve simple daily life problems requiring the division of quantities into maximum equal portions"
+          ],
+          "visualIdeas": [
+            "parallel factorisations of two numbers with common factors highlighted and multiplied to find the HCF",
+            "a sketch of two containers of different capacities being measured exactly by a common third measuring can"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "lowest-common-multiple",
+          "title": "Lowest Common Multiple (LCM)",
+          "objectives": [
+            "Student can calculate the Lowest Common Multiple (LCM) of two or three numbers using prime factorisation",
+            "Student can solve real-world problems involving simultaneous events occurring at regular intervals"
+          ],
+          "visualIdeas": [
+            "a table showing the step-by-step division method for finding the LCM of multiple numbers simultaneously",
+            "a timeline showing two bells ringing at intervals of 3 and 4 seconds, intersecting at 12 seconds"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "introduction-to-fractions",
+          "title": "Fractions and Fraction Types",
+          "objectives": [
+            "Student can classify fractions into proper, improper, and mixed fractions",
+            "Student can convert an improper fraction to a mixed fraction and vice versa"
+          ],
+          "visualIdeas": [
+            "a chart showing a proper fraction with numerator less than denominator next to an improper fraction with the reverse",
+            "diagrams showing 5 halves equivalent to 2 whole blocks and 1 half block"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "fractions-on-number-line",
+          "title": "Fractions on the Number Line",
+          "objectives": [
+            "Student can represent a given fraction as a point on a number line with equal subdivisions",
+            "Student can locate mixed numbers between correct consecutive whole numbers on the number line"
+          ],
+          "visualIdeas": [
+            "a portion of a number line between 0 and 1 divided into three equal segments to label 1/3 and 2/3",
+            "a zoom-in of a ruler between 2 and 3 showing the location of 2 and 1/2"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "operations-on-fractions",
+      "title": "Operations on Fractions",
+      "topics": [
+        {
+          "id": "equivalent-fractions",
+          "title": "Equivalent Fractions",
+          "objectives": [
+            "Student can construct equivalent fractions by multiplying or dividing numerator and denominator by the same number",
+            "Student can simplify a given fraction to its lowest terms"
+          ],
+          "visualIdeas": [
+            "three circle fraction diagrams showing 1/2, 2/4, and 4/8 with equal shaded areas",
+            "equations showing the division of numerator and denominator by their HCF to simplify a fraction"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "addition-subtraction-fractions",
+          "title": "Addition and Subtraction of Fractions",
+          "objectives": [
+            "Student can add and subtract fractions with like denominators",
+            "Student can calculate the sum and difference of unlike fractions using LCM to find common denominators"
+          ],
+          "visualIdeas": [
+            "a bar model showing 1/5 plus 2/5 resulting in a shaded area of 3/5",
+            "a step-by-step algebraic layout converting 1/2 and 1/3 to 3/6 and 2/6 before adding"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "multiplication-fractions",
+          "title": "Multiplication of Fractions",
+          "objectives": [
+            "Student can multiply a fraction by a whole number and interpret it as repeated addition",
+            "Student can multiply two fractions by multiplying numerators and denominators"
+          ],
+          "visualIdeas": [
+            "three individual blocks of size 1/4 joined together to equal 3/4",
+            "a grid representation where the overlap of vertical shading of 1/2 and horizontal shading of 2/3 shows their product"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "division-fractions",
+          "title": "Division of Fractions",
+          "objectives": [
+            "Student can calculate the reciprocal of a fraction",
+            "Student can divide a fraction by another fraction or whole number by multiplying by the reciprocal"
+          ],
+          "visualIdeas": [
+            "a diagram illustrating how many halves are in 3 wholes using divided circle circles",
+            "a text box showing the conversion from 'divided by 3/4' to 'multiplied by 4/3'"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "decimals",
+      "title": "Decimals",
+      "topics": [
+        {
+          "id": "decimals-introduction",
+          "title": "Introduction to Decimals",
+          "objectives": [
+            "Student can explain tenths and hundredths as parts of a whole",
+            "Student can write down values represented on a place value table with decimal columns"
+          ],
+          "visualIdeas": [
+            "a grid of 10 blocks with 1 column colored to represent 0.1 or one-tenth",
+            "a place value chart containing Hundreds, Tens, Ones, tenths, hundredths, and thousandths with a vertical line marking the decimal point"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "decimals-as-fractions",
+          "title": "Decimals as Fractions and Vice Versa",
+          "objectives": [
+            "Student can convert a decimal into a fraction in its simplest terms",
+            "Student can write any fraction with a denominator of 10, 100, or 1000 in decimal notation"
+          ],
+          "visualIdeas": [
+            "equations showing 0.25 written as 25/100, which then simplifies step-by-step to 1/4",
+            "a comparative scale aligning decimals 0.1, 0.2, 0.3... with fractions 1/10, 2/10, 3/10..."
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "comparing-decimals",
+          "title": "Comparing Decimals",
+          "objectives": [
+            "Student can compare two decimals to identify the greater one by looking at place values from left to right",
+            "Student can order a set of decimal numbers in ascending and descending order"
+          ],
+          "visualIdeas": [
+            "two decimal numbers 12.34 and 12.38 aligned vertically with the difference in the hundredths place highlighted",
+            "a list of decimal numbers ordered on a vertical staircase indicating increase in value"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "addition-subtraction-decimals",
+          "title": "Addition and Subtraction of Decimals",
+          "objectives": [
+            "Student can align decimal numbers vertically with their decimal points in a single line before adding or subtracting",
+            "Student can solve word problems involving weights, lengths, or currency calculations with decimals"
+          ],
+          "visualIdeas": [
+            "a column addition problem showing placeholder zeros added to ensure equal decimal length alignment",
+            "a diagram of a shopping receipt where different item costs in Rupees and paise are aligned and totaled"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "symmetry",
+      "title": "Symmetry",
+      "topics": [
+        {
+          "id": "symmetry-introduction",
+          "title": "Introduction to Symmetry",
+          "objectives": [
+            "Student can identify symmetric structures and patterns in nature, monuments, and artwork",
+            "Student can describe symmetry in their own words as a balanced proportion of halves"
+          ],
+          "visualIdeas": [
+            "a drawing of a butterfly and a leaf showing a split down the middle",
+            "a photo of the Taj Mahal showing the architectural balance on both sides of the central axis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "line-symmetry",
+          "title": "Line Symmetry",
+          "objectives": [
+            "Student can test for line symmetry in shapes by folding them along an axis",
+            "Student can complete a partially drawn symmetric shape when the line of symmetry is given"
+          ],
+          "visualIdeas": [
+            "a paper folding illustration showing how one half of a heart shape matches the other perfectly",
+            "a grid worksheet with a dotted red line of symmetry and a half-drawn house shape to be mirrored"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "rotational-symmetry",
+          "title": "Rotational Symmetry",
+          "objectives": [
+            "Student can identify figures that look identical after rotation of less than 360 degrees",
+            "Student can state the order of rotational symmetry of common geometric shapes"
+          ],
+          "visualIdeas": [
+            "a windmill toy showing how rotating it by 90 degrees leaves its appearance unchanged",
+            "a step-by-step rotational sequence of an equilateral triangle showing matches at 120, 240, and 360 degrees"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "multiple-lines-symmetry",
+          "title": "Figures with Multiple Lines of Symmetry",
+          "objectives": [
+            "Student can construct and count the multiple axes of symmetry in regular polygons",
+            "Student can compare shapes based on the number of lines of symmetry they possess"
+          ],
+          "visualIdeas": [
+            "an equilateral triangle with 3 lines of symmetry, a square with 4 lines, and a circle with infinite lines",
+            "a comparative table displaying polygons, their sides, and their corresponding number of symmetry axes"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "perimeter-and-area",
+      "title": "Perimeter and Area",
+      "topics": [
+        {
+          "id": "perimeter-area-introduction",
+          "title": "Understanding Perimeter and Area",
+          "objectives": [
+            "Student can distinguish between the boundary measurement (perimeter) and surface region (area) of shapes",
+            "Student can identify units used to measure perimeter versus area"
+          ],
+          "visualIdeas": [
+            "a diagram of a field with the fence highlighted in blue (perimeter) and the grass shaded in green (area)",
+            "a label box showing the comparison of 'cm' and 'm' for perimeter with 'sq.cm' and 'sq.m' for area"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "perimeter",
+          "title": "Perimeter of Regular and Irregular Polygons",
+          "objectives": [
+            "Student can calculate the perimeter of any polygon by summing all of its outer side lengths",
+            "Student can apply formulas to calculate the perimeter of squares, equilateral triangles, and rectangles"
+          ],
+          "visualIdeas": [
+            "an irregular pentagon with each of its five side lengths labeled and an addition equation underneath",
+            "a formula breakdown graphic showing 'Perimeter of a Rectangle = 2 x (Length + Breadth)' with dimensions"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "area",
+          "title": "Area by Grid Counting",
+          "objectives": [
+            "Student can estimate the area of any closed shape drawn on a squared grid paper by counting full, half, and more-than-half squares",
+            "Student can state why grid squares are standard units of area measurement"
+          ],
+          "visualIdeas": [
+            "a leaf silhouette placed over a square grid with counted squares marked with checkmarks and fractions",
+            "a standard square of size 1 cm by 1 cm labeled as 1 square centimeter"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "area-rectangle-square",
+          "title": "Area of Rectangles and Squares",
+          "objectives": [
+            "Student can derive the area formula of a rectangle by grid arrangement of unit squares",
+            "Student can calculate the area of squares and rectangles given their side dimensions"
+          ],
+          "visualIdeas": [
+            "a rectangle of length 5 cm and width 3 cm filled with 15 individual 1-sq-cm grid tiles",
+            "formula text boxes for Area of Rectangle (l x b) and Area of Square (side x side) with worked numerical examples"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "algebraic-thinking",
+      "title": "Algebraic Thinking",
+      "topics": [
+        {
+          "id": "algebraic-thinking-introduction",
+          "title": "Introduction to Algebra",
+          "objectives": [
+            "Student can differentiate between arithmetic expressions using numbers and algebraic statements using variables",
+            "Student can identify the unknown parts in a mathematical relation"
+          ],
+          "visualIdeas": [
+            "a balance scale comparing a known weight side (5 + 3) to a side with a mystery bag (x + 2)",
+            "a slide contrasting arithmetic equations with algebraic expressions containing letters"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "variables",
+          "title": "The Concept of Variables",
+          "objectives": [
+            "Student can describe a variable as a symbol or letter that can stand for any number in a set",
+            "Student can use variables to state simple mathematical rules like geometry perimeter formulas"
+          ],
+          "visualIdeas": [
+            "a sequence of matchstick squares with a rule box showing variables representing variable counts",
+            "a character explaining that letter symbols represent changing numerical values"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "expressions-with-variables",
+          "title": "Expressions with Variables",
+          "objectives": [
+            "Student can translate verbal statements into algebraic expressions",
+            "Student can construct numerical values of an expression by substituting given numbers for variables"
+          ],
+          "visualIdeas": [
+            "a matching game layout with verbal cards like '5 more than x' connecting to expression cards like 'x + 5'",
+            "a step-by-step substitution flow showing 'Evaluate 3y + 4 for y = 2' leading to '3(2) + 4 = 10'"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "equations",
+          "title": "Concept of an Equation",
+          "objectives": [
+            "Student can explain an equation as a condition on a variable where two sides are equal",
+            "Student can solve simple equations using the trial-and-error inspection method"
+          ],
+          "visualIdeas": [
+            "a balanced scale where left pan 'x + 3' balances right pan '7', showing x must be equal to 4",
+            "a trial-and-error value table testing different values of x to see which one makes the equation LHS equal RHS"
+          ],
+          "estMinutes": 30
+        }
+      ]
+    }
+  ]
+}

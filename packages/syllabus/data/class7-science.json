@@ -1,0 +1,586 @@
+{
+  "id": "class7-science",
+  "klass": 7,
+  "subject": "Science",
+  "chapters": [
+    {
+      "id": "the-wonderful-world-of-science",
+      "title": "The Wonderful World of Science",
+      "topics": [
+        {
+          "id": "science-around-us",
+          "title": "Science Around Us",
+          "objectives": [
+            "Student can identify scientific phenomena in daily life activities like cooking, rusting, and weather changes",
+            "Student can list three daily observations that can be investigated scientifically"
+          ],
+          "visualIdeas": [
+            "a collage of daily activities such as boiling milk, a plant growing, and a rusting nail with magnifying glasses over them",
+            "a table comparing common sense assumptions with scientifically verified facts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "asking-questions-and-exploring",
+          "title": "Asking Questions and Exploring",
+          "objectives": [
+            "Student can formulate questions about natural events starting with why, how, and what",
+            "Student can classify questions into testable and non-testable categories"
+          ],
+          "visualIdeas": [
+            "a flowchart showing a question branching into testable by experiment and not testable by experiment",
+            "illustrations of a curious child observing a falling leaf and writing down questions on a notepad"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "scientific-methods-of-enquiry",
+          "title": "Scientific Methods of Enquiry",
+          "objectives": [
+            "Student can arrange the steps of a scientific investigation in the correct chronological order",
+            "Student can draw a simple diagram representing the cycle of hypothesis, experiment, observation, and conclusion"
+          ],
+          "visualIdeas": [
+            "a circular cycle chart of the scientific method steps with distinct colored blocks",
+            "a comic strip of a student solving the mystery of a flashlight not working by checking its batteries"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "diversity-in-the-living-world",
+      "title": "Diversity in the Living World",
+      "topics": [
+        {
+          "id": "plants-around-us",
+          "title": "Plants Around Us",
+          "objectives": [
+            "Student can classify plants into herbs, shrubs, trees, climbers, and creepers based on their stem structure and height",
+            "Student can draw and label the root system, stem, leaves, and flowers of a typical plant"
+          ],
+          "visualIdeas": [
+            "a comparison grid showing drawings of a coriander plant, rose bush, mango tree, money plant, and pumpkin plant",
+            "a detailed labelled diagram of a plant showing root, shoot, leaf, and flower"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "animals-around-us",
+          "title": "Animals Around Us",
+          "objectives": [
+            "Student can categorize animals based on their habitats like terrestrial, aquatic, aerial, and arboreal",
+            "Student can identify outer physical body structures of animals that assist in movement"
+          ],
+          "visualIdeas": [
+            "a landscape drawing depicting aerial, arboreal, terrestrial, and aquatic zones",
+            "close-up drawings of a fish fin, a bird wing, and a dog leg highlighting movement structures"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "grouping-plants-and-animals",
+          "title": "Grouping Plants and Animals",
+          "objectives": [
+            "Student can group a given list of organisms based on shared physical characteristics",
+            "Student can state the similarities and differences between plants and animals"
+          ],
+          "visualIdeas": [
+            "a Venn diagram comparing plants and animals based on movement, food synthesis, and cellular structure",
+            "a sorting game layout with drag-and-drop boxes for grouping birds, insects, and mammals"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "why-classify",
+          "title": "Why Classify",
+          "objectives": [
+            "Student can explain the necessity of classification in studying a large variety of organisms efficiently",
+            "Student can identify how classification systems help in naming and organizing new discoveries"
+          ],
+          "visualIdeas": [
+            "a split illustration showing a messy pile of books versus a neatly organized library shelf",
+            "a tree diagram showing the hierarchical division of living things into broad kingdoms down to individual species"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Mindful Eating: A Path to a Healthy Body",
+      "topics": [
+        {
+          "id": "what-is-in-our-food",
+          "title": "What is in Our Food",
+          "objectives": [
+            "Student can list the major food items consumed across different regions of India",
+            "Student can identify the raw ingredients used to prepare common food dishes"
+          ],
+          "visualIdeas": [
+            "an outline map of India with popular regional dishes represented pictorially",
+            "a recipe breakout diagram showing a plate of rice pudding connected by lines to its raw ingredients"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nutrients-in-food",
+          "title": "Nutrients in Food",
+          "objectives": [
+            "Student can name the five main classes of nutrients required by the human body",
+            "Student can match each nutrient to its primary role as energy-giving, body-building, or protective"
+          ],
+          "visualIdeas": [
+            "a segmented plate displaying carbohydrates, fats, proteins, vitamins, and minerals with corresponding food sources",
+            "a table classifying nutrients into energy providers, growth promoters, and disease fighters"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "testing-for-nutrients",
+          "title": "Testing for Nutrients",
+          "objectives": [
+            "Student can describe the steps of testing for the presence of starch, proteins, and fats in a food sample",
+            "Student can identify the positive color change reactions for iodine, copper sulfate, and caustic soda tests"
+          ],
+          "visualIdeas": [
+            "a step-by-step chemical test strip drawing showing iodine solution turning blue-black on a potato slice",
+            "a visual sequence of adding copper sulfate and caustic soda to milk, turning it violet"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "balanced-diet-and-deficiencies",
+          "title": "Balanced Diet and Deficiencies",
+          "objectives": [
+            "Student can design a balanced diet chart using locally available, inexpensive food materials",
+            "Student can match common deficiency diseases like scurvy, rickets, and anemia with the lack of specific vitamins or minerals"
+          ],
+          "visualIdeas": [
+            "a balanced food plate showing correct proportions of grains, vegetables, proteins, and dairy",
+            "a simple reference table listing vitamin/mineral deficiencies and symptoms with illustrative cartoon icons"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "exploring-magnets",
+      "title": "Exploring Magnets",
+      "topics": [
+        {
+          "id": "magnetic-and-non-magnetic-materials",
+          "title": "Magnetic and Non-magnetic Materials",
+          "objectives": [
+            "Student can distinguish between magnetic and non-magnetic substances using a bar magnet",
+            "Student can list common daily materials made of iron, nickel, or cobalt that are attracted to magnets"
+          ],
+          "visualIdeas": [
+            "an interactive sorting basket containing a steel key, plastic spoon, copper wire, iron nail, and paper",
+            "a bar magnet with curved magnetic field lines attracting iron paper clips while ignoring wooden pencils"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "poles-of-a-magnet",
+          "title": "Poles of a Magnet",
+          "objectives": [
+            "Student can locate the north and south poles of a magnet by observing the accumulation of iron filings",
+            "Student can state that magnetic poles always exist in pairs and cannot be isolated"
+          ],
+          "visualIdeas": [
+            "a bar magnet dipped in iron filings, showing thick clusters of filings at the two ends",
+            "a sequence drawing showing a bar magnet being cut in half, with new poles appearing on each broken piece"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "finding-directions-with-a-magnet",
+          "title": "Finding Directions with a Magnet",
+          "objectives": [
+            "Student can explain how a freely suspended bar magnet aligns itself in the north-south direction",
+            "Student can draw the structural components of a magnetic compass"
+          ],
+          "visualIdeas": [
+            "a suspended bar magnet tied to a thread from a wooden stand, pointing north-south with a compass underneath",
+            "a top-down view of a classic compass dial with the needle pointing to the North mark"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "magnetic-attraction-and-repulsion",
+          "title": "Magnetic Attraction and Repulsion",
+          "objectives": [
+            "Student can state the rule of magnetic interaction between like and unlike poles",
+            "Student can predict the movement of two toy cars fitted with magnets when brought close to each other"
+          ],
+          "visualIdeas": [
+            "two pairs of bar magnets showing north-south attracting and north-north repelling",
+            "a cartoon diagram of magnetic toy cars demonstrating push and pull forces"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "measurement-of-distance-and-motion",
+      "title": "Measurement of Distance and Motion",
+      "topics": [
+        {
+          "id": "measuring-distances",
+          "title": "Measuring Distances",
+          "objectives": [
+            "Student can explain why non-standard units of measurement like handspan, cubit, and footstep vary from person to person",
+            "Student can estimate simple lengths using everyday objects before measuring them accurately"
+          ],
+          "visualIdeas": [
+            "an illustration comparing two people measuring the same table using their handspans, showing different counts",
+            "a standard measuring tape and ruler placed next to objects of varying lengths"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "standard-units-of-measurement",
+          "title": "Standard Units of Measurement",
+          "objectives": [
+            "Student can state the SI units of length, mass, and time",
+            "Student can convert lengths from kilometers to meters, meters to centimeters, and centimeters to millimeters"
+          ],
+          "visualIdeas": [
+            "a metric conversion ladder showing multipliers of 10, 100, and 1000 between standard units",
+            "a timeline of standard measurement benchmarks like the international prototype metre"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-motion",
+          "title": "Types of Motion",
+          "objectives": [
+            "Student can differentiate between rectilinear, circular, and periodic motion with examples",
+            "Student can classify the movements of a swinging pendulum, a spinning top, and a falling stone"
+          ],
+          "visualIdeas": [
+            "a tripartite panel showing a car driving straight, a stone tied to a string spinning, and a pendulum swinging",
+            "a diagram of a sewing machine highlighting the circular motion of its wheel and periodic motion of its needle"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "materials-around-us",
+      "title": "Materials Around Us",
+      "topics": [
+        {
+          "id": "identifying-materials",
+          "title": "Identifying Materials",
+          "objectives": [
+            "Student can identify the material from which a given household object is made",
+            "Student can list multiple objects that can be manufactured from a single material like wood or plastic"
+          ],
+          "visualIdeas": [
+            "a diagram showing wood in the center, connected to a chair, a table, a toy, and a pencil",
+            "a table mapping objects to the diverse materials they are made of"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-materials",
+          "title": "Properties of Materials",
+          "objectives": [
+            "Student can classify materials based on properties like appearance, hardness, solubility, and transparency",
+            "Student can explain why certain materials are chosen to make specific products, such as metal for cooking pots"
+          ],
+          "visualIdeas": [
+            "a split visual of a shiny metal key versus a dull wooden stick to demonstrate lustre",
+            "a comparative diagram of a hard iron block and a soft sponge being pressed"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "classification-of-materials",
+          "title": "Classification of Materials",
+          "objectives": [
+            "Student can group objects as transparent, translucent, or opaque based on light transmission",
+            "Student can categorize substances as soluble or insoluble in water through experimental observation"
+          ],
+          "visualIdeas": [
+            "three glass panes showing clear view, blurry view, and blocked view of a flower",
+            "two beakers, one with salt dissolving completely and another with sand settling at the bottom"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "temperature-and-its-measurement",
+      "title": "Temperature and its Measurement",
+      "topics": [
+        {
+          "id": "concept-of-temperature",
+          "title": "Concept of Temperature",
+          "objectives": [
+            "Student can explain why relying on the sense of touch is unreliable for determining hotness or coldness",
+            "Student can define temperature as the measure of the degree of hotness of an object"
+          ],
+          "visualIdeas": [
+            "an experiment diagram showing three bowls with hands dipping into hot, cold, and lukewarm water",
+            "a scale showing the transition from ice-cold blue to fiery-hot red with temperature values"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "measuring-temperature",
+          "title": "Measuring Temperature",
+          "objectives": [
+            "Student can state the unit of temperature measurement in Celsius and Fahrenheit scales",
+            "Student can read the temperature value from a thermometer scale correctly by aligning the eye level with the mercury meniscus"
+          ],
+          "visualIdeas": [
+            "a close-up of a thermometer scale with a correct eye level indicator line perpendicular to the scale",
+            "a comparison of Celsius and Fahrenheit marking ranges side by side"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "thermometers",
+          "title": "Thermometers",
+          "objectives": [
+            "Student can compare the features, temperature ranges, and uses of clinical and laboratory thermometers",
+            "Student can explain the function of the kink in a clinical thermometer"
+          ],
+          "visualIdeas": [
+            "a side-by-side comparison drawing of a long laboratory thermometer and a shorter clinical thermometer with the kink magnified",
+            "a modern digital thermometer display showing a body temperature reading"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "a-journey-through-states-of-water",
+      "title": "A Journey through States of Water",
+      "topics": [
+        {
+          "id": "water-in-different-states",
+          "title": "Water in Different States",
+          "objectives": [
+            "Student can identify the three states of water and the temperatures at which they transition",
+            "Student can explain the arrangement of water molecules in ice, liquid water, and water vapor"
+          ],
+          "visualIdeas": [
+            "a triangle diagram showing ice, liquid water, and steam at the corners, with arrows showing melting, boiling, freezing, and condensation",
+            "molecular representations of solid, liquid, and gaseous water inside tiny magnifying circles"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "evaporation-and-condensation",
+          "title": "Evaporation and Condensation",
+          "objectives": [
+            "Student can explain the process of evaporation and list the factors that accelerate it",
+            "Student can describe condensation using the example of water droplets forming on a cold glass surface"
+          ],
+          "visualIdeas": [
+            "a wet shirt hanging on a clothesline under the sun with wavy arrows showing water evaporating",
+            "a glass filled with ice cubes showing water droplets forming on its outer surface"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-water-cycle",
+          "title": "The Water Cycle",
+          "objectives": [
+            "Student can draw and label the steps of the water cycle including evaporation, transpiration, condensation, and precipitation",
+            "Student can describe how groundwater is replenished by rainwater harvesting and infiltration"
+          ],
+          "visualIdeas": [
+            "a landscape diagram showing mountains, a river, a forest, clouds, rain, and underground water with directional flow arrows",
+            "a schematic diagram of a house showing rooftop rainwater harvesting pipes leading to an underground pit"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "methods-of-separation-of-substances",
+      "title": "Methods of Separation of Substances",
+      "topics": [
+        {
+          "id": "need-for-separation",
+          "title": "Need for Separation",
+          "objectives": [
+            "Student can list three reasons for separating substances from a mixture with daily examples",
+            "Student can distinguish between useful components, useless components, and impurities in a mixture"
+          ],
+          "visualIdeas": [
+            "a table with three columns: Mixture, Purpose of Separation, and action taken",
+            "an image of tea leaves being separated from tea using a strainer"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "simple-methods-of-separation",
+          "title": "Simple Methods of Separation",
+          "objectives": [
+            "Student can describe and choose the correct methods among handpicking, winnowing, threshing, and sieving for a given dry mixture",
+            "Student can explain how differences in size and weight of particles are exploited in these separation methods"
+          ],
+          "visualIdeas": [
+            "a farmer throwing grain from a height to let the wind blow away the lighter husk",
+            "a worker using a large mesh screen to separate pebbles from construction sand"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "separation-using-water",
+          "title": "Separation Using Water",
+          "objectives": [
+            "Student can explain the processes of sedimentation, decantation, and filtration for muddy water",
+            "Student can set up a simple paper filter cone to purify an insoluble solid-liquid mixture"
+          ],
+          "visualIdeas": [
+            "a sequential three-step diagram showing sedimentation, decantation, and filtration",
+            "a detailed view of folding circular filter paper into a cone shape"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "living-creatures-exploring-their-characteristics",
+      "title": "Living Creatures: Exploring their Characteristics",
+      "topics": [
+        {
+          "id": "characteristics-of-life",
+          "title": "Characteristics of Life",
+          "objectives": [
+            "Student can list the seven vital characteristics that distinguish living organisms from non-living things",
+            "Student can compare how plants and animals respond to external stimuli like light and touch"
+          ],
+          "visualIdeas": [
+            "a circular radial infographic with icons for growth, movement, respiration, nutrition, excretion, reproduction, and sensitivity",
+            "a two-panel drawing of a Mimosa plant before and after being touched"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "habitats-of-living-beings",
+          "title": "Habitats of Living Beings",
+          "objectives": [
+            "Student can define a habitat and differentiate between terrestrial and aquatic habitats",
+            "Student can list biotic and abiotic components that make up an ecosystem"
+          ],
+          "visualIdeas": [
+            "a divided scene depicting a desert habitat and a pond habitat",
+            "a chart showing abiotic factors surrounding biotic organisms"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "adaptation-to-environments",
+          "title": "Adaptation to Environments",
+          "objectives": [
+            "Student can identify the structural adaptations of a camel for desert survival and a fish for underwater survival",
+            "Student can explain how leaf modification in mountain trees helps them cope with snow and high winds"
+          ],
+          "visualIdeas": [
+            "a camel illustration with callouts highlighting its structural adaptations",
+            "a pine tree with needle-shaped leaves and a sloping canopy showing snow sliding off easily"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "natures-treasures-resources-around-us",
+      "title": "Nature's Treasures: Resources Around Us",
+      "topics": [
+        {
+          "id": "air-water-and-soil",
+          "title": "Air, Water, and Soil",
+          "objectives": [
+            "Student can state the composition of clean air and the role of each component",
+            "Student can explain the importance of topsoil for plant growth and agricultural productivity"
+          ],
+          "visualIdeas": [
+            "a pie chart of air composition highlighting Nitrogen, Oxygen, Carbon dioxide, and other gases",
+            "a cross-sectional diagram of soil profile showing topsoil with organic matter, subsoil, and bedrock layers"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "forest-resources",
+          "title": "Forest Resources",
+          "objectives": [
+            "Student can list five crucial resources obtained directly from forests",
+            "Student can describe how forests maintain the balance of oxygen and carbon dioxide in the atmosphere"
+          ],
+          "visualIdeas": [
+            "a central tree surrounded by branches representing products like wood, medicine, honey, gum, and fodder",
+            "a balance scale diagram showing plants taking in CO2 and releasing O2, balanced with animals doing the reverse"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "protecting-our-resources",
+          "title": "Protecting Our Resources",
+          "objectives": [
+            "Student can list actions that cause soil erosion, air pollution, and water scarcity",
+            "Student can suggest three sustainable habits to reduce, reuse, and recycle natural resources in daily life"
+          ],
+          "visualIdeas": [
+            "a contrasting split image of a polluted river next to a pristine, clean river with waste management systems",
+            "the 3Rs symbol illustrated with everyday household items"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "beyond-earth-our-place-in-the-universe",
+      "title": "Beyond Earth: Our Place in the Universe",
+      "topics": [
+        {
+          "id": "the-night-sky-and-stars",
+          "title": "The Night Sky and Stars",
+          "objectives": [
+            "Student can identify constellations like Ursa Major and Orion from a stellar map",
+            "Student can trace the position of the Pole Star using the pointer stars of Ursa Major"
+          ],
+          "visualIdeas": [
+            "a star chart of the night sky highlighting the seven stars of the Big Dipper pointing towards the bright Pole Star",
+            "an illustration of constellations superimposed with their traditional shapes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-solar-system",
+          "title": "The Solar System",
+          "objectives": [
+            "Student can list the eight planets of the Solar System in their correct order of distance from the Sun",
+            "Student can differentiate between inner rocky planets and outer gaseous planets"
+          ],
+          "visualIdeas": [
+            "a full illustration of the Solar System showing orbits of the eight planets around the Sun, with an asteroid belt separating inner and outer planets",
+            "a comparative sizing chart of the planets side-by-side"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "earth-and-moon",
+          "title": "Earth and Moon",
+          "objectives": [
+            "Student can explain how Earth's rotation causes day and night",
+            "Student can draw the phases of the Moon as seen from Earth over a lunar month"
+          ],
+          "visualIdeas": [
+            "a diagram showing a light source shining on one side of a rotating globe, creating day and night",
+            "a circular arrangement of the Moon in various positions around Earth showing how the sunlit portion changes shape"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    }
+  ]
+}

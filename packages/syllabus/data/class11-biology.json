@@ -1,0 +1,3030 @@
+{
+  "id": "class11-biology",
+  "klass": 11,
+  "subject": "Biology",
+  "chapters": [
+    {
+      "id": "the-living-world",
+      "title": "The Living World",
+      "topics": [
+        {
+          "id": "diversity-in-the-living-world",
+          "title": "Diversity in the Living World",
+          "objectives": [
+            "Student can define biodiversity and estimate the number of described species",
+            "Student can explain the need for standardized naming using binomial nomenclature",
+            "Student can apply the rules of binomial nomenclature to write scientific names correctly"
+          ],
+          "visualIdeas": [
+            "a flow diagram representing the pathway from identification to nomenclature and classification",
+            "a comparison chart showing handwritten vs printed formats of Mangifera indica"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "taxonomic-categories",
+          "title": "Taxonomic Categories",
+          "objectives": [
+            "Student can define taxonomic hierarchy and taxon with examples",
+            "Student can order the taxonomic categories from species up to kingdom"
+          ],
+          "visualIdeas": [
+            "an ascending staircase diagram showing taxonomic ranks from Species to Kingdom",
+            "a nested circle diagram illustrating how multiple genera fit into a family"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "species",
+          "title": "Species",
+          "objectives": [
+            "Student can define a biological species based on distinct morphological differences",
+            "Student can identify the specific epithet in scientific names like Solanum tuberosum"
+          ],
+          "visualIdeas": [
+            "side-by-side drawings of Solanum tuberosum and Solanum melongena highlighting morphological differences"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "genus",
+          "title": "Genus",
+          "objectives": [
+            "Student can explain the relationship between species and genus",
+            "Student can list multiple species that belong to the genus Panthera"
+          ],
+          "visualIdeas": [
+            "a bracket tree diagram showing Panthera leo, Panthera pardus, and Panthera tigris branching from Panthera"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "family",
+          "title": "Family",
+          "objectives": [
+            "Student can classify genera into families based on vegetative and reproductive features",
+            "Student can compare the family Solanaceae with Felidae in terms of taxonomic level"
+          ],
+          "visualIdeas": [
+            "a two-column table comparing plant families like Solanaceae with animal families like Felidae and Canidae"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "order",
+          "title": "Order",
+          "objectives": [
+            "Student can identify the basis on which families are aggregated into orders",
+            "Student can list the families that belong to the order Polymoniales and Carnivora"
+          ],
+          "visualIdeas": [
+            "a taxonomic branch showing Felidae and Canidae joining under the order Carnivora"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "class",
+          "title": "Class",
+          "objectives": [
+            "Student can group related orders into a single class",
+            "Student can identify the common characteristics of the class Mammalia"
+          ],
+          "visualIdeas": [
+            "a diagram showing orders Primata and Carnivora grouped under the category Class Mammalia"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "phylum",
+          "title": "Phylum",
+          "objectives": [
+            "Student can explain the criteria used to group classes into a phylum or division",
+            "Student can state the diagnostic features of phylum Chordata"
+          ],
+          "visualIdeas": [
+            "a schematic sketch of a chordate body showing the presence of a notochord and dorsal hollow nerve cord"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "kingdom",
+          "title": "Kingdom",
+          "objectives": [
+            "Student can identify the highest category in the taxonomic hierarchy",
+            "Student can contrast the fundamental criteria of Kingdom Animalia and Kingdom Plantae"
+          ],
+          "visualIdeas": [
+            "a complete taxonomic hierarchy tree summing up all categories from Species to Kingdom for a human and a housefly"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "biological-classification",
+      "title": "Biological Classification",
+      "topics": [
+        {
+          "id": "kingdom-monera",
+          "title": "Kingdom Monera",
+          "objectives": [
+            "Student can identify bacteria as the sole members of Kingdom Monera",
+            "Student can classify bacteria into four categories based on their shape"
+          ],
+          "visualIdeas": [
+            "drawings of the four bacterial shapes: Cocci (spherical), Bacilli (rod-shaped), Spirilla (spiral), and Vibrio (comma-shaped)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "archaebacteria",
+          "title": "Archaebacteria",
+          "objectives": [
+            "Student can list the extreme habitats where halophiles, thermoacidophiles, and methanogens survive",
+            "Student can explain the structural difference that allows archaebacteria to survive extreme conditions"
+          ],
+          "visualIdeas": [
+            "a cartoon illustration of extreme environments like hot springs, salt marshes, and a cow's rumen, populated by archaebacteria"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "eubacteria",
+          "title": "Eubacteria",
+          "objectives": [
+            "Student can distinguish between autotrophic and heterotrophic eubacteria",
+            "Student can describe the structure of a filamentous blue-green alga containing heterocysts"
+          ],
+          "visualIdeas": [
+            "a labelled diagram of Nostoc showing the mucilaginous sheath and specialized nitrogen-fixing cells called heterocysts"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "kingdom-protista",
+          "title": "Kingdom Protista",
+          "objectives": [
+            "Student can list the primary characteristics of single-celled eukaryotic organisms in Kingdom Protista",
+            "Student can identify the major subgroups belonging to Kingdom Protista"
+          ],
+          "visualIdeas": [
+            "a mind map branching from Kingdom Protista into its five major subgroups with quick illustrative icons for each"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "chrysophytes",
+          "title": "Chrysophytes",
+          "objectives": [
+            "Student can describe the wall structure of diatoms and their deposition as diatomaceous earth",
+            "Student can explain why diatoms are considered the chief producers in the oceans"
+          ],
+          "visualIdeas": [
+            "a cross-section of overlapping diatom shells resembling a soap box, highlighted with silica deposits"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "dinoflagellates",
+          "title": "Dinoflagellates",
+          "objectives": [
+            "Student can describe the arrangement of flagella in dinoflagellates",
+            "Student can explain the phenomenon of red tides caused by Gonyaulax"
+          ],
+          "visualIdeas": [
+            "a detailed sketch of a dinoflagellate highlighting the longitudinal and transverse flagella in the cell wall furrows"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "euglenoids",
+          "title": "Euglenoids",
+          "objectives": [
+            "Student can explain the mixotrophic nutrition mode of Euglena in light and darkness",
+            "Student can identify the role of the protein-rich layer called pellicle in Euglena"
+          ],
+          "visualIdeas": [
+            "a labelled structure of Euglena showing the pellicle, photoreceptor eye spot, and two unequal flagella"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "slime-moulds",
+          "title": "Slime Moulds",
+          "objectives": [
+            "Student can define plasmodium and explain its formation during favorable conditions",
+            "Student can describe the survival strategy of slime moulds under unfavorable conditions using spores"
+          ],
+          "visualIdeas": [
+            "a lifecycle-like sequential sketch showing an amorphous plasmodium transforming into fruiting bodies with wall-bearing spores"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "protozoans",
+          "title": "Protozoans",
+          "objectives": [
+            "Student can classify protozoans into four major groups based on their locomotory structures",
+            "Student can identify representatives of amoeboid, flagellated, ciliated, and sporozoan protozoans"
+          ],
+          "visualIdeas": [
+            "a comparative grid illustrating Amoeba (pseudopodia), Trypanosoma (flagella), Paramecium (cilia), and Plasmodium (spores)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "kingdom-fungi",
+          "title": "Kingdom Fungi",
+          "objectives": [
+            "Student can describe the typical vegetative structure of fungi including hyphae and mycelium",
+            "Student can explain the mode of nutrition in saprophytic, parasitic, and symbiotic fungi"
+          ],
+          "visualIdeas": [
+            "a drawing of filamentous hyphae showing the difference between coenocytic (aseptate) and septate structures"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phycomycetes",
+          "title": "Phycomycetes",
+          "objectives": [
+            "Student can describe the habitat, mycelium structure, and asexual/sexual reproduction modes in Phycomycetes",
+            "Student can list common examples like Mucor, Rhizopus, and Albugo"
+          ],
+          "visualIdeas": [
+            "drawings showing the sporangium of bread mould (Rhizopus) releasing asexual spores"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "ascomycetes",
+          "title": "Ascomycetes",
+          "objectives": [
+            "Student can identify Ascomycetes as sac-fungi and describe their mycelium",
+            "Student can explain the endogenous development of ascospores in asci"
+          ],
+          "visualIdeas": [
+            "a microscopic sketch of an ascocarp showing multiple cup-like structures with asci containing eight ascospores each"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "basidiomycetes",
+          "title": "Basidiomycetes",
+          "objectives": [
+            "Student can describe the characteristics of club fungi including the absence of asexual spores",
+            "Student can explain karyogamy and meiosis in basidia producing exogenous basidiospores"
+          ],
+          "visualIdeas": [
+            "a structural diagram of a mushroom (Agaricus) zoom-detailed to show basidia on the gills bearing four basidiospores"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "deuteromycetes",
+          "title": "Deuteromycetes",
+          "objectives": [
+            "Student can explain why Deuteromycetes are commonly termed 'imperfect fungi'",
+            "Student can identify the typical mode of asexual reproduction using conidia in this group"
+          ],
+          "visualIdeas": [
+            "a schematic showing the lifecycle loop of a deuteromycete, with a dashed arrow highlighting the missing sexual phase"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "kingdom-plantae",
+          "title": "Kingdom Plantae",
+          "objectives": [
+            "Student can list the key features of eukaryotic, chlorophyll-containing organisms",
+            "Student can explain the phenomenon of alternation of generations between sporophyte and gametophyte"
+          ],
+          "visualIdeas": [
+            "a cyclic diagram showing the alternation between a diploid (2n) sporophyte and a haploid (n) gametophyte phase"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "kingdom-animalia",
+          "title": "Kingdom Animalia",
+          "objectives": [
+            "Student can characterize members of Kingdom Animalia based on nutrition, cellularity, and motility",
+            "Student can trace the pathway of food ingestion and digestion in typical holozoic animals"
+          ],
+          "visualIdeas": [
+            "a mind map showing heterotrophic eukaryotic traits, lack of cell walls, and internal digestive cavity"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "viruses-viroids-prions-and-lichens",
+          "title": "Viruses, Viroids, Prions and Lichens",
+          "objectives": [
+            "Student can compare the structural compositions of viruses, viroids, and prions",
+            "Student can explain the symbiotic relationship between phycobiont and mycobiont in a lichen"
+          ],
+          "visualIdeas": [
+            "side-by-side structures of TMV (Tobacco Mosaic Virus) showing the helical RNA and capsomeres, and a Bacteriophage",
+            "a cross-section of a lichen showing the top and bottom fungal layers sandwiching the middle photosynthetic algal zone"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "plant-kingdom",
+      "title": "Plant Kingdom",
+      "topics": [
+        {
+          "id": "algae",
+          "title": "Algae",
+          "objectives": [
+            "Student can list the general vegetative and reproductive characteristics of Algae",
+            "Student can compare the methods of vegetative, asexual, and sexual reproduction in algae"
+          ],
+          "visualIdeas": [
+            "diagrams showing isogamous, anisogamous, and oogamous fertilization in algae"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "chlorophyceae",
+          "title": "Chlorophyceae",
+          "objectives": [
+            "Student can identify the photosynthetic pigments and storage bodies (pyrenoids) of green algae",
+            "Student can list common examples of Chlorophyceae such as Chlamydomonas, Volvox, and Spirogyra"
+          ],
+          "visualIdeas": [
+            "a detailed sketch of a Chlamydomonas cell highlighting the cup-shaped chloroplast and pyrenoid"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phaeophyceae",
+          "title": "Phaeophyceae",
+          "objectives": [
+            "Student can describe the body parts (holdfast, stipe, frond) and dominant pigments of brown algae",
+            "Student can locate the storage carbohydrates laminarin or mannitol in brown algae"
+          ],
+          "visualIdeas": [
+            "a diagram of Laminaria or Fucus showing structural differentiation into holdfast, stipe, and leaf-like photosynthetic frond"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "rhodophyceae",
+          "title": "Rhodophyceae",
+          "objectives": [
+            "Student can state the pigment responsible for the red color of Rhodophyceae",
+            "Student can identify floridean starch as the storage material and describe its structural similarity to amylopectin"
+          ],
+          "visualIdeas": [
+            "a detailed diagram of Polysiphonia showing its complex filamentous thallus"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "bryophytes",
+          "title": "Bryophytes",
+          "objectives": [
+            "Student can explain why Bryophytes are called 'amphibians of the plant kingdom'",
+            "Student can identify the dominant, haploid gametophytic phase in a bryophyte life cycle"
+          ],
+          "visualIdeas": [
+            "a comparison chart contrasting bryophytes with algae in terms of tissue complexity and adaptation to land"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "liverworts",
+          "title": "Liverworts",
+          "objectives": [
+            "Student can describe the dorsiventral thallus structure of liverworts like Marchantia",
+            "Student can explain asexual reproduction in Marchantia via gemma cups"
+          ],
+          "visualIdeas": [
+            "labelled drawings of male and female Marchantia thalli, displaying gemma cups, antheridiophores, and archegoniophores"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "mosses",
+          "title": "Mosses",
+          "objectives": [
+            "Student can describe the two stages in the gametophytic life cycle of mosses: protonema and leafy stage",
+            "Student can identify the components of the sporophyte (foot, seta, capsule) in mosses"
+          ],
+          "visualIdeas": [
+            "a fully labelled structure of Funaria showing the leafy gametophyte supporting the sporophyte (seta and capsule)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "pteridophytes",
+          "title": "Pteridophytes",
+          "objectives": [
+            "Student can identify Pteridophytes as the first terrestrial vascular plants",
+            "Student can contrast homosporous and heterosporous pteridophytes with examples",
+            "Student can outline the evolutionary significance of the precursor to the seed habit in Selaginella"
+          ],
+          "visualIdeas": [
+            "sketches of Selaginella and Equisetum highlighting the cones or strobili and vascular rhizomes"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gymnosperms",
+          "title": "Gymnosperms",
+          "objectives": [
+            "Student can explain the literal meaning of 'Gymnosperms' regarding seed exposure",
+            "Student can describe morphological adaptations in Pinus and Cycas leaves to tolerate extreme environments",
+            "Student can trace the development of male and female cones on gymnosperm plants"
+          ],
+          "visualIdeas": [
+            "a cross-section of a needle-like pine leaf showing thick cuticle and sunken stomata",
+            "drawings of the pinnate leaves of Cycas and branched structures of Pinus"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "angiosperms",
+          "title": "Angiosperms",
+          "objectives": [
+            "Student can define double fertilization, explaining syngamy and triple fusion",
+            "Student can compare the haploid and diploid structures in the embryo sac of flowering plants"
+          ],
+          "visualIdeas": [
+            "a detailed 7-celled, 8-nucleate embryo sac diagram showing egg apparatus, polar nuclei, and antipodals"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "animal-kingdom",
+      "title": "Animal Kingdom",
+      "topics": [
+        {
+          "id": "basis-of-classification",
+          "title": "Basis of Classification",
+          "objectives": [
+            "Student can list the five primary criteria used for animal classification",
+            "Student can explain how cellular, tissue, organ, and organ system levels of organization differ"
+          ],
+          "visualIdeas": [
+            "a structural overview diagram showing the hierarchical criteria of animal classification"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "levels-of-organisation",
+          "title": "Levels of Organisation",
+          "objectives": [
+            "Student can distinguish between open and closed circulatory systems",
+            "Student can compare complete and incomplete digestive systems"
+          ],
+          "visualIdeas": [
+            "simple schematic flowcharts illustrating a complete digestive tract (two openings) vs an incomplete tract (single opening)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "symmetry",
+          "title": "Symmetry",
+          "objectives": [
+            "Student can classify animals as asymmetrical, radially symmetrical, or bilaterally symmetrical based on body planes",
+            "Student can provide examples of organisms representing each type of symmetry"
+          ],
+          "visualIdeas": [
+            "illustrations of a sponge (asymmetric), a jellyfish (radial lines of symmetry), and a crab (bilateral division down a single midline)"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "coelom",
+          "title": "Coelom",
+          "objectives": [
+            "Student can distinguish between acoelomate, pseudocoelomate, and coelomate animal body cavities",
+            "Student can identify the embryonic germ layers that line the true coelom"
+          ],
+          "visualIdeas": [
+            "cross-sectional color-coded diagrams of three body cavities showing ectoderm, mesoderm, endoderm, and the coelomic space"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "segmentation",
+          "title": "Segmentation",
+          "objectives": [
+            "Student can define metamerism and metameric segmentation",
+            "Student can identify metameric segmentation in earthworms"
+          ],
+          "visualIdeas": [
+            "a diagram of an earthworm body segment showcasing internal and external serial repetition of organs"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "notochord",
+          "title": "Notochord",
+          "objectives": [
+            "Student can explain the origin and location of the notochord in animal embryos",
+            "Student can categorize animals into chordates and non-chordates based on the presence of a notochord"
+          ],
+          "visualIdeas": [
+            "an embryonic cross-section highlighting the rod-like mesodermally derived notochord ventral to the nerve cord"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "phylum-porifera",
+          "title": "Phylum Porifera",
+          "objectives": [
+            "Student can describe the water transport or canal system in sponges",
+            "Student can identify the specialized collar cells (choanocytes) and their function"
+          ],
+          "visualIdeas": [
+            "a cross-section of Sycon showing the flow of water through ostia, into the spongocoel, and out of the osculum, with zoomed inset of a choanocyte"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phylum-coelenterata",
+          "title": "Phylum Coelenterata (Cnidaria)",
+          "objectives": [
+            "Student can explain metagenesis in Cnidarians using Obelia as an example",
+            "Student can identify the function of cnidoblasts (cnidocytes) in defense and prey capture"
+          ],
+          "visualIdeas": [
+            "a schematic cycle of Obelia showing alternation between asexual polyp and sexual medusa, paired with a detailed drawing of a stinging cnidoblast cell"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phylum-ctenophora",
+          "title": "Phylum Ctenophora",
+          "objectives": [
+            "Student can describe the diagnostic features of comb jellies including ciliated comb plates",
+            "Student can explain the phenomenon of bioluminescence as observed in ctenophores"
+          ],
+          "visualIdeas": [
+            "a drawing of Pleurobrachia showcasing eight external rows of ciliated comb plates and two long tentacles"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phylum-platyhelminthes",
+          "title": "Phylum Platyhelminthes",
+          "objectives": [
+            "Student can characterize flatworms based on dorsoventral flattening and triploblastic nature",
+            "Student can identify the excretory role of specialized flame cells"
+          ],
+          "visualIdeas": [
+            "drawings of Taenia (tapeworm) showing suckers and hooks, and Fasciola (liver fluke) with a flame cell detail inset"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phylum-aschelminthes",
+          "title": "Phylum Aschelminthes",
+          "objectives": [
+            "Student can describe the roundworms based on circular cross-section and pseudocoelomate body plan",
+            "Student can identify sexual dimorphism in Ascaris"
+          ],
+          "visualIdeas": [
+            "side-by-side sketches of male and female Ascaris, highlighting the shorter male with a curved posterior end"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phylum-annelida",
+          "title": "Phylum Annelida",
+          "objectives": [
+            "Student can list the key locomotory structures (setae, parapodia) found in different annelids",
+            "Student can identify the excretory organs called nephridia"
+          ],
+          "visualIdeas": [
+            "diagrams of Nereis showing lateral appendages called parapodia, and Hirudinaria (leech)"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phylum-arthropoda",
+          "title": "Phylum Arthropoda",
+          "objectives": [
+            "Student can identify Arthropoda as the largest phylum in Kingdom Animalia",
+            "Student can describe the chitinous exoskeleton and jointed appendages characteristic of arthropods",
+            "Student can list different respiratory organs (gills, book gills, book lungs, tracheal system) across arthropod classes"
+          ],
+          "visualIdeas": [
+            "anatomical sketches of a locust, a butterfly, a scorpion, and a prawn, with callouts to jointed limbs and segmented bodies"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "phylum-mollusca",
+          "title": "Phylum Mollusca",
+          "objectives": [
+            "Student can identify the three major regions of a mollusc body: head, muscular foot, and visceral hump",
+            "Student can explain the role of the mantle and the rasping organ called radula"
+          ],
+          "visualIdeas": [
+            "a schematic drawing of a generalized mollusc showing the shell, mantle cavity with feather-like gills, visceral hump, and radula"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phylum-echinodermata",
+          "title": "Phylum Echinodermata",
+          "objectives": [
+            "Student can explain the unique water vascular system and its roles in echinoderms",
+            "Student can compare larval symmetry (bilateral) with adult symmetry (radial) in echinoderms"
+          ],
+          "visualIdeas": [
+            "a structural view of Asterias (starfish) showing the central disc and radiating canal pipelines connecting to tube feet"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "phylum-hemichordata",
+          "title": "Phylum Hemichordata",
+          "objectives": [
+            "Student can describe the tripartite body division of hemichordates: proboscis, collar, and trunk",
+            "Student can identify Balanoglossus as a member of Hemichordata"
+          ],
+          "visualIdeas": [
+            "a detailed sketch of Balanoglossus highlighting the proboscis, collar, and long trunk"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phylum-chordata",
+          "title": "Phylum Chordata",
+          "objectives": [
+            "Student can compare fundamental differences between chordates and non-chordates",
+            "Student can list the three subphyla of Phylum Chordata: Urochordata, Cephalochordata, and Vertebrata"
+          ],
+          "visualIdeas": [
+            "a comparative table listing Chordates vs Non-chordates (e.g., central nervous system dorsal vs ventral)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "class-cyclostomata",
+          "title": "Class Cyclostomata",
+          "objectives": [
+            "Student can identify the key features of jawless vertebrates",
+            "Student can describe the migratory spawning habit of jawless cyclostomes like Petromyzon"
+          ],
+          "visualIdeas": [
+            "a drawing of a lamprey (Petromyzon) displaying its sucking and circular mouth without jaws"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "class-chondrichthyes",
+          "title": "Class Chondrichthyes",
+          "objectives": [
+            "Student can list features of cartilaginous fishes including placoid scales, gill slits without operculum, and air bladder absence",
+            "Student can explain how the absence of an air bladder affects buoyancy in sharks"
+          ],
+          "visualIdeas": [
+            "drawings of Scoliodon (dogfish) and Pristis (sawfish) showing ventral mouths and exposed gill slits"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "class-osteichthyes",
+          "title": "Class Osteichthyes",
+          "objectives": [
+            "Student can list features of bony fishes including cycloid/ctenoid scales, operculum, and air bladder",
+            "Student can differentiate between cartilaginous and bony fishes"
+          ],
+          "visualIdeas": [
+            "drawings of Exocoetus (flying fish) and Hippocampus (sea horse) showing terminal mouths and operculum covers"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "class-amphibia",
+          "title": "Class Amphibia",
+          "objectives": [
+            "Student can state the dual life adaptations of amphibians on land and in water",
+            "Student can identify key features such as moist skin without scales, tympanum, and three-chambered heart"
+          ],
+          "visualIdeas": [
+            "sketches of Rana (frog) and Salamandra (salamander) highlighting moist skin, limbs, and tympanum membrane"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "class-reptilia",
+          "title": "Class Reptilia",
+          "objectives": [
+            "Student can describe reptile adaptations for terrestrial life, such as dry cornified skin and epidermal scales",
+            "Student can identify exceptions in heart chamber numbers within Class Reptilia"
+          ],
+          "visualIdeas": [
+            "drawings of a turtle (Chelone), a chameleon, and a cobra showing dry, scaled, and protective epidermal plates"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "class-aves",
+          "title": "Class Aves",
+          "objectives": [
+            "Student can list the skeletal adaptations of birds for flight, including pneumatic bones",
+            "Student can explain how air sacs connected to lungs supplement respiration in birds"
+          ],
+          "visualIdeas": [
+            "a diagram of a bird skeleton pointing out hollow, air-filled pneumatic bones, and a simplified lung-air sac linkage"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "class-mammalia",
+          "title": "Class Mammalia",
+          "objectives": [
+            "Student can state the unique diagnostic features of mammals including mammary glands and body hair",
+            "Student can classify mammals into egg-laying (oviparous), pouched (marsupial), and placental (viviparous) forms"
+          ],
+          "visualIdeas": [
+            "drawings of Ornithorhynchus (platypus - oviparous), Macropus (kangaroo - viviparous), and Balaenoptera (blue whale)"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "morphology-of-flowering-plants",
+      "title": "Morphology of Flowering Plants",
+      "topics": [
+        {
+          "id": "the-root",
+          "title": "The Root",
+          "objectives": [
+            "Student can distinguish between tap root, fibrous root, and adventitious root systems",
+            "Student can identify the four regions of the root from tip upward",
+            "Student can identify modifications of roots for storage, support, and respiration"
+          ],
+          "visualIdeas": [
+            "a longitudinal view of a root tip showing root cap, region of meristematic activity, elongation, and maturation with root hairs",
+            "comparative sketches of prop roots in banyan, stilt roots in maize, and pneumatophores in Rhizophora"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-stem",
+          "title": "The Stem",
+          "objectives": [
+            "Student can describe the basic characteristics of a stem including nodes, internodes, and buds",
+            "Student can classify stem modifications into underground storage, tendrils, thorns, and phylloclades"
+          ],
+          "visualIdeas": [
+            "diagrams showing potato tubers, ginger rhizomes, stem tendrils in cucumber, thorns in Bougainvillea, and fleshy photosynthetic stems of Opuntia"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-leaf",
+          "title": "The Leaf",
+          "objectives": [
+            "Student can identify the main parts of a typical leaf: leaf base, petiole, and lamina",
+            "Student can describe the function of stipules and pulvinus"
+          ],
+          "visualIdeas": [
+            "a labelled sketch of a leaf showing blade/lamina, veins, petiole, axillary bud, stipules, and sheathing leaf base"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "venation",
+          "title": "Venation",
+          "objectives": [
+            "Student can define venation in plant leaves",
+            "Student can contrast reticulate and parallel venation with representative dicot and monocot plant examples"
+          ],
+          "visualIdeas": [
+            "side-by-side lamina details of a hibiscus leaf (reticulate net-like network) and a grass leaf (parallel veins running straight)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-leaves",
+          "title": "Types of Leaves",
+          "objectives": [
+            "Student can distinguish between simple and compound leaves",
+            "Student can compare pinnately compound and palmately compound leaves with examples"
+          ],
+          "visualIdeas": [
+            "sketches comparing a simple leaf with pinnately compound leaf (neem) and palmately compound leaf (silk cotton) focusing on the petiole/rachis"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phyllotaxy",
+          "title": "Phyllotaxy",
+          "objectives": [
+            "Student can define phyllotaxy as the pattern of arrangement of leaves on a stem",
+            "Student can identify alternate, opposite, and whorled phyllotaxy with typical plant examples"
+          ],
+          "visualIdeas": [
+            "drawings of alternate (China rose), opposite (Guava), and whorled (Alstonia) leaves on nodes"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "modifications-of-leaves",
+          "title": "Modifications of Leaves",
+          "objectives": [
+            "Student can explain how leaves modify for support, defense, storage, and food capture",
+            "Student can identify leaf modifications in peas, cacti, onions, and insectivorous plants"
+          ],
+          "visualIdeas": [
+            "illustrations of leaf tendrils in peas, spines in cacti, fleshy leaves in onion, and pitcher trap of Nepenthes"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-inflorescence",
+          "title": "The Inflorescence",
+          "objectives": [
+            "Student can define inflorescence and identify its primary axis as the peduncle",
+            "Student can compare racemose and cymose inflorescence based on main axis growth and flower opening order"
+          ],
+          "visualIdeas": [
+            "diagrams comparing racemose (indeterminate growth, acropetal succession) and cymose (determinate growth, basipetal succession) branching styles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-flower",
+          "title": "The Flower",
+          "objectives": [
+            "Student can identify the four whorls of a typical flower arranged on the thalamus",
+            "Student can classify flowers based on symmetry (actinomorphic, zygomorphic, asymmetric)",
+            "Student can define hypogynous, perigynous, and epigynous flowers based on ovary position"
+          ],
+          "visualIdeas": [
+            "cross-sections of hypogynous (superior ovary), perigynous (half-inferior), and epigynous (inferior ovary) floral structures"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "parts-of-a-flower",
+          "title": "Parts of a Flower",
+          "objectives": [
+            "Student can describe calyx, corolla, androecium, and gynoecium whorls",
+            "Student can distinguish different types of aestivation in corolla: valvate, twisted, imbricate, and vexillary"
+          ],
+          "visualIdeas": [
+            "geometric line drawings showing the overlap patterns in valvate, twisted, imbricate, and vexillary (papilionaceous) aestivation"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-fruit",
+          "title": "The Fruit",
+          "objectives": [
+            "Student can define a true fruit and differentiate it from parthenocarpic fruit",
+            "Student can describe the structure of a drupe fruit using mango or coconut as examples"
+          ],
+          "visualIdeas": [
+            "a longitudinal section of a mango showing the outer epicarp, fleshy edible mesocarp, and hard stony endocarp"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-seed",
+          "title": "The Seed",
+          "objectives": [
+            "Student can state the basic parts of a seed including seed coat and embryo",
+            "Student can explain the difference between endospermous and non-endospermous seeds"
+          ],
+          "visualIdeas": [
+            "a comparative table showing features of endospermous vs non-endospermous/albuminous seeds"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "structure-of-a-dicotyledonous-seed",
+          "title": "Structure of a Dicotyledonous Seed",
+          "objectives": [
+            "Student can identify seed structures such as hilum, micropyle, cotyledons, radicle, and plumule in a dicot seed",
+            "Student can trace the structural features of a split open gram or pea seed"
+          ],
+          "visualIdeas": [
+            "a detailed labelled diagram of a gram seed showing seed coat, hilum, micropyle, and the inner embryo with two cotyledons and embryonal axis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-a-monocotyledonous-seed",
+          "title": "Structure of a Monocotyledonous Seed",
+          "objectives": [
+            "Student can describe structural components of a maize grain including scutellum, coleoptile, and coleorhiza",
+            "Student can explain the role of the outer proteinaceous aleurone layer"
+          ],
+          "visualIdeas": [
+            "a longitudinal section of a maize seed showing the large endosperm, aleurone layer, single shield-shaped scutellum, plumule encased in coleoptile, and radicle encased in coleorhiza"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "semi-technical-description-of-a-typical-flowering-plant",
+          "title": "Semi-technical Description of a Typical Flowering Plant",
+          "objectives": [
+            "Student can translate morphological descriptions into formal botanical floral formulas",
+            "Student can draw a standard floral diagram representing whorls and fusion of parts"
+          ],
+          "visualIdeas": [
+            "a legend matching floral formula symbols (e.g., K, C, A, G, Br, percent sign) with their anatomical meanings"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "description-of-some-important-families",
+          "title": "Description of Some Important Families",
+          "objectives": [
+            "Student can write the floral formula and draw the floral diagram for Family Solanaceae",
+            "Student can list economically important plants belonging to Solanaceae"
+          ],
+          "visualIdeas": [
+            "a complete floral diagram of Solanum nigrum with its corresponding floral formula aligned beneath it, highlighting fused sepals/petals and epipetalous stamens"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "anatomy-of-flowering-plants",
+      "title": "Anatomy of Flowering Plants",
+      "topics": [
+        {
+          "id": "the-tissues",
+          "title": "The Tissues",
+          "objectives": [
+            "Student can define plant tissue and distinguish between meristematic and permanent tissues",
+            "Student can classify tissues based on their origin and structural characteristics"
+          ],
+          "visualIdeas": [
+            "a general taxonomy tree dividing plant tissues into meristematic and permanent types"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "meristematic-tissues",
+          "title": "Meristematic Tissues",
+          "objectives": [
+            "Student can compare apical, intercalary, and lateral meristems based on location and function",
+            "Student can explain how primary and secondary growth differ in relation to meristem types"
+          ],
+          "visualIdeas": [
+            "a longitudinal diagram of a shoot apex illustrating apical meristem, axillary bud, and zone of differentiation"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "permanent-tissues",
+          "title": "Permanent Tissues",
+          "objectives": [
+            "Student can distinguish simple permanent tissues (parenchyma, collenchyma, sclerenchyma) based on cell wall composition",
+            "Student can describe the complex tissues xylem (vessels, tracheids, fibres, parenchyma) and phloem (sieve tubes, companion cells, fibres, parenchyma)"
+          ],
+          "visualIdeas": [
+            "microscopic-style sketches of angular collenchyma showing pectin deposits, sclerenchyma sclereids/fibres, and a longitudinal view of a xylem vessel and tracheid"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-tissue-system",
+          "title": "The Tissue System",
+          "objectives": [
+            "Student can list the three major plant tissue systems",
+            "Student can identify the components that make up each tissue system"
+          ],
+          "visualIdeas": [
+            "a concentric circle diagram showing epidermal system outer, ground system middle, and vascular system core"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "epidermal-tissue-system",
+          "title": "Epidermal Tissue System",
+          "objectives": [
+            "Student can describe the structure of epidermal cells, stomatal apparatus, trichomes, and root hairs",
+            "Student can compare stomatal complexes in dicots (bean-shaped guard cells) and monocots (dumbbell-shaped guard cells)"
+          ],
+          "visualIdeas": [
+            "detailed drawings of stomata with kidney-shaped guard cells (dicot) and dumbbell guard cells (grasses) with subsidiary cells and chloroplasts labelled"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-ground-tissue-system",
+          "title": "The Ground Tissue System",
+          "objectives": [
+            "Student can define ground tissue and locate cortex, pericycle, pith, and medullary rays",
+            "Student can state the primary tissue types found in the mesophyll of leaves"
+          ],
+          "visualIdeas": [
+            "a transverse section highlight of a stem showing ground tissue filling the gaps between dermal layers and vascular bundles"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "vascular-tissue-system",
+          "title": "Vascular Tissue System",
+          "objectives": [
+            "Student can classify vascular bundles as radial or conjoint based on xylem and phloem arrangement",
+            "Student can distinguish open and closed vascular bundles based on the presence of cambium"
+          ],
+          "visualIdeas": [
+            "schematic diagrams of radial (roots), conjoint closed (monocot stem), and conjoint open (dicot stem) vascular bundles with cambium highlighted in color"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "anatomy-of-dicotyledonous-and-monocotyledonous-plants",
+          "title": "Anatomy of Dicotyledonous and Monocotyledonous Plants",
+          "objectives": [
+            "Student can explain how anatomical structures differ between dicot and monocot organs",
+            "Student can prepare to identify tissue arrangements in high-resolution cross-sections"
+          ],
+          "visualIdeas": [
+            "a master checklist grid to compare anatomical structures of dicot and monocot roots, stems, and leaves"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "dicotyledonous-root",
+          "title": "Dicotyledonous Root",
+          "objectives": [
+            "Student can identify tissue layers in a dicot root section: epiblema, cortex, endodermis with Casparian strips, pericycle, and diarch to tetrarch xylem",
+            "Student can explain the barrier function of the suberised Casparian strip"
+          ],
+          "visualIdeas": [
+            "a sector drawing of a dicot root showing the endodermal layer with barrel-shaped cells and a close-up of suberin deposits on radial walls"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "monocotyledonous-root",
+          "title": "Monocotyledonous Root",
+          "objectives": [
+            "Student can compare a monocot root with a dicot root based on the number of xylem bundles and pith development",
+            "Student can identify the polyarch condition in a monocot root section"
+          ],
+          "visualIdeas": [
+            "side-by-side transverse sections of dicot root (few xylem poles, small/absent pith) and monocot root (polyarch xylem poles, large well-developed pith)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dicotyledonous-stem",
+          "title": "Dicotyledonous Stem",
+          "objectives": [
+            "Student can describe the anatomical features of a primary dicot stem, including ring-arranged conjoint open vascular bundles, collenchymatous hypodermis, and starch sheath"
+          ],
+          "visualIdeas": [
+            "a detailed sector diagram of a dicot stem showing epidermis, collenchymatous hypodermis, parenchymatous cortex, endodermis, pericycle patches, and ring of vascular bundles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "monocotyledonous-stem",
+          "title": "Monocotyledonous Stem",
+          "objectives": [
+            "Student can describe anatomical features of a monocot stem, including scattered conjoint closed vascular bundles, sclerenchymatous bundle sheath, and sclerenchymatous hypodermis"
+          ],
+          "visualIdeas": [
+            "a sector diagram of a monocot stem showing scattered oval vascular bundles (looking like 'faces' with water-containing cavities) embedded in ground tissue"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dicotyledonous-dorsiventral-leaf",
+          "title": "Dicotyledonous (Dorsiventral) Leaf",
+          "objectives": [
+            "Student can describe the anatomy of a dorsiventral leaf: palisade and spongy parenchyma, hypostomatic epidermis, and bundle sheath"
+          ],
+          "visualIdeas": [
+            "a detailed vertical section of a dorsiventral leaf showing columnar palisade mesophyll dorsally and loose air-spaced spongy mesophyll ventrally, with stomata in lower epidermis"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "monocotyledonous-isobilateral-leaf",
+          "title": "Monocotyledonous (Isobilateral) Leaf",
+          "objectives": [
+            "Student can describe the anatomy of an isobilateral leaf: uniform mesophyll, amphistomatic epidermis, and bulliform cells",
+            "Student can explain how bulliform cells assist in water conservation by leaf rolling"
+          ],
+          "visualIdeas": [
+            "a vertical section of an isobilateral grass leaf showing similar mesophyll cells on both sides, and large, empty, bubble-like bulliform cells in the upper epidermis"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "structural-organisation-in-animals",
+      "title": "Structural Organisation in Animals",
+      "topics": [
+        {
+          "id": "epithelial-tissue",
+          "title": "Epithelial Tissue",
+          "objectives": [
+            "Student can classify epithelial tissues into simple and compound forms",
+            "Student can distinguish between squamous, cuboidal, and columnar epithelia based on cell shape and function",
+            "Student can explain the function of microvilli and cilia on epithelial surfaces"
+          ],
+          "visualIdeas": [
+            "microscopic-view diagrams of simple squamous (flat tiles), simple cuboidal (cubes), simple columnar (tall columns), and ciliated columnar epithelia",
+            "a table illustrating tight, adhering, and gap junctions within epithelial sheets"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "connective-tissue",
+          "title": "Connective Tissue",
+          "objectives": [
+            "Student can classify connective tissues into loose, dense, and specialized categories",
+            "Student can locate areolar, adipose, tendon, ligament, cartilage, bone, and blood tissues in the body",
+            "Student can describe the cellular components and extracellular fibers of connective tissue matrix"
+          ],
+          "visualIdeas": [
+            "a labelled diagram of areolar tissue highlighting fibroblasts, macrophages, mast cells, collagen fibers, and elastic fibers",
+            "cross-section sketches contrasting cartilage (chondrocytes in lacunae) with bone osteon structures"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "muscle-tissue",
+          "title": "Muscle Tissue",
+          "objectives": [
+            "Student can compare skeletal, smooth, and cardiac muscle tissues based on striation, nucleation, and control type",
+            "Student can identify the presence of intercalated discs in cardiac muscle fibers"
+          ],
+          "visualIdeas": [
+            "parallel panels comparing striated skeletal muscles (cylindrical, multinucleated), smooth muscles (spindle-shaped, uninucleated), and cardiac muscles (branched, striated, with intercalated junctions)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "neural-tissue",
+          "title": "Neural Tissue",
+          "objectives": [
+            "Student can describe the structure of a neuron as the basic unit of neural tissue",
+            "Student can identify the supportive role of neuroglial cells"
+          ],
+          "visualIdeas": [
+            "a sketch of a multipolar neuron showing dendrites, cyton, axon, and surrounding small protective neuroglial cells"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "frog",
+          "title": "Frog",
+          "objectives": [
+            "Student can describe the morphology and anatomy of the frog (Rana tigrina)",
+            "Student can trace the pathway of the digestive, vascular, respiratory, and reproductive systems in frogs",
+            "Student can outline the excretory mechanism and portal system of frogs"
+          ],
+          "visualIdeas": [
+            "a complete ventral dissection map of Rana tigrina showing major internal organs like heart, liver, lungs, and gut",
+            "a detailed flow chart of the double portal circulatory system (renal and hepatic portal systems) in the frog"
+          ],
+          "estMinutes": 35
+        }
+      ]
+    },
+    {
+      "id": "cell-the-unit-of-life",
+      "title": "Cell: The Unit of Life",
+      "topics": [
+        {
+          "id": "what-is-a-cell",
+          "title": "What is a Cell?",
+          "objectives": [
+            "Student can define a cell as the fundamental structural and functional unit of all living organisms",
+            "Student can describe Anton von Leeuwenhoek and Robert Brown's discoveries"
+          ],
+          "visualIdeas": [
+            "a simple conceptual drawing showing the comparison between an entire organism and single constituent cells of different types"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cell-theory",
+          "title": "Cell Theory",
+          "objectives": [
+            "Student can state the postulates of cell theory as formulated by Schleiden, Schwann, and Rudolf Virchow",
+            "Student can define the phrase 'Omnis cellula-e cellula'"
+          ],
+          "visualIdeas": [
+            "a chronological timeline showing Schleiden (1838), Schwann (1839), and Virchow (1855) with their core contributions highlighted"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "an-overview-of-cell",
+          "title": "An Overview of Cell",
+          "objectives": [
+            "Student can compare the size, shape, and compartment styles of prokaryotic and eukaryotic cells",
+            "Student can order cellular entities (mycoplasmas, bacteria, ostrich egg cell) by physical scale"
+          ],
+          "visualIdeas": [
+            "a log-scale bar displaying sizes from Mycoplasma (0.3 micrometers) through typical bacteria and red blood cells up to an ostrich egg"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "prokaryotic-cells",
+          "title": "Prokaryotic Cells",
+          "objectives": [
+            "Student can describe the characteristic features of a prokaryotic cell, including plasmid DNA and genomic DNA",
+            "Student can explain the binary fission style of genetic replication"
+          ],
+          "visualIdeas": [
+            "a drawing of a typical bacterium highlighting genomic genophore, circular plasmids, and mesosomes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cell-envelope-and-its-modifications",
+          "title": "Cell Envelope and its Modifications",
+          "objectives": [
+            "Student can describe the three-layered structure of the prokaryotic cell envelope (glycocalyx, cell wall, plasma membrane)",
+            "Student can compare Gram-positive and Gram-negative cell envelopes",
+            "Student can explain the respiratory and secretory functions of mesosome infoldings"
+          ],
+          "visualIdeas": [
+            "a layered cutaway view of the bacterial boundary showing slime layer/capsule, peptidoglycan wall, and plasma membrane with mesosome invagination"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "ribosomes-and-inclusion-bodies",
+          "title": "Ribosomes and Inclusion Bodies",
+          "objectives": [
+            "Student can describe prokaryotic 70S ribosomes (50S and 30S subunits) and polysome complexes",
+            "Student can list typical prokaryotic inclusion bodies such as phosphate, cyanophycean, and glycogen granules"
+          ],
+          "visualIdeas": [
+            "a diagram of a polysome string consisting of an mRNA thread loaded with multiple ribosomes translating polypeptides"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "eukaryotic-cells",
+          "title": "Eukaryotic Cells",
+          "objectives": [
+            "Student can list the diagnostic features of eukaryotic cells including extensive membrane-bound compartmentalization",
+            "Student can compare plant and animal cell ultrastructures"
+          ],
+          "visualIdeas": [
+            "side-by-side plant and animal cell drawings highlighting eukaryotic organelles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "cell-membrane",
+          "title": "Cell Membrane",
+          "objectives": [
+            "Student can describe the fluid mosaic model of the cell membrane proposed by Singer and Nicolson",
+            "Student can distinguish between integral and peripheral membrane proteins",
+            "Student can explain active and passive transport across the lipid bilayer"
+          ],
+          "visualIdeas": [
+            "a 3D fluid mosaic model drawing showing phospholipid bilayer, polar heads, hydrophobic tails, cholesterol, glycoproteins, and integral/peripheral proteins"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cell-wall",
+          "title": "Cell Wall",
+          "objectives": [
+            "Student can describe the chemical composition of cell walls in algae and higher plants",
+            "Student can explain the developmental relationship between primary wall, secondary wall, and middle lamella"
+          ],
+          "visualIdeas": [
+            "a microscopic view of adjacent plant cells showing primary walls, secondary layers, middle lamella calcium pectate band, and plasmodesmata connections"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "endomembrane-system",
+          "title": "Endomembrane System",
+          "objectives": [
+            "Student can list the organelles that function coordinately within the endomembrane system",
+            "Student can compare rough and smooth endoplasmic reticulum structures and functions",
+            "Student can trace protein processing through the cis and trans faces of the Golgi apparatus",
+            "Student can explain the origin and function of lysosomes and vacuoles"
+          ],
+          "visualIdeas": [
+            "a functional pathway diagram showing ribosomes on the RER exporting vesicle buds to the cis face of the Golgi, processing, and discharging secretory vesicles/lysosomes from the trans face"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "mitochondria",
+          "title": "Mitochondria",
+          "objectives": [
+            "Student can describe the double-membrane structure of a mitochondrion including cristae and matrix",
+            "Student can identify the sites of different respiratory processes within mitochondria"
+          ],
+          "visualIdeas": [
+            "a cutaway 3D diagram of a mitochondrion showing outer membrane, inner membrane folding into cristae, intermembrane space, matrix, circular DNA, and 70S ribosomes"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "plastids",
+          "title": "Plastids",
+          "objectives": [
+            "Student can classify plastids into chloroplasts, chromoplasts, and leucoplasts (amyloplasts, elaioplasts, aleuroplasts)",
+            "Student can describe the structural organization of a chloroplast including stroma, thylakoids, and grana"
+          ],
+          "visualIdeas": [
+            "a cross-sectional diagram of a chloroplast pointing out outer/inner membranes, stroma, thylakoid discs stacked as grana, stroma lamellae, and lumen space"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "ribosomes",
+          "title": "Ribosomes",
+          "objectives": [
+            "Student can describe eukaryotic 80S ribosomes composed of 60S and 40S subunits",
+            "Student can state the primary functional role of ribosomes in protein synthesis"
+          ],
+          "visualIdeas": [
+            "a drawing of the larger and smaller ribosomal subunits fitting together during protein assembly"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "cytoskeleton",
+          "title": "Cytoskeleton",
+          "objectives": [
+            "Student can list the three major filament systems that form the eukaryotic cytoskeleton",
+            "Student can state the functions of the cytoskeleton in mechanical support, motility, and maintenance of cell shape"
+          ],
+          "visualIdeas": [
+            "an intracellular view schematic showing networks of microtubules, microfilaments, and intermediate filaments supporting organelles"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "cilia-and-flagella",
+          "title": "Cilia and Flagella",
+          "objectives": [
+            "Student can explain the characteristic '9+2' microtubular arrangement in the axoneme of eukaryotic cilia and flagella",
+            "Student can identify the components of the basal body and radial spokes"
+          ],
+          "visualIdeas": [
+            "a cross-sectional electron micrograph schematic of an axoneme showing peripheral doublets, central singlet microtubules, dynein arms, radial spokes, and central sheath"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "centrosome-and-centrioles",
+          "title": "Centrosome and Centrioles",
+          "objectives": [
+            "Student can describe the perpendicular arrangement and 'cartwheel' organization of centrioles",
+            "Student can state the role of centrioles in organizing the spindle apparatus during division"
+          ],
+          "visualIdeas": [
+            "a cross-sectional diagram of a centriole showing nine peripheral triplets of microtubules arranged like spokes around a central hub"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nucleus",
+          "title": "Nucleus",
+          "objectives": [
+            "Student can describe the nuclear envelope, nuclear pores, nucleoplasm, nucleolus, and chromatin network",
+            "Student can classify chromosomes based on centromere position (metacentric, sub-metacentric, acrocentric, telocentric)"
+          ],
+          "visualIdeas": [
+            "drawings of the four chromosome structural types showing p and q chromatid arms, centromere, and secondary constrictions/satellite zones"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "microbodies",
+          "title": "Microbodies",
+          "objectives": [
+            "Student can state the nature and distribution of membrane-bound microbodies (peroxisomes, glyoxysomes) in plant and animal cells"
+          ],
+          "visualIdeas": [
+            "a simplified cell cytoplasm fragment showing a microbody vesicle with enzyme molecules inside"
+          ],
+          "estMinutes": 10
+        }
+      ]
+    },
+    {
+      "id": "biomolecules",
+      "title": "Biomolecules",
+      "topics": [
+        {
+          "id": "how-to-analyse-chemical-composition",
+          "title": "How to Analyse Chemical Composition?",
+          "objectives": [
+            "Student can outline the steps of trichloroacetic acid chemical analysis of living tissues",
+            "Student can contrast the acid-soluble pool with the acid-insoluble fraction in terms of molecular size"
+          ],
+          "visualIdeas": [
+            "a sequential flowchart of tissue grinding with TCA, filtration through cheesecloth, yielding the acid-soluble filtrate and acid-insoluble retentate"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "primary-and-secondary-metabolites",
+          "title": "Primary and Secondary Metabolites",
+          "objectives": [
+            "Student can differentiate between primary and secondary metabolites based on physiological function",
+            "Student can classify common secondary metabolites into alkaloids, terpenoids, lectins, toxins, and pigments"
+          ],
+          "visualIdeas": [
+            "a multi-column reference table grouping secondary metabolites (like morphin, codeine, ricin, abrin, carotenoids) with their plant sources"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "biomacromolecules",
+          "title": "Biomacromolecules",
+          "objectives": [
+            "Student can state the molecular weight boundary defining biomacromolecules",
+            "Student can explain why lipids, despite having low molecular weights, are found in the acid-insoluble retentate"
+          ],
+          "visualIdeas": [
+            "a visual representation of cell membrane disruption forming lipid vesicles that cannot pass through filter pores"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "proteins",
+          "title": "Proteins",
+          "objectives": [
+            "Student can identify proteins as heteropolymers of amino acids",
+            "Student can list essential and non-essential amino acids with examples"
+          ],
+          "visualIdeas": [
+            "a schematic chain of diverse colored beads representing different amino acid residues linked to form a heteropolymeric polypeptide"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "polysaccharides",
+          "title": "Polysaccharides",
+          "objectives": [
+            "Student can describe the structures of starch, cellulose, glycogen, and chitin",
+            "Student can explain why starch can hold iodine molecules while cellulose cannot"
+          ],
+          "visualIdeas": [
+            "a diagram of a helical starch chain trapping an iodine molecule, contrasted with a straight, unbranched, non-reactive cellulose chain"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nucleic-acids",
+          "title": "Nucleic Acids",
+          "objectives": [
+            "Student can identify the components of a nucleotide: nitrogenous base, pentose sugar, and phosphoric acid",
+            "Student can distinguish between purines and pyrimidines"
+          ],
+          "visualIdeas": [
+            "a structural formula diagram showing a nucleoside and a nucleotide with esterified phosphate linked to carbon-5 of pentose"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-proteins",
+          "title": "Structure of Proteins",
+          "objectives": [
+            "Student can describe primary, secondary, tertiary, and quaternary levels of protein structure",
+            "Student can identify hydrogen bonds, disulfide bridges, ionic bonds, and hydrophobic interactions in stabilizing 3D protein shapes"
+          ],
+          "visualIdeas": [
+            "a four-panel progression showing a straight polypeptide line (primary), an alpha-helix/beta-pleated sheet (secondary), a folded 3D globule (tertiary), and a multi-subunit assembly like hemoglobin (quaternary)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "nature-of-bond-linking-monomers-in-a-polymer",
+          "title": "Nature of Bond Linking Monomers in a Polymer",
+          "objectives": [
+            "Student can describe the formation of peptide bonds, glycosidic bonds, and phosphodiester bonds by dehydration synthesis"
+          ],
+          "visualIdeas": [
+            "step-by-step structural reactions showing the elimination of water molecules during peptide, glycosidic, and phosphodiester bond formations"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "dynamic-state-of-body-constituents-concept-of-metabolism",
+          "title": "Dynamic State of Body Constituents - Concept of Metabolism",
+          "objectives": [
+            "Student can define metabolic flux and metabolic pathways",
+            "Student can compare anabolic (biosynthetic) and catabolic (degradative) pathways with examples"
+          ],
+          "visualIdeas": [
+            "a metabolic subway-map showing intersecting pathways of biochemical intermediates"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "metabolic-basis-for-living",
+          "title": "Metabolic Basis for Living",
+          "objectives": [
+            "Student can explain how metabolic pathways require energy input or release energy",
+            "Student can identify ATP as the universal energy currency of cells"
+          ],
+          "visualIdeas": [
+            "a cycle showing ATP breaking down to ADP releasing energy, and ADP converting back to ATP using nutrients"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "the-living-state",
+          "title": "The Living State",
+          "objectives": [
+            "Student can define the living state as a non-equilibrium steady state to perform work",
+            "Student can explain why life cannot exist in a state of thermodynamic equilibrium"
+          ],
+          "visualIdeas": [
+            "a physics-inspired graphic illustrating a system at equilibrium (unable to perform work) vs a steady state with continuous inputs"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "enzymes",
+          "title": "Enzymes",
+          "objectives": [
+            "Student can define enzymes as biocatalysts and identify their active sites",
+            "Student can describe the primary chemical nature of most enzymes"
+          ],
+          "visualIdeas": [
+            "a tertiary protein structure drawing emphasizing the 3D pocket that serves as the active site for substrate binding"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "chemical-reactions",
+          "title": "Chemical Reactions",
+          "objectives": [
+            "Student can explain the rate of chemical reactions and how temperature influences it",
+            "Student can calculate metabolic rates using standard chemical metrics"
+          ],
+          "visualIdeas": [
+            "a line graph plotting reaction rate against temperature showing standard Q10 temperature coefficient doubling"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "how-do-enzymes-bring-about-such-high-rates-of-chemical-conversions",
+          "title": "How do Enzymes bring about such High Rates of Chemical Conversions?",
+          "objectives": [
+            "Student can explain the concept of activation energy barrier",
+            "Student can contrast catalyzed and uncatalyzed reaction progress in terms of free energy change"
+          ],
+          "visualIdeas": [
+            "a classical free energy coordinate curve showing a high activation energy hill for an uncatalyzed reaction and a significantly lower hill for an enzyme-catalyzed reaction"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "nature-of-enzyme-action",
+          "title": "Nature of Enzyme Action",
+          "objectives": [
+            "Student can describe the catalytic cycle of an enzyme-substrate interaction (E + S to ES to EP to E + P)",
+            "Student can explain the transient transition state of the ES complex"
+          ],
+          "visualIdeas": [
+            "a multi-stage flowchart showing a substrate locking into an active site, structural changes, bond breaking/making, and release of product"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "factors-affecting-enzyme-activity",
+          "title": "Factors Affecting Enzyme Activity",
+          "objectives": [
+            "Student can describe the effects of temperature, pH, and substrate concentration [S] on enzyme activity",
+            "Student can state the mathematical meaning of Km (Michaelis constant)",
+            "Student can explain competitive inhibition using malonate and succinate dehydrogenase as an example"
+          ],
+          "visualIdeas": [
+            "three standard graphs: bell-shaped curves for Temp and pH, and a rectangular hyperbola curve for substrate concentration showing Vmax and Vmax/2 to find Km",
+            "a diagram showing a competitive inhibitor blockading an enzyme's active site"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "classification-and-nomenclature-of-enzymes",
+          "title": "Classification and Nomenclature of Enzymes",
+          "objectives": [
+            "Student can classify enzymes into six major classes with representative functions (Oxidoreductases, Transferases, Hydrolases, Lyases, Isomerases, Ligases)"
+          ],
+          "visualIdeas": [
+            "a six-part classification wheel with icons representing chemical transformations for each enzyme class"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "co-factors",
+          "title": "Co-factors",
+          "objectives": [
+            "Student can distinguish prosthetic groups, coenzymes, and metal ions from the apoenzyme part of a holoenzyme"
+          ],
+          "visualIdeas": [
+            "a puzzle-piece block diagram showing how an Apoenzyme (protein part) joins with a Co-factor (non-protein part) to form an active Holoenzyme"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "cell-cycle-and-cell-division",
+      "title": "Cell Cycle and Cell Division",
+      "topics": [
+        {
+          "id": "cell-cycle",
+          "title": "Cell Cycle",
+          "objectives": [
+            "Student can define the cell cycle as a coordinated sequence of cell growth and division",
+            "Student can identify the regulatory checks ensuring genome integrity during the cycle"
+          ],
+          "visualIdeas": [
+            "a timeline overview showing the relative durations of cell growth and nuclear division phases"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "phases-of-cell-cycle",
+          "title": "Phases of Cell Cycle",
+          "objectives": [
+            "Student can compare the phases of Interphase (G1, S, G2) and the M phase",
+            "Student can state the amount of DNA per cell (C) and chromosome count (2n) across G1, S, and G2",
+            "Student can describe the quiescent state (G0) of non-dividing cells"
+          ],
+          "visualIdeas": [
+            "a large circular pie diagram of the cell cycle showing Interphase occupying over 95% of the cycle, divided into G1, S, and G2 sectors, with M phase as a thin wedge"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "m-phase",
+          "title": "M Phase",
+          "objectives": [
+            "Student can explain why mitosis is called equational division",
+            "Student can distinguish karyokinesis from cytokinesis"
+          ],
+          "visualIdeas": [
+            "a split pathway schematic showing nuclear envelope division (karyokinesis) followed by cytoplasm partition (cytokinesis)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "karyokinesis",
+          "title": "Karyokinesis",
+          "objectives": [
+            "Student can describe the key events of Prophase, Metaphase, Anaphase, and Telophase",
+            "Student can identify mitotic stages from diagrams of chromatin condensation, spindle formation, metaphase plate alignment, and chromatid separation"
+          ],
+          "visualIdeas": [
+            "four progressive cell diagrams: Prophase (condensation), Metaphase (chromosomes lined up at equatorial plate), Anaphase (sister chromatids pulling apart), and Telophase (two nuclear envelopes forming)"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "cytokinesis",
+          "title": "Cytokinesis",
+          "objectives": [
+            "Student can compare animal cytokinesis (cell furrowing) with plant cytokinesis (cell plate formation)",
+            "Student can explain the formation of a multinucleate syncytium when karyokinesis is not followed by cytokinesis"
+          ],
+          "visualIdeas": [
+            "side-by-side diagrams of cytokinesis: animal cell with contractile ring pinching a cleavage furrow; plant cell with phragmoplast vesicles forming a central cell plate"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "significance-of-mitosis",
+          "title": "Significance of Mitosis",
+          "objectives": [
+            "Student can list the physiological roles of mitosis in growth, cell repair, and maintenance of nucleocytoplasmic ratio"
+          ],
+          "visualIdeas": [
+            "a graphic showing epithelial cell shedding and repair via mitosis in multicellular organisms"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "meiosis",
+          "title": "Meiosis",
+          "objectives": [
+            "Student can explain why meiosis is termed reductional division",
+            "Student can outline the overall path from a diploid germ cell to four haploid gametes"
+          ],
+          "visualIdeas": [
+            "a flow diagram tracking chromosomes from 2n to two n intermediates, then to four n gametes"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "meiosis-i",
+          "title": "Meiosis I",
+          "objectives": [
+            "Student can describe the substages of Prophase I: Leptotene, Zygotene, Pachytene, Diplotene, and Diakinesis",
+            "Student can explain synapsis, synaptonemal complex formation, bivalents, crossing over, recombinase action, chiasmata, and terminalisation"
+          ],
+          "visualIdeas": [
+            "a close-up sequence of homologous chromosomes pairing, forming a synaptonemal complex, crossing over with exchange of genetic segments, and remaining attached at chiasmata"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "meiosis-ii",
+          "title": "Meiosis II",
+          "objectives": [
+            "Student can describe the stages of Meiosis II and identify how they resemble normal mitosis but with half the chromosome number"
+          ],
+          "visualIdeas": [
+            "diagrams of Metaphase II and Anaphase II showing sister chromatid alignment and separation within haploid sister cells"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "significance-of-meiosis",
+          "title": "Significance of Meiosis",
+          "objectives": [
+            "Student can explain how meiosis conserves chromosome number across sexually reproducing generations",
+            "Student can describe how crossing over generates genetic variability"
+          ],
+          "visualIdeas": [
+            "a conceptual chart linking crossing over, independent assortment, genetic variation, and evolutionary diversity"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "photosynthesis-in-higher-plants",
+      "title": "Photosynthesis in Higher Plants",
+      "topics": [
+        {
+          "id": "what-do-we-know",
+          "title": "What do we Know?",
+          "objectives": [
+            "Student can list the simple requirements for photosynthesis (chlorophyll, light, carbon dioxide, water)",
+            "Student can describe Joseph Priestley's bell jar experiment showing plants restore oxygen to depleted air"
+          ],
+          "visualIdeas": [
+            "a three-part storyboard of Priestley's candle, mouse, and mint sprig under a closed bell jar"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "early-experiments",
+          "title": "Early Experiments",
+          "objectives": [
+            "Student can summarize the historical contributions of Jan Ingenhousz, Julius von Sachs, T.W. Engelmann, and Cornelius van Niel",
+            "Student can explain Engelmann's prism experiment using Cladophora and aerobic bacteria to trace the action spectrum of photosynthesis"
+          ],
+          "visualIdeas": [
+            "a diagram of Engelmann's setup: white light split by a prism illuminating a green algal strand, showing aerobic bacteria clustered at blue and red light regions"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "where-does-photosynthesis-take-place",
+          "title": "Where does Photosynthesis take place?",
+          "objectives": [
+            "Student can identify the chloroplast as the primary site of photosynthetic reactions",
+            "Student can locate light-dependent and dark (carbon-fixation) reactions in the thylakoid membranes and stroma respectively"
+          ],
+          "visualIdeas": [
+            "a schematic chloroplast showing thylakoid stacks (membrane-bound light reactions) linked to the liquid stroma (enzymatic dark reactions)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-many-pigments-are-involved-in-photosynthesis",
+          "title": "How many Pigments are involved in Photosynthesis?",
+          "objectives": [
+            "Student can list the four pigments of chloroplasts identified by chromatography: chlorophyll a, chlorophyll b, xanthophylls, and carotenoids",
+            "Student can compare absorption spectra of pigments with the overall action spectrum of photosynthesis"
+          ],
+          "visualIdeas": [
+            "graphs comparing the absorption spectrum peaks of chlorophyll a and b with the total photosynthetic action rate overlay"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-light-reaction",
+          "title": "What is Light Reaction?",
+          "objectives": [
+            "Student can define the Light Harvesting Complex (LHC) including antenna molecules and reaction centers",
+            "Student can state the primary molecular events occurring upon light absorption"
+          ],
+          "visualIdeas": [
+            "a diagram of a photosystem showing photon absorption by antenna molecules and energy transfer to the reaction center (P680/P700) with electron ejection"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-electron-transport",
+          "title": "The Electron Transport",
+          "objectives": [
+            "Student can describe the path of electrons in non-cyclic photophosphorylation (Z-scheme)",
+            "Student can trace the transfer of electrons from Photosystem II to Photosystem I"
+          ],
+          "visualIdeas": [
+            "a structural Z-scheme flowchart plotted against redox potential showing PS II, plastoquinone, cytochrome b6f complex, plastocyanin, PS I, ferredoxin, and NADP reductase"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "splitting-of-water",
+          "title": "Splitting of Water",
+          "objectives": [
+            "Student can locate the oxygen-evolving complex associated with PS II on the inner side of the thylakoid membrane",
+            "Student can write the chemical equation for water photolysis"
+          ],
+          "visualIdeas": [
+            "a detail drawing of the lumen face of PS II where two H2O molecules are split into oxygen gas, protons, and free electrons"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "cyclic-and-non-cyclic-photo-phosphorylation",
+          "title": "Cyclic and Non-cyclic Photo-phosphorylation",
+          "objectives": [
+            "Student can compare cyclic and non-cyclic photophosphorylation based on active photosystems and products",
+            "Student can explain when and why a plant cell resorts to cyclic photophosphorylation"
+          ],
+          "visualIdeas": [
+            "a loop pathway diagram of cyclic electron transport around PS I (P700) yielding only ATP"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "chemiosmotic-hypothesis",
+          "title": "Chemiosmotic Hypothesis",
+          "objectives": [
+            "Student can explain how a proton gradient is built across the thylakoid membrane",
+            "Student can describe ATP synthesis coupled with proton flow through the F0-F1 particles of ATPase"
+          ],
+          "visualIdeas": [
+            "a detailed diagram showing the thylakoid membrane, accumulation of protons in the lumen via photolysis and plastoquinone, and their exit through F0-F1 ATP synthase to drive ATP formation in the stroma"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "where-are-the-atp-and-nadph-used",
+          "title": "Where are the ATP and NADPH Used?",
+          "objectives": [
+            "Student can describe the dark reaction as the biosynthetic pathway utilizing ATP and NADPH to reduce CO2 into hexose sugars",
+            "Student can identify the primary acceptor molecules in the C3 and C4 pathways"
+          ],
+          "visualIdeas": [
+            "a flowchart linking light reaction products (ATP, NADPH) to the carbon fixation cycle"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "the-c3-pathway",
+          "title": "The C3 Pathway",
+          "objectives": [
+            "Student can describe the three main stages of the Calvin cycle: carboxylation, reduction, and regeneration",
+            "Student can identify RuBisCO as the key carboxylation enzyme",
+            "Student can calculate the net energetic cost of synthesizing one molecule of glucose via the C3 pathway"
+          ],
+          "visualIdeas": [
+            "a cyclic diagram of the Calvin (C3) cycle showing RuBP + CO2 carboxylation, 3-PGA reduction to triose phosphate using ATP and NADPH, and RuBP regeneration"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-c4-pathway",
+          "title": "The C4 Pathway",
+          "objectives": [
+            "Student can describe Kranz anatomy in C4 leaves",
+            "Student can trace the spatial separation of CO2 fixation between mesophyll and bundle sheath cells (Hatch-Slack pathway)"
+          ],
+          "visualIdeas": [
+            "an anatomical section showing concentric wreath-like bundle sheath cells with large chloroplasts",
+            "a pathway diagram tracing PEP carboxylase activity in mesophyll producing OAA, malate transport, decarboxylation in bundle sheath, and CO2 release into the Calvin cycle"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "photorespiration",
+          "title": "Photorespiration",
+          "objectives": [
+            "Student can explain the dual carboxylase/oxygenase activity of RuBisCO under high oxygen levels",
+            "Student can explain why photorespiration is a wasteful process that limits yield in C3 plants",
+            "Student can explain how C4 plants suppress photorespiration"
+          ],
+          "visualIdeas": [
+            "a comparative pathway diagram showing RuBisCO combining with O2 instead of CO2, leading to phosphoglycolate formation with no ATP or sugar yield"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "factors-affecting-photosynthesis",
+          "title": "Factors affecting Photosynthesis",
+          "objectives": [
+            "Student can explain Blackman's Law of Limiting Factors",
+            "Student can analyze how light, CO2 concentration, temperature, and water act as limiting factors"
+          ],
+          "visualIdeas": [
+            "a curve graph plotting photosynthetic rate against light intensity, highlighting the linear phase, light saturation point, and the flat plateau where other factors become limiting"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "respiration-in-plants",
+      "title": "Respiration in Plants",
+      "topics": [
+        {
+          "id": "do-plants-breathe",
+          "title": "Do Plants Breathe?",
+          "objectives": [
+            "Student can explain how plants exchange gases through stomata and lenticels without specialized respiratory organs",
+            "Student can state why plant tissues have low respiratory demands compared to animal systems"
+          ],
+          "visualIdeas": [
+            "a cross-sectional sketch of stem bark showing gas diffusion paths through a loose cell pocket of a lenticel"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "glycolysis",
+          "title": "Glycolysis",
+          "objectives": [
+            "Student can trace the ten enzymatic steps of glycolysis (Embden-Meyerhof-Parnas pathway) from glucose to pyruvic acid",
+            "Student can identify the energy-consuming and energy-yielding steps in glycolysis",
+            "Student can calculate the net ATP and NADH yield of glycolysis"
+          ],
+          "visualIdeas": [
+            "a complete biochemical step flowchart of glycolysis showing phosphorylation, cleavage, and oxidation reactions, with ATP inputs and outputs marked"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "fermentation",
+          "title": "Fermentation",
+          "objectives": [
+            "Student can describe anaerobic pathways of alcoholic and lactic acid fermentation",
+            "Student can identify the enzymes alcohol dehydrogenase and lactate dehydrogenase",
+            "Student can compare energy yield between anaerobic and aerobic respiration"
+          ],
+          "visualIdeas": [
+            "a branching flowchart from pyruvic acid: one pathway leading to lactic acid (muscle cells) and another to ethanol + CO2 (yeast cells), highlighting NADH regeneration"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "aerobic-respiration",
+          "title": "Aerobic Respiration",
+          "objectives": [
+            "Student can describe the oxidative decarboxylation of pyruvic acid to acetyl-CoA (link reaction) catalyzed by pyruvate dehydrogenase",
+            "Student can locate link reactions and citric acid cycle steps in the mitochondrial matrix"
+          ],
+          "visualIdeas": [
+            "a diagram showing pyruvate crossing the double mitochondrial membrane and converting into Acetyl CoA with NAD+ reduction and CO2 release"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "tricarboxylic-acid-cycle",
+          "title": "Tricarboxylic Acid Cycle",
+          "objectives": [
+            "Student can trace the cyclic pathway of the Krebs (TCA) cycle from acetyl-CoA and oxaloacetic acid to citrate and back",
+            "Student can list the steps where CO2 release and NADH/FADH2/GTP generation occur"
+          ],
+          "visualIdeas": [
+            "a wheel diagram of the citric acid cycle highlighting 6-carbon, 5-carbon, and 4-carbon intermediates and energy carrier synthesis points"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "electron-transport-system-and-oxidative-phosphorylation",
+          "title": "Electron Transport System (ETS) and Oxidative Phosphorylation",
+          "objectives": [
+            "Student can describe the components of Complexes I to V in the inner mitochondrial membrane",
+            "Student can explain how oxygen acts as the terminal electron acceptor and drives metabolic water formation",
+            "Student can explain ATP generation driven by the proton motive force through Complex V (ATP Synthase)"
+          ],
+          "visualIdeas": [
+            "a detailed cross-section of the inner mitochondrial membrane displaying Complexes I, II, III, and IV embedded in the bilayer, pumping protons into the intermembrane space, with Complex V (F0F1) utilizing the gradient to generate ATP"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "the-respiratory-balance-sheet",
+          "title": "The Respiratory Balance Sheet",
+          "objectives": [
+            "Student can construct a complete biochemical balance sheet of ATP production for one glucose molecule",
+            "Student can state the assumptions made when calculating absolute respiratory yields"
+          ],
+          "visualIdeas": [
+            "a master ledger table summing up ATP produced by substrate-level phosphorylation vs oxidative phosphorylation (using 2.5 ATP/NADH and 1.5 ATP/FADH2 ratios)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "amphibolic-pathway",
+          "title": "Amphibolic Pathway",
+          "objectives": [
+            "Student can explain why respiratory pathways are called amphibolic (both catabolic and anabolic)",
+            "Student can identify the entry and exit points of proteins and fats within respiratory pathways"
+          ],
+          "visualIdeas": [
+            "an integrated biochemical map showing glycerol entering glycolysis, fatty acids converting to acetyl-CoA, and proteins feeding in as organic acids at different TCA steps"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "respiratory-quotient",
+          "title": "Respiratory Quotient",
+          "objectives": [
+            "Student can define Respiratory Quotient (RQ)",
+            "Student can calculate the RQ values for carbohydrates, fats (tripalmitin), and proteins based on stoichiometric respiratory equations"
+          ],
+          "visualIdeas": [
+            "a comparative card table showing the chemical equations, fraction ratios (VCO2 / VO2), and RQ decimal values for glucose (1.0), tripalmitin (0.7), and proteins (0.9)"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "plant-growth-and-development",
+      "title": "Plant Growth and Development",
+      "topics": [
+        {
+          "id": "growth",
+          "title": "Growth",
+          "objectives": [
+            "Student can define plant growth as an irreversible, permanent increase in size",
+            "Student can explain why plant growth is unique and open-ended"
+          ],
+          "visualIdeas": [
+            "a diagram comparing closed animal growth (determinate) with open-ended plant growth (indeterminate)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "plant-growth-generally-is-indeterminate",
+          "title": "Plant Growth Generally is Indeterminate",
+          "objectives": [
+            "Student can identify the role of primary and secondary meristems in maintaining indeterminate growth",
+            "Student can explain root and shoot apical meristem functions"
+          ],
+          "visualIdeas": [
+            "a plant outline highlighting local terminal growth zones (root and shoot apices) and lateral cambium zones"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "growth-is-measurable",
+          "title": "Growth is Measurable",
+          "objectives": [
+            "Student can list parameters used to measure plant growth (dry weight, fresh weight, cell count, surface area)",
+            "Student can explain how an auxanometer is used to track growth"
+          ],
+          "visualIdeas": [
+            "a simplified diagram of an arc auxanometer displaying a pointer moving across a scale as a plant stem elongates"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "phases-of-growth",
+          "title": "Phases of Growth",
+          "objectives": [
+            "Student can describe the three successive phases of plant growth: meristematic, elongation, and maturation",
+            "Student can identify cell wall characteristics defining each phase"
+          ],
+          "visualIdeas": [
+            "a longitudinal cell-by-cell row illustrating small dividing cells, elongated vacuolated cells, and thick-walled mature cells"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "growth-rates",
+          "title": "Growth Rates",
+          "objectives": [
+            "Student can compare arithmetic and geometric growth models",
+            "Student can derive mathematical expressions for arithmetic (Lt = L0 + rt) and geometric (Wt = W0 * e^rt) growth rates",
+            "Student can construct a sigmoid growth curve indicating lag, log (exponential), and stationary phases"
+          ],
+          "visualIdeas": [
+            "graphs side-by-side: a straight line representing arithmetic growth (constant increments) and a sigmoid 'S' curve representing geometric growth phases"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "conditions-for-growth",
+          "title": "Conditions for Growth",
+          "objectives": [
+            "Student can list external environmental and nutritional factors (water, oxygen, nutrients, temperature, light) necessary for plant growth",
+            "Student can explain the physiological consequences of water stress on cell expansion"
+          ],
+          "visualIdeas": [
+            "a checklist diagram detailing essential environmental parameters and their precise roles in enzyme activity and cell turgidity"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "differentiation-dedifferentiation-and-redifferentiation",
+          "title": "Differentiation, Dedifferentiation and Redifferentiation",
+          "objectives": [
+            "Student can distinguish between differentiation, dedifferentiation, and redifferentiation with tissue examples",
+            "Student can identify cork cambium and interfascicular cambium as products of dedifferentiation"
+          ],
+          "visualIdeas": [
+            "a block diagram showing cellular transformations: Parenchyma (differentiated) -> Interfascicular Cambium (dedifferentiated) -> Secondary Xylem/Phloem (redifferentiated)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "development",
+          "title": "Development",
+          "objectives": [
+            "Student can define development as the sum of growth and differentiation",
+            "Student can trace the sequential development pathway of a plant cell"
+          ],
+          "visualIdeas": [
+            "a metabolic pathway flow diagram from a meristematic cell through division, elongation, differentiation, senescence, and death"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "plasticity",
+          "title": "Plasticity",
+          "objectives": [
+            "Student can define plasticity as the capacity of plants to alter growth patterns in response to the environment",
+            "Student can identify heterophylly in cotton, coriander, larkspur, and buttercup as examples of environmental and phase-dependent plasticity"
+          ],
+          "visualIdeas": [
+            "drawings showing different leaf shapes in terrestrial vs aquatic habits of the buttercup plant (Ranunculus)"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "plant-growth-regulators",
+          "title": "Plant Growth Regulators",
+          "objectives": [
+            "Student can categorize plant growth regulators (PGRs) into growth promoters and growth inhibitors",
+            "Student can list the five major classes of plant hormones"
+          ],
+          "visualIdeas": [
+            "a mind map classifying PGRs into promoters (Auxins, Gibberellins, Cytokinins) and inhibitors/stress response (Abscisic acid, Ethylene)"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "characteristics",
+          "title": "Characteristics",
+          "objectives": [
+            "Student can describe the general chemical composition and nature of PGRs (indole compounds, adenine derivatives, carotenoid derivatives, terpenes, gases)"
+          ],
+          "visualIdeas": [
+            "a comparative table pairing chemical hormone groups with their raw molecular structures"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "discovery-of-plant-growth-regulators",
+          "title": "Discovery of Plant Growth Regulators",
+          "objectives": [
+            "Student can summarize key physiological discoveries: Charles and Francis Darwin (phototropism), E. Kurosawa ('bakanae' seedling disease), F.W. Went (auxin isolation), and Skoog/Miller (kinetin)"
+          ],
+          "visualIdeas": [
+            "a comic-strip timeline depicting Darwin's canary grass coleoptiles curving to light and Went's agar block agar-tip transfer experiments"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "physiological-effects-of-plant-growth-regulators",
+          "title": "Physiological Effects of Plant Growth Regulators",
+          "objectives": [
+            "Student can explain the bioassays and physiological actions of Auxins (apical dominance), Gibberellins (bolting), Cytokinins (cell division), Ethylene (fruit ripening), and Abscisic Acid (stomatal closure)"
+          ],
+          "visualIdeas": [
+            "drawings showing the removal of an apical bud resulting in lateral branch release (de-capitation experiment illustrating apical dominance)"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "photoperiodism",
+          "title": "Photoperiodism",
+          "objectives": [
+            "Student can define photoperiodism and classify plants into short-day, long-day, and day-neutral plants",
+            "Student can explain the role of leaf perception in the photoperiodic floral stimulus"
+          ],
+          "visualIdeas": [
+            "comparative charts showing flowering response under critical photoperiods for long-day, short-day, and day-neutral plants"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "vernalisation",
+          "title": "Vernalisation",
+          "objectives": [
+            "Student can define vernalisation as the low-temperature promotion of flowering",
+            "Student can explain the physiological significance of vernalisation in biennial crops like sugarbeet, cabbage, and carrot"
+          ],
+          "visualIdeas": [
+            "a timeline illustration showing how winter wheat exposed to cold is induced to flower in spring, compared to un-vernalised controls"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "breathing-and-exchange-of-gases",
+      "title": "Breathing and Exchange of Gases",
+      "topics": [
+        {
+          "id": "respiratory-organs",
+          "title": "Respiratory Organs",
+          "objectives": [
+            "Student can list respiratory surfaces (skin, gills, tracheal networks, lungs) across major animal taxa",
+            "Student can relate respiratory adaptations to animal habitats"
+          ],
+          "visualIdeas": [
+            "a taxonomic matrix mapping animal classes (e.g., amphibians, insects, fishes) to their respiratory mechanisms"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "human-respiratory-system",
+          "title": "Human Respiratory System",
+          "objectives": [
+            "Student can trace the structural anatomy of the human respiratory tract from the nostrils to the alveoli",
+            "Student can identify the components of the voice box (larynx) and trachea",
+            "Student can describe the double-layered pleura and its protective role"
+          ],
+          "visualIdeas": [
+            "a complete labelled diagram of the human respiratory system highlighting larynx, trachea with cartilaginous rings, bronchi, lungs, pleura, and alveoli terminal clusters"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "mechanism-of-breathing",
+          "title": "Mechanism of Breathing",
+          "objectives": [
+            "Student can explain the pressure gradients driving inspiration and expiration",
+            "Student can describe the coordinate movements of the diaphragm and external/internal intercostal muscles"
+          ],
+          "visualIdeas": [
+            "two-panel mechanical lung drawing showing thoracic volume expansion/diaphragm contraction (inspiration) vs lung contraction/diaphragm relaxation (expiration)"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "respiratory-volumes-and-capacities",
+          "title": "Respiratory Volumes and Capacities",
+          "objectives": [
+            "Student can define Tidal Volume (TV), Inspiratory Reserve Volume (IRV), Expiratory Reserve Volume (ERV), and Residual Volume (RV)",
+            "Student can calculate clinical capacities (IC, EC, FRC, VC, TLC) using component volumes"
+          ],
+          "visualIdeas": [
+            "a spirometer trace chart showing peak waves corresponding to TV, IRV, ERV, and a baseline area for non-expellable RV"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "exchange-of-gases",
+          "title": "Exchange of Gases",
+          "objectives": [
+            "Student can explain gas exchange driven by partial pressure gradients at alveoli and tissue levels",
+            "Student can describe the structure of the diffusion membrane, including thin squamous alveolar epithelium, basement membrane, and capillary endothelium"
+          ],
+          "visualIdeas": [
+            "a detailed cross-section of an alveolus interface showing thin membrane cells, basement substance, and a red blood cell squeezed in a capillary",
+            "a flow schematic tracking PO2 and PCO2 values in systemic arteries, veins, tissues, and alveoli"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "transport-of-gases",
+          "title": "Transport of Gases",
+          "objectives": [
+            "Student can explain the transport of oxygen and carbon dioxide in the blood"
+          ],
+          "visualIdeas": [
+            "a balance flowchart showing oxygen and carbon dioxide distributions across plasma and red blood cells"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "transport-of-oxygen",
+          "title": "Transport of Oxygen",
+          "objectives": [
+            "Student can describe oxygen binding to hemoglobin to form oxyhemoglobin",
+            "Student can analyze the oxygen-hemoglobin dissociation curve and list factors (pH, temperature, pCO2) that shift it"
+          ],
+          "visualIdeas": [
+            "a sigmoid oxygen-hemoglobin dissociation curve showing shifts to the right (Bohr effect) and left with parameter calls"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "transport-of-carbon-dioxide",
+          "title": "Transport of Carbon dioxide",
+          "objectives": [
+            "Student can explain the three modes of carbon dioxide transport: dissolved, carbamino-hemoglobin, and bicarbonate ions",
+            "Student can describe the role of carbonic anhydrase and chloride shift in erythrocytes"
+          ],
+          "visualIdeas": [
+            "an intracellular RBC metabolic pathway showing CO2 + H2O forming carbonic acid, splitting to bicarbonate, and exiting the cell in exchange for chloride"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "regulation-of-respiration",
+          "title": "Regulation of Respiration",
+          "objectives": [
+            "Student can locate the respiratory rhythm center and pneumotaxic center in the brainstem",
+            "Student can explain the sensitivity of chemosensitive areas to carbon dioxide and hydrogen ion changes"
+          ],
+          "visualIdeas": [
+            "a sagittal view of the human brainstem indicating medulla and pons regulation hubs with feedback loops from aortic/carotid chemical receptors"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "disorders-of-respiratory-system",
+          "title": "Disorders of Respiratory System",
+          "objectives": [
+            "Student can describe the physiological pathology of Asthma, Emphysema, and Occupational Respiratory Disorders (asbestosis, silicosis)"
+          ],
+          "visualIdeas": [
+            "alveolar wall comparison: normal grape-like elastic clusters vs damaged, ruptured larger air sacs of an emphysemic lung"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "body-fluids-and-circulation",
+      "title": "Body Fluids and Circulation",
+      "topics": [
+        {
+          "id": "blood",
+          "title": "Blood",
+          "objectives": [
+            "Student can describe the composition of blood as a specialized connective tissue consisting of plasma and formed elements"
+          ],
+          "visualIdeas": [
+            "a test tube representation of centrifuged blood showing plasma (top), white buffy coat (middle), and red blood cells (bottom)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "plasma",
+          "title": "Plasma",
+          "objectives": [
+            "Student can list the constituent proteins of plasma (fibrinogen, globulins, albumins) and their respective functions"
+          ],
+          "visualIdeas": [
+            "a pie chart breakdown of plasma water, mineral salts, nutrients, and clotting proteins"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "formed-elements",
+          "title": "Formed Elements",
+          "objectives": [
+            "Student can describe the structure and function of erythrocytes, leucocytes (granulocytes and agranulocytes), and platelets",
+            "Student can identify different white blood cell types under microscopic cross-sections"
+          ],
+          "visualIdeas": [
+            "drawings of different blood cell morphologies: biconcave RBC, segmented neutrophil, bi-lobed eosinophil, basophil, large-nucleus lymphocyte, and kidney-nucleus monocyte"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "blood-groups",
+          "title": "Blood Groups",
+          "objectives": [
+            "Student can explain the biochemical basis of ABO blood grouping",
+            "Student can predict donor compatibility based on antigens and antibodies",
+            "Student can describe the clinical significance of Rh factor and the pathology of Erythroblastosis foetalis"
+          ],
+          "visualIdeas": [
+            "a grid table showing blood groups (A, B, AB, O), RBC surface antigens, serum antibodies, and donor compatibilities",
+            "a progressive timeline of Rh- mother pregnancy with an Rh+ fetus, maternal antibody formation, and subsequent pregnancy risk"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "coagulation-of-blood",
+          "title": "Coagulation of Blood",
+          "objectives": [
+            "Student can trace the enzyme cascade mechanism of blood clotting",
+            "Student can identify the roles of thrombokinase, prothrombin, thrombin, fibrinogen, and calcium ions"
+          ],
+          "visualIdeas": [
+            "a sequential cascade diagram showing injured tissue -> platelet release of thromboplastins -> thrombokinase conversion of prothrombin to active thrombin -> fibrinogen to fibrin mesh"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "lymph-tissue-fluid",
+          "title": "Lymph (Tissue Fluid)",
+          "objectives": [
+            "Student can describe the formation, composition, and circulation of lymph",
+            "Student can explain the physiological role of lymph in nutrient absorption and immune defense"
+          ],
+          "visualIdeas": [
+            "a schematic showing fluid filtration out of blood capillaries into intercellular spaces, drainage into lymphatic vessels, and return to venous circulation"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "circulatory-pathways",
+          "title": "Circulatory Pathways",
+          "objectives": [
+            "Student can compare open and closed circulatory systems in the animal kingdom",
+            "Student can trace heart structural evolution from two-chambered (fishes) to three-chambered (amphibians) and four-chambered hearts"
+          ],
+          "visualIdeas": [
+            "comparative diagrams showing single circulation in fish, incomplete double circulation in amphibians, and complete double circulation in mammals"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "human-circulatory-system",
+          "title": "Human Circulatory System",
+          "objectives": [
+            "Student can describe the internal and external anatomy of the human heart",
+            "Student can locate the myogenic nodal tissue system (SAN, AVN, bundle of His, Purkinje fibers)"
+          ],
+          "visualIdeas": [
+            "a detailed sectional diagram of the human heart showing atria, ventricles, bicuspid/tricuspid valves, semilunar valves, and the path of the electrical conduction network starting at the SA node"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "cardiac-cycle",
+          "title": "Cardiac Cycle",
+          "objectives": [
+            "Student can define the cardiac cycle and explain the sequence of joint diastole, atrial systole, and ventricular systole",
+            "Student can define stroke volume and cardiac output",
+            "Student can associate the closure of AV and semilunar valves with 'lub' and 'dub' heart sounds"
+          ],
+          "visualIdeas": [
+            "a circular cycle clock spanning 0.8 seconds detailing atrial and ventricular systolic and diastolic periods"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "electrocardiograph-ecg",
+          "title": "Electrocardiograph (ECG)",
+          "objectives": [
+            "Student can define an ECG and explain its clinical utility",
+            "Student can correlate wave components (P wave, QRS complex, T wave) with depolarization and repolarization of heart chambers"
+          ],
+          "visualIdeas": [
+            "a standard clinical ECG tracing with P, Q, R, S, T peaks labelled and annotated with their corresponding cardiac electrical events"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "double-circulation",
+          "title": "Double Circulation",
+          "objectives": [
+            "Student can trace the separate paths of pulmonary and systemic circulation",
+            "Student can describe hepatic portal and coronary circulatory pathways"
+          ],
+          "visualIdeas": [
+            "a figure-eight schematic showing deoxygenated blood flowing to the lungs (pulmonary circle) and oxygenated blood pumping out to somatic systems (systemic circle)"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "regulation-of-cardiac-activity",
+          "title": "Regulation of Cardiac Activity",
+          "objectives": [
+            "Student can explain how the autonomic nervous system (sympathetic and parasympathetic) regulates heart rate",
+            "Student can identify the adrenal medullary hormones that influence cardiac output"
+          ],
+          "visualIdeas": [
+            "a brainstem neural link diagram showing sympathetic nerve accelerators and vagus nerve inhibitors terminating at the SA node"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "disorders-of-circulatory-system",
+          "title": "Disorders of Circulatory System",
+          "objectives": [
+            "Student can define hypertension, coronary artery disease (atherosclerosis), angina pectoris, and heart failure"
+          ],
+          "visualIdeas": [
+            "cross-section of an artery showing healthy lumen clearance vs lumen narrowed by cholesterol plaque deposition"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "excretory-products-and-their-elimination",
+      "title": "Excretory Products and their Elimination",
+      "topics": [
+        {
+          "id": "human-excretory-system",
+          "title": "Human Excretory System",
+          "objectives": [
+            "Student can identify the organs of the human excretory system",
+            "Student can describe the gross internal structure of the kidney, including cortex, medulla, pelvis, and calyces"
+          ],
+          "visualIdeas": [
+            "a complete anatomical system view showing kidneys, ureters, urinary bladder, and urethra, coupled with a coronal cutaway of a kidney"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-a-nephron",
+          "title": "Structure of a Nephron",
+          "objectives": [
+            "Student can distinguish cortical and juxtamedullary nephrons based on loop of Henle length",
+            "Student can describe the components of the renal corpuscle (glomerulus and Bowman's capsule) and the renal tubule (PCT, Henle's loop, DCT)"
+          ],
+          "visualIdeas": [
+            "a schematic of a nephron showing afferent/efferent arterioles, Bowman's capsule, PCT, descending and ascending loops, DCT, and collecting duct, with peritubular capillaries and vasa recta"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "urine-formation",
+          "title": "Urine Formation",
+          "objectives": [
+            "Student can describe the three main steps of urine formation: glomerular filtration, selective reabsorption, and tubular secretion",
+            "Student can define Glomerular Filtration Rate (GFR) and explain the filtration pressure"
+          ],
+          "visualIdeas": [
+            "a schematic renal corpuscle showing net filtration pressure calculation and podocyte filtration slits on the Bowman inner membrane"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "function-of-the-tubules",
+          "title": "Function of the Tubules",
+          "objectives": [
+            "Student can detail the absorption and secretion events of electrolytes, nutrients, and water within the PCT, Henle's loop, DCT, and collecting duct",
+            "Student can state how the tubule functions regulate blood pH and ionic balance"
+          ],
+          "visualIdeas": [
+            "a detailed nephron tubule map showing directional arrows for active/passive transport of NaCl, H2O, HCO3-, K+, H+, and NH3 at each tubule segment"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mechanism-of-concentration-of-the-filtrate",
+          "title": "Mechanism of Concentration of the Filtrate",
+          "objectives": [
+            "Student can explain the countercurrent multiplier and exchanger systems of Henle's loop and vasa recta",
+            "Student can describe the osmolarity gradient established in the medullary interstitium"
+          ],
+          "visualIdeas": [
+            "a parallel hairpin diagram comparing the countercurrent flow in Henle's loop with the vasa recta loop, tracking osmolarity values from 300 to 1200 mOsmol/L"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "regulation-of-kidney-function",
+          "title": "Regulation of Kidney Function",
+          "objectives": [
+            "Student can explain feedback regulation mechanisms involving ADH (vasopressin), the Juxtaglomerular Apparatus (JGA), RAAS system, and ANF"
+          ],
+          "visualIdeas": [
+            "a feedback loop flowchart showing blood volume fall triggering renin release, converting angiotensinogen to angiotensin I and II, aldosterone release, and sodium-water retention"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "micturition",
+          "title": "Micturition",
+          "objectives": [
+            "Student can outline the neural reflex pathway of micturition",
+            "Student can list typical physical and chemical characteristics of normal human urine"
+          ],
+          "visualIdeas": [
+            "a reflex arc flow diagram showing bladder stretch receptors firing signals to the CNS, initiating urethral sphincter relaxation"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "role-of-other-organs-in-excretion",
+          "title": "Role of other Organs in Excretion",
+          "objectives": [
+            "Student can describe how the lungs, liver, and skin (sweat and sebaceous glands) assist in elimination of metabolic wastes"
+          ],
+          "visualIdeas": [
+            "a chart listing accessory excretory organs alongside their target wastes (e.g., CO2, bilirubin, sebum lipids, salt, lactic acid)"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "disorders-of-the-excretory-system",
+          "title": "Disorders of the Excretory System",
+          "objectives": [
+            "Student can describe uremia, renal calculi, and glomerulonephritis",
+            "Student can outline the clinical steps of hemodialysis using an artificial kidney"
+          ],
+          "visualIdeas": [
+            "a clinical flowchart of hemodialysis showing blood drawn from an artery, passing through cellophane tubes in a dialysing bath, and returning clean to a vein"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "locomotion-and-movement",
+      "title": "Locomotion and Movement",
+      "topics": [
+        {
+          "id": "types-of-movement",
+          "title": "Types of Movement",
+          "objectives": [
+            "Student can compare amoeboid, ciliary, and muscular movements with physiological body examples",
+            "Student can state the difference between movement and locomotion"
+          ],
+          "visualIdeas": [
+            "a comparative collage showing macrophage pseudopodia, trachea cilia, and limb muscles in action"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "muscle",
+          "title": "Muscle",
+          "objectives": [
+            "Student can describe the microanatomy of a skeletal muscle fiber, including sarcolemma, sarcoplasmic reticulum, myofibrils, and the sarcomere unit"
+          ],
+          "visualIdeas": [
+            "a structural nested diagram of a muscle belly down to muscle fascicle, single muscle fiber cell, and myofibrils showing dark A and light I bands"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "structure-of-contractile-proteins",
+          "title": "Structure of Contractile Proteins",
+          "objectives": [
+            "Student can describe the structure of thin (actin, tropomyosin, troponin) and thick (myosin, meromyosin) filaments",
+            "Student can locate the active sites for myosin binding and ATP hydrolysis"
+          ],
+          "visualIdeas": [
+            "detailed models of a double-helical F-actin strand draped with tropomyosin and troponin complexes, alongside a myosin molecule detailing heavy/light meromyosin arms and globular heads"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "mechanism-of-muscle-contraction",
+          "title": "Mechanism of Muscle Contraction",
+          "objectives": [
+            "Student can explain the sliding filament theory of muscle contraction",
+            "Student can trace the biochemical and mechanical stages of the cross-bridge cycle driven by Ca2+ and ATP"
+          ],
+          "visualIdeas": [
+            "a multi-panel cycle diagram showing calcium unmasking actin binding sites, myosin binding actin, power stroke sliding, ATP binding causing detachment, and ATP hydrolysis resetting the head"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "skeletal-system",
+          "title": "Skeletal System",
+          "objectives": [
+            "Student can classify the human skeleton into axial and appendicular divisions",
+            "Student can identify the bones of the skull, vertebral column, ribs, sternum, pectoral/pelvic girdles, and limbs"
+          ],
+          "visualIdeas": [
+            "a full-body human skeleton graphic color-coding the axial skeleton bones vs appendicular skeleton bones with exact counts"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "joints",
+          "title": "Joints",
+          "objectives": [
+            "Student can classify joints into fibrous, cartilaginous, and synovial joints",
+            "Student can locate ball and socket, hinge, pivot, gliding, and saddle joints with body examples"
+          ],
+          "visualIdeas": [
+            "simplified mechanical pivot-point sketches of a suture (fibrous), vertebral disk (cartilaginous), and synovial joint detail with synovial fluid and cartilage"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "disorders-of-muscular-and-skeletal-system",
+          "title": "Disorders of Muscular and Skeletal System",
+          "objectives": [
+            "Student can describe Myasthenia gravis, Muscular dystrophy, Tetany, Arthritis, Osteoporosis, and Gout"
+          ],
+          "visualIdeas": [
+            "anatomical views comparing a healthy joint with a joint affected by osteoarthritis and uric acid crystals of gout"
+          ],
+          "estMinutes": 12
+        }
+      ]
+    },
+    {
+      "id": "neural-control-and-coordination",
+      "title": "Neural Control and Coordination",
+      "topics": [
+        {
+          "id": "neural-system",
+          "title": "Neural System",
+          "objectives": [
+            "Student can compare the simplicity of neural coordination in Hydra and insects with vertebrate neural systems"
+          ],
+          "visualIdeas": [
+            "a simple comparative illustration of Hydra's nerve net vs the organized brain and ganglionic ladder of an insect"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "human-neural-system",
+          "title": "Human Neural System",
+          "objectives": [
+            "Student can divide the human nervous system into Central Nervous System (CNS) and Peripheral Nervous System (PNS)",
+            "Student can contrast somatic and autonomic (sympathetic and parasympathetic) neural divisions"
+          ],
+          "visualIdeas": [
+            "a structured flow taxonomy diagram of the human nervous system branching down to autonomic subdivisions"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "neuron-as-structural-and-functional-unit-of-neural-system",
+          "title": "Neuron as Structural and Functional Unit of Neural System",
+          "objectives": [
+            "Student can describe parts of a multipolar neuron: cell body (soma), dendrites, and axon",
+            "Student can classify neurons as unipolar, bipolar, or multipolar"
+          ],
+          "visualIdeas": [
+            "side-by-side structures comparing unipolar, embryonic, retinal bipolar, and cerebral cortex multipolar neurons"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "generation-and-conduction-of-nerve-impulse",
+          "title": "Generation and Conduction of Nerve Impulse",
+          "objectives": [
+            "Student can describe resting membrane potential maintenance by the Na+/K+ pump",
+            "Student can explain action potential generation and depolarization/repolarization phases using sodium/potassium voltage-gated channels"
+          ],
+          "visualIdeas": [
+            "an axon membrane patch diagram displaying ion flows, charges (+ outside/ - inside at rest, reversing during action potential), and a corresponding voltage spike graph"
+          ],
+          "estMinutes": 22
+        },
+        {
+          "id": "transmission-of-impulses",
+          "title": "Transmission of Impulses",
+          "objectives": [
+            "Student can compare electrical and chemical synapses",
+            "Student can trace the path of neurotransmitter action across a synaptic cleft"
+          ],
+          "visualIdeas": [
+            "a detailed axon terminal diagram showing synaptic vesicles fusing with the pre-synaptic membrane, releasing neurotransmitters across the cleft to post-synaptic receptors"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "central-neural-system",
+          "title": "Central Neural System",
+          "objectives": [
+            "Student can list the three protective cranial meninges (dura mater, arachnoid mater, pia mater)",
+            "Student can identify the broad anatomical divisions of the brain"
+          ],
+          "visualIdeas": [
+            "a sagittal profile diagram of the human head showing meningeal layer stacking under the skull"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "forebrain",
+          "title": "Forebrain",
+          "objectives": [
+            "Student can describe the structure and functional regions of the cerebrum, thalamus, and hypothalamus",
+            "Student can explain the role of the limbic system in emotional behavior"
+          ],
+          "visualIdeas": [
+            "a detailed brain diagram highlighting the cerebral cortex lobes, corpus callosum band, thalamus, and hypothalamus base"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "midbrain",
+          "title": "Midbrain",
+          "objectives": [
+            "Student can locate the cerebral aqueduct passing through the midbrain",
+            "Student can state the reflex visual/auditory role of the corpora quadrigemina"
+          ],
+          "visualIdeas": [
+            "a sectional view of the midbrain highlighting the four colliculus lobes (corpora quadrigemina) and the aqueduct channel"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "hindbrain",
+          "title": "Hindbrain",
+          "objectives": [
+            "Student can locate the pons, cerebellum, and medulla oblongata",
+            "Student can list the vegetative functions regulated by the medulla"
+          ],
+          "visualIdeas": [
+            "a highlighted hindbrain region zoom showing the folded cerebellum structure, pons bridge, and medulla leading down to the spinal cord"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "chemical-coordination-and-integration",
+      "title": "Chemical Coordination and Integration",
+      "topics": [
+        {
+          "id": "endocrine-glands-and-hormones",
+          "title": "Endocrine Glands and Hormones",
+          "objectives": [
+            "Student can define endocrine glands and distinguish them from exocrine glands",
+            "Student can define hormones as non-nutrient intercellular messengers produced in trace amounts"
+          ],
+          "visualIdeas": [
+            "a conceptual drawing contrasting ductless endocrine capillary secretion with ducted exocrine gland delivery"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "human-endocrine-system",
+          "title": "Human Endocrine System",
+          "objectives": [
+            "Student can locate major endocrine glands in the human body",
+            "Student can list key hormones released by each gland"
+          ],
+          "visualIdeas": [
+            "a full-body human outline showing spatial locations of the hypothalamus, pituitary, pineal, thyroid, parathyroid, thymus, adrenal, pancreas, and gonads"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-hypothalamus",
+          "title": "The Hypothalamus",
+          "objectives": [
+            "Student can describe the neurosecretory nuclei of the hypothalamus",
+            "Student can classify hypothalamic hormones into releasing and inhibiting hormones with examples (GnRH, Somatostatin)"
+          ],
+          "visualIdeas": [
+            "a diagram of portal circulation and direct tract connections linking neurosecretory neurons in the hypothalamus down to the pituitary gland"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "the-pituitary-gland",
+          "title": "The Pituitary Gland",
+          "objectives": [
+            "Student can distinguish anatomical regions of the pituitary: Adenohypophysis (pars distalis, pars intermedia) and Neurohypophysis (pars nervosa)",
+            "Student can state the functions of hormones secreted by each pituitary region (GH, PRL, TSH, ACTH, LH, FSH, MSH, Oxytocin, Vasopressin)"
+          ],
+          "visualIdeas": [
+            "a pituitary structural breakdown chart matching anatomical parts with their respective endocrine outputs"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "the-pineal-gland",
+          "title": "The Pineal Gland",
+          "objectives": [
+            "Student can locate the pineal gland on the dorsal side of the forebrain",
+            "Student can explain the physiological role of melatonin in regulating diurnal (24-hour) biological rhythms"
+          ],
+          "visualIdeas": [
+            "a circular clock graphic linking daylight/darkness cycles to melatonin release and sleep-wake cycles"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "thyroid-gland",
+          "title": "Thyroid Gland",
+          "objectives": [
+            "Student can describe the bilobed follicular structure of the thyroid",
+            "Student can compare the physiological outcomes of hyperthyroidism and hypothyroidism (goitre, cretinism, myxedema)",
+            "Student can list functions of thyroxine and thyrocalcitonin (TCT)"
+          ],
+          "visualIdeas": [
+            "an anatomical sketch of the larynx and trachea displaying the butterfly-shaped thyroid lobes and isthmus connect",
+            "a slide image schematic showing thyroid follicles filled with colloid"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "parathyroid-gland",
+          "title": "Parathyroid Gland",
+          "objectives": [
+            "Student can locate the four parathyroid glands on the back of the thyroid lobes",
+            "Student can explain the antagonistic regulation of blood calcium levels by parathyroid hormone (PTH) and thyrocalcitonin (TCT)"
+          ],
+          "visualIdeas": [
+            "a dual-feedback balance scale showing bone resorption/kidney absorption turning on/off with high/low calcium levels"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "thymus",
+          "title": "Thymus",
+          "objectives": [
+            "Student can locate the thymus gland relative to the heart and aorta",
+            "Student can state the role of thymosin hormones in T-lymphocyte differentiation and cell-mediated/humoral immunity",
+            "Student can explain why immunity decreases with age due to thymus degeneration"
+          ],
+          "visualIdeas": [
+            "a bar chart showing thymus gland mass relative to age, declining from childhood through old age"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "adrenal-gland",
+          "title": "Adrenal Gland",
+          "objectives": [
+            "Student can divide the adrenal gland into adrenal cortex and adrenal medulla",
+            "Student can compare catecholamines (adrenaline/noradrenaline) as emergency 'fight-or-flight' hormones with corticoids (glucocorticoids/mineralocorticoids)"
+          ],
+          "visualIdeas": [
+            "a cross-sectional wedge of an adrenal gland detailing the three layers of the cortex (zona glomerulosa, fasciculata, reticularis) surrounding the central medulla core"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "pancreas",
+          "title": "Pancreas",
+          "objectives": [
+            "Student can identify the pancreas as a composite/heterocrine gland",
+            "Student can locate pancreatic Islets of Langerhans and describe the endocrine functions of glucagon (alpha cells) and insulin (beta cells)",
+            "Student can explain the metabolic symptoms of Diabetes Mellitus"
+          ],
+          "visualIdeas": [
+            "a comparative flowchart of blood glucose level homeostasis: insulin lowering sugar (glycogenesis) and glucagon raising sugar (glycogenolysis)"
+          ],
+          "estMinutes": 18
+        },
+        {
+          "id": "testis",
+          "title": "Testis",
+          "objectives": [
+            "Student can identify Leydig (interstitial) cells as the source of androgens (testosterone)",
+            "Student can list the physiological actions of testosterone in male development and spermatogenesis"
+          ],
+          "visualIdeas": [
+            "a histology section sketch of testicular tissue showing Leydig cells situated in between circular seminiferous tubules"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "ovary",
+          "title": "Ovary",
+          "objectives": [
+            "Student can describe the secretion of estrogen by developing ovarian follicles and progesterone by the corpus luteum",
+            "Student can state the physiological roles of estrogen and progesterone in female reproductive cycles and pregnancy"
+          ],
+          "visualIdeas": [
+            "a cyclic ovary sketch showing a follicle maturing, releasing an ovum, and transitioning into a yellow corpus luteum body"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "hormones-of-heart-kidney-and-gastrointestinal-tract",
+          "title": "Hormones of Heart, Kidney and Gastrointestinal Tract",
+          "objectives": [
+            "Student can state the endocrine functions of non-endocrine tissues: atrial natriuretic factor (ANF) from the heart, erythropoietin from the kidney, and gastrin, secretin, CCK, and GIP from the gut"
+          ],
+          "visualIdeas": [
+            "a reference table listing non-endocrine organs, their hormone outputs, and primary target tissues"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "mechanism-of-hormone-action",
+          "title": "Mechanism of Hormone Action",
+          "objectives": [
+            "Student can explain how water-soluble protein hormones interact with extracellular receptors and generate second messengers (cAMP, IP3, Ca2+)",
+            "Student can explain how lipid-soluble steroid hormones pass through membranes to bind intracellular/nuclear receptors and alter gene expression"
+          ],
+          "visualIdeas": [
+            "side-by-side diagrams of hormone mechanisms: a peptide hormone binding to a membrane receptor triggering second messengers; a steroid hormone entering the nucleus, binding to a receptor, and initiating transcription of mRNA"
+          ],
+          "estMinutes": 22
+        }
+      ]
+    }
+  ]
+}

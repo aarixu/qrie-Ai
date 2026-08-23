@@ -1,0 +1,693 @@
+{
+  "id": "class6-science",
+  "klass": 6,
+  "subject": "Science",
+  "chapters": [
+    {
+      "id": "components-of-food",
+      "title": "Components of Food",
+      "topics": [
+        {
+          "id": "what-do-different-food-items-contain",
+          "title": "What Do Different Food Items Contain?",
+          "objectives": [
+            "Student can test for the presence of starch in a food sample using iodine solution",
+            "Student can demonstrate the presence of proteins in a food item using copper sulphate and caustic soda solutions",
+            "Student can identify the presence of fats in food by using a paper rub test"
+          ],
+          "visualIdeas": [
+            "a illustration of a dropper adding iodine to a potato slice with a blue-black color change",
+            "a test tube changing to violet color when solutions are added to test for proteins"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "what-do-various-nutrients-do-for-our-body",
+          "title": "What Do Various Nutrients Do for Our Body?",
+          "objectives": [
+            "Student can match major food sources with their corresponding primary nutrients like carbohydrates, proteins, and fats",
+            "Student can list the biological roles of vitamins and minerals in maintaining body health",
+            "Student can explain the importance of dietary fibres and water in human digestion"
+          ],
+          "visualIdeas": [
+            "a colorful plate diagram categorizing food items into energy-giving, body-building, and protective foods",
+            "a simple diagram of the digestive tract showing roughage assisting in moving waste"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "balanced-diet",
+          "title": "Balanced Diet",
+          "objectives": [
+            "Student can define a balanced diet in terms of nutrient proportion and variety",
+            "Student can design a simple, cost-effective meal plan that constitutes a balanced diet",
+            "Student can state the loss of nutrients that occurs due to incorrect cooking and washing practices"
+          ],
+          "visualIdeas": [
+            "a pie chart of a meal plate showing the ideal proportions of carbohydrates, proteins, fats, and vitamins",
+            "a comparison graphic of vegetables washed before cutting versus after cutting to show vitamin loss"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "deficiency-diseases",
+          "title": "Deficiency Diseases",
+          "objectives": [
+            "Student can correlate specific vitamin and mineral deficiencies with their corresponding diseases",
+            "Student can identify symptoms of diseases like scurvy, rickets, goitre, and anemia"
+          ],
+          "visualIdeas": [
+            "a summary table linking vitamins/minerals to deficiency diseases and their diagnostic symptoms",
+            "a line drawing of a neck showing thyroid swelling characteristic of goitre"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "sorting-materials-into-groups",
+      "title": "Sorting Materials into Groups",
+      "topics": [
+        {
+          "id": "objects-around-us",
+          "title": "Objects Around Us",
+          "objectives": [
+            "Student can list the different materials from which a single everyday object can be manufactured",
+            "Student can classify a random assortment of household items based on the materials they are made of"
+          ],
+          "visualIdeas": [
+            "a central sketch of a chair with arrows pointing to wood, plastic, iron, and cushions",
+            "a sorting bin graphic demonstrating grouping of glass, metal, plastics, and wood"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "properties-of-materials",
+          "title": "Properties of Materials",
+          "objectives": [
+            "Student can distinguish between lustrous and non-lustrous materials by visual inspection",
+            "Student can classify materials into hard and soft based on the ease of scratching or compressing them",
+            "Student can conduct solubility tests of different solids and liquids in water"
+          ],
+          "visualIdeas": [
+            "a shining metal rod juxtaposed with a dull piece of wood under a light source",
+            "two beakers showing salt completely dissolving versus sand settling at the bottom"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "floating-and-transparency",
+          "title": "Floating and Transparency",
+          "objectives": [
+            "Student can predict whether a given object will float or sink in water based on its material properties",
+            "Student can categorize objects into transparent, translucent, and opaque based on how light passes through them"
+          ],
+          "visualIdeas": [
+            "a water-filled container showing a leaf and cork floating, while a coin and stone sink to the bottom",
+            "a single torch beam passing fully through a glass pane, partially through oiled paper, and blocked by cardboard"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "separation-of-substances",
+      "title": "Separation of Substances",
+      "topics": [
+        {
+          "id": "methods-of-separation-dry",
+          "title": "Dry Separation Methods",
+          "objectives": [
+            "Student can explain the physical principles behind handpicking, threshing, and winnowing",
+            "Student can select the appropriate separation technique for a dry mixture based on particle size and weight difference"
+          ],
+          "visualIdeas": [
+            "a sequence of drawings illustrating threshing by beating stalks and winnowing in wind where chaff blows away",
+            "a diagram of a sieve separating fine sand from larger pebbles at a construction site"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "methods-of-separation-wet",
+          "title": "Wet Separation Methods",
+          "objectives": [
+            "Student can describe the steps of sedimentation, decantation, and filtration to separate insoluble solids from liquids",
+            "Student can assemble a simple filter paper cone to separate mud from water"
+          ],
+          "visualIdeas": [
+            "a three-step transition showing muddy water settling, clean water pouring out, and a filter paper setup in a funnel"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "evaporation-and-condensation",
+          "title": "Evaporation and Condensation",
+          "objectives": [
+            "Student can state the difference between evaporation and condensation in terms of state change",
+            "Student can explain how salt is harvested from seawater using shallow pits"
+          ],
+          "visualIdeas": [
+            "a boiling kettle with steam hitting a cold metal plate held over a beaker, showing droplets forming",
+            "an illustration of salt pans on a coastline with sun rays evaporating water"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "saturated-solutions",
+          "title": "Saturated Solutions",
+          "objectives": [
+            "Student can define a saturated solution in terms of dissolved solute limits",
+            "Student can explain how temperature changes affect the solubility of a solute in water"
+          ],
+          "visualIdeas": [
+            "a beaker with undissolved sugar at the bottom and an arrow showing heat addition dissolving the residue"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "getting-to-know-plants",
+      "title": "Getting to Know Plants",
+      "topics": [
+        {
+          "id": "herbs-shrubs-and-trees",
+          "title": "Herbs, Shrubs and Trees",
+          "objectives": [
+            "Student can classify plants into herbs, shrubs, and trees based on their stem characteristics and height",
+            "Student can differentiate between climbers and creepers with examples"
+          ],
+          "visualIdeas": [
+            "a comparative diagram showing side-by-side structures of a delicate herb, a bushy shrub, and a tall woody tree",
+            "a creeper spreading on the ground next to a climber using a stick support to grow upwards"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "stem",
+          "title": "Stem",
+          "objectives": [
+            "Student can demonstrate how stems conduct water to other plant parts using a dye experiment",
+            "Student can trace the path of water from soil through the stem to leaves"
+          ],
+          "visualIdeas": [
+            "a cut stem in red ink showing colored vascular pathways under a magnifying glass"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "leaf",
+          "title": "Leaf",
+          "objectives": [
+            "Student can distinguish between reticulate and parallel venation in leaves",
+            "Student can explain the process of transpiration in leaves using a plastic bag experiment",
+            "Student can summarize the raw materials and products of photosynthesis"
+          ],
+          "visualIdeas": [
+            "a side-by-side comparison of a peepal leaf with net-like veins and a grass leaf with parallel veins",
+            "a plant with a plastic bag tied around its leaf showing condensed water droplets inside"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "root",
+          "title": "Root",
+          "objectives": [
+            "Student can compare taproot and fibrous root systems in terms of structure and plant examples",
+            "Student can demonstrate the relationship between leaf venation and root type of a plant"
+          ],
+          "visualIdeas": [
+            "a diagram showing a single deep taproot with lateral roots beside a cluster of thin fibrous roots"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "flower",
+          "title": "Flower",
+          "objectives": [
+            "Student can identify and label sepals, petals, stamens, and pistil in a dissected flower",
+            "Student can describe the inner parts of an ovary including ovules"
+          ],
+          "visualIdeas": [
+            "a cross-section of a hibiscus flower with clear labels pointing to the ovary, style, stigma, anther, and filament",
+            "a magnified view of an ovary cut open to display tiny seed-like ovules"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "body-movements",
+      "title": "Body Movements",
+      "topics": [
+        {
+          "id": "human-body-and-its-movements",
+          "title": "Human Body and its Movements",
+          "objectives": [
+            "Student can identify the locations of ball and socket, pivotal, hinge, and fixed joints in the human body",
+            "Student can compare the range of motion allowed by different types of skeletal joints"
+          ],
+          "visualIdeas": [
+            "a skeleton highlight map pointing to shoulder, neck, elbow, and skull joints with motion range icons"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "bones-cartilage-and-muscles",
+          "title": "Bones, Cartilage and Muscles",
+          "objectives": [
+            "Student can describe the function of the rib cage, backbone, shoulder, and pelvic bones",
+            "Student can explain the role of contraction and relaxation of antagonistic muscle pairs in bone movement",
+            "Student can locate cartilage in the human body"
+          ],
+          "visualIdeas": [
+            "an arm showing biceps contracting while triceps relax to pull the forearm up",
+            "an illustration of the outer ear showing flexible cartilage"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gait-of-animals-invertebrates",
+          "title": "Gait of Animals: Invertebrates",
+          "objectives": [
+            "Student can explain how an earthworm moves using muscular contractions and bristles",
+            "Student can describe the locomotive action of a snail's muscular foot",
+            "Student can detail the wing and leg coordinates used by a cockroach to walk and fly"
+          ],
+          "visualIdeas": [
+            "a step-by-step cartoon showing an earthworm extending the front body and dragging the rear",
+            "a snail sliding on a glass pane showing muscular waves along its foot"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "gait-of-animals-vertebrates",
+          "title": "Gait of Animals: Vertebrates",
+          "objectives": [
+            "Student can identify skeletal adaptations in birds that enable flight",
+            "Student can explain how a streamlined body shape assists fish in swimming",
+            "Student can describe the slithering loop-like motion of a snake"
+          ],
+          "visualIdeas": [
+            "a bird skeleton showing hollow bones and strong breastbone modifications",
+            "a top-down schematic of a fish showing loops forming on alternate sides of the body"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "the-living-organisms-characteristics-and-habitats",
+      "title": "The Living Organisms — Characteristics and Habitats",
+      "topics": [
+        {
+          "id": "organisms-and-surroundings",
+          "title": "Organisms and the Surroundings Where They Live",
+          "objectives": [
+            "Student can define habitat and distinguish between biotic and abiotic components of an environment",
+            "Student can explain the difference between adaptation and acclimatisation"
+          ],
+          "visualIdeas": [
+            "a landscape split into living biotic factors and non-living abiotic factors like sun, water, and soil"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "terrestrial-habitats",
+          "title": "Terrestrial Habitats",
+          "objectives": [
+            "Student can list structural adaptations of desert plants like cacti and desert animals like camels",
+            "Student can explain how trees and animals in mountain habitats adapt to extreme cold and snow"
+          ],
+          "visualIdeas": [
+            "a camel with arrows highlighting its long legs, hump, and water-retention features",
+            "a conical pine tree showing how sloped branches shed snow easily"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "aquatic-habitats",
+          "title": "Aquatic Habitats",
+          "objectives": [
+            "Student can describe the physical adaptations of marine animals like dolphins and squids",
+            "Student can compare the root systems and leaves of fully submerged plants with floating aquatic plants"
+          ],
+          "visualIdeas": [
+            "a water tank cross-section showing floating leaves with stomata on top, and submerged plants with ribbon-like leaves"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "characteristics-of-organisms",
+          "title": "Characteristics of Organisms",
+          "objectives": [
+            "Student can match life processes like respiration, stimulus response, excretion, and reproduction with experimental proof of living status",
+            "Student can distinguish between plant and animal methods of reproduction and movement"
+          ],
+          "visualIdeas": [
+            "a mimosa pudica plant showing leaves folding quickly when touched",
+            "a germinated seed showing a tiny root emerging downwards and shoot upwards"
+          ],
+          "estMinutes": 25
+        }
+      ]
+    },
+    {
+      "id": "motion-and-measurement-of-distances",
+      "title": "Motion and Measurement of Distances",
+      "topics": [
+        {
+          "id": "story-of-transport",
+          "title": "Story of Transport",
+          "objectives": [
+            "Student can sequence the historical developments in transportation modes from early animal-drawn carts to modern electric trains"
+          ],
+          "visualIdeas": [
+            "a chronological timeline showing logs, wheels, sailing boats, steam engines, and supersonic airplanes"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "standard-units-of-measurements",
+          "title": "Standard Units of Measurements",
+          "objectives": [
+            "Student can explain why non-standard units like foot-spans and cubits lead to inconsistent measurements",
+            "Student can state the SI units of length and convert basic measurements from metres to centimetres and millimetres"
+          ],
+          "visualIdeas": [
+            "a sketch showing two people with different hand-span sizes measuring the exact same desk"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "correct-measurement-of-length",
+          "title": "Correct Measurement of Length",
+          "objectives": [
+            "Student can demonstrate how to align a ruler and read values while avoiding parallax errors",
+            "Student can measure the length of a curved line using a non-elastic thread and a standard scale"
+          ],
+          "visualIdeas": [
+            "three eyes looking at a ruler scale, showing the correct straight-on perspective versus incorrect angled views",
+            "a thread laid along a curved path and then stretched straight beside a ruler"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "types-of-motion",
+          "title": "Types of Motion",
+          "objectives": [
+            "Student can classify real-world motions into rectilinear, circular, and periodic categories",
+            "Student can identify instances where an object exhibits multiple types of motion simultaneously"
+          ],
+          "visualIdeas": [
+            "a direct comparison panel showing a falling stone, a rotating ceiling fan, and a swinging pendulum",
+            "a rolling bicycle wheel demonstrating both circular and rectilinear motion"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "light-shadows-and-reflections",
+      "title": "Light, Shadows and Reflections",
+      "topics": [
+        {
+          "id": "transparent-opaque-and-translucent-objects",
+          "title": "Transparent, Opaque and Translucent Objects",
+          "objectives": [
+            "Student can classify objects as transparent, opaque, or translucent based on how clearly things can be seen through them",
+            "Student can explain how light travels in a straight line"
+          ],
+          "visualIdeas": [
+            "a simple setup of three aligned cardboard cards with small holes, showing light blocked if one card is moved out of line"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-exactly-are-shadows",
+          "title": "What Exactly are Shadows?",
+          "objectives": [
+            "Student can list the three requirements for shadow formation: light source, opaque object, and screen",
+            "Student can predict how the size and shape of a shadow will change based on light source position"
+          ],
+          "visualIdeas": [
+            "a hand casting a bird shadow on a screen when illuminated by a torch in a dark room"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "a-pinhole-camera",
+          "title": "A Pinhole Camera",
+          "objectives": [
+            "Student can construct a cardboard pinhole camera and describe the orientation of the image formed",
+            "Student can explain how natural pinhole images of the sun are formed under trees"
+          ],
+          "visualIdeas": [
+            "a cutaway diagram of a pinhole camera showing light rays crossing at the pinhole to form an inverted image on tracing paper",
+            "sunlight passing through tree leaf gaps forming circular sun spots on the ground"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "mirrors-and-reflections",
+          "title": "Mirrors and Reflections",
+          "objectives": [
+            "Student can demonstrate how a mirror redirects a beam of light",
+            "Student can differentiate between a shadow and a mirror reflection"
+          ],
+          "visualIdeas": [
+            "a diagram showing a torch light bouncing off a mirror to create a patch of light on a wall"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "electricity-and-circuits",
+      "title": "Electricity and Circuits",
+      "topics": [
+        {
+          "id": "electric-cell-and-bulb",
+          "title": "Electric Cell and Bulb",
+          "objectives": [
+            "Student can identify the positive and negative terminals of an electric cell",
+            "Student can locate the filament and terminals of a miniature electric bulb"
+          ],
+          "visualIdeas": [
+            "a detailed diagram of an electric cell highlighting the metal cap (+) and metal disc (-)",
+            "a cutaway view of a bulb showing the fine filament supported by two thick wires"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "an-electric-circuit-and-switch",
+          "title": "An Electric Circuit and Switch",
+          "objectives": [
+            "Student can trace the complete loop of an electric circuit that allows a bulb to glow",
+            "Student can explain how an electric switch functions to break or complete a circuit"
+          ],
+          "visualIdeas": [
+            "a circuit diagram showing a cell, wires, switch using a safety pin, and bulb in closed and open states"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "conductors-and-insulators",
+          "title": "Conductors and Insulators",
+          "objectives": [
+            "Student can classify household materials into conductors and insulators of electricity",
+            "Student can explain why rubber handles are used on electricians' tools"
+          ],
+          "visualIdeas": [
+            "a circuit tester with key, eraser, plastic scale, and safety pin inserted in a gap to see if the bulb glows"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "fun-with-magnets",
+      "title": "Fun with Magnets",
+      "topics": [
+        {
+          "id": "discovery-and-materials",
+          "title": "Discovery and Materials",
+          "objectives": [
+            "Student can narrate the discovery of natural magnets by shepherd Magnus",
+            "Student can classify common materials as magnetic or non-magnetic using a bar magnet"
+          ],
+          "visualIdeas": [
+            "a schematic showing a bar magnet attracting iron paper clips while ignoring brass pins and plastics"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "poles-of-magnet-and-direction",
+          "title": "Poles of Magnet and Direction",
+          "objectives": [
+            "Student can locate where the magnetic strength is strongest on a bar magnet using iron filings",
+            "Student can determine geographic directions using a freely suspended bar magnet"
+          ],
+          "visualIdeas": [
+            "a bar magnet covered in iron filings, heavily clustered at both ends (North and South poles)",
+            "a bar magnet suspended from a thread on a wooden stand aligning along the North-South line"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "making-magnets-and-interactions",
+          "title": "Making Magnets and Interactions",
+          "objectives": [
+            "Student can create a temporary magnet from an iron strip using the single-touch stroke method",
+            "Student can state the laws of magnetic attraction and repulsion between like and unlike poles"
+          ],
+          "visualIdeas": [
+            "a hands-on diagram of a hand dragging a magnet in a single direction along an iron nail",
+            "two toy cars with magnets attached, showing arrows of repulsion for identical poles facing each other"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    },
+    {
+      "id": "air-around-us",
+      "title": "Air Around Us",
+      "topics": [
+        {
+          "id": "is-air-present-everywhere",
+          "title": "Is Air Present Everywhere Around Us?",
+          "objectives": [
+            "Student can demonstrate that an 'empty' bottle contains air using a water submersion test",
+            "Student can show that soil and water contain trapped air"
+          ],
+          "visualIdeas": [
+            "a bottle held upside down in a tub of water, showing bubbles escaping as it is tilted",
+            "a lump of dry soil thrown into a beaker of water releasing air bubbles"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "what-is-air-made-up-of",
+          "title": "What is Air Made Up of?",
+          "objectives": [
+            "Student can list the percentage composition of major gases in the air",
+            "Student can demonstrate that oxygen is necessary for combustion using a burning candle experiment"
+          ],
+          "visualIdeas": [
+            "a pie chart of air components showing Nitrogen (78%), Oxygen (21%), and minor gases",
+            "two candles under glass jars of different heights showing how the candle in the smaller jar goes out first"
+          ],
+          "estMinutes": 20
+        },
+        {
+          "id": "oxygen-cycle-and-balance",
+          "title": "How is the Oxygen in the Atmosphere Replaced?",
+          "objectives": [
+            "Student can explain how plants and animals maintain the balance of oxygen and carbon dioxide in nature",
+            "Student can describe the role of wind mills and air movements in daily life"
+          ],
+          "visualIdeas": [
+            "a cyclical flow diagram showing plants releasing oxygen during photosynthesis and animals breathing out carbon dioxide"
+          ],
+          "estMinutes": 15
+        }
+      ]
+    },
+    {
+      "id": "water",
+      "title": "Water",
+      "topics": [
+        {
+          "id": "how-much-water-do-we-use",
+          "title": "How Much Water Do We Use?",
+          "objectives": [
+            "Student can calculate daily water consumption of a household for basic activities."
+          ],
+          "visualIdeas": [
+            "A bar chart showing water usage in liters for drinking, washing, bathing, and flushing"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "where-do-we-get-water-from",
+          "title": "Where Do We Get Water From?",
+          "objectives": [
+            "Student can list primary sources of water such as rivers, springs, ponds, wells, and tube wells."
+          ],
+          "visualIdeas": [
+            "A landscape diagram showing the flow of water from a mountain spring, to a river, and eventually to tap water supply systems"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "water-cycle",
+          "title": "Water Cycle",
+          "objectives": [
+            "Student can explain the processes of evaporation, transpiration, condensation, and precipitation.",
+            "Student can demonstrate condensation by placing ice cubes in a glass of water."
+          ],
+          "visualIdeas": [
+            "A full-page water cycle diagram with labeled arrows for evaporation, transpiration, cloud formation, and rainfall"
+          ],
+          "estMinutes": 25
+        },
+        {
+          "id": "back-to-the-oceans",
+          "title": "Back to the Oceans",
+          "objectives": [
+            "Student can trace the path of rain and meltwater back into lakes, rivers, and oceans."
+          ],
+          "visualIdeas": [
+            "A mountain-to-ocean runoff model showing groundwater flow and river networks"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "what-if-it-rains-heavily",
+          "title": "What if It Rains Heavily?",
+          "objectives": [
+            "Student can identify the environmental and economic impacts of floods."
+          ],
+          "visualIdeas": [
+            "An illustration of a flooded village scene with submerged crops, houses, and roads"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "droughts",
+          "title": "What Happens if It Does Not Rain for a Long Period?",
+          "objectives": [
+            "Student can explain how lack of rain leads to soil drying and groundwater depletion."
+          ],
+          "visualIdeas": [
+            "A dry, cracked field with withered plants and a lowered well water level"
+          ],
+          "estMinutes": 15
+        },
+        {
+          "id": "how-can-we-conserve-water",
+          "title": "How Can We Conserve Water?",
+          "objectives": [
+            "Student can list everyday actions to save water and prevent waste."
+          ],
+          "visualIdeas": [
+            "A checklist poster of water-saving habits: turning off tap while brushing, repairing leaks, bucket-washing cars"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "rainwater-harvesting",
+          "title": "Rainwater Harvesting",
+          "objectives": [
+            "Student can explain rooftop rainwater harvesting and roadside rainwater harvesting.",
+            "Student can draw a simple layout of a rainwater harvesting system."
+          ],
+          "visualIdeas": [
+            "A house showing rain falling on the roof, directed through a pipe with a filter into an underground storage tank"
+          ],
+          "estMinutes": 20
+        }
+      ]
+    }
+  ]
+}
