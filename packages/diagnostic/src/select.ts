@@ -72,7 +72,10 @@ export function selectNextProbe(
 
     const node = index.node(probe.nodeId);
     if (!node) continue; // a probe whose node was removed from the map
-    if (node.klass !== session.config.klass) continue;
+    // In scope: the student's class and up to lookBack classes behind it —
+    // placement looks backwards, because that is where the real gaps live.
+    if (node.klass > session.config.klass) continue;
+    if (node.klass < session.config.klass - (session.config.lookBack ?? 0)) continue;
     if (subjects.size > 0 && !subjects.has(node.subject)) continue;
 
     const information = informationValue(session.mastery, index, probe.nodeId);
@@ -107,7 +110,9 @@ export function availableProbeCount(
   return bank.probes.filter((probe) => {
     if (session.askedNodeIds.has(probe.nodeId)) return false;
     const node = index.node(probe.nodeId);
-    if (!node || node.klass !== session.config.klass) return false;
+    if (!node) return false;
+    if (node.klass > session.config.klass) return false;
+    if (node.klass < session.config.klass - (session.config.lookBack ?? 0)) return false;
     return subjects.size === 0 || subjects.has(node.subject);
   }).length;
 }

@@ -244,3 +244,60 @@ describe('end to end', () => {
     expect(plan[0].nodeId).toBe('fractions');
   });
 });
+
+describe('lookBack — placement reaches into earlier classes', () => {
+  /** A two-class map: Class 9 percentages rest on Class 8 and Class 7 ground. */
+  function crossClassFixture() {
+    // A real prerequisite chain across the classes — isolated nodes carry no
+    // information, and a probe with nothing to infer is never worth asking.
+    const nodes = [
+      node('c6-counting', [], { klass: 6, chapter: 'counting', difficulty: 1 }),
+      node('c7-fractions', ['c6-counting'], { klass: 7, chapter: 'fractions', difficulty: 1 }),
+      node('c8-ratios', ['c7-fractions'], { klass: 8, chapter: 'ratios', difficulty: 2 }),
+      node('c9-percentages', ['c8-ratios'], { klass: 9, chapter: 'percentages', difficulty: 3 }),
+    ];
+    const index = new GraphIndex(loadGraph({ version: 1, nodes }));
+    const bank: ProbeBank = { version: 1, probes: nodes.map((n) => probe(n.id)) };
+    return { index, bank };
+  }
+
+  it('with lookBack 0 only the student class is askable (the old behaviour)', () => {
+    const { index, bank } = crossClassFixture();
+    const s = startSession(index, bank, { klass: 9, subjects: ['Science'] });
+    expect(availableProbeCount(s, index, bank)).toBe(1); // c9-percentages alone
+  });
+
+  it('with lookBack 2 the two classes behind come into scope, no further', () => {
+    const { index, bank } = crossClassFixture();
+    const s = startSession(index, bank, { klass: 9, subjects: ['Science'], lookBack: 2 });
+    // c9, c8, c7 — and never c6, and never anything above the student.
+    expect(availableProbeCount(s, index, bank)).toBe(3);
+  });
+
+  it('never asks above the student class, whatever the lookBack', () => {
+    const { index, bank } = crossClassFixture();
+    const s = startSession(index, bank, { klass: 7, subjects: ['Science'], lookBack: 5 });
+    expect(availableProbeCount(s, index, bank)).toBe(2); // c7 + c6, never c8/c9
+  });
+
+  it('the plan may prescribe an earlier-class node', () => {
+    const { index, bank } = crossClassFixture();
+    let s = startSession(index, bank, {
+      klass: 9,
+      subjects: ['Science'],
+      lookBack: 2,
+      minQuestions: 1,
+      maxQuestions: 4,
+    });
+    // Fail everything the test asks; whatever settles low is a gap.
+    for (let i = 0; i < 4; i += 1) {
+      const p = selectNextProbe(s, index, bank);
+      if (!p) break;
+      s = answerProbe(s, index, p, (p.correctIndex + 1) % 4);
+    }
+    const result = buildPlan(s, index);
+    const klasses = result.plan.map((step) => index.node(step.nodeId)!.klass);
+    expect(Math.min(...klasses)).toBeLessThan(9); // reached behind the student's class
+    expect(Math.max(...klasses)).toBeLessThanOrEqual(9);
+  });
+});

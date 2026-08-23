@@ -70,7 +70,7 @@ export function parseAgentReply(raw: string, canRecall: (beatId: string) => bool
 }
 
 export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
-  const model = opts.model ?? 'gemini-3.5-flash';
+  const model = opts.model ?? 'gemini-3.7-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${opts.apiKey}`;
 
   return {

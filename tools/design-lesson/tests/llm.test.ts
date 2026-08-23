@@ -90,10 +90,10 @@ describe('GeminiAdapter', () => {
     expect(body.contents[0].parts[0].text).toBe('USER');
   });
 
-  it('defaults the model to gemini-3.1-flash', async () => {
+  it('defaults the model to gemini-3.7-flash', async () => {
     const calls = stubFetch({ candidates: [{ content: { parts: [{ text: '{}' }] } }] });
     await new GeminiAdapter({ GEMINI_API_KEY: 'gk' } as NodeJS.ProcessEnv).complete('s', 'u');
-    expect(calls[0].url).toContain('/models/gemini-3.1-flash:');
+    expect(calls[0].url).toContain('/models/gemini-3.7-flash:');
   });
 
   it('throws with the HTTP status on a failed request', async () => {

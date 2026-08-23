@@ -28,7 +28,7 @@ export class GeminiAdapter implements LlmAdapter {
     const key = env.GOOGLE_API_KEY ?? env.GEMINI_API_KEY;
     if (!key) throw new Error('GeminiAdapter: set GOOGLE_API_KEY or GEMINI_API_KEY');
     this.key = key;
-    this.model = env.GEMINI_MODEL ?? 'gemini-3.1-flash';
+    this.model = env.GEMINI_MODEL ?? 'gemini-3.7-flash';
   }
 
   async complete(system: string, user: string): Promise<string> {

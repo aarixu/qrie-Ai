@@ -22,6 +22,14 @@ export interface DiagnosticConfig {
   klass: number;
   /** Subjects the student picked during onboarding. */
   subjects: string[];
+  /**
+   * How many earlier classes are in scope alongside `klass`. A placement that
+   * only asks a Class 9 student Class 9 questions cannot see that the real
+   * break happened in Class 7 fractions — the gaps that matter are usually a
+   * level or two behind where the student is sitting. 0 keeps the old
+   * same-class behaviour.
+   */
+  lookBack: number;
   /** Hard ceiling. Past roughly this many questions a student disengages. */
   maxQuestions: number;
   /** Never stop before this, however confident the model looks. */
@@ -31,6 +39,7 @@ export interface DiagnosticConfig {
 }
 
 export const DEFAULT_CONFIG: Omit<DiagnosticConfig, 'klass' | 'subjects'> = {
+  lookBack: 0,
   maxQuestions: 20,
   minQuestions: 12,
   confidenceTarget: 0.75,

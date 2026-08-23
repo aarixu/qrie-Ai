@@ -131,10 +131,22 @@ export function applyEvidence(
 export interface GapOptions {
   /** Only consider these subjects, when the student picked some. */
   subjects?: readonly string[];
+  /** The student's class — the top of the range considered. */
   klass?: number;
+  /**
+   * Bottom of the class range, for a placement that looks back at earlier
+   * levels. Omitted, the range is just `klass` — the old behaviour.
+   */
+  minKlass?: number;
   /** Below this belief a node counts as a gap. */
   threshold?: number;
 }
+
+/** The class-range test shared by every consumer of GapOptions. */
+const inKlassRange = (nodeKlass: number, opts: GapOptions): boolean => {
+  if (opts.klass === undefined) return true;
+  return nodeKlass <= opts.klass && nodeKlass >= (opts.minKlass ?? opts.klass);
+};
 
 /**
  * The nodes worth fixing, worst-and-most-blocking first.
@@ -155,7 +167,7 @@ export function gapsFrom(mastery: Mastery, index: GraphIndex, opts: GapOptions =
     const node = index.node(id);
     if (!node) continue;
     if (subjects && !subjects.has(node.subject)) continue;
-    if (opts.klass !== undefined && node.klass !== opts.klass) continue;
+    if (!inKlassRange(node.klass, opts)) continue;
 
     gaps.push({ nodeId: id, confidence: 1 - belief, blocks: index.blockCount(id) });
   }
@@ -198,7 +210,7 @@ export function confidenceCoverage(
     const node = index.node(id);
     if (!node) continue;
     if (subjects && !subjects.has(node.subject)) continue;
-    if (opts.klass !== undefined && node.klass !== opts.klass) continue;
+    if (!inKlassRange(node.klass, opts)) continue;
 
     total += 1;
     const belief = mastery[id] ?? PRIOR;

@@ -38,6 +38,10 @@ export function buildPlan(
   const gaps = gapsFrom(session.mastery, index, {
     subjects: session.config.subjects,
     klass: session.config.klass,
+    // The plan may reach back exactly as far as the test did: a Class 9
+    // student whose break is Class 7 fractions gets Class 7 fractions as
+    // step one, not a Class 9 restatement of it.
+    minKlass: session.config.klass - (session.config.lookBack ?? 0),
     threshold: opts.threshold,
   });
 

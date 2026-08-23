@@ -9,7 +9,7 @@ import {
   type DiagnosticSession,
 } from '@ai-tutor/diagnostic';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
-import { loadDiagnosticData } from '../lib/diagnosticData';
+import { loadDiagnosticDataFor } from '../lib/diagnosticData';
 import { BRAND } from '../brand';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -71,14 +71,27 @@ export function Diagnostic({
   /** Called when the student closes the test, or when no map exists for them. */
   onSkip: () => void;
 }) {
-  const data = useMemo(() => loadDiagnosticData(klass), [klass]);
+  // The merged map: the student's class plus the levels behind it, scoped to
+  // their subjects with lineage (Class 11 Biology looks back into Class 10
+  // Science). The data layer decides how far back; the session just follows.
+  const data = useMemo(
+    () => loadDiagnosticDataFor(klass, subjects),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- array identity
+    [klass, subjects.join('|')],
+  );
 
   // The session is the entire state of the test, created once: the engine is
   // pure, so rebuilding it mid-test would silently restart the student. The
   // caller mounts this screen per placement test, so a different class is a new
   // mount and gets its own session.
   const [session, setSession] = useState<DiagnosticSession | null>(() =>
-    data ? startSession(data.index, data.bank, { klass, subjects }) : null,
+    data
+      ? startSession(data.index, data.bank, {
+          klass,
+          subjects: data.subjects,
+          lookBack: data.lookBack,
+        })
+      : null,
   );
 
   // Having no probe left to ask IS the finish line, whether that is because the

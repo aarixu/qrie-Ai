@@ -13,7 +13,7 @@ import { settingsStore, isOnboarded } from './stores/settings';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
-import { loadDiagnosticData } from './lib/diagnosticData';
+import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI } from './lib/content';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
@@ -76,7 +76,9 @@ function StudyPlanRoute() {
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
 
-  const data = settings.klass !== null ? loadDiagnosticData(settings.klass) : null;
+  // The stored plan may hold steps from earlier classes (the placement looks
+  // back), so the index that renders it must be the same merged one.
+  const data = settings.klass !== null ? loadDiagnosticDataFor(settings.klass, profile.subjects) : null;
   if (!hasDiagnostic(profile) || !data) return <Navigate to="/" replace />;
 
   return (
