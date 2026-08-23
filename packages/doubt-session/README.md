@@ -40,6 +40,22 @@ interface AgentSession { sendUserText(text: string): void; stop(): void }
 
 createStubAgent(): AgentAdapter     // deterministic scripted agent for dev/tests
 
+// --- brief.ts : the live tutor's system prompt ---------------------------
+// StudentContext, and every word of her character, come from @ai-tutor/persona.
+type DoubtMoment = 'opening' | 'answering' | 'closing'
+type DoubtSurface = 'voice' | 'text'
+interface DoubtBriefOptions {
+  moment: DoubtMoment
+  surface: DoubtSurface
+  subject?: string               // e.g. "Science" — from the syllabus, when the caller knows it
+  title?: string                 // the lesson's own title
+}
+buildDoubtBrief(ctx: DoubtContext, student: StudentContext, options: DoubtBriefOptions): string
+
+interface RecallTarget { readonly id: string; readonly topic: string }
+recallTargets(ctx: DoubtContext): readonly RecallTarget[]   // what the prompt lists
+isRecallable(ctx: DoubtContext, beatId: string): boolean    // what the adapter checks
+
 entryLine(ctx: DoubtContext): string   // Hinglish bridge, deterministic per beatId
 exitLine(ctx: DoubtContext): string
 
@@ -58,6 +74,41 @@ createHandoff(opts: {
 }
 ```
 
+## The briefing
+
+`buildDoubtBrief` is the only place a live doubt tutor's system prompt is
+written. Three call sites used to hand-write one each — the typed agent, the
+spoken agent and the LiveKit worker — and they had already drifted, which is why
+`@ai-tutor/persona` exists. Nothing in this package writes tutor prose: her
+character, her prohibitions and her speaking rules all come out of persona, and
+this module only maps a `DoubtContext` onto persona's `LessonContext` and picks
+the moment and the surface.
+
+```ts
+const ctx = buildContext(lesson, beatIndex);
+
+const systemPrompt = buildDoubtBrief(ctx, student, {
+  moment: 'opening',      // 'answering' once they have asked, 'closing' on the way out
+  surface: 'voice',       // 'text' for the typed doubt
+  title: lesson.title,    // plus subject, where the caller knows it from the syllabus
+});
+
+// The same list, both sides of the model:
+//   recallTargets(ctx) is what the prompt enumerates
+//   isRecallable(ctx, id) is what the adapter checks before moving the canvas
+if (isRecallable(ctx, reply.beatId)) io.recall(reply.beatId);
+```
+
+Two rules carry across from persona and are worth repeating here:
+
+- **An unknown student signal is passed through, never filled in.** A default
+  invented here would be indistinguishable from a measurement by the time the
+  model read it, so absent stays absent and persona says nothing about it.
+- **The offered ids and the accepted ids are one set.** `isRecallable` is
+  derived from `recallTargets`, because a prompt that offers an id the
+  validator refuses shows up in class as the tutor promising a diagram and the
+  board staying blank.
+
 ## Design rules
 
 - Illegal transitions are **no-ops, never throws** — a double-tap on ✋ must not
@@ -68,4 +119,7 @@ createHandoff(opts: {
 
 ## Depends on
 
-`@ai-tutor/lesson-format`. Nothing else.
+`@ai-tutor/lesson-format` for the `Lesson` document `buildContext` reads, and
+`@ai-tutor/persona` for the tutor herself — `buildDoubtBrief` assembles her
+prompt rather than writing one, so the live tutor and the recorded one are the
+same person. Nothing else, and no AI: the agent stays behind `AgentAdapter`.

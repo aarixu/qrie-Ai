@@ -9,11 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-tutor/diagnostic": "*",
     "@ai-tutor/doubt-session": "*",
+    "@ai-tutor/knowledge-graph": "*",
     "@ai-tutor/lesson-format": "*",
+    "@ai-tutor/persona": "*",
     "@ai-tutor/player": "*",
     "@ai-tutor/stage": "*",
     "@ai-tutor/syllabus": "*",
+    "@ai-tutor/voice": "*",
+    "livekit-client": "^2.22.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",

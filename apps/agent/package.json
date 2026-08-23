@@ -1,0 +1,20 @@
+{
+  "name": "@ai-tutor/agent",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "worker": "node src/worker.ts dev",
+    "worker:start": "node src/worker.ts start",
+    "token": "node src/tokenServer.ts"
+  },
+  "dependencies": {
+    "@ai-tutor/lesson-format": "*",
+    "@ai-tutor/persona": "*",
+    "@livekit/agents": "1.7.0",
+    "@livekit/agents-plugin-google": "1.7.0",
+    "@livekit/rtc-node": "^0.13.34",
+    "livekit-server-sdk": "^2.18.0",
+    "zod": "^4.1.8"
+  }
+}

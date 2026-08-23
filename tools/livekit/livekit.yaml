@@ -1,0 +1,93 @@
+# LiveKit server — the config this repo actually runs.
+#
+#   npm run livekit:server              # uses this file
+#   livekit-server --config <this file> # same thing, if you have the binary yourself
+#
+# Production-shaped on purpose: it does NOT rely on `--dev` for its behaviour.
+# Every value below is the value we want on a real box too, so the only thing
+# that changes on the way to production is the `keys:` block at the bottom.
+#
+# Two things to know before editing:
+#   1. Parsing is strict. An unknown or misspelled key ABORTS startup with a
+#      terse error. Suspect a typo before you suspect a bug.
+#   2. Everything not listed here keeps LiveKit's default. The full annotated
+#      reference is config-sample.yaml in github.com/livekit/livekit.
+
+# TCP port for the REST API and the client signalling WebSocket. The browser and
+# the agent worker are both just clients of this one port — the worker registers
+# at <url>/agent, it does not need a port of its own.
+# In production this sits behind a TLS-terminating proxy; locally it is plain ws.
+port: 7880
+
+# Which local addresses the SIGNALLING listener binds to. This does NOT affect
+# media sockets — those bind to every interface regardless (see rtc below).
+# Both entries matter on Windows: `localhost` resolves to ::1 first, so an
+# IPv4-only bind makes ws://localhost:7880 fail while ws://127.0.0.1:7880 works.
+# For another device on your LAN to join, add 0.0.0.0 and "::" here.
+bind_addresses:
+  - 127.0.0.1
+  - "::1"
+
+rtc:
+  # ALL media on one UDP port instead of the 50000-60000 default range. That
+  # default is 10,001 ports: one miserable firewall rule and a slow ICE gather.
+  # This is also what `--dev` does implicitly — pinning it here means the server
+  # behaves identically with and without that flag.
+  # NOTE: port_range_start / port_range_end must stay absent for this to apply.
+  udp_port: 7882
+
+  # ICE/TCP fallback, for networks that block UDP. Cannot sit behind TLS.
+  tcp_port: 7881
+
+  # STUN-based public-IP discovery, off. On a laptop there is no NAT to punch,
+  # and `true` costs a startup round-trip to Twilio/Google that simply fails
+  # when the machine is offline. Turn it on for a cloud VM behind NAT.
+  use_external_ip: false
+
+  # Same machine, normal Wi-Fi: leave both of these commented. LiveKit picks the
+  # LAN address as its host candidate and the browser reaches it over loopback.
+  # Uncomment BOTH only for a fully offline box (Wi-Fi off), where IP discovery
+  # falls back to 127.0.0.1 and loopback candidates are otherwise suppressed —
+  # the symptom is signalling connecting and media never establishing.
+  # Setting node_ip explicitly also stops LiveKit injecting the public Google and
+  # Twilio STUN servers into the SFU, which it does whenever it guessed the IP.
+  # node_ip: 127.0.0.1
+  # enable_loopback_candidate: true
+
+logging:
+  # `--dev` overrides this with debug + a console formatter. Without that flag
+  # this is what you get, and info is the level you want when something is
+  # actually wrong at 2am.
+  level: info
+  # Pion is the WebRTC stack underneath. At anything below error it drowns out
+  # LiveKit's own logs.
+  pion_level: error
+
+room:
+  # The student's browser and the live tutor both join by room name, with no
+  # CreateRoom call anywhere. Turning this off means writing that call.
+  auto_create: true
+  # Seconds a room stays open with nobody in it. It covers the gap between the
+  # token being minted and the participant actually connecting.
+  empty_timeout: 300
+  # Seconds a room is held after the last participant leaves. Long enough for a
+  # dropped student to rejoin the same room; short enough not to leak rooms.
+  departure_timeout: 20
+
+# ── keys ───────────────────────────────────────────────────────────────────
+# DELIBERATELY ABSENT, and this file must stay that way: it is committed.
+#
+# With no keys here, `npm run livekit:server` adds `--dev`, and the server
+# injects its own well-known development pair (devkey / secret) for local use.
+# Those are in LiveKit's source code — they are not a secret and they are not
+# for anything a real student touches.
+#
+# For a real deployment, generate a pair and keep it out of git:
+#   livekit-server generate-keys
+# then either set the environment variable (nothing to commit):
+#   LIVEKIT_KEYS="APIxxxxxxxx: <43-char-secret>"
+# or point at a file that is gitignored and not world-readable:
+#   key_file: ./livekit-keys.yaml
+#
+# A secret shorter than 32 characters does NOT stop the server — it logs an
+# error and scrolls past. Use generate-keys rather than typing one.

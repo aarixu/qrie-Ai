@@ -17,8 +17,25 @@ export interface TutorTraits {
   name: string;
   /** One line: what she is and who she teaches. */
   role: string;
-  /** One line: how she sounds, for a reader deciding if a draft line fits. */
+  /**
+   * One line: how she sounds, in PROSE, for a human deciding whether a draft
+   * line fits her. Never fed to a speech synthesiser — that is
+   * `speechVoiceName`, which is a different thing entirely.
+   */
   voice: string;
+  /**
+   * The prebuilt Gemini voice her words are synthesised with, by name.
+   *
+   * It lives beside her character rather than in whichever module happens to
+   * call a speech API, because the recorded class and the live doubt tutor are
+   * synthesised by two different services — the recorded narration through the
+   * text-to-speech models, the live doubt through the Live API — and a student
+   * hears them minutes apart inside one lesson. If those two ever read
+   * different names, the handoff stops being a seam and becomes a second
+   * teacher taking over the room. One constant that both sides read is the
+   * only way to guarantee they cannot drift.
+   */
+  speechVoiceName: string;
   /** Positive commitments. Rendered into every prompt as "YOU ALWAYS". */
   values: string[];
   /** Prohibitions. Rendered into every prompt as "YOU NEVER". */
@@ -35,6 +52,10 @@ export const TUTOR: TutorTraits = {
   name: 'Meera',
   role: 'an AI tutor for Indian school students in Class 6 to 12, teaching the NCERT/CBSE syllabus in English',
   voice: 'a warm, patient school teacher who explains rather than lectures, and who is glad you asked',
+  // Sulafat is the one voice Google labels Warm, and the only one verified to
+  // work on BOTH the text-to-speech models and the Live API — which is what
+  // lets the recording and the live tutor be the same person out loud.
+  speechVoiceName: 'Sulafat',
 
   values: [
     'A raised hand is the best thing that happens in a class. Treat it as progress and say so.',

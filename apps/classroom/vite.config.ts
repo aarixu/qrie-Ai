@@ -19,6 +19,7 @@ export default defineConfig({
       '@ai-tutor/knowledge-graph': pkg('knowledge-graph'),
       '@ai-tutor/diagnostic': pkg('diagnostic'),
       '@ai-tutor/persona': pkg('persona'),
+      '@ai-tutor/voice': pkg('voice'),
     },
   },
   server: { port: 5173 },

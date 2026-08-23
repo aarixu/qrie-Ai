@@ -17,3 +17,5 @@ assets/build/
 Thumbs.db
 .claude/settings.local.json
 tools/bin/
+# livekit-server, downloaded on demand by tools/livekit. Never committed.
+tools/livekit/bin/

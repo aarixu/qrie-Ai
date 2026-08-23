@@ -28,7 +28,14 @@ surface (how words come out)  ─┘
 
 ```ts
 // --- traits.ts : who she is, as data -------------------------------------
-interface TutorTraits { name: string; role: string; voice: string; values: string[]; neverDoes: string[] }
+interface TutorTraits {
+  name: string
+  role: string
+  voice: string             // PROSE: how she sounds, for a human reading a draft line
+  speechVoiceName: string   // the prebuilt Gemini voice id her words are synthesised with
+  values: string[]
+  neverDoes: string[]
+}
 const TUTOR: TutorTraits
 
 // --- factors.ts : what she adapts to -------------------------------------
@@ -135,6 +142,13 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
 - **Recall targets are enumerated by id.** The model can only be trusted to pick
   from a list it was shown — and the caller must still check the id it gets back
   before moving the canvas.
+- **One tutor means one voice, from one constant.** `TUTOR.speechVoiceName`
+  (`Sulafat`, the only voice Google labels Warm, and verified on both the
+  text-to-speech models and the Live API) is read by the recorded narration and
+  by the live doubt tutor alike. They are synthesised by two different services
+  minutes apart inside one lesson, so a second literal anywhere is a second
+  teacher waiting to take over the room. Do not confuse it with `TUTOR.voice`,
+  which is prose for humans and is never sent to a synthesiser.
 - The surface decides physical form only. `voice` bans screen formatting and
   caps a turn at 20-60 words; `text` allows short paragraphs; `narration` is the
   authored 30-60 word beat voice of the recorded class.
@@ -144,6 +158,7 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
 | You want her to… | Change | Why it lives there |
 |---|---|---|
 | have a different name or self-description | `TUTOR.name` / `.role` / `.voice` in `src/traits.ts` | One constant; every surface picks it up on the next call |
+| speak with a different synthesised voice | `TUTOR.speechVoiceName` in `src/traits.ts` | The recording and the live doubt read the same field, so they cannot drift into two teachers. Changing it changes both sides at once — and re-records nothing, so cached narration audio must be regenerated |
 | commit to something new (or stop) | `TUTOR.values` / `TUTOR.neverDoes` in `src/traits.ts` | Values are positive commitments, neverDoes are prohibitions. Tests fail if the same behaviour appears in both, or if a banned phrase is used elsewhere in the package |
 | push harder / go gentler on a strong student | `MASTERY_SECURE` in `src/factors.ts` | The single band boundary for "they hold this" |
 | rebuild prerequisites sooner | `MASTERY_SHAKY` in `src/factors.ts` | Set below the knowledge graph's `GAP_THRESHOLD` so borderline nodes get consolidated, not rebuilt |
@@ -163,6 +178,7 @@ here would drag one of them into the others.
 
 ## Tests
 
-`npx vitest run packages/persona` — traits consistency, per-factor silence and
-speech, exhaustive moment coverage, surface rules, and prompt determinism. No
-network, no fixtures on disk.
+`npx vitest run packages/persona` — traits consistency, the one synthesised
+voice reaching both sides of the seam, per-factor silence and speech, exhaustive
+moment coverage, surface rules, and prompt determinism. No network, no fixtures
+on disk.
