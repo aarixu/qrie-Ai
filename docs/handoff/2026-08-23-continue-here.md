@@ -23,7 +23,7 @@ enough to hand to a human developer — a stranger's first day is the constraint
 
 ## Where we are
 
-Last commit `a682f51`. 17 routed screens, 831 tests, typecheck and production
+Last commit `60a55fa`. 20 routed screens, 925 tests, typecheck and production
 build clean. Run `npm run dev` → http://localhost:5173
 
 **Genuinely working:**
@@ -103,9 +103,10 @@ Three more things I found in the same look:
 - LiveKit needs four processes in order: `npm run livekit:server`,
   `npm run agent:worker`, `npm run agent:token`, `npm run dev`. None of it is
   needed for the browser-direct live tutor, which is the default.
-- Recon notes from this session are in the scratchpad as `recon-0.md` …
-  `recon-5.md` and `avatar-0.md` … `avatar-3.md`. They were produced by reading
-  shipped `.d.ts` files and running the real binaries.
+- **`docs/research/`** holds ten notes from this session — the LiveKit SDKs, the
+  Gemini plugin, self-hosting on Windows, Gemini TTS, and four on avatars. Most
+  of it was verified by running the real thing. Read `docs/research/README.md`
+  first; it says which note settles what.
 
 ## Already closed out — don't redo it
 
