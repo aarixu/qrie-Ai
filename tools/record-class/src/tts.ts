@@ -1,10 +1,16 @@
 /**
  * The synthesis boundary. Gemini today; anything else behind the same interface
  * tomorrow. Authoring time only — nothing here ever runs in the student app.
+ *
+ * Which voice and which model are NOT decided here: they are
+ * `DEFAULT_TUTOR_VOICE` and `DEFAULT_TTS_MODEL` from `@ai-tutor/voice`, where
+ * the first is the persona's `speechVoiceName` and the live doubt agent reads
+ * the very same constants. The list below is only the set of names Google will
+ * accept, so a typo fails in a millisecond instead of after a round trip.
  */
 
 export interface SpeechRequest {
-  /** The whole text part: director's notes plus transcript (see speechPrompt.ts). */
+  /** The whole text part: director's notes plus transcript, from buildSpeechPrompt. */
   prompt: string;
   voice: string;
   model: string;
@@ -20,12 +26,6 @@ export interface SpeechAudio {
 export interface TtsTransport {
   synthesize(request: SpeechRequest): Promise<SpeechAudio>;
 }
-
-/** Measured working on this key, and the only voice Google labels Warm. */
-export const DEFAULT_VOICE = 'Sulafat';
-
-/** Streaming and batch both exist on this id; the 2.5 TTS models have neither. */
-export const DEFAULT_MODEL = 'gemini-3.1-flash-tts-preview';
 
 /**
  * The 30 prebuilt voices. Checked locally so a typo fails in a millisecond

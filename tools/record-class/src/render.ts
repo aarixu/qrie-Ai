@@ -1,20 +1,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Beat, Lesson } from '../../../packages/lesson-format/src/types.ts';
+import {
+  audioFileName,
+  buildSpeechPrompt,
+  hashNarration,
+  type NarrationManifest,
+} from '../../../packages/voice/src/index.ts';
 import { checkTake, parsePcmFormat, pcmDurationMs } from './audio.ts';
 import type { AudioEncoder } from './encode.ts';
 import {
-  audioFileName,
   emptyManifest,
-  hashNarration,
   loadManifest,
   manifestDir,
   orderBeats,
   writeManifest,
-  type NarrationManifest,
 } from './manifest.ts';
 import { planRender, type PlannedSkip, type RenderPlan } from './plan.ts';
-import { buildSpeechPrompt } from './speechPrompt.ts';
 import {
   isQuotaExhausted,
   retry,
@@ -144,6 +146,10 @@ async function synthesise(
   deps: RenderDeps,
   opts: RenderOptions,
 ): Promise<Take> {
+  // The tutor's name, her description and the director's notes come from the
+  // persona through this builder's own defaults, and are deliberately not
+  // restated here: the live doubt agent calls the same function, and a beat
+  // recorded from a locally-worded prompt would be a second teacher.
   const prompt = buildSpeechPrompt(beat.narration, {
     lessonTitle: lesson.title,
     beatTopic: beat.topic,

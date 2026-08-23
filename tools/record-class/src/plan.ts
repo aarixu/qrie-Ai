@@ -1,6 +1,10 @@
 import type { Beat, Lesson } from '../../../packages/lesson-format/src/types.ts';
+import {
+  hashNarration,
+  type NarrationEntry,
+  type NarrationManifest,
+} from '../../../packages/voice/src/index.ts';
 import { expectedDurationMs } from './audio.ts';
-import { hashNarration, type NarrationEntry, type NarrationManifest } from './manifest.ts';
 
 /**
  * WHAT THIS RUN WOULD DO, decided before anything is spent.
