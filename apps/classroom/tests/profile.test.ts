@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import {
-  SUBJECTS_BY_CLASS,
   hasDiagnostic,
   hasProfile,
   profileStore,
   saveDiagnostic,
   type StudentProfile,
 } from '../src/stores/profile';
+import { SYLLABI, subjectsAvailable } from '../src/lib/content';
 
 /**
  * The store key is a persistence contract — changing it orphans every existing
@@ -124,47 +124,29 @@ describe('saveDiagnostic', () => {
   });
 });
 
-describe('SUBJECTS_BY_CLASS', () => {
-  it('covers every class from 6 to 12 with a non-empty list', () => {
-    for (let klass = 6; klass <= 12; klass += 1) {
-      expect(SUBJECTS_BY_CLASS[klass], `class ${klass}`).toBeDefined();
-      expect(SUBJECTS_BY_CLASS[klass].length).toBeGreaterThan(0);
-    }
-  });
-
-  it('gives classes 6-10 the general-science stream', () => {
+describe('subjectsAvailable (the honest subject list)', () => {
+  it('offers only subjects that have an authored syllabus', () => {
+    // Classes 6-10: the general-science stream, exactly as authored.
     for (let klass = 6; klass <= 10; klass += 1) {
-      expect(SUBJECTS_BY_CLASS[klass]).toEqual([
-        'Science',
-        'Mathematics',
-        'Social Science',
-        'English',
-        'Hindi',
-      ]);
+      expect(subjectsAvailable(klass), `class ${klass}`).toEqual(['Mathematics', 'Science']);
     }
+    // Class 11 splits into the separate sciences that exist so far.
+    expect(subjectsAvailable(11)).toEqual(['Biology', 'Chemistry', 'Mathematics']);
   });
 
-  it('splits science into the separate subjects for 11-12', () => {
-    for (const klass of [11, 12]) {
-      expect(SUBJECTS_BY_CLASS[klass]).toEqual([
-        'Physics',
-        'Chemistry',
-        'Biology',
-        'Mathematics',
-        'English',
-      ]);
-      expect(SUBJECTS_BY_CLASS[klass]).not.toContain('Science');
+  it('returns an empty list, not a wishlist, for a class with nothing authored yet', () => {
+    // No class 12 syllabus exists. A subject chip with nothing behind it is a
+    // promise the first tap breaks - the list must say so.
+    expect(subjectsAvailable(12)).toEqual([]);
+  });
+
+  it('never names a subject with zero chapters behind it', () => {
+    for (let klass = 6; klass <= 12; klass += 1) {
+      for (const subject of subjectsAvailable(klass)) {
+        const syllabus = SYLLABI.find((s) => s.klass === klass && s.subject === subject);
+        expect(syllabus, `${subject} class ${klass}`).toBeDefined();
+        expect(syllabus!.chapters.length).toBeGreaterThan(0);
+      }
     }
-  });
-
-  it('gives each class its own array, so one cannot be edited through another', () => {
-    expect(SUBJECTS_BY_CLASS[6]).not.toBe(SUBJECTS_BY_CLASS[7]);
-    expect(SUBJECTS_BY_CLASS[11]).not.toBe(SUBJECTS_BY_CLASS[12]);
-  });
-
-  it('has no class outside 6-12', () => {
-    expect(Object.keys(SUBJECTS_BY_CLASS).map(Number).sort((a, b) => a - b)).toEqual([
-      6, 7, 8, 9, 10, 11, 12,
-    ]);
   });
 });

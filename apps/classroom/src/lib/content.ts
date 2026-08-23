@@ -1,7 +1,5 @@
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import { loadSyllabus, type SubjectSyllabus, type Topic } from '@ai-tutor/syllabus';
-// Syllabus data ships with the syllabus package; the app just imports it.
-import class10ScienceJson from '../../../../packages/syllabus/data/class10-science.json';
 
 /**
  * The app's content access layer: joins the lesson catalog (content/index.json,
@@ -34,7 +32,24 @@ export interface TopicRow {
   lessons: CatalogEntry[];
 }
 
-export const SYLLABI: SubjectSyllabus[] = [loadSyllabus(class10ScienceJson)];
+/**
+ * Every authored syllabus, loaded eagerly at build time. The glob is the
+ * point: adding a fourteenth class to packages/syllabus/data changes this
+ * array without anyone remembering to edit an import list — the app once
+ * imported exactly one file here, and a Class 7 student was quietly shown
+ * Class 10 Science because of it.
+ */
+const syllabusModules = import.meta.glob('../../../../packages/syllabus/data/*.json', {
+  eager: true,
+}) as Record<string, { default: unknown }>;
+
+export const SYLLABI: SubjectSyllabus[] = Object.values(syllabusModules)
+  .map((m) => loadSyllabus(m.default))
+  .sort((a, b) => a.klass - b.klass || a.subject.localeCompare(b.subject));
+
+/** The subjects a class can actually study — the ones with an authored syllabus. */
+export const subjectsAvailable = (klass: number): string[] =>
+  Array.from(new Set(SYLLABI.filter((s) => s.klass === klass).map((s) => s.subject)));
 
 let catalogCache: CatalogEntry[] | null = null;
 

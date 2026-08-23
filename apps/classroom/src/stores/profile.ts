@@ -21,27 +21,6 @@ export interface StudentProfile {
   diagnosedAt: string | null;
 }
 
-/**
- * NCERT subject lists. Classes 6-10 share the general-science stream; 11-12
- * split it into the separate sciences, which is the real break point in the
- * curriculum and the reason this is a table rather than one list.
- *
- * Each class gets its own copy so a caller that sorts or filters in place
- * cannot reach across into another class's list.
- */
-const UPPER_PRIMARY_AND_SECONDARY = ['Science', 'Mathematics', 'Social Science', 'English', 'Hindi'];
-const SENIOR_SECONDARY = ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'English'];
-
-export const SUBJECTS_BY_CLASS: Record<number, string[]> = {
-  6: [...UPPER_PRIMARY_AND_SECONDARY],
-  7: [...UPPER_PRIMARY_AND_SECONDARY],
-  8: [...UPPER_PRIMARY_AND_SECONDARY],
-  9: [...UPPER_PRIMARY_AND_SECONDARY],
-  10: [...UPPER_PRIMARY_AND_SECONDARY],
-  11: [...SENIOR_SECONDARY],
-  12: [...SENIOR_SECONDARY],
-};
-
 const EMPTY_PROFILE: StudentProfile = {
   name: null,
   klass: null,

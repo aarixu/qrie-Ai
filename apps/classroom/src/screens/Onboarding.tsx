@@ -1,31 +1,43 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TUTOR } from '@ai-tutor/persona';
 import { settingsStore } from '../stores/settings';
-import { profileStore, SUBJECTS_BY_CLASS } from '../stores/profile';
+import { profileStore } from '../stores/profile';
+import { subjectsAvailable } from '../lib/content';
+import { loadDiagnosticData } from '../lib/diagnosticData';
 import { Icon } from '../ui/Icon';
-import { Logo } from '../ui/Logo';
+import { TutorTile } from '../ui/TutorTile';
 import { BRAND } from '../brand';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
-const STEPS = ['name', 'class', 'subjects', 'ready'] as const;
+const STEPS = ['meet', 'name', 'class', 'subjects', 'ready'] as const;
 type Step = (typeof STEPS)[number];
 
 /**
- * First run: name, class, subjects, then into the placement test.
+ * First run: meet the teacher, then name, class, subjects, then into the
+ * placement test.
  *
- * One question per screen. A single form asking all three at once looks
- * shorter and feels longer — and a student who abandons it halfway leaves us
- * nothing, where a stepped flow has already banked their name and class.
+ * It opens on Meera because the product is her — a student who is about to be
+ * asked "what should I call you?" deserves to know who is asking. One question
+ * per screen after that: a single form asking everything at once looks shorter
+ * and feels longer, and a student who abandons a stepped flow has already
+ * banked their name and class.
+ *
+ * The subjects offered come from the syllabi that actually exist for that
+ * class — never from a wishlist. A subject chip with nothing behind it is a
+ * promise the first tap breaks.
  */
 export function Onboarding() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('name');
+  const [step, setStep] = useState<Step>('meet');
   const [name, setName] = useState('');
   const [klass, setKlass] = useState<number | null>(null);
   const [subjects, setSubjects] = useState<string[]>([]);
 
   const index = STEPS.indexOf(step);
-  const available = klass !== null ? (SUBJECTS_BY_CLASS[klass] ?? []) : [];
+  const available = klass !== null ? subjectsAvailable(klass) : [];
+  // The placement test exists class by class; only offer what can be taken.
+  const hasPlacement = klass !== null && loadDiagnosticData(klass) !== null;
 
   const toggleSubject = (subject: string) =>
     setSubjects((current) =>
@@ -36,7 +48,7 @@ export function Onboarding() {
     setKlass(next);
     // Subjects are per class, so a class change cannot keep the old selection.
     // Default to everything: opting out is easier than opting in.
-    setSubjects(SUBJECTS_BY_CLASS[next] ?? []);
+    setSubjects(subjectsAvailable(next));
     setStep('subjects');
   };
 
@@ -48,6 +60,10 @@ export function Onboarding() {
     settingsStore.update((s) => ({ ...s, klass }));
     navigate(toDiagnostic ? '/diagnostic' : '/', { replace: true });
   };
+
+  /** The one primary-action recipe, verbatim from the rest of the app. */
+  const PRIMARY =
+    'w-full bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0';
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body-md flex flex-col">
@@ -75,16 +91,38 @@ export function Onboarding() {
 
       <main className="flex-1 grid place-items-center px-margin-mobile pb-10">
         <div className="w-full max-w-[440px]">
+          {step === 'meet' && (
+            <div className="text-center">
+              {/* Her tile, exactly as the classroom draws it — the student is
+                  meeting the same person they will see teach. */}
+              <div className="grid place-items-center mb-6">
+                <TutorTile mode="teaching" variant="pip" />
+              </div>
+              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-3">
+                Hi, I'm {TUTOR.name} — your teacher.
+              </h1>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-2">
+                {BRAND.name} is your classroom: live classes for Class 6–12, on your phone.
+              </p>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                Stuck mid-class? Raise your hand ✋ — I stop and explain, then the class goes on.
+              </p>
+              <button onClick={() => setStep('name')} className={PRIMARY}>
+                Get started
+              </button>
+            </div>
+          )}
+
           {step === 'name' && (
             <div className="text-center">
               <div className="grid place-items-center mb-5">
-                <Logo size={64} />
+                <TutorTile mode="teaching" variant="pip" />
               </div>
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                 What should I call you?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                Your tutor will use this in class.
+                I'll use your name in class — like any teacher would.
               </p>
               <input
                 value={name}
@@ -98,7 +136,7 @@ export function Onboarding() {
               <button
                 onClick={() => setStep('class')}
                 disabled={name.trim().length === 0}
-                className="w-full mt-stack-md bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
+                className={`mt-stack-md ${PRIMARY}`}
               >
                 Continue
               </button>
@@ -111,7 +149,7 @@ export function Onboarding() {
                 Which class are you in{name.trim() ? `, ${name.trim()}` : ''}?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                Your lessons will match your level. You can change this later.
+                Your classes will match your level. You can change this later.
               </p>
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                 {CLASSES.map((k) => (
@@ -140,7 +178,11 @@ export function Onboarding() {
                 What are you studying?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md text-center">
-                Pick at least one. You can add more later.
+                {available.length === 0
+                  ? `Class ${klass} material is still being written — you can look around meanwhile.`
+                  : available.length > 1
+                    ? 'Pick at least one. More subjects are on their way.'
+                    : 'More subjects are on their way.'}
               </p>
               <div className="flex flex-wrap gap-3 justify-center">
                 {available.map((subject) => {
@@ -164,40 +206,56 @@ export function Onboarding() {
               </div>
               <button
                 onClick={() => setStep('ready')}
-                disabled={subjects.length === 0}
-                className="w-full mt-stack-lg bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-40 disabled:active:translate-y-0"
+                // A class with no authored subjects yet must still get through —
+                // an empty selection is only a refusal when there was a choice.
+                disabled={subjects.length === 0 && available.length > 0}
+                className={`mt-stack-lg ${PRIMARY}`}
               >
                 Continue
               </button>
             </div>
           )}
 
-          {step === 'ready' && (
-            <div className="text-center">
-              <div className="w-20 h-20 rounded-full bg-primary-fixed grid place-items-center mx-auto mb-5">
-                <Icon name="explore" filled className="text-[38px] text-on-primary-fixed" />
+          {step === 'ready' &&
+            (hasPlacement ? (
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-primary-fixed grid place-items-center mx-auto mb-5">
+                  <Icon name="explore" filled className="text-[38px] text-on-primary-fixed" />
+                </div>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                  Let's find your level
+                </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                  20 quick questions on what you've studied before — no marks, nothing to
+                  revise. I use them to work out what to teach you first, and what to skip.
+                </p>
+                <button onClick={() => finish(true)} className={PRIMARY}>
+                  Start the placement test
+                </button>
+                <button
+                  onClick={() => finish(false)}
+                  className="w-full mt-3 py-3 font-label-md text-label-md text-on-surface-variant underline underline-offset-2"
+                >
+                  Skip for now
+                </button>
               </div>
-              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
-                Let's find where you are
-              </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                A few quick questions — no marks, nothing to revise. {BRAND.name} uses them to
-                work out what to teach you first, and what to skip.
-              </p>
-              <button
-                onClick={() => finish(true)}
-                className="w-full bg-primary text-on-primary font-label-md text-label-md px-6 py-4 rounded-xl border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
-              >
-                Start
-              </button>
-              <button
-                onClick={() => finish(false)}
-                className="w-full mt-3 py-3 font-label-md text-label-md text-on-surface-variant underline underline-offset-2"
-              >
-                Skip for now
-              </button>
-            </div>
-          )}
+            ) : (
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-primary-fixed grid place-items-center mx-auto mb-5">
+                  <Icon name="celebration" filled className="text-[38px] text-on-primary-fixed" />
+                </div>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                  You're all set{name.trim() ? `, ${name.trim()}` : ''}!
+                </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                  Your placement test for Class {klass} is still being written — you can start
+                  learning right away, and I'll ask you those questions once they're ready.
+                </p>
+                <button onClick={() => finish(false)} className={PRIMARY}>
+                  Start learning
+                </button>
+              </div>
+            ))}
         </div>
       </main>
     </div>

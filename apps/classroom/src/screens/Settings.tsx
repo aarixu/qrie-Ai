@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { BRAND } from '../brand';
 import { version } from '../../package.json';
 import { settingsStore } from '../stores/settings';
-import { profileStore, SUBJECTS_BY_CLASS } from '../stores/profile';
+import { profileStore } from '../stores/profile';
+import { subjectsAvailable } from '../lib/content';
 import { preferencesStore, setPreference, type Preferences } from '../stores/preferences';
 import { progressStore } from '../stores/progress';
 import { doubtLogStore } from '../stores/doubtLog';
@@ -98,12 +99,12 @@ export function Settings() {
   // screen), while the profile copy is only written by the newer ones — so it
   // is the one that can be stale, never the other way round.
   const klass = settings.klass ?? profile.klass;
-  const available = klass !== null ? (SUBJECTS_BY_CLASS[klass] ?? []) : [];
+  const available = klass !== null ? subjectsAvailable(klass) : [];
 
   const chooseClass = (next: number) => {
     // Subjects are listed per class, so a class change cannot keep a selection
     // made against the old list — default to everything, as onboarding does.
-    profileStore.update((p) => ({ ...p, klass: next, subjects: SUBJECTS_BY_CLASS[next] ?? [] }));
+    profileStore.update((p) => ({ ...p, klass: next, subjects: subjectsAvailable(next) }));
     // Written to BOTH stores: a class in one and not the other would silently
     // give the student one class of lessons and another class of placement test.
     settingsStore.update((s) => ({ ...s, klass: next }));

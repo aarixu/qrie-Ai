@@ -7,7 +7,8 @@ import { describe, expect, it } from 'vitest';
 import { BRAND } from '../src/brand';
 import { createLocalStore } from '../src/stores/localStore';
 import { preferencesStore, setPreference, type Preferences } from '../src/stores/preferences';
-import { profileStore, SUBJECTS_BY_CLASS } from '../src/stores/profile';
+import { profileStore } from '../src/stores/profile';
+import { subjectsAvailable } from '../src/lib/content';
 import { settingsStore } from '../src/stores/settings';
 import { Help } from '../src/screens/Help';
 import { Settings } from '../src/screens/Settings';
@@ -55,7 +56,7 @@ const asStudent = (preferences: Preferences): void => {
   profileStore.set({
     name: 'Test student',
     klass: KLASS,
-    subjects: [SUBJECTS_BY_CLASS[KLASS][0]],
+    subjects: [subjectsAvailable(KLASS)[0]],
     diagnostic: null,
     diagnosedAt: null,
   });
@@ -117,7 +118,7 @@ describe('Settings', () => {
   });
 
   it('offers the subjects of that class as chips, marking the chosen ones', () => {
-    for (const subject of SUBJECTS_BY_CLASS[KLASS]) expect(html).toContain(`>${subject}</button>`);
+    for (const subject of subjectsAvailable(KLASS)) expect(html).toContain(`>${subject}</button>`);
     // The student picked exactly one, so exactly one chip is pressed.
     expect(html.split('aria-pressed="true"').length - 1).toBe(1);
   });
