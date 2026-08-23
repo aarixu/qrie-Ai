@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from '../lib/content';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
-import { settingsStore } from '../stores/settings';
+import { profileStore } from '../stores/profile';
+import { BRAND } from '../brand';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
-import { BottomNav } from '../ui/BottomNav';
+import { BottomNav, SideNav } from '../ui/Nav';
 
 /**
  * Home, built to the Stitch design: a greeting bar with the streak, a hero card
@@ -32,7 +33,7 @@ const styleFor = (subject: string) => SUBJECT_STYLE[subject] ?? SUBJECT_STYLE.Sc
 export function Home() {
   const navigate = useNavigate();
   const progress = useStore(progressStore);
-  const settings = useStore(settingsStore);
+  const profile = useStore(profileStore);
   const [catalog, setCatalog] = useState<CatalogEntry[] | null>(null);
   const [resumeEntry, setResumeEntry] = useState<CatalogEntry | null>(null);
 
@@ -68,7 +69,7 @@ export function Home() {
   };
 
   return (
-    <div className="bg-background text-on-background min-h-screen font-body-md pb-24 md:pb-8">
+    <div className="bg-background text-on-background min-h-screen font-body-md pb-24 md:pb-8 md:pl-[232px]">
       {/* Top app bar */}
       <header className="w-full top-0 sticky bg-background z-40">
         <div className="flex justify-between items-center px-margin-mobile py-4 max-w-[1120px] mx-auto">
@@ -77,7 +78,8 @@ export function Home() {
               <Icon name="person" filled className="text-on-primary-fixed" />
             </div>
             <h1 className="font-headline-md text-headline-md font-bold text-primary">
-              Namaste{settings.klass ? '!' : '!'}
+              {BRAND.greeting}
+              {profile.name ? `, ${profile.name}!` : '!'}
             </h1>
           </div>
           {streak > 0 && (
@@ -178,6 +180,7 @@ export function Home() {
         </section>
       </main>
 
+      <SideNav />
       <BottomNav />
     </div>
   );

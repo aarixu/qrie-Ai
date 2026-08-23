@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from './Icon';
-import { BottomNav } from './BottomNav';
+import { BottomNav, SideNav } from './Nav';
 
 /**
  * The page frame every screen sits in: background, the centred content column,
@@ -27,7 +27,11 @@ export function Screen({
   const back = onBack ?? (() => navigate(-1));
 
   return (
-    <div className={`bg-background text-on-background min-h-screen font-body-md ${nav ? 'pb-24 md:pb-8' : 'pb-8'}`}>
+    <div
+      className={`bg-background text-on-background min-h-screen font-body-md ${
+        nav ? 'pb-24 md:pb-8 md:pl-[232px]' : 'pb-8'
+      }`}
+    >
       <header className="w-full top-0 sticky bg-background z-40">
         <div className="flex items-center gap-2 px-margin-mobile py-4 max-w-[1120px] mx-auto">
           {onBack !== undefined && (
@@ -50,7 +54,12 @@ export function Screen({
 
       <main className="px-margin-mobile max-w-[1120px] mx-auto pb-20">{children}</main>
 
-      {nav && <BottomNav />}
+      {nav && (
+        <>
+          <SideNav />
+          <BottomNav />
+        </>
+      )}
     </div>
   );
 }

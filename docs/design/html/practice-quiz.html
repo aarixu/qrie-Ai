@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Practice Quiz</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb783",
+                        "on-tertiary-container": "#fffbff",
+                        "surface": "#f7f9fb",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "inverse-primary": "#c0c1ff",
+                        "surface-tint": "#494bd6",
+                        "on-background": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#767586",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#684000",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-fixed": "#ffdcc5",
+                        "primary-container": "#6063ee",
+                        "primary": "#4648d4",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#b55d00",
+                        "outline-variant": "#c7c4d7",
+                        "on-surface-variant": "#464554",
+                        "error": "#ba1a1a",
+                        "tertiary": "#904900",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#855300",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed": "#07006c",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-container": "#fea619",
+                        "surface-dim": "#d8dadc",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#fffbff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed": "#301400"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "margin-desktop": "32px",
+                        "margin-mobile": "16px",
+                        "stack-md": "24px",
+                        "stack-lg": "48px",
+                        "card-padding": "24px",
+                        "base-unit": "8px",
+                        "stack-sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "headline-md": ["Quicksand"],
+                        "label-md": ["Lexend"],
+                        "body-md": ["Lexend"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "headline-xl": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "700" }],
+                        "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            /* Pattern for visual interest without noise */
+            background-image: radial-gradient(#e0e3e5 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-color: #f7f9fb;
+        }
+        
+        .answer-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+        
+        .answer-card:active {
+            transform: scale(0.98);
+        }
+
+        .selected-card {
+            box-shadow: 0px 4px 20px rgba(99, 102, 241, 0.15);
+        }
+        
+        .unselected-card {
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .unselected-card:hover {
+            box-shadow: 0px 4px 12px rgba(99, 102, 241, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        /* Progress bar animation */
+        .progress-fill {
+            background: linear-gradient(45deg, #4648d4 25%, #6063ee 25%, #6063ee 50%, #4648d4 50%, #4648d4 75%, #6063ee 75%, #6063ee 100%);
+            background-size: 20px 20px;
+            animation: moveStripes 2s linear infinite;
+        }
+
+        @keyframes moveStripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 20px 0; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col font-body-md text-on-surface md:hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 bg-surface dark:bg-surface-dim shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full max-w-7xl mx-auto sticky z-10">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors scale-95 active:scale-90 transition-transform text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">close</span>
+</button>
+<div class="flex-1 px-4 max-w-[200px]">
+<div class="h-3 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full w-3/8 progress-fill rounded-full" style="width: 37.5%;"></div>
+</div>
+</div>
+<div class="flex items-center gap-1 font-headline-md text-headline-md text-secondary-container bg-secondary-container/10 px-3 py-1 rounded-full">
+<span class="font-bold text-[18px]">5</span>
+<span>🔥</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col px-margin-mobile py-stack-md gap-stack-md overflow-y-auto pb-24">
+<!-- Header Section -->
+<div class="flex flex-col gap-stack-sm">
+<div class="inline-flex items-center self-start px-3 py-1 bg-surface-container text-on-surface-variant rounded-full font-label-sm text-label-sm uppercase tracking-wider">
+                QUESTION 3 OF 8
+            </div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">
+                Which of these processes describes how plants make their own food using sunlight?
+            </h1>
+<button class="inline-flex items-center gap-2 self-start text-primary hover:text-primary-container font-label-md text-label-md transition-colors mt-2">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">front_hand</span>
+                Ask the tutor
+            </button>
+</div>
+<!-- Answers Section -->
+<div class="flex flex-col gap-stack-sm">
+<!-- Card A -->
+<button class="answer-card unselected-card w-full flex items-center p-4 bg-surface-container-lowest rounded-[24px] border border-transparent">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-surface-container text-on-surface font-headline-md text-headline-md">
+                    A
+                </div>
+<div class="ml-4 text-left font-body-lg text-body-lg text-on-surface flex-1">
+                    Respiration
+                </div>
+</button>
+<!-- Card B (Selected) -->
+<button class="answer-card selected-card w-full flex items-center p-4 bg-primary-fixed border-2 border-primary rounded-[24px]">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-on-primary font-headline-md text-headline-md">
+                    B
+                </div>
+<div class="ml-4 text-left font-body-lg text-body-lg text-on-primary-fixed-variant flex-1 font-medium">
+                    Photosynthesis
+                </div>
+</button>
+<!-- Card C -->
+<button class="answer-card unselected-card w-full flex items-center p-4 bg-surface-container-lowest rounded-[24px] border border-transparent">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-surface-container text-on-surface font-headline-md text-headline-md">
+                    C
+                </div>
+<div class="ml-4 text-left font-body-lg text-body-lg text-on-surface flex-1">
+                    Transpiration
+                </div>
+</button>
+<!-- Card D -->
+<button class="answer-card unselected-card w-full flex items-center p-4 bg-surface-container-lowest rounded-[24px] border border-transparent">
+<div class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-surface-container text-on-surface font-headline-md text-headline-md">
+                    D
+                </div>
+<div class="ml-4 text-left font-body-lg text-body-lg text-on-surface flex-1">
+                    Digestion
+                </div>
+</button>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md p-margin-mobile border-t border-outline-variant/30">
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-headline-md text-headline-md flex items-center justify-center gap-2 shadow-[0px_4px_0px_#2f2ebe] active:shadow-none active:translate-y-[4px] transition-all">
+            Check
+        </button>
+</div>
+</body></html>
