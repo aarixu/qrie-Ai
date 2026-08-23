@@ -32,6 +32,14 @@ import { DoubtPanel } from '../ui/DoubtPanel';
  */
 const CONTROLS_IDLE_MS = 3_500;
 
+/**
+ * The joining pause before the class starts itself. A student does not press
+ * play on a live class — they arrive, the room readies itself, the teacher
+ * begins. The wait is also real headroom: the recorded take's first audio
+ * fetch and the speech pipeline warm up behind it.
+ */
+const PREPARE_MS = 5_000;
+
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
 export function LessonRoute() {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -370,6 +378,41 @@ export function ClassRoom({
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
   };
 
+  /**
+   * Nobody presses play on a live class. The room shows itself getting ready
+   * for a beat, then the class begins on its own.
+   *
+   * The one exception is a student who arrived without ever touching the page
+   * (a pasted link): the browser will not let audio start uninvited, so THAT
+   * student gets a Join button — which is what Meet shows at a door anyway.
+   */
+  const [entryPhase, setEntryPhase] = useState<'preparing' | 'join' | 'inClass'>('preparing');
+  const entryPhaseRef = useRef(entryPhase);
+  entryPhaseRef.current = entryPhase;
+  const startClassRef = useRef(startClass);
+  startClassRef.current = startClass;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (entryPhaseRef.current !== 'preparing') return;
+      // Missing API (older browsers) counts as activated — autoplay simply fails
+      // quiet there, which is still a running, captioned class.
+      const activated = navigator.userActivation?.hasBeenActive ?? true;
+      if (activated) {
+        startClassRef.current();
+        setEntryPhase('inClass');
+      } else {
+        setEntryPhase('join');
+      }
+    }, PREPARE_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const joinClass = () => {
+    startClassRef.current();
+    setEntryPhase('inClass');
+  };
+
   const sendText = (text: string) => {
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
     handoff.sendUserText(text);
@@ -399,6 +442,9 @@ export function ClassRoom({
                 : "Couldn't hear you — you can type instead";
 
   const notStarted = !inDoubt && (player.state === 'idle' || player.state === 'ended');
+  // The joining overlay: only over a class that has not begun. Once the class
+  // ran to its end the room offers a replay instead.
+  const joining = notStarted && player.state === 'idle' && entryPhase !== 'inClass';
   // Beat progress fills the top hairline the way established lesson players do.
   const progress =
     player.state === 'ended' ? 1 : (player.beatIndex + (player.state === 'idle' ? 0 : 1)) / lesson.beats.length;
@@ -479,15 +525,52 @@ export function ClassRoom({
             </p>
           )}
 
-          {/* Not started / finished: one clear action, centre-board. */}
-          {notStarted && (
+          {/* Joining: the room readies itself, then the class begins on its own. */}
+          {joining && (
+            <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
+              {entryPhase === 'preparing' ? (
+                <div className="flex flex-col items-center gap-4 px-6 text-center">
+                  <div className="flex items-end gap-1.5 h-6" aria-hidden>
+                    {[10, 20, 14, 22, 12].map((h, i) => (
+                      <span
+                        key={i}
+                        className="w-1.5 rounded-full bg-white sound-bar"
+                        style={{ height: h, animationDelay: `${i * 0.15}s` }}
+                      />
+                    ))}
+                  </div>
+                  <p className="font-headline-md text-[17px] leading-6 font-semibold text-white">
+                    {canResume ? 'Picking up where you left off…' : 'Meera is getting your class ready…'}
+                  </p>
+                  {/* PREPARE_MS worth of fill, so the wait visibly ends. */}
+                  <div className="w-48 h-1.5 rounded-full bg-white/25 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-white"
+                      style={{ animation: `prepare-fill ${PREPARE_MS}ms linear forwards` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={joinClass}
+                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+                >
+                  <Icon name="play_arrow" filled />
+                  {canResume ? 'Rejoin class' : 'Join class'}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* A finished class replays on request — the one press-to-play left. */}
+          {!inDoubt && player.state === 'ended' && (
             <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
               <button
                 onClick={startClass}
                 className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
               >
-                <Icon name={player.state === 'ended' ? 'replay' : 'play_arrow'} filled />
-                {player.state === 'ended' ? 'Watch again' : canResume ? 'Resume class' : 'Start class'}
+                <Icon name="replay" filled />
+                Watch again
               </button>
             </div>
           )}

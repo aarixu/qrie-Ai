@@ -89,3 +89,9 @@
 @media (prefers-reduced-motion: reduce) {
   .sound-bar { animation: none; }
 }
+
+/* The joining bar: PREPARE_MS of fill while the room readies itself. */
+@keyframes prepare-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
