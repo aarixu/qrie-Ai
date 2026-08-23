@@ -1,27 +1,23 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TUTOR } from '@ai-tutor/persona';
 import { settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
 import { loadDiagnosticData } from '../lib/diagnosticData';
 import { Icon } from '../ui/Icon';
 import { TutorTile } from '../ui/TutorTile';
-import { BRAND } from '../brand';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
-const STEPS = ['meet', 'name', 'class', 'subjects', 'ready'] as const;
+const STEPS = ['name', 'class', 'subjects', 'ready'] as const;
 type Step = (typeof STEPS)[number];
 
 /**
- * First run: meet the teacher, then name, class, subjects, then into the
- * placement test.
+ * First run: name, class, subjects, then into the placement test.
  *
- * It opens on Meera because the product is her — a student who is about to be
- * asked "what should I call you?" deserves to know who is asking. One question
- * per screen after that: a single form asking everything at once looks shorter
- * and feels longer, and a student who abandons a stepped flow has already
- * banked their name and class.
+ * One question per screen — a single form asking everything at once looks
+ * shorter and feels longer, and a student who abandons a stepped flow has
+ * already banked their name and class. Her tile above the first question is
+ * the whole introduction: who is asking, without a screen spent on it.
  *
  * The subjects offered come from the syllabi that actually exist for that
  * class — never from a wishlist. A subject chip with nothing behind it is a
@@ -29,7 +25,7 @@ type Step = (typeof STEPS)[number];
  */
 export function Onboarding() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('meet');
+  const [step, setStep] = useState<Step>('name');
   const [name, setName] = useState('');
   const [klass, setKlass] = useState<number | null>(null);
   const [subjects, setSubjects] = useState<string[]>([]);
@@ -91,28 +87,6 @@ export function Onboarding() {
 
       <main className="flex-1 grid place-items-center px-margin-mobile pb-10">
         <div className="w-full max-w-[440px]">
-          {step === 'meet' && (
-            <div className="text-center">
-              {/* Her tile, exactly as the classroom draws it — the student is
-                  meeting the same person they will see teach. */}
-              <div className="grid place-items-center mb-6">
-                <TutorTile mode="teaching" variant="pip" />
-              </div>
-              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-3">
-                Hi, I'm {TUTOR.name} — your teacher.
-              </h1>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-2">
-                {BRAND.name} is your classroom: live classes for Class 6–12, on your phone.
-              </p>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                Stuck mid-class? Raise your hand ✋ — I stop and explain, then the class goes on.
-              </p>
-              <button onClick={() => setStep('name')} className={PRIMARY}>
-                Get started
-              </button>
-            </div>
-          )}
-
           {step === 'name' && (
             <div className="text-center">
               <div className="grid place-items-center mb-5">
