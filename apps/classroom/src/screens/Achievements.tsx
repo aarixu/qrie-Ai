@@ -101,7 +101,10 @@ function Card({ item }: { item: Achievement }) {
               aria-valuetext={bar.label}
               className="h-2 rounded-full bg-surface-variant overflow-hidden"
             >
-              <div className="h-full rounded-full bg-primary-fixed-dim" style={{ width: `${percent}%` }} />
+              <div
+                className="h-full rounded-full bg-primary-fixed-dim"
+                style={{ width: `${percent}%` }}
+              />
             </div>
             <p className="font-label-md text-label-md text-on-surface-variant mt-2">{bar.label}</p>
           </div>
