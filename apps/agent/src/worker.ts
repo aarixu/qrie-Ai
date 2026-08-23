@@ -13,6 +13,7 @@ import {
 import * as google from '@livekit/agents-plugin-google';
 import type { RemoteParticipant, Room } from '@livekit/rtc-node';
 import { z } from 'zod';
+import { TUTOR } from '@ai-tutor/persona';
 import { loadLocalEnv, readGoogleApiKey } from './config.ts';
 import {
   END_DOUBT,
@@ -74,11 +75,12 @@ const LIVE_MODEL = 'gemini-2.5-flash-native-audio-latest';
 
 /**
  * THE SAME VOICE AS THE RECORDING. tools/record-class narrates every lesson
- * with Sulafat (the one voice Google labels Warm), and the entire illusion —
- * that the recording and the live tutor are one teacher — collapses the moment
- * these two drift apart. Change both or neither.
+ * with TUTOR.speechVoiceName, and the entire illusion — that the recording and
+ * the live tutor are one teacher — collapses the moment these two drift apart.
+ * Read from the persona, never written here: this file had its own 'Sulafat'
+ * literal once, which is exactly the drift the one-constant rule exists for.
  */
-const TUTOR_VOICE = 'Sulafat';
+const TUTOR_VOICE = TUTOR.speechVoiceName;
 
 /**
  * How long the agent waits for the student who supposedly raised a hand. They

@@ -113,6 +113,39 @@ describe('createBrowserTts — speechSynthesis path', () => {
     expect(uttered[0].rate).toBe(1);
   });
 
+  it("picks a woman's voice — Indian English first, gender before locale", () => {
+    const voice = (name: string, lang: string) => ({ name, lang }) as SpeechSynthesisVoice;
+    const david = voice('Microsoft David - English (United States)', 'en-US');
+    const heera = voice('Microsoft Heera - English (India)', 'en-IN');
+    const zira = voice('Microsoft Zira - English (United States)', 'en-US');
+    const ravi = voice('Microsoft Ravi - English (India)', 'en-IN');
+
+    // The full Windows lineup: Heera is female AND en-IN — she wins outright.
+    vi.stubGlobal('speechSynthesis', {
+      speak: (u: unknown) => uttered.push(u as FakeUtterance),
+      cancel: synthCancel,
+      getVoices: () => [david, heera, zira, ravi],
+    });
+    void createBrowserTts().speak('namaste');
+    expect((uttered[0] as FakeUtterance & { voice?: SpeechSynthesisVoice }).voice).toBe(heera);
+
+    // No Indian woman installed: Zira (a woman, wrong locale) still beats
+    // Ravi (en-IN, a man) — the tutor is Meera, and her voice says so first.
+    vi.stubGlobal('speechSynthesis', {
+      speak: (u: unknown) => uttered.push(u as FakeUtterance),
+      cancel: synthCancel,
+      getVoices: () => [david, ravi, zira],
+    });
+    void createBrowserTts().speak('namaste');
+    expect((uttered[1] as FakeUtterance & { voice?: SpeechSynthesisVoice }).voice).toBe(zira);
+  });
+
+  it('leaves the voice unset while the engine has no list yet', () => {
+    // No getVoices at all (this suite's default stub): lang alone, as before.
+    void createBrowserTts().speak('namaste');
+    expect((uttered[0] as FakeUtterance & { voice?: SpeechSynthesisVoice }).voice).toBeUndefined();
+  });
+
   it('passes lang and rate options through to the utterance', () => {
     const tts = createBrowserTts({ lang: 'hi-IN', rate: 1.2 });
     void tts.speak('dhanyavaad');

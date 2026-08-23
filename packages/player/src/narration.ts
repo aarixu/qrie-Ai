@@ -26,11 +26,51 @@ export function createBrowserTts(opts?: { lang?: string; rate?: number }): TtsAd
   return createSynthTts(synth, opts?.lang ?? 'en-IN', opts?.rate ?? 1);
 }
 
+/**
+ * Names that mean "a woman's voice" across the engines students actually have.
+ * The Web Speech API has no gender field, so this list of shipped voice names
+ * is the only handle there is: Heera/Neerja/Swara are Windows' Indian-English
+ * women, Zira/Aria/Jenny the US ones, and the generic words catch Android and
+ * macOS. The tutor is Meera — left to the OS default she speaks as David.
+ */
+const FEMALE_VOICE = /heera|neerja|swara|aditi|raveena|kajal|zira|aria|jenny|sonia|libby|hazel|susan|samantha|veena|tessa|female|woman/i;
+
+/**
+ * The best voice for her: a woman speaking the requested language, Indian
+ * English first. Null (engine still loading its list, or nothing matched)
+ * leaves the utterance's `lang` to pick the platform default, as before.
+ */
+function pickVoice(synth: SpeechSynthesis, lang: string): SpeechSynthesisVoice | null {
+  // Test stubs and old WebViews may not implement getVoices at all.
+  const voices = typeof synth.getVoices === 'function' ? synth.getVoices() : [];
+  const base = lang.split('-')[0];
+  let best: SpeechSynthesisVoice | null = null;
+  let bestScore = 0;
+  for (const voice of voices) {
+    let score = 0;
+    if (FEMALE_VOICE.test(voice.name)) score += 8;
+    if (voice.lang === lang) score += 4;
+    else if (voice.lang.startsWith(base)) score += 2;
+    if (score > bestScore) {
+      best = voice;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
 function createSynthTts(synth: SpeechSynthesis, lang: string, rate: number): TtsAdapter {
   // Resolver of the in-flight speak(). Each utterance settles through its OWN
   // finish() closure, so a late `end` event from a cancelled utterance can
   // never resolve a newer speak()'s promise.
   let pendingFinish: (() => void) | null = null;
+
+  // Chrome delivers the voice list asynchronously; until it lands, utterances
+  // go out on `lang` alone and re-resolve per speak() once it has.
+  let voice = pickVoice(synth, lang);
+  synth.addEventListener?.('voiceschanged', () => {
+    voice = pickVoice(synth, lang);
+  });
 
   return {
     speak(text: string): Promise<void> {
@@ -48,6 +88,8 @@ function createSynthTts(synth: SpeechSynthesis, lang: string, rate: number): Tts
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = lang;
         utterance.rate = rate;
+        if (!voice) voice = pickVoice(synth, lang); // the list may have arrived since
+        if (voice) utterance.voice = voice;
         // An errored utterance must resolve too, or the class stalls forever.
         utterance.onend = finish;
         utterance.onerror = finish;
