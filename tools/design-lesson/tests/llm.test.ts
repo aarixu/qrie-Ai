@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   AnthropicAdapter,
   GeminiAdapter,
+  OpenRouterAdapter,
   createAdapterFromEnv,
   stripJsonFences,
 } from '../src/llm.ts';
@@ -32,12 +33,19 @@ describe('stripJsonFences', () => {
 describe('createAdapterFromEnv', () => {
   const env = (extra: Record<string, string>): NodeJS.ProcessEnv => extra as NodeJS.ProcessEnv;
 
-  it('defaults to Gemini', () => {
-    expect(createAdapterFromEnv(env({ GOOGLE_API_KEY: 'k' }))).toBeInstanceOf(GeminiAdapter);
+  it('defaults to OpenRouter — the one that works from this machine', () => {
+    expect(createAdapterFromEnv(env({ OPENROUTER_API_KEY: 'k' }))).toBeInstanceOf(
+      OpenRouterAdapter,
+    );
   });
 
-  it('accepts GEMINI_API_KEY as the Gemini key', () => {
-    expect(createAdapterFromEnv(env({ GEMINI_API_KEY: 'k' }))).toBeInstanceOf(GeminiAdapter);
+  it('selects Gemini via LLM_PROVIDER, either key name', () => {
+    expect(
+      createAdapterFromEnv(env({ LLM_PROVIDER: 'gemini', GOOGLE_API_KEY: 'k' })),
+    ).toBeInstanceOf(GeminiAdapter);
+    expect(
+      createAdapterFromEnv(env({ LLM_PROVIDER: 'gemini', GEMINI_API_KEY: 'k' })),
+    ).toBeInstanceOf(GeminiAdapter);
   });
 
   it('selects Anthropic via LLM_PROVIDER', () => {
@@ -47,8 +55,13 @@ describe('createAdapterFromEnv', () => {
   });
 
   it('throws a specific message when the key is missing', () => {
-    expect(() => createAdapterFromEnv(env({}))).toThrow(/GOOGLE_API_KEY or GEMINI_API_KEY/);
-    expect(() => createAdapterFromEnv(env({ LLM_PROVIDER: 'anthropic' }))).toThrow(/ANTHROPIC_API_KEY/);
+    expect(() => createAdapterFromEnv(env({}))).toThrow(/OPENROUTER_API_KEY/);
+    expect(() => createAdapterFromEnv(env({ LLM_PROVIDER: 'gemini' }))).toThrow(
+      /GOOGLE_API_KEY or GEMINI_API_KEY/,
+    );
+    expect(() => createAdapterFromEnv(env({ LLM_PROVIDER: 'anthropic' }))).toThrow(
+      /ANTHROPIC_API_KEY/,
+    );
   });
 
   it('throws on an unknown provider', () => {
@@ -132,5 +145,58 @@ describe('AnthropicAdapter', () => {
       ANTHROPIC_MODEL: 'claude-test',
     } as NodeJS.ProcessEnv).complete('s', 'u');
     expect(JSON.parse(calls[0].init.body).model).toBe('claude-test');
+  });
+});
+
+describe('OpenRouterAdapter', () => {
+  it('posts system/user as chat messages and asks for JSON back', async () => {
+    const calls = stubFetch({ choices: [{ message: { content: '```json\n{"ok":true}\n```' } }] });
+    const adapter = new OpenRouterAdapter({ OPENROUTER_API_KEY: 'or' } as NodeJS.ProcessEnv);
+
+    const reply = await adapter.complete('SYS', 'USER');
+
+    expect(reply).toBe('{"ok":true}');
+    expect(calls[0].url).toBe('https://openrouter.ai/api/v1/chat/completions');
+    expect(calls[0].init.headers.authorization).toBe('Bearer or');
+    const body = JSON.parse(calls[0].init.body);
+    expect(body.model).toBe('stealth/ox-alpha');
+    expect(body.messages).toEqual([
+      { role: 'system', content: 'SYS' },
+      { role: 'user', content: 'USER' },
+    ]);
+    expect(body.response_format).toEqual({ type: 'json_object' });
+  });
+
+  it('asks for low reasoning effort by default', async () => {
+    // Ox Alpha reasons at "max" unless told otherwise, which on 158 chapters
+    // is hours of thinking about a schema-shaped extraction.
+    const calls = stubFetch({ choices: [{ message: { content: '{}' } }] });
+    await new OpenRouterAdapter({ OPENROUTER_API_KEY: 'or' } as NodeJS.ProcessEnv).complete('s', 'u');
+    expect(JSON.parse(calls[0].init.body).reasoning).toEqual({ effort: 'low' });
+  });
+
+  it('honours the model and effort overrides', async () => {
+    const calls = stubFetch({ choices: [{ message: { content: '{}' } }] });
+    await new OpenRouterAdapter({
+      OPENROUTER_API_KEY: 'or',
+      OPENROUTER_MODEL: 'some/other-model',
+      OPENROUTER_REASONING_EFFORT: 'high',
+    } as NodeJS.ProcessEnv).complete('s', 'u');
+    const body = JSON.parse(calls[0].init.body);
+    expect(body.model).toBe('some/other-model');
+    expect(body.reasoning).toEqual({ effort: 'high' });
+  });
+
+  it('surfaces an upstream failure reported as a 200 with an error body', async () => {
+    // OpenRouter answers 200 and puts the provider's failure in the payload.
+    stubFetch({ error: { message: 'upstream is out of capacity' } });
+    const adapter = new OpenRouterAdapter({ OPENROUTER_API_KEY: 'or' } as NodeJS.ProcessEnv);
+    await expect(adapter.complete('s', 'u')).rejects.toThrow(/out of capacity/);
+  });
+
+  it('throws with the HTTP status on a failed request', async () => {
+    vi.stubGlobal('fetch', async () => ({ ok: false, status: 401, text: async () => 'no key' }));
+    const adapter = new OpenRouterAdapter({ OPENROUTER_API_KEY: 'bad' } as NodeJS.ProcessEnv);
+    await expect(adapter.complete('s', 'u')).rejects.toThrow(/OpenRouter 401/);
   });
 });

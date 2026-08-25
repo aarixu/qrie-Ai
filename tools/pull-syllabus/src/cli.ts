@@ -9,7 +9,7 @@ import {
   slugify,
   type NcertBook,
 } from './parse.ts';
-import { createAdapterFromEnv } from './llm.ts';
+import { createAdapterFromEnv, loadEnvFiles } from './llm.ts';
 import { buildChapterPrompt } from './prompt.ts';
 import { generateChapters, mergeIntoSyllabus, syllabusIdFor } from './generate.ts';
 
@@ -57,8 +57,11 @@ Usage:
   --refresh    re-fetch the NCERT index instead of using the cached copy
   --dry-run    print the prompts and write nothing (needs no API key)
 
-Env:
-  LLM_PROVIDER            "gemini" (default) | "anthropic"
+Env (read from .env.local at the repo root, or the shell):
+  LLM_PROVIDER              "openrouter" (default) | "gemini" | "anthropic"
+  OPENROUTER_API_KEY        https://openrouter.ai/keys
+  OPENROUTER_MODEL          default "stealth/ox-alpha" (free)
+  OPENROUTER_REASONING_EFFORT  low (default) | high | max
   GOOGLE_API_KEY | GEMINI_API_KEY | ANTHROPIC_API_KEY`);
   process.exit(2);
 }
@@ -125,6 +128,8 @@ function selectBooks(books: NcertBook[]): Map<string, NcertBook[]> {
 }
 
 async function main(): Promise<void> {
+  // Keys come from .env.local at the repo root; real env vars still win.
+  loadEnvFiles();
   const argv = process.argv.slice(2);
   const wantList = argv.includes('--list');
   const wantAll = argv.includes('--all');
@@ -255,10 +260,18 @@ async function main(): Promise<void> {
   }
 
   console.log(`\n${written} file(s) written, ${failed} book(s) failed.`);
-  if (failed > 0) process.exit(1);
+  if (failed > 0) process.exitCode = 1;
 }
 
+/**
+ * Failures set `exitCode` rather than calling `process.exit`.
+ *
+ * On Windows, forcing an exit while undici still holds sockets trips a libuv
+ * assertion, and the crash REPLACES the exit code with 0 — so a generation
+ * that died on a 401 reported success to whatever loop was driving it.
+ * Setting the code and letting Node drain gets the failure reported.
+ */
 main().catch((e) => {
   console.error(e instanceof Error ? e.message : String(e));
-  process.exit(1);
+  process.exitCode = 1;
 });

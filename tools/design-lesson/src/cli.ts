@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 // Leaf module, not the package index — see the note in prompt.ts.
 import { getTopic, listTopics, loadSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
 import type { SubjectSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
-import { createAdapterFromEnv } from './llm.ts';
+import { createAdapterFromEnv, loadEnvFiles } from './llm.ts';
 import { designLesson } from './design.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -43,6 +43,8 @@ function loadAllSyllabi(): SubjectSyllabus[] {
 }
 
 async function main(): Promise<number> {
+  // Keys come from .env.local at the repo root; real env vars still win.
+  loadEnvFiles();
   const args = parseArgs(process.argv.slice(2));
   if (!args) {
     console.error('Usage: node tools/design-lesson/src/cli.ts --topic <syllabusId/chapterId/topicId> --out <dir>');
@@ -102,9 +104,11 @@ async function main(): Promise<number> {
 }
 
 main().then(
-  (code) => process.exit(code),
+  (code) => {
+    process.exitCode = code;
+  },
   (err) => {
     console.error(err instanceof Error ? err.message : String(err));
-    process.exit(1);
+    process.exitCode = 1;
   },
 );

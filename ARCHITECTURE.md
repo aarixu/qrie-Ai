@@ -64,6 +64,7 @@ reconstructed from that beat alone, which is exactly what the doubt agent's
 | `packages/doubt-session` | THE HANDOFF | pure state machine: `PLAYING → PAUSING → AGENT_ENTERING → LIVE → AGENT_LEAVING → RESUMING → PLAYING`. Agent behind an adapter |
 | `packages/syllabus` | curriculum as data | Class→Subject→Chapter→Topic, NCERT-aligned |
 | `apps/classroom` | the student app | **wiring only** — screens, controls, avatar. No logic lives here |
+| `tools/llm` | THE PROVIDER BOUNDARY | one `complete(system, user)` adapter for every authoring tool — OpenRouter, Gemini, Anthropic — plus the `.env.local` reader. One copy, because three copies had already drifted |
 | `tools/design-lesson` | the factory CLI | LLM → lesson.json, validated, with repair loop |
 | `content/` | lessons as data | one lesson = one folder. Adding a lesson touches zero source files |
 | `apps/agent` | the live tutor, server side | a LiveKit worker that arrives only when a hand goes up, and a token server so the LiveKit secret never reaches a browser |
@@ -121,8 +122,12 @@ topic → prompt → LLM → validateLesson → (errors? repair retry ≤2) → 
   no DOM, no timers they don't own, and test in milliseconds.
 - **Content is data, not code.**
 - **Every external dependency sits behind an adapter**: TTS (`TtsAdapter`), the
-  live agent (`AgentAdapter`), the designer LLM (provider adapter). Nothing is
+  live agent (`AgentAdapter`), the authoring LLM (`tools/llm`). Nothing is
   locked in.
+- **Authoring keys and student keys are different keys.** The tools generate
+  curriculum that lands in this repo, so they may use a free model whose
+  prompts are logged (`stealth/ox-alpha` on OpenRouter, the default). Nothing
+  a student types may go anywhere near one — see the note in `tools/llm`.
 - **Illegal state transitions are no-ops, never throws** — a double-tap must not
   crash a class.
 - Tones/colors are theme decisions inside `stage`; content never contains hex codes.
