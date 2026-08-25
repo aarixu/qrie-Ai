@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import { GraphIndex } from '@ai-tutor/knowledge-graph';
 import { settingsStore, isOnboarded } from './stores/settings';
+import { watchTheme } from './lib/theme';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
@@ -154,24 +155,32 @@ function Gate({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * The student's reduced-motion switch, applied to the document root.
+ * The student's appearance switches, applied to the document root.
  *
- * ONE DIRECTION ONLY: the attribute goes on when they ask for less motion and
- * comes off when they do not. Nothing in the stylesheet turns motion back on,
- * so a device whose OS already asks for less keeps that answer either way —
- * a preference may quieten motion, never restore it.
+ * Reduced motion is ONE DIRECTION ONLY: the attribute goes on when they ask
+ * for less motion and comes off when they do not. Nothing in the stylesheet
+ * turns motion back on, so a device whose OS already asks for less keeps that
+ * answer either way — a preference may quieten motion, never restore it.
+ *
+ * The theme follows the same discipline: the store decides, the document
+ * follows — including OS flips while "system" is selected (watchTheme's
+ * listener), and index.html applies the same rule before first paint so a
+ * dark-theme student never sees a white flash.
  */
-function useReducedMotion(): void {
+function useAppearance(): void {
   const preferences = useStore(preferencesStore);
+
   useEffect(() => {
     const root = document.documentElement;
     if (preferences.reducedMotion) root.setAttribute('data-reduced-motion', 'true');
     else root.removeAttribute('data-reduced-motion');
   }, [preferences.reducedMotion]);
+
+  useEffect(() => watchTheme(preferences.theme), [preferences.theme]);
 }
 
 export default function App() {
-  useReducedMotion();
+  useAppearance();
   return (
     <BrowserRouter>
       <Gate>

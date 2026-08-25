@@ -69,6 +69,7 @@ const asStudent = (preferences: Preferences): void => {
 describe('preferences store', () => {
   it('ships with sound and captions on and autoplay off', () => {
     expect(shipped).toEqual({
+      theme: 'system',
       voice: true,
       captions: true,
       autoplayNext: false,
@@ -93,6 +94,7 @@ describe('preferences store', () => {
     setPreference('reducedMotion', true);
 
     expect(preferencesStore.get()).toEqual({
+      theme: 'system',
       voice: true,
       captions: true,
       autoplayNext: true,
@@ -103,7 +105,7 @@ describe('preferences store', () => {
 
 describe('Settings', () => {
   const html = (() => {
-    asStudent({ voice: true, captions: false, autoplayNext: false, reducedMotion: true });
+    asStudent({ theme: 'system', voice: true, captions: false, autoplayNext: false, reducedMotion: true });
     return decode(render(<Settings />));
   })();
 
@@ -137,7 +139,7 @@ describe('Settings', () => {
   });
 
   it('follows the store rather than a fixed set of defaults', () => {
-    asStudent({ voice: false, captions: true, autoplayNext: true, reducedMotion: false });
+    asStudent({ theme: 'system', voice: false, captions: true, autoplayNext: true, reducedMotion: false });
     const flipped = decode(render(<Settings />));
 
     expect(switchFor(flipped, 'voice')).toContain('aria-checked="false"');

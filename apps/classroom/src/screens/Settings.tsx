@@ -17,8 +17,13 @@ const CLASSES = [6, 7, 8, 9, 10, 11, 12];
 const ROW =
   'w-full bg-surface-container-lowest rounded-[16px] p-4 flex items-center gap-4 shadow-soft-indigo';
 
+/** The boolean preference keys — the ones a Switch can carry. */
+type BooleanPreference = {
+  [K in keyof Preferences]: Preferences[K] extends boolean ? K : never;
+}[keyof Preferences];
+
 /** The playback switches, as data — one row shape, so they cannot drift apart. */
-const PLAYBACK: { key: keyof Preferences; icon: string; label: string; hint: string }[] = [
+const PLAYBACK: { key: BooleanPreference; icon: string; label: string; hint: string }[] = [
   {
     key: 'voice',
     icon: 'record_voice_over',
@@ -204,6 +209,43 @@ export function Settings() {
               )}
             </>
           )}
+        </div>
+      </Section>
+
+      <Section title="Appearance">
+        {/* The segmented control needs the full width on a phone, so this row
+            stacks rather than squeezing the hint into a column of one word. */}
+        <div className={`${ROW} flex-col items-stretch gap-3`}>
+          <div className="flex items-center gap-4">
+            <Icon name="contrast" className="text-primary" />
+            <div className="min-w-0 flex-1">
+              <div className="font-body-md text-body-md text-on-surface">Theme</div>
+              <div className="font-label-md text-label-md text-on-surface-variant">
+                System follows your phone's setting.
+              </div>
+            </div>
+          </div>
+          <div
+            className="flex gap-1 bg-surface-container rounded-full p-1"
+            role="radiogroup"
+            aria-label="Theme"
+          >
+            {(['light', 'system', 'dark'] as const).map((option) => (
+              <button
+                key={option}
+                role="radio"
+                aria-checked={preferences.theme === option}
+                onClick={() => setPreference('theme', option)}
+                className={`flex-1 px-3 py-2 rounded-full font-label-md text-label-md font-semibold capitalize transition-colors ${
+                  preferences.theme === option
+                    ? 'bg-surface-container-lowest text-primary shadow-sm'
+                    : 'text-on-surface-variant'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
         </div>
       </Section>
 

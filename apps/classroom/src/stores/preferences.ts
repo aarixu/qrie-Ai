@@ -1,15 +1,18 @@
 import { createLocalStore } from './localStore';
+import type { Theme } from '../lib/theme';
 
 /**
- * How the student wants a class to play. Deliberately small: every switch here
- * is one the app can actually act on with the code it already has — a theme
- * switch or a language picker would be a promise we cannot keep, and a switch
- * that does nothing is worse than no switch at all.
+ * How the student wants the app to behave. Deliberately small: every switch
+ * here is one the app can actually act on with the code it already has — a
+ * language picker would be a promise we cannot keep, and a switch that does
+ * nothing is worse than no switch at all.
  *
  * Kept out of `settings` (the app's identity-ish state, read by older screens)
  * so a new playback preference never forces those screens to change.
  */
 export interface Preferences {
+  /** Light, dark, or follow the OS. Applied by lib/theme via App. */
+  theme: Theme;
   /** The tutor reads the lesson aloud. Off leaves a silent, captioned class. */
   voice: boolean;
   /** Show the narration as text under the stage. */
@@ -30,6 +33,8 @@ export interface Preferences {
  * default that takes control away rather than giving it.
  */
 const DEFAULTS: Preferences = {
+  // System, because the student already told their phone which room they like.
+  theme: 'system',
   voice: true,
   captions: true,
   autoplayNext: false,

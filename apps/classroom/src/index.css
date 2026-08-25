@@ -1,14 +1,26 @@
+/* The palette lives in theme.css — :root is the light room, .dark the dark one. */
+@import './theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Subject-tile tints. Stitch expresses these as arbitrary values per card; as
-   component classes they stay in one place and every subject card matches. */
+/* Subject tints — tile (card wash), ring (icon circle) and ink (text/icon),
+   each with its dark-room value beside it. One place, so every subject card
+   matches and no screen carries a raw hex of its own. */
 @layer components {
-  .tile-green  { @apply bg-[#f0fdf4]; }
-  .tile-blue   { @apply bg-[#eff6ff]; }
-  .tile-purple { @apply bg-[#faf5ff]; }
-  .tile-orange { @apply bg-[#fff7ed]; }
+  .tile-green  { @apply bg-[#f0fdf4] dark:bg-[#132b1d]; }
+  .tile-blue   { @apply bg-[#eff6ff] dark:bg-[#12233f]; }
+  .tile-purple { @apply bg-[#faf5ff] dark:bg-[#2a1840]; }
+  .tile-orange { @apply bg-[#fff7ed] dark:bg-[#33200e]; }
+  .ring-tint-green  { @apply bg-[#dcfce7] dark:bg-[#1b4030]; }
+  .ring-tint-blue   { @apply bg-[#dbeafe] dark:bg-[#1c3765]; }
+  .ring-tint-purple { @apply bg-[#f3e8ff] dark:bg-[#40245f]; }
+  .ring-tint-orange { @apply bg-[#ffedd5] dark:bg-[#4c2c12]; }
+  .ink-green  { @apply text-[#166534] dark:text-[#86efac]; }
+  .ink-blue   { @apply text-[#1e40af] dark:text-[#93c5fd]; }
+  .ink-purple { @apply text-[#6b21a8] dark:text-[#d8b4fe]; }
+  .ink-orange { @apply text-[#9a3412] dark:text-[#fdba74]; }
 }
 
 @layer base {
@@ -21,8 +33,9 @@
   .material-symbols-outlined.filled {
     font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
+  html { background-color: rgb(var(--c-background)); }
   :focus-visible {
-    outline: 2px solid #4648d4;
+    outline: 2px solid rgb(var(--c-primary));
     outline-offset: 2px;
     border-radius: 8px;
   }

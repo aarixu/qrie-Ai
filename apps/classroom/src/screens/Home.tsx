@@ -18,14 +18,14 @@ import { BottomNav, SideNav } from '../ui/Nav';
 
 /** Tile styling per subject. Unknown subjects fall back to the first entry. */
 const SUBJECT_STYLE: Record<string, { tile: string; ring: string; icon: string; ink: string }> = {
-  Science: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'science', ink: 'text-[#166534]' },
-  Mathematics: { tile: 'tile-blue', ring: 'bg-[#dbeafe]', icon: 'calculate', ink: 'text-[#1e40af]' },
-  English: { tile: 'tile-purple', ring: 'bg-[#f3e8ff]', icon: 'book', ink: 'text-[#6b21a8]' },
-  'Social Science': { tile: 'tile-orange', ring: 'bg-[#ffedd5]', icon: 'public', ink: 'text-[#9a3412]' },
-  Hindi: { tile: 'tile-purple', ring: 'bg-[#f3e8ff]', icon: 'translate', ink: 'text-[#6b21a8]' },
-  Physics: { tile: 'tile-blue', ring: 'bg-[#dbeafe]', icon: 'rocket_launch', ink: 'text-[#1e40af]' },
-  Chemistry: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'experiment', ink: 'text-[#166534]' },
-  Biology: { tile: 'tile-green', ring: 'bg-[#dcfce7]', icon: 'genetics', ink: 'text-[#166534]' },
+  Science: { tile: 'tile-green', ring: 'ring-tint-green', icon: 'science', ink: 'ink-green' },
+  Mathematics: { tile: 'tile-blue', ring: 'ring-tint-blue', icon: 'calculate', ink: 'ink-blue' },
+  English: { tile: 'tile-purple', ring: 'ring-tint-purple', icon: 'book', ink: 'ink-purple' },
+  'Social Science': { tile: 'tile-orange', ring: 'ring-tint-orange', icon: 'public', ink: 'ink-orange' },
+  Hindi: { tile: 'tile-purple', ring: 'ring-tint-purple', icon: 'translate', ink: 'ink-purple' },
+  Physics: { tile: 'tile-blue', ring: 'ring-tint-blue', icon: 'rocket_launch', ink: 'ink-blue' },
+  Chemistry: { tile: 'tile-green', ring: 'ring-tint-green', icon: 'experiment', ink: 'ink-green' },
+  Biology: { tile: 'tile-green', ring: 'ring-tint-green', icon: 'genetics', ink: 'ink-green' },
 };
 
 const styleFor = (subject: string) => SUBJECT_STYLE[subject] ?? SUBJECT_STYLE.Science;

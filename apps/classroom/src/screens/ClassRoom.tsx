@@ -80,7 +80,7 @@ export function LessonRoute() {
           <p className="font-headline-md text-[18px] leading-6 text-on-surface">{error}</p>
           <button
             onClick={() => navigate('/')}
-            className="bg-primary text-on-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+            className="bg-stage-primary text-on-stage-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
           >
             Back home
           </button>
@@ -123,7 +123,7 @@ function ToolButton({
 }) {
   const tones: Record<string, string> = {
     plain: 'bg-stage-surface text-stage-ink',
-    primary: 'bg-primary text-on-primary',
+    primary: 'bg-stage-primary text-on-stage-primary',
     green: 'bg-[#188038] text-white',
     red: 'bg-stage-red text-white',
     lit: 'bg-stage-blue text-stage',
@@ -553,7 +553,7 @@ export function ClassRoom({
               ) : (
                 <button
                   onClick={joinClass}
-                  className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+                  className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
                 >
                   <Icon name="play_arrow" filled />
                   {canResume ? 'Rejoin class' : 'Join class'}
@@ -567,7 +567,7 @@ export function ClassRoom({
             <div className="absolute inset-0 grid place-items-center bg-stage/40 backdrop-blur-[2px]">
               <button
                 onClick={startClass}
-                className="flex items-center gap-2 bg-primary text-on-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+                className="flex items-center gap-2 bg-stage-primary text-on-stage-primary rounded-full px-7 py-4 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
               >
                 <Icon name="replay" filled />
                 Watch again
@@ -617,7 +617,7 @@ export function ClassRoom({
               setDraft('');
             }}
             aria-label="Send doubt"
-            className="w-11 h-11 rounded-xl bg-primary text-on-primary grid place-items-center flex-shrink-0"
+            className="w-11 h-11 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
           >
             <Icon name="send" filled className="text-[18px]" />
           </button>

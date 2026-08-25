@@ -1,0 +1,95 @@
+/* THE PALETTE — one set of role names, two rooms. Every colour the app
+   wears is a CSS variable, so dark mode is these two blocks and zero
+   markup changes. Values are RGB triplets because Tailwind's opacity
+   modifiers (bg-primary/25) need to compose an alpha in. */
+:root {
+  --c-primary: 70 72 212;
+  --c-on-primary: 255 255 255;
+  --c-primary-container: 96 99 238;
+  --c-on-primary-container: 255 251 255;
+  --c-primary-fixed: 225 224 255;
+  --c-primary-fixed-dim: 192 193 255;
+  --c-on-primary-fixed: 7 0 108;
+  --c-on-primary-fixed-variant: 47 46 190;
+  --c-inverse-primary: 192 193 255;
+  --c-surface-tint: 73 75 214;
+  --c-secondary: 133 83 0;
+  --c-on-secondary: 255 255 255;
+  --c-secondary-container: 254 166 25;
+  --c-on-secondary-container: 104 64 0;
+  --c-secondary-fixed: 255 221 184;
+  --c-secondary-fixed-dim: 255 185 95;
+  --c-on-secondary-fixed: 42 23 0;
+  --c-on-secondary-fixed-variant: 101 62 0;
+  --c-tertiary: 144 73 0;
+  --c-on-tertiary: 255 255 255;
+  --c-tertiary-container: 181 93 0;
+  --c-on-tertiary-container: 255 251 255;
+  --c-tertiary-fixed: 255 220 197;
+  --c-tertiary-fixed-dim: 255 183 131;
+  --c-on-tertiary-fixed: 48 20 0;
+  --c-on-tertiary-fixed-variant: 112 55 0;
+  --c-error: 186 26 26;
+  --c-on-error: 255 255 255;
+  --c-error-container: 255 218 214;
+  --c-on-error-container: 147 0 10;
+  --c-background: 247 249 251;
+  --c-on-background: 25 28 30;
+  --c-surface: 247 249 251;
+  --c-on-surface: 25 28 30;
+  --c-surface-variant: 224 227 229;
+  --c-on-surface-variant: 70 69 84;
+  --c-surface-bright: 247 249 251;
+  --c-surface-dim: 216 218 220;
+  --c-surface-container-lowest: 255 255 255;
+  --c-surface-container-low: 242 244 246;
+  --c-surface-container: 236 238 240;
+  --c-surface-container-high: 230 232 234;
+  --c-surface-container-highest: 224 227 229;
+  --c-inverse-surface: 45 49 51;
+  --c-inverse-on-surface: 239 241 243;
+  --c-outline: 118 117 134;
+  --c-outline-variant: 199 196 215;
+}
+
+/* Elevation in a dark room reads as LIGHTER, not darker: every screen uses
+   surface-container-lowest as the card that lifts off the page, so here the
+   ramp starts above the background and climbs, rather than following M3's
+   literal tone order downward. */
+.dark {
+  --c-primary: 192 193 255;
+  --c-on-primary: 27 26 163;
+  --c-primary-container: 47 46 190;
+  --c-on-primary-container: 225 224 255;
+  --c-inverse-primary: 70 72 212;
+  --c-surface-tint: 192 193 255;
+  --c-secondary: 255 185 95;
+  --c-on-secondary: 71 42 0;
+  --c-secondary-container: 101 62 0;
+  --c-on-secondary-container: 255 221 184;
+  --c-tertiary: 255 183 131;
+  --c-on-tertiary: 74 40 0;
+  --c-tertiary-container: 112 55 0;
+  --c-on-tertiary-container: 255 220 197;
+  --c-error: 255 180 171;
+  --c-on-error: 105 0 5;
+  --c-error-container: 147 0 10;
+  --c-on-error-container: 255 218 214;
+  --c-background: 16 20 24;
+  --c-on-background: 225 227 232;
+  --c-surface: 16 20 24;
+  --c-on-surface: 225 227 232;
+  --c-surface-variant: 45 50 59;
+  --c-on-surface-variant: 195 199 207;
+  --c-surface-bright: 54 58 63;
+  --c-surface-dim: 11 14 19;
+  --c-surface-container-lowest: 25 29 35;
+  --c-surface-container-low: 30 34 42;
+  --c-surface-container: 34 39 47;
+  --c-surface-container-high: 39 44 52;
+  --c-surface-container-highest: 45 50 59;
+  --c-inverse-surface: 225 227 232;
+  --c-inverse-on-surface: 46 49 53;
+  --c-outline: 141 145 153;
+  --c-outline-variant: 54 59 68;
+}

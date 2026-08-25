@@ -61,7 +61,7 @@ export function Chapter() {
               <div
                 className={`w-12 h-12 rounded-full grid place-items-center shrink-0 ${
                   done
-                    ? 'bg-[#dcfce7] text-[#166534]'
+                    ? 'ring-tint-green ink-green'
                     : available
                       ? 'bg-primary text-on-primary'
                       : 'bg-surface-container text-on-surface-variant'

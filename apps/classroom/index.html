@@ -26,6 +26,25 @@
     />
   </head>
   <body>
+    <!-- Before first paint, or a dark-theme student sees a white flash on every
+         load. Deliberately duplicates src/lib/theme.ts rather than importing
+         it: the module graph has not loaded yet at this point. The store key
+         and the rule must stay in step with that file. -->
+    <script>
+      try {
+        var pref = JSON.parse(localStorage.getItem('ai-tutor:preferences') || '{}');
+        var theme = pref.theme || 'system';
+        var dark =
+          theme === 'dark' ||
+          (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#101418');
+        }
+      } catch (e) {
+        /* A blocked or broken localStorage just means the light room. */
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -68,9 +68,9 @@ export function Progress() {
   return (
     <Screen title="Your progress">
       <div className="flex gap-3 mb-stack-md">
-        {stat('check_circle', String(completed), 'lessons done', 'tile-green', 'text-[#166534]')}
-        {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'text-[#9a3412]', '/streak')}
-        {stat('back_hand', String(doubts.length), 'doubts asked', 'tile-blue', 'text-[#1e40af]', '/doubts')}
+        {stat('check_circle', String(completed), 'lessons done', 'tile-green', 'ink-green')}
+        {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'ink-orange', '/streak')}
+        {stat('back_hand', String(doubts.length), 'doubts asked', 'tile-blue', 'ink-blue', '/doubts')}
       </div>
 
       {/* Per-chapter completion */}

@@ -59,7 +59,7 @@ export function DoubtPanel({ active, lines, status, onSend, onDone }: DoubtPanel
                 data-role={line.role}
                 className={`max-w-[88%] px-3 py-2 rounded-[14px] font-body-md text-[13px] leading-relaxed ${
                   line.role === 'student'
-                    ? 'self-end bg-primary text-on-primary rounded-br-[4px]'
+                    ? 'self-end bg-stage-primary text-on-stage-primary rounded-br-[4px]'
                     : 'self-start bg-stage-surface text-stage-ink rounded-bl-[4px]'
                 } ${line.final ? '' : 'italic opacity-70'}`}
               >
@@ -82,7 +82,7 @@ export function DoubtPanel({ active, lines, status, onSend, onDone }: DoubtPanel
               <button
                 onClick={send}
                 aria-label="Send doubt"
-                className="w-10 h-10 rounded-xl bg-primary text-on-primary grid place-items-center flex-shrink-0"
+                className="w-10 h-10 rounded-xl bg-stage-primary text-on-stage-primary grid place-items-center flex-shrink-0"
               >
                 <Icon name="send" filled className="text-[18px]" />
               </button>
