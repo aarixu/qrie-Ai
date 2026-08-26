@@ -1,6 +1,6 @@
 import type { Element } from '@ai-tutor/lesson-format';
 import type { Action } from '@openmaic/dsl';
-import { WB_SCALE_Y, type PlayerState } from './state';
+import { WB_SCALE_Y, type BoardState } from './state';
 
 /** Their y is 0-562, ours is 0-620. One conversion, one place. */
 const sy = (y: number): number => y * WB_SCALE_Y;
@@ -16,7 +16,7 @@ const plain = (html: string): string => html.replace(/<[^>]*>/g, ' ').replace(/\
 const idOf = (action: { id: string; elementId?: string }): string => action.elementId ?? action.id;
 
 /** Append an element and show it. `visible` is a complete set, so this is a push. */
-function draw(state: PlayerState, element: Element): PlayerState {
+function draw(state: BoardState, element: Element): BoardState {
   return {
     ...state,
     elements: [...state.elements, element],
@@ -31,7 +31,7 @@ function draw(state: PlayerState, element: Element): PlayerState {
  * every verb we do not draw). Callers rely on that identity to skip re-renders,
  * and the tests assert it.
  */
-export function reduce(state: PlayerState, action: Action): PlayerState {
+export function reduce(state: BoardState, action: Action): BoardState {
   switch (action.type) {
     case 'wb_open':
       return { ...state, whiteboardOpen: true };

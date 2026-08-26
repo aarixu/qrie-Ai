@@ -18,7 +18,7 @@ export const WB_SCALE_Y = CANVAS_H / WB_HEIGHT;
  * reflects. No Three.js, no DOM, no timers — the whole thing is testable in
  * milliseconds, the same split `@ai-tutor/stage`'s `state.ts` already uses.
  */
-export interface PlayerState {
+export interface BoardState {
   /** Every element drawn so far this scene, in draw order. */
   elements: Element[];
   /** Complete set of visible element ids, never a delta. */
@@ -29,7 +29,7 @@ export interface PlayerState {
   whiteboardOpen: boolean;
 }
 
-export const initialPlayerState: PlayerState = {
+export const initialBoard: BoardState = {
   elements: [],
   visible: [],
   focus: [],

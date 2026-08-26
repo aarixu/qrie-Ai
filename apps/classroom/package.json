@@ -9,10 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ai-tutor/action-player": "*",
     "@ai-tutor/diagnostic": "*",
     "@ai-tutor/doubt-session": "*",
     "@ai-tutor/knowledge-graph": "*",
     "@ai-tutor/lesson-format": "*",
+    "@ai-tutor/maic-adapter": "*",
     "@ai-tutor/persona": "*",
     "@ai-tutor/player": "*",
     "@ai-tutor/stage": "*",

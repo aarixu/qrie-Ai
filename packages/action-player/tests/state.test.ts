@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { initialPlayerState, WB_HEIGHT, WB_SCALE_Y } from '../src/state';
+import { initialBoard, WB_HEIGHT, WB_SCALE_Y } from '../src/state';
 
 describe('the player starts from a blank board', () => {
   it('has no elements, nothing visible, nothing focused', () => {
-    expect(initialPlayerState).toEqual({
+    expect(initialBoard).toEqual({
       elements: [],
       visible: [],
       focus: [],

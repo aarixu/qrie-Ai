@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { ElementKind, Lesson } from '@ai-tutor/lesson-format';
-import { initialPlayerState, reduce } from '@ai-tutor/action-player';
+import { initialBoard, reduce } from '@ai-tutor/action-player';
 import { planToScene } from '../src/planToScene';
 import { beatOfAction } from '../src/beatOfAction';
 
@@ -27,7 +27,7 @@ describe('a real lesson survives the round trip', () => {
   });
 
   it('ends with every element of the final beat on the board', () => {
-    const state = actions.reduce(reduce, initialPlayerState);
+    const state = actions.reduce(reduce, initialBoard);
     const onBoard = new Set(state.visible);
     const missed = lesson.beats.at(-1)!.show.filter((id) => !onBoard.has(id));
     expect(missed).toEqual([]);
@@ -39,7 +39,7 @@ describe('a real lesson survives the round trip', () => {
     // verb is added for either, this expectation must shrink — not be deleted.
     const byId = new Map(lesson.elements.map((e) => [e.id, e]));
     const shown = new Set(lesson.beats.flatMap((b) => b.show));
-    const state = actions.reduce(reduce, initialPlayerState);
+    const state = actions.reduce(reduce, initialBoard);
     const onBoard = new Set(state.visible);
 
     const undrawn = [...shown]

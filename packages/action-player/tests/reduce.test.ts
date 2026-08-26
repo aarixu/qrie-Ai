@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { Action } from '@openmaic/dsl';
-import { initialPlayerState, WB_SCALE_Y } from '../src/state';
+import { initialBoard, WB_SCALE_Y } from '../src/state';
 import { reduce } from '../src/reduce';
 
-const play = (...actions: Action[]) => actions.reduce(reduce, initialPlayerState);
+const play = (...actions: Action[]) => actions.reduce(reduce, initialBoard);
 
 describe('drawing verbs become elements the Scene already knows', () => {
   it('turns wb_draw_text into a text element, scaled onto our canvas', () => {
@@ -173,7 +173,7 @@ describe('verbs that change nothing on the board', () => {
   });
 
   it('leaves state untouched for an action it does not handle', () => {
-    const before = initialPlayerState;
+    const before = initialBoard;
     const after = reduce(before, { id: 'a1', type: 'discussion', topic: 'anything' });
     expect(after).toBe(before);
   });

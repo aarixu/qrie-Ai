@@ -22,6 +22,7 @@ import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
 import { Chapter } from './screens/Chapter';
 import { LessonRoute } from './screens/ClassRoom';
+import { ActionLab } from './screens/ActionLab';
 import { LessonComplete } from './screens/LessonComplete';
 import { Profile } from './screens/Profile';
 import { Search } from './screens/Search';
@@ -193,6 +194,7 @@ export default function App() {
           <Route path="/syllabus" element={<Syllabus />} />
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
+          <Route path="/action-lab/:lessonId" element={<ActionLab />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />
           <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
           <Route path="/profile" element={<Profile />} />

@@ -7,6 +7,10 @@
   "types": "src/index.ts",
   "dependencies": {
     "@ai-tutor/lesson-format": "*",
-    "@openmaic/dsl": "0.10.1"
+    "@openmaic/dsl": "0.10.1",
+    "@ai-tutor/player": "*"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
   }
 }

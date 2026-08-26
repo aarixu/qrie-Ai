@@ -13,10 +13,10 @@ same split `@ai-tutor/stage`'s `state.ts` already uses.
 // What one action does to the board. Returns the SAME object when nothing
 // visual changes (speech, and any verb we do not draw), so callers can skip
 // re-renders on identity.
-reduce(state: PlayerState, action: Action): PlayerState
+reduce(state: BoardState, action: Action): BoardState
 
 // The blank board.
-initialPlayerState: PlayerState
+initialBoard: BoardState
 
 // Must this action finish before the next one starts? Read off their
 // FIRE_AND_FORGET_ACTIONS, not restated here.
@@ -29,9 +29,9 @@ nextBoundary(actions: Action[], from: number): number
 ## Usage
 
 ```ts
-import { initialPlayerState, reduce } from '@ai-tutor/action-player';
+import { initialBoard, reduce } from '@ai-tutor/action-player';
 
-const state = actions.reduce(reduce, initialPlayerState);
+const state = actions.reduce(reduce, initialBoard);
 <Scene
   lesson={{ ...lesson, elements: state.elements }}
   visible={state.visible}

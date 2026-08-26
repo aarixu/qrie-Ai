@@ -37,10 +37,10 @@ interface PlannedScene { actions: Action[]; beatRanges: BeatRange[] }
 
 ```ts
 import { planToScene, beatOfAction } from '@ai-tutor/maic-adapter';
-import { initialPlayerState, reduce } from '@ai-tutor/action-player';
+import { initialBoard, reduce } from '@ai-tutor/action-player';
 
 const { actions, beatRanges } = planToScene(lesson);
-const board = actions.slice(0, upTo).reduce(reduce, initialPlayerState);
+const board = actions.slice(0, upTo).reduce(reduce, initialBoard);
 const stuckOn = beatOfAction(beatRanges, currentIndex);
 ```
 
