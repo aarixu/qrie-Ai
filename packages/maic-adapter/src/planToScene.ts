@@ -1,7 +1,21 @@
 import type { Element, Lesson } from '@ai-tutor/lesson-format';
+import { WB_SCALE_Y } from '@ai-tutor/action-player';
 import type { Action } from '@openmaic/dsl';
 import type { BeatRange } from './beatOfAction';
 import type { PlannedScene } from './types';
+
+/**
+ * Our canvas is 1000x620; their whiteboard verbs are documented in 1000x562.
+ *
+ * Elements are authored in OUR space, so every y leaving here is converted into
+ * THEIRS - `reduce` scales it straight back on the way in, making the round trip
+ * an identity. Emitting our y unconverted would push the whole lesson 10% down
+ * the board and drop anything below y=562 off the bottom.
+ *
+ * Actions are kept in their space rather than ours so the prompt assets shipped
+ * in @openmaic/generation keep producing coordinates that land correctly.
+ */
+const toWb = (y: number): number => y / WB_SCALE_Y;
 
 /** Where an element sits, for the verbs that need a point rather than a box. */
 function anchorOf(element: Element): { x: number; y: number } {
@@ -39,7 +53,9 @@ function textOf(element: Element): string {
  * silence is asserted in the round-trip test so it cannot pass for success.
  */
 function drawActionFor(element: Element, id: string): Action | null {
-  const { x, y } = anchorOf(element);
+  const point = anchorOf(element);
+  const x = point.x;
+  const y = toWb(point.y);
 
   if (element.kind === 'formula') {
     return { id, type: 'wb_draw_latex', elementId: element.id, latex: element.text, x, y };
@@ -54,7 +70,7 @@ function drawActionFor(element: Element, id: string): Action | null {
       x,
       y,
       width: element.w,
-      height: element.h,
+      height: toWb(element.h),
     };
   }
 
@@ -64,9 +80,9 @@ function drawActionFor(element: Element, id: string): Action | null {
       type: 'wb_draw_line',
       elementId: element.id,
       startX: element.from.x,
-      startY: element.from.y,
+      startY: toWb(element.from.y),
       endX: element.to.x,
-      endY: element.to.y,
+      endY: toWb(element.to.y),
       style: element.dashed ? 'dashed' : 'solid',
     };
   }

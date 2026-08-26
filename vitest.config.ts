@@ -17,6 +17,8 @@ export default defineConfig({
       '@ai-tutor/persona': pkg('persona'),
       '@ai-tutor/pedagogy': pkg('pedagogy'),
       '@ai-tutor/voice': pkg('voice'),
+      '@ai-tutor/action-player': pkg('action-player'),
+      '@ai-tutor/maic-adapter': pkg('maic-adapter'),
     },
   },
   test: {
