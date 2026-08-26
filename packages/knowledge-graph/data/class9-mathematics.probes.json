@@ -1,0 +1,1229 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class9-mathematics-explain-two-number-lines",
+      "nodeId": "class9-mathematics-explain-two-number-lines",
+      "question": "Why do we need two perpendicular number lines to fix the position of a point in a plane?",
+      "options": [
+        "Because one number line cannot show negative numbers",
+        "Because two lines make the graph look bigger",
+        "Because one number line only tells distance along one direction, not how far up or down the point is",
+        "Because perpendicular lines are easier to draw"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes a single number line cannot show negative numbers",
+        "thinks the purpose of axes is visual size, not locating points",
+        "",
+        "focuses on drawing ease rather than the mathematical need"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-identify-origin",
+      "nodeId": "class9-mathematics-identify-origin",
+      "question": "What are the coordinates of the origin?",
+      "options": [
+        "(0, 0)",
+        "(1, 1)",
+        "(0, 1)",
+        "(1, 0)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses origin with the first counting number on each axis",
+        "mixes up which axis is zero first",
+        "swaps x and y zeros for ones"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-name-coordinate-axes",
+      "nodeId": "class9-mathematics-name-coordinate-axes",
+      "question": "On a Cartesian plane, what do we call the horizontal number line?",
+      "options": [
+        "The y-axis",
+        "The x-axis",
+        "The origin",
+        "The quadrant line"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "swaps the names of the two axes",
+        "",
+        "thinks the intersection point is an axis",
+        "invents a term instead of recalling the axis name"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-positive-directions-axes",
+      "nodeId": "class9-mathematics-positive-directions-axes",
+      "question": "Where do positive numbers lie on the y-axis?",
+      "options": [
+        "Above the origin",
+        "Below the origin",
+        "To the left of the origin",
+        "To the right of the origin"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks down means positive",
+        "applies the x-axis rule (right = positive) to the y-axis",
+        "gives the correct direction for the wrong axis"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrant-names",
+      "nodeId": "class9-mathematics-quadrant-names",
+      "question": "Which region of the Cartesian plane is Quadrant III?",
+      "options": [
+        "Top-right region",
+        "Top-left region",
+        "Bottom-left region",
+        "Bottom-right region"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks numbering starts at top-right and goes clockwise",
+        "counts quadrants starting from top-left",
+        "",
+        "counts quadrants going anticlockwise from top-left"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrant-sign-rules",
+      "nodeId": "class9-mathematics-quadrant-sign-rules",
+      "question": "A point lies in Quadrant II. What are the signs of its coordinates (x, y)?",
+      "options": [
+        "x positive, y positive",
+        "x negative, y positive",
+        "x negative, y negative",
+        "x positive, y negative"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses the signs of Quadrant I for all quadrants",
+        "",
+        "reverses the sign pattern and applies it to Quadrant III",
+        "reads quadrants in the wrong order around the plane"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-order-in-pair-matters",
+      "nodeId": "class9-mathematics-order-in-pair-matters",
+      "question": "Do (3, 5) and (5, 3) name the same point on a Cartesian plane? Why or why not?",
+      "options": [
+        "Yes, because both pairs use the numbers 3 and 5",
+        "Yes, because addition gives 8 either way",
+        "No, because odd numbers cannot be swapped with even numbers",
+        "No, because the order matters: the first number moves along the x-axis and the second along the y-axis"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks coordinates behave like a set where order does not matter",
+        "treats ordered pairs like sums, where order does not matter",
+        "guesses at a reason involving odd and even numbers",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-read-x-coordinate",
+      "nodeId": "class9-mathematics-read-x-coordinate",
+      "question": "A point P is marked on a labelled Cartesian plane. Its arrow to the x-axis meets the x-axis at 4. What is the x-coordinate of P?",
+      "options": [
+        "4",
+        "0",
+        "The y-coordinate of P",
+        "Cannot be found without knowing y"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses foot of perpendicular with the origin",
+        "gives the other coordinate instead",
+        "thinks both coordinates are needed together"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-read-y-coordinate",
+      "nodeId": "class9-mathematics-read-y-coordinate",
+      "question": "A point Q is marked on a labelled Cartesian plane. Its arrow to the y-axis meets the y-axis at 6. What is the y-coordinate (ordinate) of Q?",
+      "options": [
+        "The x-coordinate of Q",
+        "0",
+        "6",
+        "−6"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the coordinate on the axis itself is always 0",
+        "confuses the ordinate with the abscissa",
+        "",
+        "flips the sign when reading across the plane"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-write-point-coordinates",
+      "nodeId": "class9-mathematics-write-point-coordinates",
+      "question": "A point R sits 5 units to the right of the y-axis and 2 units above the x-axis. What are its coordinates?",
+      "options": [
+        "(2, 5)",
+        "(5, 2)",
+        "(−5, 2)",
+        "(7, 7)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "writes the distances in the wrong order in the pair",
+        "",
+        "ignores the direction and writes a negative sign wrongly",
+        "adds the distances instead of pairing them"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-points-on-x-axis",
+      "nodeId": "class9-mathematics-points-on-x-axis",
+      "question": "Every point on the x-axis has coordinates of the form:",
+      "options": [
+        "(a, 0)",
+        "(0, b)",
+        "(a, b)",
+        "(a, a)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "mixes up the rule for the x-axis with that of the y-axis",
+        "thinks axis points still have both coordinates nonzero",
+        "thinks both coordinates must be equal"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-points-on-y-axis",
+      "nodeId": "class9-mathematics-points-on-y-axis",
+      "question": "Every point on the y-axis has coordinates of the form:",
+      "options": [
+        "(a, 0)",
+        "(a, b)",
+        "(0, b)",
+        "(a, a)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "applies the x-axis rule to the y-axis",
+        "thinks axis points have both coordinates nonzero",
+        "",
+        "assumes coordinates must match each other"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-classify-axis-vs-quadrant",
+      "nodeId": "class9-mathematics-classify-axis-vs-quadrant",
+      "question": "Where does the point (0, −3) lie?",
+      "options": [
+        "On the y-axis",
+        "On the x-axis",
+        "In Quadrant III",
+        "In Quadrant IV"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "sees zero and assumes it lies on the x-axis",
+        "picks a quadrant matching just the negative sign",
+        "sees a negative number and picks a quadrant without checking the zero"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-identify-origin-from-pair",
+      "nodeId": "class9-mathematics-identify-origin-from-pair",
+      "question": "Which ordered pair names the origin?",
+      "options": [
+        "Any pair with a 0 in it, such as (0, 5)",
+        "(0, 1)",
+        "(1, 0)",
+        "Only (0, 0)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks any zero makes it the origin",
+        "confuses being near the origin with being the origin",
+        "swaps zeros for ones when recalling the origin",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-perpendicular-distance-meaning",
+      "nodeId": "class9-mathematics-perpendicular-distance-meaning",
+      "question": "What does the y-coordinate of a point tell you?",
+      "options": [
+        "Its horizontal distance from the y-axis",
+        "Its directed (signed) perpendicular distance above or below the x-axis",
+        "Its distance from the origin",
+        "Its directed perpendicular distance left or right of the y-axis"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the y-coordinate's reference axis",
+        "",
+        "confuses distance from origin with distance from an axis",
+        "swaps the roles of x and y coordinates entirely"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-first-quadrant-point",
+      "nodeId": "class9-mathematics-plot-first-quadrant-point",
+      "question": "How do you plot the point (3, 4)?",
+      "options": [
+        "Move 4 units right and 3 units up",
+        "Count 3 units diagonally, then 4 units vertically",
+        "Move 3 units up, then 4 units right",
+        "Move 3 units right along the x-axis, then 4 units up parallel to the y-axis"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps the roles of the x and y coordinates",
+        "tries to move diagonally instead of along the grid",
+        "moves in the correct distances but wrong axis directions",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-negative-x",
+      "nodeId": "class9-mathematics-plot-negative-x",
+      "question": "To plot the point (−2, 3), in which direction do you move for the x-coordinate?",
+      "options": [
+        "Left of the y-axis by 2 units",
+        "Right of the y-axis by 2 units",
+        "Down from the x-axis by 2 units",
+        "Stay at the origin because it is negative"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "ignores the minus sign and plots as if positive",
+        "applies the vertical direction rule to the x-coordinate",
+        "thinks negative coordinates mean no movement"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-negative-y",
+      "nodeId": "class9-mathematics-plot-negative-y",
+      "question": "To plot the point (3, −2), after moving 3 units right, what do you do next?",
+      "options": [
+        "Move 2 units up",
+        "Move 2 units left",
+        "Stop on the x-axis at 3",
+        "Move 2 units down"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "ignores the minus sign and moves up",
+        "applies the horizontal direction rule to the y-coordinate",
+        "forgets the second coordinate and stops on the axis",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-any-quadrant-point",
+      "nodeId": "class9-mathematics-plot-any-quadrant-point",
+      "question": "In which quadrant does the correctly plotted point (−3, −4) land?",
+      "options": [
+        "Quadrant II",
+        "Quadrant III",
+        "Quadrant IV",
+        "Quadrant I"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "handles the signs separately and lands in the wrong half-plane",
+        "",
+        "swaps the roles of x and y when reading signs",
+        "ignores negative signs completely"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-axis-point",
+      "nodeId": "class9-mathematics-plot-axis-point",
+      "question": "Where should the point (0, 4) be plotted?",
+      "options": [
+        "At (4, 0), since order does not matter",
+        "On the x-axis at 4",
+        "At the origin, because one coordinate is 0",
+        "Four units up the y-axis from the origin"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps the coordinates before plotting",
+        "confuses which axis gets the zero",
+        "thinks any zero coordinate forces the point to the origin",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-fractional-coordinates",
+      "nodeId": "class9-mathematics-plot-fractional-coordinates",
+      "question": "To plot (2.5, 1), where should the point sit relative to the gridlines?",
+      "options": [
+        "Halfway between gridlines on the y-axis instead",
+        "Exactly on the gridline at 2, rounding 2.5 down",
+        "Halfway between the gridlines at 2 and 3 along the x-axis, level with 1 on the y-axis",
+        "Between 2 and 3 on both axes"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "places the fraction on the wrong axis",
+        "rounds fractional values to whole gridlines",
+        "",
+        "applies the fraction to both coordinates"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-check-plotted-point",
+      "nodeId": "class9-mathematics-check-plotted-point",
+      "question": "A student plots (2, −1) at the position 1 unit right and 2 units down. What mistake was made?",
+      "options": [
+        "Nothing; that is the right spot",
+        "Both coordinates were given the wrong signs",
+        "The x and y values were swapped",
+        "The student moved along the wrong scale"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "cannot detect plotting errors at all",
+        "misdiagnoses a swap as a sign error",
+        "",
+        "blames the scale instead of the swapped values"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-sequence-of-points",
+      "nodeId": "class9-mathematics-plot-sequence-of-points",
+      "question": "You plot (1, 2), then (−3, 1), then (2, −2) on one plane. What should be true about all three points?",
+      "options": [
+        "They must lie on a straight line",
+        "They must all be joined with curved lines",
+        "They must all be in the same quadrant",
+        "Each is plotted using its own signs independently on the same axes"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes plotted points must be collinear",
+        "confuses joining instructions with plotting rules",
+        "assumes points plotted together share a quadrant",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-join-points-in-order",
+      "nodeId": "class9-mathematics-join-points-in-order",
+      "question": "Points A, B, C, D are plotted and you must close the figure. Which segments do you draw?",
+      "options": [
+        "AC, BD only",
+        "AB, BC, CD only",
+        "AB, BC, CD, DA",
+        "All possible segments between every pair of points"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "draws diagonals instead of sides",
+        "misses the final segment returning to the start",
+        "",
+        "draws every segment instead of only adjacent ones"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-form-figure-from-points",
+      "nodeId": "class9-mathematics-form-figure-from-points",
+      "question": "Plot (0, 0), (4, 0), (4, 3) and (0, 3), joining them in order back to the start. What figure is formed?",
+      "options": [
+        "A rectangle",
+        "A triangle",
+        "A circle",
+        "A parallelogram"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "counts vertices badly or joins incorrectly and gets three sides",
+        "thinks four plotted points suggest a round shape",
+        "recognises four sides but misjudges the angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-read-polygon-vertices",
+      "nodeId": "class9-mathematics-read-polygon-vertices",
+      "question": "A triangle has corners at (1, 1), (5, 1) and (3, 4). How many ordered pairs describe its vertices, and why?",
+      "options": [
+        "Three, because each corner of the triangle is one vertex with its own pair",
+        "Two, because two pairs fix the triangle's size",
+        "Six, because each vertex needs two numbers counted separately",
+        "One, because the triangle shares one origin"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses side lengths with vertex count",
+        "counts individual numbers rather than pairs",
+        "relates vertices to the origin instead of corners"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-name-side-by-endpoints",
+      "nodeId": "class9-mathematics-name-side-by-endpoints",
+      "question": "A square has corners A(0,0), B(3,0), C(3,3), D(0,3). Which pair of endpoints names the bottom side?",
+      "options": [
+        "C(3,3) and D(0,3)",
+        "A(0,0) and C(3,3)",
+        "B(3,0) and C(3,3)",
+        "A(0,0) and B(3,0)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "picks the top side instead of the bottom",
+        "names a diagonal rather than a side",
+        "picks a vertical side instead of a horizontal one",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-figure-symmetry-axes",
+      "nodeId": "class9-mathematics-figure-symmetry-axes",
+      "question": "Which pair of points is symmetric about the x-axis?",
+      "options": [
+        "(2, 3) and (2, −3)",
+        "(2, 3) and (−2, 3)",
+        "(2, 3) and (−2, −3)",
+        "(2, 3) and (3, 2)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses symmetry about the y-axis with symmetry about the x-axis",
+        "confuses reflection through the origin with axis reflection",
+        "swaps coordinates instead of reflecting"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-give-example-in-quadrant",
+      "nodeId": "class9-mathematics-give-example-in-quadrant",
+      "question": "Which of these is an example of a point in Quadrant IV?",
+      "options": [
+        "(−2, −5)",
+        "(2, −5)",
+        "(2, 5)",
+        "(−2, 5)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses Quadrant IV with Quadrant III",
+        "",
+        "confuses Quadrant IV with Quadrant I",
+        "confuses Quadrant IV with Quadrant II"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrant-from-signs",
+      "nodeId": "class9-mathematics-quadrant-from-signs",
+      "question": "Without plotting, which quadrant contains the point (−4, 7)?",
+      "options": [
+        "Quadrant III",
+        "Quadrant I",
+        "Quadrant II",
+        "Quadrant IV"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "looks only at the negative x and picks Quadrant III",
+        "looks only at the positive y and picks Quadrant I",
+        "",
+        "swaps the sign rules and picks Quadrant IV"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-linear-pattern-on-plane",
+      "nodeId": "class9-mathematics-linear-pattern-on-plane",
+      "question": "Points (1,1), (2,2), (3,3) are plotted. What pattern do they show?",
+      "options": [
+        "They form a triangle",
+        "They lie on a horizontal line",
+        "They lie on a curve bending upward",
+        "They lie on a straight line passing through the origin"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "connects the dots into a closed shape instead of noticing alignment",
+        "ignores that x equals y and thinks of constant height",
+        "extrapolates a curve from three points",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-complete-table-of-points",
+      "nodeId": "class9-mathematics-complete-table-of-points",
+      "question": "For the relation y = x + 2, what is y when x = 3?",
+      "options": [
+        "y = 3",
+        "y = 5",
+        "y = 6",
+        "y = 1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "copies x unchanged, ignoring the +2",
+        "",
+        "multiplies instead of adding",
+        "subtracts the 2 instead of adding"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-describe-location-verbally",
+      "nodeId": "class9-mathematics-describe-location-verbally",
+      "question": "Which description matches the point (4, −3)?",
+      "options": [
+        "4 units left of the y-axis, 3 units below the x-axis",
+        "4 units right of the y-axis, 3 units below the x-axis",
+        "4 units right of the y-axis, 3 units above the x-axis",
+        "4 units above the x-axis, 3 units left of the y-axis"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "applies the negative sign to the wrong coordinate",
+        "",
+        "ignores the negative sign entirely",
+        "describes the distances but swaps their axis roles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-identify-two-variables-equation",
+      "nodeId": "class9-mathematics-identify-two-variables-equation",
+      "question": "Which of these is a linear equation in two variables?",
+      "options": [
+        "3x^2 + 2y = 7",
+        "3x + 2y = 7",
+        "3x + 2 = 7",
+        "3x + 2y^2 = 7"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks any equation containing x and y is linear, without checking the powers",
+        "",
+        "thinks 'two variables' means the equation must literally show both letters x and y",
+        "checks only that two letters appear, not that their powers are 1"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-frame-equation-from-words",
+      "nodeId": "class9-mathematics-frame-equation-from-words",
+      "question": "A pen costs Rs 12 and a notebook costs Rs 25. Ravi buys some pens and notebooks for Rs 200. If x is the number of pens and y is the number of notebooks, which equation is correct?",
+      "options": [
+        "25x + 12y = 200",
+        "x + y = 200",
+        "12x - 25y = 200",
+        "12x + 25y = 200"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps which cost goes with which item",
+        "thinks the total cost means adding just the counts",
+        "subtracts instead of adds, thinking of change or difference",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathamentals-placeholder-ignore",
+      "nodeId": "class9-mathamentals-placeholder-ignore",
+      "question": "What is the value of 6 multiplied by 7?",
+      "options": [
+        "42",
+        "36",
+        "49",
+        "56"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 6 and 7 and multiplies by 3, or confuses the table of 6",
+        "recalls the square of 7 instead of 6 times 7",
+        "recalls 8 times 7 instead of 6 times 7"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-identify-coefficients-xy",
+      "nodeId": "class9-mathematics-identify-coefficients-xy",
+      "question": "In the equation 5x - 3y + 8 = 0, what are the coefficients of x and y and the constant term?",
+      "options": [
+        "Coefficients: 5 and 3; constant: 8",
+        "Coefficients: 5 and -3; constant: 8",
+        "Coefficients: 5 and 3; constant: -8",
+        "Coefficients: 5 and -3; constant: -8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "ignores the minus sign attached to y's coefficient",
+        "",
+        "reads c as the term on the right side after moving everything over, losing its sign",
+        "misses both the sign on y's coefficient and the sign rule for moving the constant"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-coefficient-implied-one",
+      "nodeId": "class9-mathematics-coefficient-implied-one",
+      "question": "In the equation x + 4y - 6 = 0, what is the coefficient of x?",
+      "options": [
+        "0",
+        "4",
+        "-6",
+        "1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes a variable with no visible number has no coefficient",
+        "attaches the nearby coefficient of y to x too",
+        "picks the last number seen in the equation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-standard-form-linear-two-var",
+      "nodeId": "class9-mathematics-standard-form-linear-two-var",
+      "question": "What is the standard form of a linear equation in two variables?",
+      "options": [
+        "ax^2 + by + c = 0, where a and b are not both zero",
+        "ax + b = 0, where a is not zero",
+        "ax + by + c = 0, where a and b are not both zero",
+        "ax + by = ab"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "mixes in a squared term from quadratic equations",
+        "recalls the one-variable linear form instead",
+        "",
+        "remembers an equals-product form instead of equals zero"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-rewrite-to-standard-form",
+      "nodeId": "class9-mathematics-rewrite-to-standard-form",
+      "question": "Rewrite the equation 2x = 3y - 5 in the form ax + by + c = 0.",
+      "options": [
+        "2x + 3y - 5 = 0",
+        "2x + 3y + 5 = 0",
+        "2x - 3y - 5 = 0",
+        "2x - 3y + 5 = 0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "moves terms across without changing their signs",
+        "moves all terms to one side but keeps every original sign unchanged",
+        "changes only some signs when moving terms",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-read-a-b-c-values",
+      "nodeId": "class9-mathematics-read-a-b-c-values",
+      "question": "For the equation written as 4x - 7y + 2 = 0, what are the values of a, b and c?",
+      "options": [
+        "a = 4, b = -7, c = 2",
+        "a = 4, b = -7, c = -2",
+        "a = 4, b = 7, c = -2",
+        "a = 4, b = 7, c = 2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "changes the sign of the constant term when reading it",
+        "drops the minus sign from b while also flipping the constant",
+        "drops the minus sign from b and also changes the sign of c"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-check-pair-satisfies",
+      "nodeId": "class9-mathematics-check-pair-satisfies",
+      "question": "Does the pair (2, 3) satisfy the equation 2x + y = 7?",
+      "options": [
+        "Yes, because 2(2) + 3 = 7",
+        "Yes, because x = 2 and y = 3 are both less than 7",
+        "No, because 2 + 3 does not equal 7",
+        "No, because 2(3) + 2 does not equal 7"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks small values automatically satisfy the equation",
+        "adds the coordinates directly instead of substituting into the equation",
+        "substitutes the values into the wrong variables"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-find-missing-value-given-one",
+      "nodeId": "class9-mathematics-find-missing-value-given-one",
+      "question": "If (3, k) satisfies the equation x + 2y = 11, what is the value of k?",
+      "options": [
+        "k = 5",
+        "k = 8",
+        "k = 14",
+        "k = 4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides incorrectly, treating 2y as 22",
+        "adds 3 and 2 and subtracts from nothing sensible, guessing 8",
+        "moves terms across without changing signs, getting 14",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-distinguish-equality-vs-identity",
+      "nodeId": "class9-mathematics-distinguish-equality-vs-identity",
+      "question": "Which statement about the equation x + y = 10 is true?",
+      "options": [
+        "It is true only for certain pairs like (4, 6), so it is a conditional equation",
+        "It is true for every pair of values, so it is an identity",
+        "It is always false, since x and y cannot both be found",
+        "It is neither true nor false for any pair"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks any equation with two variables holds for all values",
+        "assumes equations must be solvable for single values only",
+        "confuses conditional equations with having no solutions at all"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-solution-is-a-pair",
+      "nodeId": "class9-mathematics-solution-is-a-pair",
+      "question": "What does a solution of the linear equation x + y = 6 look like?",
+      "options": [
+        "A pair of values, one for each variable, such as (2, 4)",
+        "A single value, such as x = 6",
+        "Only the value of y, since y comes second",
+        "The number 6 itself"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "gives a value for only one variable",
+        "thinks the order of variables decides which value matters",
+        "confuses the solution with the constant on the right side"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-produce-solution-by-choice",
+      "nodeId": "class9-mathematics-produce-solution-by-choice",
+      "question": "To find a solution of x - y = 3, what should you do first?",
+      "options": [
+        "Set x equal to y so the equation becomes easy",
+        "Solve for both x and y at once to get one fixed answer",
+        "Choose any value you like for one variable, then calculate the other",
+        "Add x and y together to get 3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "tries to make the equation simpler by forcing x = y",
+        "treats a two-variable equation as if it had exactly one solution",
+        "",
+        "misreads the equation as x + y = 3"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-tabulate-four-solutions",
+      "nodeId": "class9-mathematics-tabulate-four-solutions",
+      "question": "Which table lists four distinct solutions of x + y = 5?",
+      "options": [
+        "(1,1), (2,2), (3,3), (4,4)",
+        "(0,5), (1,5), (2,5), (3,5)",
+        "(0,5), (1,4), (2,3), (3,2)",
+        "(0,0), (1,1), (2,2), (3,3)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses pairs where both entries match, checking against the wrong pattern",
+        "keeps one variable fixed, forgetting it must also satisfy the sum each time",
+        "",
+        "lists counting pairs without testing them in the equation"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-fractional-solutions-exist",
+      "nodeId": "class9-mathematics-fractional-solutions-exist",
+      "question": "Give one solution of 2x + y = 3 where x is not a whole number.",
+      "options": [
+        "(0, 3)",
+        "(1, 1)",
+        "(1/2, 2)",
+        "(2, -1)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "finds whole-number solutions but forgets fractions can work too",
+        "only considers whole-number values of x and gives up",
+        "",
+        "allows negatives but still avoids fractions"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-infinitely-many-solutions",
+      "nodeId": "class9-mathematics-infinitely-many-solutions",
+      "question": "Why does the equation x + y = 4 have infinitely many solutions?",
+      "options": [
+        "Because x and y can be swapped repeatedly",
+        "Because you may choose any value for x, and then y is fixed, giving a new pair each time",
+        "Because 4 can be written in many ways as a sum",
+        "Because the equation has two unknowns, so it has no solutions at all"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "mistakes swapping one pair for new independent solutions",
+        "",
+        "credits the constant rather than the free choice of a variable",
+        "confuses infinitely many solutions with having none"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-solutions-not-pairs-rejected",
+      "nodeId": "class9-mathematics-solutions-not-pairs-rejected",
+      "question": "Meera says (3, 2) is a solution of 2x + y = 9. Why is she wrong?",
+      "options": [
+        "Substituting gives 2(3) + 2 = 8, not 9",
+        "Because 3 and 2 are too small to make 9",
+        "Because the pair is not written in brackets",
+        "Because x and y must be equal in every solution"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "judges size of numbers instead of substituting",
+        "thinks notation style affects whether a pair works",
+        "assumes solutions must have equal coordinates"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-graph-needs-two-points",
+      "nodeId": "class9-mathematics-graph-needs-two-points",
+      "question": "How many distinct points are needed to draw one unique straight line through them?",
+      "options": [
+        "One",
+        "Two",
+        "Three",
+        "As many as you like"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks a single point fixes the direction of the line",
+        "",
+        "believes extra points beyond two are required before drawing",
+        "confuses plotting practice with what is mathematically necessary"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-select-convenient-solutions",
+      "nodeId": "class9-mathematics-select-convenient-solutions",
+      "question": "To graph x + y = 6 easily, which pair of solutions would be most convenient to plot?",
+      "options": [
+        "(-1/2, 13/2) and (5/2, 7/2)",
+        "(0, 6) and (6, 0)",
+        "(1/3, 17/3) and (2/3, 16/3)",
+        "(100, -94) and (-50, 56)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "does not see why fractional coordinates make plotting harder",
+        "",
+        "chooses far-off points, making the graph awkward to fit on paper",
+        "picks valid-looking pairs without thinking about ease of drawing"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-plot-solutions-and-join",
+      "nodeId": "class9-mathematics-plot-solutions-and-join",
+      "question": "After finding two solutions of a linear equation and plotting them, what is the next step to draw its graph?",
+      "options": [
+        "Mark only those two points and leave them unjoined",
+        "Join them with a curved line",
+        "Join them with a straight line extended on both sides",
+        "Draw a circle passing through the two points"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "stops at plotting without joining, unsure the line extends further",
+        "draws curves between points, as done for other kinds of graphs",
+        "",
+        "connects points with shapes other than the straight line"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-graph-is-straight-line",
+      "nodeId": "class9-mathematics-graph-is-straight-line",
+      "question": "You plotted two solutions of 2x + y = 5 and joined them. How can you check the graph really is a straight line?",
+      "options": [
+        "Erase the line and redraw it more neatly",
+        "Plot a third solution and check that it also lies on the same line",
+        "Count how many grid squares the line crosses",
+        "Check whether the two points have the same x-coordinate"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks neatness decides correctness of the graph",
+        "",
+        "relies on irrelevant counting instead of testing solutions",
+        "confuses a vertical line condition with being straight"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-point-on-graph-is-solution",
+      "nodeId": "class9-mathematics-point-on-graph-is-solution",
+      "question": "A point P lies on the graph of x + y = 8. What can you say about its coordinates?",
+      "options": [
+        "They add up to 8, so they form a solution of the equation",
+        "They must both be 8",
+        "Their difference is 8",
+        "They have nothing to do with the equation"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses coordinates with the constant in the equation",
+        "swaps addition for subtraction when reading the relation",
+        "sees the graph and the equation as unrelated"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-point-off-graph-not-solution",
+      "nodeId": "class9-mathematics-point-off-graph-not-solution",
+      "question": "A point Q does not lie on the line drawn for x + y = 8. What can you conclude about its coordinates?",
+      "options": [
+        "They do not satisfy x + y = 8, so they are not a solution",
+        "They still give a solution, since every point has coordinates",
+        "They satisfy the equation only if Q is close to the line",
+        "They satisfy the equation only if Q is below the line"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks any point anywhere supplies a solution",
+        "believes closeness to the line matters rather than exact position",
+        "links position above or below with satisfying the equation"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-every-graph-point-satisfies",
+      "nodeId": "class9-mathematics-every-graph-point-satisfies",
+      "question": "What is the relationship between the points on the line of x + y = 8 and its solutions?",
+      "options": [
+        "Only the points used to draw the line give solutions",
+        "Half the points on the line give solutions and half do not",
+        "Only points whose coordinates are whole numbers give solutions",
+        "Every point on the line gives a solution, and every solution appears as a point on the line"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "limits solutions to the few points actually plotted",
+        "thinks parts of the line fail to represent solutions",
+        "restricts solutions to whole-number coordinates",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-x-axis-line-y-zero",
+      "nodeId": "class9-mathematics-x-axis-line-y-zero",
+      "question": "Which equation represents the x-axis?",
+      "options": [
+        "x = 0",
+        "y = 0",
+        "x + y = 0",
+        "y = x"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the x-axis with the y-axis because of the name x",
+        "",
+        "mixes up axes with the diagonal line through the origin",
+        "confuses the axis with the line y = x"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-y-axis-line-x-zero",
+      "nodeId": "class9-mathematics-y-axis-line-x-zero",
+      "question": "Every point on the y-axis has which coordinate equal to 0?",
+      "options": [
+        "The x-coordinate is 0, so the y-axis is the line x = 0",
+        "The y-coordinate is 0, so the y-axis is the line y = 0",
+        "Both coordinates are 0 everywhere",
+        "Neither coordinate is ever 0"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "matches the coordinate named y with the y-axis wrongly, choosing y = 0",
+        "thinks only the origin lies on the y-axis",
+        "believes points on the y-axis avoid zero entirely"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-graph-x-equals-a",
+      "nodeId": "class9-mathematics-graph-x-equals-a",
+      "question": "How would you draw the graph of the equation x = 3?",
+      "options": [
+        "A horizontal line through the point (3, 0)",
+        "A slanted line through the origin",
+        "A vertical line through the point (3, 0)",
+        "A vertical line through the point (0, 3)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses vertical with horizontal direction",
+        "expects lines of simple equations to pass through the origin",
+        "",
+        "plots the constant on the wrong axis"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-graph-y-equals-b",
+      "nodeId": "class9-mathematics-graph-y-equals-b",
+      "question": "The graph of the equation y = -2 is drawn through which point, and in which direction?",
+      "options": [
+        "Through (0, -2), vertically",
+        "Through (-2, 0), horizontally",
+        "Through (0, -2), horizontally",
+        "Through (-2, 0), vertically"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "gets the direction right but anchors the line at the wrong point",
+        "places the constant on the x-axis instead of the y-axis",
+        "",
+        "swaps both the anchor point and the direction"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-classify-horizontal-vertical",
+      "nodeId": "class9-mathematics-classify-horizontal-vertical",
+      "question": "A line passes through A(4, 2) and B(4, 7). Is it horizontal or vertical, and why?",
+      "options": [
+        "Horizontal, because the y-coordinates differ",
+        "Vertical, because both points have the same x-coordinate",
+        "Horizontal, because both x-coordinates are even",
+        "Vertical, because 4 + 4 = 8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "matches 'horizontal' with changing y-coordinates instead of equal ones",
+        "",
+        "judges by evenness of the coordinates rather than equality",
+        "invents arithmetic on coordinates to decide direction"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-equation-from-horizontal-line",
+      "nodeId": "class9-mathematics-equation-from-horizontal-line",
+      "question": "What is the equation of the horizontal line passing through the point (5, -3)?",
+      "options": [
+        "x = -3",
+        "x = 5",
+        "y = -3",
+        "y = 5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "writes x = the y-coordinate, mixing up the variables",
+        "takes the x-coordinate of the given point for the equation",
+        "",
+        "pairs the wrong variable with the wrong coordinate completely"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-equation-from-vertical-line",
+      "nodeId": "class9-mathematics-equation-from-vertical-line",
+      "question": "What is the equation of the vertical line passing through the point (6, 4)?",
+      "options": [
+        "y = 6",
+        "y = 4",
+        "x = 4",
+        "x = 6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assigns the y-variable to the fixed x-value",
+        "swaps both the variable and the coordinate used",
+        "uses the other coordinate of the point",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-x-equals-a-one-variable-view",
+      "nodeId": "class9-mathematics-x-equals-a-one-variable-view",
+      "question": "The one-variable equation x = 4 can be seen in two variables as which equation?",
+      "options": [
+        "x.y = 4, so y is 1/4 whenever x is 4",
+        "x + y = 4, so y must be 0",
+        "x + 0.y = 4, meaning y can be anything while x stays 4",
+        "x - y = 4, so y is always 4 less than x"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the variables instead of adding zero times y",
+        "replaces the missing y-term with a real y-term",
+        "",
+        "subtracts y instead of adding 0.y"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-cost-quantity-word-problem",
+      "nodeId": "class9-mathematics-cost-quantity-word-problem",
+      "question": "Chairs cost Rs 300 each and tables cost Rs 700 each. Sunita spends Rs 4200 buying some chairs and tables. If she buys 2 chairs, how many tables does she buy?",
+      "options": [
+        "6 tables",
+        "4 tables",
+        "3 tables",
+        "5 tables"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides the whole amount by the price of a table",
+        "forgets to subtract the chair cost before dividing",
+        "subtracts the chair cost twice before dividing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-age-word-problem",
+      "nodeId": "class9-mathematics-age-word-problem",
+      "question": "A father is 30 years older than his son. If the son's age is x and the father's age is y, which equation fits, and what is the father's age when the son is 12?",
+      "options": [
+        "y = x - 30; the father is -18 years old",
+        "x = y + 30; the father is 42 years old",
+        "y = x + 30; the father is 360 years old",
+        "y = x + 30; the father is 42 years old"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "writes the relation with the subtraction backwards",
+        "expresses the son in terms of the father but solves it inconsistently",
+        "multiplies the ages instead of adding the age gap",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-geometry-statement-equation",
+      "nodeId": "class9-mathematics-geometry-statement-equation",
+      "question": "The length of a rectangle is 5 cm more than its breadth. Taking breadth as x and length as y, which equation is correct?",
+      "options": [
+        "x = y + 5",
+        "y = x + 5",
+        "y = 5x",
+        "x + y = 5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "writes the bigger quantity on the wrong side of the equation",
+        "",
+        "turns 'more than' into multiplication",
+        "confuses the relation between sides with their sum"
+      ]
+    }
+  ]
+}

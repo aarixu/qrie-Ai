@@ -10,6 +10,17 @@ export interface DoubtContext {
   visibleElementIds: string[];
   /** Beats seen so far — the legal targets for recall(beatId). */
   recentBeats: { id: string; topic: string }[];
+  /**
+   * Learning Outcome Map ids this beat teaches — what the hand went up ABOUT.
+   *
+   * The topic label says what the beat is called; these say what it was for.
+   * A tutor who knows the outcome can start from the step underneath it; a
+   * tutor who only knows the label can only say the same thing again, slower.
+   *
+   * Empty for a hook or a recap, which teach nothing, and for the lessons
+   * authored before the map existed.
+   */
+  outcomeIds: string[];
 }
 
 /**
@@ -36,5 +47,6 @@ export function buildContext(lesson: Lesson, beatIndex: number): DoubtContext {
     // never corrupt the lesson document.
     visibleElementIds: [...beat.show],
     recentBeats: soFar.map((b) => ({ id: b.id, topic: b.topic })),
+    outcomeIds: [...(beat.teaches ?? [])],
   };
 }

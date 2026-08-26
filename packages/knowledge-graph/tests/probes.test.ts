@@ -75,10 +75,40 @@ describe('committed probe banks', () => {
     expect(share).toBeLessThan(0.45);
   });
 
-  it.each(banks)('%s covers enough of its map to diagnose it', (file) => {
+  /**
+   * Coverage is checked PER CHAPTER, and only for chapters that have been
+   * probed at all.
+   *
+   * Maps grow one chapter at a time across many generation runs, so a chapter
+   * with no probes yet is a schedule fact, not a defect — and a whole-map
+   * ratio cannot tell that apart from a bank that has lost probes it used to
+   * have. Per chapter it can: the generator writes a chapter's probes in one
+   * go, so a probed chapter that is only half covered means something was
+   * dropped, which is exactly the drift worth failing on.
+   */
+  it.each(banks)('%s covers every chapter it has started', (file) => {
     const { bank, index } = load(file);
     const covered = new Set(bank.probes.map((p) => p.nodeId));
-    const inScope = index.ids();
-    expect(covered.size / inScope.length).toBeGreaterThan(0.8);
+
+    const byChapter = new Map<string, { total: number; covered: number }>();
+    for (const id of index.ids()) {
+      const chapter = index.node(id)?.chapter;
+      if (chapter === undefined) continue;
+      const tally = byChapter.get(chapter) ?? { total: 0, covered: 0 };
+      tally.total += 1;
+      if (covered.has(id)) tally.covered += 1;
+      byChapter.set(chapter, tally);
+    }
+
+    for (const [chapter, tally] of byChapter) {
+      if (tally.covered === 0) continue; // not generated yet
+      expect(tally.covered / tally.total, `${file} chapter "${chapter}"`).toBeGreaterThan(0.8);
+    }
+  });
+
+  it.each(banks)('%s has enough probes to run a diagnostic at all', (file) => {
+    const { bank } = load(file);
+    // The placement test asks up to twenty questions and never repeats a node.
+    expect(bank.probes.length).toBeGreaterThanOrEqual(20);
   });
 });

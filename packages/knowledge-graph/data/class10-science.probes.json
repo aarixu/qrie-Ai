@@ -6,16 +6,16 @@
       "nodeId": "sci10-lp-cell-is-unit",
       "question": "If a multicellular animal is resting and not moving, why does it still need nutrients and oxygen delivered to every part of its body?",
       "options": [
-        "Only the active organs need nutrients, while other tissues do not.",
         "Every individual cell is alive and must be kept alive.",
         "Only the brain and heart are made of cells that need energy.",
+        "Only the active organs need nutrients, while other tissues do not.",
         "The organs need nutrients, but the individual cells do not."
       ],
-      "correctIndex": 1,
+      "correctIndex": 0,
       "misconceptions": [
-        "believes only active tissues need nutrients",
         "",
         "thinks only major vital organs require life support",
+        "believes only active tissues need nutrients",
         "fails to recognize cells as the individual living units of organs"
       ]
     },
@@ -60,17 +60,17 @@
       "nodeId": "sci10-lp-nutrition-two-modes",
       "question": "An organism lives deep in the soil and absorbs organic nutrients from decaying plant matter. How should this organism be classified?",
       "options": [
-        "Autotroph, because it makes its own food from the soil.",
+        "Heterotroph, because it uses sunlight to break down food.",
         "Autotroph, because it does not hunt other living animals.",
-        "Heterotroph, because it must consume existing organic matter.",
-        "Heterotroph, because it uses sunlight to break down food."
+        "Autotroph, because it makes its own food from the soil.",
+        "Heterotroph, because it must consume existing organic matter."
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "misconceptions": [
-        "confuses absorbing nutrients from soil with autotrophic synthesis",
+        "incorrectly associates heterotrophy with photosynthesis/sunlight",
         "defines autotrophy as simply not hunting animals",
-        "",
-        "incorrectly associates heterotrophy with photosynthesis/sunlight"
+        "confuses absorbing nutrients from soil with autotrophic synthesis",
+        ""
       ]
     },
     {
@@ -78,15 +78,15 @@
       "nodeId": "sci10-lp-photo-inputs",
       "question": "Which of the following groups contains only the inputs required by a green plant to perform photosynthesis?",
       "options": [
-        "Oxygen, water, and glucose",
         "Carbon dioxide, water, and sunlight",
+        "Oxygen, water, and glucose",
         "Oxygen, carbon dioxide, and soil nutrients",
         "Carbon dioxide, glucose, and chlorophyll"
       ],
-      "correctIndex": 1,
+      "correctIndex": 0,
       "misconceptions": [
-        "confuses products (oxygen, glucose) with inputs",
         "",
+        "confuses products (oxygen, glucose) with inputs",
         "thinks oxygen is an input and includes soil nutrients",
         "includes glucose (a product) as an input"
       ]
@@ -97,16 +97,16 @@
       "question": "What are the primary products released or formed as a direct result of photosynthesis?",
       "options": [
         "Carbon dioxide and water",
+        "Carbon dioxide and oxygen",
         "Glucose and water",
-        "Glucose and oxygen",
-        "Carbon dioxide and oxygen"
+        "Glucose and oxygen"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "misconceptions": [
         "confuses reactants/inputs with products",
+        "thinks carbon dioxide is a product of photosynthesis",
         "thinks water is a major product instead of oxygen",
-        "",
-        "thinks carbon dioxide is a product of photosynthesis"
+        ""
       ]
     },
     {
@@ -114,15 +114,15 @@
       "nodeId": "sci10-lp-photo-equation-side",
       "question": "In the chemical equation for photosynthesis, on which side of the arrow does oxygen gas (O2) appear, and why?",
       "options": [
-        "On the product side, because it is produced and released during the reaction.",
         "On the reactant side, because plants must absorb it to start the reaction.",
+        "On the product side, because it is produced and released during the reaction.",
         "On the reactant side, because it is consumed to break down carbon dioxide.",
         "On both sides, because it is used to transport energy across the cell."
       ],
-      "correctIndex": 0,
+      "correctIndex": 1,
       "misconceptions": [
-        "",
         "thinks oxygen is a reactant because plants are thought to breathe it in for photosynthesis",
+        "",
         "believes oxygen is a reactant used to chemically break down carbon dioxide",
         "believes oxygen is both a reactant and product serving as an energy carrier"
       ]
@@ -133,16 +133,16 @@
       "question": "Which of the following represents the correct balanced chemical equation for photosynthesis?",
       "options": [
         "C6H12O6 + 6O2 --(Sunlight/Chlorophyll)--> 6CO2 + 6H2O",
-        "CO2 + H2O --(Sunlight/Chlorophyll)--> C6H12O6 + O2",
+        "6CO2 + 6H2O --(Sunlight/Chlorophyll)--> C6H12O6 + 6O2",
         "6CO2 + 6H2O --> C6H12O6 + 6O2",
-        "6CO2 + 6H2O --(Sunlight/Chlorophyll)--> C6H12O6 + 6O2"
+        "CO2 + H2O --(Sunlight/Chlorophyll)--> C6H12O6 + O2"
       ],
-      "correctIndex": 3,
+      "correctIndex": 1,
       "misconceptions": [
         "reverses respiration and photosynthesis equations",
-        "fails to balance the chemical equation",
+        "",
         "omits the essential conditions of sunlight and chlorophyll",
-        ""
+        "fails to balance the chemical equation"
       ]
     },
     {
@@ -151,16 +151,16 @@
       "question": "What is the exact role of chlorophyll during the process of photosynthesis?",
       "options": [
         "It reacts with carbon dioxide to form glucose.",
-        "It absorbs light energy and remains unchanged.",
+        "It acts as a source of hydrogen to make water.",
         "It is broken down to release oxygen into the air.",
-        "It acts as a source of hydrogen to make water."
+        "It absorbs light energy and remains unchanged."
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "misconceptions": [
         "believes chlorophyll is a reactant that directly combines with carbon dioxide",
-        "",
+        "believes chlorophyll is a chemical reactant donating hydrogen",
         "believes chlorophyll is consumed/broken down to produce oxygen",
-        "believes chlorophyll is a chemical reactant donating hydrogen"
+        ""
       ]
     },
     {
@@ -168,16 +168,16 @@
       "nodeId": "sci10-lp-stomata-function",
       "question": "What is the primary function of the tiny pores called stomata found on the surface of leaves?",
       "options": [
-        "To allow gases to enter and leave the leaf.",
-        "To absorb liquid water directly from the air.",
         "To transport sugars from leaves to the roots.",
+        "To absorb liquid water directly from the air.",
+        "To allow gases to enter and leave the leaf.",
         "To block sunlight from entering leaf cells."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "misconceptions": [
-        "",
-        "thinks stomata absorb liquid water/minerals from air",
         "confuses stomata with vascular tissues like phloem",
+        "thinks stomata absorb liquid water/minerals from air",
+        "",
         "thinks stomata act as light shields"
       ]
     },
@@ -186,17 +186,17 @@
       "nodeId": "sci10-lp-stomata-guard-cells",
       "question": "How do guard cells regulate the opening and closing of a stomatal pore?",
       "options": [
-        "They swell when water flows in to open the pore, and shrink to close it.",
+        "They use active muscle-like fibers to pull the stomatal pore open.",
         "They shrink when water flows in to open the pore, and swell to close it.",
         "They expand when dry to open the pore, and shrink when wet to close it.",
-        "They use active muscle-like fibers to pull the stomatal pore open."
+        "They swell when water flows in to open the pore, and shrink to close it."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "misconceptions": [
-        "",
+        "believes guard cells have active muscle-like contractile fibers to pull apart",
         "reverses the physical swelling/shrinking effect on pore opening",
         "believes dry conditions cause guard cells to expand/open",
-        "believes guard cells have active muscle-like contractile fibers to pull apart"
+        ""
       ]
     },
     {
@@ -205,16 +205,16 @@
       "question": "Which of the following options shows the correct path of food through the human digestive tract?",
       "options": [
         "Mouth -> Stomach -> Oesophagus -> Small intestine -> Large intestine",
+        "Mouth -> Stomach -> Oesophagus -> Large intestine -> Small intestine",
         "Mouth -> Oesophagus -> Stomach -> Large intestine -> Small intestine",
-        "Mouth -> Oesophagus -> Stomach -> Small intestine -> Large intestine",
-        "Mouth -> Stomach -> Oesophagus -> Large intestine -> Small intestine"
+        "Mouth -> Oesophagus -> Stomach -> Small intestine -> Large intestine"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "misconceptions": [
         "swaps the order of the stomach and the oesophagus",
+        "swaps both stomach/oesophagus and small/large intestine",
         "swaps the order of the small intestine and large intestine",
-        "",
-        "swaps both stomach/oesophagus and small/large intestine"
+        ""
       ]
     },
     {
@@ -222,17 +222,17 @@
       "nodeId": "sci10-lp-saliva-enzyme",
       "question": "What is the main function of the enzyme salivary amylase in the mouth?",
       "options": [
-        "It begins the chemical breakdown of starch.",
+        "It neutralizes acids to protect teeth.",
         "It breaks down proteins into amino acids.",
         "It digests fats into fatty acids.",
-        "It neutralizes acids to protect teeth."
+        "It begins the chemical breakdown of starch."
       ],
-      "correctIndex": 0,
+      "correctIndex": 3,
       "misconceptions": [
-        "",
+        "attributes mechanical/chemical protection instead of digestive enzyme role",
         "confuses amylase target with protease/pepsin",
         "confuses amylase with lipase",
-        "attributes mechanical/chemical protection instead of digestive enzyme role"
+        ""
       ]
     },
     {
@@ -241,16 +241,16 @@
       "question": "What are the two main roles of hydrochloric acid in the stomach?",
       "options": [
         "It directly digests proteins into amino acids, and it kills bacteria on food.",
-        "It neutralizes stomach pH for amylase, and it digests complex fats.",
         "It activates pepsin by making the stomach acidic, and it kills bacteria on food.",
-        "It keeps the stomach alkaline to help pepsin, and it destroys viruses."
+        "It keeps the stomach alkaline to help pepsin, and it destroys viruses.",
+        "It neutralizes stomach pH for amylase, and it digests complex fats."
       ],
-      "correctIndex": 2,
+      "correctIndex": 1,
       "misconceptions": [
         "thinks stomach acid itself digests proteins directly",
-        "thinks the stomach is neutral and digests fats",
         "",
-        "thinks pepsin works in alkaline conditions"
+        "thinks pepsin works in alkaline conditions",
+        "thinks the stomach is neutral and digests fats"
       ]
     },
     {
@@ -259,15 +259,15 @@
       "question": "Which organ of the human digestive system is the primary site where digested nutrients are absorbed into the bloodstream?",
       "options": [
         "Stomach",
-        "Small intestine",
         "Large intestine",
+        "Small intestine",
         "Mouth"
       ],
-      "correctIndex": 1,
+      "correctIndex": 2,
       "misconceptions": [
         "thinks absorption mainly happens where digestion of proteins begins",
-        "",
         "confuses water absorption in the large intestine with general nutrient absorption",
+        "",
         "thinks absorption happens immediately upon ingestion in the mouth"
       ]
     },
@@ -312,17 +312,17 @@
       "nodeId": "sci10-lp-respiration-equation",
       "question": "How is the chemical equation for aerobic respiration related to the equation for photosynthesis?",
       "options": [
+        "Aerobic respiration is the reverse of photosynthesis, using glucose and oxygen to produce carbon dioxide, water, and energy.",
         "Aerobic respiration is the same as photosynthesis, using carbon dioxide and water to produce glucose.",
-        "Aerobic respiration uses carbon dioxide and glucose to produce oxygen and water.",
         "Aerobic respiration uses oxygen and water to produce glucose and carbon dioxide.",
-        "Aerobic respiration is the reverse of photosynthesis, using glucose and oxygen to produce carbon dioxide, water, and energy."
+        "Aerobic respiration uses carbon dioxide and glucose to produce oxygen and water."
       ],
-      "correctIndex": 3,
+      "correctIndex": 0,
       "misconceptions": [
+        "",
         "thinks aerobic respiration and photosynthesis have identical reactants and products",
-        "incorrectly mixes reactants and products of respiration and photosynthesis",
         "thinks water is a reactant and carbon dioxide is a product alongside glucose in respiration",
-        ""
+        "incorrectly mixes reactants and products of respiration and photosynthesis"
       ]
     },
     {
@@ -330,16 +330,16 @@
       "nodeId": "sci10-lp-aerobic-vs-anaerobic",
       "question": "How do aerobic and anaerobic respiration compare in terms of oxygen use and the amount of energy released?",
       "options": [
-        "Aerobic respiration uses oxygen and releases much more energy than anaerobic respiration.",
-        "Aerobic respiration does not use oxygen, but it releases more energy than anaerobic respiration.",
         "Anaerobic respiration uses oxygen and releases much more energy than aerobic respiration.",
+        "Aerobic respiration does not use oxygen, but it releases more energy than anaerobic respiration.",
+        "Aerobic respiration uses oxygen and releases much more energy than anaerobic respiration.",
         "Both types of respiration use oxygen, but anaerobic respiration releases more energy."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "misconceptions": [
-        "",
-        "thinks aerobic respiration occurs without oxygen",
         "reverses both oxygen requirement and relative energy yields",
+        "thinks aerobic respiration occurs without oxygen",
+        "",
         "thinks all forms of respiration require oxygen and confuses energy yield"
       ]
     },
@@ -348,16 +348,16 @@
       "nodeId": "sci10-lp-lactic-acid",
       "question": "During heavy exercise, why do we sometimes experience painful cramps in our skeletal muscles?",
       "options": [
-        "Muscles receive too much oxygen, causing carbon dioxide to build up rapidly inside muscle cells.",
-        "Muscles stop performing respiration entirely, leading to sudden cell death.",
         "Muscles run short of oxygen and perform anaerobic respiration, producing lactic acid which causes cramps.",
+        "Muscles stop performing respiration entirely, leading to sudden cell death.",
+        "Muscles receive too much oxygen, causing carbon dioxide to build up rapidly inside muscle cells.",
         "Muscles produce alcohol instead of carbon dioxide, which poisons the muscle fibers."
       ],
-      "correctIndex": 2,
+      "correctIndex": 0,
       "misconceptions": [
-        "thinks cramps are caused by high oxygen levels or direct carbon dioxide buildup",
-        "thinks muscle fatigue/cramp represents complete cessation of cellular respiration",
         "",
+        "thinks muscle fatigue/cramp represents complete cessation of cellular respiration",
+        "thinks cramps are caused by high oxygen levels or direct carbon dioxide buildup",
         "confuses lactic acid fermentation in muscles with alcoholic fermentation in yeast"
       ]
     },
@@ -367,16 +367,16 @@
       "question": "How does anaerobic respiration in yeast cells cause bread dough to rise during baking?",
       "options": [
         "Yeast produces oxygen gas, which inflates the dough when heated.",
-        "Yeast produces carbon dioxide gas as a byproduct, which forms bubbles and expands the dough.",
+        "Yeast cells absorb water from the flour and swell up to many times their original size.",
         "Yeast produces alcohol, which boils at a low temperature and pushes the dough upward.",
-        "Yeast cells absorb water from the flour and swell up to many times their original size."
+        "Yeast produces carbon dioxide gas as a byproduct, which forms bubbles and expands the dough."
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "misconceptions": [
         "thinks yeast anaerobic respiration releases oxygen rather than carbon dioxide",
-        "",
+        "thinks physical swelling of yeast cells causes dough expansion",
         "attributes the rising of dough to boiling alcohol rather than expanding gas bubbles",
-        "thinks physical swelling of yeast cells causes dough expansion"
+        ""
       ]
     },
     {
@@ -384,16 +384,16 @@
       "nodeId": "sci10-lp-mitochondria-role",
       "question": "Which cellular organelle is the site where aerobic respiration takes place to release energy?",
       "options": [
-        "Mitochondrion",
-        "Chloroplast",
         "Ribosome",
+        "Chloroplast",
+        "Mitochondrion",
         "Nucleus"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "misconceptions": [
-        "",
-        "confuses the site of aerobic respiration with the site of photosynthesis",
         "confuses energy release with protein synthesis",
+        "confuses the site of aerobic respiration with the site of photosynthesis",
+        "",
         "thinks the nucleus directly performs metabolic energy generation because it is the control center"
       ]
     },
@@ -402,17 +402,17 @@
       "nodeId": "sci10-lp-heart-is-pump",
       "question": "What is the primary biological function of the human heart?",
       "options": [
-        "It acts as a storage reservoir that holds blood until the body needs it.",
+        "It acts as a muscular pump that continuously circulates blood throughout the body.",
         "It produces new blood cells to replace old ones.",
-        "It filters toxins and waste products out of the blood.",
-        "It acts as a muscular pump that continuously circulates blood throughout the body."
+        "It acts as a storage reservoir that holds blood until the body needs it.",
+        "It filters toxins and waste products out of the blood."
       ],
-      "correctIndex": 3,
+      "correctIndex": 0,
       "misconceptions": [
-        "views the heart as a static storage tank for blood rather than a pump",
+        "",
         "confuses the function of the heart with bone marrow",
-        "confuses the heart's function with kidneys or liver",
-        ""
+        "views the heart as a static storage tank for blood rather than a pump",
+        "confuses the heart's function with kidneys or liver"
       ]
     },
     {
@@ -420,16 +420,16 @@
       "nodeId": "sci10-lp-four-chambers-name",
       "question": "What are the correct names of the four chambers of the human heart?",
       "options": [
-        "Right auricle, left auricle, upper aorta, lower aorta",
-        "Upper ventricle, lower ventricle, left atrium, right atrium",
         "Right atrium, left atrium, right ventricle, left ventricle",
+        "Upper ventricle, lower ventricle, left atrium, right atrium",
+        "Right auricle, left auricle, upper aorta, lower aorta",
         "Right artery, left artery, right vein, left vein"
       ],
-      "correctIndex": 2,
+      "correctIndex": 0,
       "misconceptions": [
-        "confuses heart chambers with major blood vessels like the aorta",
-        "thinks ventricles are oriented vertically as upper/lower instead of left/right",
         "",
+        "thinks ventricles are oriented vertically as upper/lower instead of left/right",
+        "confuses heart chambers with major blood vessels like the aorta",
         "confuses chambers with blood vessels connected to the heart"
       ]
     },
@@ -438,15 +438,15 @@
       "nodeId": "sci10-lp-atria-receive",
       "question": "What are the primary roles of the atria and the ventricles in the human heart?",
       "options": [
-        "Atria pump blood out of the heart, while ventricles receive blood coming into the heart.",
         "Atria receive blood coming into the heart, while ventricles pump blood out of the heart.",
+        "Atria pump blood out of the heart, while ventricles receive blood coming into the heart.",
         "Both atria and ventricles pump blood out of the heart, but to different organs.",
         "Atria oxygenate the blood, while ventricles deoxygenate the blood."
       ],
-      "correctIndex": 1,
+      "correctIndex": 0,
       "misconceptions": [
-        "reverses the roles of atria and ventricles",
         "",
+        "reverses the roles of atria and ventricles",
         "believes both heart chambers only actively pump outward, failing to recognize that atria are receiving chambers",
         "confuses heart chamber mechanical pumping/receiving with systemic/pulmonary gas exchange functions"
       ]
@@ -456,16 +456,16 @@
       "nodeId": "sci10-lp-pulmonary-circuit",
       "question": "Which of the following correctly traces the path of blood through the pulmonary circulation?",
       "options": [
-        "Right ventricle -> Lungs -> Left atrium",
         "Right atrium -> Lungs -> Left ventricle",
         "Left ventricle -> Lungs -> Right atrium",
+        "Right ventricle -> Lungs -> Left atrium",
         "Right ventricle -> Body tissues -> Left atrium"
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "misconceptions": [
-        "",
         "starts the pathway at an atrium and ends at a ventricle, reversing the pumping and receiving roles",
         "swaps the left and right sides of the heart for pulmonary circulation",
+        "",
         "confuses pulmonary circulation with systemic circulation by targeting body tissues instead of the lungs"
       ]
     },
@@ -475,16 +475,16 @@
       "question": "Which path does blood take in the systemic circulation?",
       "options": [
         "Left atrium -> Body tissues -> Right ventricle",
+        "Left ventricle -> Lungs -> Right atrium",
         "Right ventricle -> Body tissues -> Left atrium",
-        "Left ventricle -> Body tissues -> Right atrium",
-        "Left ventricle -> Lungs -> Right atrium"
+        "Left ventricle -> Body tissues -> Right atrium"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "misconceptions": [
         "starts the pathway at an atrium and ends at a ventricle, reversing the pumping and receiving roles",
+        "confuses systemic circulation target organs with pulmonary circulation target organs",
         "swaps the left and right sides of the heart for systemic circulation",
-        "",
-        "confuses systemic circulation target organs with pulmonary circulation target organs"
+        ""
       ]
     },
     {
@@ -492,17 +492,17 @@
       "nodeId": "sci10-lp-double-circulation",
       "question": "Why does blood pass through the heart twice during one complete circuit of the body?",
       "options": [
+        "To separate oxygenated and deoxygenated blood, and to boost the pressure of blood after it loses pressure in the lungs.",
         "To allow the blood to pick up oxygen inside the heart chambers before it goes to the body tissues.",
-        "Because the heart can only pump blood in one direction at a time, so it needs to pause.",
         "To filter out waste products and old blood cells before the blood enters the main arteries.",
-        "To separate oxygenated and deoxygenated blood, and to boost the pressure of blood after it loses pressure in the lungs."
+        "Because the heart can only pump blood in one direction at a time, so it needs to pause."
       ],
-      "correctIndex": 3,
+      "correctIndex": 0,
       "misconceptions": [
+        "",
         "believes oxygenation occurs inside the heart chambers rather than in the lungs",
-        "thinks the heart cannot pump simultaneously and needs to cycle directionally",
         "confuses heart function with waste-filtration systems like the kidneys or spleen",
-        ""
+        "thinks the heart cannot pump simultaneously and needs to cycle directionally"
       ]
     },
     {
@@ -529,15 +529,15 @@
       "question": "What is the primary function of the valves inside the heart?",
       "options": [
         "To speed up the flow of blood as it leaves the heart chambers.",
-        "To separate oxygenated blood from deoxygenated blood within the same chamber.",
         "To prevent the backward flow of blood, ensuring it only moves in one direction.",
+        "To separate oxygenated blood from deoxygenated blood within the same chamber.",
         "To control the amount of oxygen that dissolves into the blood."
       ],
-      "correctIndex": 2,
+      "correctIndex": 1,
       "misconceptions": [
         "thinks valves act as nozzles or accelerators to increase flow speed",
-        "confuses heart valves with the septum, which physically divides the left and right sides of the heart",
         "",
+        "confuses heart valves with the septum, which physically divides the left and right sides of the heart",
         "associates mechanical valves with chemical gas-exchange regulation"
       ]
     },
@@ -547,16 +547,16 @@
       "question": "Which of the following correctly pairs a blood component with its main function?",
       "options": [
         "White blood cells - Transport oxygen to tissues",
-        "Platelets - Fight infections and pathogens",
         "Red blood cells - Form clots to stop bleeding",
-        "Plasma - Transport dissolved nutrients, waste, and hormones"
+        "Plasma - Transport dissolved nutrients, waste, and hormones",
+        "Platelets - Fight infections and pathogens"
       ],
-      "correctIndex": 3,
+      "correctIndex": 2,
       "misconceptions": [
         "confuses white blood cell function with red blood cell function",
-        "confuses platelet function with white blood cell function",
         "confuses red blood cell function with platelet function",
-        ""
+        "",
+        "confuses platelet function with white blood cell function"
       ]
     },
     {
@@ -564,16 +564,16 @@
       "nodeId": "sci10-lp-haemoglobin",
       "question": "What is the role of haemoglobin in red blood cells, and what element gives it its red colour?",
       "options": [
-        "It binds oxygen, and the presence of iron makes it look red.",
         "It fights infections, and the presence of calcium makes it look red.",
         "It clots blood at wounds, and the presence of copper makes it look red.",
+        "It binds oxygen, and the presence of iron makes it look red.",
         "It carries dissolved carbon dioxide, and the presence of nitrogen makes it look red."
       ],
-      "correctIndex": 0,
+      "correctIndex": 2,
       "misconceptions": [
-        "",
         "confuses haemoglobin's role with white blood cells and names the wrong mineral",
         "confuses haemoglobin's role with platelets and names the wrong mineral",
+        "",
         "believes haemoglobin primarily carries carbon dioxide rather than oxygen, and names the wrong element for blood color"
       ]
     },
@@ -600,16 +600,16 @@
       "nodeId": "sci10-lp-artery-vs-vein-direction",
       "question": "What is the key difference in the direction of blood flow carried by arteries and veins?",
       "options": [
-        "Arteries always carry oxygenated blood, while veins always carry deoxygenated blood.",
-        "Arteries carry blood to the lungs, while veins carry blood to all other organs.",
         "Arteries carry blood away from the heart, while veins carry blood back to the heart.",
+        "Arteries carry blood to the lungs, while veins carry blood to all other organs.",
+        "Arteries always carry oxygenated blood, while veins always carry deoxygenated blood.",
         "Arteries carry blood under low pressure, while veins carry blood under high pressure."
       ],
-      "correctIndex": 2,
+      "correctIndex": 0,
       "misconceptions": [
-        "defines vessels strictly by oxygenation level, ignoring pulmonary arteries and veins",
-        "restricts arteries to pulmonary circulation and veins to systemic circulation",
         "",
+        "restricts arteries to pulmonary circulation and veins to systemic circulation",
+        "defines vessels strictly by oxygenation level, ignoring pulmonary arteries and veins",
         "reverses the relative blood pressures found in arteries and veins"
       ]
     },
@@ -619,16 +619,16 @@
       "question": "Why do arteries have thick, elastic walls compared to veins?",
       "options": [
         "To allow oxygen to easily diffuse through the walls to nearby organs.",
-        "To withstand and sustain the high pressure of blood being pumped directly from the heart.",
+        "To store large reserves of blood when the body is at rest.",
         "To help push blood backward if it starts flowing in the wrong direction.",
-        "To store large reserves of blood when the body is at rest."
+        "To withstand and sustain the high pressure of blood being pumped directly from the heart."
       ],
-      "correctIndex": 1,
+      "correctIndex": 3,
       "misconceptions": [
         "confuses the structural properties of arteries with capillaries",
-        "",
+        "thinks arteries act as primary blood reservoirs, which is a role associated with veins",
         "believes arterial walls act as active pumps to reverse flow direction",
-        "thinks arteries act as primary blood reservoirs, which is a role associated with veins"
+        ""
       ]
     },
     {
@@ -636,17 +636,17 @@
       "nodeId": "sci10-lp-vein-valves",
       "question": "Why do veins contain valves, while arteries do not?",
       "options": [
-        "Blood in veins flows extremely fast, and valves are needed to slow it down before it hits the heart.",
         "Veins carry thicker blood that tends to settle, so valves help filter out solid clumps.",
+        "Blood in veins is under low pressure and flows slowly, so valves are needed to prevent backward flow.",
         "Valves in veins help pump blood actively by squeezing closed like tiny hearts.",
-        "Blood in veins is under low pressure and flows slowly, so valves are needed to prevent backward flow."
+        "Blood in veins flows extremely fast, and valves are needed to slow it down before it hits the heart."
       ],
-      "correctIndex": 3,
+      "correctIndex": 1,
       "misconceptions": [
-        "incorrectly believes venous blood flows at high velocity and needs to be decelerated",
         "believes venous blood is physically thicker and that valves serve as filtration meshes",
+        "",
         "believes valves are active muscle pumps rather than passive one-way gates",
-        ""
+        "incorrectly believes venous blood flows at high velocity and needs to be decelerated"
       ]
     },
     {
@@ -710,15 +710,15 @@
       "options": [
         "Neuron",
         "Alveolus",
-        "Nephron",
-        "Ureter"
+        "Ureter",
+        "Nephron"
       ],
-      "correctIndex": 2,
+      "correctIndex": 3,
       "misconceptions": [
         "confuses the kidney's filtering unit with the nervous system's functional unit due to phonetic similarity",
         "confuses the kidney's filtering unit with the respiratory system's air sacs",
-        "",
-        "confuses the microscopic filtering unit with the macroscopic tube that transports urine to the bladder"
+        "confuses the microscopic filtering unit with the macroscopic tube that transports urine to the bladder",
+        ""
       ]
     },
     {

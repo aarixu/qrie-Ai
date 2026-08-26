@@ -23,6 +23,7 @@ const ctx: DoubtContext = {
     { id: 'valves', topic: 'Valves stop backflow' },
     { id: 'chambers', topic: 'Four chambers' },
   ],
+  outcomeIds: [],
 };
 
 /** Only what the app really measures — see lib/student.ts. */

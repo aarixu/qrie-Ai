@@ -1,0 +1,4250 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class9-science-matter-made-of-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Matter is particulate",
+      "outcome": "State that all matter is made up of tiny particles",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-matter-mass-volume",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Matter has mass and volume",
+      "outcome": "Identify that anything occupying space and having mass is matter",
+      "prerequisites": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-particles-have-space-between-them",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Space between particles",
+      "outcome": "Conclude from dissolving salt in water without a level change that particles have space between them",
+      "prerequisites": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-space-examples-everyday",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Everyday mixing examples",
+      "outcome": "Give everyday examples like tea, coffee or lemonade showing space between particles of different substances",
+      "prerequisites": [
+        "class9-science-particles-have-space-between-them"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-dilution-shows-small-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Serial dilution observation",
+      "outcome": "Describe how repeated serial dilution still shows colour, indicating particles are extremely small",
+      "prerequisites": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-calculate-dilution-factor",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Dilution factor calculation",
+      "outcome": "Calculate the dilution factor after successive dilutions of a coloured solution",
+      "prerequisites": [
+        "class9-science-dilution-shows-small-particles"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-estimate-particle-size-limit",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Estimate particle size limit",
+      "outcome": "Estimate an upper limit for the size of particles from dilution observations (about 10^-9 m)",
+      "prerequisites": [
+        "class9-science-calculate-dilution-factor"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-science-three-characteristics-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Three characteristics of particles",
+      "outcome": "List the three main characteristics: particles have space between them, move continuously and attract each other",
+      "prerequisites": [
+        "class9-science-particles-have-space-between-them"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-particles-move-continuously",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Particles keep moving",
+      "outcome": "State that particles of matter are continuously moving because they possess kinetic energy",
+      "prerequisites": [
+        "class9-science-three-characteristics-particles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-define-diffusion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Define diffusion",
+      "outcome": "Define diffusion as intermixing of particles due to their continuous motion",
+      "prerequisites": [
+        "class9-science-particles-move-continuously"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-temperature-and-diffusion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Temperature affects diffusion",
+      "outcome": "Explain that diffusion becomes faster at higher temperature due to increased kinetic energy",
+      "prerequisites": [
+        "class9-science-define-diffusion"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-smell-hot-food",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Smell travels by diffusion",
+      "outcome": "Relate everyday observations like smelling hot food across a room to diffusion of gaseous particles",
+      "prerequisites": [
+        "class9-science-temperature-and-diffusion"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-gases-diffuse-in-liquids",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Gases diffuse into liquids",
+      "outcome": "Explain how gases like oxygen and carbon dioxide diffuse into water and support aquatic life",
+      "prerequisites": [
+        "class9-science-define-diffusion"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-particles-attract-each-other",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Interparticle attraction",
+      "outcome": "State that particles of matter attract each other with a force that keeps them together",
+      "prerequisites": [
+        "class9-science-three-characteristics-particles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-compare-cohesive-forces",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Compare cohesive forces",
+      "outcome": "Compare the force of attraction between particles in iron, chalk and a rubber band and order them by strength",
+      "prerequisites": [
+        "class9-science-particles-attract-each-other"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-water-stream-not-cut",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Why water stream resists cutting",
+      "outcome": "Explain why a stream of water cannot be easily cut with fingers using interparticle attraction",
+      "prerequisites": [
+        "class9-science-particles-attract-each-other"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-name-three-states",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Name three states",
+      "outcome": "Name the three physical states of matter: solid, liquid and gas",
+      "prerequisites": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-same-substance-states",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Same substance, states differ",
+      "outcome": "Explain that ice, water and steam are the same substance in different states differing only in particle arrangement",
+      "prerequisites": [
+        "class9-science-name-three-states",
+        "class9-science-three-characteristics-particles"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-solid-properties",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Properties of solids",
+      "outcome": "List properties of solids: definite shape, distinct boundaries, fixed volume and negligible compressibility",
+      "prerequisites": [
+        "class9-science-name-three-states"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-solids-rigid-explanation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Why solids are rigid",
+      "outcome": "Explain rigidity of solids by tightly packed particles held by strong forces of attraction",
+      "prerequisites": [
+        "class9-science-solid-properties",
+        "class9-science-compare-cohesive-forces"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-solid-shape-force",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Solids resist shape change",
+      "outcome": "Predict what happens when force is applied to a solid and justify why it breaks rather than flows",
+      "prerequisites": [
+        "class9-science-solids-rigid-explanation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-liquid-properties",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Properties of liquids",
+      "outcome": "Describe properties of liquids: fixed volume, no fixed shape, fluidity and taking the shape of the container",
+      "prerequisites": [
+        "class9-science-name-three-states"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-liquid-particle-arrangement",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Liquid particle arrangement",
+      "outcome": "Compare the spacing and attraction of liquid particles with those in solids to explain flow",
+      "prerequisites": [
+        "class9-science-liquid-properties",
+        "class9-science-solids-rigid-explanation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-density-order",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Density of states",
+      "outcome": "Order solids, liquids and gases by density and explain using particle packing",
+      "prerequisites": [
+        "class9-science-solid-properties",
+        "class9-science-liquid-properties"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-gas-compressibility",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Gases are highly compressible",
+      "outcome": "Explain the high compressibility of gases compared to solids and liquids using large interparticle spaces",
+      "prerequisites": [
+        "class9-science-name-three-states",
+        "class9-science-particles-have-space-between-them"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-compressed-gas-applications",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Compressed gas applications",
+      "outcome": "Identify everyday applications of compressed gases such as LPG cylinders and CNG vehicles",
+      "prerequisites": [
+        "class9-science-gas-compressibility"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-gas-flow-expansion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Gases fill container",
+      "outcome": "Explain why gases expand to fill their container completely and exert pressure on its walls",
+      "prerequisites": [
+        "class9-science-gas-compressibility"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-kinetic-energy-temperature",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Kinetic energy rises with temperature",
+      "outcome": "State that kinetic energy of particles increases with temperature for all states of matter",
+      "prerequisites": [
+        "class9-science-particles-move-continuously"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-interconversion-diagram",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Interconversion diagram",
+      "outcome": "Sketch and label a diagram showing melting, boiling/fusion, condensation, solidification and sublimation between the three states",
+      "prerequisites": [
+        "class9-science-name-three-states"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-trace-ice-water-steam",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Ice to steam trace",
+      "outcome": "Trace the transformation ice -> water -> steam naming each change of state along the temperature path",
+      "prerequisites": [
+        "class9-science-interconversion-diagram"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-define-melting-point",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Define melting point",
+      "outcome": "Define melting point as the temperature at which a solid melts to become a liquid at atmospheric pressure",
+      "prerequisites": [
+        "class9-science-interconversion-diagram"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-define-boiling-point",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Define boiling point",
+      "outcome": "Define boiling point as the temperature at which a liquid boils throughout its bulk at atmospheric pressure",
+      "prerequisites": [
+        "class9-science-interconversion-diagram"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-latent-heat-fusion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Latent heat of fusion",
+      "outcome": "Define latent heat of fusion and state its SI unit, giving the value for ice",
+      "prerequisites": [
+        "class9-science-define-melting-point"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-latent-heat-vaporization",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Latent heat of vaporization",
+      "outcome": "Define latent heat of vaporization and give the value for water",
+      "prerequisites": [
+        "class9-science-define-boiling-point"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-constant-temp-during-phase-change",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Temperature constant while changing state",
+      "outcome": "Explain why thermometer reading stays constant during melting or boiling even though heat is supplied",
+      "prerequisites": [
+        "class9-science-latent-heat-fusion",
+        "class9-science-latent-heat-vaporization"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-sublimation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Sublimation examples",
+      "outcome": "Name substances like camphor and naphthalene that undergo sublimation and describe the experiment showing it",
+      "prerequisites": [
+        "class9-science-interconversion-diagram"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-pressure-liquefy-gases",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Pressure liquefies gases",
+      "outcome": "Explain how applying pressure and lowering temperature can liquefy a gas",
+      "prerequisites": [
+        "class9-science-gas-compressibility",
+        "class9-science-interconversion-diagram"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-dry-ice",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Dry ice",
+      "outcome": "Describe why solid carbon dioxide is called dry ice and how it converts directly to gas",
+      "prerequisites": [
+        "class9-science-pressure-liquefy-gases",
+        "class9-science-sublimation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-evaporation-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Define evaporation",
+      "outcome": "Define evaporation as conversion of a liquid into vapour below its boiling point",
+      "prerequisites": [
+        "class9-science-define-boiling-point"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-evaporation-surface-phenomenon",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Evaporation is surface phenomenon",
+      "outcome": "Explain evaporation as a surface phenomenon where only surface particles escape",
+      "prerequisites": [
+        "class9-science-evaporation-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-boiling-vs-evaporation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Boiling vs evaporation",
+      "outcome": "Distinguish boiling from evaporation on the basis of temperature, location (bulk vs surface) and speed",
+      "prerequisites": [
+        "class9-science-evaporation-surface-phenomenon"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-factors-affecting-evaporation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Four factors of evaporation",
+      "outcome": "List the four factors affecting rate of evaporation: surface area, temperature, humidity and wind speed",
+      "prerequisites": [
+        "class9-science-evaporation-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-predict-evaporation-rate",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Predict evaporation changes",
+      "outcome": "Predict whether wet clothes dry faster or slower when humidity, wind, temperature or spread-out area changes",
+      "prerequisites": [
+        "class9-science-factors-affecting-evaporation"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-evaporation-causes-cooling",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Evaporation causes cooling",
+      "outcome": "Explain cooling during evaporation using energy absorbed from surroundings by escaping particles",
+      "prerequisites": [
+        "class9-science-evaporation-definition",
+        "class9-science-latent-heat-vaporization"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-earthen-pot-cooling",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Earthen pot cooling",
+      "outcome": "Explain why water remains cool in an earthen pot (matka) using evaporation through pores",
+      "prerequisites": [
+        "class9-science-evaporation-causes-cooling"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-acetone-palm-cooling",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Acetone cools palm",
+      "outcome": "Explain the cooling sensation when acetone or perfume evaporates from skin",
+      "prerequisites": [
+        "class9-science-evaporation-causes-cooling"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-cotton-summer-clothes",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "matter-in-our-surroundings",
+      "title": "Cotton clothes in summer",
+      "outcome": "Apply evaporation cooling to explain why cotton clothes are preferred in summer",
+      "prerequisites": [
+        "class9-science-evaporation-causes-cooling",
+        "class9-science-predict-evaporation-rate"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-mixture",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define mixture",
+      "outcome": "Define a mixture as a physical combination of two or more substances that are not chemically combined.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": "what-is-a-mixture"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-distinguish-pure-mixture",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Distinguish pure vs mixture",
+      "outcome": "Distinguish between pure substances (e.g., water, sugar) and mixtures (e.g., salt water, air) by stating that pure substances have fixed composition and properties, while mixtures have variable composition.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-mixture"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-mixture"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-examples-mixtures",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Examples of mixtures",
+      "outcome": "Give examples of mixtures from daily life, such as air, milk, and soil.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-mixture"
+      ],
+      "difficulty": 1,
+      "lessonRef": "what-is-a-mixture"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-mixture-variable-composition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Mixture variable composition",
+      "outcome": "Explain that the composition of a mixture is not fixed and can vary.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-mixture"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-mixture"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Classify mixtures",
+      "outcome": "Classify a given mixture as homogeneous (uniform composition throughout) or heterogeneous (non-uniform composition).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture"
+      ],
+      "difficulty": 2,
+      "lessonRef": "types-of-mixtures"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-prepare-salt-solution",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Prepare salt solution",
+      "outcome": "Describe the preparation of a salt solution by dissolving salt in water, noting that the salt particles are not visible and the mixture is uniform.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous"
+      ],
+      "difficulty": 2,
+      "lessonRef": "types-of-mixtures"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-prepare-sand-water",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Prepare sand and water",
+      "outcome": "Describe the preparation of a sand-and-water mixture, noting that sand particles are visible and settle over time.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous"
+      ],
+      "difficulty": 2,
+      "lessonRef": "types-of-mixtures"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-examples-homogeneous-heterogeneous",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Examples of mixture types",
+      "outcome": "Give examples of homogeneous mixtures (e.g., salt water, sugar solution) and heterogeneous mixtures (e.g., oil and water, sand and water).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous"
+      ],
+      "difficulty": 1,
+      "lessonRef": "types-of-mixtures"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-solute-solvent-solution",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define solute, solvent, solution",
+      "outcome": "Define solute (the substance that dissolves), solvent (the substance that dissolves the solute), and solution (the homogeneous mixture of solute and solvent).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-prepare-salt-solution",
+        "class9-science-matter-made-of-particles",
+        "class9-science-particles-have-space-between-them"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-identify-solute-solvent",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Identify solute and solvent",
+      "outcome": "Identify the solute and solvent in a given solution (e.g., in salt water, salt is solute, water is solvent).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-properties-solutions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Properties of solutions",
+      "outcome": "List the key properties of solutions: particle size < 1 nm, stable, do not scatter light, cannot be separated by filtration.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-water-universal-solvent",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Water as universal solvent",
+      "outcome": "Describe water as a universal solvent because it dissolves many substances.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 1,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-factors-affecting-solubility",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Factors affecting solubility",
+      "outcome": "List factors that affect solubility: temperature, pressure, and nature of solute and solvent.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-effect-temperature-solubility",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Temperature effect on solubility",
+      "outcome": "Explain that solubility of solids generally increases with temperature, while solubility of gases decreases with temperature.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-factors-affecting-solubility"
+      ],
+      "difficulty": 3,
+      "lessonRef": "what-is-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-calculate-mass-percentage",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Calculate mass percentage",
+      "outcome": "Calculate the mass-by-mass percentage of a solution using the formula: (mass of solute / mass of solution) × 100.",
+      "prerequisites": [
+        "class9-science-matter-mass-volume",
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 3,
+      "lessonRef": "concentration-of-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-calculate-mass-solute",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Calculate mass of solute",
+      "outcome": "Calculate the mass of solute in a solution given its mass-by-mass percentage and the total mass of the solution.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-calculate-mass-percentage"
+      ],
+      "difficulty": 3,
+      "lessonRef": "concentration-of-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-saturated-unsaturated",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define saturated and unsaturated",
+      "outcome": "Define a saturated solution as a solution that cannot dissolve any more solute at a given temperature, and an unsaturated solution as one that can still dissolve more solute.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-solute-solvent-solution"
+      ],
+      "difficulty": 2,
+      "lessonRef": "concentration-of-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-effect-heating-saturated",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Heating saturated solution",
+      "outcome": "Describe that heating a saturated solution can allow it to dissolve more solute, making it unsaturated.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-saturated-unsaturated"
+      ],
+      "difficulty": 2,
+      "lessonRef": "concentration-of-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-supersaturated",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define supersaturated solution",
+      "outcome": "Define a supersaturated solution as a solution that contains more dissolved solute than a saturated solution at the same temperature, and is unstable.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-saturated-unsaturated"
+      ],
+      "difficulty": 3,
+      "lessonRef": "concentration-of-a-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-suspension",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define suspension",
+      "outcome": "Define a suspension as a heterogeneous mixture in which solute particles are visible and do not dissolve.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous",
+        "class9-science-is-matter-around-us-pure-prepare-sand-water"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-suspension"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-properties-suspensions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Properties of suspensions",
+      "outcome": "Describe the properties of suspensions: particle size > 100 nm, visible to naked eye, scatter light, settle on standing, can be separated by filtration.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-suspension"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-suspension"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-examples-suspensions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Examples of suspensions",
+      "outcome": "Give examples of suspensions such as muddy water, chalk powder in water, and paint.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-suspension"
+      ],
+      "difficulty": 1,
+      "lessonRef": "what-is-a-suspension"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-suspension-unstable",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Suspension instability",
+      "outcome": "Explain that suspensions are unstable and the particles settle over time due to gravity.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-properties-suspensions"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-suspension"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-colloid",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define colloid",
+      "outcome": "Define a colloid as a heterogeneous mixture with particle size between 1-100 nm, and identify the dispersed phase (the substance present in smaller amount) and dispersion medium (the substance in larger amount).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-types-colloids",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Types of colloids",
+      "outcome": "Give examples of different types of colloids: sol (ink), gel (jelly), emulsion (milk), foam (whipped cream).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-colloid"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-identify-dispersed-phase-medium",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Identify dispersed phase and medium",
+      "outcome": "Identify the dispersed phase and dispersion medium in a given colloid (e.g., in milk, fat droplets dispersed in water).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-colloid"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-colloid-stability",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Colloid stability",
+      "outcome": "Explain that colloidal particles do not settle due to Brownian motion and are stable.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-colloid"
+      ],
+      "difficulty": 3,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-tyndall-effect",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Tyndall effect",
+      "outcome": "Explain the Tyndall effect as the scattering of light by colloidal particles, and give an example such as a beam of light passing through a milk solution.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-colloid"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-centrifugation-colloids",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Separation of colloids",
+      "outcome": "Describe that colloids can be separated by centrifugation, not by filtration.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-colloid"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-is-a-colloidal-solution"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-physical-change",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define physical change",
+      "outcome": "Define a physical change as a change that does not produce a new substance and is usually reversible.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": "physical-and-chemical-changes"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-chemical-change",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define chemical change",
+      "outcome": "Define a chemical change as a change that produces one or more new substances and is usually irreversible.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": "physical-and-chemical-changes"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-classify-physical-chemical",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Classify physical vs chemical",
+      "outcome": "Classify a given change (e.g., melting, rusting, burning) as physical or chemical based on criteria of new substance formation and reversibility.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-physical-change",
+        "class9-science-is-matter-around-us-pure-define-chemical-change"
+      ],
+      "difficulty": 2,
+      "lessonRef": "physical-and-chemical-changes"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-indicators-chemical-change",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Indicators of chemical change",
+      "outcome": "List indicators of a chemical change: change in color, evolution of gas, change in temperature, formation of a precipitate.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-chemical-change"
+      ],
+      "difficulty": 2,
+      "lessonRef": "physical-and-chemical-changes"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-distinguish-physical-chemical-examples",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Distinguish changes with examples",
+      "outcome": "Distinguish between physical and chemical changes using examples like boiling water (physical) and electrolysis of water (chemical).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-physical-chemical"
+      ],
+      "difficulty": 3,
+      "lessonRef": "physical-and-chemical-changes"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-classify-pure-substances",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Classify pure substances",
+      "outcome": "Classify pure substances into elements (cannot be broken down into simpler substances) and compounds (can be broken down into elements by chemical means).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture"
+      ],
+      "difficulty": 2,
+      "lessonRef": "what-are-the-types-of-pure-substances"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-element",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define element",
+      "outcome": "Define an element as a pure substance that cannot be broken down into simpler substances by chemical means.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-pure-substances"
+      ],
+      "difficulty": 1,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-define-compound",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Define compound",
+      "outcome": "Define a compound as a pure substance composed of two or more elements chemically combined in a fixed proportion.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-pure-substances"
+      ],
+      "difficulty": 1,
+      "lessonRef": "compounds"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-examples-elements-compounds",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Examples of elements and compounds",
+      "outcome": "Give examples of elements (e.g., hydrogen, oxygen, iron) and compounds (e.g., water, carbon dioxide).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-element",
+        "class9-science-is-matter-around-us-pure-define-compound"
+      ],
+      "difficulty": 1,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Classify elements into metals/nonmetals",
+      "outcome": "Describe the classification of elements into metals, non-metals, and metalloids based on their properties.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-element"
+      ],
+      "difficulty": 2,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-boyle-lavoisier-element",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Boyle and Lavoisier on elements",
+      "outcome": "State that Robert Boyle defined an element as a substance that cannot be broken down into simpler substances, and Lavoisier defined it as a substance that cannot be decomposed by chemical means.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-element"
+      ],
+      "difficulty": 1,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-properties-metals",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Properties of metals",
+      "outcome": "List typical physical properties of metals: lustre, ductility, malleability, conductivity, sonority.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals"
+      ],
+      "difficulty": 2,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-properties-nonmetals",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Properties of nonmetals",
+      "outcome": "List typical physical properties of non-metals: non-lustrous, brittle, poor conductors of heat and electricity.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals"
+      ],
+      "difficulty": 2,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-metalloids",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Characteristics of metalloids",
+      "outcome": "State that metalloids have properties intermediate between metals and non-metals, e.g., silicon is a semiconductor.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals"
+      ],
+      "difficulty": 2,
+      "lessonRef": "elements"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-compound-different-properties",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Compound properties differ",
+      "outcome": "Explain that the properties of a compound (e.g., iron sulfide) are different from the properties of its constituent elements (iron and sulfur).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-compound"
+      ],
+      "difficulty": 2,
+      "lessonRef": "compounds"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-distinguish-mixture-compound-iron-sulfur",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "is-matter-around-us-pure",
+      "title": "Mixture vs compound: iron and sulfur",
+      "outcome": "Distinguish between a mixture of iron and sulfur (which can be separated by physical means, retains properties of iron and sulfur) and the compound iron sulfide (which has different properties and cannot be separated by physical means).",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-compound",
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture"
+      ],
+      "difficulty": 3,
+      "lessonRef": "compounds"
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-lavoisier-conservation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Lavoisier and conservation of mass",
+      "outcome": "State the Law of Conservation of Mass and identify Antoine Lavoisier as the scientist who established it.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-compound",
+        "class9-science-is-matter-around-us-pure-distinguish-mixture-compound-iron-sulfur"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-proust-constant-proportions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Proust and constant proportions",
+      "outcome": "State the Law of Constant Proportions and identify Joseph Proust as the scientist who proposed it.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-compound"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-verify-conservation-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Verify conservation of mass",
+      "outcome": "Verify the Law of Conservation of Mass by calculating the total mass of reactants and products from given chemical reaction data.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-distinguish-mixture-compound-iron-sulfur",
+        "class9-science-atoms-and-molecules-lavoisier-conservation",
+        "class9-science-particles-have-space-between-them"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-experiment-sealed-flask",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Sealed flask experiment",
+      "outcome": "Describe the experiment demonstrating the Law of Conservation of Mass using the reaction of barium chloride and sodium sulfate in a sealed flask.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-verify-conservation-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-explain-constant-proportions-water",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Constant proportions in water",
+      "outcome": "Explain the Law of Constant Proportions using the example of water, stating the 1:8 mass ratio of hydrogen to oxygen.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-proust-constant-proportions",
+        "class9-science-is-matter-around-us-pure-define-compound"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-mass-ratio",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate mass from ratio",
+      "outcome": "Calculate the mass of one element in a compound given the mass of the other element and their fixed combining ratio.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-explain-constant-proportions-water"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-atom",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define atom",
+      "outcome": "Define an atom as the building block of all matter.",
+      "prerequisites": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-matter",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton’s postulate: matter made of atoms",
+      "outcome": "State that according to Dalton, all matter is made up of tiny indivisible particles called atoms.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-identical",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton’s postulate: identical atoms of same element",
+      "outcome": "State the Dalton postulate that atoms of a given element are identical in mass and chemical properties.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-dalton-postulates-matter"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-combine",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton’s postulate: atoms combine in simple ratios",
+      "outcome": "State the Dalton postulate that atoms of different elements combine in simple whole-number ratios to form compounds.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-dalton-postulates-identical"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-rearrange",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton’s postulate: atoms rearranged in reactions",
+      "outcome": "State the Dalton postulate that in a chemical reaction, atoms are rearranged, not created or destroyed.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-dalton-postulates-combine"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-modern-symbols-recall",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Recall IUPAC symbols",
+      "outcome": "Recall the modern symbols of common elements (H, He, C, N, O, Na, Mg, Al, Si, P, S, Cl, K, Ca, Fe, Cu, Zn, Ag, I, Pb, Au, Hg) as approved by IUPAC.",
+      "prerequisites": [
+        "class9-science-is-matter-around-us-pure-define-element"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-symbols-latin-origin",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Symbol origin from Latin names",
+      "outcome": "Explain that some element symbols are derived from their Latin names (e.g., Fe from Ferrum, Na from Natrium, K from Kalium, Cu from Cuprum, Ag from Argentum, Au from Aurum, Hg from Hydrargyrum).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-atomic-mass-unit",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define atomic mass unit",
+      "outcome": "Define atomic mass unit (u) as 1/12th the mass of a carbon-12 atom.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-carbon12-standard",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Carbon-12 standard for atomic mass",
+      "outcome": "Explain why carbon-12 is used as the standard reference for atomic mass, citing its stability and convenient mass.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atomic-mass-unit"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-monoatomic-vs-molecules",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Monoatomic vs. molecules/ions",
+      "outcome": "Distinguish between elements that exist as monoatomic (e.g., noble gases) and those that exist as molecules or ions (e.g., H2, O2, Na+, Cl-).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom",
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-why-atoms-cannot-exist-alone",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Why atoms cannot exist independently",
+      "outcome": "State that most atoms cannot exist independently under normal conditions because they are reactive and combine with other atoms to achieve stability.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-monoatomic-vs-molecules"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-molecule",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define molecule",
+      "outcome": "Define a molecule as a group of two or more atoms chemically bonded together.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-why-atoms-cannot-exist-alone"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-atomicity-examples",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Atomicity with examples",
+      "outcome": "Explain atomicity and give examples of monoatomic (He), diatomic (O2), triatomic (O3), and polyatomic (P4) molecules.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecule"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-molecules-of-elements-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Molecules of elements defined",
+      "outcome": "Define molecules of elements as containing atoms of only one element.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecule"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-classify-molecular-elements",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Classify molecular elements by atomicity",
+      "outcome": "Classify molecules of elements as monoatomic, diatomic, triatomic, or polyatomic based on the number of atoms present.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-molecules-of-elements-definition",
+        "class9-science-atoms-and-molecules-atomicity-examples"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-molecules-of-compounds-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Molecules of compounds defined",
+      "outcome": "Define molecules of compounds as containing atoms of two or more different elements.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecule"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-ratio-by-atoms-h2o-nh3",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Atom ratio in water and ammonia",
+      "outcome": "State the ratio by number of atoms in a water (H2O) molecule as 2:1 (H:O) and in an ammonia (NH3) molecule as 1:3 (N:H).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-molecules-of-compounds-definition"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-ion-cation-anion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define ions, cations, anions",
+      "outcome": "Define ions as charged particles, cations as positively charged ions, and anions as negatively charged ions.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-polyatomic-ions-list",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Common polyatomic ions",
+      "outcome": "List the constituent elements and charges of common polyatomic ions: ammonium (NH4+), carbonate (CO3^2-), sulphate (SO4^2-), nitrate (NO3-), hydroxide (OH-), and phosphate (PO4^3-).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-ion-cation-anion"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-valency",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define valency",
+      "outcome": "Define valency as the combining capacity of an element, measured by the number of hydrogen atoms it can combine with or displace.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecule"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-apply-valency-balance-charges",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Balance charges using valency",
+      "outcome": "Apply the rule of writing chemical formulae by crossing over valencies to balance the total positive and negative charges when combining ions.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-valency",
+        "class9-science-atoms-and-molecules-polyatomic-ions-list"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-write-binary-compound-formulas",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Write formulas of binary compounds",
+      "outcome": "Write the chemical formula of binary compounds (e.g., NaCl, MgO, H2O, CO2) using the valencies of the constituent elements.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-apply-valency-balance-charges",
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-translate-name-to-formula",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Translate compound names to formulas",
+      "outcome": "Translate common compound names (e.g., sodium oxide, calcium chloride, aluminium oxide) into their correct molecular formulas.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-write-binary-compound-formulas",
+        "class9-science-atoms-and-molecules-polyatomic-ions-list"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-molecular-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define molecular mass",
+      "outcome": "Define molecular mass as the sum of the atomic masses of all atoms in a molecule.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atomic-mass-unit",
+        "class9-science-atoms-and-molecules-define-molecule"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-molecular-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate molecular mass",
+      "outcome": "Calculate the molecular mass of chemical compounds from given atomic masses (e.g., H2O, CO2, CH4, C2H5OH).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecular-mass",
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-compare-molecular-masses",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Compare molecular masses of H2O and CO2",
+      "outcome": "Compare the molecular masses of water (H2O) and carbon dioxide (CO2) and state which is heavier.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-formula-unit-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define formula unit mass",
+      "outcome": "Define formula unit mass as the sum of atomic masses of all atoms in a formula unit of an ionic compound, and state that it is used for compounds that do not exist as discrete molecules.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molecular-mass",
+        "class9-science-atoms-and-molecules-define-ion-cation-anion"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-formula-unit-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate formula unit mass",
+      "outcome": "Calculate the formula unit mass of sodium chloride (NaCl) and calcium chloride (CaCl2) from given atomic masses.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-formula-unit-mass",
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-explain-formula-unit-mass-same",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Formula unit mass calculation is same",
+      "outcome": "Explain that the formula unit mass is calculated in the same manner as molecular mass, by summing atomic masses of all atoms in the formula unit.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-calculate-formula-unit-mass",
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-mole",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define mole",
+      "outcome": "Define a mole as the amount of substance that contains 6.022 × 10^23 entities (atoms, molecules, ions, or particles).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom",
+        "class9-science-atoms-and-molecules-define-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-state-avogadro-number",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Avogadro number",
+      "outcome": "State Avogadro number as 6.022 × 10^23 and identify it as the number of particles in one mole of any substance.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-mole"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-number-of-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate number of particles",
+      "outcome": "Calculate the number of particles (atoms, molecules, or ions) given the number of moles or mass of a substance using Avogadro number.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-state-avogadro-number",
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-mass-from-moles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate mass from moles",
+      "outcome": "Calculate the mass of a substance given the number of moles and its molar mass.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-mole",
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-calculate-moles-from-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate moles from mass",
+      "outcome": "Calculate the number of moles of a substance given its mass and molar mass.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-mole",
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-define-molar-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Define molar mass",
+      "outcome": "Define molar mass as the mass of one mole of a substance, numerically equal to the molecular or formula mass in grams.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-mole",
+        "class9-science-atoms-and-molecules-define-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-relate-mass-moles-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Relate mass, moles, and particles",
+      "outcome": "Relate the mass, number of moles, and number of particles of a substance using the formulas: mass = moles × molar mass; number of particles = moles × Avogadro number.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-calculate-mass-from-moles",
+        "class9-science-atoms-and-molecules-calculate-number-of-particles"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-valency-table-common",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Valency of common elements",
+      "outcome": "Recall the valencies of common elements: H(1), O(2), Na(1), Mg(2), Al(3), C(4), N(3), Cl(1), Ca(2), Fe(2,3), etc.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-valency",
+        "class9-science-atoms-and-molecules-modern-symbols-recall"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-write-formulas-polyatomic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Write formulas with polyatomic ions",
+      "outcome": "Write the chemical formula of compounds containing polyatomic ions (e.g., NaOH, CaCO3, NH4Cl, Al2(SO4)3) by balancing charges.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-translate-name-to-formula",
+        "class9-science-atoms-and-molecules-polyatomic-ions-list"
+      ],
+      "difficulty": 3,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-atoms-different-elements",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton: atoms of different elements differ",
+      "outcome": "State the Dalton postulate that atoms of different elements have different masses and chemical properties.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-dalton-postulates-identical"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-dalton-postulates-atoms-indivisible",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Dalton: atoms are indivisible",
+      "outcome": "State the Dalton postulate that atoms are indivisible and cannot be created or destroyed.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-dalton-postulates-matter"
+      ],
+      "difficulty": 1,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-atomic-masses-common",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Atomic masses of common elements",
+      "outcome": "Recall the atomic masses (in u) of common elements: H(1), C(12), N(14), O(16), Na(23), Mg(24), Al(27), Si(28), P(31), S(32), Cl(35.5), K(39), Ca(40), Fe(56), Cu(63.5), Zn(65), Ag(108), I(127), Pb(207), Au(197), Hg(201).",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-modern-symbols-recall",
+        "class9-science-atoms-and-molecules-define-atomic-mass-unit"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-molar-mass-calculation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "atoms-and-molecules",
+      "title": "Calculate molar mass",
+      "outcome": "Calculate the molar mass of a compound by summing the atomic masses of all atoms in its formula and expressing the result in g/mol.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-molar-mass",
+        "class9-science-atoms-and-molecules-atomic-masses-common",
+        "class9-science-atoms-and-molecules-calculate-molecular-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": null
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-static-electricity-evidence",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Static electricity and atoms",
+      "outcome": "Explain that static electricity experiments (like rubbing a comb on dry hair) indicate that atoms contain charged particles.",
+      "prerequisites": [
+        "class9-science-atoms-and-molecules-define-atom"
+      ],
+      "difficulty": 2,
+      "lessonRef": "charged-particles-in-matter"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-electron-discovery",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Electron discovery",
+      "outcome": "Identify that the electron was the first subatomic particle discovered by J.J. Thomson.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": "charged-particles-in-matter"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-atom-neutrality",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Atom neutrality",
+      "outcome": "Explain that an atom is electrically neutral because the number of protons equals the number of electrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-electron-discovery",
+        "class9-science-atoms-and-molecules-define-atom"
+      ],
+      "difficulty": 2,
+      "lessonRef": "the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-list-subatomic-particles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Three subatomic particles",
+      "outcome": "List the three major subatomic particles: protons, neutrons, and electrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-electron-discovery"
+      ],
+      "difficulty": 1,
+      "lessonRef": "the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-proton-charge-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Proton properties",
+      "outcome": "State the charge and approximate mass of a proton (1.6×10⁻¹⁹ C, 1.67×10⁻²⁷ kg).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles"
+      ],
+      "difficulty": 1,
+      "lessonRef": "the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-electron-charge-mass",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Electron properties",
+      "outcome": "State the charge and approximate mass of an electron (-1.6×10⁻¹⁹ C, 9.1×10⁻³¹ kg).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles"
+      ],
+      "difficulty": 1,
+      "lessonRef": "the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-compare-proton-electron",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Compare proton and electron",
+      "outcome": "Compare the charge and mass of a proton with those of an electron (opposite charge, mass ~1840 times greater for proton).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-proton-charge-mass",
+        "class9-science-structure-of-the-atom-electron-charge-mass"
+      ],
+      "difficulty": 2,
+      "lessonRef": "the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-thomson-model-description",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Plum pudding model",
+      "outcome": "Describe Thomson's 'plum pudding' (or watermelon) model of the atom, including a sphere of positive charge with embedded electrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-atom-neutrality",
+        "class9-science-structure-of-the-atom-electron-discovery"
+      ],
+      "difficulty": 2,
+      "lessonRef": "thomsons-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-thomson-postulates",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Thomson's postulates",
+      "outcome": "State the two major postulates of Thomson's model: (i) atom is a sphere of positive charge with electrons embedded, (ii) atom is electrically neutral.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-thomson-model-description"
+      ],
+      "difficulty": 1,
+      "lessonRef": "thomsons-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-thomson-model-alternate-name",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Alternate names for Thomson model",
+      "outcome": "State that Thomson's model is also known as the plum pudding or watermelon model.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-thomson-model-description"
+      ],
+      "difficulty": 1,
+      "lessonRef": "thomsons-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-alpha-particle-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Alpha particle definition",
+      "outcome": "Define an alpha particle as a positively charged helium nucleus (2 protons, 2 neutrons, +2 charge).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles"
+      ],
+      "difficulty": 1,
+      "lessonRef": "rutherfords-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-rutherford-experiment-setup",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Rutherford experiment setup",
+      "outcome": "Describe the setup of Rutherford's alpha-particle scattering experiment, including the gold foil, alpha source, and detector.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-alpha-particle-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": "rutherfords-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-rutherford-observations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Rutherford's observations",
+      "outcome": "State the three observations of Rutherford's experiment: most alpha particles pass through, some are deflected, very few bounce back.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-rutherford-experiment-setup"
+      ],
+      "difficulty": 1,
+      "lessonRef": "rutherfords-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-rutherford-conclusion-nucleus",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Conclusion about nucleus",
+      "outcome": "Conclude from Rutherford's observations that the atom has a small, dense, positively charged nucleus.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-rutherford-observations"
+      ],
+      "difficulty": 2,
+      "lessonRef": "rutherfords-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-rutherford-conclusion-empty-space",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Conclusion about empty space",
+      "outcome": "Conclude from Rutherford's observations that most of the atom is empty space.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-rutherford-observations"
+      ],
+      "difficulty": 2,
+      "lessonRef": "rutherfords-model-of-an-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-rutherford-model-instability",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Rutherford model instability",
+      "outcome": "Explain why Rutherford's model predicted unstable electron orbits: an electron in circular orbit would continuously radiate energy and spiral into the nucleus.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-rutherford-conclusion-nucleus"
+      ],
+      "difficulty": 3,
+      "lessonRef": "bohrs-model-of-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-bohr-model-overcomes-instability",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Bohr's solution to instability",
+      "outcome": "Describe how Bohr's model overcomes the instability of Rutherford's model by introducing quantized energy levels (electrons can only occupy specific orbits without radiating energy).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-rutherford-model-instability"
+      ],
+      "difficulty": 3,
+      "lessonRef": "bohrs-model-of-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-bohr-discrete-orbits",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Discrete orbits in Bohr model",
+      "outcome": "State that electrons can only occupy discrete orbits (shells) with fixed energy in Bohr's model.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-bohr-model-overcomes-instability"
+      ],
+      "difficulty": 1,
+      "lessonRef": "bohrs-model-of-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-bohr-energy-levels-sketch",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Sketch Bohr's energy levels",
+      "outcome": "Sketch the first four energy shells (K, L, M, N) corresponding to principal quantum numbers n=1, 2, 3, 4.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-bohr-discrete-orbits"
+      ],
+      "difficulty": 2,
+      "lessonRef": "bohrs-model-of-atom"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-neutron-discovery",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Neutron discovery",
+      "outcome": "Identify the neutron as a neutral subatomic particle discovered by James Chadwick.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles"
+      ],
+      "difficulty": 1,
+      "lessonRef": "neutrons"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-mass-concentrated-in-nucleus",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Mass concentration in nucleus",
+      "outcome": "State that the mass of an atom is concentrated in its nucleus, which contains protons and neutrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-neutron-discovery",
+        "class9-science-structure-of-the-atom-rutherford-conclusion-nucleus"
+      ],
+      "difficulty": 2,
+      "lessonRef": "neutrons"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-bohr-bury-2n2-rule",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Bohr-Bury 2n² rule",
+      "outcome": "State the Bohr-Bury rule for maximum number of electrons in a shell: 2n².",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-bohr-energy-levels-sketch"
+      ],
+      "difficulty": 2,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-calculate-shell-capacity",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Calculate shell capacity",
+      "outcome": "Calculate the maximum number of electrons for the first three shells (n=1,2,3) using 2n².",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-bohr-bury-2n2-rule"
+      ],
+      "difficulty": 2,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-shell-filling-order",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Shell filling order",
+      "outcome": "State that electrons fill shells in order of increasing energy (K, L, M, ...) and that the outermost shell can hold at most 8 electrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-calculate-shell-capacity"
+      ],
+      "difficulty": 2,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Apply 2n² to first 18 elements",
+      "outcome": "Apply the Bohr-Bury rules to determine the electron configuration of any element with atomic number up to 18.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-shell-filling-order",
+        "class9-science-structure-of-the-atom-define-atomic-number"
+      ],
+      "difficulty": 3,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-draw-atomic-structure-h",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Draw atomic structure: H",
+      "outcome": "Draw the schematic atomic structure of hydrogen (nucleus with 1 proton, 1 electron in K shell).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements",
+        "class9-science-structure-of-the-atom-mass-concentrated-in-nucleus"
+      ],
+      "difficulty": 3,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-draw-atomic-structure-he",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Draw atomic structure: He",
+      "outcome": "Draw the schematic atomic structure of helium (nucleus with 2 protons, 2 neutrons, 2 electrons in K shell).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-draw-atomic-structure-h",
+        "class9-science-structure-of-the-atom-neutron-discovery"
+      ],
+      "difficulty": 3,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-draw-atomic-structure-na",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Draw atomic structure: Na",
+      "outcome": "Draw the schematic atomic structure of sodium (nucleus with 11 protons, 12 neutrons; electrons: 2 in K, 8 in L, 1 in M).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-draw-atomic-structure-he"
+      ],
+      "difficulty": 3,
+      "lessonRef": "how-are-electrons-distributed-in-different-orbits-shells"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-valence-electrons",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define valence electrons",
+      "outcome": "Define valence electrons as the electrons in the outermost shell of an atom.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements"
+      ],
+      "difficulty": 1,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-determine-number-of-valence-electrons",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Determine valence electrons",
+      "outcome": "Determine the number of valence electrons from the electron configuration of an element.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-valence-electrons"
+      ],
+      "difficulty": 2,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-octet-rule",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Octet rule",
+      "outcome": "State the octet rule: atoms tend to achieve a full outermost shell of eight electrons (or two for H, He) for stability.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-determine-number-of-valence-electrons"
+      ],
+      "difficulty": 2,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-valency",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define valency",
+      "outcome": "Define valency as the combining capacity of an element, determined by the number of electrons it can gain, lose, or share to achieve a full outer shell.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-octet-rule",
+        "class9-science-atoms-and-molecules-define-valency"
+      ],
+      "difficulty": 1,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-valency-noble-gases",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Valency of noble gases",
+      "outcome": "State that noble gases have zero valency because their outermost shell is full (except He with 2).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-valency"
+      ],
+      "difficulty": 2,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-calculate-valency-first-18",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Calculate valency for first 18 elements",
+      "outcome": "Calculate the valency of elements from the first 18 elements based on their electron configurations (e.g., Na=1, Cl=1, O=2, etc.).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-valency",
+        "class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements"
+      ],
+      "difficulty": 3,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-distinguish-valency-valence-electrons",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Valency vs valence electrons",
+      "outcome": "Distinguish between valency and the number of valence electrons for an element (e.g., Na has 1 valence electron and valency 1, O has 6 valence electrons and valency 2).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-valency",
+        "class9-science-structure-of-the-atom-determine-number-of-valence-electrons"
+      ],
+      "difficulty": 3,
+      "lessonRef": "valency"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-atomic-number",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define atomic number",
+      "outcome": "Define atomic number (Z) as the number of protons in the nucleus of an atom.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-proton-charge-mass"
+      ],
+      "difficulty": 1,
+      "lessonRef": "atomic-number-and-mass-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-identify-element-from-atomic-number",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Identify element from atomic number",
+      "outcome": "Identify an element given its atomic number using the periodic table.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-atomic-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "atomic-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-mass-number",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define mass number",
+      "outcome": "Define mass number (A) as the total number of protons and neutrons in the nucleus.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-atomic-number",
+        "class9-science-structure-of-the-atom-neutron-discovery"
+      ],
+      "difficulty": 1,
+      "lessonRef": "atomic-number-and-mass-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-nucleons",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define nucleons",
+      "outcome": "State that protons and neutrons are collectively called nucleons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-mass-number"
+      ],
+      "difficulty": 1,
+      "lessonRef": "mass-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-calculate-mass-number",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Calculate mass number",
+      "outcome": "Calculate the mass number of an atom given the numbers of protons and neutrons.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-mass-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "mass-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-use-standard-notation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Standard notation for element",
+      "outcome": "Use standard notation to represent an element, e.g., ^A_Z X.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-atomic-number",
+        "class9-science-structure-of-the-atom-define-mass-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "atomic-number-and-mass-number"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-isotopes",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define isotopes",
+      "outcome": "Define isotopes as atoms of the same element with the same atomic number but different mass numbers.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-atomic-number",
+        "class9-science-structure-of-the-atom-define-mass-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "isotopes"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-examples-of-isotopes",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Examples of isotopes",
+      "outcome": "Give examples of isotopes: hydrogen-1, hydrogen-2, hydrogen-3; carbon-12, carbon-14.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-isotopes"
+      ],
+      "difficulty": 1,
+      "lessonRef": "isotopes"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-calculate-neutrons-in-isotope",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Calculate neutrons in isotope",
+      "outcome": "Calculate the number of neutrons in an isotope given its atomic number and mass number.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-isotopes",
+        "class9-science-structure-of-the-atom-calculate-mass-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "isotopes"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-isotopes-applications",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Applications of isotopes",
+      "outcome": "List applications of isotopes: uranium-235 in nuclear reactors, cobalt-60 in cancer treatment, iodine-131 in thyroid diagnostics.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-isotopes"
+      ],
+      "difficulty": 2,
+      "lessonRef": "isotopes"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-define-isobars",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Define isobars",
+      "outcome": "Define isobars as atoms of different elements with the same mass number but different atomic numbers.",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-atomic-number",
+        "class9-science-structure-of-the-atom-define-mass-number"
+      ],
+      "difficulty": 2,
+      "lessonRef": "isobars"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-identify-isobars",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Identify isobars",
+      "outcome": "Identify isobars from a list of atomic numbers and mass numbers (e.g., Ar-40, K-40, Ca-40).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-isobars"
+      ],
+      "difficulty": 2,
+      "lessonRef": "isobars"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-compare-isotopes-isobars",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "structure-of-the-atom",
+      "title": "Compare isotopes and isobars",
+      "outcome": "Compare isotopes and isobars in terms of atomic number, mass number, and chemical properties (isotopes have same chemical properties, isobars different).",
+      "prerequisites": [
+        "class9-science-structure-of-the-atom-define-isotopes",
+        "class9-science-structure-of-the-atom-define-isobars"
+      ],
+      "difficulty": 3,
+      "lessonRef": "isobars"
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cells-basic-unit",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Cells as basic unit of life",
+      "outcome": "State that cells are the basic structural and functional units of all living organisms.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-hooke-discovery",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Hooke's discovery of cells",
+      "outcome": "Describe how Robert Hooke observed cells in a thin slice of cork using a primitive microscope and named them 'cells'.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-regions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Three main regions of a cell",
+      "outcome": "Identify the plasma membrane, nucleus, and cytoplasm as the three main functional regions of a cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cells-basic-unit"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-three-regions-roles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Roles of the three cell regions",
+      "outcome": "State that the plasma membrane encloses the cell, the nucleus controls cellular activities, and the cytoplasm is the site of many metabolic reactions.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-regions"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-selective-permeability",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Selective permeability of plasma membrane",
+      "outcome": "Define selective permeability as the property of the plasma membrane that allows some substances to pass through while preventing others.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-three-regions-roles"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-membrane-composition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Composition of plasma membrane",
+      "outcome": "State that the plasma membrane is composed of a bilayer of lipids with embedded proteins.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-selective-permeability"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-diffusion-cell",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Diffusion across cell membrane",
+      "outcome": "Define diffusion as the movement of molecules from a region of higher concentration to a region of lower concentration across a cell membrane.",
+      "prerequisites": [
+        "class9-science-define-diffusion",
+        "class9-science-the-fundamental-unit-of-life-selective-permeability"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-osmosis-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Definition of osmosis",
+      "outcome": "Define osmosis as the movement of water molecules through a selectively permeable membrane from a region of high water concentration to a region of low water concentration.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-diffusion-cell"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-movement-across-membrane",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Movement across plasma membrane",
+      "outcome": "Explain that substances like gases and water move across the plasma membrane by diffusion and osmosis, respectively.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-diffusion-cell",
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-wall-location",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Location of cell wall",
+      "outcome": "Locate the cell wall as the outermost layer of a plant cell, lying outside the plasma membrane.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-regions"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-wall-composition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Composition of cell wall",
+      "outcome": "State that the plant cell wall is mainly composed of cellulose.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-wall-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Function of cell wall",
+      "outcome": "State that the cell wall provides structural support and protection to the plant cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plasmolysis",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Plasmolysis",
+      "outcome": "Define plasmolysis as the shrinkage of the cytoplasm away from the cell wall due to water loss when a plant cell is placed in a hypertonic solution.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location",
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-animal-cell-hypotonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Animal cell in hypotonic solution",
+      "outcome": "Predict that an animal cell placed in a hypotonic solution will swell and may burst due to water entering the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-animal-cell-isotonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Animal cell in isotonic solution",
+      "outcome": "Predict that an animal cell placed in an isotonic solution will remain unchanged because equal water movement occurs.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-animal-cell-hypertonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Animal cell in hypertonic solution",
+      "outcome": "Predict that an animal cell placed in a hypertonic solution will shrink due to water leaving the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plant-cell-hypotonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Plant cell in hypotonic solution",
+      "outcome": "Predict that a plant cell placed in a hypotonic solution becomes turgid due to water entry but does not burst because of the cell wall.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition",
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plant-cell-isotonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Plant cell in isotonic solution",
+      "outcome": "Predict that a plant cell placed in an isotonic solution remains flaccid because no net water movement.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plant-cell-hypertonic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Plant cell in hypertonic solution",
+      "outcome": "Predict that a plant cell placed in a hypertonic solution undergoes plasmolysis due to water leaving the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-plasmolysis"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-nucleus-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Structure of nucleus",
+      "outcome": "Describe the nucleus as having a nuclear membrane with pores, nucleolus, and chromatin (thread-like material).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-regions"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-nucleus-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Function of nucleus",
+      "outcome": "State that the nucleus controls all cellular activities and contains genetic material (DNA) in the form of chromatin.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-nucleolus-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Function of nucleolus",
+      "outcome": "Explain that the nucleolus is a dense region within the nucleus that produces ribosomes.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-chromosomes-dna",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Chromosomes contain DNA",
+      "outcome": "State that chromatin condenses to form chromosomes which contain DNA and proteins.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-prokaryotic-eukaryotic",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Prokaryotic vs eukaryotic cells",
+      "outcome": "Distinguish between prokaryotic cells (lacking a nucleus with nuclear membrane) and eukaryotic cells (having a true nucleus with nuclear membrane).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-prokaryote-examples",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Examples of prokaryotes",
+      "outcome": "Give examples of prokaryotes (e.g., bacteria) and eukaryotes (e.g., plants, animals, fungi).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-prokaryotic-eukaryotic"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-prokaryote-examples-specific",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Specific prokaryotes: bacteria and cyanobacteria",
+      "outcome": "State that bacteria and blue-green algae (cyanobacteria) are examples of prokaryotes.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-prokaryotic-eukaryotic"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cytoplasm-definition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Definition of cytoplasm",
+      "outcome": "Define cytoplasm as the jelly-like fluid substance inside the plasma membrane that contains organelles.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-regions"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cytoplasmic-organelles-importance",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Importance of cytoplasmic organelles",
+      "outcome": "Explain that cytoplasmic organelles perform specialized functions that maintain cell life.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-er-types",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Types of endoplasmic reticulum",
+      "outcome": "Identify the endoplasmic reticulum as a network of membranes and distinguish between rough ER (with ribosomes) and smooth ER (without ribosomes).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-er-functions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Functions of rough and smooth ER",
+      "outcome": "State that rough ER synthesizes proteins and smooth ER synthesizes lipids.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-er-types"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-ribosomes-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Function of ribosomes",
+      "outcome": "Explain that ribosomes are the sites of protein synthesis and can be attached to rough ER or free in cytoplasm.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-er-functions"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-golgi-apparatus",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Golgi apparatus",
+      "outcome": "Identify the Golgi apparatus as stacks of membranes and state that it modifies, packages, and transports materials within the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-lysosomes",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Lysosomes",
+      "outcome": "Identify lysosomes as membrane-bound vesicles containing digestive enzymes and state that they break down waste and foreign substances.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-lysosomes-suicide-bags",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Lysosomes as suicide bags",
+      "outcome": "Explain that lysosomes can digest the cell itself by releasing enzymes when the cell is damaged, earning the nickname 'suicide bags'.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-lysosomes"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-mitochondria",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Mitochondria",
+      "outcome": "Identify mitochondria as double-membrane organelles and state that they produce energy (ATP) through respiration.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-mitochondria-powerhouse",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Mitochondria as powerhouses",
+      "outcome": "Explain that mitochondria are called the 'powerhouses of the cell' because they generate most of the cell's energy (ATP).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-mitochondria"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plastids-types",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Types of plastids",
+      "outcome": "Identify plastids as organelles in plant cells and distinguish three types: chloroplasts (green), chromoplasts (colored), and leucoplasts (colorless).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-plastid-functions",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Functions of plastids",
+      "outcome": "State that chloroplasts carry out photosynthesis, chromoplasts give color to flowers and fruits, and leucoplasts store starch, oils, and proteins.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-plastids-types"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-vacuoles",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Vacuoles",
+      "outcome": "Identify vacuoles as fluid-filled sacs and state that they store substances and help in maintaining turgor pressure in plant cells.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cytoplasm-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-vacuoles-comparison",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Vacuole size comparison",
+      "outcome": "Compare that plant cells usually have a large central vacuole, while animal cells have smaller vacuoles.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-vacuoles"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-animal-plant-comparison",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Comparison of animal and plant cells",
+      "outcome": "Compare animal and plant cells by noting that plant cells have a cell wall, plastids, and a large central vacuole, while animal cells do not.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location",
+        "class9-science-the-fundamental-unit-of-life-plastids-types",
+        "class9-science-the-fundamental-unit-of-life-vacuoles"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-size-limit",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Cell size limited by surface area to volume ratio",
+      "outcome": "State that cells are small because a larger surface area to volume ratio allows efficient diffusion of substances.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-diffusion-cell"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-endocytosis",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Endocytosis",
+      "outcome": "Describe endocytosis as the process by which the plasma membrane engulfs external material to form a vesicle inside the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-membrane-composition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-exocytosis",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Exocytosis",
+      "outcome": "Describe exocytosis as the process by which a vesicle fuses with the plasma membrane to release its contents outside the cell.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-membrane-composition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-active-passive-transport",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Active vs passive transport",
+      "outcome": "Distinguish between passive transport (diffusion, osmosis) which requires no energy, and active transport which uses energy to move substances against concentration gradient.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-diffusion-cell",
+        "class9-science-the-fundamental-unit-of-life-osmosis-definition"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-fluid-mosaic-model",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Fluid mosaic model",
+      "outcome": "State that the plasma membrane is described by the fluid mosaic model, where lipids and proteins can move laterally.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-membrane-composition"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-cell-theory-formulators",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Cell theory formulators",
+      "outcome": "State that Schleiden and Schwann proposed the cell theory that all plants and animals are composed of cells.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cells-basic-unit"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-virchow-addition",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "the-fundamental-unit-of-life",
+      "title": "Virchow's addition to cell theory",
+      "outcome": "State that Rudolf Virchow modified the cell theory by stating that new cells arise from pre-existing cells (omnis cellula e cellula).",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cell-theory-formulators"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-science-tissues-contrast-plant-animal-tissues",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Contrast plant and animal tissues",
+      "outcome": "Contrast plants and animals based on mobility, energy needs, and the resulting complexity of their tissues.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cells-basic-unit"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-localized-vs-uniform-growth",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Localized vs uniform growth",
+      "outcome": "Describe how plants have localized growth in specific regions (meristems) while animals have uniform growth throughout the body.",
+      "prerequisites": [],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-classify-plant-tissues",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Classify plant tissues",
+      "outcome": "Classify plant tissues into meristematic and permanent tissues.",
+      "prerequisites": [
+        "class9-science-tissues-contrast-plant-animal-tissues"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-apical-meristem-location",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Apical meristem location",
+      "outcome": "Identify that apical meristem is located at the tips of roots and shoots.",
+      "prerequisites": [
+        "class9-science-tissues-classify-plant-tissues"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-intercalary-meristem-location",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Intercalary meristem location",
+      "outcome": "Identify that intercalary meristem is located at the base of leaves and internodes in grasses.",
+      "prerequisites": [
+        "class9-science-tissues-classify-plant-tissues"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-lateral-meristem-location",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Lateral meristem location",
+      "outcome": "Identify that lateral meristem is located on the sides of the plant (cambium) and increases girth.",
+      "prerequisites": [
+        "class9-science-tissues-classify-plant-tissues"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-meristematic-cell-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Meristematic cell characteristics",
+      "outcome": "Describe the cellular characteristics of meristematic cells: thin cell walls, dense cytoplasm, large nuclei, and absence of vacuoles.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-three-regions-roles",
+        "class9-science-the-fundamental-unit-of-life-cell-wall-location"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-role-meristematic-length-growth",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Role in length growth",
+      "outcome": "Explain that apical and intercalary meristems are responsible for increase in length of the plant.",
+      "prerequisites": [
+        "class9-science-tissues-apical-meristem-location",
+        "class9-science-tissues-intercalary-meristem-location"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-role-meristematic-girth-growth",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Role in girth growth",
+      "outcome": "Explain that lateral meristem is responsible for increase in girth (width) of the plant.",
+      "prerequisites": [
+        "class9-science-tissues-lateral-meristem-location"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-define-differentiation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Define differentiation",
+      "outcome": "Define differentiation as the process by which meristematic cells lose the ability to divide and become specialized permanent tissues.",
+      "prerequisites": [
+        "class9-science-tissues-meristematic-cell-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-simple-vs-complex-tissues",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Simple vs complex tissues",
+      "outcome": "Distinguish between simple permanent tissues (made of one cell type) and complex permanent tissues (made of multiple cell types).",
+      "prerequisites": [
+        "class9-science-tissues-define-differentiation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-parenchyma-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Parenchyma structure",
+      "outcome": "Describe the structure of parenchyma cells: thin-walled, living, loosely packed with intercellular spaces.",
+      "prerequisites": [
+        "class9-science-tissues-simple-vs-complex-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-parenchyma-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Parenchyma function",
+      "outcome": "Identify the functions of parenchyma: storage, photosynthesis (in chlorenchyma), and buoyancy (in aerenchyma).",
+      "prerequisites": [
+        "class9-science-tissues-parenchyma-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-collenchyma-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Collenchyma structure",
+      "outcome": "Describe the structure of collenchyma cells: living, elongated, with unevenly thickened cell walls, found under the epidermis.",
+      "prerequisites": [
+        "class9-science-tissues-simple-vs-complex-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-collenchyma-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Collenchyma function",
+      "outcome": "State that collenchyma provides mechanical support and flexibility to plant parts.",
+      "prerequisites": [
+        "class9-science-tissues-collenchyma-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-sclerenchyma-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Sclerenchyma structure",
+      "outcome": "Describe the structure of sclerenchyma cells: dead cells with thick, lignified walls; narrow lumen; no intercellular spaces.",
+      "prerequisites": [
+        "class9-science-tissues-simple-vs-complex-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-sclerenchyma-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Sclerenchyma function",
+      "outcome": "State that sclerenchyma provides strength and rigidity to plant organs and forms the protective covering of seeds and nuts.",
+      "prerequisites": [
+        "class9-science-tissues-sclerenchyma-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-xylem-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Xylem structure",
+      "outcome": "List the main cell types in xylem: tracheids, vessels, xylem parenchyma, and xylem fibres.",
+      "prerequisites": [
+        "class9-science-tissues-simple-vs-complex-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-xylem-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Xylem function",
+      "outcome": "Describe the primary function of xylem as conduction of water and minerals from roots to aerial parts.",
+      "prerequisites": [
+        "class9-science-tissues-xylem-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-phloem-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Phloem structure",
+      "outcome": "List the main cell types in phloem: sieve tubes, companion cells, phloem parenchyma, and phloem fibres.",
+      "prerequisites": [
+        "class9-science-tissues-simple-vs-complex-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-phloem-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Phloem function",
+      "outcome": "Describe the primary function of phloem as conduction of food (sugars) from leaves to other plant parts.",
+      "prerequisites": [
+        "class9-science-tissues-phloem-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-name-four-animal-tissues",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Name four animal tissue types",
+      "outcome": "Name the four basic types of animal tissues: epithelial, connective, muscular, and nervous.",
+      "prerequisites": [
+        "class9-science-the-fundamental-unit-of-life-cells-basic-unit"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-general-functions-animal-tissues",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Functions of animal tissues",
+      "outcome": "State the primary function of each animal tissue: epithelium (covering/lining), connective (support/binding), muscle (contraction), and nervous (signal transmission).",
+      "prerequisites": [
+        "class9-science-tissues-name-four-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-general-epithelial-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "General epithelial tissue",
+      "outcome": "Describe the general characteristics of epithelial tissue: tightly packed cells, little intercellular matrix, rests on a basement membrane, covers body surfaces and lines cavities.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-squamous-epithelium-identification",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Squamous epithelium identification",
+      "outcome": "Identify squamous epithelium based on its flattened, scale-like cells.",
+      "prerequisites": [
+        "class9-science-tissues-general-epithelial-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-cuboidal-epithelium-identification",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Cuboidal epithelium identification",
+      "outcome": "Identify cuboidal epithelium based on its cube-shaped cells.",
+      "prerequisites": [
+        "class9-science-tissues-general-epithelial-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-columnar-epithelium-identification",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Columnar epithelium identification",
+      "outcome": "Identify columnar epithelium based on its tall, column-like cells.",
+      "prerequisites": [
+        "class9-science-tissues-general-epithelial-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-ciliated-epithelium-identification",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Ciliated epithelium identification",
+      "outcome": "Identify ciliated epithelium by the presence of hair-like cilia on the free surface.",
+      "prerequisites": [
+        "class9-science-tissues-general-epithelial-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-glandular-epithelium-identification",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Glandular epithelium identification",
+      "outcome": "Identify glandular epithelium as specialized for secretion, often forming glands.",
+      "prerequisites": [
+        "class9-science-tissues-general-epithelial-characteristics"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-epithelium-shape-location-correlation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Epithelium shape-location correlation",
+      "outcome": "Correlate epithelial shapes with typical locations: squamous (skin, alveoli), cuboidal (kidney tubules), columnar (intestine), ciliated (trachea), glandular (glands).",
+      "prerequisites": [
+        "class9-science-tissues-squamous-epithelium-identification",
+        "class9-science-tissues-cuboidal-epithelium-identification",
+        "class9-science-tissues-columnar-epithelium-identification",
+        "class9-science-tissues-ciliated-epithelium-identification",
+        "class9-science-tissues-glandular-epithelium-identification"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-tissues-general-connective-tissue-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "General connective tissue",
+      "outcome": "Describe the general characteristics of connective tissue: cells loosely arranged in an extracellular matrix, abundant matrix with fibers and ground substance.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-blood-components-locations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Blood components and location",
+      "outcome": "Describe the components (plasma, RBC, WBC, platelets) and locations (blood vessels, heart) of blood as a connective tissue.",
+      "prerequisites": [
+        "class9-science-tissues-general-connective-tissue-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-bone-components-locations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Bone components and location",
+      "outcome": "Describe the components (hard matrix of calcium phosphate, osteocytes) and locations (skeleton) of bone as a connective tissue.",
+      "prerequisites": [
+        "class9-science-tissues-general-connective-tissue-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-cartilage-components-locations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Cartilage components and location",
+      "outcome": "Describe the components (solid but flexible matrix, chondrocytes) and locations (nose, ear, joints) of cartilage as a connective tissue.",
+      "prerequisites": [
+        "class9-science-tissues-general-connective-tissue-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-areolar-components-locations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Areolar tissue components and location",
+      "outcome": "Describe the components (fibroblasts, fibers, loose matrix) and locations (between skin and muscles, around organs) of areolar connective tissue.",
+      "prerequisites": [
+        "class9-science-tissues-general-connective-tissue-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-adipose-components-locations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Adipose tissue components and location",
+      "outcome": "Describe the components (fat cells, little matrix) and locations (under skin, around kidneys) of adipose connective tissue.",
+      "prerequisites": [
+        "class9-science-tissues-general-connective-tissue-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-matrix-determines-properties",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Matrix determines properties",
+      "outcome": "Explain that the physical properties of connective tissue (hardness, flexibility, fluidity) are determined by the nature of the extracellular matrix (solid, semi-solid, fluid).",
+      "prerequisites": [
+        "class9-science-tissues-blood-components-locations",
+        "class9-science-tissues-bone-components-locations",
+        "class9-science-tissues-cartilage-components-locations",
+        "class9-science-tissues-areolar-components-locations",
+        "class9-science-tissues-adipose-components-locations"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-tissues-striated-muscle-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Striated muscle characteristics",
+      "outcome": "Describe striated (skeletal) muscle: long, cylindrical, multinucleated, unbranched, voluntary, with striations.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-unstriated-muscle-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Unstriated muscle characteristics",
+      "outcome": "Describe unstriated (smooth) muscle: spindle-shaped, uninucleated, no striations, involuntary.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-cardiac-muscle-characteristics",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Cardiac muscle characteristics",
+      "outcome": "Describe cardiac muscle: striated, branched, uninucleated, with intercalated discs, involuntary, rhythmic contraction.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-compare-muscle-types",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Compare muscle types",
+      "outcome": "Compare striated, unstriated, and cardiac muscles in terms of structure, number of nuclei, presence of striations, branching, and type of control (voluntary/involuntary).",
+      "prerequisites": [
+        "class9-science-tissues-striated-muscle-characteristics",
+        "class9-science-tissues-unstriated-muscle-characteristics",
+        "class9-science-tissues-cardiac-muscle-characteristics"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-tissues-neuron-structure",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Neuron structure",
+      "outcome": "Sketch and label a typical neuron showing cell body, dendrites, and axon.",
+      "prerequisites": [
+        "class9-science-tissues-general-functions-animal-tissues"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-nerve-impulse-path",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Nerve impulse path",
+      "outcome": "Trace the path of a nerve impulse: dendrites → cell body → axon → axon terminal → synapse → next neuron.",
+      "prerequisites": [
+        "class9-science-tissues-neuron-structure"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-nervous-tissue-function",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Nervous tissue function",
+      "outcome": "State that nervous tissue is responsible for receiving stimuli and conducting nerve impulses for control and coordination.",
+      "prerequisites": [
+        "class9-science-tissues-nerve-impulse-path"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-xylem-cell-types",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Xylem cell types",
+      "outcome": "List the four main cell types in xylem: tracheids, vessels, xylem fibres, and xylem parenchyma.",
+      "prerequisites": [
+        "class9-science-tissues-xylem-structure"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-phloem-cell-types",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Phloem cell types",
+      "outcome": "List the four main cell types in phloem: sieve tubes, companion cells, phloem fibres, and phloem parenchyma.",
+      "prerequisites": [
+        "class9-science-tissues-phloem-structure"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-tissues-function-ciliated-epithelium",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Function of ciliated epithelium",
+      "outcome": "Explain that ciliated epithelium in the respiratory tract moves mucus and trapped particles upward to be expelled.",
+      "prerequisites": [
+        "class9-science-tissues-ciliated-epithelium-identification"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-tissues-function-glandular-epithelium",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "tissues",
+      "title": "Function of glandular epithelium",
+      "outcome": "Explain that glandular epithelium secretes substances such as sweat, enzymes, or hormones.",
+      "prerequisites": [
+        "class9-science-tissues-glandular-epithelium-identification"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-motion-relative-to-reference",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define motion relative to reference",
+      "outcome": "Define motion as a change in the position of an object with respect to a reference point.",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-identify-reference-point",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Identify reference point",
+      "outcome": "Identify the reference point or origin in a given description of motion.",
+      "prerequisites": [
+        "class9-science-motion-define-motion-relative-to-reference"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-distinguish-scalar-vector",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Distinguish scalar and vector",
+      "outcome": "Distinguish between scalar and vector quantities using distance (scalar) and displacement (vector) as examples.",
+      "prerequisites": [
+        "class9-science-motion-define-motion-relative-to-reference"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-distance-displacement",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define distance and displacement",
+      "outcome": "Define distance as the total path length (scalar) and displacement as the change in position (vector) with direction.",
+      "prerequisites": [
+        "class9-science-motion-distinguish-scalar-vector"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-calculate-distance-linear",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate distance along straight line",
+      "outcome": "Calculate the total distance traveled by an object moving along a straight line given its positions.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-calculate-displacement-linear",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate displacement along straight line",
+      "outcome": "Calculate the magnitude and direction of displacement for an object moving along a straight line from initial to final positions.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-example-zero-displacement",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Example of zero displacement",
+      "outcome": "Describe a situation where the displacement of an object is zero but the distance traveled is non-zero (e.g., returning to start point).",
+      "prerequisites": [
+        "class9-science-motion-calculate-displacement-linear"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-uniform-motion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define uniform motion",
+      "outcome": "Define uniform motion as motion where an object covers equal distances in equal intervals of time.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-define-non-uniform-motion",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define non-uniform motion",
+      "outcome": "Define non-uniform motion as motion where an object covers unequal distances in equal intervals of time.",
+      "prerequisites": [
+        "class9-science-motion-define-uniform-motion"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-classify-motion-examples",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Classify motion examples",
+      "outcome": "Classify given examples of motion as uniform or non-uniform.",
+      "prerequisites": [
+        "class9-science-motion-define-uniform-motion",
+        "class9-science-motion-define-non-uniform-motion"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-speed",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define speed and its SI unit",
+      "outcome": "Define speed as distance traveled per unit time and state its SI unit as m/s.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-calculate-average-speed",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate average speed",
+      "outcome": "Calculate the average speed of an object given total distance and total time.",
+      "prerequisites": [
+        "class9-science-motion-define-speed"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-velocity",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define velocity",
+      "outcome": "Define velocity as displacement per unit time and write the formula v = s/t (with direction).",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement",
+        "class9-science-motion-define-speed"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-velocity-change-factors",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Velocity change by speed or direction",
+      "outcome": "Explain that velocity changes when either the speed or the direction of motion changes.",
+      "prerequisites": [
+        "class9-science-motion-define-velocity"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-acceleration",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define acceleration and retardation",
+      "outcome": "Define acceleration as the rate of change of velocity and classify positive acceleration as increase and negative (retardation) as decrease.",
+      "prerequisites": [
+        "class9-science-motion-define-velocity"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-calculate-average-acceleration",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate average acceleration",
+      "outcome": "Calculate average acceleration using the formula a = (v - u)/t.",
+      "prerequisites": [
+        "class9-science-motion-define-acceleration"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-benefits-of-graphs",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Benefits of graphs in motion",
+      "outcome": "List two benefits of using graphs to represent motion: visual comparison and easy calculation of speed/acceleration.",
+      "prerequisites": [
+        "class9-science-motion-define-speed",
+        "class9-science-motion-define-velocity"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-plot-distance-time-graph",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Plot distance-time graph",
+      "outcome": "Plot a distance-time graph from given tabular data of time and distance.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement",
+        "class9-science-motion-define-speed"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-calculate-speed-from-slope",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate speed from distance-time slope",
+      "outcome": "Calculate the speed of an object from the slope of a distance-time graph.",
+      "prerequisites": [
+        "class9-science-motion-plot-distance-time-graph"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-plot-velocity-time-graph",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Plot velocity-time graph",
+      "outcome": "Plot a velocity-time graph from given tabular data of velocity and time.",
+      "prerequisites": [
+        "class9-science-motion-define-velocity"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-calculate-distance-from-vt-area",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate distance from v-t area",
+      "outcome": "Calculate the distance traveled by finding the area under a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-plot-velocity-time-graph"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-determine-acceleration-from-slope",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Determine acceleration from v-t slope",
+      "outcome": "Determine the acceleration from the slope of a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-plot-velocity-time-graph",
+        "class9-science-motion-define-acceleration"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-interpret-graph-shape",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Interpret graph shape",
+      "outcome": "Interpret the state of motion (rest, uniform, non-uniform) from the shape of a distance-time or velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-plot-distance-time-graph",
+        "class9-science-motion-plot-velocity-time-graph"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-state-three-equations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "State three equations of motion",
+      "outcome": "State the three equations of motion for uniform acceleration: v = u + at, s = ut + 0.5at^2, 2as = v^2 - u^2.",
+      "prerequisites": [
+        "class9-science-motion-define-acceleration"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-define-variables-equations",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define variables in equations",
+      "outcome": "Define each variable (u, v, a, t, s) in the three equations of motion.",
+      "prerequisites": [
+        "class9-science-motion-state-three-equations",
+        "class9-science-motion-define-acceleration",
+        "class9-science-motion-define-velocity",
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-derive-v=u+at",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Derive v = u + at",
+      "outcome": "Derive the first equation of motion, v = u + at, from the slope of a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-determine-acceleration-from-slope"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-science-motion-solve-numericals-v=u+at",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Solve v = u + at problems",
+      "outcome": "Solve numerical problems using the first equation of motion, v = u + at.",
+      "prerequisites": [
+        "class9-science-motion-derive-v=u+at",
+        "class9-science-motion-define-variables-equations"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-derive-s=ut+0.5at2",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Derive s = ut + 0.5at^2",
+      "outcome": "Derive the second equation of motion, s = ut + 0.5at^2, using the area under a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-derive-v=u+at",
+        "class9-science-motion-calculate-distance-from-vt-area"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-science-motion-calculate-displacement-second-equation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate displacement from rest",
+      "outcome": "Calculate the displacement of an object starting from rest under constant acceleration using the second equation of motion.",
+      "prerequisites": [
+        "class9-science-motion-derive-s=ut+0.5at2"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-derive-2as=v2-u2",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Derive 2as = v^2 - u^2",
+      "outcome": "Derive the third equation of motion, 2as = v^2 - u^2, by calculating the area under a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-derive-s=ut+0.5at2",
+        "class9-science-motion-derive-v=u+at"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-science-motion-apply-2as=v2-u2-stopping-distance",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Apply third equation to stopping distance",
+      "outcome": "Apply the third equation of motion to determine the stopping distance when deceleration is known.",
+      "prerequisites": [
+        "class9-science-motion-derive-2as=v2-u2"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-explain-circular-acceleration",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Explain circular motion acceleration",
+      "outcome": "Explain that uniform circular motion is accelerated motion because the direction of velocity changes continuously.",
+      "prerequisites": [
+        "class9-science-motion-define-velocity",
+        "class9-science-motion-define-acceleration"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-calculate-speed-uniform-circular",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate speed in uniform circular motion",
+      "outcome": "Calculate the speed of an object in uniform circular motion using the formula v = 2πr/T.",
+      "prerequisites": [
+        "class9-science-motion-explain-circular-acceleration"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-period-uniform-circular",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define period in uniform circular motion",
+      "outcome": "Define the time period T in uniform circular motion as the time taken to complete one revolution.",
+      "prerequisites": [
+        "class9-science-motion-calculate-speed-uniform-circular"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-distinguish-speed-velocity",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Distinguish speed and velocity",
+      "outcome": "Distinguish between speed (scalar) and velocity (vector) in terms of magnitude and direction.",
+      "prerequisites": [
+        "class9-science-motion-define-speed",
+        "class9-science-motion-define-velocity"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-choose-equation-given-values",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Choose appropriate equation",
+      "outcome": "Choose the appropriate equation of motion (v=u+at, s=ut+0.5at^2, 2as=v^2-u^2) given the known and unknown variables in a problem.",
+      "prerequisites": [
+        "class9-science-motion-state-three-equations",
+        "class9-science-motion-solve-numericals-v=u+at",
+        "class9-science-motion-calculate-displacement-second-equation",
+        "class9-science-motion-apply-2as=v2-u2-stopping-distance"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-identify-acceleration-from-vt-graph",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Identify acceleration from v-t graph",
+      "outcome": "Identify positive, negative, or zero acceleration from the slope of a velocity-time graph.",
+      "prerequisites": [
+        "class9-science-motion-plot-velocity-time-graph",
+        "class9-science-motion-define-acceleration"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-calculate-average-velocity",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate average velocity",
+      "outcome": "Calculate average velocity given total displacement and total time.",
+      "prerequisites": [
+        "class9-science-motion-define-velocity",
+        "class9-science-motion-calculate-displacement-linear"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-identify-uniform-motion-table",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Identify uniform motion from table",
+      "outcome": "Identify uniform motion from a table of distances at equal time intervals.",
+      "prerequisites": [
+        "class9-science-motion-define-uniform-motion",
+        "class9-science-motion-define-distance-displacement"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-calculate-displacement-multi-segment",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate displacement with multiple segments",
+      "outcome": "Calculate the net displacement for an object moving along a straight line with multiple segments considering direction.",
+      "prerequisites": [
+        "class9-science-motion-calculate-displacement-linear"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-convert-units-speed",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Convert units of speed",
+      "outcome": "Convert speed from km/h to m/s and vice versa.",
+      "prerequisites": [
+        "class9-science-motion-define-speed"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-define-instantaneous-speed",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Define instantaneous speed",
+      "outcome": "Define instantaneous speed as the speed at a given instant.",
+      "prerequisites": [
+        "class9-science-motion-define-speed"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-science-motion-solve-numericals-second-equation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Solve problems using second equation",
+      "outcome": "Solve numerical problems using the second equation of motion, s = ut + 0.5at^2, for any given values.",
+      "prerequisites": [
+        "class9-science-motion-state-three-equations",
+        "class9-science-motion-define-variables-equations"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-solve-numericals-third-equation",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Solve problems using third equation",
+      "outcome": "Solve numerical problems using the third equation of motion, 2as = v^2 - u^2.",
+      "prerequisites": [
+        "class9-science-motion-state-three-equations",
+        "class9-science-motion-define-variables-equations"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-science-motion-assign-sign-displacement",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Assign sign to displacement",
+      "outcome": "Assign a positive or negative sign to displacement based on the chosen direction along a straight line.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement",
+        "class9-science-motion-distinguish-scalar-vector"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-calculate-distance-reversing-direction",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Calculate distance with reversal",
+      "outcome": "Calculate the total distance traveled when an object moves along a straight line and reverses direction.",
+      "prerequisites": [
+        "class9-science-motion-define-distance-displacement",
+        "class9-science-motion-calculate-distance-linear",
+        "class9-science-motion-example-zero-displacement"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-science-motion-describe-shape-distance-time",
+      "klass": 9,
+      "subject": "Science",
+      "chapter": "motion",
+      "title": "Describe distance-time graph shapes",
+      "outcome": "Describe the shape of a distance-time graph for an object at rest, in uniform motion, and in non-uniform motion.",
+      "prerequisites": [
+        "class9-science-motion-plot-distance-time-graph"
+      ],
+      "difficulty": 2
+    }
+  ]
+}

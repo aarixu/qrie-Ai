@@ -13,11 +13,39 @@ import { fileURLToPath } from 'node:url';
 // Leaf module, not the package index — see the note in prompt.ts.
 import { getTopic, listTopics, loadSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
 import type { SubjectSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
+import { loadGraph } from '../../../packages/knowledge-graph/src/graph.ts';
+import type { LearningNode } from '../../../packages/knowledge-graph/src/types.ts';
+import { planBeats } from '../../../packages/pedagogy/src/plan.ts';
+import { outcomesForTopic } from './select.ts';
 import { createAdapterFromEnv, loadEnvFiles } from './llm.ts';
 import { designLesson } from './design.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.resolve(here, '../../../packages/syllabus/data');
+const graphDir = path.resolve(here, '../../../packages/knowledge-graph/data');
+
+/**
+ * The outcomes this lesson has to deliver, read off the Learning Outcome Map.
+ *
+ * Backward design needs a destination, and the map is the only place one
+ * exists. Chapter granularity, because a node names its chapter and not the
+ * topic within it — a lesson for one topic is planned against its chapter's
+ * outcomes, and the designer is told which of them this topic covers.
+ *
+ * No map for this class yet is a normal state: the caller falls back to the
+ * old topic-only prompt rather than refusing to design anything.
+ */
+function outcomesForChapter(syllabusId: string, chapterId: string): LearningNode[] {
+  const file = path.join(graphDir, `${syllabusId}.json`);
+  if (!fs.existsSync(file)) return [];
+  try {
+    const graph = loadGraph(JSON.parse(fs.readFileSync(file, 'utf8')));
+    return graph.nodes.filter((node) => node.chapter === chapterId);
+  } catch (err) {
+    console.error(`  ! ${path.basename(file)} did not load: ${(err as Error).message}`);
+    return [];
+  }
+}
 
 function parseArgs(argv: string[]): { topic: string; out: string } | null {
   let topic: string | undefined;
@@ -81,8 +109,40 @@ async function main(): Promise<number> {
     return 1;
   }
 
-  console.log(`Designing "${topic.title}" (${args.topic})...`);
-  const result = await designLesson(topic, adapter, { klass: syllabus.klass, topicPath: args.topic });
+  const [, chapterId] = args.topic.split('/');
+  // A chapter holds ~50 outcomes; one lesson carries about seven of them.
+  const nodes = outcomesForTopic(topic, outcomesForChapter(syllabus.id, chapterId));
+  // Only outcomes inside this lesson constrain its order; the rest of the
+  // chapter is somebody else's lesson.
+  const inLesson = new Set(nodes.map((n) => n.id));
+  const prerequisites = new Map<string, readonly string[]>(
+    nodes.map((n) => [n.id, n.prerequisites.filter((p) => inLesson.has(p))]),
+  );
+
+  let blueprint;
+  if (nodes.length > 0) {
+    const beats = planBeats(
+      nodes.map((n) => ({
+        id: n.id,
+        difficulty: n.difficulty,
+        prerequisites: prerequisites.get(n.id) ?? [],
+      })),
+      { idPrefix: 'b' },
+    );
+    blueprint = { beats, outcomes: new Map(nodes.map((n) => [n.id, n.outcome])) };
+    console.log(
+      `Designing "${topic.title}" (${args.topic}) — ${nodes.length} outcomes, ${beats.length} beats planned.`,
+    );
+  } else {
+    console.log(`Designing "${topic.title}" (${args.topic}) — no outcome map for this chapter yet.`);
+  }
+
+  const result = await designLesson(topic, adapter, {
+    klass: syllabus.klass,
+    topicPath: args.topic,
+    blueprint,
+    prerequisites,
+  });
 
   fs.mkdirSync(args.out, { recursive: true });
   if (!result.ok) {

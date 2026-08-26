@@ -15,6 +15,7 @@ import { BRAND } from '../brand';
 
 const TABS = [
   { to: '/', icon: 'home', label: 'Home' },
+  { to: '/syllabus', icon: 'menu_book', label: 'Syllabus' },
   { to: '/search', icon: 'search', label: 'Search' },
   { to: '/progress', icon: 'insights', label: 'Progress' },
   { to: '/profile', icon: 'person', label: 'Profile' },

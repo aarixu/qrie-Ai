@@ -1,6 +1,7 @@
 import type { Answer, Gap, Mastery } from './types';
 import { GAP_THRESHOLD, PRIOR } from './types';
 import type { GraphIndex } from './graph';
+import { edgeSupport, emptyParams, itemParams, posterior, type ModelParams } from './params';
 
 /**
  * Belief propagation over the Learning Outcome Map — the machinery that turns
@@ -22,8 +23,6 @@ import type { GraphIndex } from './graph';
 const FLOOR = 0.02;
 const CEILING = 0.98;
 
-/** Pull toward 1 (or 0) for the node actually answered. */
-const DIRECT_STRENGTH = 0.85;
 /**
  * Pull applied one edge away, decaying with each further edge.
  *
@@ -82,6 +81,26 @@ export interface ApplyEvidenceOptions {
    * them. The caller owns this set across a session.
    */
   probed?: ReadonlySet<string>;
+  /**
+   * What the model has learned about this item and these edges. Omitted, every
+   * item gets the default slip/guess and every edge is trusted completely —
+   * which is exactly the state a brand new install is in.
+   */
+  params?: ModelParams;
+}
+
+/**
+ * How far belief travels along an edge nobody has verified.
+ *
+ * Support multiplies the propagation strength, so a claim students keep
+ * contradicting stops carrying inference long before anyone deletes it. This
+ * is the difference between a map that degrades where it is wrong and one that
+ * confidently spreads a bad edge across a whole subject.
+ */
+function edgeTrust(params: ModelParams | undefined, from: string, to: string, correct: boolean): number {
+  if (!params) return 1;
+  // Upward (correct) the pair is (node, ancestor); downward it is reversed.
+  return correct ? edgeSupport(params, from, to) : edgeSupport(params, to, from);
 }
 
 /**
@@ -105,8 +124,17 @@ export function applyEvidence(
   }
 
   const laboured = answer.correct && (answer.ms ?? 0) > SLOW_ANSWER_MS;
-  const directStrength = DIRECT_STRENGTH * (laboured ? SLOW_ANSWER_FACTOR : 1);
-  next[answer.nodeId] = pull(next[answer.nodeId] ?? PRIOR, target, directStrength);
+  const prior = next[answer.nodeId] ?? PRIOR;
+
+  // The probed node gets the Bayesian answer, which accounts for the chance
+  // this was luck or a slip. Everything downstream is still a heuristic pull:
+  // a marginal per node, not a joint posterior, because enumerating knowledge
+  // states is exponential and lands in the same place on a DAG this shape.
+  const item = itemParams(opts.params ?? emptyParams(), answer.probeId);
+  const bayes = posterior(prior, answer.correct, item);
+  // A laboured correct answer is reconstruction, not recall, so it is allowed
+  // to move belief only part of the way to where certainty would put it.
+  next[answer.nodeId] = clamp(laboured ? prior + (bayes - prior) * SLOW_ANSWER_FACTOR : bayes);
 
   // Correct answers speak upward about foundations; wrong answers speak
   // downward about everything built on the gap.
@@ -120,11 +148,106 @@ export function applyEvidence(
       ? index.distanceToAncestor(answer.nodeId, id)
       : index.distanceToAncestor(id, answer.nodeId);
     const distance = hops > 0 ? hops : 1;
+    const trust = edgeTrust(opts.params, answer.nodeId, id, answer.correct);
     const strength =
-      PROPAGATION_STRENGTH * Math.pow(DECAY, distance - 1) * (laboured ? SLOW_ANSWER_FACTOR : 1);
+      PROPAGATION_STRENGTH *
+      Math.pow(DECAY, distance - 1) *
+      (laboured ? SLOW_ANSWER_FACTOR : 1) *
+      trust;
     next[id] = pull(next[id] ?? PRIOR, target, strength);
   }
 
+  return next;
+}
+
+/**
+ * FORGETTING.
+ *
+ * Belief measured on Tuesday is not belief on the following month's Tuesday,
+ * and a map that never forgets will keep insisting a student holds something
+ * they last touched in April. Ebbinghaus's curve is an exponential decay, so
+ * that is what this is: each node relaxes back toward the prior with a
+ * half-life, and a plan built afterwards naturally schedules review.
+ *
+ * It decays ONLY toward the prior, never past it. Time erodes what you knew;
+ * it does not manufacture evidence that you never knew it — a belief already
+ * below the prior stays exactly where the evidence put it.
+ */
+const DEFAULT_HALF_LIFE_DAYS = 30;
+
+export interface DecayOptions {
+  /** Days after which an unreviewed belief has moved half way back to the prior. */
+  halfLifeDays?: number;
+  /**
+   * Nodes exempt from decay this pass — everything the student has just
+   * practised. Reviewing one node must not quietly age the rest.
+   */
+  refreshed?: ReadonlySet<string>;
+}
+
+export function decayMastery(mastery: Mastery, elapsedDays: number, opts: DecayOptions = {}): Mastery {
+  if (!(elapsedDays > 0)) return mastery;
+  const halfLife = opts.halfLifeDays ?? DEFAULT_HALF_LIFE_DAYS;
+  const retained = Math.pow(0.5, elapsedDays / halfLife);
+  const refreshed = opts.refreshed;
+
+  const next: Mastery = {};
+  for (const [id, belief] of Object.entries(mastery)) {
+    if (belief <= PRIOR || refreshed?.has(id)) {
+      next[id] = belief;
+      continue;
+    }
+    next[id] = clamp(PRIOR + (belief - PRIOR) * retained);
+  }
+  return next;
+}
+
+/**
+ * A RAISED HAND IS EVIDENCE.
+ *
+ * This is the signal no question can give us. When a student stops the class at
+ * a known beat, we know the exact outcomes being taught at the moment they got
+ * lost — a confusion marker located precisely in the map, arriving without
+ * anyone being tested. A placement test gets twenty of these an hour; a class
+ * generates them for free, all term.
+ *
+ * Weak on purpose, and it does not propagate. Curiosity and confusion look the
+ * same from here, so a hand is a nudge rather than a verdict, and a student who
+ * asks a lot must never be modelled as a student who knows nothing.
+ */
+const DOUBT_STRENGTH = 0.22;
+
+export function applyDoubt(mastery: Mastery, nodeIds: readonly string[]): Mastery {
+  if (nodeIds.length === 0) return mastery;
+  const next: Mastery = { ...mastery };
+  for (const id of nodeIds) {
+    next[id] = pull(next[id] ?? PRIOR, 0, DOUBT_STRENGTH);
+  }
+  return next;
+}
+
+/**
+ * ATTENDANCE, WEIGHED HONESTLY.
+ *
+ * Sitting through the beat that teaches an outcome is evidence. It is the
+ * weakest evidence in this file, and it has to stay that way: a student who
+ * watches ten lessons has not passed ten questions, and a map that treated
+ * them as equal would stop asking about anything they had merely seen.
+ *
+ * So it nudges belief up, and it saturates — the second and third viewing of
+ * the same beat move it far less than the first, because rewatching is what a
+ * student does when they did NOT get it.
+ */
+const TAUGHT_STRENGTH = 0.18;
+
+export function applyTaught(mastery: Mastery, nodeIds: readonly string[], times = 1): Mastery {
+  if (nodeIds.length === 0 || times < 1) return mastery;
+  // Diminishing: 1 -> 0.18, 2 -> 0.23, 3 -> 0.26 of the way toward "holds it".
+  const strength = TAUGHT_STRENGTH * (1 + Math.log(times));
+  const next: Mastery = { ...mastery };
+  for (const id of nodeIds) {
+    next[id] = pull(next[id] ?? PRIOR, 1, Math.min(strength, 0.35));
+  }
   return next;
 }
 

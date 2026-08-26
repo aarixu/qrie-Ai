@@ -1,0 +1,14 @@
+[
+  {
+    "elementId": "i_water_drop",
+    "kind": "image",
+    "description": "A single drop of water zoomed to show thousands of tiny particle dots inside",
+    "suggestedPrompt": "Clean, flat educational illustration for an Indian school lesson: A single drop of water zoomed to show thousands of tiny particle dots inside. Simple shapes, high contrast, no embedded text."
+  },
+  {
+    "elementId": "i_scale",
+    "kind": "image",
+    "description": "A scale bar showing meters down to nanometers, with a particle of matter highlighted at 10⁻⁹ m",
+    "suggestedPrompt": "Clean, flat educational illustration for an Indian school lesson: A scale bar showing meters down to nanometers, with a particle of matter highlighted at 10⁻⁹ m. Simple shapes, high contrast, no embedded text."
+  }
+]

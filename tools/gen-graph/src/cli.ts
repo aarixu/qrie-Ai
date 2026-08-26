@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadGraph } from '../../../packages/knowledge-graph/src/graph.ts';
-import type { KnowledgeGraph, ProbeBank } from '../../../packages/knowledge-graph/src/types.ts';
+import type { KnowledgeGraph, Probe, ProbeBank } from '../../../packages/knowledge-graph/src/types.ts';
 import { loadSyllabus, type SubjectSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
 import type { ClassLinks } from '../../../packages/knowledge-graph/src/types.ts';
 import { createAdapterFromEnv, loadEnvFiles, type LlmAdapter } from './llm.ts';
@@ -69,6 +69,26 @@ function readProbeBank(file: string): ProbeBank {
   return JSON.parse(fs.readFileSync(file, 'utf8')) as ProbeBank;
 }
 
+/**
+ * Write a probe bank, re-reading first and dropping anything orphaned.
+ *
+ * A probe whose node is no longer in the map cannot be asked and cannot be
+ * scored — it is dead weight that makes the bank look bigger than it is, and
+ * it fails the committed-data checks for a reason nobody can act on. Pruning
+ * on write is how the two files stay honest about each other.
+ */
+function writeProbeBank(file: string, incoming: readonly Probe[], graph: KnowledgeGraph): number {
+  const known = new Set(graph.nodes.map((n) => n.id));
+  const merged = new Map<string, Probe>();
+  for (const probe of [...readProbeBank(file).probes, ...incoming]) {
+    if (known.has(probe.nodeId)) merged.set(probe.id, probe);
+  }
+  const bank: ProbeBank = { version: 1, probes: [...merged.values()] };
+  fs.writeFileSync(file, `${JSON.stringify(bank, null, 2)}
+`);
+  return bank.probes.length;
+}
+
 interface RunOptions {
   chapterArg: string;
   out: string;
@@ -108,10 +128,17 @@ async function fillProbeGaps(
   let failed = 0;
   for (let i = 0; i < missing.length; i += PROBE_BATCH) {
     const slice = missing.slice(i, i + PROBE_BATCH);
-    const probes = await generateProbes(slice, adapter, {
-      klass: syllabus.klass,
-      subject: syllabus.subject,
-    });
+    let probes;
+    try {
+      probes = await generateProbes(slice, adapter, {
+        klass: syllabus.klass,
+        subject: syllabus.subject,
+      });
+    } catch (error) {
+      failed += 1;
+      console.error(`  ✗ probe batch: ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
     if (probes.ok) {
       bank.probes.push(...probes.value);
       added += probes.value.length;
@@ -182,12 +209,19 @@ async function linkSyllabus(
     console.log(`─── ${chapterId} (${chapterNodes.length} nodes) ───`);
     if (opts.dryRun) continue;
 
-    const result = await generateLinks(chapterNodes, foundationGraph.nodes, adapter, {
-      klass: syllabus.klass,
-      subject: syllabus.subject,
-      foundationKlass: below.klass,
-      foundationSubject: below.subject,
-    });
+    let result;
+    try {
+      result = await generateLinks(chapterNodes, foundationGraph.nodes, adapter, {
+        klass: syllabus.klass,
+        subject: syllabus.subject,
+        foundationKlass: below.klass,
+        foundationSubject: below.subject,
+      });
+    } catch (error) {
+      tally.failed += 1;
+      console.error(`  ✗ ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
     if (!result.ok) {
       tally.failed += 1;
       console.error(`  ✗ ${result.errors.slice(0, 3).join('; ')}`);
@@ -238,7 +272,7 @@ async function runSyllabus(
     const result = await fillProbeGaps(graph, bank, adapter, syllabus, inScope);
     tally.probesAdded = result.added;
     tally.failed += result.failed;
-    if (result.added > 0) fs.writeFileSync(probeFile, `${JSON.stringify(bank, null, 2)}\n`);
+    if (result.added > 0) writeProbeBank(probeFile, bank.probes, graph);
     console.log(`  Wrote ${path.relative(process.cwd(), probeFile)} — ${bank.probes.length} probes.`);
     return tally;
   }
@@ -274,13 +308,23 @@ async function runSyllabus(
       continue;
     }
 
-    const result = await generateNodes(chapter, adapter, {
-      syllabusId: syllabus.id,
-      klass: syllabus.klass,
-      subject: syllabus.subject,
-      existingIds,
-      targetCount,
-    });
+    // A transport failure costs THIS chapter, never the run. One empty reply
+    // used to throw all the way out of main() and end a 158-chapter job at
+    // chapter nine — and the next run then had to be started by hand.
+    let result;
+    try {
+      result = await generateNodes(chapter, adapter, {
+        syllabusId: syllabus.id,
+        klass: syllabus.klass,
+        subject: syllabus.subject,
+        existingIds,
+        targetCount,
+      });
+    } catch (error) {
+      tally.failed += 1;
+      console.error(`  ✗ ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
 
     if (!result.ok) {
       tally.failed += 1;
@@ -308,15 +352,23 @@ async function runSyllabus(
     console.log(`  ✓ ${result.value.length} nodes (map is now ${graph.nodes.length})`);
 
     if (wantProbes) {
-      const probes = await generateProbes(result.value, adapter, {
-        klass: syllabus.klass,
-        subject: syllabus.subject,
-      });
+      let probes;
+      try {
+        probes = await generateProbes(result.value, adapter, {
+          klass: syllabus.klass,
+          subject: syllabus.subject,
+        });
+      } catch (error) {
+        // Probes are recoverable on a later --probes-only sweep; the nodes are
+        // already safely on disk, so this chapter is not lost.
+        console.error(`  ! probes: ${error instanceof Error ? error.message : String(error)}`);
+        continue;
+      }
       if (probes.ok) {
         bank.probes.push(...probes.value);
         tally.probesAdded += probes.value.length;
-        fs.writeFileSync(probeFile, `${JSON.stringify(bank, null, 2)}\n`);
-        console.log(`  ✓ ${probes.value.length} probes (bank is now ${bank.probes.length})`);
+        const total = writeProbeBank(probeFile, probes.value, graph);
+        console.log(`  ✓ ${probes.value.length} probes (bank is now ${total})`);
       } else {
         // Probes are recoverable — re-run with --probes-only later. Nodes are not.
         console.error(`  ! probe generation failed: ${probes.errors.slice(0, 3).join('; ')}`);
@@ -331,7 +383,7 @@ async function runSyllabus(
     const gapFill = await fillProbeGaps(graph, bank, adapter, syllabus, () => true);
     tally.probesAdded += gapFill.added;
     tally.failed += gapFill.failed;
-    if (gapFill.added > 0) fs.writeFileSync(probeFile, `${JSON.stringify(bank, null, 2)}\n`);
+    if (gapFill.added > 0) writeProbeBank(probeFile, bank.probes, graph);
   }
 
   if (dryRun) {
@@ -391,7 +443,11 @@ async function main(): Promise<void> {
           wantProbes,
           probesOnly,
           targetCount,
-          skipDone: syllabusArg === 'all',
+          // Resume is decided by --chapter, not --syllabus: asking for every
+          // chapter means "fill what is missing", whether that is one subject
+          // or all thirteen. Tied to --syllabus all, a single-subject rerun
+          // regenerated chapters it had already written.
+          skipDone: chapterArg === 'all',
         });
     total.added += tally.added;
     total.probesAdded += tally.probesAdded;

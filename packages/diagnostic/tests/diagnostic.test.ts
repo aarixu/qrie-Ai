@@ -301,3 +301,64 @@ describe('lookBack — placement reaches into earlier classes', () => {
     expect(Math.max(...klasses)).toBeLessThanOrEqual(9);
   });
 });
+
+describe('the plan interleaves without breaking prerequisites', () => {
+  /** Two independent three-step chains, in different chapters. */
+  function twoChains() {
+    const nodes = [
+      node('m1', [], { chapter: 'maths', difficulty: 1 }),
+      node('m2', ['m1'], { chapter: 'maths', difficulty: 2 }),
+      node('m3', ['m2'], { chapter: 'maths', difficulty: 3 }),
+      node('s1', [], { chapter: 'science', difficulty: 1 }),
+      node('s2', ['s1'], { chapter: 'science', difficulty: 2 }),
+      node('s3', ['s2'], { chapter: 'science', difficulty: 3 }),
+    ];
+    const index = new GraphIndex(loadGraph({ version: 1, nodes }));
+    const bank: ProbeBank = { version: 1, probes: nodes.map((n) => probe(n.id)) };
+    return { index, bank, nodes };
+  }
+
+  /** Everything is a gap, so the plan has to order all six. */
+  const allWrong = () => {
+    const { index, bank, nodes } = twoChains();
+    let s = startSession(index, bank, {
+      klass: 10,
+      subjects: ['Science'],
+      minQuestions: 1,
+      maxQuestions: nodes.length,
+    });
+    for (let i = 0; i < nodes.length; i += 1) {
+      const p = selectNextProbe(s, index, bank);
+      if (!p) break;
+      s = answerProbe(s, index, p, (p.correctIndex + 1) % 4);
+    }
+    return { plan: buildPlan(s, index).plan, index };
+  };
+
+  it('never teaches a step before something it rests on', () => {
+    const { plan, index } = allWrong();
+    const position = new Map(plan.map((step, i) => [step.nodeId, i]));
+    for (const step of plan) {
+      for (const prerequisite of index.prerequisitesOf(step.nodeId)) {
+        const before = position.get(prerequisite);
+        if (before === undefined) continue; // not in the plan at all
+        expect(before, `${prerequisite} must come before ${step.nodeId}`).toBeLessThan(
+          position.get(step.nodeId)!,
+        );
+      }
+    }
+  });
+
+  it('mixes the chapters rather than blocking one after the other', () => {
+    const { plan, index } = allWrong();
+    const chapters = plan.map((s) => index.node(s.nodeId)!.chapter);
+    // Blocked practice would be maths,maths,maths,science,science,science:
+    // exactly one switch. Interleaving has to do better than that.
+    const switches = chapters.filter((c, i) => i > 0 && c !== chapters[i - 1]).length;
+    expect(switches).toBeGreaterThan(1);
+  });
+
+  it('is deterministic — the same gaps give the same plan', () => {
+    expect(allWrong().plan.map((s) => s.nodeId)).toEqual(allWrong().plan.map((s) => s.nodeId));
+  });
+});

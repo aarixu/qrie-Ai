@@ -19,6 +19,7 @@ const ctxWithHistory = (): DoubtContext => ({
     { id: 'b0', topic: 'the heart' },
     { id: 'b1', topic: 'chambers of the heart' },
   ],
+  outcomeIds: [],
 });
 
 const ctxFirstBeat = (): DoubtContext => ({
@@ -27,7 +28,7 @@ const ctxFirstBeat = (): DoubtContext => ({
   beatTopic: 'the heart',
   transcriptSoFar: 'n0',
   visibleElementIds: ['e1'],
-  recentBeats: [{ id: 'b0', topic: 'the heart' }],
+  recentBeats: [{ id: 'b0', topic: 'the heart' }], outcomeIds: [],
 });
 
 /** An AgentIO whose say() resolves only when the test says so. */

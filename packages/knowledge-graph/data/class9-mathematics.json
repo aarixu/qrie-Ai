@@ -1,0 +1,3900 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class9-mathematics-need-for-extended-numbers",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Need for extended numbers",
+      "outcome": "State that numbers beyond natural numbers were needed to solve equations like x+2=0",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-name-natural-numbers",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Natural numbers set",
+      "outcome": "Name the set of natural numbers and write its notation N",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-name-whole-numbers",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Whole numbers set",
+      "outcome": "Name the set of whole numbers, write its notation W, and state how it differs from N",
+      "prerequisites": [
+        "class9-mathematics-name-natural-numbers"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-name-integers",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Integers set",
+      "outcome": "Name the set of integers Z and identify which integers are not whole numbers",
+      "prerequisites": [
+        "class9-mathematics-name-whole-numbers"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-define-rational-number",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Define rational number",
+      "outcome": "Define a rational number as a number expressible in the form p/q where p, q are integers and q ≠ 0",
+      "prerequisites": [
+        "class9-mathematics-name-integers"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-check-rational-form",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Identify rational form",
+      "outcome": "Decide whether a given real number is rational by checking if it can be written as p/q with integer p, q ≠ 0",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-set-containment-order",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "N ⊂ W ⊂ Z ⊂ Q",
+      "outcome": "State the chain of containments N ⊂ W ⊂ Z ⊂ Q and classify a given number into the smallest set containing it",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-fraction-to-decimal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Convert fraction to decimal",
+      "outcome": "Carry out long division to convert a given fraction p/q into its decimal expansion",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-classify-decimal-type",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Classify decimal expansion",
+      "outcome": "Identify whether a given decimal expansion terminates, is non-terminating recurring, or is non-terminating non-recurring",
+      "prerequisites": [
+        "class9-mathematics-fraction-to-decimal"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-prime-factorisation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Prime factorise denominator",
+      "outcome": "Write the prime factorisation of an integer as a product of powers of primes",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-terminating-criterion",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Terminating criterion",
+      "outcome": "State that p/q (in lowest terms) has a terminating decimal expansion exactly when q = 2^n × 5^m",
+      "prerequisites": [
+        "class9-mathematics-prime-factorisation",
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-predict-expansion-from-denominator",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Predict expansion type",
+      "outcome": "Classify a fraction's decimal expansion as terminating or non-terminating recurring by examining the prime factors of its denominator without dividing",
+      "prerequisites": [
+        "class9-mathematics-terminating-criterion"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-recurring-decimal-notation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Recurring decimal notation",
+      "outcome": "Write a repeating decimal using bar notation and read back which digits repeat",
+      "prerequisites": [
+        "class9-mathematics-classify-decimal-type"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-convert-recurring-to-fraction",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Recurring decimal to fraction",
+      "outcome": "Convert a repeating decimal such as 0.3̄ or 0.2̄3̄5̄ into a fraction by multiplying by a power of 10 and subtracting",
+      "prerequisites": [
+        "class9-mathematics-recurring-decimal-notation"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-nonrecurring-nonrational",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Non-terminating non-recurring ⇒ irrational",
+      "outcome": "Explain that every irrational number has a non-terminating non-recurring decimal expansion and vice versa",
+      "prerequisites": [
+        "class9-mathematics-classify-decimal-type"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-define-irrational-number",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Define irrational number",
+      "outcome": "Define an irrational number as one that cannot be written in the form p/q with integers p, q ≠ 0",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-recognise-surds",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Recognise surds",
+      "outcome": "Identify expressions like √2, √5, 3√7 as irrational numbers and distinguish them from rationals like √4 or √25",
+      "prerequisites": [
+        "class9-mathematics-define-irrational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-proof-by-contradiction-method",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Contradiction method",
+      "outcome": "Describe proof by contradiction: assume the negation of what is to be proved and derive an impossibility",
+      "prerequisites": [],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-square-divisibility-lemma",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "p divides a² ⇒ p divides a",
+      "outcome": "Use the lemma that if a prime p divides a² then p divides a, for prime p",
+      "prerequisites": [
+        "class9-mathematics-prime-factorisation"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-prove-sqrt2-irrational",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Prove √2 irrational",
+      "outcome": "Prove that √2 is irrational by contradiction assuming √2 = a/b in lowest terms",
+      "prerequisites": [
+        "class9-mathematics-proof-by-contradiction-method",
+        "class9-mathematics-square-divisibility-lemma"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-prove-sqrt3-irrational",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Prove √3 irrational",
+      "outcome": "Adapt the contradiction argument to prove that √3 is irrational",
+      "prerequisites": [
+        "class9-mathematics-prove-sqrt2-irrational"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-sum-rational-irrational",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Rational ± irrational is irrational",
+      "outcome": "Prove by contradiction that the sum or difference of a rational and an irrational number is irrational",
+      "prerequisites": [
+        "class9-mathematics-proof-by-contradiction-method",
+        "class9-mathematics-define-irrational-number"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-product-rational-irrational",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Rational × irrational is irrational",
+      "outcome": "Show that the product of a nonzero rational and an irrational number is irrational",
+      "prerequisites": [
+        "class9-mathematics-sum-rational-irrational"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-sum-of-irrationals",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Sums/products of irrationals vary",
+      "outcome": "Give examples showing the sum or product of two irrationals can be rational (√2·√2=2) or irrational",
+      "prerequisites": [
+        "class9-mathematics-recognise-surds"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-right-triangle-construction",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "√2 on number line",
+      "outcome": "Locate √2 on the number line using a right triangle with equal legs of length 1 and a compass arc",
+      "prerequisites": [
+        "class9-mathematics-recognise-surds"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-spiral-root-construction",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "√3 via spiral",
+      "outcome": "Locate √3 on the number line by adjoining a unit perpendicular to the √2 segment",
+      "prerequisites": [
+        "class9-mathematics-right-triangle-construction"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-real-numbers-definition",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Define real numbers",
+      "outcome": "State that the collection R of all rational and irrational numbers forms the real numbers",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number",
+        "class9-mathematics-define-irrational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-point-real-correspondence",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Points ↔ reals",
+      "outcome": "Explain why every point on the number line corresponds to exactly one real number and conversely",
+      "prerequisites": [
+        "class9-mathematics-real-numbers-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-successive-magnification",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Successive magnification",
+      "outcome": "Carry out successive magnification to visualise and pin down a real number between two consecutive tenths on the number line",
+      "prerequisites": [
+        "class9-mathematics-point-real-correspondence"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-find-decimals-between",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Infinitely many reals between",
+      "outcome": "Write several distinct decimals lying strictly between two given real numbers",
+      "prerequisites": [
+        "class9-mathematics-successive-magnification"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-add-like-surds",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Add like surds",
+      "outcome": "Simplify sums of like surds such as 2√3 + 5√3",
+      "prerequisites": [
+        "class9-mathematics-recognise-surds"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-distributivity-surds",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Distribute over surds",
+      "outcome": "Apply distributivity to expand products like √3(2+√5) and (a+b)(c+d) with surd terms",
+      "prerequisites": [
+        "class9-mathematics-add-like-surds"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-simplify-root-products",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Multiply roots",
+      "outcome": "Simplify products using √a·√b = √(ab) for positive a, b, e.g. √6·√8",
+      "prerequisites": [
+        "class9-mathematics-recognise-surds"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-extract-square-factors",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Extract square factors",
+      "outcome": "Simplify surds by extracting square factors, e.g. √8 = 2√2, so √2 + √8 simplifies fully",
+      "prerequisites": [
+        "class9-mathematics-prime-factorisation",
+        "class9-mathematics-simplify-root-products"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-denominators-with-surds",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Simple surd denominators",
+      "outcome": "Rewrite 1/√a as √a/a to remove a single surd from the denominator",
+      "prerequisites": [
+        "class9-mathematics-simplify-root-products"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-conjugate-identity",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Conjugate identity",
+      "outcome": "Use the identity (a+b)(a−b)=a²−b² to compute products like (√3+√2)(√3−√2)",
+      "prerequisites": [
+        "class9-mathematics-distributivity-surds"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-rationalise-binomial-denominator",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Rationalise binomial denominator",
+      "outcome": "Rationalise the denominator of expressions like 1/(√3+√2) by multiplying numerator and denominator by the conjugate",
+      "prerequisites": [
+        "class9-mathematics-conjugate-identity",
+        "class9-mathematics-denominators-with-surds"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-rationalise-and-simplify",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Full surd simplification",
+      "outcome": "Simplify a complete expression combining rationalising denominators, extracting square factors and collecting like surds",
+      "prerequisites": [
+        "class9-mathematics-rationalise-binomial-denominator",
+        "class9-mathematics-extract-square-factors"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-rational-properties-recall",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Field properties of Q",
+      "outcome": "List the properties rationals satisfy: closure under +, −, ×, ÷ (nonzero divisor), commutativity, associativity, distributivity",
+      "prerequisites": [
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-properties-fail-for-irrationals",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Properties fail for irrationals",
+      "outcome": "State which properties fail for irrationals — e.g. they are not closed under addition, subtraction, multiplication or division — with counterexamples",
+      "prerequisites": [
+        "class9-mathematics-rational-properties-recall",
+        "class9-mathematics-sum-of-irrationals"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-integer-exponent-meaning",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Integer exponents recap",
+      "outcome": "Interpret a^m for natural m and negative exponents a^(−n) = 1/a^n",
+      "prerequisites": [],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-laws-of-exponents-state",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "State exponent laws",
+      "outcome": "State the laws: a^m·a^n=a^(m+n), (a^m)^n=a^(mn), a^m/a^n=a^(m−n), a^m b^m=(ab)^m",
+      "prerequisites": [
+        "class9-mathematics-integer-exponent-meaning"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-exponents-integer-bases",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Apply laws to integer bases",
+      "outcome": "Apply the laws of exponents to simplify numerical expressions with integer bases, e.g. 2³·2⁵ ÷ 2⁴",
+      "prerequisites": [
+        "class9-mathematics-laws-of-exponents-state"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-rational-exponent-meaning",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Meaning of a^(1/n)",
+      "outcome": "Interpret a^(1/n) as the nth root of a>0 and a^(m/n) as the nth root of a^m",
+      "prerequisites": [
+        "class9-mathematics-laws-of-exponents-state"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-evaluate-fractional-expressions",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Evaluate fractional powers",
+      "outcome": "Evaluate expressions like 2^(1/3) · 2^(2/3) or 32^(2/5) using exponent laws with fractional indices",
+      "prerequisites": [
+        "class9-mathematics-rational-exponent-meaning"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-exponents-irrational-bases",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Laws hold for irrational bases",
+      "outcome": "Apply the laws of exponents to expressions whose bases are irrational, e.g. simplify (√2)^(1/2) · (√2)^(1/2)",
+      "prerequisites": [
+        "class9-mathematics-rational-exponent-meaning",
+        "class9-mathematics-recognise-surds"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-negative-fractional-exponents",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "number-systems",
+      "title": "Negative fractional powers",
+      "outcome": "Evaluate expressions combining negative and fractional exponents, e.g. 8^(−2/3)",
+      "prerequisites": [
+        "class9-mathematics-evaluate-fractional-expressions",
+        "class9-mathematics-integer-exponent-meaning"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-identify-polynomial-expression",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identify polynomials",
+      "outcome": "Identify whether a given algebraic expression is a polynomial, checking that exponents of the variable are whole numbers",
+      "prerequisites": [
+        "class9-mathematics-name-whole-numbers"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-reject-nonpolynomials",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Reject non-polynomials",
+      "outcome": "Explain why expressions with negative or fractional exponents or variables in denominators are not polynomials",
+      "prerequisites": [
+        "class9-mathematics-identify-polynomial-expression"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-constant-term-meaning",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Constant term",
+      "outcome": "Name the constant term of a given polynomial",
+      "prerequisites": [
+        "class9-mathematics-identify-polynomial-expression"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-degree-definition",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Define degree",
+      "outcome": "State that the degree of a polynomial is the highest power of the variable with a non-zero coefficient",
+      "prerequisites": [
+        "class9-mathematics-identify-polynomial-expression"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-find-degree",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Find degree",
+      "outcome": "Find the degree of a given polynomial in one variable",
+      "prerequisites": [
+        "class9-mathematics-degree-definition"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-degree-of-constant",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Degree of constants",
+      "outcome": "State that a non-zero constant polynomial has degree 0 and the zero polynomial has no degree",
+      "prerequisites": [
+        "class9-mathematics-find-degree"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-name-by-degree",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Linear/quadratic/cubic names",
+      "outcome": "Name polynomials of degree 1, 2 and 3 as linear, quadratic and cubic respectively",
+      "prerequisites": [
+        "class9-mathematics-find-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-classify-by-degree",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Classify by degree",
+      "outcome": "Classify a list of polynomials as constant, linear, quadratic or cubic from their examples",
+      "prerequisites": [
+        "class9-mathematics-name-by-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-one-variable-form",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "One-variable form",
+      "outcome": "State the general form of a polynomial in one variable x as a₀xⁿ + ... + a₁x + a₂ with real coefficients",
+      "prerequisites": [
+        "class9-mathematics-real-numbers-definition",
+        "class9-mathematics-identify-polynomial-expression"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-identify-coefficients",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identify coefficients",
+      "outcome": "Identify the coefficient of each power of the variable in a polynomial written in standard form",
+      "prerequisites": [
+        "class9-mathematics-one-variable-form"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-coefficients-unordered",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Coefficients unordered",
+      "outcome": "Identify coefficients when terms of a polynomial are written in non-standard order",
+      "prerequisites": [
+        "class9-mathematics-identify-coefficients"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-count-terms-mono-trinomial",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Monomial/binomial/trinomial",
+      "outcome": "Classify polynomials as monomials, binomials or trinomials by counting their terms",
+      "prerequisites": [
+        "class9-mathematics-identify-coefficients"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-evaluate-polynomial-value",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Evaluate p(a)",
+      "outcome": "Calculate the value p(a) of a polynomial p(x) at a given value x = a by substitution",
+      "prerequisites": [
+        "class9-mathematics-identify-coefficients",
+        "class9-mathematics-exponents-integer-bases"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-zero-check-substitution",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Verify zero by substitution",
+      "outcome": "Verify whether a given number is a zero of a polynomial by substituting it and checking the value equals zero",
+      "prerequisites": [
+        "class9-mathematics-evaluate-polynomial-value"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-zeroes-vs-values",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Zero vs value distinction",
+      "outcome": "Distinguish between the zero(s) of a polynomial and the value of the polynomial at a point",
+      "prerequisites": [
+        "class9-mathematics-zero-check-substitution"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-linear-zero-formula",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Zero of ax+b",
+      "outcome": "Derive and state that the only zero of the linear polynomial ax+b is x = −b/a",
+      "prerequisites": [
+        "class9-mathematics-zero-check-substitution"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-find-linear-zero",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Find linear zero",
+      "outcome": "Find the zero of a given linear polynomial ax+b",
+      "prerequisites": [
+        "class9-mathematics-linear-zero-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-zeroes-quadratic-two",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Quadratic has two zeroes",
+      "outcome": "State that a quadratic polynomial has at most two zeroes and verify both by substitution",
+      "prerequisites": [
+        "class9-mathematics-zero-check-substitution"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-geometric-meaning-zero",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Zeroes as graph crossings",
+      "outcome": "Interpret geometrically that a real number k is a zero of p(x) exactly where the graph y = p(x) meets the x-axis",
+      "prerequisites": [
+        "class9-mathematics-point-real-correspondence",
+        "class9-mathematics-zero-check-substitution"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-divide-poly-by-linear",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Long division of polynomials",
+      "outcome": "Divide a polynomial p(x) by a linear polynomial (x − a) using long division to obtain quotient and remainder",
+      "prerequisites": [
+        "class9-mathematics-evaluate-polynomial-value"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-dividend-identity",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Division algorithm statement",
+      "outcome": "Write p(x) = g(x)·q(x) + r(x) identifying dividend, divisor, quotient and remainder after a division",
+      "prerequisites": [
+        "class9-mathematics-divide-poly-by-linear"
+      ],
+      "difficulty": 3
+    },
+    {
+      "class9-mathematics-remainder-degrees": "x",
+      "id": "class9-mathematics-remainder-degree-rule",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Remainder degree rule",
+      "outcome": "Explain that when dividing by a linear divisor the remainder must be a constant",
+      "prerequisites": [
+        "class9-mathematics-dividend-identity"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-state-remainder-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "State Remainder Theorem",
+      "outcome": "State the Remainder Theorem: the remainder on dividing p(x) by (x − a) is p(a)",
+      "prerequisites": [
+        "class9-mathematics-dividend-identity"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-remainder-without-division",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Remainder without dividing",
+      "outcome": "Compute the remainder when a polynomial is divided by (x − a) using the Remainder Theorem without long division",
+      "prerequisites": [
+        "class9-mathematics-state-remainder-theorem",
+        "class9-mathematics-evaluate-polynomial-value"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-remainder-other-forms",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Remainders with x+a and ax−b",
+      "outcome": "Compute remainders for divisors like (x + a) or (ax − b) by rewriting them in the form (x − k)",
+      "prerequisites": [
+        "class9-mathematics-remainder-without-division"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-remainder-zero-is-factor",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Zero remainder meaning",
+      "outcome": "Predict that if the remainder p(a) is 0 then (x − a) divides p(x) exactly",
+      "prerequisites": [
+        "class9-mathematics-remainder-without-division"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-state-factor-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "State Factor Theorem",
+      "outcome": "State the Factor Theorem: (x − a) is a factor of p(x) if and only if p(a) = 0",
+      "prerequisites": [
+        "class9-mathematics-remainder-zero-is-factor"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-test-candidate-factor",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Test candidate factor",
+      "outcome": "Use the Factor Theorem to decide whether a given linear expression is a factor of a polynomial",
+      "prerequisites": [
+        "class9-mathematics-state-factor-theorem"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-split-middle-term",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Split middle term",
+      "outcome": "Factorise a quadratic trinomial x² + bx + c by splitting the middle term into two numbers whose sum is b and product is c",
+      "prerequisites": [
+        "class9-mathematics-prime-factorisation"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-split-middle-leading-coeff",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Split middle with leading coeff",
+      "outcome": "Factorise a quadratic ax² + bx + c with a ≠ 1 by splitting the middle term using ac",
+      "prerequisites": [
+        "class9-mathematics-split-middle-term"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-spot-root-by-trial",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Spot root by trial",
+      "outcome": "Find one root of a cubic polynomial with integer coefficients by trial among the factors of the constant term",
+      "prerequisites": [
+        "class9-mathematics-evaluate-polynomial-value"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-cubic-via-factor-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Factorise cubic",
+      "outcome": "Factorise a cubic polynomial completely by finding one root by trial, dividing out its factor, then factorising the remaining quadratic",
+      "prerequisites": [
+        "class9-mathematics-spot-root-by-trial",
+        "class9-mathematics-test-candidate-factor",
+        "class9-mathematics-divide-poly-by-linear"
+      ],
+      "difficulty": 5
+    },
+    {
+      "id": "class9-mathematics-square-identity-expand",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Expand (a+b)²",
+      "outcome": "Expand (a+b)² and (a−b)² using the identities a²+2ab+b² and a²−2ab+b²",
+      "prerequisites": [
+        "class9-mathematics-distributivity-surds"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-diff-squares-product",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Product (a+b)(a−b)",
+      "outcome": "Expand (a+b)(a−b) using the identity a² − b² and use it to compute products like 51 × 49 mentally",
+      "prerequisites": [
+        "class9-mathematics-square-identity-expand"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-eval-squares-near-hundred",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Squares near 100 mentally",
+      "outcome": "Evaluate squares like 103² or 97² mentally using the identity (a±b)² = a² ± 2ab + b²",
+      "prerequisites": [
+        "class9-mathematics-square-identity-expand"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-cube-identity-expand",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Expand (a+b)³",
+      "outcome": "Expand (a+b)³ and (a−b)³ using the identities a³+3a²b+3ab²+b³ and its counterpart with minus signs",
+      "prerequisites": [
+        "class9-mathematics-square-identity-expand"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-sum-cube-compact",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Compact cube forms",
+      "outcome": "Use the compact identity (a+b)³ = a³ + b³ + 3ab(a+b) and its (a−b) version to simplify expansions",
+      "prerequisites": [
+        "class9-mathematics-cube-identity-expand"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-factor-a3-plus-b3",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Factorise a³+b³",
+      "outcome": "Factorise a³ + b³ as (a + b)(a² − ab + b²)",
+      "prerequisites": [
+        "class9-mathematics-cube-identity-expand"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-factor-a3-minus-b3",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Factorise a³−b³",
+      "outcome": "Factorise a³ − b³ as (a − b)(a² + ab + b²)",
+      "prerequisites": [
+        "class9-mathematics-factor-a3-plus-b3"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-apply-sum-diff-cubes",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Apply cube factorisation",
+      "outcome": "Factorise numeric sums and differences of cubes like 8x³ + 27y³ using a³ ± b³ identities",
+      "prerequisites": [
+        "class9-mathematics-factor-a3-minus-b3"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-factor-diff-squares",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Factorise a²−b²",
+      "outcome": "Factorise expressions of the form a² − b² using the difference of squares identity",
+      "prerequisites": [
+        "class9-mathematics-diff-squares-product"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-factor-perfect-square",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Recognise perfect squares",
+      "outcome": "Recognise and factorise perfect square trinomials using a² ± 2ab + b²",
+      "prerequisites": [
+        "class9-mathematics-square-identity-expand",
+        "class9-mathematics-extract-square-factors"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-factor-perfect-cube-trinomial",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Perfect cube patterns",
+      "outcome": "Recognise and factorise expressions matching a³ ± 3a²b + 3ab² ± b³ as cubes of binomials",
+      "prerequisites": [
+        "class9-mathematics-cube-identity-expand"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-identity-proof-expansion",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Prove an identity",
+      "outcome": "Prove an algebraic identity by expanding both sides and showing they are equal",
+      "prerequisites": [
+        "class9-mathematics-square-identity-expand"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-identity-not-equation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identity vs equation",
+      "outcome": "Distinguish an identity true for all values from a conditional equation true only for some values",
+      "prerequisites": [
+        "class9-mathematics-identity-proof-expansion"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-remainder-find-unknown-coeff",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Unknown coefficient via remainder",
+      "outcome": "Find an unknown coefficient in a polynomial given the remainder upon division by a linear expression",
+      "prerequisites": [
+        "class9-mathematics-remainder-without-division"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-factor-given-condition",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Coefficient via Factor Theorem",
+      "outcome": "Find the value of a constant so that a given linear expression becomes a factor of a polynomial",
+      "prerequisites": [
+        "class9-mathematics-test-candidate-factor"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-identity-evaluate-products",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Products near round numbers",
+      "outcome": "Evaluate products like 104 × 96 or 99³ mentally using suitable algebraic identities",
+      "prerequisites": [
+        "class9-mathematics-diff-squares-product",
+        "class9-mathematics-cube-identity-expand"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-explain-two-number-lines",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Two perpendicular number lines",
+      "outcome": "Explain how two perpendicular number lines fix the position of a point in a plane",
+      "prerequisites": [
+        "class9-mathematics-point-real-correspondence"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-identify-origin",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Identify the origin",
+      "outcome": "Identify the origin as the intersection point of the two coordinate axes and state its coordinates as (0, 0)",
+      "prerequisites": [
+        "class9-mathematics-explain-two-number-lines"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-name-coordinate-axes",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Name the coordinate axes",
+      "outcome": "Name the horizontal axis as the x-axis and the vertical axis as the y-axis on a Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-explain-two-number-lines"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-positive-directions-axes",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Positive directions of axes",
+      "outcome": "State that positive numbers lie to the right on the x-axis and above on the y-axis, and identify negative directions",
+      "prerequisites": [
+        "class9-mathematics-name-coordinate-axes"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-quadrant-names",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Name the four quadrants",
+      "outcome": "Name the four quadrants I, II, III and IV and locate which region each occupies on the plane",
+      "prerequisites": [
+        "class9-mathematics-name-coordinate-axes"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-quadrant-sign-rules",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Signs in each quadrant",
+      "outcome": "State the sign pattern of coordinates (++, −+, −−, +−) in quadrants I to IV",
+      "prerequisites": [
+        "class9-mathematics-quadrant-names"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-order-in-pair-matters",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Ordered pair meaning",
+      "outcome": "Explain why (3, 5) and (5, 3) name different points, i.e. order matters in an ordered pair",
+      "prerequisites": [
+        "class9-mathematics-name-coordinate-axes"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-read-x-coordinate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Read the x-coordinate",
+      "outcome": "Identify the x-coordinate (abscissa) of a point shown on a labelled Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-name-coordinate-axes"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-read-y-coordinate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Read the y-coordinate",
+      "outcome": "Identify the y-coordinate (ordinate) of a point shown on a labelled Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-name-coordinate-axes"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-write-point-coordinates",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Write coordinates of a point",
+      "outcome": "Write the full ordered pair (x, y) for a point plotted on a given Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-read-x-coordinate",
+        "class9-mathematics-read-y-coordinate"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-points-on-x-axis",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Points on the x-axis",
+      "outcome": "State that every point on the x-axis has y-coordinate 0 and write its coordinates as (a, 0)",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-points-on-y-axis",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Points on the y-axis",
+      "outcome": "State that every point on the y-axis has x-coordinate 0 and write its coordinates as (0, b)",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-classify-axis-vs-quadrant",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Axis or quadrant?",
+      "outcome": "Classify a given ordered pair as lying on the x-axis, on the y-axis, or in a named quadrant",
+      "prerequisites": [
+        "class9-mathematics-quadrant-sign-rules",
+        "class9-mathematics-points-on-x-axis",
+        "class9-mathematics-points-on-y-axis"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-identify-origin-from-pair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Recognise the origin pair",
+      "outcome": "Identify (0, 0) as the only ordered pair naming the origin",
+      "prerequisites": [
+        "class9-mathematics-classify-axis-vs-quadrant"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-perpendicular-distance-meaning",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Coordinates as distances",
+      "outcome": "Explain a coordinate as a directed perpendicular distance from the corresponding axis",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-plot-first-quadrant-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot point in quadrant I",
+      "outcome": "Plot a point with both coordinates positive on a Cartesian plane by counting units along the axes",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-plot-negative-x",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot with negative x",
+      "outcome": "Plot a point whose x-coordinate is negative, moving left of the y-axis correctly",
+      "prerequisites": [
+        "class9-mathematics-plot-first-quadrant-point",
+        "class9-mathematics-positive-directions-axes"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-plot-negative-y",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot with negative y",
+      "outcome": "Plot a point whose y-coordinate is negative, moving below the x-axis correctly",
+      "prerequisites": [
+        "class9-mathematics-plot-first-quadrant-point",
+        "class9-mathematics-positive-directions-axes"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-plot-any-quadrant-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot any ordered pair",
+      "outcome": "Plot an arbitrary ordered pair, respecting signs so it lands in the correct quadrant",
+      "prerequisites": [
+        "class9-mathematics-plot-negative-x",
+        "class9-mathematics-plot-negative-y"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-plot-axis-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot points on axes",
+      "outcome": "Plot points of the form (a, 0) and (0, b) exactly on the x-axis or y-axis",
+      "prerequisites": [
+        "class9-mathematics-points-on-x-axis",
+        "class9-mathematics-points-on-y-axis"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-plot-fractional-coordinates",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot fractional coordinates",
+      "outcome": "Plot points with fractional or decimal coordinates between unit gridlines",
+      "prerequisites": [
+        "class9-mathematics-plot-any-quadrant-point"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-check-plotted-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Verify a plotted point",
+      "outcome": "Check whether a marked point on a plane matches a given ordered pair and correct common plotting errors",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates",
+        "class9-mathematics-plot-any-quadrant-point"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-plot-sequence-of-points",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Plot several points",
+      "outcome": "Plot several given ordered pairs accurately on one Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-plot-any-quadrant-point"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-join-points-in-order",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Join points in order",
+      "outcome": "Join a sequence of plotted points in the given order with straight line segments, returning to the first point when told to close the figure",
+      "prerequisites": [
+        "class9-mathematics-plot-sequence-of-points"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-form-figure-from-points",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Form a figure from points",
+      "outcome": "Plot several points and join them in order to form a figure such as a rectangle or triangle, then name the figure formed",
+      "prerequisites": [
+        "class9-mathematics-join-points-in-order"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-read-polygon-vertices",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Read vertices of a polygon",
+      "outcome": "Read off the coordinates of all vertices of a polygon drawn on a Cartesian plane",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-name-side-by-endpoints",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Name sides by endpoints",
+      "outcome": "Name each side of a drawn figure using the coordinate pairs of its endpoints",
+      "prerequisites": [
+        "class9-mathematics-read-polygon-vertices"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-figure-symmetry-axes",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Symmetry about the axes",
+      "outcome": "Identify pairs of points symmetric about the x-axis or y-axis from their coordinates ((a, b) vs (a, −b), etc.)",
+      "prerequisites": [
+        "class9-mathematics-quadrant-sign-rules"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-give-example-in-quadrant",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Give example coordinates",
+      "outcome": "Write an example ordered pair lying in a specified quadrant or on a specified axis",
+      "prerequisites": [
+        "class9-mathematics-quadrant-sign-rules",
+        "class9-mathematics-points-on-x-axis",
+        "class9-mathematics-points-on-y-axis"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-quadrant-from-signs",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Quadrant from signs alone",
+      "outcome": "Determine the quadrant of a point from the signs of its coordinates without plotting it",
+      "prerequisites": [
+        "class9-mathematics-quadrant-sign-rules"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-linear-pattern-on-plane",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Points on a straight line pattern",
+      "outcome": "Plot points such as (1,1), (2,2), (3,3) and observe they lie on a straight line through the origin",
+      "prerequisites": [
+        "class9-mathematics-plot-sequence-of-points"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-complete-table-of-points",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Complete a table of solutions",
+      "outcome": "Complete a table of (x, y) values satisfying a simple relation such as y = x + 2, ready for plotting",
+      "prerequisites": [
+        "class9-mathematics-evaluate-polynomial-value",
+        "class9-mathematics-plot-sequence-of-points"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-describe-location-verbally",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Describe location verbally",
+      "outcome": "Describe the position of a point in words relative to the axes and origin, e.g. '4 units right of the y-axis, 3 units below the x-axis'",
+      "prerequisites": [
+        "class9-mathematics-perpendicular-distance-meaning"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-identify-two-variables-equation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Identify two-variable equations",
+      "outcome": "Identify whether a given equation is a linear equation in two variables",
+      "prerequisites": [
+        "class9-mathematics-one-variable-form",
+        "class9-mathematics-degree-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": "introduction"
+    },
+    {
+      "id": "class9-mathematics-frame-equation-from-words",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Frame equation from words",
+      "outcome": "Frame a linear equation in two variables from a word statement, such as cost problems",
+      "prerequisites": [
+        "class9-mathematics-identify-two-variables-equation"
+      ],
+      "difficulty": 3,
+      "lessonRef": "introduction"
+    },
+    {
+      "id": "class9-mathamentals-placeholder-ignore",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "placeholder",
+      "outcome": "placeholder",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-identify-coefficients-xy",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Coefficients of x and y",
+      "outcome": "Identify the coefficients of x and y and the constant term in a linear equation in two variables",
+      "prerequisites": [
+        "class9-mathematics-identify-coefficients",
+        "class9-mathematics-constant-term-meaning"
+      ],
+      "difficulty": 2,
+      "lessonRef": "introduction"
+    },
+    {
+      "id": "class9-mathematics-coefficient-implied-one",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Implied coefficient of one",
+      "outcome": "Recognise that terms like x or y carry an implied coefficient of 1 when identifying coefficients",
+      "prerequisites": [
+        "class9-mathematics-identify-coefficients-xy"
+      ],
+      "difficulty": 2,
+      "lessonRef": "introduction"
+    },
+    {
+      "id": "class9-mathematics-standard-form-linear-two-var",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Standard form ax+by+c=0",
+      "outcome": "State the standard form ax + by + c = 0 of a linear equation in two variables, with a and b not both zero",
+      "prerequisites": [
+        "class9-mathematics-identify-two-variables-equation"
+      ],
+      "difficulty": 1,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-rewrite-to-standard-form",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Rewrite to standard form",
+      "outcome": "Rewrite a given linear equation, such as 2x = 3y - 5, in the standard form ax + by + c = 0",
+      "prerequisites": [
+        "class9-mathematics-standard-form-linear-two-var"
+      ],
+      "difficulty": 2,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-read-a-b-c-values",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Read a, b, c values",
+      "outcome": "State the values of a, b and c for an equation written in standard form",
+      "prerequisites": [
+        "class9-mathematics-rewrite-to-standard-form"
+      ],
+      "difficulty": 2,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-check-pair-satisfies",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Check pair satisfies equation",
+      "outcome": "Check whether a given ordered pair of values satisfies a linear equation by substituting both variables",
+      "prerequisites": [
+        "class9-mathematics-evaluate-polynomial-value",
+        "class9-mathematics-order-in-pair-matters"
+      ],
+      "difficulty": 2,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-find-missing-value-given-one",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Find one missing value",
+      "outcome": "Find the unknown value of y when x is given (or vice versa) so that the pair satisfies the equation",
+      "prerequisites": [
+        "class9-mathematics-check-pair-satisfies",
+        "class9-mathematics-find-linear-zero"
+      ],
+      "difficulty": 2,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-distinguish-equality-vs-identity",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Equation vs identity",
+      "outcome": "Distinguish a conditional equation in two variables from an identity using substitution checks",
+      "prerequisites": [
+        "class9-mathematics-identity-not-equation",
+        "class9-mathematics-check-pair-satisfies"
+      ],
+      "difficulty": 3,
+      "lessonRef": "linear-equations"
+    },
+    {
+      "id": "class9-mathematics-solution-is-a-pair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Solution is a pair",
+      "outcome": "Explain that a solution of a linear equation in two variables is a pair of values, one for each variable",
+      "prerequisites": [
+        "class9-mathematics-check-pair-satisfies"
+      ],
+      "difficulty": 2,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-produce-solution-by-choice",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Produce solutions freely",
+      "outcome": "Produce solutions of a linear equation by choosing any value for one variable and computing the other",
+      "prerequisites": [
+        "class9-mathematics-find-missing-value-given-one"
+      ],
+      "difficulty": 2,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-tabulate-four-solutions",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Tabulate four solutions",
+      "outcome": "Tabulate at least four distinct solutions of a given linear equation in two variables",
+      "prerequisites": [
+        "class9-mathematics-produce-solution-by-choice",
+        "class9-mathematics-complete-table-of-points"
+      ],
+      "difficulty": 2,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-fractional-solutions-exist",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Solutions may be fractions",
+      "outcome": "Produce solutions involving fractional or negative values when whole-number choices do not give them",
+      "prerequisites": [
+        "class9-mathematics-produce-solution-by-choice",
+        "class9-mathematics-define-rational-number"
+      ],
+      "difficulty": 3,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-infinitely-many-solutions",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Infinitely many solutions",
+      "outcome": "Explain why a linear equation in two variables has infinitely many solutions, citing the free choice of one variable",
+      "prerequisites": [
+        "class9-mathematics-produce-solution-by-choice"
+      ],
+      "difficulty": 3,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-solutions-not-pairs-rejected",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Reject non-solutions",
+      "outcome": "Justify why a given pair is not a solution by showing the substituted equation fails",
+      "prerequisites": [
+        "class9-mathematics-check-pair-satisfies"
+      ],
+      "difficulty": 2,
+      "lessonRef": "solution-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-graph-needs-two-points",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Two points fix a line",
+      "outcome": "State that a straight line is determined uniquely by any two distinct points on it",
+      "prerequisites": [
+        "class9-mathematics-join-points-in-order"
+      ],
+      "difficulty": 1,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-select-convenient-solutions",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Choose convenient points",
+      "outcome": "Select two solutions of an equation that are convenient to plot, avoiding fractional coordinates when possible",
+      "prerequisites": [
+        "class9-mathematics-tabulate-four-solutions",
+        "class9-mathematics-plot-any-quadrant-point"
+      ],
+      "difficulty": 2,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-plot-solutions-and-join",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Plot and join solutions",
+      "outcome": "Draw the graph of a linear equation by plotting two of its solutions and joining them with a straight line extended both ways",
+      "prerequisites": [
+        "class9-mathematics-select-convenient-solutions",
+        "class9-mathematics-plot-sequence-of-points"
+      ],
+      "difficulty": 3,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-graph-is-straight-line",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Verify line is straight",
+      "outcome": "Verify that the graph of a linear equation is a straight line by checking that a third plotted solution lies on it",
+      "prerequisites": [
+        "class9-mathematics-plot-solutions-and-join",
+        "class9-mathematics-check-plotted-point"
+      ],
+      "difficulty": 3,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-point-on-graph-is-solution",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Point means solution",
+      "outcome": "Read the coordinates of a point on the graph and state that they form a solution of the equation",
+      "prerequisites": [
+        "class9-mathematics-write-point-coordinates",
+        "class9-mathematics-plot-solutions-and-join"
+      ],
+      "difficulty": 2,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-point-off-graph-not-solution",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Off-graph not solution",
+      "outcome": "Conclude that a point not lying on the graph does not give a solution of the equation",
+      "prerequisites": [
+        "class9-mathematics-point-on-graph-is-solution"
+      ],
+      "difficulty": 2,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-every-graph-point-satisfies",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Every point satisfies",
+      "outcome": "Explain that every point on the line gives a solution and every solution corresponds to a point on the line",
+      "prerequisites": [
+        "class9-mathematics-point-on-graph-is-solution",
+        "class9-mathematics-infinitely-many-solutions"
+      ],
+      "difficulty": 4,
+      "lessonRef": "graph-of-a-linear-equation"
+    },
+    {
+      "id": "class9-mathematics-x-axis-line-y-zero",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "x-axis is y=0",
+      "outcome": "Relate the x-axis to the equation y = 0, using the fact that every point on it has y-coordinate 0",
+      "prerequisites": [
+        "class9-mathematics-points-on-x-axis"
+      ],
+      "difficulty": 2,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-y-axis-line-x-zero",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "y-axis is x=0",
+      "outcome": "Relate the y-axis to the equation x = 0, using the fact that every point on it has x-coordinate 0",
+      "prerequisites": [
+        "class9-mathematics-points-on-y-axis"
+      ],
+      "difficulty": 2,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-graph-x-equals-a",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Graph of x=a",
+      "outcome": "Draw the vertical line x = a through the point where it meets the x-axis",
+      "prerequisites": [
+        "class9-mathematics-y-axis-line-x-zero",
+        "class9-mathematics-plot-axis-point"
+      ],
+      "difficulty": 2,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-graph-y-equals-b",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Graph of y=b",
+      "outcome": "Draw the horizontal line y = b through the point where it meets the y-axis",
+      "prerequisites": [
+        "class9-mathematics-x-axis-line-y-zero",
+        "class9-mathematics-plot-axis-point"
+      ],
+      "difficulty": 2,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-classify-horizontal-vertical",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Horizontal or vertical",
+      "outcome": "Classify a line through two given points as horizontal or vertical by comparing their coordinates",
+      "prerequisites": [
+        "class9-mathematics-graph-x-equals-a",
+        "class9-mathematics-graph-y-equals-b"
+      ],
+      "difficulty": 2,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-equation-from-horizontal-line",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Equation of horizontal line",
+      "outcome": "Write the equation y = b of the horizontal line through a point whose y-coordinate is b",
+      "prerequisites": [
+        "class9-mathematics-graph-y-equals-b"
+      ],
+      "difficulty": 3,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-equation-from-vertical-line",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Equation of vertical line",
+      "outcome": "Write the equation x = a of the vertical line through a point whose x-coordinate is a",
+      "prerequisites": [
+        "class9-mathematics-graph-x-equals-a"
+      ],
+      "difficulty": 3,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-x-equals-a-one-variable-view",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "x=a as two-variable",
+      "outcome": "Explain how the one-variable equation x = a can be viewed as the two-variable equation x + 0.y = a",
+      "prerequisites": [
+        "class9-mathematics-standard-form-linear-two-var",
+        "class9-mathematics-graph-x-equals-a"
+      ],
+      "difficulty": 3,
+      "lessonRef": "equations-parallel-to-axes"
+    },
+    {
+      "id": "class9-mathematics-cost-quantity-word-problem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Cost word problem",
+      "outcome": "Frame a linear equation relating number of items and total cost from a word problem and produce a required solution",
+      "prerequisites": [
+        "class9-mathematics-frame-equation-from-words",
+        "class9-mathematics-produce-solution-by-choice"
+      ],
+      "difficulty": 3,
+      "lessonRef": "word-problems"
+    },
+    {
+      "id": "class9-mathematics-age-word-problem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Age word problem",
+      "outcome": "Frame and solve a linear equation in two variables from a statement about ages of two people",
+      "prerequisites": [
+        "class9-mathematics-frame-equation-from-words",
+        "class9-mathematics-produce-solution-by-choice"
+      ],
+      "difficulty": 3,
+      "lessonRef": "word-problems"
+    },
+    {
+      "id": "class9-mathematics-geometry-statement-equation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-two-variables",
+      "title": "Geometry to equation",
+      "outcome": "Translate a geometric statement, such as perimeter relations, into a linear equation in two variables",
+      "prerequisites": [
+        "class9-mathematics-frame-equation-from-words"
+      ],
+      "difficulty": 3,
+      "lessonRef": "word-problems"
+    },
+    {
+      "id": "class9-mathematics-geometry-origin-land",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Origins in land surveying",
+      "outcome": "Describe how geometry originated from the practical need to measure land and re-draw field boundaries after floods along the Nile",
+      "prerequisites": [],
+      "difficulty": 1,
+      "lessonRef": "euclid-intro"
+    },
+    {
+      "id": "class9-mathematics-geometry-meaning-etymology",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Meaning of 'geometry'",
+      "outcome": "State that the word 'geometry' comes from the Greek words for earth and measurement",
+      "prerequisites": [
+        "class9-mathematics-geometry-origin-land"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-intro"
+    },
+    {
+      "id": "class9-mathematics-define-geometry-study",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Define geometry",
+      "outcome": "Define geometry as the study of shapes, sizes and positions of figures built on basic assumptions called axioms and postulates",
+      "prerequisites": [
+        "class9-mathematics-geometry-origin-land"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-intro"
+    },
+    {
+      "id": "class9-mathematics-egyptian-survey-example",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Surveying example",
+      "outcome": "Explain, using a simple diagram of a rectangular field, how surveyors used ropes and right angles to measure land",
+      "prerequisites": [
+        "class9-mathematics-geometry-origin-land"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-intro"
+    },
+    {
+      "id": "class9-mathematics-geometry-india-contribution",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Geometry in Indian texts",
+      "outcome": "Identify examples of geometric rules in ancient Indian works such as the Sulbasutras used for constructing altars",
+      "prerequisites": [
+        "class9-mathematics-geometry-origin-land"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-intro"
+    },
+    {
+      "id": "class9-mathematics-abstract-from-shapes",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "From solid to abstract",
+      "outcome": "Order the progression solid, surface, line, point as each dimension is removed step by step",
+      "prerequisites": [
+        "class9-mathematics-define-geometry-study"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-define-point-euclid",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Euclid's definition of point",
+      "outcome": "State Euclid's definition of a point as that which has no part",
+      "prerequisites": [
+        "class9-mathematics-abstract-from-shapes"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-define-line-euclid",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Euclid's definition of line",
+      "outcome": "State Euclid's definition of a line as length without breadth, and a straight line as one which lies evenly with the points on itself",
+      "prerequisites": [
+        "class9-mathematics-abstract-from-shapes"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-define-surface-euclid",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Euclid's definition of surface",
+      "outcome": "State Euclid's definition of a surface as that which has length and breadth only",
+      "prerequisites": [
+        "class9-mathematics-abstract-from-shapes"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-definitions-not-provable",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Definitions rely on ideas",
+      "outcome": "Explain why Euclid's definitions are imperfect because they define terms using other undefined notions such as 'part' or 'evenly'",
+      "prerequisites": [
+        "class9-mathematics-define-point-euclid",
+        "class9-mathematics-define-line-euclid"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-identify-solid-surface-line-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Classify geometric parts",
+      "outcome": "Classify given descriptions (edge of a box, corner tip, sheet face) as solid, surface, line or point",
+      "prerequisites": [
+        "class9-mathematics-define-surface-euclid",
+        "class9-mathematics-define-line-euclid",
+        "class9-mathematics-define-point-euclid"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-undefined-terms-list",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Undefined terms",
+      "outcome": "Name point, line and plane as the terms taken as undefined starting ideas in modern geometry",
+      "prerequisites": [
+        "class9-mathematics-definitions-not-provable"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-defs"
+    },
+    {
+      "id": "class9-mathematics-axiom-vs-postulate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Axiom vs postulate",
+      "outcome": "Distinguish between axioms (common notions true in all of mathematics) and postulates (assumptions specific to geometry)",
+      "prerequisites": [
+        "class9-mathematics-define-geometry-study"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-axiom-equals-added",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Axiom: equals added",
+      "outcome": "State Euclid's first axiom that things which are equal to the same thing are equal to one another, and apply it to justify a simple equality",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-axiom-add-subtract-equals",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Axioms: add/subtract equals",
+      "outcome": "Apply the axioms about adding equals to equals and subtracting equals from equals to justify statements such as if x = y then x + 3 = y + 3",
+      "prerequisites": [
+        "class9-mathematics-axiom-equals-added"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-axiom-whole-parts",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Whole and part axioms",
+      "outcome": "State the axioms that the whole is greater than the part, and apply them to reject claims like half of a segment exceeding the whole",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-axiom-things-coincident",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Coincidence axiom",
+      "outcome": "Apply the axiom that things which coincide with one another are equal to conclude two segments are equal by superposition",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-justify-statement-axioms",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Justify via axioms",
+      "outcome": "Justify a multi-step statement such as if AB = PQ and PQ = CD then AB = CD by naming the axiom used at each step",
+      "prerequisites": [
+        "class9-mathematics-axiom-equals-added",
+        "class9-mathematics-axiom-add-subtract-equals"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-axioms-true-universal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Axioms need no proof",
+      "outcome": "Explain why axioms are accepted without proof as self-evident universal truths on which all deductions rest",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-state-postulates-one-three",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Postulates 1–3 stated",
+      "outcome": "State Euclid's first three postulates: drawing a straight line through any two points, extending it indefinitely, and drawing a circle with any centre and radius",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-postulate-two-points-line",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Unique line through points",
+      "outcome": "Illustrate with a drawing that exactly one straight line can be drawn through two distinct points",
+      "prerequisites": [
+        "class9-mathematics-state-postulates-one-three"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-postulate-extension",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Extending a segment",
+      "outcome": "Draw a finite straight segment extended further in either direction, matching the second postulate",
+      "prerequisites": [
+        "class9-mathematics-state-postulates-one-three"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-postulate-circle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Drawing circles",
+      "outcome": "Given a marked centre and a radius, draw the circle described by the third postulate and identify centre and radius on the figure",
+      "prerequisites": [
+        "class9-mathematics-state-postulates-one-three"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-postulate-four-right-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Fourth postulate",
+      "outcome": "State the fourth postulate that all right angles are equal to one another and mark equal right angles on a figure",
+      "prerequisites": [
+        "class9-mathematics-state-postulates-one-three"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-state-fifth-postulate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Fifth postulate stated",
+      "outcome": "State Euclid's fifth postulate about two lines cut by a transversal meeting where the sum of inner angles is less than two right angles",
+      "prerequisites": [
+        "class9-mathematics-postulate-four-right-angles"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-illustrate-fifth-postulate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Draw fifth postulate figure",
+      "outcome": "Draw the transversal figure of the fifth postulate, marking interior angles whose sum is less than 180° and the side on which the lines meet",
+      "prerequisites": [
+        "class9-mathematics-state-fifth-postulate"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-predict-meeting-side",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Predict side of intersection",
+      "outcome": "Given a figure with a transversal, predict on which side the two lines will meet according to the fifth postulate",
+      "prerequisites": [
+        "class9-mathematics-illustrate-fifth-postulate"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-sum-two-right-angle-check",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Compare angle sums",
+      "outcome": "For several transversal figures, decide whether the sum of interior angles equals, exceeds, or falls short of two right angles",
+      "prerequisites": [
+        "class9-mathematics-illustrate-fifth-postulate"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-postulates"
+    },
+    {
+      "id": "class9-mathematics-postulates-vs-axioms-complexity",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Why postulate five differs",
+      "outcome": "Compare the short first four postulates with the long fifth postulate and explain why Euclid avoided using it until late in the Elements",
+      "prerequisites": [
+        "class9-mathematics-state-fifth-postulate"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-fifth-unused-early-theorems",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Postponed use",
+      "outcome": "Identify that Euclid proved his early results without the fifth postulate, treating it as possibly unnecessary",
+      "prerequisites": [
+        "class9-mathematics-postulates-vs-axioms-complexity"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-attempted-proofs-fifth",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Failed proof attempts",
+      "outcome": "Explain why centuries of attempts to deduce the fifth postulate from the others failed, leading to equivalent versions instead",
+      "prerequisites": [
+        "class9-mathematics-postulates-vs-axioms-complexity"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-playfair-axiom-state",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Playfair's axiom",
+      "outcome": "State Playfair's axiom: for every line and point not on it, exactly one parallel line passes through the point",
+      "prerequisites": [
+        "class9-mathematics-state-fifth-postulate"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-playfair-illustrate",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Draw Playfair figure",
+      "outcome": "Draw a line, an external point and the unique parallel through it, then attempt a second parallel and explain why none exists",
+      "prerequisites": [
+        "class9-mathematics-playfair-axiom-state"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-equivalence-fifth-playfair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Equivalence sketch",
+      "outcome": "Explain in words why Playfair's version implies Euclid's fifth postulate and vice versa, so assuming either gives the same geometry",
+      "prerequisites": [
+        "class9-mathematics-playfair-illustrate",
+        "class9-mathematics-illustrate-fifth-postulate"
+      ],
+      "difficulty": 4,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-no-two-intersect-through-point",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Two lines through point",
+      "outcome": "Show that two lines cannot both pass through a single point and be parallel to the same third line, using Playfair's uniqueness",
+      "prerequisites": [
+        "class9-mathematics-playfair-axiom-state"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-sum-transversal-version",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Angle sum version",
+      "outcome": "State the equivalent condition that two lines are parallel when the sum of co-interior angles with a transversal is exactly two right angles",
+      "prerequisites": [
+        "class9-mathematics-sum-two-right-angle-check"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-nonintersecting-lines-definition",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Parallel lines meaning",
+      "outcome": "Define non-intersecting (parallel) lines as lines in the same plane that never meet however far they are produced",
+      "prerequisites": [
+        "class9-mathematics-postulate-two-points-line"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-distance-check-parallel",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Constant distance test",
+      "outcome": "Verify whether two drawn lines stay equidistant at three chosen places and relate constant distance to being non-intersecting",
+      "prerequisites": [
+        "class9-mathematics-nonintersecting-lines-definition"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-consistent-system-axioms",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Consistency of assumptions",
+      "outcome": "Explain that a system of axioms must be consistent, so no theorem may contradict another or an axiom",
+      "prerequisites": [
+        "class9-mathematics-axioms-true-universal"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-independent-axioms",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Independence of axioms",
+      "outcome": "Explain what it means for an axiom to be independent — not deducible from the others — and connect this to the status of the fifth postulate",
+      "prerequisites": [
+        "class9-mathematics-consistent-system-axioms"
+      ],
+      "difficulty": 4,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-deductive-reasoning-meaning",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Deductive reasoning",
+      "outcome": "Contrast deductive reasoning, which derives conclusions from accepted truths, with empirical verification by measuring drawings",
+      "prerequisites": [
+        "class9-mathematics-axioms-true-universal"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-theorem-proof-structure",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Theorem and proof",
+      "outcome": "Identify the parts of a mathematical argument — given, to prove, construction, proof — as used in the Elements",
+      "prerequisites": [
+        "class9-mathematics-deductive-reasoning-meaning"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-elements-significance",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Euclid's Elements",
+      "outcome": "Describe the Elements as thirteen books organising all known geometry from a handful of definitions, axioms and postulates",
+      "prerequisites": [
+        "class9-mathematics-define-geometry-study"
+      ],
+      "difficulty": 1,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-infinite-line-assumption",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Lines have no ends",
+      "outcome": "Recognise that treating lines as endless is an idealisation assumed in the postulates, not something a drawing can show fully",
+      "prerequisites": [
+        "class9-mathematics-postulate-extension"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-plane-assumption",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Flat plane assumption",
+      "outcome": "State that Euclidean geometry assumes all figures lie in a flat plane, and identify figures drawn on curved surfaces as outside this assumption",
+      "prerequisites": [
+        "class9-mathematics-undefined-terms-list"
+      ],
+      "difficulty": 2,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-non-euclidean-glimpse",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Beyond the fifth postulate",
+      "outcome": "Give a qualitative example (triangles on a sphere) showing geometry changes if the fifth postulate is replaced",
+      "prerequisites": [
+        "class9-mathematics-equivalence-fifth-playfair"
+      ],
+      "difficulty": 5,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-apply-axiom-word-problem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Axiom word application",
+      "outcome": "Solve a comparison problem such as 'Ravi and Farida have equal marbles; Ravi gains some' by naming which axiom guarantees the conclusion",
+      "prerequisites": [
+        "class9-mathematics-justify-statement-axioms"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-axioms"
+    },
+    {
+      "id": "class9-mathematics-classify-assumption-or-result",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "euclids-geometry",
+      "title": "Assumption or result?",
+      "outcome": "Classify given sentences as definition, axiom, postulate or provable result within Euclid's framework",
+      "prerequisites": [
+        "class9-mathematics-axiom-vs-postulate",
+        "class9-mathematics-define-point-euclid"
+      ],
+      "difficulty": 3,
+      "lessonRef": "euclid-fifth"
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-intro-recall-proof-method",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Recall proof method",
+      "outcome": "Recall that geometry results are proved from previously proved facts and axioms",
+      "prerequisites": [
+        "class9-mathematics-deductive-reasoning-meaning",
+        "class9-mathematics-theorem-proof-structure"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-intro-name-objects",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Name basic objects",
+      "outcome": "Name the basic objects used in geometry: line, ray, and angle",
+      "prerequisites": [
+        "class9-mathematics-define-line-euclid",
+        "class9-mathematics-define-point-euclid"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-ray",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define ray",
+      "outcome": "Define a ray as a part of a line with one endpoint and extending infinitely in one direction",
+      "prerequisites": [
+        "class9-mathematics-define-line-euclid",
+        "class9-mathematics-define-point-euclid"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define angle",
+      "outcome": "Define an angle as the figure formed by two rays with a common endpoint",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-ray"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-acute-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define acute angle",
+      "outcome": "Define an acute angle and give an example with its measure between 0° and 90°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-right-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define right angle",
+      "outcome": "Define a right angle and give an example with measure exactly 90°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-obtuse-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define obtuse angle",
+      "outcome": "Define an obtuse angle and give an example with its measure between 90° and 180°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-straight-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define straight angle",
+      "outcome": "Define a straight angle and give an example with measure exactly 180°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-reflex-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define reflex angle",
+      "outcome": "Define a reflex angle and give an example with its measure between 180° and 360°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-classify-angle-type",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Classify angle by measure",
+      "outcome": "Classify an angle as acute, right, obtuse, straight, or reflex given its degree measure",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-acute-angle",
+        "class9-mathematics-lines-and-angles-define-right-angle",
+        "class9-mathematics-lines-and-angles-define-obtuse-angle",
+        "class9-mathematics-lines-and-angles-define-straight-angle",
+        "class9-mathematics-lines-and-angles-define-reflex-angle"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-identify-adjacent-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify adjacent angles",
+      "outcome": "Identify adjacent angles in a figure",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-identify-linear-pair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify linear pair",
+      "outcome": "Identify a linear pair of adjacent angles in a figure",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-identify-adjacent-angles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-identify-vertically-opposite-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify vertically opposite angles",
+      "outcome": "Identify vertically opposite angles formed by intersecting lines",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle",
+        "class9-mathematics-define-line-euclid"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-complementary-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define complementary angles",
+      "outcome": "Define complementary angles as two angles whose sum is 90°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-supplementary-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define supplementary angles",
+      "outcome": "Define supplementary angles as two angles whose sum is 180°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-identify-complementary-pair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify complementary pairs",
+      "outcome": "Identify whether a pair of angles are complementary",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-complementary-angles"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-identify-supplementary-pair",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify supplementary pairs",
+      "outcome": "Identify whether a pair of angles are supplementary",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-supplementary-angles"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-explain-intersecting-lines",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Explain intersecting lines",
+      "outcome": "Explain that two lines in a plane intersect if they have exactly one common point",
+      "prerequisites": [
+        "class9-mathematics-define-line-euclid"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-explain-parallel-lines",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Explain parallel lines",
+      "outcome": "Explain that two lines in a plane are parallel if they never meet",
+      "prerequisites": [
+        "class9-mathematics-nonintersecting-lines-definition"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-relate-parallelism-distance",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Parallel lines constant distance",
+      "outcome": "Relate parallel lines to the property that the distance between them is constant",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-explain-parallel-lines"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-linear-pair-property",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Use linear pair property",
+      "outcome": "Use the linear pair property to find unknown angles in a figure",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-identify-linear-pair"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-vertically-opposite-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State vertically opposite equal",
+      "outcome": "State that vertically opposite angles are equal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-identify-vertically-opposite-angles"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-prove-vertically-opposite-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Prove vertically opposite equal",
+      "outcome": "Prove that vertically opposite angles are equal using the linear pair axiom",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-vertically-opposite-equal",
+        "class9-mathematics-lines-and-angles-linear-pair-property"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-vertically-opposite-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply vertically opposite equality",
+      "outcome": "Apply the equality of vertically opposite angles to find unknown angles in a figure",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-vertically-opposite-equal"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-solve-complementary-supplementary-problems",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Solve comp/supp multi-step",
+      "outcome": "Solve multi-step problems involving complementary and supplementary angle relations",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-identify-complementary-pair",
+        "class9-mathematics-lines-and-angles-identify-supplementary-pair"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-define-transversal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define transversal",
+      "outcome": "Define a transversal as a line that intersects two or more lines at distinct points",
+      "prerequisites": [
+        "class9-mathematics-define-line-euclid",
+        "class9-mathematics-lines-and-angles-explain-intersecting-lines"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-name-corresponding-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify corresponding angles",
+      "outcome": "Identify corresponding angles formed by a transversal cutting two lines",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-transversal"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-name-alternate-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify alternate interior angles",
+      "outcome": "Identify alternate interior angles formed by a transversal cutting two lines",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-transversal"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-name-alternate-exterior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify alternate exterior angles",
+      "outcome": "Identify alternate exterior angles formed by a transversal cutting two lines",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-transversal"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-name-co-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify co-interior angles",
+      "outcome": "Identify co-interior (same-side interior) angles formed by a transversal cutting two lines",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-transversal"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State corresponding angles axiom",
+      "outcome": "State that if two parallel lines are cut by a transversal, then each pair of corresponding angles is equal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-name-corresponding-angles",
+        "class9-mathematics-lines-and-angles-explain-parallel-lines"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-alternate-interior-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State alternate interior theorem",
+      "outcome": "State the theorem: alternate interior angles are equal when parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-name-alternate-interior-angles",
+        "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-alternate-exterior-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State alternate exterior theorem",
+      "outcome": "State the theorem: alternate exterior angles are equal when parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-name-alternate-exterior-angles",
+        "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-co-interior-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State co-interior theorem",
+      "outcome": "State that co-interior (same-side interior) angles are supplementary when parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-name-co-interior-angles",
+        "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-corresponding-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply corresponding angles",
+      "outcome": "Use the corresponding angles axiom to find unknown angles when parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-alternate-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply alternate interior angles",
+      "outcome": "Use the alternate interior angles theorem to find unknown angles",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-alternate-interior-theorem"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-alternate-exterior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply alternate exterior angles",
+      "outcome": "Use the alternate exterior angles theorem to find unknown angles",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-alternate-exterior-theorem"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-co-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply co-interior angles",
+      "outcome": "Use the co-interior angles theorem to find unknown angles",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-co-interior-theorem"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-converse-corresponding-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Converse corresponding angles",
+      "outcome": "Use the converse of the corresponding angles axiom to conclude that two lines are parallel",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-corresponding-angles-axiom"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-converse-alternate-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Converse alternate interior angles",
+      "outcome": "Use the converse of the alternate interior angles theorem to conclude that two lines are parallel",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-alternate-interior-theorem"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-converse-co-interior-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Converse co-interior angles",
+      "outcome": "Use the converse of the co-interior angles theorem to conclude that two lines are parallel",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-co-interior-theorem"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-combined-unknown-angles-parallel-lines",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Combined parallel line problems",
+      "outcome": "Solve for unknown angles in figures involving parallel lines cut by a transversal using multiple angle relations",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-apply-corresponding-angles",
+        "class9-mathematics-lines-and-angles-apply-alternate-interior-angles",
+        "class9-mathematics-lines-and-angles-apply-alternate-exterior-angles",
+        "class9-mathematics-lines-and-angles-apply-co-interior-angles",
+        "class9-mathematics-lines-and-angles-linear-pair-property",
+        "class9-mathematics-lines-and-angles-apply-vertically-opposite-equal"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-angle-sum-triangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State angle sum of triangle",
+      "outcome": "State that the sum of the interior angles of a triangle is 180°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-prove-angle-sum-triangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Prove angle sum of triangle",
+      "outcome": "Prove that the sum of the angles of a triangle is 180° using parallel lines and transversal",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle",
+        "class9-mathematics-lines-and-angles-state-alternate-interior-theorem"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-angle-sum-triangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply angle sum of triangle",
+      "outcome": "Apply the angle sum property to find missing angles in a triangle",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-state-exterior-angle-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State exterior angle theorem",
+      "outcome": "State the exterior angle theorem: an exterior angle equals the sum of the two remote interior angles",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-prove-exterior-angle-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Prove exterior angle theorem",
+      "outcome": "Prove the exterior angle theorem using the angle sum property",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-apply-exterior-angle-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply exterior angle theorem",
+      "outcome": "Apply the exterior angle theorem to find unknown angles in triangles",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-state-exterior-angle-theorem"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class9-mathematics-lines-and-angles-solve-combined-triangle-problems",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Solve combined triangle problems",
+      "outcome": "Solve problems that combine the angle sum property and exterior angle theorem with parallel line relations",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-apply-angle-sum-triangle",
+        "class9-mathematics-lines-and-angles-apply-exterior-angle-theorem",
+        "class9-mathematics-lines-and-angles-apply-corresponding-angles",
+        "class9-mathematics-lines-and-angles-apply-alternate-interior-angles"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class9-mathematics-triangles-define-triangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define triangle",
+      "outcome": "Define a triangle as a three-sided closed polygon",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-intro-name-objects"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-name-parts",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Name triangle parts",
+      "outcome": "Name the vertices, sides, and angles of a given triangle",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-scalene",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define scalene triangle",
+      "outcome": "Define a scalene triangle as a triangle with all sides of different lengths",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-isosceles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define isosceles triangle",
+      "outcome": "Define an isosceles triangle as a triangle with at least two equal sides",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-equilateral",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define equilateral triangle",
+      "outcome": "Define an equilateral triangle as a triangle with all sides equal",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-acute",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define acute triangle",
+      "outcome": "Define an acute triangle as a triangle with all angles less than 90°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-acute-angle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-right",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define right triangle",
+      "outcome": "Define a right triangle as a triangle with one right angle",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-right-angle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-define-obtuse",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Define obtuse triangle",
+      "outcome": "Define an obtuse triangle as a triangle with one angle greater than 90°",
+      "prerequisites": [
+        "class9-mathematics-lines-and-angles-define-obtuse-angle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-classify-by-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Classify by sides",
+      "outcome": "Classify a given triangle as scalene, isosceles, or equilateral based on side lengths",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-scalene",
+        "class9-mathematics-triangles-define-isosceles",
+        "class9-mathematics-triangles-define-equilateral"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-classify-by-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Classify by angles",
+      "outcome": "Classify a given triangle as acute, right, or obtuse based on angle measures",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-acute",
+        "class9-mathematics-triangles-define-right",
+        "class9-mathematics-triangles-define-obtuse"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-congruence",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State congruence meaning",
+      "outcome": "State that congruent figures have exactly the same shape and size",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-write-correspondence-vertices",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Write vertex correspondence",
+      "outcome": "Given two triangles, write a correspondence of vertices (e.g., A↔P, B↔Q, C↔R) such that the triangles could be congruent",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-congruence",
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-congruence-notation",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Use congruence notation",
+      "outcome": "Use the symbol ≅ correctly in statements like ΔABC ≅ ΔPQR",
+      "prerequisites": [
+        "class9-mathematics-triangles-write-correspondence-vertices"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-identify-equal-parts",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Identify equal parts from congruence",
+      "outcome": "Given a congruence statement ΔABC ≅ ΔPQR, identify all equal corresponding sides and angles",
+      "prerequisites": [
+        "class9-mathematics-triangles-congruence-notation"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-list-corresponding-parts",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "List six equal parts",
+      "outcome": "List all three pairs of equal sides and three pairs of equal angles from a given triangle congruence",
+      "prerequisites": [
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-SAS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State SAS criterion",
+      "outcome": "State the SAS congruence criterion: if two sides and the included angle of one triangle are equal to two sides and the included angle of another triangle, the triangles are congruent",
+      "prerequisites": [
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-ASA",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State ASA criterion",
+      "outcome": "State the ASA congruence criterion: if two angles and the included side of one triangle are equal to two angles and the included side of another triangle, the triangles are congruent",
+      "prerequisites": [
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-SSS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State SSS criterion",
+      "outcome": "State the SSS congruence criterion: if three sides of one triangle are equal to three sides of another triangle, the triangles are congruent",
+      "prerequisites": [
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-RHS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State RHS criterion",
+      "outcome": "State the RHS congruence criterion: if the hypotenuse and one side of a right triangle are equal to the hypotenuse and one side of another right triangle, the triangles are congruent",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-right",
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-identify-criterion",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Identify congruence criterion",
+      "outcome": "Given two triangles with marked equal parts, identify which congruence criterion (SAS, ASA, SSS, RHS) applies or state that none applies",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-SAS",
+        "class9-mathematics-triangles-state-ASA",
+        "class9-mathematics-triangles-state-SSS",
+        "class9-mathematics-triangles-state-RHS"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-SAS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply SAS criterion",
+      "outcome": "Prove two triangles congruent using the SAS criterion given appropriate equalities in a diagram",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-SAS",
+        "class9-mathematics-triangles-setup-proof"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-ASA",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply ASA criterion",
+      "outcome": "Prove two triangles congruent using the ASA criterion given appropriate equalities",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-ASA",
+        "class9-mathematics-triangles-setup-proof"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-SSS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply SSS criterion",
+      "outcome": "Prove two triangles congruent using the SSS criterion given appropriate equalities",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-SSS",
+        "class9-mathematics-triangles-setup-proof"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-RHS",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply RHS criterion",
+      "outcome": "Prove two right triangles congruent using the RHS criterion",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-RHS",
+        "class9-mathematics-triangles-setup-proof"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-setup-proof",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Set up congruence proof",
+      "outcome": "Given a geometric diagram, identify the triangles to prove congruent and write the given statements and what is to be proved",
+      "prerequisites": [
+        "class9-mathematics-triangles-identify-equal-parts",
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-write-two-column",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Write two-column proof",
+      "outcome": "Complete a two-column proof of triangle congruence by filling statements and reasons, including the congruence criterion and CPCTC",
+      "prerequisites": [
+        "class9-mathematics-triangles-apply-SAS",
+        "class9-mathematics-triangles-apply-ASA",
+        "class9-mathematics-triangles-apply-SSS",
+        "class9-mathematics-triangles-apply-RHS"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-congruence-cpctc",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Use CPCTC",
+      "outcome": "State that corresponding parts of congruent triangles are equal (CPCTC) and apply it to deduce equal sides or angles after proving congruence",
+      "prerequisites": [
+        "class9-mathematics-triangles-write-two-column",
+        "class9-mathematics-triangles-identify-equal-parts"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-angles-equal-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State angles opposite equal sides",
+      "outcome": "State the theorem: angles opposite to equal sides of a triangle are equal",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-isosceles"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-prove-angles-equal-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove angles opposite equal sides",
+      "outcome": "Prove that angles opposite equal sides are equal using SAS congruence (drop median or bisector)",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-angles-equal-sides",
+        "class9-mathematics-triangles-apply-SAS",
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-angles-equal-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply angles equal sides",
+      "outcome": "Find unknown angles in an isosceles triangle using the property that angles opposite equal sides are equal, combined with angle sum",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-angles-equal-sides",
+        "class9-mathematics-lines-and-angles-apply-angle-sum-triangle"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-sides-equal-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State sides opposite equal angles",
+      "outcome": "State the converse: sides opposite to equal angles of a triangle are equal",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-angles-equal-sides"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-prove-sides-equal-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove sides opposite equal angles",
+      "outcome": "Prove that sides opposite equal angles are equal using congruence (e.g., drop perpendicular from vertex, use ASA or AAS)",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-sides-equal-angles",
+        "class9-mathematics-triangles-apply-ASA",
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-sides-equal-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply sides equal angles",
+      "outcome": "Find unknown side lengths in an isosceles triangle using the property that sides opposite equal angles are equal, combined with given side measures",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-sides-equal-angles"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-identify-isosceles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Identify isosceles triangle",
+      "outcome": "Determine whether a triangle is isosceles given side lengths or angle measures using equal sides or equal angles property",
+      "prerequisites": [
+        "class9-mathematics-triangles-apply-angles-equal-sides",
+        "class9-mathematics-triangles-apply-sides-equal-angles"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-combine-isosceles-sum",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Combine isosceles and angle sum",
+      "outcome": "Solve problems that combine isosceles triangle properties and angle sum property to find unknown angles in composite figures",
+      "prerequisites": [
+        "class9-mathematics-triangles-apply-angles-equal-sides",
+        "class9-mathematics-lines-and-angles-apply-angle-sum-triangle"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-prove-isosceles-altitude",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove altitude bisects base",
+      "outcome": "Prove that in an isosceles triangle, the altitude from the vertex to the base bisects the base using congruence",
+      "prerequisites": [
+        "class9-mathematics-triangles-prove-angles-equal-sides",
+        "class9-mathematics-triangles-apply-RHS"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-greater-side-greater-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State greater side greater angle",
+      "outcome": "State the theorem: in a triangle, the greater side has the greater angle opposite it",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle",
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-side-to-angle-order",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Order angles from sides",
+      "outcome": "Given the side lengths of a triangle, order the angles from smallest to largest using the greater-side-greater-angle theorem",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-greater-side-greater-angle"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-greater-angle-greater-side",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State greater angle greater side",
+      "outcome": "State the converse: in a triangle, the greater angle has the greater side opposite it",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-greater-side-greater-angle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-angle-to-side-order",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Order sides from angles",
+      "outcome": "Given the angle measures of a triangle, order the sides from smallest to largest using the greater-angle-greater-side theorem",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-greater-angle-greater-side"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-state-triangle-inequality",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State triangle inequality",
+      "outcome": "State the triangle inequality: the sum of the lengths of any two sides of a triangle is greater than the length of the third side",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-check-triangle-inequality",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Verify triangle inequality",
+      "outcome": "Given three lengths, check whether they satisfy the triangle inequality and determine if they can form a triangle",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-triangle-inequality"
+      ],
+      "difficulty": 2,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-find-range-third-side",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Find third side range",
+      "outcome": "Given two side lengths of a triangle, determine the range of possible lengths for the third side using the triangle inequality",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-triangle-inequality"
+      ],
+      "difficulty": 3,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-apply-inequality-word",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Solve inequality word problems",
+      "outcome": "Solve word problems involving triangle inequalities, such as finding minimum or maximum perimeter given side constraints",
+      "prerequisites": [
+        "class9-mathematics-triangles-check-triangle-inequality",
+        "class9-mathematics-triangles-find-range-third-side"
+      ],
+      "difficulty": 4,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-prove-greater-side-greater-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove greater side greater angle",
+      "outcome": "Prove that in a triangle, if one side is longer than another, the angle opposite the longer side is larger",
+      "prerequisites": [
+        "class9-mathematics-triangles-state-greater-side-greater-angle",
+        "class9-mathematics-triangles-apply-SAS",
+        "class9-mathematics-lines-and-angles-apply-exterior-angle-theorem"
+      ],
+      "difficulty": 5,
+      "lessonRef": ""
+    },
+    {
+      "id": "class9-mathematics-triangles-prove-greater-angle-greater-side",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove greater angle greater side",
+      "outcome": "Prove the converse: in a triangle, if one angle is larger than another, the side opposite the larger angle is longer",
+      "prerequisites": [
+        "class9-mathematics-triangles-prove-greater-side-greater-angle",
+        "class9-mathematics-lines-and-angles-apply-exterior-angle-theorem"
+      ],
+      "difficulty": 5,
+      "lessonRef": ""
+    }
+  ]
+}

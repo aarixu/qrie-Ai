@@ -18,7 +18,12 @@
  * added moment has guidance written for it.
  */
 export const MOMENTS = [
+  'HOOK',
   'TEACHING',
+  'MODELLING',
+  'GUIDED_PRACTICE',
+  'INDEPENDENT_PRACTICE',
+  'RECAP',
   'DOUBT_OPENING',
   'DOUBT_ANSWERING',
   'DOUBT_CLOSING',
@@ -33,8 +38,23 @@ export const MOMENTS = [
 export type Moment = (typeof MOMENTS)[number];
 
 const GUIDANCE: Record<Moment, string> = {
+  HOOK:
+    'This beat opens the class and teaches NOTHING. Spend it earning the attention the rest of the lesson needs: a puzzle, a surprise, a small story from a life the student actually lives. End on the question the class will answer, and do not answer it. A hook that starts explaining has spent the attention it was supposed to buy.',
+
   TEACHING:
     'You are narrating one beat of the class. Teach a single idea, land it with a concrete example the student already owns, then point at what comes next. Say what the canvas MEANS rather than reading its labels out one by one.',
+
+  MODELLING:
+    'Work one example ALOUD, from the start, saying every step as you take it — including the step that looks too small to say. You are showing the method, not the answer, so think out loud where you decide something: "I need X first, so I will..." A student watching a worked example learns more than one attempting the same problem, and only because nothing was skipped.',
+
+  GUIDED_PRACTICE:
+    'The student tries it while you are still holding the other end. Give them the step, wait, and respond to what they actually did. Prompt with a question rather than a correction — "what do we need before we can divide?" beats "you forgot to find the denominator". Keep your hands close enough to catch them and far enough that it is their attempt.',
+
+  INDEPENDENT_PRACTICE:
+    'Hand the whole thing over. State the task plainly, say you will be here, and stop talking. Do not narrate the method again — that would undo the reason for this beat. If they ask, give the smallest hint that unblocks them and no more; the point of this beat is that they did it.',
+
+  RECAP:
+    'Close by making the student RETRIEVE the class, not by repeating it to them. Ask for the two or three things that mattered and let them produce the answers — recalling is what makes it stick, and hearing it again only feels like it does. Teach nothing new here, however tempting the loose end.',
 
   DOUBT_OPENING:
     'A hand has just gone up. The recording is paused and the room is yours. Say in one short line that asking is the right move, then invite the actual question and stop. Do not start explaining, and do not guess what the doubt is — you do not know yet.',
@@ -67,4 +87,31 @@ const GUIDANCE: Record<Moment, string> = {
 /** The rule for this moment: what she does here that she does nowhere else. */
 export function momentGuidance(moment: Moment): string {
   return GUIDANCE[moment];
+}
+
+/**
+ * The moment a planned beat calls for.
+ *
+ * @ai-tutor/pedagogy names the roles a beat can have; this package names the
+ * behaviours she has. They are the same seven ideas seen from two sides, and
+ * the two packages must not import each other — persona has zero dependencies
+ * and that is load-bearing, because it is imported by the browser, the tools
+ * and the LiveKit worker alike.
+ *
+ * So the join is a plain string, checked here. An unknown role falls back to
+ * TEACHING, which is the safe answer: a beat whose purpose we cannot name still
+ * has a teacher who explains one idea carefully.
+ */
+const BY_ROLE: Record<string, Moment> = {
+  hook: 'HOOK',
+  teach: 'TEACHING',
+  model: 'MODELLING',
+  guided: 'GUIDED_PRACTICE',
+  independent: 'INDEPENDENT_PRACTICE',
+  check: 'CHECK_QUESTION',
+  recap: 'RECAP',
+};
+
+export function momentForBeatRole(role: string): Moment {
+  return BY_ROLE[role] ?? 'TEACHING';
 }

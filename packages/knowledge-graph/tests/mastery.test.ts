@@ -59,7 +59,12 @@ describe('applyEvidence', () => {
   it('a correct answer raises the node and its ancestors', () => {
     const index = chain();
     const m = applyEvidence(initialMastery(index), index, answer('C', true));
-    expect(m.C).toBeGreaterThan(0.8);
+    // Bayes with a 1-in-4 guess rate: 0.5 -> 0.78, not the 0.93 a naive pull
+    // gave. One correct answer on a four-option question is real evidence and
+    // not proof, and the difference is exactly what stops luck reading as
+    // knowledge. It still clears the 0.75 a node needs to count as settled.
+    expect(m.C).toBeGreaterThan(0.75);
+    expect(m.C).toBeLessThan(0.85);
     expect(m.B).toBeGreaterThan(PRIOR);
     expect(m.A).toBeGreaterThan(PRIOR);
     // Belief decays with distance: the direct evidence is strongest.

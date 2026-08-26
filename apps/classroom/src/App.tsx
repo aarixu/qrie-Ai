@@ -25,6 +25,7 @@ import { LessonRoute } from './screens/ClassRoom';
 import { LessonComplete } from './screens/LessonComplete';
 import { Profile } from './screens/Profile';
 import { Search } from './screens/Search';
+import { Syllabus } from './screens/Syllabus';
 import { Progress } from './screens/Progress';
 import { Diagnostic } from './screens/Diagnostic';
 import { StudyPlan } from './screens/StudyPlan';
@@ -189,6 +190,7 @@ export default function App() {
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/diagnostic" element={<DiagnosticRoute />} />
           <Route path="/plan" element={<StudyPlanRoute />} />
+          <Route path="/syllabus" element={<Syllabus />} />
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />

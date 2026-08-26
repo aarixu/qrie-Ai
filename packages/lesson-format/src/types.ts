@@ -51,6 +51,31 @@ export interface Beat {
   show: string[];
   /** Element ids emphasised during this beat. Must be a subset of `show`. */
   focus?: string[];
+  /**
+   * Learning Outcome Map node ids this beat TEACHES — the outcomes a student
+   * should hold afterwards that they may not have held before.
+   *
+   * This is the field that turns a lesson from a video into a measurement.
+   * Without it a finished lesson is a tick against a lesson id and a raised
+   * hand puts a whole chapter under suspicion. With it, finishing raises belief
+   * on exactly these outcomes, a hand raised here names exactly what confused
+   * the student, and the beat that collects doubts all term names the outcome
+   * the factory should rewrite.
+   *
+   * Beats that teach nothing new leave it empty, and that is a real answer, not
+   * a gap: a hook earns attention and a recap retrieves what is already there.
+   * Neither should raise belief in anything.
+   *
+   * Optional because five lessons were authored before the map existed. New
+   * lessons are expected to carry it; see `pedagogyErrors`.
+   */
+  teaches?: string[];
+  /**
+   * Node ids this beat CHECKS rather than teaches — a question about something
+   * already covered. Kept separate from `teaches` because a check that raised
+   * belief would be a test that grades itself.
+   */
+  checks?: string[];
   /** Minimum time on this beat even if narration finishes sooner. */
   minMs?: number;
 }

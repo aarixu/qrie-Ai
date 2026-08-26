@@ -87,6 +87,57 @@ function orderPlan(gaps: Gap[], index: GraphIndex, maxSteps: number): PlanStep[]
   const rank = new Map(index.topoOrder().map((id, i) => [id, i]));
   chosen.sort((a, b) => (rank.get(a) ?? 0) - (rank.get(b) ?? 0));
 
+  return toSteps(interleave(chosen, index), index, inPlan);
+}
+
+/**
+ * INTERLEAVING — the same steps, in an order that survives the week.
+ *
+ * Six steps from one chapter in a row is blocked practice. It feels efficient
+ * while it is happening and it is the weaker way to learn: the student stops
+ * having to work out WHICH idea applies, because the answer is always "the
+ * same one as last time". Mixing chapters costs a little fluency in the moment
+ * and buys a lot of retention (Rohrer & Taylor; Bjork's desirable difficulties).
+ *
+ * It is applied AFTER the topological sort and may never break it: a step is
+ * only ever pulled forward past steps it does not depend on. Teaching division
+ * before fractions to make the list look varied would be a far worse trade
+ * than any amount of blocking.
+ */
+function interleave(ordered: string[], index: GraphIndex): string[] {
+  const chapterOf = (id: string): string => index.node(id)?.chapter ?? '';
+  const remaining = [...ordered];
+  const out: string[] = [];
+  const placed = new Set<string>();
+
+  while (remaining.length > 0) {
+    const lastChapter = out.length > 0 ? chapterOf(out[out.length - 1]) : null;
+
+    // The first step whose prerequisites are all already placed (or were never
+    // in the plan) AND which changes the subject. Falling back to the first
+    // ready step keeps the topological order intact when nothing else is legal.
+    const ready = remaining.filter((id) =>
+      index.prerequisitesOf(id).every((p) => !ordered.includes(p) || placed.has(p)),
+    );
+    if (ready.length === 0) {
+      // Cannot happen for a topologically sorted list, but a plan is not the
+      // place to discover that: take the head rather than loop forever.
+      const next = remaining.shift()!;
+      out.push(next);
+      placed.add(next);
+      continue;
+    }
+
+    const next = ready.find((id) => chapterOf(id) !== lastChapter) ?? ready[0];
+    remaining.splice(remaining.indexOf(next), 1);
+    out.push(next);
+    placed.add(next);
+  }
+  return out;
+}
+
+/** Turn ordered node ids into the steps a student reads. */
+function toSteps(chosen: string[], index: GraphIndex, inPlan: ReadonlySet<string>): PlanStep[] {
   return chosen.map((id) => {
     const node = index.node(id);
     return {

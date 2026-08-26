@@ -167,7 +167,9 @@ describe('generateProbes', () => {
     question: `What about ${nodeId}?`,
     options: ['right', 'w1', 'w2', 'w3'],
     correctIndex: 0,
-    misconceptions: ['', 'm1', 'm2', 'm3'],
+    // Sentence-length on purpose: a misconception has to say WHY a student
+    // would pick that option, and the validator now holds it to that.
+    misconceptions: ['', 'confuses cause with effect', 'reverses the direction', 'recalls the wrong stage'],
     ...over,
   });
   const reply = (probes: unknown[]) => JSON.stringify({ probes });

@@ -20,7 +20,7 @@ export {
   type FactorSpec,
 } from './factors';
 
-export { MOMENTS, momentGuidance, type Moment } from './moments';
+export { MOMENTS, momentForBeatRole, momentGuidance, type Moment } from './moments';
 
 export {
   SURFACES,

@@ -50,6 +50,12 @@ Why `beat.show` is a complete set (not a delta): any beat's canvas can be
 reconstructed from that beat alone, which is exactly what the doubt agent's
 `recall(beatId)` needs.
 
+Why `beat.teaches` exists: it is the join between the lesson and the map. A
+finished lesson stops being a tick on a lesson id and becomes evidence about
+named outcomes; a hand raised at a beat names exactly what confused the
+student instead of putting a whole chapter under suspicion; and the beat that
+collects doubts all term names the outcome the factory should rewrite.
+
 ## Repo map
 
 | Path | What | Owns |
@@ -59,7 +65,8 @@ reconstructed from that beat alone, which is exactly what the doubt agent's
 | `packages/player` | playback | beat timing + TTS adapter. Framework-free controller, thin React hook |
 | `packages/voice` | how she is HEARD | browser audio plumbing, Gemini TTS, the narration cache, and the recorded-take adapter. Three layers: recorded, synthesised, browser |
 | `packages/persona` | WHO she is | traits, the factors she adapts to, one rule per teaching moment, and the prompt assembler. Zero dependencies, and it must stay that way |
-| `packages/knowledge-graph` | the map | nanoscale outcome nodes, their prerequisite edges, and belief propagation over them |
+| `packages/knowledge-graph` | the map | nanoscale outcome nodes, their prerequisite edges, belief propagation over them, and the parameters it learns from real answers (slip, guess, edge support) |
+| `packages/pedagogy` | the SHAPE of a class | Rosenshine's principles and backward design as rules a validator enforces, not prose in a prompt. Zero deps |
 | `packages/diagnostic` | the placement test | which probe to ask next, and the plan that falls out of the answers |
 | `packages/doubt-session` | THE HANDOFF | pure state machine: `PLAYING → PAUSING → AGENT_ENTERING → LIVE → AGENT_LEAVING → RESUMING → PLAYING`. Agent behind an adapter |
 | `packages/syllabus` | curriculum as data | Class→Subject→Chapter→Topic, NCERT-aligned |

@@ -17,6 +17,7 @@ import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liv
 import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
+import { recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore, setPreference } from '../stores/preferences';
@@ -200,7 +201,13 @@ export function ClassRoom({
    *   text   — Gemini over REST, the student types (key, no mic)
    *   stub   — a scripted script (no key at all), so the app always runs
    */
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+  const geminiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+  const openRouterKey = import.meta.env.VITE_OPENROUTER_API_KEY as string | undefined;
+  // Typed doubts can go through either. OpenRouter first when its key exists,
+  // because one key reaches the same models when a Google project is blocked.
+  // The LIVE VOICE cannot follow: OpenRouter serves text only, so speaking to
+  // her still needs the Gemini key.
+  const apiKey = openRouterKey ?? geminiKey;
 
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
@@ -226,8 +233,9 @@ export function ClassRoom({
     // guessed class is a tutor pitching a lesson at a child who is not there.
     if (!apiKey || student === null) return createStubAgent();
     if (voiceMode) {
+      // Voice is Gemini-only, and voiceMode is never entered without that key.
       return createLiveAgent({
-        apiKey,
+        apiKey: geminiKey!,
         student,
         onState: setLiveState,
         isMuted: () => mutedRef.current,
@@ -243,8 +251,12 @@ export function ClassRoom({
           }),
       });
     }
-    return createGeminiAgent({ apiKey, student });
-  }, [apiKey, voiceMode, student]);
+    return createGeminiAgent({
+      apiKey,
+      student,
+      provider: openRouterKey ? 'openrouter' : 'gemini',
+    });
+  }, [apiKey, geminiKey, openRouterKey, voiceMode, student]);
 
   const handoff = useMemo(
     () =>
@@ -341,6 +353,9 @@ export function ClassRoom({
   useEffect(() => {
     if (player.state !== 'ended') return;
     markCompleted(lesson.id);
+    // The map hears about it too: a finished class is evidence about the
+    // outcomes its beats declared, not just a tick on a lesson id.
+    recordLessonTaught(lesson);
     navigate(`/complete/${lesson.id}`, { replace: true });
   }, [lesson.id, player.state, navigate]);
 
@@ -352,9 +367,13 @@ export function ClassRoom({
   const raiseHand = async () => {
     const ctx = buildContext(lesson, player.beatIndex);
     logDoubt(lesson.id, ctx.beatId);
+    // Located precisely: this hand is about the outcomes THIS beat teaches,
+    // not about the chapter it happens to sit in.
+    recordDoubtAtBeat(lesson, ctx.beatId);
 
     if (apiKey && student !== null) {
-      const status = await requestMic();
+      // A mic is no use without the key that can carry speech.
+      const status = geminiKey ? await requestMic() : 'denied';
       const useVoice = status === 'granted';
       setVoiceMode(useVoice);
       if (useVoice) {

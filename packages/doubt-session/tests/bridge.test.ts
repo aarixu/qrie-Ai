@@ -8,7 +8,7 @@ const ctxFor = (beatId: string, topic = 'photosynthesis'): DoubtContext => ({
   beatTopic: topic,
   transcriptSoFar: '',
   visibleElementIds: [],
-  recentBeats: [{ id: beatId, topic }],
+  recentBeats: [{ id: beatId, topic }], outcomeIds: [],
 });
 
 describe('bridge lines', () => {

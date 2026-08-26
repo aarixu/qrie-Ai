@@ -30,6 +30,7 @@ const ctx: DoubtContext = {
     { id: 'valves', topic: 'Valves stop backflow' },
     { id: 'chambers', topic: 'Four chambers' },
   ],
+  outcomeIds: [],
 };
 
 const IDENTITY = 'student-42';

@@ -134,15 +134,23 @@ actually makes. A distractor nobody would pick teaches you nothing when it is
 not picked, and wastes the question.
 
 For each wrong option, name the misconception it encodes in "misconceptions",
-aligned to "options" BY INDEX, with an empty string at the correct index. That
-naming is what lets the tutor say WHY a student is stuck rather than just THAT
-they are.
+aligned to "options" BY INDEX. That naming is what lets the tutor say WHY a
+student is stuck rather than just THAT they are.
 
-Example for "Which chamber pumps blood to the whole body?":
-  options:        ["Left ventricle", "Right ventricle", "Left atrium", "Right atrium"]
-  correctIndex:   0
-  misconceptions: ["", "confuses the pulmonary circuit with the systemic circuit",
-                   "thinks atria pump rather than receive",
+TWO RULES ABOUT "misconceptions" THAT ARE REJECTED MECHANICALLY:
+1. misconceptions[correctIndex] MUST be the empty string "". The correct answer
+   is not a misconception, so its slot is blank. If correctIndex is 2, then
+   misconceptions[2] is "" and the other three are filled.
+2. Every other entry must be a SENTENCE about the student's thinking, not a
+   label. "foam" and "both" are rejected; "thinks whipped cream is a colloid
+   because it looks thick" is what is wanted.
+
+Example — note correctIndex is 2 here, so the BLANK is at index 2, not index 0:
+  options:        ["Left atrium", "Right ventricle", "Left ventricle", "Right atrium"]
+  correctIndex:   2
+  misconceptions: ["thinks atria pump rather than receive",
+                   "confuses the pulmonary circuit with the systemic circuit",
+                   "",
                    "confuses side and chamber type together"]
 
 BANNED: "all of the above", "none of the above", options that are obviously

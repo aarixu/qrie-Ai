@@ -8,69 +8,84 @@
       "title": "Number Systems",
       "topics": [
         {
-          "id": "introduction-to-number-systems",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can classify numbers as natural numbers, whole numbers, integers, or rational numbers",
-            "Student can find multiple rational numbers between any two given rational numbers"
+            "Student can state that numbers beyond natural numbers were needed to solve equations like x+2=0",
+            "Student can name the sets of natural numbers, whole numbers, integers and rational numbers"
           ],
           "visualIdeas": [
-            "a nested diagram of number sets with labels and examples for N, W, Z, and Q",
-            "a number line highlighting the zoom-in process between two integers to show rational divisions"
+            "a number line with dots for naturals, wholes and integers shaded progressively",
+            "a table listing each number set with two example members"
           ],
-          "estMinutes": 15
+          "estMinutes": 8
         },
         {
           "id": "irrational-numbers",
           "title": "Irrational Numbers",
           "objectives": [
-            "Student can define an irrational number with examples",
-            "Student can locate the square root of two and square root of three on a number line using a compass"
+            "Student can identify whether a given decimal expansion terminates, recurs or neither",
+            "Student can prove that √2 is irrational by contradiction",
+            "Student can locate √2 on the number line using a right triangle construction"
           ],
           "visualIdeas": [
-            "a step-by-step construction of the square root spiral starting from a unit right-angled triangle",
-            "an arc being drawn with a compass from the hypotenuse of a right-angled triangle down to the number line"
+            "decimal expansions of 1/3, 1/4 and √2 shown side by side",
+            "a unit square whose diagonal is swung onto the number line with compass arcs"
           ],
-          "estMinutes": 20
+          "estMinutes": 14
         },
         {
-          "id": "real-numbers-and-their-decimal-expansions",
+          "id": "real-numbers-decimal-expansions",
           "title": "Real Numbers and their Decimal Expansions",
           "objectives": [
-            "Student can classify decimal expansions of real numbers as terminating, non-terminating recurring, or non-terminating non-recurring",
-            "Student can convert a recurring decimal number into the rational form p/q"
+            "Student can classify a fraction's decimal expansion as terminating or non-terminating recurring from its denominator's prime factors",
+            "Student can convert a repeating decimal back into a fraction"
           ],
           "visualIdeas": [
-            "a comparison table of division steps for 10/3, 7/8, and 1/7, highlighting the repeating remainders",
-            "the algebraic process of multiplying by ten or one hundred written side-by-side with subtraction steps to eliminate the repeating part"
+            "long division of 13/7 showing the repeating block appearing",
+            "a flowchart deciding terminating vs recurring from prime factors 2 and 5"
           ],
-          "estMinutes": 25
+          "estMinutes": 12
+        },
+        {
+          "id": "representing-real-numbers",
+          "title": "Representing Real Numbers on the Number Line",
+          "objectives": [
+            "Student can carry out successive magnification to pin down a real number between two tenths",
+            "Student can explain why every point on the number line corresponds to exactly one real number"
+          ],
+          "visualIdeas": [
+            "successive zoom panels narrowing from interval [2,3] down to 2.36",
+            "a magnifying glass over one small segment of the number line"
+          ],
+          "estMinutes": 10
         },
         {
           "id": "operations-on-real-numbers",
           "title": "Operations on Real Numbers",
           "objectives": [
-            "Student can simplify algebraic expressions containing square roots using algebraic identities",
-            "Student can rationalize the denominator of a real number with a radical term"
+            "Student can simplify sums and products involving surds such as √2 + √8",
+            "Student can rationalise the denominator of an expression like 1/(√3+√2)",
+            "Student can state which properties of rationals fail for irrationals"
           ],
           "visualIdeas": [
-            "a side-by-side algebraic simplification showing terms with radical signs grouping together",
-            "a fraction multiplied by its conjugate conjugate factor, with terms highlighting the difference of squares identity in the denominator"
-          ],
-          "estMinutes": 20
-        },
-        {
-          "id": "laws-of-exponents-for-real-numbers",
-          "title": "Laws of Exponents for Real Numbers",
-          "objectives": [
-            "Student can state the laws of exponents for positive real bases and rational exponents",
-            "Student can simplify exponential expressions by applying the product, quotient, and power laws"
-          ],
-          "visualIdeas": [
-            "a summary chart of exponent laws with algebraic terms on the left and numerical examples on the right",
-            "a step-by-step reduction of a complex rational fraction showing the bases and matching exponents colored differently"
+            "step-by-step rationalisation multiplying numerator and denominator by the conjugate",
+            "a number line addition of two surd lengths using compass arcs"
           ],
           "estMinutes": 15
+        },
+        {
+          "id": "laws-of-exponents",
+          "title": "Laws of Exponents for Real Numbers",
+          "objectives": [
+            "Student can apply the laws of exponents to expressions with irrational bases",
+            "Student can evaluate expressions like 2^(1/3) · 2^(2/3)"
+          ],
+          "visualIdeas": [
+            "the five exponent laws listed with a worked example beside each",
+            "an expression simplifying term by term with exponents combining"
+          ],
+          "estMinutes": 10
         }
       ]
     },
@@ -79,69 +94,84 @@
       "title": "Polynomials",
       "topics": [
         {
-          "id": "introduction-to-polynomials",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can identify whether a given algebraic expression is a polynomial in one variable",
-            "Student can write down the degree and the coefficients of each term of a given polynomial"
+            "Student can distinguish polynomial expressions from non-polynomial expressions",
+            "Student can name polynomials by degree as linear, quadratic or cubic"
           ],
           "visualIdeas": [
-            "a checklist matching algebraic expressions to polynomial criteria highlighting fractional or negative powers",
-            "a diagram of a cubic polynomial with labels pointing to terms, coefficients, variables, and the degree"
+            "expressions sorted into polynomial and not-a-polynomial columns",
+            "degree labels under x²+3x, 5x³−2x, 7"
           ],
-          "estMinutes": 15
+          "estMinutes": 8
         },
         {
           "id": "polynomials-in-one-variable",
           "title": "Polynomials in One Variable",
           "objectives": [
-            "Student can classify a given polynomial as monomial, binomial, or trinomial based on the number of terms",
-            "Student can classify a given polynomial as linear, quadratic, or cubic based on its degree"
+            "Student can identify coefficients and degree of a polynomial in one variable",
+            "Student can classify constant, linear, quadratic and cubic polynomials from examples"
           ],
           "visualIdeas": [
-            "a sorting grid categorizing various expressions into columns of linear, quadratic, and cubic types",
-            "a tree diagram branching first by number of terms and then by degree"
+            "a polynomial with its terms colour-coded and coefficients labelled",
+            "a staircase of degrees 0,1,2,3 with one example each"
           ],
-          "estMinutes": 15
+          "estMinutes": 10
         },
         {
           "id": "zeroes-of-a-polynomial",
           "title": "Zeroes of a Polynomial",
           "objectives": [
-            "Student can calculate the value of a polynomial at a given real number",
-            "Student can verify whether a given real number is a zero of a specific polynomial"
+            "Student can verify whether a given number is a zero of a polynomial by substitution",
+            "Student can find the zero of a linear polynomial ax+b"
           ],
           "visualIdeas": [
-            "a functional 'input-output' box showing a real number entering and the resulting value of the polynomial leaving",
-            "a step-by-step substitution block highlighting the replacement of the variable 'x' with the target value in parentheses"
+            "substitution working shown line by line giving remainder 0",
+            "the graph of p(x)=x²−4 crossing the x-axis at its zeroes"
           ],
-          "estMinutes": 20
+          "estMinutes": 12
+        },
+        {
+          "id": "remainder-theorem",
+          "title": "Remainder Theorem",
+          "objectives": [
+            "Student can state the Remainder Theorem",
+            "Student can compute the remainder when a polynomial is divided by x−a without long division"
+          ],
+          "visualIdeas": [
+            "long division beside the theorem shortcut for the same problem",
+            "p(x) divided by (x−a) with the remainder boxed"
+          ],
+          "estMinutes": 12
         },
         {
           "id": "factorisation-of-polynomials",
           "title": "Factorisation of Polynomials",
           "objectives": [
-            "Student can apply the Factor Theorem to determine if x - a is a factor of a polynomial p(x)",
-            "Student can factorize a quadratic polynomial by splitting the middle term"
+            "Student can factorise a cubic polynomial after spotting one root by trial",
+            "Student can use the Factor Theorem to test a candidate factor",
+            "Student can split the middle term to factorise quadratics"
           ],
           "visualIdeas": [
-            "a flow diagram of the Factor Theorem showing how p(a) = 0 implies factorization",
-            "a grid representation of the splitting method showing the product of coefficients matching the sum of the split terms"
+            "trial roots checked in a table until one gives zero",
+            "factor tree of x³−3x²−10x+24 splitting into three linear factors"
           ],
-          "estMinutes": 25
+          "estMinutes": 16
         },
         {
           "id": "algebraic-identities",
           "title": "Algebraic Identities",
           "objectives": [
-            "Student can state standard algebraic identities including the expansion of trinomial squares and cubic binomials",
-            "Student can calculate products of numbers without direct multiplication by applying algebraic identities"
+            "Student can expand products using identities (a+b)², (a+b)(a−b) and (a+b)³",
+            "Student can apply identities to evaluate squares like 103² mentally",
+            "Student can factorise expressions using the identity a³±b³"
           ],
           "visualIdeas": [
-            "a geometric area model showing a square of side (a + b) split into four sub-regions representing the identity terms",
-            "a template mapping values like 103 x 97 onto the difference of squares identity template"
+            "geometric square split into four areas proving (a+b)²",
+            "identity cards with a worked example on each"
           ],
-          "estMinutes": 30
+          "estMinutes": 15
         }
       ]
     },
@@ -150,43 +180,44 @@
       "title": "Coordinate Geometry",
       "topics": [
         {
-          "id": "introduction-to-coordinate-geometry",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can describe the position of an object on a plane surface using two perpendicular reference lines",
-            "Student can identify the origin, axes, and direction signs of a grid layout"
+            "Student can explain how two perpendicular number lines fix the position of a point in a plane",
+            "Student can describe the origin and the coordinate axes"
           ],
           "visualIdeas": [
-            "a simple street layout grid with horizontal and vertical streets to illustrate relative positioning",
-            "a photograph of a study desk with two reference edges marked as x and y coordinates"
+            "two number lines crossing at the origin with quadrant labels",
+            "a seat map of a classroom locating a student by row and column"
           ],
-          "estMinutes": 15
+          "estMinutes": 8
         },
         {
           "id": "cartesian-system",
           "title": "Cartesian System",
           "objectives": [
-            "Student can identify the x-axis, y-axis, origin, coordinates, abscissa, and ordinate of a point in a coordinate plane",
-            "Student can identify the quadrant in which a point lies based on the signs of its coordinates"
+            "Student can write the coordinates of a point shown on the plane",
+            "Student can plot a point given its ordered pair, respecting signs by quadrant",
+            "Student can state the coordinates of points on the x-axis and y-axis"
           ],
           "visualIdeas": [
-            "a coordinate plane with the four quadrants clearly colored, labeled, and marked with sign pairs (+, +), (-, +), (-, -), (+, -)",
-            "a diagram showing a single point with dashed projection lines to both axes, labeled with abscissa and ordinate"
+            "a full grid with labelled axes and plotted points in all four quadrants",
+            "sign pattern chart (+,+),(−,+),(−,−),(+,−) for quadrants I–IV"
           ],
-          "estMinutes": 20
+          "estMinutes": 12
         },
         {
-          "id": "plotting-a-point-in-the-plane-if-its-coordinates-are-given",
+          "id": "plotting-a-point",
           "title": "Plotting a Point in the Plane if its Coordinates are Given",
           "objectives": [
-            "Student can plot a point on the Cartesian plane given its coordinates",
-            "Student can read off the coordinates of a plotted point by measuring its perpendicular distance from both axes"
+            "Student can plot several points and join them in order to form a figure",
+            "Student can read off the coordinates of vertices of a drawn polygon"
           ],
           "visualIdeas": [
-            "an animation layout showing a point moving along the x-axis and then parallel to the y-axis to reach its final coordinates",
-            "a coordinate grid with points plotted on the axes themselves to highlight zero coordinate positions"
+            "points joined step by step forming a rectangle on the grid",
+            "arrows showing move-along-x then move-along-y to reach a point"
           ],
-          "estMinutes": 25
+          "estMinutes": 12
         }
       ]
     },
@@ -195,75 +226,116 @@
       "title": "Linear Equations in Two Variables",
       "topics": [
         {
-          "id": "introduction-to-linear-equations",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can identify a linear equation in two variables in its standard form ax + by + c = 0",
-            "Student can express a given word problem as a linear equation in two variables"
+            "Student can frame a linear equation in two variables from a word statement",
+            "Student can identify the coefficients of x, y and the constant term"
           ],
           "visualIdeas": [
-            "a balance scale comparing algebraic variables on one side with a constant on the other side",
-            "a table mapping verbal statements directly to algebraic symbols to demonstrate formulation"
+            "word problem translated sentence-by-sentence into ax+by+c=0",
+            "a labelled equation with coefficient tags"
           ],
-          "estMinutes": 15
+          "estMinutes": 8
         },
         {
           "id": "linear-equations",
           "title": "Linear Equations",
           "objectives": [
-            "Student can identify the values of constants a, b, and c after writing an equation in standard form",
-            "Student can formulate examples of linear equations from real-life context variables"
+            "Student can state the standard form of a linear equation in two variables",
+            "Student can check whether a given pair of values satisfies an equation"
           ],
           "visualIdeas": [
-            "an equation rewriting sequence where terms are shifted to the left-hand side and aligned under ax + by + c = 0",
-            "a list of physical situations showing variable connections represented as simple equations"
+            "rewriting equations like 2x=5y−3 into standard form step by step",
+            "substitution check of a solution pair shown line by line"
           ],
-          "estMinutes": 15
+          "estMinutes": 10
         },
         {
           "id": "solution-of-a-linear-equation",
           "title": "Solution of a Linear Equation",
           "objectives": [
-            "Student can find multiple ordered pair solutions for a given linear equation in two variables",
-            "Student can verify whether a given ordered pair is a solution to a linear equation"
+            "Student can produce multiple solutions of a linear equation in two variables",
+            "Student can explain why a linear equation in two variables has infinitely many solutions"
           ],
           "visualIdeas": [
-            "a solution table with columns for x, substituted equation steps, and the resulting y value",
-            "a split screen verifying a correct coordinate pair showing left-hand side equal to right-hand side versus an incorrect pair where they are unequal"
+            "a solution table filling with pairs satisfying 2x+y=7",
+            "dots of found solutions appearing along the line"
           ],
-          "estMinutes": 25
+          "estMinutes": 10
+        },
+        {
+          "id": "graph-of-a-linear-equation",
+          "title": "Graph of a Linear Equation in Two Variables",
+          "objectives": [
+            "Student can draw the graph of a linear equation from any two of its solutions",
+            "Student can read a solution of the equation from a point on its graph",
+            "Student can verify that the graph is a straight line"
+          ],
+          "visualIdeas": [
+            "table of values beside the line being ruled through plotted points",
+            "checking a third point lies on the same line"
+          ],
+          "estMinutes": 14
+        },
+        {
+          "id": "equations-parallel-to-axes",
+          "title": "Equations of Lines Parallel to the x-axis and y-axis",
+          "objectives": [
+            "Student can graph equations of the form x=a and y=b",
+            "Student can identify the line through two given points as horizontal or vertical"
+          ],
+          "visualIdeas": [
+            "vertical and horizontal lines drawn at x=3 and y=−2",
+            "grid with both lines highlighted and their equations tagged"
+          ],
+          "estMinutes": 10
         }
       ]
     },
     {
-      "id": "introduction-to-euclids-geometry",
+      "id": "euclids-geometry",
       "title": "Introduction to Euclid's Geometry",
       "topics": [
         {
-          "id": "introduction-to-euclids-ideas",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can describe the historical development of geometry with examples from ancient civilizations",
-            "Student can explain how Indian mathematical traditions handled geometrical constructions"
+            "Student can describe geometry's origins in land measurement and surveying",
+            "Student can define geometry as the study of shapes and space built on basic assumptions"
           ],
           "visualIdeas": [
-            "a comparative timeline showing the geometric shapes used in the Indus Valley Civilization alongside Greek contributions",
-            "illustrations of brick structures from ancient Harappan architecture showing systematic dimensional ratios"
+            "ancient Egyptian rope-stretchers measuring fields",
+            "timeline strip from Egypt to Euclid's Alexandria"
+          ],
+          "estMinutes": 8
+        },
+        {
+          "id": "euclids-definitions-axioms-postulates",
+          "title": "Euclid's Definitions, Axioms and Postulates",
+          "objectives": [
+            "Student can state Euclid's definitions of point, line and surface",
+            "Student can list Euclid's axioms and apply them to justify simple statements",
+            "Student can state the five postulates and illustrate each with a drawing"
+          ],
+          "visualIdeas": [
+            "five postulate diagrams side by side, postulate 5 with interior angles marked",
+            "axiom cards with a one-line application each"
           ],
           "estMinutes": 15
         },
         {
-          "id": "euclids-definitions-axioms-and-postulates",
-          "title": "Euclid’s Definitions, Axioms and Postulates",
+          "id": "equivalent-versions-fifth-postulate",
+          "title": "Equivalent Versions of Euclid's Fifth Postulate",
           "objectives": [
-            "Student can distinguish between axioms, postulates, and theorems in mathematical reasoning",
-            "Student can state Euclid's five postulates and apply his common notions to solve simple geometric proofs"
+            "Student can state Playfair's axiom as an equivalent form of the fifth postulate",
+            "Student can compare the fifth postulate with the other four and note its complexity"
           ],
           "visualIdeas": [
-            "visual representations of Euclid's five postulates, such as a straight line passing through two points and a circle drawn with any center",
-            "a step-by-step diagram showing Euclid's fifth postulate with two lines intersected by a third line, highlighting interior angles sum"
+            "transversal cutting two lines with sum of interior angles compared to 180°",
+            "two lines converging to meet on one side, never meeting on the other"
           ],
-          "estMinutes": 30
+          "estMinutes": 12
         }
       ]
     },
@@ -272,69 +344,86 @@
       "title": "Lines and Angles",
       "topics": [
         {
-          "id": "introduction-to-lines-and-angles",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can identify practical instances of lines and angles in real-world structures",
-            "Student can state the physical significance of intersecting paths and orientations"
+            "Student can recall that geometry results are proved from previously proved facts and axioms",
+            "Student can name the basic objects used in this chapter: lines, rays and angles"
           ],
           "visualIdeas": [
-            "a photograph of a bridge or tower structure overlayed with bold lines indicating angles and parallel segments",
-            "a simple compass rose highlighting angles formed between standard directions"
+            "line vs ray vs segment drawn with arrows and endpoints labelled",
+            "chain diagram: axioms → earlier theorems → new result"
           ],
-          "estMinutes": 10
+          "estMinutes": 8
         },
         {
           "id": "basic-terms-and-definitions",
           "title": "Basic Terms and Definitions",
           "objectives": [
-            "Student can define basic geometric elements including line segment, ray, collinear points, and various types of angles",
-            "Student can classify angles as acute, right, obtuse, straight, reflex, or complete"
+            "Student can define acute, obtuse, right, straight and reflex angles with examples",
+            "Student can identify adjacent angles, linear pair and vertically opposite angles in a figure",
+            "Student can label complementary and supplementary angle pairs"
           ],
           "visualIdeas": [
-            "a visual glossary sheet showing labeled diagrams of a line, ray, and segment side-by-side",
-            "a fan diagram showing the gradual increase of an angle through different classifications up to a reflex angle"
+            "protractor diagram marking angle types by range",
+            "two intersecting lines with vertical angle pairs colour-coded"
           ],
-          "estMinutes": 20
+          "estMinutes": 12
+        },
+        {
+          "id": "intersecting-and-non-intersecting-lines",
+          "title": "Intersecting Lines and Non-intersecting Lines",
+          "objectives": [
+            "Student can explain when two lines in a plane intersect and when they are parallel",
+            "Student can relate parallelism to the equal distances between lines"
+          ],
+          "visualIdeas": [
+            "two lines meeting at a point versus two parallel rails",
+            "perpendicular distance segments drawn between parallel lines"
+          ],
+          "estMinutes": 8
         },
         {
           "id": "pairs-of-angles",
           "title": "Pairs of Angles",
           "objectives": [
-            "Student can identify complementary, supplementary, adjacent, vertically opposite, and linear pairs of angles",
-            "Student can calculate unknown angles in diagrams by applying the linear pair axiom and vertically opposite angles theorem"
+            "Student can use the linear pair property to find unknown angles in a figure",
+            "Student can prove and apply vertically opposite angles are equal",
+            "Student can solve multi-step problems mixing complementary and supplementary relations"
           ],
           "visualIdeas": [
-            "a diagram showing two intersecting straight lines with vertically opposite angles highlighted in matching colors",
-            "a straight horizontal line with an inclined ray, showing the sum of adjacent angles equals 180 degrees"
+            "angle chase around intersecting lines filling unknowns step by step",
+            "linear pair diagram with x and 180°−x marked"
           ],
-          "estMinutes": 25
+          "estMinutes": 14
         },
         {
-          "id": "parallel-lines-and-a-transversal",
+          "id": "parallel-lines-transversal",
           "title": "Parallel Lines and a Transversal",
           "objectives": [
-            "Student can identify interior, exterior, corresponding, alternate interior, alternate exterior, and consecutive interior angles",
-            "Student can calculate unknown angles when parallel lines are intersected by a transversal"
+            "Student can name corresponding, alternate interior, alternate exterior and co-interior angles",
+            "Student can use the axiom on corresponding angles to conclude lines are parallel",
+            "Student can apply the angle relations cut by a transversal to find unknowns"
           ],
           "visualIdeas": [
-            "two parallel lines intersected by a diagonal line with corresponding angles highlighted dynamically using matching colors",
-            "a diagram showing the 'Z' shape and 'F' shape overlays to help identify alternate and corresponding angles"
+            "transversal across two parallels with all eight angles numbered and paired by colour",
+            "F-, Z- and C-shaped highlights for corresponding, alternate and co-interior pairs"
           ],
-          "estMinutes": 30
+          "estMinutes": 15
         },
         {
-          "id": "angle-sum-property-of-a-triangle",
+          "id": "angle-sum-property-triangle",
           "title": "Angle Sum Property of a Triangle",
           "objectives": [
-            "Student can prove that the sum of interior angles of a triangle is 180 degrees",
-            "Student can apply the exterior angle theorem to calculate unknown angles of a triangle"
+            "Student can state that the sum of the angles of a triangle is 180°",
+            "Student can apply the angle sum to find missing angles including exterior angle problems",
+            "Student can use the exterior angle theorem relating an exterior angle to remote interior angles"
           ],
           "visualIdeas": [
-            "a triangle diagram showing the three interior angles being torn and rearranged along a straight line to form 180 degrees",
-            "a triangle with one side extended, showing the exterior angle equal to the sum of the two interior opposite angles"
+            "triangle's corners torn and laid flat along a ruler to make a straight angle",
+            "exterior angle diagram with remote interior angles highlighted"
           ],
-          "estMinutes": 25
+          "estMinutes": 12
         }
       ]
     },
@@ -343,69 +432,72 @@
       "title": "Triangles",
       "topics": [
         {
-          "id": "introduction-to-triangles",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can state the concept of congruence in geometric shapes",
-            "Student can identify congruent objects in day-to-day life"
+            "Student can recall what a triangle and its parts are called: vertices, sides, angles",
+            "Student can state congruence as same shape and same size"
           ],
           "visualIdeas": [
-            "two identical postal stamps or coins placed on top of each other to show perfect overlap",
-            "overlapping geometric triangles showing how vertices must match up exactly for congruence"
+            "triangle ABC with sides and angles labelled in matching colours",
+            "two identical cut-out triangles overlapped exactly"
           ],
-          "estMinutes": 10
+          "estMinutes": 8
         },
         {
           "id": "congruence-of-triangles",
           "title": "Congruence of Triangles",
           "objectives": [
-            "Student can write the correct symbolic notation of congruence showing proper correspondence of vertices",
-            "Student can list the six pairs of corresponding parts of two congruent triangles"
+            "Student can write a correct correspondence ΔABC ≅ ΔPQR and read off equal parts",
+            "Student can identify corresponding sides and angles from a congruence statement"
           ],
           "visualIdeas": [
-            "two congruent triangles with matching sides and matching angles color-coded to show exact correspondence",
-            "a list of vertex correspondences with arrows mapping vertices of triangle ABC to triangle PQR"
+            "two triangles with matched vertices joined by dashed arrows",
+            "correspondence table mapping A↔P, B↔Q, C↔R"
           ],
-          "estMinutes": 15
+          "estMinutes": 10
         },
         {
-          "id": "criteria-for-congruence-of-triangles",
+          "id": "criteria-for-congruence",
           "title": "Criteria for Congruence of Triangles",
           "objectives": [
-            "Student can apply the SAS and ASA congruence rules to prove that two triangles are congruent",
-            "Student can deduce corresponding parts using the CPCT rule after establishing congruence"
+            "Student can state SAS, ASA, SSS and RHS criteria",
+            "Student can decide which criterion applies to a given pair of triangles",
+            "Student can complete a two-column proof using a congruence criterion"
           ],
           "visualIdeas": [
-            "a side-by-side construction sequence showing how specifying two sides and an included angle locks the triangle's shape",
-            "a flow diagram of a geometric proof showing given properties leading to SAS congruence and then CPCT conclusions"
+            "four mini-diagrams, one per criterion, with known parts ticked",
+            "CPCT arrows carrying equality from congruence statement to conclusion"
           ],
-          "estMinutes": 25
+          "estMinutes": 18
         },
         {
           "id": "some-properties-of-a-triangle",
           "title": "Some Properties of a Triangle",
           "objectives": [
-            "Student can prove that angles opposite to equal sides of an isosceles triangle are equal",
-            "Student can apply properties of isosceles triangles to solve numerical and deductive problems"
+            "Student can prove angles opposite equal sides are equal",
+            "Student can prove sides opposite equal angles are equal",
+            "Student can apply these properties to find unknown sides and angles in isosceles triangles"
           ],
           "visualIdeas": [
-            "an isosceles triangle with an altitude line drawn down the middle, showing the split into two congruent right triangles",
-            "a dynamic model of a triangle showing that as two side lengths are made equal, their opposite angles adjust to match exactly"
+            "isosceles triangle with fold line showing symmetry",
+            "angle marks added where sides are marked equal, step by step"
           ],
-          "estMinutes": 25
+          "estMinutes": 14
         },
         {
-          "id": "some-more-criteria-for-congruence-of-triangles",
-          "title": "Some More Criteria for Congruence of Triangles",
+          "id": "inequalities-in-a-triangle",
+          "title": "Inequalities in a Triangle",
           "objectives": [
-            "Student can apply the SSS and RHS congruence rules to establish congruence between triangles",
-            "Student can prove geometric properties of symmetrical shapes using SSS and RHS criteria"
+            "Student can state that the greater side lies opposite the greater angle",
+            "Student can verify the triangle inequality that any two sides exceed the third",
+            "Student can order sides of a triangle given its angles"
           ],
           "visualIdeas": [
-            "three fixed sticks forming a rigid triangle layout to illustrate why SSS locks the shape uniquely",
-            "two right-angled triangles with matching hypotenuses and one matching leg, sliding together to show congruence"
+            "scalene triangle with longest side opposite largest angle highlighted",
+            "three sticks tested against the triangle inequality"
           ],
-          "estMinutes": 25
+          "estMinutes": 12
         }
       ]
     },
@@ -414,56 +506,86 @@
       "title": "Quadrilaterals",
       "topics": [
         {
-          "id": "introduction-to-quadrilaterals",
+          "id": "introduction",
           "title": "Introduction",
           "objectives": [
-            "Student can state the angle sum property of a quadrilateral",
-            "Student can calculate the unknown angle of a quadrilateral when three angles are given"
+            "Student can name the parts of a quadrilateral: vertices, sides, angles, diagonals",
+            "Student can identify convex and concave quadrilaterals from figures"
           ],
           "visualIdeas": [
-            "a general quadrilateral split into two triangles by a diagonal to show that the angle sum is 2 x 180 = 360 degrees",
-            "a calculation grid summing up three given angle values and subtracting from 360 to find the fourth"
+            "quadrilateral ABCD with diagonals AC and BD drawn",
+            "convex vs concave shapes side by side with reflex angle flagged"
           ],
-          "estMinutes": 15
+          "estMinutes": 8
         },
         {
-          "id": "properties-of-a-parallelogram",
+          "id": "angle-sum-property-quadrilateral",
+          "title": "Angle Sum Property of a Quadrilateral",
+          "objectives": [
+            "Student can prove the sum of the angles of a quadrilateral is 360° using a diagonal",
+            "Student can find a missing angle of a quadrilateral given the other three"
+          ],
+          "visualIdeas": [
+            "diagonal splitting the quad into two triangles, 2×180° written in",
+            "four angles listed adding to 360° with the unknown solved"
+          ],
+          "estMinutes": 10
+        },
+        {
+          "id": "types-of-quadrilaterals",
+          "title": "Types of Quadrilaterals",
+          "objectives": [
+            "Student can define trapezium, parallelogram, rectangle, rhombus and square",
+            "Student can classify quadrilaterals by their side and angle properties",
+            "Student can identify a kite and state its properties"
+          ],
+          "visualIdeas": [
+            "family tree of quadrilaterals from general to square",
+            "each special quadrilateral drawn with its equal parts marked"
+          ],
+          "estMinutes": 12
+        },
+        {
+          "id": "properties-of-parallelogram",
           "title": "Properties of a Parallelogram",
           "objectives": [
-            "Student can state and prove properties regarding diagonals, opposite sides, and opposite angles of a parallelogram",
-            "Student can apply properties of parallelograms to compute missing lengths and angles"
+            "Student can prove opposite sides and opposite angles of a parallelogram are equal",
+            "Student can prove the diagonals of a parallelogram bisect each other",
+            "Student can apply these properties to find unknown lengths and angles"
           ],
           "visualIdeas": [
-            "a parallelogram with diagonals intersecting, highlighting that they bisect each other into equal segments",
-            "a diagram showing equal opposite sides and equal opposite angles with matching symbols and colors"
+            "parallelogram with diagonal drawn making congruent triangles",
+            "both diagonals crossed at midpoint with equal segment ticks"
           ],
-          "estMinutes": 25
+          "estMinutes": 16
         },
         {
-          "id": "another-condition-for-a-quadrilateral-to-be-a-parallelogram",
+          "id": "condition-for-parallelogram",
           "title": "Another Condition for a Quadrilateral to be a Parallelogram",
           "objectives": [
-            "Student can prove that a quadrilateral is a parallelogram if a pair of opposite sides is equal and parallel",
-            "Student can identify whether a given quadrilateral is a parallelogram based on side and angle conditions"
+            "Student can state that diagonals bisecting each other make a parallelogram",
+            "Student can test whether a given quadrilateral is a parallelogram using its diagonals",
+            "Student can use conditions based on opposite sides being equal or parallel"
           ],
           "visualIdeas": [
-            "a quadrilateral with only one pair of opposite sides marked both equal and parallel, showing how this forces the remaining sides to match",
-            "a checklist flow-diagram checking properties of diagonals and sides to classify a quadrilateral as a parallelogram"
+            "quadrilateral with diagonals meeting at a common midpoint marked O",
+            "checklist graphic testing each parallelogram condition"
           ],
-          "estMinutes": 20
+          "estMinutes": 12
         },
         {
-          "id": "the-mid-point-theorem",
-          "title": "The Mid-point Theorem",
+          "id": "midpoint-theorem",
+          "title": "The Midpoint Theorem",
           "objectives": [
-            "Student can prove that the line segment joining the mid-points of two sides of a triangle is parallel to the third side and half of it",
-            "Student can apply the mid-point theorem and its converse to solve geometric problems in triangles and quadrilaterals"
+            "Student can state and prove the Midpoint Theorem about the segment joining midpoints",
+            "Student can apply the converse to locate a midpoint given a parallel half-length segment",
+            "Student can solve problems using the eighth part area relation of the medial triangle"
           ],
           "visualIdeas": [
-            "a triangle with marked mid-points on two sides connected by a segment, showing it is parallel to and exactly half the base length",
-            "a step-by-step construction of a parallel line through the mid-point of one side to show it bisects the opposite side"
+            "triangle with mid-segment drawn, parallel and half-length labelled",
+            "medial triangle shaded inside the original"
           ],
-          "estMinutes": 30
+          "estMinutes": 14
         }
       ]
     }

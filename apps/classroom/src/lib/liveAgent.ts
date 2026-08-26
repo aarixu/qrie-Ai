@@ -6,6 +6,7 @@ import {
   type DoubtContext,
 } from '@ai-tutor/doubt-session';
 import { TUTOR, type StudentContext } from '@ai-tutor/persona';
+import { createOutcomeLookup } from './outcomeLookup';
 import {
   MIC_SAMPLE_RATE,
   createAudioPlayer,
@@ -172,7 +173,12 @@ export interface SetupFrame {
  * accept back cannot disagree.
  */
 export function buildLiveSystemInstruction(ctx: DoubtContext, student: StudentContext): string {
-  return buildDoubtBrief(ctx, student, { moment: 'opening', surface: 'voice' });
+  return buildDoubtBrief(ctx, student, {
+      moment: 'opening',
+      surface: 'voice',
+      // She is told the outcome this beat is for, and what it rests on.
+      outcomes: createOutcomeLookup(),
+    });
 }
 
 /** The first frame on the socket. Nothing is sent before this is acknowledged. */

@@ -44,6 +44,15 @@
       "subject": "Science",
       "path": "class10-excretion/lesson.json",
       "topicRef": "class10-science/life-processes/excretion-in-human-beings"
+    },
+    {
+      "id": "class9-how-small-are-these-particles-of-matter",
+      "title": "How Small are these Particles?",
+      "subtitle": "Class 9 · Matter in Our Surroundings",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-particle-size/lesson.json",
+      "topicRef": "class9-science/matter-in-our-surroundings/how-small-are-these-particles-of-matter"
     }
   ]
 }

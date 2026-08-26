@@ -147,3 +147,73 @@ describe('buildSystemPrompt', () => {
     expect(prompt).not.toContain('0.9');
   });
 });
+
+describe('what this beat is FOR', () => {
+  const base = { moment: 'TEACHING' as const, student: { klass: 9 as const }, surface: 'voice' as const };
+
+  it('states the outcome as something the student will be able to DO', () => {
+    const prompt = buildSystemPrompt({
+      ...base,
+      lesson: { beatTopic: 'Dilution', outcome: 'Calculate the dilution factor after successive dilutions' },
+    });
+    expect(prompt).toContain('Calculate the dilution factor');
+    // The label and the outcome are different things, and she is told so.
+    expect(prompt).toContain('Dilution');
+  });
+
+  it('says nothing at all when no outcome is known', () => {
+    const prompt = buildSystemPrompt({ ...base, lesson: { beatTopic: 'Dilution' } });
+    expect(prompt).not.toContain('should be able to');
+  });
+
+  it('lists the foundations, and marks the shaky one as a place to start', () => {
+    const prompt = buildSystemPrompt({
+      ...base,
+      moment: 'DOUBT_ANSWERING',
+      lesson: {
+        outcome: 'Calculate the dilution factor',
+        restsOn: [
+          { statement: 'Describe serial dilution', secure: true },
+          { statement: 'Divide by a power of ten', secure: false },
+        ],
+      },
+    });
+    expect(prompt).toContain('WHAT THIS RESTS ON');
+    expect(prompt).toContain('may not have this yet');
+    expect(prompt).toContain('Divide by a power of ten');
+  });
+
+  it('never turns a belief into a number she could read out', () => {
+    const prompt = buildSystemPrompt({
+      ...base,
+      lesson: { restsOn: [{ statement: 'Divide by ten', secure: false }] },
+    });
+    expect(prompt).not.toMatch(/0\.\d+/);
+  });
+
+  it('leaves the section out entirely when nothing rests on anything', () => {
+    expect(buildSystemPrompt({ ...base, lesson: { beatTopic: 'x' } })).not.toContain(
+      'WHAT THIS RESTS ON',
+    );
+  });
+});
+
+describe('a moment per beat role produces a different prompt', () => {
+  const base = { student: { klass: 9 as const }, surface: 'narration' as const };
+
+  it('a hook and a worked example are not given the same instructions', () => {
+    const hook = buildSystemPrompt({ ...base, moment: 'HOOK' });
+    const model = buildSystemPrompt({ ...base, moment: 'MODELLING' });
+    expect(hook).not.toBe(model);
+    expect(hook).toContain('teaches NOTHING');
+    expect(model).toContain('ALOUD');
+  });
+
+  it('independent practice tells her to stop talking', () => {
+    expect(buildSystemPrompt({ ...base, moment: 'INDEPENDENT_PRACTICE' })).toContain('stop talking');
+  });
+
+  it('the recap makes the student retrieve rather than hear it again', () => {
+    expect(buildSystemPrompt({ ...base, moment: 'RECAP' })).toContain('RETRIEVE');
+  });
+});

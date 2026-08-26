@@ -32,6 +32,26 @@ export interface LessonContext {
   title?: string;
   /** The topic label of the beat the class is on. */
   beatTopic?: string;
+  /**
+   * The outcome this beat is FOR, from the Learning Outcome Map — what the
+   * student should be able to do afterwards, in the map's own words.
+   *
+   * A topic label says what the beat is about; this says what it is for, and
+   * they are not the same thing. "Dilution" is a subject. "Calculate the
+   * dilution factor after successive dilutions" is a thing a person can either
+   * do or not do, which is what she is actually trying to make true.
+   */
+  outcome?: string;
+  /**
+   * What that outcome rests on, and how sure we are the student holds each —
+   * the prerequisite chain, in plain words.
+   *
+   * This is the difference between re-explaining and diagnosing. A student
+   * stuck on the dilution factor usually has not lost the dilution factor;
+   * they have lost the step underneath it, and until someone says so out loud
+   * the same explanation gets repeated slower.
+   */
+  restsOn?: readonly { statement: string; secure?: boolean }[];
   /** Narration of every beat up to and including the current one. */
   transcriptSoFar?: string;
   /** Element ids on the canvas right now — what she may refer to as visible. */
@@ -94,6 +114,11 @@ function lessonSection(lesson: LessonContext | undefined): string | null {
   if (lesson.beatTopic !== undefined) {
     facts.push(`Right now the class is on "${lesson.beatTopic}".`);
   }
+  if (lesson.outcome !== undefined && lesson.outcome.length > 0) {
+    facts.push(
+      `What this beat is FOR: by the end of it the student should be able to — ${lesson.outcome}. That is the thing to make true; the topic label is only its name.`,
+    );
+  }
   if (lesson.onScreen !== undefined && lesson.onScreen.length > 0) {
     facts.push(
       `On the canvas at this moment: ${lesson.onScreen.join(', ')}. Refer only to these as visible.`,
@@ -105,6 +130,23 @@ function lessonSection(lesson: LessonContext | undefined): string | null {
 
   if (lesson.transcriptSoFar !== undefined && lesson.transcriptSoFar.length > 0) {
     blocks.push(['WHAT THE CLASS HAS COVERED SO FAR', lesson.transcriptSoFar].join('\n'));
+  }
+
+  // The foundations, marked with what we believe about each. She is told the
+  // shaky ones plainly because that is where an explanation usually has to
+  // start — never as a score, only as a place to begin.
+  if (lesson.restsOn !== undefined && lesson.restsOn.length > 0) {
+    blocks.push(
+      [
+        'WHAT THIS RESTS ON — if they are stuck, start from the first one that looks shaky rather than repeating the step itself:',
+        lesson.restsOn
+          .map(
+            (r) =>
+              `- ${r.statement}${r.secure === false ? '  (they may not have this yet)' : r.secure === true ? '  (they have this)' : ''}`,
+          )
+          .join('\n'),
+      ].join('\n'),
+    );
   }
 
   // Enumerated by id because a model can only be trusted to choose from a list

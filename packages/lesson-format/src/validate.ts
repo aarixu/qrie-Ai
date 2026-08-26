@@ -107,6 +107,32 @@ function beatErrors(beat: Record<string, unknown>, path: string, elementIds: Set
     }
   }
 
+  // `teaches` and `checks` are outcome ids from the Learning Outcome Map. This
+  // package cannot see that map — it has zero dependencies by design — so it
+  // checks the SHAPE here and leaves "does this id exist" to whoever holds the
+  // map. What it can enforce is that the two lists never overlap: a beat that
+  // both teaches and checks the same outcome is a question marking its own
+  // homework.
+  for (const field of ['teaches', 'checks'] as const) {
+    const value = beat[field];
+    if (value === undefined) continue;
+    if (!Array.isArray(value) || !value.every((id) => isStr(id))) {
+      errs.push(`${path}: ${field} must be an array of outcome ids`);
+      continue;
+    }
+    if (new Set(value.map(String)).size !== value.length) {
+      errs.push(`${path}: ${field} lists the same outcome twice`);
+    }
+  }
+  if (Array.isArray(beat.teaches) && Array.isArray(beat.checks)) {
+    const taught = new Set(beat.teaches.map(String));
+    for (const id of beat.checks) {
+      if (taught.has(String(id))) {
+        errs.push(`${path}: "${String(id)}" is both taught and checked in the same beat`);
+      }
+    }
+  }
+
   if (beat.minMs !== undefined && (!isNum(beat.minMs) || beat.minMs < 0)) {
     errs.push(`${path}: minMs must be a non-negative number`);
   }

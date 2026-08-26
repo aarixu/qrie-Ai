@@ -14,7 +14,7 @@ const ctxOf = (): DoubtContext => ({
   recentBeats: [
     { id: 'b0', topic: 'the heart' },
     { id: 'b1', topic: 'chambers of the heart' },
-  ],
+  ], outcomeIds: [],
 });
 
 // The machine advances inside promise callbacks; give microtasks room to run.

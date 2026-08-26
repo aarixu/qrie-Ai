@@ -55,6 +55,22 @@ export interface DoubtBriefOptions {
   subject?: string;
   /** The lesson's own title, when the caller has the document. */
   title?: string;
+  /**
+   * A way to look an outcome up, supplied by whoever holds the Learning
+   * Outcome Map.
+   *
+   * Passed as functions rather than as the map itself, deliberately: this
+   * package must not depend on @ai-tutor/knowledge-graph, because the handoff
+   * state machine is the one thing in the product that has to work when
+   * everything else is missing. Omitted, she teaches from the beat's label and
+   * transcript, exactly as before.
+   */
+  outcomes?: {
+    /** The outcome in plain words, or undefined if unknown. */
+    statement(id: string): string | undefined;
+    /** What it rests on, nearest first, with what we believe about each. */
+    foundations(id: string): readonly { statement: string; secure?: boolean }[] | undefined;
+  };
 }
 
 /** An earlier moment of the class the tutor may bring back onto the board. */
@@ -117,6 +133,11 @@ export function buildDoubtBrief(
   student: StudentContext,
   options: DoubtBriefOptions,
 ): string {
+  // The outcome and its foundations in plain words, when the caller has the
+  // map to hand. Without it she still gets the beat's label and transcript,
+  // which is what every lesson written before the map has.
+  const outcome = options.outcomes?.statement(ctx.outcomeIds[0] ?? '');
+  const restsOn = options.outcomes?.foundations(ctx.outcomeIds[0] ?? '');
   return buildSystemPrompt({
     moment: PERSONA_MOMENT[options.moment],
     student,
@@ -128,6 +149,8 @@ export function buildDoubtBrief(
       transcriptSoFar: ctx.transcriptSoFar,
       onScreen: ctx.visibleElementIds,
       recallableBeats: recallTargets(ctx),
+      outcome,
+      restsOn,
     },
   });
 }

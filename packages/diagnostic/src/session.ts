@@ -1,6 +1,7 @@
 import {
   GraphIndex,
   applyEvidence,
+  type ModelParams,
   confidenceCoverage,
   initialMastery,
   type Answer,
@@ -78,6 +79,11 @@ export function answerProbe(
   probe: Probe,
   chosenIndex: number | null,
   ms?: number,
+  /**
+   * What the model has measured about this item and these edges. Omitted, the
+   * priors apply and every edge is trusted — a fresh install's honest state.
+   */
+  params?: ModelParams,
 ): DiagnosticSession {
   const answer: Answer = {
     probeId: probe.id,
@@ -96,7 +102,10 @@ export function answerProbe(
     ...session,
     askedNodeIds,
     answers: [...session.answers, answer],
-    mastery: applyEvidence(session.mastery, index, answer, { probed: session.askedNodeIds }),
+    mastery: applyEvidence(session.mastery, index, answer, {
+      probed: session.askedNodeIds,
+      params,
+    }),
   };
 }
 

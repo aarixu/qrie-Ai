@@ -8,8 +8,10 @@ import {
   startSession,
   type DiagnosticSession,
 } from '@ai-tutor/diagnostic';
-import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
+import { applyDoubt, applyTaught, type DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from '../lib/diagnosticData';
+import { modelStore, trainOnSession } from '../stores/model';
+import { outcomeStore } from '../stores/outcomes';
 import { BRAND } from '../brand';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -84,15 +86,35 @@ export function Diagnostic({
   // pure, so rebuilding it mid-test would silently restart the student. The
   // caller mounts this screen per placement test, so a different class is a new
   // mount and gets its own session.
-  const [session, setSession] = useState<DiagnosticSession | null>(() =>
-    data
-      ? startSession(data.index, data.bank, {
-          klass,
-          subjects: data.subjects,
-          lookBack: data.lookBack,
-        })
-      : null,
-  );
+  const [session, setSession] = useState<DiagnosticSession | null>(() => {
+    if (!data) return null;
+    const fresh = startSession(data.index, data.bank, {
+      klass,
+      subjects: data.subjects,
+      lookBack: data.lookBack,
+    });
+    // The classroom has already said something about this student: which
+    // outcomes they have been taught, and which ones they stopped the class
+    // on. Starting the test from those beliefs rather than from the prior
+    // means their first question is already informed by their term's work.
+    const signals = outcomeStore.get();
+    let mastery = applyTaught(fresh.mastery, Object.keys(signals.taught));
+    for (const [id, times] of Object.entries(signals.taught)) {
+      if (times > 1) mastery = applyTaught(mastery, [id], times);
+    }
+    mastery = applyDoubt(mastery, Object.keys(signals.confused));
+    return { ...fresh, mastery };
+  });
+
+  // What this install has learned about its own questions and edges so far.
+  // Read once per test: parameters that shifted mid-test would mean two
+  // answers to the same question counted differently, which is not a
+  // measurement any more.
+  const params = useRef(modelStore.get()).current;
+
+  // The beliefs the test STARTED from, kept for calibration. An item judged
+  // against beliefs that already include its own answer always looks perfect.
+  const beliefsBefore = useRef(session?.mastery ?? {}).current;
 
   // Having no probe left to ask IS the finish line, whether that is because the
   // engine has seen enough or because the bank ran dry, so both cases collapse
@@ -115,8 +137,17 @@ export function Diagnostic({
   useEffect(() => {
     if (delivered.current || !data || !session || probe) return;
     delivered.current = true;
+    // SELF-TRAINING. The test just produced the only thing the map has never
+    // had: real answers. Fold them in before handing back the plan, so the
+    // next student meets a slightly better calibrated version of it.
+    trainOnSession({
+      index: data.index,
+      answers: session.answers,
+      beliefsBefore,
+      beliefsAfter: session.mastery,
+    });
     onComplete(buildPlan(session, data.index));
-  }, [data, session, probe, onComplete]);
+  }, [data, session, probe, onComplete, beliefsBefore]);
 
   if (!data || !session) {
     return (
@@ -164,7 +195,9 @@ export function Diagnostic({
   const percent = Math.round((current / target) * 100);
 
   const answer = (chosenIndex: number | null) => {
-    setSession(answerProbe(session, data.index, probe, chosenIndex, Date.now() - shownAt.current));
+    setSession(
+      answerProbe(session, data.index, probe, chosenIndex, Date.now() - shownAt.current, params),
+    );
   };
 
   const node = data.index.node(probe.nodeId);

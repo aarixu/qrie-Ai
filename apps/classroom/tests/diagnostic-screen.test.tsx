@@ -1,25 +1,33 @@
 import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { selectNextProbe, startSession } from '@ai-tutor/diagnostic';
-import { loadDiagnosticData } from '../src/lib/diagnosticData';
+import { LOOK_BACK, loadDiagnosticDataFor } from '../src/lib/diagnosticData';
 import { Diagnostic } from '../src/screens/Diagnostic';
 import { BRAND } from '../src/brand';
 
 /**
  * The screen is wiring, so the test is wired to the same real data the app
- * loads: the committed Class 10 map and probe bank. The expected first question
- * is computed with the engine rather than hard-coded, so this proves the screen
- * shows what the engine chose — a fixture would only prove the fixture renders.
+ * loads — including the earlier classes the placement now looks back into, so
+ * the expected question moves when the map grows rather than going stale. It
+ * is computed with the engine rather than hard-coded, which proves the screen
+ * shows what the engine chose; a fixture would only prove the fixture renders.
  */
 
 const KLASS = 10;
 const SUBJECTS = ['Science'];
 
-const data = loadDiagnosticData(KLASS);
+// Loaded exactly as the screen loads it — same merge, same lineage, same
+// look-back. A session built with different config picks a different first
+// question, which is how this test drifted from the screen once before.
+const data = loadDiagnosticDataFor(KLASS, SUBJECTS);
 if (!data) throw new Error('the Class 10 Learning Outcome Map failed to load');
 
 const firstProbe = selectNextProbe(
-  startSession(data.index, data.bank, { klass: KLASS, subjects: SUBJECTS }),
+  startSession(data.index, data.bank, {
+    klass: KLASS,
+    subjects: data.subjects,
+    lookBack: data.lookBack,
+  }),
   data.index,
   data.bank,
 );
@@ -88,7 +96,7 @@ describe('Diagnostic: the question', () => {
 describe('Diagnostic: no map for this class', () => {
   it('renders the empty state and a way to continue instead of trapping the student', () => {
     // Only Class 10 has a map so far; every other class must degrade, not crash.
-    expect(loadDiagnosticData(7)).toBeNull();
+    expect(loadDiagnosticDataFor(7, SUBJECTS)).toBeNull();
 
     const html = decode(renderScreen(7));
 
@@ -99,10 +107,28 @@ describe('Diagnostic: no map for this class', () => {
   });
 });
 
-describe('loadDiagnosticData', () => {
-  it('loads the committed Class 10 map and probe bank, and reuses the index', () => {
-    expect(data.index.size).toBe(44);
+describe('the merged map the screen is given', () => {
+  it('carries the student class and the levels behind it, and nothing above', () => {
+    // Sizes are derived, never pinned: the map grows chapter by chapter, and a
+    // hard-coded count would fail on the next generation run rather than on a
+    // real defect.
+    expect(data.index.size).toBeGreaterThan(0);
     expect(data.bank.probes.length).toBeGreaterThan(0);
-    expect(loadDiagnosticData(KLASS)).toBe(data);
+
+    for (const id of data.index.ids()) {
+      const node = data.index.node(id)!;
+      expect(node.klass, id).toBeLessThanOrEqual(KLASS);
+      expect(node.klass, id).toBeGreaterThanOrEqual(KLASS - LOOK_BACK);
+    }
+  });
+
+  it('is memoised per student, so the index is built once', () => {
+    expect(loadDiagnosticDataFor(KLASS, SUBJECTS)).toBe(data);
+  });
+
+  it('every probe points at a node the merged index can see', () => {
+    for (const probe of data.bank.probes) {
+      expect(data.index.node(probe.nodeId), probe.id).toBeTruthy();
+    }
   });
 });

@@ -7,11 +7,18 @@ import {
   type DoubtContext,
 } from '@ai-tutor/doubt-session';
 import type { StudentContext } from '@ai-tutor/persona';
+import { createOutcomeLookup } from './outcomeLookup';
 
 /**
- * The real live doubt tutor: Gemini behind the same AgentAdapter the stub
+ * The real TYPED doubt tutor, behind the same AgentAdapter the stub
  * implements. The whole seam (bridges, states, recall wiring) stays in
  * @ai-tutor/doubt-session and does not know this exists.
+ *
+ * Two transports, one session. Google direct is the original; OpenRouter is
+ * the same models reached through one key, which is what keeps this working
+ * while a Google project is blocked. Only the HTTP call differs — the promise
+ * chain, the stop discipline and the reply sanitising are the valuable part
+ * and must not be written twice.
  *
  * Reliability rules, in order of importance:
  *  1. The class must NEVER get stuck — any API failure says a friendly line
@@ -25,6 +32,84 @@ export interface GeminiAgentOptions {
   /** Who is in front of her, forwarded to the persona exactly as measured. */
   student: StudentContext;
   model?: string;
+  /**
+   * Where the model is reached. 'gemini' is Google's own endpoint; 'openrouter'
+   * is the same class of model through OpenRouter's one key.
+   */
+  provider?: 'gemini' | 'openrouter';
+}
+
+/** One turn of the conversation, in this file's own vocabulary. */
+export interface Turn {
+  role: 'user' | 'model';
+  text: string;
+}
+
+/** What a transport must do: a system prompt and the turns so far, in, reply text out. */
+export type Transport = (system: string, turns: readonly Turn[], signal: AbortSignal) => Promise<string>;
+
+const DEFAULT_MODEL = {
+  gemini: 'gemini-3.7-flash',
+  // OpenRouter names the same family with a vendor prefix.
+  openrouter: 'google/gemini-3-flash-preview',
+} as const;
+
+export function createTransport(opts: GeminiAgentOptions): Transport {
+  const provider = opts.provider ?? 'gemini';
+  const model = opts.model ?? DEFAULT_MODEL[provider];
+
+  if (provider === 'openrouter') {
+    return async (system, turns, signal) => {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        signal,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${opts.apiKey}`,
+          'X-Title': 'Curie',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
+            { role: 'system', content: system },
+            ...turns.map((t) => ({
+              role: t.role === 'model' ? 'assistant' : 'user',
+              content: t.text,
+            })),
+          ],
+          response_format: { type: 'json_object' },
+          temperature: 0.7,
+        }),
+      });
+      if (!res.ok) throw new Error(`OpenRouter ${res.status}`);
+      const data = (await res.json()) as {
+        choices?: { message?: { content?: string } }[];
+        error?: { message?: string };
+      };
+      // OpenRouter reports upstream failures as a 200 with an error body.
+      if (data.error) throw new Error(`OpenRouter: ${data.error.message ?? 'unknown error'}`);
+      return data.choices?.[0]?.message?.content ?? '';
+    };
+  }
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${opts.apiKey}`;
+  return async (system, turns, signal) => {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal,
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: system }] },
+        contents: turns.map((t) => ({ role: t.role, parts: [{ text: t.text }] })),
+        generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
+      }),
+    });
+    if (!res.ok) throw new Error(`Gemini ${res.status}`);
+    const data = (await res.json()) as {
+      candidates?: { content?: { parts?: { text?: string }[] } }[];
+    };
+    return data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
+  };
 }
 
 interface AgentReply {
@@ -41,7 +126,12 @@ interface AgentReply {
  */
 export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext): string {
   return [
-    buildDoubtBrief(ctx, student, { moment: 'answering', surface: 'text' }),
+    buildDoubtBrief(ctx, student, {
+      moment: 'answering',
+      surface: 'text',
+      // She is told the outcome this beat is for, and what it rests on.
+      outcomes: createOutcomeLookup(),
+    }),
     '',
     'Respond with ONLY a JSON object: {"say": string, "recallBeatId": string | null, "done": boolean}',
     'Set recallBeatId to bring an earlier moment back onto the board, or null. Set done to true once the doubt is resolved.',
@@ -70,33 +160,22 @@ export function parseAgentReply(raw: string, canRecall: (beatId: string) => bool
 }
 
 export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
-  const model = opts.model ?? 'gemini-3.7-flash';
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${opts.apiKey}`;
+  const transport = createTransport(opts);
 
   return {
     start(ctx: DoubtContext, io: AgentIO): AgentSession {
       let stopped = false;
       const controller = new AbortController();
-      const history: { role: 'user' | 'model'; parts: { text: string }[] }[] = [];
+      const history: Turn[] = [];
 
       const call = async (userText: string): Promise<AgentReply> => {
-        history.push({ role: 'user', parts: [{ text: userText }] });
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          signal: controller.signal,
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: buildDoubtSystemPrompt(ctx, opts.student) }] },
-            contents: history,
-            generationConfig: { responseMimeType: 'application/json', temperature: 0.7 },
-          }),
-        });
-        if (!res.ok) throw new Error(`Gemini ${res.status}`);
-        const data = (await res.json()) as {
-          candidates?: { content?: { parts?: { text?: string }[] } }[];
-        };
-        const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
-        history.push({ role: 'model', parts: [{ text }] });
+        history.push({ role: 'user', text: userText });
+        const text = await transport(
+          buildDoubtSystemPrompt(ctx, opts.student),
+          history,
+          controller.signal,
+        );
+        history.push({ role: 'model', text });
         return parseAgentReply(text, (id) => isRecallable(ctx, id));
       };
 

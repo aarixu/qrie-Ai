@@ -1,0 +1,3371 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-mixture",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-mixture",
+      "question": "What is a mixture?",
+      "options": [
+        "A combination of two or more substances that are chemically combined in a fixed ratio.",
+        "A physical combination of two or more substances that are not chemically combined.",
+        "A pure substance that cannot be broken down further.",
+        "A substance formed by a chemical reaction."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks mixture requires chemical combination",
+        "",
+        "confuses mixture with element",
+        "thinks mixture is always a product of chemical reaction"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-distinguish-pure-mixture",
+      "nodeId": "class9-science-is-matter-around-us-pure-distinguish-pure-mixture",
+      "question": "Which statement correctly distinguishes a pure substance from a mixture?",
+      "options": [
+        "Pure substances have variable composition, while mixtures have fixed composition.",
+        "Both pure substances and mixtures have fixed composition.",
+        "Pure substances have fixed composition and properties, while mixtures have variable composition.",
+        "Mixtures are always pure."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the property",
+        "thinks both have fixed composition",
+        "",
+        "thinks mixtures are pure"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-examples-mixtures",
+      "nodeId": "class9-science-is-matter-around-us-pure-examples-mixtures",
+      "question": "Which of the following is an example of a mixture?",
+      "options": [
+        "Pure water",
+        "Iron",
+        "Sugar",
+        "Air"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks pure water is a mixture",
+        "thinks iron is a mixture (it's an element)",
+        "thinks sugar is a mixture (it's a pure substance)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-mixture-variable-composition",
+      "nodeId": "class9-science-is-matter-around-us-pure-mixture-variable-composition",
+      "question": "Why is the composition of a mixture not fixed?",
+      "options": [
+        "Because the amounts of the substances can be changed.",
+        "Because the substances in a mixture are chemically combined.",
+        "Because mixtures are always pure.",
+        "Because all mixtures have the same ratio of components."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks chemical combination allows variable composition",
+        "confuses mixture with pure substance",
+        "thinks all mixtures have fixed ratio"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous",
+      "nodeId": "class9-science-is-matter-around-us-pure-classify-homogeneous-heterogeneous",
+      "question": "Which describes a homogeneous mixture?",
+      "options": [
+        "It has non-uniform composition and visible particles.",
+        "Its particles settle on standing.",
+        "It always contains two liquids.",
+        "It has uniform composition throughout."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "describes heterogeneous mixture",
+        "describes a suspension",
+        "confuses with limited examples",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-prepare-salt-solution",
+      "nodeId": "class9-science-is-matter-around-us-pure-prepare-salt-solution",
+      "question": "When salt is dissolved in water, which observation is correct?",
+      "options": [
+        "Salt particles are not visible and the mixture is uniform.",
+        "Salt particles are visible and settle at the bottom.",
+        "The water turns into a solid.",
+        "The mixture becomes cloudy and scatters light."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses with suspension",
+        "confuses with chemical reaction",
+        "describes colloid (Tyndall effect) but salt solution is true solution"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-prepare-sand-water",
+      "nodeId": "class9-science-is-matter-around-us-pure-prepare-sand-water",
+      "question": "When sand is added to water and stirred, what happens?",
+      "options": [
+        "The sand dissolves completely and the mixture is clear.",
+        "The sand reacts with water to form a new substance.",
+        "The sand particles are visible and eventually settle at the bottom.",
+        "The mixture becomes homogeneous and cannot be filtered."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "describes solution",
+        "thinks chemical change",
+        "",
+        "describes solution property"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-examples-homogeneous-heterogeneous",
+      "nodeId": "class9-science-is-matter-around-us-pure-examples-homogeneous-heterogeneous",
+      "question": "Which of the following is a homogeneous mixture?",
+      "options": [
+        "Sand and water",
+        "Oil and water",
+        "Salt water",
+        "Chalk powder in water"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "heterogeneous",
+        "heterogeneous",
+        "",
+        "suspension (heterogeneous)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-solute-solvent-solution",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-solute-solvent-solution",
+      "question": "In a salt solution, what is the solvent?",
+      "options": [
+        "Salt",
+        "Water",
+        "The mixture",
+        "The salt crystals"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses solute with solvent",
+        "",
+        "confuses solution with solvent",
+        "thinks undissolved salt is solvent"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-identify-solute-solvent",
+      "nodeId": "class9-science-is-matter-around-us-pure-identify-solute-solvent",
+      "question": "In a sugar solution made by dissolving sugar in water, which is the solute?",
+      "options": [
+        "Water",
+        "Neither",
+        "Both are solutes",
+        "Sugar"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks water is solute",
+        "confuses with no solute",
+        "thinks both are solutes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-properties-solutions",
+      "nodeId": "class9-science-is-matter-around-us-pure-properties-solutions",
+      "question": "Which property is true for a solution?",
+      "options": [
+        "Particles are larger than 100 nm and settle on standing.",
+        "It scatters light (Tyndall effect).",
+        "Particles are less than 1 nm in size and do not scatter light.",
+        "It can be separated by filtration."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "describes suspension",
+        "describes colloid",
+        "",
+        "solutions pass through filter paper"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-water-universal-solvent",
+      "nodeId": "class9-science-is-matter-around-us-pure-water-universal-solvent",
+      "question": "Why is water called a universal solvent?",
+      "options": [
+        "It dissolves many substances.",
+        "It dissolves all substances completely.",
+        "It is a pure substance.",
+        "It does not dissolve anything."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "overstatement - not all substances dissolve",
+        "irrelevant",
+        "opposite"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-factors-affecting-solubility",
+      "nodeId": "class9-science-is-matter-around-us-pure-factors-affecting-solubility",
+      "question": "Which factor does NOT affect solubility?",
+      "options": [
+        "Temperature",
+        "Pressure",
+        "Nature of solute and solvent",
+        "Color of the solute"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "temperature does affect",
+        "pressure affects especially gases",
+        "nature affects",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-effect-temperature-solubility",
+      "nodeId": "class9-science-is-matter-around-us-pure-effect-temperature-solubility",
+      "question": "How does increasing temperature generally affect the solubility of a solid in water?",
+      "options": [
+        "It decreases the solubility of the solid.",
+        "It makes the solid disappear.",
+        "It has no effect on the solubility.",
+        "It increases the solubility of the solid."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with gas solubility",
+        "misunderstands dissolution",
+        "no effect is false",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-calculate-mass-percentage",
+      "nodeId": "class9-science-is-matter-around-us-pure-calculate-mass-percentage",
+      "question": "A solution contains 10 g of salt dissolved in 90 g of water. What is the mass-by-mass percentage of salt?",
+      "options": [
+        "11.1%",
+        "10%",
+        "25%",
+        "50%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses mass of solvent instead of solution",
+        "",
+        "uses 10/40 incorrectly",
+        "uses 10/20"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-calculate-mass-solute",
+      "nodeId": "class9-science-is-matter-around-us-pure-calculate-mass-solute",
+      "question": "A 200 g sugar solution is 5% sugar by mass. What is the mass of sugar in the solution?",
+      "options": [
+        "20 g",
+        "5 g",
+        "100 g",
+        "10 g"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "10% of total",
+        "thinks percentage directly is mass",
+        "half of total",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-saturated-unsaturated",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-saturated-unsaturated",
+      "question": "What is a saturated solution?",
+      "options": [
+        "A solution that can dissolve more solute at a given temperature.",
+        "A solution that cannot dissolve any more solute at a given temperature.",
+        "A solution that contains no solute.",
+        "A solution that has only solvent."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "definition of unsaturated",
+        "",
+        "confused",
+        "confused"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-effect-heating-saturated",
+      "nodeId": "class9-science-is-matter-around-us-pure-effect-heating-saturated",
+      "question": "If a saturated sugar solution is heated, what happens?",
+      "options": [
+        "It becomes supersaturated immediately.",
+        "It becomes unstable and starts boiling.",
+        "It can dissolve more sugar because its solubility increases.",
+        "Nothing changes because it is already saturated."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "supersaturated requires cooling often",
+        "heating doesn't necessarily cause boiling",
+        "",
+        "solubility increases"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-supersaturated",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-supersaturated",
+      "question": "A supersaturated solution is one that:",
+      "options": [
+        "Contains less solute than it can hold at that temperature.",
+        "Contains exactly the maximum amount of solute at that temperature.",
+        "Contains more dissolved solute than a saturated solution at the same temperature and is unstable.",
+        "Cannot be prepared."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "unsaturated",
+        "saturated",
+        "",
+        "it can be prepared"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-suspension",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-suspension",
+      "question": "Which best describes a suspension?",
+      "options": [
+        "A homogeneous mixture with particles < 1 nm.",
+        "A heterogeneous mixture in which solute particles are visible and do not dissolve.",
+        "A mixture where particles are between 1-100 nm.",
+        "A clear solution."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "solution",
+        "",
+        "colloid",
+        "solution"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-properties-suspensions",
+      "nodeId": "class9-science-is-matter-around-us-pure-properties-suspensions",
+      "question": "Which is a property of a suspension?",
+      "options": [
+        "Particles do not settle on standing.",
+        "Particles can be separated by filtration.",
+        "Particles are not visible to the naked eye.",
+        "It is always a clear liquid."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "colloid property",
+        "",
+        "suspension particles are visible",
+        "suspension is not clear"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-examples-suspensions",
+      "nodeId": "class9-science-is-matter-around-us-pure-examples-suspensions",
+      "question": "Which is an example of a suspension?",
+      "options": [
+        "Salt water",
+        "Milk",
+        "Muddy water",
+        "Ink"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "solution",
+        "colloid (emulsion)",
+        "",
+        "colloid (sol)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-suspension-unstable",
+      "nodeId": "class9-science-is-matter-around-us-pure-suspension-unstable",
+      "question": "Why do suspension particles settle over time?",
+      "options": [
+        "Because they are very small and don't move.",
+        "Because the liquid evaporates.",
+        "Because they are chemically active.",
+        "Because of gravity acting on larger particles."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "small particles don't settle quickly",
+        "evaporation not the cause",
+        "chemical reaction not involved",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-colloid",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-colloid",
+      "question": "In a colloid, the substance present in smaller amount is called the:",
+      "options": [
+        "Dispersion medium",
+        "Dispersed phase",
+        "Solvent",
+        "Solute"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "medium is larger amount",
+        "",
+        "solvent is for solution",
+        "solute is for solution"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-colloid-stability",
+      "nodeId": "class9-science-is-matter-around-us-pure-colloid-stability",
+      "question": "What keeps colloidal particles from settling?",
+      "options": [
+        "They are constantly moving due to Brownian motion.",
+        "They are too heavy.",
+        "They are chemically bonded to the medium.",
+        "They settle immediately."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "heavy would settle",
+        "not bonded",
+        "opposite"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-tyndall-effect",
+      "nodeId": "class9-science-is-matter-around-us-pure-tyndall-effect",
+      "question": "When a beam of light is passed through milk, the path of light becomes visible. This is called:",
+      "options": [
+        "Reflection",
+        "Refraction",
+        "Tyndall effect",
+        "Dispersion"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reflection not specifically scattering by colloids",
+        "refraction",
+        "",
+        "dispersion of light into colors"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-centrifugation-colloids",
+      "nodeId": "class9-science-is-matter-around-us-pure-centrifugation-colloids",
+      "question": "Which method can be used to separate particles of a colloid?",
+      "options": [
+        "Centrifugation",
+        "Filtration",
+        "Decantation",
+        "Evaporation"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "filtration cannot separate colloid particles",
+        "decantation is for immiscible liquids",
+        "evaporation leaves solute but not separation of colloid"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-physical-change",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-physical-change",
+      "question": "Which statement describes a physical change?",
+      "options": [
+        "No new substance is formed and the change is usually reversible.",
+        "The change is usually irreversible.",
+        "A new substance is formed.",
+        "Energy is always released."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "chemical change",
+        "chemical change",
+        "energy release not always"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-chemical-change",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-chemical-change",
+      "question": "Which statement describes a chemical change?",
+      "options": [
+        "No new substance is formed.",
+        "The change is easily reversible.",
+        "Only the state of matter changes.",
+        "One or more new substances are formed."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "physical change",
+        "physical change",
+        "physical change",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-classify-physical-chemical",
+      "nodeId": "class9-science-is-matter-around-us-pure-classify-physical-chemical",
+      "question": "Rusting of iron is a:",
+      "options": [
+        "Physical change because iron can be reversed.",
+        "Reversible change.",
+        "Physical change because no new substance is formed.",
+        "Chemical change because a new substance (rust) is formed."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "common misconception that rust is reversible",
+        "rusting is irreversible",
+        "new substance is formed",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-indicators-chemical-change",
+      "nodeId": "class9-science-is-matter-around-us-pure-indicators-chemical-change",
+      "question": "Which is an indicator that a chemical change has occurred?",
+      "options": [
+        "Change in state only",
+        "No change in temperature",
+        "Dissolving of a solid",
+        "Formation of a precipitate"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "change in state can be physical",
+        "temperature change often occurs in chemical change",
+        "dissolving is physical",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-distinguish-physical-chemical-examples",
+      "nodeId": "class9-science-is-matter-around-us-pure-distinguish-physical-chemical-examples",
+      "question": "Which of the following is a chemical change?",
+      "options": [
+        "Boiling water to form steam",
+        "Dissolving salt in water",
+        "Melting of wax",
+        "Electrolysis of water to form hydrogen and oxygen"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "physical change",
+        "physical change",
+        "physical change",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-classify-pure-substances",
+      "nodeId": "class9-science-is-matter-around-us-pure-classify-pure-substances",
+      "question": "Pure substances can be classified into:",
+      "options": [
+        "Elements and compounds",
+        "Elements and mixtures",
+        "Compounds and mixtures",
+        "Only elements"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "elements and mixtures (mixtures are not pure)",
+        "compounds and mixtures (mixtures not pure)",
+        "only elements (ignores compounds)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-element",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-element",
+      "question": "An element is a pure substance that:",
+      "options": [
+        "Can be broken down into simpler substances by chemical means.",
+        "Cannot be broken down into simpler substances by chemical means.",
+        "Is always a metal.",
+        "Contains more than one type of atom."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "definition of compound",
+        "",
+        "elements can be non-metals too",
+        "elements have one type of atom"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-define-compound",
+      "nodeId": "class9-science-is-matter-around-us-pure-define-compound",
+      "question": "A compound is a pure substance:",
+      "options": [
+        "Composed of two or more elements chemically combined in a fixed proportion.",
+        "That can be separated by physical methods.",
+        "Made of only one element.",
+        "That has variable composition."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "compounds cannot be separated by physical means",
+        "describes element",
+        "compounds have fixed composition"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-examples-elements-compounds",
+      "nodeId": "class9-science-is-matter-around-us-pure-examples-elements-compounds",
+      "question": "Which of the following is a compound?",
+      "options": [
+        "Oxygen",
+        "Iron",
+        "Water",
+        "Gold"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "element",
+        "element",
+        "",
+        "element"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals",
+      "nodeId": "class9-science-is-matter-around-us-pure-classify-elements-metals-nonmetals",
+      "question": "Elements that are generally lustrous, ductile, and good conductors of electricity are called:",
+      "options": [
+        "Metals",
+        "Metalloids",
+        "Non-metals",
+        "Compounds"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "metalloids are intermediate",
+        "non-metals are opposite",
+        "compounds not elements"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-boyle-lavoisier-element",
+      "nodeId": "class9-science-is-matter-around-us-pure-boyle-lavoisier-element",
+      "question": "Robert Boyle and Antoine Lavoisier both defined an element. Which statement best describes their definitions?",
+      "options": [
+        "Boyle said an element cannot be broken down by chemical means, and Lavoisier said it cannot be decomposed by chemical means.",
+        "Both said an element can be broken down.",
+        "Boyle said an element can be decomposed, Lavoisier said it cannot.",
+        "Their definitions were completely different."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "opposite",
+        "mixing them",
+        "overstating difference"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-properties-metals",
+      "nodeId": "class9-science-is-matter-around-us-pure-properties-metals",
+      "question": "Which is a typical property of metals?",
+      "options": [
+        "Brittle and poor conductor of electricity",
+        "Lustre and ductility",
+        "Non-lustrous and low melting point",
+        "Cannot be hammered into sheets"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "non-metal property",
+        "",
+        "non-metal",
+        "metals are malleable"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-properties-nonmetals",
+      "nodeId": "class9-science-is-matter-around-us-pure-properties-nonmetals",
+      "question": "Which property is typical of non-metals?",
+      "options": [
+        "They are good conductors of heat.",
+        "They are brittle and poor conductors of electricity.",
+        "They are lustrous.",
+        "They are malleable."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "metal property",
+        "",
+        "metal property",
+        "metal property"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-metalloids",
+      "nodeId": "class9-science-is-matter-around-us-pure-metalloids",
+      "question": "Which element is a metalloid and is used as a semiconductor?",
+      "options": [
+        "Gold",
+        "Oxygen",
+        "Silicon",
+        "Sodium"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "gold is metal",
+        "oxygen is non-metal",
+        "",
+        "sodium is metal"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-compound-different-properties",
+      "nodeId": "class9-science-is-matter-around-us-pure-compound-different-properties",
+      "question": "When iron and sulfur react to form iron sulfide, which statement is true?",
+      "options": [
+        "Iron sulfide has properties different from iron and sulfur.",
+        "Iron sulfide has properties of both iron and sulfur.",
+        "Iron sulfide can be separated by a magnet.",
+        "Iron sulfide is a mixture of iron and sulfur."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "compound retains properties",
+        "iron sulfide is not magnetic, but this confuses",
+        "confuses with mixture"
+      ]
+    },
+    {
+      "id": "probe-class9-science-is-matter-around-us-pure-distinguish-mixture-compound-iron-sulfur",
+      "nodeId": "class9-science-is-matter-around-us-pure-distinguish-mixture-compound-iron-sulfur",
+      "question": "A mixture of iron filings and sulfur powder can be separated by a magnet, but iron sulfide cannot. This is because:",
+      "options": [
+        "Iron sulfide is also a mixture.",
+        "Iron sulfide is a compound with new properties, while the mixture retains the properties of iron and sulfur.",
+        "The magnet is not strong enough for the compound.",
+        "The sulfur in iron sulfide is no longer present."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses compound with mixture",
+        "",
+        "magnet would work if stronger",
+        "sulfur is still present but combined"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-lavoisier-conservation",
+      "nodeId": "class9-science-atoms-and-molecules-lavoisier-conservation",
+      "question": "Who established the Law of Conservation of Mass?",
+      "options": [
+        "Avogadro",
+        "Proust",
+        "Dalton",
+        "Lavoisier"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with Avogadro's number related to moles",
+        "confuses the Law of Constant Proportions with the Law of Conservation of Mass",
+        "attributes the law to Dalton's atomic theory",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-proust-constant-proportions",
+      "nodeId": "class9-science-atoms-and-molecules-proust-constant-proportions",
+      "question": "Who proposed the Law of Constant Proportions?",
+      "options": [
+        "Dalton",
+        "Lavoisier",
+        "Proust",
+        "Avogadro"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses Dalton's atomic theory with Proust's law",
+        "confuses conservation of mass with constant proportions",
+        "",
+        "confuses Avogadro with Proust"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-verify-conservation-mass",
+      "nodeId": "class9-science-atoms-and-molecules-verify-conservation-mass",
+      "question": "In a reaction, 12 g of carbon reacts completely with 32 g of oxygen to form carbon dioxide. What is the total mass of carbon dioxide formed?",
+      "options": [
+        "12 g",
+        "44 g",
+        "32 g",
+        "20 g"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks product mass equals the mass of one reactant only (carbon)",
+        "",
+        "thinks product mass equals the mass of one reactant only (oxygen)",
+        "subtracts the reactant masses instead of adding them"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-experiment-sealed-flask",
+      "nodeId": "class9-science-atoms-and-molecules-experiment-sealed-flask",
+      "question": "In the sealed-flask experiment, barium chloride solution is mixed with sodium sulfate solution. What happens to the total mass before and after the reaction?",
+      "options": [
+        "It increases",
+        "It stays the same",
+        "It is unmeasurable",
+        "It decreases"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks a new solid appearing adds mass",
+        "",
+        "thinks sealing prevents mass measurement",
+        "thinks a gas escapes and reduces mass"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-explain-constant-proportions-water",
+      "nodeId": "class9-science-atoms-and-molecules-explain-constant-proportions-water",
+      "question": "In pure water, what is the fixed mass ratio of hydrogen to oxygen?",
+      "options": [
+        "1 : 16",
+        "2 : 1",
+        "1 : 8",
+        "8 : 1"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "gives the ratio of oxygen atomic mass to hydrogen atomic mass",
+        "gives the atomic ratio instead of the mass ratio",
+        "",
+        "reverses the ratio of hydrogen to oxygen"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-mass-ratio",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-mass-ratio",
+      "question": "Hydrogen and oxygen combine in the mass ratio 1 : 8. How much oxygen will combine with 4 g of hydrogen?",
+      "options": [
+        "32 g",
+        "8 g",
+        "4 g",
+        "0.5 g"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the 1:8 ratio directly as 8 g for 4 g of hydrogen",
+        "thinks oxygen mass equals hydrogen mass",
+        "divides instead of multiplying by the ratio"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-atom",
+      "nodeId": "class9-science-atoms-and-molecules-define-atom",
+      "question": "What is an atom?",
+      "options": [
+        "A group of elements joined together",
+        "The smallest part of a compound",
+        "The building block of all matter",
+        "A particle with a positive charge"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses atom with molecule",
+        "confuses atom with a particle of a compound",
+        "",
+        "confuses atom with an ion"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-matter",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-matter",
+      "question": "According to Dalton, all matter is made up of what?",
+      "options": [
+        "A continuous substance",
+        "Tiny indivisible particles called atoms",
+        "Molecules only",
+        "A type of energy"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks matter is continuous rather than particulate",
+        "",
+        "thinks all matter is made only of molecules",
+        "confuses matter with energy"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-identical",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-identical",
+      "question": "According to Dalton, atoms of a given element are what?",
+      "options": [
+        "Different in mass",
+        "Identical in mass and chemical properties",
+        "Same mass, different properties",
+        "Divisible into smaller particles"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks atoms of the same element can differ in mass",
+        "",
+        "thinks same element atoms differ in chemical properties",
+        "contradicts Dalton's indivisibility"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-combine",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-combine",
+      "question": "According to Dalton, atoms of different elements combine in what ratio to form compounds?",
+      "options": [
+        "Simple whole-number ratios",
+        "Random ratios",
+        "Any ratio possible",
+        "Equal numbers of atoms"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks combination ratios are random",
+        "thinks ratios can be arbitrary",
+        "overgeneralizes to equal numbers"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-rearrange",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-rearrange",
+      "question": "According to Dalton, what happens to atoms in a chemical reaction?",
+      "options": [
+        "They are created or destroyed",
+        "They change into atoms of other elements",
+        "They disappear completely",
+        "They are rearranged, not created or destroyed"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks atoms can be created/destroyed in reactions",
+        "thinks atoms can be transmuted",
+        "thinks atoms vanish",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-modern-symbols-recall",
+      "nodeId": "class9-science-atoms-and-molecules-modern-symbols-recall",
+      "question": "What is the modern symbol for the element potassium?",
+      "options": [
+        "K",
+        "Po",
+        "Ka",
+        "P"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses potassium with polonium",
+        "thinks symbol is simply the first letter with a lowercase a",
+        "confuses potassium with phosphorus"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-symbols-latin-origin",
+      "nodeId": "class9-science-atoms-and-molecules-symbols-latin-origin",
+      "question": "The symbol Fe for iron is derived from which Latin name?",
+      "options": [
+        "Ferrite",
+        "Iron",
+        "Ferric",
+        "Ferrum"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with a mineral form of iron",
+        "thinks the symbol comes from the English name",
+        "confuses with the ferric ion term",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-atomic-mass-unit",
+      "nodeId": "class9-science-atoms-and-molecules-define-atomic-mass-unit",
+      "question": "One atomic mass unit (u) is defined as what?",
+      "options": [
+        "1/16th the mass of an oxygen atom",
+        "1/12th the mass of a carbon-12 atom",
+        "The mass of a single proton",
+        "1/12th the mass of a hydrogen atom"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with the old oxygen standard",
+        "",
+        "confuses atomic mass unit with proton mass",
+        "confuses carbon-12 with hydrogen"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-carbon12-standard",
+      "nodeId": "class9-science-atoms-and-molecules-carbon12-standard",
+      "question": "Why is carbon-12 used as the standard reference for atomic mass?",
+      "options": [
+        "It is the most abundant element",
+        "It is the smallest atom",
+        "It is stable and has a convenient mass",
+        "It is the easiest to ionize"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses abundance with suitability as mass standard",
+        "thinks smallness is why it is standard",
+        "",
+        "confuses ionization with mass measurement"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-monoatomic-vs-molecules",
+      "nodeId": "class9-science-atoms-and-molecules-monoatomic-vs-molecules",
+      "question": "Which element normally exists as single atoms (monoatomic)?",
+      "options": [
+        "Helium",
+        "Oxygen",
+        "Nitrogen",
+        "Hydrogen"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks oxygen exists as single atoms rather than O2 molecules",
+        "thinks nitrogen exists as single atoms rather than N2 molecules",
+        "thinks hydrogen exists as single atoms rather than H2 molecules"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-why-atoms-cannot-exist-alone",
+      "nodeId": "class9-science-atoms-and-molecules-why-atoms-cannot-exist-alone",
+      "question": "Most atoms cannot exist independently under normal conditions because they do what?",
+      "options": [
+        "Are reactive and combine to achieve stability",
+        "Are too large to exist alone",
+        "Are invisible",
+        "Repel one another"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks atomic size prevents independent existence",
+        "thinks visibility is the reason",
+        "thinks atoms repel instead of attract/combine"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-molecule",
+      "nodeId": "class9-science-atoms-and-molecules-define-molecule",
+      "question": "A molecule is best defined as what?",
+      "options": [
+        "A group of two or more atoms chemically bonded together",
+        "A single atom",
+        "A charged particle",
+        "A mixture of different elements"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses molecule with atom",
+        "confuses molecule with ion",
+        "confuses molecule with a mixture"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-atomicity-examples",
+      "nodeId": "class9-science-atoms-and-molecules-atomicity-examples",
+      "question": "What is the atomicity of ozone (O3)?",
+      "options": [
+        "3",
+        "2",
+        "1",
+        "4"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses O3 with O2",
+        "thinks atomicity is the number of elements (oxygen is one element)",
+        "confuses with P4's atomicity"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-molecules-of-elements-definition",
+      "nodeId": "class9-science-atoms-and-molecules-molecules-of-elements-definition",
+      "question": "Molecules of elements are made up of atoms of what?",
+      "options": [
+        "Only one element",
+        "Any element",
+        "No elements",
+        "Different elements"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks molecules can be made of any element",
+        "thinks molecules can exist without atoms",
+        "confuses molecules of elements with molecules of compounds"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-classify-molecular-elements",
+      "nodeId": "class9-science-atoms-and-molecules-classify-molecular-elements",
+      "question": "A phosphorus molecule has the formula P4. How is it classified?",
+      "options": [
+        "Triatomic",
+        "Monoatomic",
+        "Diatomic",
+        "Polyatomic"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses P4 with a three-atom molecule",
+        "thinks P4 exists as single atoms",
+        "confuses P4 with a two-atom molecule",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-molecules-of-compounds-definition",
+      "nodeId": "class9-science-atoms-and-molecules-molecules-of-compounds-definition",
+      "question": "Molecules of compounds contain atoms of what?",
+      "options": [
+        "Only one element",
+        "Two or more different elements",
+        "The same element only",
+        "No elements"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses compounds with elements",
+        "",
+        "thinks a compound molecule can have only one element",
+        "thinks molecules can be element-free"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-ratio-by-atoms-h2o-nh3",
+      "nodeId": "class9-science-atoms-and-molecules-ratio-by-atoms-h2o-nh3",
+      "question": "In a water molecule (H2O), the ratio of hydrogen atoms to oxygen atoms is what?",
+      "options": [
+        "1 : 2",
+        "1 : 8",
+        "2 : 8",
+        "2 : 1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "reverses the atom ratio",
+        "gives the mass ratio instead of the atom ratio",
+        "mixes atom ratio with mass ratio incorrectly",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-ion-cation-anion",
+      "nodeId": "class9-science-atoms-and-molecules-define-ion-cation-anion",
+      "question": "Which pair correctly defines cations and anions?",
+      "options": [
+        "Cations: negative; Anions: positive",
+        "Cations: positive; Anions: negative",
+        "Cations: positive; Anions: neutral",
+        "Cations: neutral; Anions: charged"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reverses the charges of cations and anions",
+        "",
+        "thinks anions have no charge",
+        "thinks cations have no charge"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-polyatomic-ions-list",
+      "nodeId": "class9-science-atoms-and-molecules-polyatomic-ions-list",
+      "question": "What is the correct formula and charge for the sulphate ion?",
+      "options": [
+        "SO4^−",
+        "SO3^2−",
+        "SO4^2−",
+        "S2O4^2−"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks sulphate has a single negative charge",
+        "confuses sulphite with sulphate",
+        "",
+        "thinks sulphate contains two sulfur atoms"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-valency",
+      "nodeId": "class9-science-atoms-and-molecules-define-valency",
+      "question": "The valency of an element is its what?",
+      "options": [
+        "Atomic mass",
+        "Combining capacity",
+        "Number of atoms",
+        "Density"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses valency with atomic mass",
+        "",
+        "confuses valency with number of atoms",
+        "confuses valency with density"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-apply-valency-balance-charges",
+      "nodeId": "class9-science-atoms-and-molecules-apply-valency-balance-charges",
+      "question": "Using the criss-cross method, what is the formula for aluminium oxide (Al^3+ and O^2−)?",
+      "options": [
+        "AlO",
+        "Al3O2",
+        "Al2O3",
+        "AlO3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets to cross over the valencies",
+        "crosses over incorrectly and writes Al3O2",
+        "",
+        "uses only the oxygen valency on aluminium"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-write-binary-compound-formulas",
+      "nodeId": "class9-science-atoms-and-molecules-write-binary-compound-formulas",
+      "question": "What is the correct chemical formula for carbon dioxide?",
+      "options": [
+        "C2O",
+        "CO2",
+        "C2O4",
+        "CO"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reverses the subscripts",
+        "",
+        "doubles the subscripts",
+        "forgets the subscript 2"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-translate-name-to-formula",
+      "nodeId": "class9-science-atoms-and-molecules-translate-name-to-formula",
+      "question": "What is the correct chemical formula for calcium chloride?",
+      "options": [
+        "Ca2Cl",
+        "CaCl",
+        "CaCl2",
+        "Ca2Cl3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the numbers",
+        "forgets that calcium needs two chlorines",
+        "",
+        "uses random criss-cross without balancing charges"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-molecular-mass",
+      "nodeId": "class9-science-atoms-and-molecules-define-molecular-mass",
+      "question": "Molecular mass is defined as what?",
+      "options": [
+        "The mass of one atom in a molecule",
+        "The total charge of a molecule",
+        "The number of atoms in a molecule",
+        "The sum of the atomic masses of all atoms in a molecule"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses molecular mass with atomic mass",
+        "confuses mass with charge",
+        "confuses mass with atom count",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-molecular-mass",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-molecular-mass",
+      "question": "Using H=1, C=12, what is the molecular mass of methane (CH4)?",
+      "options": [
+        "16 u",
+        "13 u",
+        "12 u",
+        "4 u"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds one hydrogen atom instead of four",
+        "uses only the mass of carbon and ignores hydrogen",
+        "uses only hydrogen mass and ignores carbon"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-compare-molecular-masses",
+      "nodeId": "class9-science-atoms-and-molecules-compare-molecular-masses",
+      "question": "Which is heavier: water (H2O) or carbon dioxide (CO2)? (H=1, C=12, O=16)",
+      "options": [
+        "Water",
+        "Equal masses",
+        "Cannot say",
+        "Carbon dioxide"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks water is heavier because it has hydrogen",
+        "thinks both have three atoms",
+        "thinks comparison needs masses",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-formula-unit-mass",
+      "nodeId": "class9-science-atoms-and-molecules-define-formula-unit-mass",
+      "question": "Formula unit mass is used for compounds that do what?",
+      "options": [
+        "Exist as discrete molecules",
+        "Do not exist as discrete molecules",
+        "Are made of only one element",
+        "Have no formula"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks formula unit is for molecular compounds",
+        "",
+        "thinks it applies to elements",
+        "thinks it applies only when no formula"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-formula-unit-mass",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-formula-unit-mass",
+      "question": "Using Na=23, Cl=35.5, what is the formula unit mass of sodium chloride (NaCl)?",
+      "options": [
+        "23 u",
+        "35.5 u",
+        "58.5 u",
+        "12 u"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses only sodium's mass",
+        "uses only chlorine's mass",
+        "",
+        "subtracts the atomic masses"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-explain-formula-unit-mass-same",
+      "nodeId": "class9-science-atoms-and-molecules-explain-formula-unit-mass-same",
+      "question": "How is formula unit mass calculated?",
+      "options": [
+        "By adding the atomic masses of all atoms in the formula unit",
+        "By multiplying the atomic masses of all atoms",
+        "By counting the number of atoms only",
+        "By dividing the total mass by the number of atoms"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks masses are multiplied",
+        "confuses mass calculation with atom count",
+        "thinks mass is divided by atom count"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-mole",
+      "nodeId": "class9-science-atoms-and-molecules-define-mole",
+      "question": "A mole is the amount of substance that contains how many entities?",
+      "options": [
+        "6.022 × 10^22",
+        "6.022 × 10^24",
+        "12",
+        "6.022 × 10^23"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with a smaller power of ten",
+        "confuses with a larger power of ten",
+        "confuses with the carbon-12 reference",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-state-avogadro-number",
+      "nodeId": "class9-science-atoms-and-molecules-state-avogadro-number",
+      "question": "What is the Avogadro number?",
+      "options": [
+        "6.022 × 10^23",
+        "6.022 × 10^22",
+        "6.022 × 10^24",
+        "1.66 × 10^-27"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses with a smaller power of ten",
+        "confuses with a larger power of ten",
+        "confuses with the atomic mass unit in kilograms"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-number-of-particles",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-number-of-particles",
+      "question": "How many molecules are present in 2 moles of carbon dioxide? (Avogadro number = 6.022 × 10^23)",
+      "options": [
+        "6.022 × 10^23",
+        "2.4088 × 10^24",
+        "3.011 × 10^23",
+        "1.2044 × 10^24"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses one mole instead of two",
+        "multiplies by four instead of two",
+        "divides by two instead of multiplying",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-mass-from-moles",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-mass-from-moles",
+      "question": "The molar mass of water is 18 g/mol. What is the mass of 2 moles of water?",
+      "options": [
+        "18 g",
+        "9 g",
+        "20 g",
+        "36 g"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses the mass for one mole",
+        "divides by 2 instead of multiplying",
+        "adds the molar mass and the number of moles",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-calculate-moles-from-mass",
+      "nodeId": "class9-science-atoms-and-molecules-calculate-moles-from-mass",
+      "question": "The molar mass of oxygen gas (O2) is 32 g/mol. How many moles are in 64 g of oxygen gas?",
+      "options": [
+        "1 mol",
+        "2 mol",
+        "0.5 mol",
+        "32 mol"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks one mole is always the mass value",
+        "",
+        "divides molar mass by mass instead of mass by molar mass",
+        "uses molar mass as number of moles"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-define-molar-mass",
+      "nodeId": "class9-science-atoms-and-molecules-define-molar-mass",
+      "question": "Molar mass is defined as what?",
+      "options": [
+        "The number of moles in one gram",
+        "The mass of one atom of a substance",
+        "The mass of one mole of a substance",
+        "The mass of one molecule in grams"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses mass and amount",
+        "confuses molar mass with atomic mass",
+        "",
+        "confuses molar mass with molecular mass in grams"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-relate-mass-moles-particles",
+      "nodeId": "class9-science-atoms-and-molecules-relate-mass-moles-particles",
+      "question": "Which formula correctly relates mass, moles, and molar mass?",
+      "options": [
+        "mass = moles ÷ molar mass",
+        "moles = mass × molar mass",
+        "mass = moles × molar mass",
+        "moles = molar mass ÷ mass"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the relationship",
+        "multiplies where division is needed",
+        "",
+        "reverses the division"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-valency-table-common",
+      "nodeId": "class9-science-atoms-and-molecules-valency-table-common",
+      "question": "What is the valency of aluminium (Al)?",
+      "options": [
+        "2",
+        "3",
+        "1",
+        "4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with magnesium's valency",
+        "",
+        "confuses with sodium's valency",
+        "confuses with carbon's valency"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-write-formulas-polyatomic",
+      "nodeId": "class9-science-atoms-and-molecules-write-formulas-polyatomic",
+      "question": "What is the correct formula for aluminium sulphate, which contains Al^3+ and SO4^2−?",
+      "options": [
+        "AlSO4",
+        "Al3(SO4)2",
+        "Al2SO4",
+        "Al2(SO4)3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to balance charges with multiple sulphate ions",
+        "swaps the valencies incorrectly",
+        "uses only one sulphate ion",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-atoms-different-elements",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-atoms-different-elements",
+      "question": "According to Dalton, atoms of different elements have what?",
+      "options": [
+        "Same masses but different chemical properties",
+        "Same masses and same chemical properties",
+        "Different masses and different chemical properties",
+        "Different masses but same chemical properties"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks mass stays same across elements",
+        "thinks all atoms are identical regardless of element",
+        "",
+        "thinks chemical properties are same across elements"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-dalton-postulates-atoms-indivisible",
+      "nodeId": "class9-science-atoms-and-molecules-dalton-postulates-atoms-indivisible",
+      "question": "According to Dalton, atoms are what?",
+      "options": [
+        "Indivisible and cannot be created or destroyed",
+        "Divisible and can be created",
+        "Indivisible but can be destroyed",
+        "Divisible and can be destroyed"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks atoms can be split and created",
+        "thinks atoms cannot be divided but can be destroyed",
+        "thinks atoms can be broken and destroyed"
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-atomic-masses-common",
+      "nodeId": "class9-science-atoms-and-molecules-atomic-masses-common",
+      "question": "What is the atomic mass of chlorine (Cl)?",
+      "options": [
+        "32 u",
+        "36 u",
+        "17 u",
+        "35.5 u"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses chlorine with sulfur",
+        "rounds 35.5 to 36",
+        "confuses atomic mass with atomic number (17)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-atoms-and-molecules-molar-mass-calculation",
+      "nodeId": "class9-science-atoms-and-molecules-molar-mass-calculation",
+      "question": "Using H=1, O=16, what is the molar mass of water (H2O) in g/mol?",
+      "options": [
+        "17 g/mol",
+        "16 g/mol",
+        "18 g/mol",
+        "20 g/mol"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds one hydrogen atom instead of two",
+        "uses only oxygen's mass and ignores hydrogen",
+        "",
+        "adds two hydrogens and two oxygens"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-static-electricity-evidence",
+      "nodeId": "class9-science-structure-of-the-atom-static-electricity-evidence",
+      "question": "What does rubbing a comb on dry hair and picking up small pieces of paper show about atoms?",
+      "options": [
+        "Atoms are indivisible.",
+        "Atoms contain charged particles.",
+        "Atoms are mostly empty space.",
+        "Atoms have a nucleus."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses static electricity with indivisibility of atoms",
+        "",
+        "confuses static electricity with Rutherford's conclusion about empty space",
+        "thinks static electricity directly shows the nucleus"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-electron-discovery",
+      "nodeId": "class9-science-structure-of-the-atom-electron-discovery",
+      "question": "Who discovered the electron?",
+      "options": [
+        "Ernest Rutherford",
+        "James Chadwick",
+        "J.J. Thomson",
+        "Niels Bohr"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses with Rutherford",
+        "confuses with Chadwick (neutron)",
+        "",
+        "confuses with Bohr"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-atom-neutrality",
+      "nodeId": "class9-science-structure-of-the-atom-atom-neutrality",
+      "question": "Why is an atom electrically neutral?",
+      "options": [
+        "Protons and neutrons have equal charges.",
+        "Electrons cancel out the charge of neutrons.",
+        "Number of protons equals number of electrons.",
+        "The nucleus is neutral."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks neutrons have charge",
+        "thinks electrons cancel neutrons",
+        "",
+        "thinks nucleus is neutral"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-list-subatomic-particles",
+      "nodeId": "class9-science-structure-of-the-atom-list-subatomic-particles",
+      "question": "Which are the three main subatomic particles?",
+      "options": [
+        "Protons, neutrons, alpha particles",
+        "Protons, electrons, positrons",
+        "Neutrons, electrons, quarks",
+        "Protons, neutrons, electrons"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "includes alpha particle instead of electron",
+        "includes positron instead of neutron",
+        "includes quark instead of proton",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-proton-charge-mass",
+      "nodeId": "class9-science-structure-of-the-atom-proton-charge-mass",
+      "question": "What is the charge and approximate mass of a proton?",
+      "options": [
+        "+1.6×10⁻¹⁹ C, 9.1×10⁻³¹ kg",
+        "-1.6×10⁻¹⁹ C, 1.67×10⁻²⁷ kg",
+        "+1.6×10⁻¹⁹ C, 1.67×10⁻²⁹ kg",
+        "+1.6×10⁻¹⁹ C, 1.67×10⁻²⁷ kg"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses mass with electron's mass",
+        "confuses charge with electron's charge",
+        "wrong mass (10⁻²⁹)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-electron-charge-mass",
+      "nodeId": "class9-science-structure-of-the-atom-electron-charge-mass",
+      "question": "What is the charge and approximate mass of an electron?",
+      "options": [
+        "-1.6×10⁻¹⁹ C, 9.1×10⁻³¹ kg",
+        "-1.6×10⁻¹⁹ C, 1.67×10⁻²⁷ kg",
+        "+1.6×10⁻¹⁹ C, 9.1×10⁻³¹ kg",
+        "-1.6×10⁻¹⁹ C, 9.1×10⁻²⁹ kg"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses mass with proton's",
+        "confuses charge with proton's",
+        "wrong mass (10⁻²⁹)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-compare-proton-electron",
+      "nodeId": "class9-science-structure-of-the-atom-compare-proton-electron",
+      "question": "How does the mass of a proton compare to the mass of an electron?",
+      "options": [
+        "They have equal mass.",
+        "Electron is about 1840 times heavier.",
+        "Proton is about 1840 times heavier.",
+        "Proton is about 1840 times lighter."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks equal",
+        "reverses the ratio",
+        "",
+        "thinks proton is lighter"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-thomson-model-description",
+      "nodeId": "class9-science-structure-of-the-atom-thomson-model-description",
+      "question": "In Thomson's plum pudding model, how are the electrons arranged?",
+      "options": [
+        "Electrons orbit the nucleus in fixed paths.",
+        "Electrons are concentrated at the centre.",
+        "Electrons are evenly spaced around the nucleus.",
+        "Electrons are embedded in a sphere of positive charge."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with Bohr model",
+        "thinks electrons are at centre",
+        "thinks electrons are equally spaced around nucleus",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-thomson-postulates",
+      "nodeId": "class9-science-structure-of-the-atom-thomson-postulates",
+      "question": "Which of the following is a postulate of Thomson's atomic model?",
+      "options": [
+        "The atom is mostly empty space.",
+        "The atom has a small, dense nucleus.",
+        "The atom is a sphere of positive charge with electrons embedded.",
+        "Electrons move in discrete orbits."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses with Rutherford's model",
+        "confuses with Rutherford's model",
+        "",
+        "confuses with Bohr's model"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-thomson-model-alternate-name",
+      "nodeId": "class9-science-structure-of-the-atom-thomson-model-alternate-name",
+      "question": "What is another name for Thomson's atomic model?",
+      "options": [
+        "Planetary model",
+        "Energy level model",
+        "Nuclear model",
+        "Watermelon model"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with Rutherford's planetary model",
+        "confuses with Bohr's energy level model",
+        "confuses with Rutherford's nuclear model",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-alpha-particle-definition",
+      "nodeId": "class9-science-structure-of-the-atom-alpha-particle-definition",
+      "question": "What is an alpha particle?",
+      "options": [
+        "A fast-moving electron.",
+        "A helium nucleus with 2 protons and 2 neutrons.",
+        "A neutron.",
+        "A hydrogen nucleus with 1 proton."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with beta particle",
+        "",
+        "confuses with neutron",
+        "confuses with proton/hydrogen nucleus"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-rutherford-experiment-setup",
+      "nodeId": "class9-science-structure-of-the-atom-rutherford-experiment-setup",
+      "question": "What did Rutherford use in his alpha-particle scattering experiment?",
+      "options": [
+        "Gold foil, alpha source, and a fluorescent screen.",
+        "Carbon foil, proton source, and a photographic plate.",
+        "Gold foil, neutron source, and a Geiger counter.",
+        "Silver foil, alpha source, and a microscope."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses carbon and proton",
+        "uses neutron source",
+        "uses silver and microscope"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-rutherford-observations",
+      "nodeId": "class9-science-structure-of-the-atom-rutherford-observations",
+      "question": "What did Rutherford observe when alpha particles hit the gold foil?",
+      "options": [
+        "Most passed through, some deflected, very few bounced back.",
+        "All alpha particles were deflected.",
+        "All alpha particles passed through.",
+        "Most alpha particles bounced back."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks all deflected",
+        "thinks all passed through (no deflection)",
+        "thinks most bounced back"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-rutherford-conclusion-nucleus",
+      "nodeId": "class9-science-structure-of-the-atom-rutherford-conclusion-nucleus",
+      "question": "What did Rutherford conclude from the fact that some alpha particles were deflected?",
+      "options": [
+        "The atom has a small, dense, positively charged nucleus.",
+        "The atom is a solid sphere.",
+        "Electrons are in fixed orbits.",
+        "The atom is mostly empty space."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks atom is solid sphere (Dalton)",
+        "confuses with Bohr",
+        "that's another conclusion, but from a different observation"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-rutherford-conclusion-empty-space",
+      "nodeId": "class9-science-structure-of-the-atom-rutherford-conclusion-empty-space",
+      "question": "What did Rutherford conclude from the fact that most alpha particles passed straight through the gold foil?",
+      "options": [
+        "The atom is a hard sphere.",
+        "The atom has a nucleus.",
+        "Electrons are embedded in positive charge.",
+        "Most of the atom is empty space."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks atom is solid",
+        "that's from deflection, not from passing through",
+        "confuses with Thomson's model",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-rutherford-model-instability",
+      "nodeId": "class9-science-structure-of-the-atom-rutherford-model-instability",
+      "question": "Why did Rutherford's model of the atom predict that electrons would fall into the nucleus?",
+      "options": [
+        "Electrons are attracted to the nucleus but there is no force to keep them in orbit.",
+        "Electrons are stationary, so they fall.",
+        "Electrons would radiate energy and lose speed, spiralling in.",
+        "The nucleus repels electrons."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "says no force, but there is Coulomb force; misunderstanding",
+        "thinks electrons are stationary",
+        "",
+        "thinks nucleus repels electrons"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-bohr-model-overcomes-instability",
+      "nodeId": "class9-science-structure-of-the-atom-bohr-model-overcomes-instability",
+      "question": "How did Bohr's model solve the problem of electrons falling into the nucleus?",
+      "options": [
+        "By introducing a repulsive force between electrons.",
+        "By allowing electrons only in specific orbits where they do not radiate energy.",
+        "By stating that electrons are stationary.",
+        "By putting the nucleus at the centre of the atom."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks repulsive force",
+        "",
+        "thinks stationary",
+        "that was already in Rutherford's model"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-bohr-discrete-orbits",
+      "nodeId": "class9-science-structure-of-the-atom-bohr-discrete-orbits",
+      "question": "In Bohr's model, how do electrons move around the nucleus?",
+      "options": [
+        "They can be at any distance.",
+        "They can only be in certain fixed orbits.",
+        "They are embedded in a positive sphere.",
+        "They are stationary."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks any distance (continuous)",
+        "",
+        "confuses with Thomson",
+        "thinks stationary"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-bohr-energy-levels-sketch",
+      "nodeId": "class9-science-structure-of-the-atom-bohr-energy-levels-sketch",
+      "question": "What are the names of the first four electron shells in order from the nucleus?",
+      "options": [
+        "K, L, M, N",
+        "A, B, C, D",
+        "1, 2, 3, 4",
+        "S, P, D, F"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks alphabetical order A,B,C,D",
+        "thinks numbers but shell names are letters",
+        "confuses with subshells (s,p,d,f)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-neutron-discovery",
+      "nodeId": "class9-science-structure-of-the-atom-neutron-discovery",
+      "question": "Who discovered the neutron?",
+      "options": [
+        "J.J. Thomson",
+        "James Chadwick",
+        "Ernest Rutherford",
+        "Niels Bohr"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with electron",
+        "",
+        "confuses with Rutherford",
+        "confuses with Bohr"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-mass-concentrated-in-nucleus",
+      "nodeId": "class9-science-structure-of-the-atom-mass-concentrated-in-nucleus",
+      "question": "Where is most of the mass of an atom located?",
+      "options": [
+        "In the electron cloud.",
+        "Evenly spread throughout the atom.",
+        "In the nucleus.",
+        "In the outermost shell."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks electrons have mass",
+        "thinks uniform distribution (Thomson-like)",
+        "",
+        "thinks mass in outermost shell"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-bohr-bury-2n2-rule",
+      "nodeId": "class9-science-structure-of-the-atom-bohr-bury-2n2-rule",
+      "question": "What is the maximum number of electrons that can be in the nth shell according to Bohr-Bury?",
+      "options": [
+        "2n",
+        "2n²",
+        "n²",
+        "2n²+2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks 2n",
+        "",
+        "thinks n²",
+        "thinks 2n²+2 (maybe confuses with exceptions)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-calculate-shell-capacity",
+      "nodeId": "class9-science-structure-of-the-atom-calculate-shell-capacity",
+      "question": "What is the maximum number of electrons in the first (K) shell?",
+      "options": [
+        "32",
+        "8",
+        "18",
+        "2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with N shell (32)",
+        "confuses with L shell (8)",
+        "confuses with M shell (18)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-shell-filling-order",
+      "nodeId": "class9-science-structure-of-the-atom-shell-filling-order",
+      "question": "What is the maximum number of electrons that can be in the outermost shell of an atom?",
+      "options": [
+        "2",
+        "8",
+        "18",
+        "32"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with K shell",
+        "",
+        "confuses with M shell capacity",
+        "confuses with N shell capacity"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements",
+      "nodeId": "class9-science-structure-of-the-atom-apply-2n2-to-first-18-elements",
+      "question": "What is the electron configuration of sodium (atomic number 11)?",
+      "options": [
+        "2,9",
+        "2,8,2",
+        "2,8,1",
+        "1,8,2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks 2,9 (wrong, 9 in L shell impossible)",
+        "thinks 2,8,2 (Mg)",
+        "",
+        "thinks 1,8,2 (wrong order/shells)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-draw-atomic-structure-h",
+      "nodeId": "class9-science-structure-of-the-atom-draw-atomic-structure-h",
+      "question": "How many electrons are in the K shell of a hydrogen atom?",
+      "options": [
+        "0",
+        "2",
+        "1",
+        "3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks no electrons",
+        "thinks 2 (He)",
+        "",
+        "thinks 3 (Li)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-draw-atomic-structure-he",
+      "nodeId": "class9-science-structure-of-the-atom-draw-atomic-structure-he",
+      "question": "How many protons and neutrons are in the nucleus of a helium atom?",
+      "options": [
+        "2 protons, 1 neutron",
+        "2 protons, 2 neutrons",
+        "1 proton, 2 neutrons",
+        "2 protons, 0 neutrons"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks 2,1 (He-3)",
+        "",
+        "thinks 1,2 (H-3? Not He)",
+        "thinks 2,0 (He-4 without neutrons? Actually He-4 has 2 neutrons, so no)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-draw-atomic-structure-na",
+      "nodeId": "class9-science-structure-of-the-atom-draw-atomic-structure-na",
+      "question": "How many neutrons are in the nucleus of a sodium atom (atomic number 11, mass number 23)?",
+      "options": [
+        "12",
+        "11",
+        "23",
+        "34"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses with protons",
+        "thinks mass number",
+        "adds them incorrectly"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-valence-electrons",
+      "nodeId": "class9-science-structure-of-the-atom-define-valence-electrons",
+      "question": "What are valence electrons?",
+      "options": [
+        "Electrons in the innermost shell.",
+        "All electrons in the atom.",
+        "Electrons in the outermost shell.",
+        "Neutrons in the nucleus."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks innermost",
+        "thinks all electrons",
+        "",
+        "confuses with neutrons"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-determine-number-of-valence-electrons",
+      "nodeId": "class9-science-structure-of-the-atom-determine-number-of-valence-electrons",
+      "question": "How many valence electrons does oxygen (electron configuration 2,6) have?",
+      "options": [
+        "6",
+        "2",
+        "8",
+        "16"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses with K shell electrons",
+        "thinks total electrons is 8 (that's atomic number), but valence is 6",
+        "thinks mass number"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-octet-rule",
+      "nodeId": "class9-science-structure-of-the-atom-octet-rule",
+      "question": "What does the octet rule state?",
+      "options": [
+        "Atoms tend to have 8 electrons in the first shell.",
+        "Atoms tend to have 8 electrons in the outermost shell.",
+        "Atoms always have 8 electrons total.",
+        "Atoms tend to have 8 electrons in the nucleus."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks first shell (only 2)",
+        "",
+        "thinks total electrons",
+        "thinks electrons in nucleus"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-valency",
+      "nodeId": "class9-science-structure-of-the-atom-define-valency",
+      "question": "What is valency of an element?",
+      "options": [
+        "Number of protons in the atom.",
+        "Mass of the atom.",
+        "Number of electrons in the outermost shell.",
+        "Combining capacity of the element."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with atomic number",
+        "confuses with mass number",
+        "confuses with valence electrons",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-valency-noble-gases",
+      "nodeId": "class9-science-structure-of-the-atom-valency-noble-gases",
+      "question": "What is the valency of neon (atomic number 10)?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks it can lose 1",
+        "thinks it can gain 2",
+        "confuses with number of valence electrons"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-calculate-valency-first-18",
+      "nodeId": "class9-science-structure-of-the-atom-calculate-valency-first-18",
+      "question": "What is the valency of oxygen (atomic number 8)?",
+      "options": [
+        "6",
+        "2",
+        "8",
+        "4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with valence electrons (6)",
+        "",
+        "confuses with atomic number",
+        "thinks 4 (maybe from carbon?)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-distinguish-valency-valence-electrons",
+      "nodeId": "class9-science-structure-of-the-atom-distinguish-valency-valence-electrons",
+      "question": "For oxygen, which has 6 valence electrons, what is its valency?",
+      "options": [
+        "6",
+        "8",
+        "2",
+        "4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses with valence electrons",
+        "thinks octet",
+        "",
+        "thinks something else"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-atomic-number",
+      "nodeId": "class9-science-structure-of-the-atom-define-atomic-number",
+      "question": "What does the atomic number of an element represent?",
+      "options": [
+        "Number of neutrons.",
+        "Number of protons.",
+        "Number of electrons.",
+        "Number of protons and neutrons."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses with neutrons",
+        "",
+        "confuses with electrons (but for neutral atom it's same, but definition is protons)",
+        "confuses with mass number"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-identify-element-from-atomic-number",
+      "nodeId": "class9-science-structure-of-the-atom-identify-element-from-atomic-number",
+      "question": "Which element has atomic number 6?",
+      "options": [
+        "Carbon",
+        "Nitrogen",
+        "Oxygen",
+        "Silicon"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses with 7",
+        "confuses with 8",
+        "confuses with 14"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-mass-number",
+      "nodeId": "class9-science-structure-of-the-atom-define-mass-number",
+      "question": "What does the mass number of an atom represent?",
+      "options": [
+        "Number of protons.",
+        "Number of neutrons.",
+        "Number of electrons.",
+        "Number of protons and neutrons."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with atomic number",
+        "confuses with neutrons only",
+        "confuses with electrons",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-nucleons",
+      "nodeId": "class9-science-structure-of-the-atom-define-nucleons",
+      "question": "What are protons and neutrons together called?",
+      "options": [
+        "Electrons",
+        "Ions",
+        "Isotopes",
+        "Nucleons"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with electrons",
+        "confuses with ions",
+        "confuses with isotopes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-calculate-mass-number",
+      "nodeId": "class9-science-structure-of-the-atom-calculate-mass-number",
+      "question": "An atom has 8 protons and 8 neutrons. What is its mass number?",
+      "options": [
+        "16",
+        "8",
+        "24",
+        "64"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks only protons",
+        "adds incorrectly (8+8+8?)",
+        "multiplies"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-use-standard-notation",
+      "nodeId": "class9-science-structure-of-the-atom-use-standard-notation",
+      "question": "In the symbol ^23_11 Na, what does the 23 represent?",
+      "options": [
+        "Atomic number.",
+        "Number of electrons.",
+        "Number of neutrons.",
+        "Mass number."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with atomic number (11)",
+        "thinks electrons",
+        "thinks it's neutrons (it's protons+neutrons)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-isotopes",
+      "nodeId": "class9-science-structure-of-the-atom-define-isotopes",
+      "question": "What are isotopes of an element?",
+      "options": [
+        "Atoms with the same number of neutrons but different protons.",
+        "Atoms with the same number of protons but different neutrons.",
+        "Atoms with the same number of electrons but different protons.",
+        "Atoms with the same mass number but different atomic numbers."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reverses",
+        "",
+        "thinks same electrons but different protons (that would change element)",
+        "confuses with isobars"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-examples-of-isotopes",
+      "nodeId": "class9-science-structure-of-the-atom-examples-of-isotopes",
+      "question": "Which of the following are isotopes of hydrogen?",
+      "options": [
+        "H-1, H-2, He-4",
+        "H-1, He-4, C-12",
+        "H-2, He-3, Li-6",
+        "H-1, H-2, H-3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "includes He-4",
+        "includes different elements",
+        "includes He and Li",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-calculate-neutrons-in-isotope",
+      "nodeId": "class9-science-structure-of-the-atom-calculate-neutrons-in-isotope",
+      "question": "How many neutrons are in carbon-14 (atomic number 6)?",
+      "options": [
+        "6",
+        "14",
+        "8",
+        "20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses with protons",
+        "thinks mass number",
+        "",
+        "adds them"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-isotopes-applications",
+      "nodeId": "class9-science-structure-of-the-atom-isotopes-applications",
+      "question": "Which isotope is used in nuclear reactors?",
+      "options": [
+        "Iodine-131",
+        "Cobalt-60",
+        "Uranium-235",
+        "Carbon-14"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "used in thyroid",
+        "used in cancer treatment",
+        "",
+        "used in radiocarbon dating"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-define-isobars",
+      "nodeId": "class9-science-structure-of-the-atom-define-isobars",
+      "question": "What are isobars?",
+      "options": [
+        "Atoms of same element with different mass numbers.",
+        "Atoms of different elements with different mass numbers.",
+        "Atoms of same element with same mass number.",
+        "Atoms of different elements with same mass number."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses with isotopes",
+        "opposite",
+        "same element same mass? That's not a special name",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-identify-isobars",
+      "nodeId": "class9-science-structure-of-the-atom-identify-isobars",
+      "question": "Which of the following are isobars?",
+      "options": [
+        "^40_18 Ar, ^40_19 K, ^40_20 Ca",
+        "^12_6 C, ^13_6 C, ^14_6 C",
+        "^1_1 H, ^2_1 H, ^3_1 H",
+        "^16_8 O, ^17_8 O, ^18_8 O"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "isotopes of carbon",
+        "isotopes of hydrogen",
+        "isotopes of oxygen"
+      ]
+    },
+    {
+      "id": "probe-class9-science-structure-of-the-atom-compare-isotopes-isobars",
+      "nodeId": "class9-science-structure-of-the-atom-compare-isotopes-isobars",
+      "question": "How do the chemical properties of isotopes compare?",
+      "options": [
+        "Isotopes have the same chemical properties.",
+        "Isotopes have different chemical properties.",
+        "Isotopes have the same number of neutrons.",
+        "Isotopes have different atomic numbers."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "says different (false)",
+        "says same neutrons (false, they differ in neutrons)",
+        "says different atomic numbers (false)"
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-contrast-plant-animal-tissues",
+      "nodeId": "class9-science-tissues-contrast-plant-animal-tissues",
+      "question": "Why do animals need a greater variety of tissue types than plants?",
+      "options": [
+        "Animals are more complex because they have more cells than plants.",
+        "Plants are simpler because they don't have to move at all, so they need only a few tissues.",
+        "Animals eat food, so they need more tissues to digest it, while plants make their own food.",
+        "Animals move from place to place and need quick reactions, which require specialized tissues like muscles and nerves."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Thinks total cell count determines complexity, not function.",
+        "Thinks plants have no movement at all, ignoring that even stationary organisms need complex tissues.",
+        "Thinks diet alone determines tissue diversity, ignoring mobility and sensing.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-localized-vs-uniform-growth",
+      "nodeId": "class9-science-tissues-localized-vs-uniform-growth",
+      "question": "Where does growth mainly occur in a plant?",
+      "options": [
+        "Uniformly throughout the body like in animals.",
+        "Only in the roots and not in the shoots.",
+        "Only in specific regions called meristems.",
+        "Only in the leaves and stems."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Thinks plants grow uniformly like animals.",
+        "Thinks growth is only in roots, ignoring shoot apices and lateral meristems.",
+        "",
+        "Thinks growth is only in leaves and stems, but ignores roots and meristems."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-classify-plant-tissues",
+      "nodeId": "class9-science-tissues-classify-plant-tissues",
+      "question": "Which classification correctly divides plant tissues?",
+      "options": [
+        "Meristematic and permanent tissues.",
+        "Simple and complex tissues.",
+        "Living and dead tissues.",
+        "Apical and lateral tissues."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Thinks simple vs complex is the first classification, but that is a subdivision of permanent tissues.",
+        "Thinks living vs dead is the main classification; meristematic are living but permanent can be living or dead.",
+        "Thinks apical vs lateral are the two main types, but they are types of meristematic tissues, not all plant tissues."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-apical-meristem-location",
+      "nodeId": "class9-science-tissues-apical-meristem-location",
+      "question": "Where would you find apical meristem in a plant?",
+      "options": [
+        "At the tips of roots and shoots.",
+        "At the base of leaves and internodes.",
+        "On the sides of stems and roots.",
+        "Inside the mature stem."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "This describes intercalary meristem.",
+        "This describes lateral meristem.",
+        "Apical meristem is at the tips, not inside mature parts."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-intercalary-meristem-location",
+      "nodeId": "class9-science-tissues-intercalary-meristem-location",
+      "question": "In which part of a grass plant is intercalary meristem found?",
+      "options": [
+        "At the tips of roots and shoots.",
+        "On the sides of the stem.",
+        "Inside the leaf blade.",
+        "At the base of leaves and internodes."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "This describes apical meristem.",
+        "This describes lateral meristem.",
+        "Intercalary meristem is at the base, not inside the leaf blade.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-lateral-meristem-location",
+      "nodeId": "class9-science-tissues-lateral-meristem-location",
+      "question": "Where is lateral meristem located in a plant?",
+      "options": [
+        "On the sides of the stem and root.",
+        "At the base of the leaf.",
+        "At the tip of the shoot.",
+        "Inside the flower."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "This describes intercalary meristem.",
+        "This describes apical meristem.",
+        "Flowers do not contain meristem that increases girth."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-meristematic-cell-characteristics",
+      "nodeId": "class9-science-tissues-meristematic-cell-characteristics",
+      "question": "Which set of features is typical of meristematic cells?",
+      "options": [
+        "Thin cell walls, dense cytoplasm, large nuclei, no vacuoles.",
+        "Thick cell walls, small nuclei, large vacuoles.",
+        "Irregular shapes, intercellular spaces, dead cells.",
+        "Elongated cells, unevenly thickened walls."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "These are features of mature permanent cells like sclerenchyma.",
+        "These describe sclerenchyma or mature permanent cells, not meristematic cells.",
+        "These describe collenchyma."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-role-meristematic-length-growth",
+      "nodeId": "class9-science-tissues-role-meristematic-length-growth",
+      "question": "Which meristems are responsible for increasing the length of a plant?",
+      "options": [
+        "Apical and intercalary meristems.",
+        "Lateral meristem only.",
+        "Apical meristem only.",
+        "Intercalary meristem only."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Lateral meristem increases girth, not length.",
+        "Apical alone gives length, but intercalary also contributes in grasses.",
+        "Intercalary alone, ignoring apical."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-role-meristematic-girth-growth",
+      "nodeId": "class9-science-tissues-role-meristematic-girth-growth",
+      "question": "Which meristem is responsible for increase in girth (width) of a plant?",
+      "options": [
+        "Apical meristem.",
+        "Intercalary meristem.",
+        "All meristems together.",
+        "Lateral meristem."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Apical increases length.",
+        "Intercalary increases length in grasses.",
+        "Only lateral increases girth.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-define-differentiation",
+      "nodeId": "class9-science-tissues-define-differentiation",
+      "question": "What is differentiation in plants?",
+      "options": [
+        "Growth of cells in length.",
+        "The process by which meristematic cells lose ability to divide and become specialized permanent tissues.",
+        "Division of meristematic cells to produce new cells.",
+        "Movement of cells from one part to another."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "That is growth or elongation.",
+        "",
+        "That is cell division, not differentiation.",
+        "Cells do not move in plants."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-simple-vs-complex-tissues",
+      "nodeId": "class9-science-tissues-simple-vs-complex-tissues",
+      "question": "What is the difference between simple and complex permanent tissues?",
+      "options": [
+        "Simple tissues are living, complex are dead.",
+        "Simple tissues are found in stems, complex in leaves.",
+        "Simple tissues have one cell type, complex tissues have multiple cell types working together.",
+        "Simple tissues are only in plants, complex in animals."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Both can be living or dead (e.g., parenchyma living, sclerenchyma dead; xylem vessels dead, phloem sieve tubes living).",
+        "Location does not define simple vs complex.",
+        "",
+        "Both are plant tissues."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-parenchyma-structure",
+      "nodeId": "class9-science-tissues-parenchyma-structure",
+      "question": "Which description matches parenchyma cells?",
+      "options": [
+        "Elongated cells with unevenly thickened walls.",
+        "Dead cells with thick lignified walls and narrow lumen.",
+        "Thin-walled living cells, loosely packed with intercellular spaces.",
+        "Cells with dense cytoplasm and large nuclei, without vacuoles."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "This describes collenchyma.",
+        "This describes sclerenchyma.",
+        "",
+        "This describes meristematic cells."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-parenchyma-function",
+      "nodeId": "class9-science-tissues-parenchyma-function",
+      "question": "Which is a function of parenchyma tissue?",
+      "options": [
+        "Provides strength and rigidity to plant parts.",
+        "Conducts water and minerals from roots to leaves.",
+        "Transports food from leaves to other parts.",
+        "Stores food and may carry out photosynthesis."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Function of sclerenchyma.",
+        "Function of xylem.",
+        "Function of phloem.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-collenchyma-structure",
+      "nodeId": "class9-science-tissues-collenchyma-structure",
+      "question": "Where in a plant would you expect to find collenchyma?",
+      "options": [
+        "In the hard shell of a nut.",
+        "In the pith of the stem.",
+        "In the root cap.",
+        "Under the epidermis in stems and leaves."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Hard shells have sclerenchyma.",
+        "Pith is mainly parenchyma.",
+        "Root cap has meristematic cells.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-collenchyma-function",
+      "nodeId": "class9-science-tissues-collenchyma-function",
+      "question": "What is the main function of collenchyma?",
+      "options": [
+        "To store water and food.",
+        "To provide mechanical support and flexibility to plant parts.",
+        "To conduct water and minerals.",
+        "To protect the plant from herbivores."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Function of parenchyma.",
+        "",
+        "Function of xylem.",
+        "Collenchyma is not for protection; sclerenchyma forms protective layers."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-sclerenchyma-structure",
+      "nodeId": "class9-science-tissues-sclerenchyma-structure",
+      "question": "Which best describes the structure of sclerenchyma cells?",
+      "options": [
+        "Thin-walled living cells with intercellular spaces.",
+        "Dead cells with thick lignified walls and narrow lumen, no intercellular spaces.",
+        "Living cells with unevenly thickened walls.",
+        "Cells with dense cytoplasm and large nuclei."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Describes parenchyma.",
+        "",
+        "Describes collenchyma.",
+        "Describes meristematic cells."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-sclerenchyma-function",
+      "nodeId": "class9-science-tissues-sclerenchyma-function",
+      "question": "What is sclerenchyma mainly responsible for?",
+      "options": [
+        "Strength and rigidity, and forming hard coverings of seeds.",
+        "Conduction of food.",
+        "Flexibility and support.",
+        "Photosynthesis and storage."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Function of phloem.",
+        "Function of collenchyma.",
+        "Function of parenchyma (chlorenchyma)."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-xylem-structure",
+      "nodeId": "class9-science-tissues-xylem-structure",
+      "question": "Which cell types are found in xylem?",
+      "options": [
+        "Tracheids, vessels, sieve tubes, companion cells.",
+        "Tracheids, vessels, xylem parenchyma, xylem fibres.",
+        "Sieve tubes, companion cells, phloem parenchyma, phloem fibres.",
+        "Parenchyma, collenchyma, sclerenchyma."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Mixes phloem and xylem elements (sieve tubes are phloem).",
+        "",
+        "These are phloem cell types.",
+        "These are simple tissues, not xylem cell types."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-xylem-function",
+      "nodeId": "class9-science-tissues-xylem-function",
+      "question": "What is the primary function of xylem?",
+      "options": [
+        "To conduct food from leaves to other parts.",
+        "To conduct water and minerals from roots to aerial parts.",
+        "To provide mechanical support only.",
+        "To store food and water."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Function of phloem.",
+        "",
+        "Thinks providing mechanical support is xylem's primary function, ignoring conduction.",
+        "Thinks xylem stores food and water; that is mainly parenchyma's role."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-phloem-structure",
+      "nodeId": "class9-science-tissues-phloem-structure",
+      "question": "Which cell types are found in phloem?",
+      "options": [
+        "Tracheids, vessels, xylem fibres, xylem parenchyma.",
+        "Tracheids, sieve tubes, companion cells, fibres.",
+        "Parenchyma, collenchyma, sclerenchyma.",
+        "Sieve tubes, companion cells, phloem fibres, phloem parenchyma."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "These are xylem cell types.",
+        "Mixes tracheids (xylem) with phloem elements.",
+        "These are simple tissues, not phloem.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-phloem-function",
+      "nodeId": "class9-science-tissues-phloem-function",
+      "question": "What is the main function of phloem?",
+      "options": [
+        "To conduct food (sugars) from leaves to other plant parts.",
+        "To provide strength to the plant.",
+        "To conduct water and minerals.",
+        "To store food and water."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Function of sclerenchyma, but phloem fibres also provide support, but primary is conduction.",
+        "Function of xylem.",
+        "Function of parenchyma."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-name-four-animal-tissues",
+      "nodeId": "class9-science-tissues-name-four-animal-tissues",
+      "question": "What are the four basic types of animal tissues?",
+      "options": [
+        "Epithelial, vascular, muscular, skeletal.",
+        "Epithelial, connective, muscular, nervous.",
+        "Skin, blood, muscle, brain.",
+        "Simple, complex, meristematic, permanent."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Vascular and skeletal are not basic tissue types; vascular is part of connective.",
+        "",
+        "These are organs, not tissues.",
+        "These are plant tissue classifications."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-general-functions-animal-tissues",
+      "nodeId": "class9-science-tissues-general-functions-animal-tissues",
+      "question": "Which function is correctly matched with an animal tissue?",
+      "options": [
+        "Epithelial tissue: support and binding.",
+        "Connective tissue: contraction and movement.",
+        "Nervous tissue: receiving stimuli and conducting impulses.",
+        "Muscular tissue: covering and lining."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Epithelium is for covering/lining, not support.",
+        "Connective is for support/binding, not contraction.",
+        "",
+        "Muscle is for contraction, not covering."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-general-epithelial-characteristics",
+      "nodeId": "class9-science-tissues-general-epithelial-characteristics",
+      "question": "Which of these is a general characteristic of epithelial tissue?",
+      "options": [
+        "Cells are loosely arranged with abundant matrix.",
+        "Cells have thick walls and are dead at maturity.",
+        "Cells are tightly packed, rest on a basement membrane, and cover surfaces.",
+        "Cells are long, cylindrical, and multinucleated."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Describes connective tissue.",
+        "Describes plant sclerenchyma.",
+        "",
+        "Describes striated muscle."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-squamous-epithelium-identification",
+      "nodeId": "class9-science-tissues-squamous-epithelium-identification",
+      "question": "Which shape best describes squamous epithelium cells?",
+      "options": [
+        "Cube-shaped.",
+        "Tall and column-like.",
+        "Flattened and scale-like.",
+        "Spindle-shaped."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Describes cuboidal epithelium.",
+        "Describes columnar epithelium.",
+        "",
+        "Describes smooth muscle cells."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-cuboidal-epithelium-identification",
+      "nodeId": "class9-science-tissues-cuboidal-epithelium-identification",
+      "question": "What shape are cuboidal epithelial cells?",
+      "options": [
+        "Flattened like scales.",
+        "Irregular with branching.",
+        "Tall and column-like.",
+        "Cube-shaped (like dice)."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Squamous.",
+        "Not an epithelial shape; possibly cardiac muscle.",
+        "Columnar.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-columnar-epithelium-identification",
+      "nodeId": "class9-science-tissues-columnar-epithelium-identification",
+      "question": "How would you recognize columnar epithelium?",
+      "options": [
+        "Cells are tall and resemble columns.",
+        "Cells are flattened and thin.",
+        "Cells are cube-shaped.",
+        "Cells have hair-like cilia."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Squamous.",
+        "Cuboidal.",
+        "Ciliated epithelium is a type, but cilia are not the shape; columnar can be ciliated, but the shape is tall. So this option confuses characteristic with shape."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-ciliated-epithelium-identification",
+      "nodeId": "class9-science-tissues-ciliated-epithelium-identification",
+      "question": "What special feature is present on the free surface of ciliated epithelium?",
+      "options": [
+        "Tiny finger-like projections (microvilli).",
+        "Tight junctions between cells.",
+        "Hair-like structures called cilia.",
+        "A thick layer of mucus."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Microvilli are in the intestine, but ciliated epithelium has cilia, not microvilli.",
+        "Junctions are present in many epithelia but not the defining feature.",
+        "",
+        "Mucus is secreted, but not the feature on the cell surface."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-glandular-epithelium-identification",
+      "nodeId": "class9-science-tissues-glandular-epithelium-identification",
+      "question": "Glandular epithelium is specialized for which function?",
+      "options": [
+        "Absorption of nutrients.",
+        "Protection from mechanical injury.",
+        "Secretion of substances like sweat, enzymes, or hormones.",
+        "Movement of particles across the surface."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Mainly columnar epithelium in intestine does absorption.",
+        "Protection is a general function of epithelium, but glandular is for secretion.",
+        "",
+        "Movement is ciliated epithelium."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-epithelium-shape-location-correlation",
+      "nodeId": "class9-science-tissues-epithelium-shape-location-correlation",
+      "question": "Where would you most likely find squamous epithelium?",
+      "options": [
+        "Lining the trachea.",
+        "Lining the kidney tubules.",
+        "Lining the alveoli of lungs and inner lining of blood vessels.",
+        "Lining the intestine."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Trachea has ciliated columnar epithelium.",
+        "Kidney tubules have cuboidal epithelium.",
+        "",
+        "Intestine has columnar epithelium."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-general-connective-tissue-characteristics",
+      "nodeId": "class9-science-tissues-general-connective-tissue-characteristics",
+      "question": "Which is a general feature of connective tissue?",
+      "options": [
+        "Cells are loosely arranged in an extracellular matrix that contains fibers and ground substance.",
+        "Cells are tightly packed with no matrix between them.",
+        "Cells have large vacuoles and thin cell walls.",
+        "Cells are long and multinucleated with striations."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "This describes epithelial tissue.",
+        "This describes plant parenchyma.",
+        "This describes striated muscle."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-blood-components-locations",
+      "nodeId": "class9-science-tissues-blood-components-locations",
+      "question": "Which of these is a component of blood, and where is it found?",
+      "options": [
+        "Red blood cells (RBCs) are found in the bones.",
+        "Plasma is the fluid matrix found in blood vessels and heart.",
+        "White blood cells (WBCs) are found in the matrix of cartilage.",
+        "Platelets are found in the lymphatic vessels."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "RBCs are formed in bone marrow but circulate in blood vessels.",
+        "",
+        "WBCs are in blood, not in cartilage.",
+        "Platelets are in blood, not just lymphatic vessels."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-bone-components-locations",
+      "nodeId": "class9-science-tissues-bone-components-locations",
+      "question": "What makes bone hard and rigid?",
+      "options": [
+        "Flexible protein fibers called collagen.",
+        "Chondrocytes in a semi-solid matrix.",
+        "A hard matrix of calcium phosphate, with osteocytes embedded in it.",
+        "Fat cells packed together."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Collagen provides flexibility but not hardness; bone has both collagen and calcium phosphate.",
+        "This describes cartilage.",
+        "",
+        "This describes adipose tissue."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-cartilage-components-locations",
+      "nodeId": "class9-science-tissues-cartilage-components-locations",
+      "question": "Where in the human body is cartilage found?",
+      "options": [
+        "In the nose, ear, and at the joints.",
+        "In the bones of the skeleton.",
+        "In the blood vessels.",
+        "Under the skin around kidneys."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Bones are different; cartilage is not in bones.",
+        "Blood vessels have smooth muscle and elastic tissue.",
+        "Under kidney is adipose tissue."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-areolar-components-locations",
+      "nodeId": "class9-science-tissues-areolar-components-locations",
+      "question": "Where is areolar connective tissue typically found?",
+      "options": [
+        "In the walls of the heart.",
+        "Between the skin and muscles, and around organs.",
+        "In the lining of the stomach.",
+        "Inside the bone marrow."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Heart walls have cardiac muscle and some connective, but areolar is not typical.",
+        "",
+        "Stomach lining has epithelial tissue.",
+        "Bone marrow has blood-forming cells and reticular connective, not areolar."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-adipose-components-locations",
+      "nodeId": "class9-science-tissues-adipose-components-locations",
+      "question": "What is the main component of adipose tissue?",
+      "options": [
+        "Fibroblasts and collagen fibers.",
+        "Chondrocytes in a flexible matrix.",
+        "Osteocytes in a hard matrix.",
+        "Fat cells (adipocytes) with little matrix."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "These are components of areolar tissue.",
+        "These are cartilage.",
+        "These are bone.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-matrix-determines-properties",
+      "nodeId": "class9-science-tissues-matrix-determines-properties",
+      "question": "Why is blood considered a connective tissue even though it is fluid?",
+      "options": [
+        "Because it has a hard matrix.",
+        "Because it has cells suspended in a liquid matrix (plasma).",
+        "Because it has fibers and ground substance, but it is still fluid.",
+        "Because it connects different parts of the body, like all connective tissues."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Blood does not have a hard matrix.",
+        "",
+        "Blood has water and proteins, but fibers are only during clotting; not typical. The key is the matrix is fluid, which determines its property.",
+        "This is a functional reason, but the structural reason is the matrix nature."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-striated-muscle-characteristics",
+      "nodeId": "class9-science-tissues-striated-muscle-characteristics",
+      "question": "Which of these describes striated (skeletal) muscle?",
+      "options": [
+        "Spindle-shaped cells with single nucleus, no striations.",
+        "Long cylindrical cells with multiple nuclei and visible striations.",
+        "Branched cells with single nucleus and intercalated discs.",
+        "Short fusiform cells with central nucleus."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Describes smooth muscle.",
+        "",
+        "Describes cardiac muscle.",
+        "Describes smooth muscle."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-unstriated-muscle-characteristics",
+      "nodeId": "class9-science-tissues-unstriated-muscle-characteristics",
+      "question": "What is a feature of unstriated (smooth) muscle?",
+      "options": [
+        "It is spindle-shaped with a single nucleus and no striations.",
+        "It has striations and is voluntary.",
+        "It is branched and has intercalated discs.",
+        "It has multiple nuclei and is cylindrical."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Smooth muscle has no striations and is involuntary.",
+        "Cardiac muscle.",
+        "Skeletal muscle."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-cardiac-muscle-characteristics",
+      "nodeId": "class9-science-tissues-cardiac-muscle-characteristics",
+      "question": "What unique structure is found in cardiac muscle cells?",
+      "options": [
+        "Many nuclei per cell.",
+        "Spindle shape with no striations.",
+        "Intercalated discs that help cells contract together.",
+        "Long unbranched fibers."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Skeletal muscle has many nuclei, but cardiac has 1-2.",
+        "Smooth muscle.",
+        "",
+        "Skeletal muscle is long and unbranched, cardiac is branched."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-compare-muscle-types",
+      "nodeId": "class9-science-tissues-compare-muscle-types",
+      "question": "Which muscle type is voluntary and has striations?",
+      "options": [
+        "Cardiac muscle.",
+        "Smooth muscle.",
+        "All three.",
+        "Skeletal muscle."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Cardiac is involuntary but striated.",
+        "Smooth is involuntary and not striated.",
+        "Only skeletal is voluntary.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-neuron-structure",
+      "nodeId": "class9-science-tissues-neuron-structure",
+      "question": "Which part of a neuron receives signals from other neurons?",
+      "options": [
+        "Axon.",
+        "Axon terminal.",
+        "Cell body.",
+        "Dendrites."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Axon conducts impulses away from cell body.",
+        "Axon terminal sends signals to next neuron.",
+        "Cell body processes signals, but dendrites receive them.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-nerve-impulse-path",
+      "nodeId": "class9-science-tissues-nerve-impulse-path",
+      "question": "In which direction does a nerve impulse travel through a neuron?",
+      "options": [
+        "Axon → cell body → dendrites → synapse.",
+        "Cell body → axon → dendrites → synapse.",
+        "Synapse → axon → cell body → dendrites.",
+        "Dendrites → cell body → axon → axon terminal → synapse."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Reverse direction.",
+        "Impulse goes from dendrites to cell body first.",
+        "Impulse starts at dendrites, not synapse.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-nervous-tissue-function",
+      "nodeId": "class9-science-tissues-nervous-tissue-function",
+      "question": "What is the main function of nervous tissue?",
+      "options": [
+        "To contract and produce movement.",
+        "To bind and support other tissues.",
+        "To cover and protect body surfaces.",
+        "To receive stimuli and conduct nerve impulses for control and coordination."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Function of muscle tissue.",
+        "Function of connective tissue.",
+        "Function of epithelial tissue.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-xylem-cell-types",
+      "nodeId": "class9-science-tissues-xylem-cell-types",
+      "question": "Which of the following is NOT a cell type found in xylem?",
+      "options": [
+        "Tracheids.",
+        "Vessels.",
+        "Sieve tubes.",
+        "Xylem fibres."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Tracheids are in xylem.",
+        "Vessels are in xylem.",
+        "",
+        "Xylem fibres are in xylem."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-phloem-cell-types",
+      "nodeId": "class9-science-tissues-phloem-cell-types",
+      "question": "Which cell type is part of phloem?",
+      "options": [
+        "Tracheids.",
+        "Companion cells.",
+        "Vessels.",
+        "Xylem fibres."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Tracheids are xylem.",
+        "",
+        "Vessels are xylem.",
+        "Xylem fibres are xylem."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-function-ciliated-epithelium",
+      "nodeId": "class9-science-tissues-function-ciliated-epithelium",
+      "question": "What is the role of ciliated epithelium in the respiratory tract?",
+      "options": [
+        "To move mucus and trapped particles upward to be expelled.",
+        "To absorb oxygen into the blood.",
+        "To secrete mucus that traps dust.",
+        "To prevent germs from entering the body."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Gas exchange occurs in alveoli, not in ciliated epithelium.",
+        "Goblet cells secrete mucus, but cilia move it.",
+        "Protection is a general function, but specifically cilia move mucus."
+      ]
+    },
+    {
+      "id": "probe-class9-science-tissues-function-glandular-epithelium",
+      "nodeId": "class9-science-tissues-function-glandular-epithelium",
+      "question": "What substance might glandular epithelium secrete?",
+      "options": [
+        "Mucus only.",
+        "Sweat, enzymes, or hormones.",
+        "Blood cells.",
+        "Urine."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Mucus is one example, but not the only.",
+        "",
+        "Blood cells are produced in bone marrow, not by glandular epithelium.",
+        "Urine is formed in kidneys, not secreted by glandular epithelium."
+      ]
+    }
+  ]
+}

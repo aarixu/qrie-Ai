@@ -218,6 +218,18 @@ function validateProbes(raw: unknown, nodes: LearningNode[]): { value: Probe[] |
       } else if (String(probe.misconceptions[probe.correctIndex] ?? '').trim() !== '') {
         errors.push(`${where}: misconceptions[correctIndex] must be an empty string`);
       } else if (
+        // Long enough to be a sentence about the student's thinking. The
+        // committed-bank test enforces the same floor, and a generator that
+        // accepts what the repo rejects just moves the failure downstream:
+        // "foam" names an option, not the mistake behind choosing it.
+        probe.misconceptions.some(
+          (m, idx) => idx !== probe.correctIndex && String(m ?? '').trim().length <= 4,
+        )
+      ) {
+        errors.push(
+          `${where}: each wrong option needs a misconception saying WHY a student would pick it, not just a word`,
+        );
+      } else if (
         probe.misconceptions.some((m, idx) => idx !== probe.correctIndex && !isStr(m))
       ) {
         errors.push(`${where}: every wrong option needs a named misconception`);
@@ -233,16 +245,72 @@ function validateProbes(raw: unknown, nodes: LearningNode[]): { value: Probe[] |
   return errors.length > 0 ? { value: null, errors } : { value: probes, errors: [] };
 }
 
+/**
+ * FNV-1a over the probe id. The same probe always lands in the same place, so
+ * regenerating a chapter does not reshuffle a bank someone has already seen.
+ */
+function hash(str: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i += 1) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
+
+/**
+ * Move each correct answer to a position decided by its id, not by the model.
+ *
+ * The prompt asks for varied positions and the model ignores it: the first
+ * chapter generated came back with the answer at A for all thirteen questions,
+ * which the committed-bank test caught. A student who notices can score full
+ * marks without reading a word, and a placement test they can game measures
+ * nothing. Options and misconceptions move together — they are aligned by
+ * index, and a swap that forgot the misconceptions would mislabel every gap.
+ */
+export function balanceAnswerPositions(probes: Probe[]): Probe[] {
+  // Rank the batch by a hash of the id, then deal positions round-robin. Pure
+  // per-probe hashing is deterministic but lumpy — on thirteen questions it
+  // still put nearly half the answers in one slot. Dealing by rank spreads any
+  // batch evenly AND stays stable, because the ranking is the id's, not the
+  // order the model happened to reply in.
+  const rank = new Map(
+    probes
+      .map((probe, i) => ({ i, key: hash(probe.id) }))
+      .sort((a, b) => a.key - b.key || a.i - b.i)
+      .map((entry, position) => [entry.i, position]),
+  );
+
+  return probes.map((probe, i) => {
+    const target = (rank.get(i) ?? 0) % probe.options.length;
+    if (target === probe.correctIndex) return probe;
+
+    const swap = <T>(list: T[]): T[] => {
+      const next = [...list];
+      [next[target], next[probe.correctIndex]] = [next[probe.correctIndex], next[target]];
+      return next;
+    };
+    return {
+      ...probe,
+      options: swap(probe.options),
+      correctIndex: target,
+      ...(probe.misconceptions ? { misconceptions: swap(probe.misconceptions) } : {}),
+    };
+  });
+}
+
 export async function generateProbes(
   nodes: LearningNode[],
   adapter: LlmAdapter,
   opts: ProbesPromptOptions,
 ): Promise<Outcome<Probe[]>> {
   const { system, user } = buildProbesPrompt(nodes, opts);
+  const balanced = (out: Outcome<Probe[]>): Outcome<Probe[]> =>
+    out.ok ? { ok: true, value: balanceAnswerPositions(out.value) } : out;
 
   const first = await adapter.complete(system, user);
   const attempt = parse(first, (json) => validateProbes(json, nodes));
-  if (attempt.ok) return attempt;
+  if (attempt.ok) return balanced(attempt);
 
   const repair = [
     user,
@@ -255,7 +323,7 @@ export async function generateProbes(
   ].join('\n');
 
   const second = await adapter.complete(system, repair);
-  return parse(second, (json) => validateProbes(json, nodes));
+  return balanced(parse(second, (json) => validateProbes(json, nodes)));
 }
 
 // ---------------------------------------------------------------------------

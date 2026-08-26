@@ -1,0 +1,536 @@
+{
+  "formatVersion": 1,
+  "id": "class9-how-small-are-these-particles-of-matter",
+  "title": "How Small are these Particles of Matter?",
+  "subtitle": "Class 9 · Matter in Our Surroundings",
+  "language": "en",
+  "topicRef": "class9-science/matter-in-our-surroundings/how-small-are-these-particles-of-matter",
+  "canvas": {
+    "w": 1000,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "t_title",
+      "x": 500,
+      "y": 60,
+      "text": "How Small are these Particles of Matter?",
+      "sub": "Class 9 · Matter in Our Surroundings"
+    },
+    {
+      "kind": "note",
+      "id": "n_hook",
+      "x": 100,
+      "y": 200,
+      "w": 300,
+      "text": "Have you ever seen a single grain of sugar dissolve completely in water? Where does it go? How small must it be?",
+      "tone": "accent"
+    },
+    {
+      "kind": "image",
+      "id": "i_water_drop",
+      "x": 600,
+      "y": 150,
+      "w": 300,
+      "h": 250,
+      "src": "assets/water-droplet-particles.png",
+      "alt": "A single drop of water zoomed to show thousands of tiny particle dots inside",
+      "label": "A drop of water"
+    },
+    {
+      "kind": "text",
+      "id": "x_particles_matter",
+      "x": 500,
+      "y": 460,
+      "text": "All matter is made up of tiny particles",
+      "muted": false,
+      "size": 24
+    },
+    {
+      "kind": "box",
+      "id": "b_dilution_funnel",
+      "x": 50,
+      "y": 150,
+      "w": 120,
+      "h": 300,
+      "label": "Dilution series",
+      "tone": "neutral"
+    },
+    {
+      "kind": "box",
+      "id": "b_beaker1",
+      "x": 70,
+      "y": 160,
+      "w": 90,
+      "h": 60,
+      "label": "1 : 10"
+    },
+    {
+      "kind": "box",
+      "id": "b_beaker2",
+      "x": 70,
+      "y": 240,
+      "w": 90,
+      "h": 60,
+      "label": "1 : 100",
+      "tone": "good"
+    },
+    {
+      "kind": "box",
+      "id": "b_beaker3",
+      "x": 70,
+      "y": 320,
+      "w": 90,
+      "h": 60,
+      "label": "1 : 1000",
+      "tone": "good"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_dilute1",
+      "from": {
+        "x": 165,
+        "y": 190
+      },
+      "to": {
+        "x": 165,
+        "y": 270
+      },
+      "label": "dilute again"
+    },
+    {
+      "kind": "arrow",
+      "id": "a_dilute2",
+      "from": {
+        "x": 165,
+        "y": 270
+      },
+      "to": {
+        "x": 165,
+        "y": 350
+      },
+      "label": "dilute again"
+    },
+    {
+      "kind": "note",
+      "id": "n_dilution_colour",
+      "x": 200,
+      "y": 280,
+      "w": 300,
+      "text": "Even after hundreds of dilutions, the colour is still visible — meaning particles are extremely small.",
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "b_salt_water",
+      "x": 400,
+      "y": 150,
+      "w": 150,
+      "h": 200,
+      "label": "Water + Salt",
+      "tone": "neutral"
+    },
+    {
+      "kind": "text",
+      "id": "x_level_label",
+      "x": 520,
+      "y": 200,
+      "text": "Original level",
+      "muted": true,
+      "size": 14
+    },
+    {
+      "kind": "note",
+      "id": "n_space",
+      "x": 580,
+      "y": 150,
+      "w": 280,
+      "h": 100,
+      "text": "When salt dissolves, water level does not change — this proves particles have space between them.",
+      "tone": "accent"
+    },
+    {
+      "kind": "note",
+      "id": "n_check1",
+      "x": 100,
+      "y": 500,
+      "w": 300,
+      "text": "Quick question: If you dissolve 1 kg of salt in water and still see no level rise, what does that tell you about the particles of matter?",
+      "tone": "neutral"
+    },
+    {
+      "kind": "text",
+      "id": "x_three_title",
+      "x": 500,
+      "y": 110,
+      "text": "Three Characteristics of Particles of Matter",
+      "size": 28,
+      "muted": false
+    },
+    {
+      "kind": "note",
+      "id": "n_char_space",
+      "x": 80,
+      "y": 140,
+      "w": 250,
+      "text": "1. Particles have space between them.",
+      "tone": "neutral"
+    },
+    {
+      "kind": "note",
+      "id": "n_char_motion",
+      "x": 80,
+      "y": 220,
+      "w": 250,
+      "text": "2. Particles are continuously moving.",
+      "tone": "neutral"
+    },
+    {
+      "kind": "note",
+      "id": "n_char_attract",
+      "x": 80,
+      "y": 300,
+      "w": 250,
+      "text": "3. Particles attract each other.",
+      "tone": "neutral"
+    },
+    {
+      "kind": "pen",
+      "id": "p_motion_arrows",
+      "points": [
+        {
+          "x": 460,
+          "y": 180
+        },
+        {
+          "x": 500,
+          "y": 160
+        },
+        {
+          "x": 540,
+          "y": 180
+        },
+        {
+          "x": 500,
+          "y": 200
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "x_motion_explain",
+      "x": 500,
+      "y": 220,
+      "text": "Particles move continuously due to kinetic energy.",
+      "muted": false,
+      "size": 18
+    },
+    {
+      "kind": "note",
+      "id": "n_check2",
+      "x": 80,
+      "y": 400,
+      "w": 300,
+      "text": "Question: Which of the three characteristics explains why a drop of ink spreads in water?",
+      "tone": "neutral"
+    },
+    {
+      "kind": "box",
+      "id": "b_calc_box",
+      "x": 300,
+      "y": 120,
+      "w": 400,
+      "h": 350,
+      "label": "Dilution Calculation",
+      "tone": "accent"
+    },
+    {
+      "kind": "formula",
+      "id": "f_step1",
+      "x": 320,
+      "y": 180,
+      "text": "1 mL KMnO₄ + 99 mL H₂O → Dilution factor = 1:100"
+    },
+    {
+      "kind": "formula",
+      "id": "f_step2",
+      "x": 320,
+      "y": 240,
+      "text": "Take 1 mL of that + 99 mL H₂O → Total = 1:10,000"
+    },
+    {
+      "kind": "formula",
+      "id": "f_step3",
+      "x": 320,
+      "y": 300,
+      "text": "Take 1 mL of that + 99 mL H₂O → Total = 1:1,000,000"
+    },
+    {
+      "kind": "text",
+      "id": "x_calc_final",
+      "x": 500,
+      "y": 380,
+      "text": "If colour still visible after 1 in 10⁷ dilution, particles must be less than 10⁻⁹ m.",
+      "muted": false,
+      "size": 16
+    },
+    {
+      "kind": "image",
+      "id": "i_scale",
+      "x": 700,
+      "y": 80,
+      "w": 200,
+      "h": 400,
+      "src": "assets/scale-bar-nanometer.png",
+      "alt": "A scale bar showing meters down to nanometers, with a particle of matter highlighted at 10⁻⁹ m"
+    },
+    {
+      "kind": "note",
+      "id": "n_estimate",
+      "x": 100,
+      "y": 400,
+      "w": 250,
+      "text": "The upper limit for particle size from dilution experiments is about 10⁻⁹ m — one nanometre.",
+      "tone": "accent"
+    },
+    {
+      "kind": "note",
+      "id": "n_recap_q",
+      "x": 350,
+      "y": 400,
+      "w": 300,
+      "text": "Can you list all three characteristics of matter without looking back? Try it now!",
+      "tone": "neutral"
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "topic": "Hook",
+      "narration": "Imagine you drop a single grain of sugar into a glass of water and stir. Within seconds, the grain disappears, yet the water tastes sweet everywhere. Where did the grain go? How small must its pieces be to disappear so completely? That puzzle is what we are about to solve.",
+      "show": [
+        "t_title",
+        "n_hook"
+      ],
+      "focus": [
+        "n_hook"
+      ],
+      "teaches": [],
+      "checks": []
+    },
+    {
+      "id": "b2",
+      "topic": "Matter is made of particles",
+      "narration": "The answer is simple: matter is not a continuous sheet — it is made of tiny discrete particles. Think of a pile of sand: each grain is a particle. In water, each molecule is a particle. This idea, that everything around us is composed of particles, is the foundation of science.",
+      "show": [
+        "t_title",
+        "i_water_drop",
+        "x_particles_matter"
+      ],
+      "focus": [
+        "i_water_drop",
+        "x_particles_matter"
+      ],
+      "teaches": [
+        "class9-science-matter-made-of-particles"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b3",
+      "topic": "Dilution shows small particles",
+      "narration": "Now a brilliant experiment. Take a drop of dark purple potassium permanganate and add water — the colour spreads. Take a little from that and add more water — still purple. Keep going a hundred times, and the colour remains. That proves particles are so small that even extreme dilution leaves many behind.",
+      "show": [
+        "t_title",
+        "b_dilution_funnel",
+        "b_beaker1",
+        "b_beaker2",
+        "b_beaker3",
+        "a_dilute1",
+        "a_dilute2",
+        "n_dilution_colour"
+      ],
+      "focus": [
+        "b_beaker1",
+        "b_beaker2",
+        "b_beaker3",
+        "n_dilution_colour"
+      ],
+      "teaches": [
+        "class9-science-dilution-shows-small-particles"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b4",
+      "topic": "Space between particles",
+      "narration": "Let's try something different. Take a glass of water, mark the water level, then slowly add salt and stir. The salt dissolves, yet the water level stays exactly at the mark. How is that possible? Because the salt particles quietly slip into the gaps between water particles. That proves particles have empty space around them.",
+      "show": [
+        "t_title",
+        "b_salt_water",
+        "x_level_label",
+        "n_space"
+      ],
+      "focus": [
+        "b_salt_water",
+        "n_space"
+      ],
+      "teaches": [
+        "class9-science-particles-have-space-between-them"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b5",
+      "topic": "Check point 1",
+      "narration": "Let's see if you've got it. If you dissolve one kilogram of salt in a bucket of water and the water level does not rise a single millimeter, what does that tell you about the particles of matter? Pause and think — I'm listening.",
+      "show": [
+        "t_title",
+        "b_salt_water",
+        "n_space",
+        "n_check1"
+      ],
+      "focus": [
+        "n_check1"
+      ],
+      "teaches": [],
+      "checks": [
+        "class9-science-matter-made-of-particles",
+        "class9-science-dilution-shows-small-particles",
+        "class9-science-particles-have-space-between-them"
+      ]
+    },
+    {
+      "id": "b6",
+      "topic": "Three characteristics of particles",
+      "narration": "Now we pull everything together. Particles of matter have three fundamental characteristics. First, there is space between them — that's why salt dissolves without raising the level. Second, they are continuously moving — that's why smell spreads across a room. Third, they attract one another — that's why ice is solid. Memorise these three.",
+      "show": [
+        "t_title",
+        "x_three_title",
+        "n_char_space",
+        "n_char_motion",
+        "n_char_attract"
+      ],
+      "focus": [
+        "n_char_space",
+        "n_char_motion",
+        "n_char_attract"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b7",
+      "topic": "Particles move continuously",
+      "narration": "Focus on the second characteristic: continuous movement. Every particle has kinetic energy — that's the energy of motion. Even in a solid, particles vibrate in place. In a liquid, they slide past each other. In a gas, they zoom around. The warmer it is, the faster they move. That's why a hot cup of tea releases steam.",
+      "show": [
+        "t_title",
+        "x_three_title",
+        "n_char_motion",
+        "p_motion_arrows",
+        "x_motion_explain"
+      ],
+      "focus": [
+        "p_motion_arrows",
+        "x_motion_explain"
+      ],
+      "teaches": [
+        "class9-science-particles-move-continuously"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b8",
+      "topic": "Check point 2",
+      "narration": "Quick test: imagine you carefully place a drop of blue ink into a still glass of water. Without stirring, the ink slowly spreads until the whole glass turns blue. Which of the three characteristics explains this? Think about it, and I'll keep the answer to myself for now.",
+      "show": [
+        "t_title",
+        "n_char_space",
+        "n_char_motion",
+        "n_char_attract",
+        "n_check2"
+      ],
+      "focus": [
+        "n_check2"
+      ],
+      "teaches": [],
+      "checks": [
+        "class9-science-three-characteristics-particles",
+        "class9-science-particles-move-continuously"
+      ]
+    },
+    {
+      "id": "b9",
+      "topic": "Calculate dilution factor — model",
+      "narration": "Let's model a dilution calculation step by step. Start with 1 mL of purple potassium permanganate. Add 99 mL of distilled water — dilution factor is 1 in 100, or 1:100. Now take 1 mL of this dilute solution and add another 99 mL of water. Our total dilution is now 1 in 10,000. One more time: 1 mL of the new solution plus 99 mL water gives 1 in 1,000,000. Each time, the colour stays.",
+      "show": [
+        "t_title",
+        "b_calc_box",
+        "f_step1",
+        "f_step2",
+        "f_step3",
+        "x_calc_final"
+      ],
+      "focus": [
+        "f_step1",
+        "f_step2",
+        "f_step3"
+      ],
+      "teaches": [
+        "class9-science-calculate-dilution-factor"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b10",
+      "topic": "Estimate particle size — independent",
+      "narration": "Now your turn. Suppose after 10 rounds of such dilution, the colour is still faintly visible. The solution is 1 in 10 billion. If each particle is tiny, and so many remain after such extreme dilution, what is the biggest each particle can be? Use the scale on your side to estimate an upper limit. The answer is remarkably small — around 10⁻⁹ m, or one nanometre.",
+      "show": [
+        "t_title",
+        "b_calc_box",
+        "x_calc_final",
+        "i_scale",
+        "n_estimate"
+      ],
+      "focus": [
+        "i_scale",
+        "n_estimate"
+      ],
+      "teaches": [
+        "class9-science-estimate-particle-size-limit"
+      ],
+      "checks": []
+    },
+    {
+      "id": "b11",
+      "topic": "Recap",
+      "narration": "Let's do a quick recap — without me repeating everything. Can you answer these three? First, what is matter made of? Second, what experiment proves particles are extremely small? Third, name all three characteristics of particles. If you can recall each one, you've mastered this lesson. Take a moment to answer out loud.",
+      "show": [
+        "t_title",
+        "x_particles_matter",
+        "n_dilution_colour",
+        "n_char_space",
+        "n_char_motion",
+        "n_char_attract",
+        "n_recap_q"
+      ],
+      "focus": [
+        "n_recap_q"
+      ],
+      "teaches": [],
+      "checks": [
+        "class9-science-matter-made-of-particles",
+        "class9-science-dilution-shows-small-particles",
+        "class9-science-particles-have-space-between-them",
+        "class9-science-three-characteristics-particles",
+        "class9-science-particles-move-continuously",
+        "class9-science-calculate-dilution-factor",
+        "class9-science-estimate-particle-size-limit"
+      ]
+    }
+  ]
+}
