@@ -1,0 +1,12 @@
+{
+  "name": "@ai-tutor/action-player",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@ai-tutor/lesson-format": "*",
+    "@openmaic/dsl": "0.10.1"
+  }
+}
