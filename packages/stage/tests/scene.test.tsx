@@ -54,16 +54,16 @@ describe('Scene: visibility', () => {
 });
 
 describe('Scene: focus', () => {
-  it('dims non-focused elements to opacity 0.25 and glows the focused one', () => {
+  it('dims non-focused elements without erasing them, and glows the focused one', () => {
     const html = render(['b_heart', 'x_pump'], ['b_heart']);
-    expect(groupTag(html, 'x_pump')).toContain('opacity="0.25"');
-    expect(groupTag(html, 'b_heart')).not.toContain('opacity="0.25"');
+    expect(groupTag(html, 'x_pump')).toContain('opacity="0.4"');
+    expect(groupTag(html, 'b_heart')).not.toContain('opacity="0.4"');
     expect(groupTag(html, 'b_heart')).toContain('drop-shadow');
   });
 
   it('dims nothing when focus is empty', () => {
     const html = render(['b_heart', 'x_pump'], []);
-    expect(html).not.toContain('opacity="0.25"');
+    expect(html).not.toContain('opacity="0.4"');
   });
 
   it('still renders the dimmed element content (dim, never hide)', () => {

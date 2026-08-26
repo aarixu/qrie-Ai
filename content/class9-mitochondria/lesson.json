@@ -14,23 +14,42 @@
       "kind": "title",
       "id": "t_title",
       "x": 500,
-      "y": 70,
+      "y": 78,
       "text": "Mitochondria",
       "sub": "the powerhouse, opened up"
     },
     {
-      "kind": "text",
-      "id": "x_hook",
+      "kind": "handwrite",
+      "id": "h_hook",
       "x": 500,
-      "y": 200,
-      "text": "Every time you lift your hand, something inside your cells paid for it."
+      "y": 320,
+      "text": "What pays for every move you make?",
+      "size": 38,
+      "tone": "accent"
+    },
+    {
+      "kind": "diagram",
+      "id": "d_cell",
+      "x": 100,
+      "y": 110,
+      "w": 800,
+      "h": 400,
+      "src": "assets/cell-context.svg",
+      "alt": "An animal cell with its membrane, cytoplasm, nucleus and several mitochondria scattered through it",
+      "parts": [
+        "cell_membrane",
+        "cytoplasm",
+        "nucleus",
+        "mitochondria",
+        "other_organelles"
+      ]
     },
     {
       "kind": "diagram",
       "id": "d_mito",
-      "x": 60,
-      "y": 120,
-      "w": 880,
+      "x": 100,
+      "y": 110,
+      "w": 800,
       "h": 400,
       "src": "assets/mitochondrion.svg",
       "alt": "A mitochondrion cut open: an outer membrane, an inner membrane folded into cristae, and the matrix inside, holding ribosomes and a loop of mitochondrial DNA",
@@ -44,98 +63,225 @@
       ]
     },
     {
+      "kind": "diagram",
+      "id": "d_crista",
+      "x": 140,
+      "y": 110,
+      "w": 720,
+      "h": 400,
+      "src": "assets/crista-zoom.svg",
+      "alt": "A close-up of one crista: the folded inner membrane studded with ATP synthase on both faces, the matrix outside the fold and the intermembrane space inside it",
+      "parts": [
+        "membrane",
+        "atp_synthase",
+        "matrix_side",
+        "intermembrane_side"
+      ]
+    },
+    {
+      "kind": "text",
+      "id": "x_cell",
+      "x": 500,
+      "y": 560,
+      "text": "Somewhere in here. These orange capsules are mitochondria — a cell has hundreds."
+    },
+    {
+      "kind": "text",
+      "id": "x_whole",
+      "x": 500,
+      "y": 560,
+      "text": "One of them, cut open. Two membranes, and everything else sits between them."
+    },
+    {
       "kind": "text",
       "id": "x_outer",
       "x": 500,
       "y": 560,
-      "text": "The outer membrane: a smooth bag, and the boundary with the rest of the cell"
+      "text": "The outer membrane: smooth, and the boundary with the rest of the cell."
     },
     {
       "kind": "text",
       "id": "x_inner",
       "x": 500,
       "y": 560,
-      "text": "Inside it sits a second membrane — and this one does not stay smooth"
+      "text": "Just inside it, a second membrane — and this one does not stay smooth."
     },
     {
       "kind": "text",
       "id": "x_cristae",
       "x": 500,
       "y": 560,
-      "text": "It folds inward. Each fold is a crista — and folding is the whole trick"
-    },
-    {
-      "kind": "note",
-      "id": "n_surface",
-      "x": 250,
-      "y": 250,
-      "w": 500,
-      "text": "Fold a bedsheet into a small box and the sheet is still the same size. The folds do not shrink the sheet — they fit more of it into the same space. Cristae do exactly that with membrane, and it is on that membrane that ATP is made.",
-      "tone": "accent"
+      "text": "It folds inward. One fold is a crista. Many are cristae."
     },
     {
       "kind": "text",
       "id": "x_matrix",
       "x": 500,
       "y": 560,
-      "text": "The space the folds sit in is the matrix — a thick fluid full of enzymes"
+      "text": "The space the folds sit in is the matrix — a thick fluid packed with enzymes."
+    },
+    {
+      "kind": "text",
+      "id": "x_zoom",
+      "x": 500,
+      "y": 560,
+      "text": "Zoom into one fold. Those studs are ATP synthase — the machines that build ATP."
     },
     {
       "kind": "text",
       "id": "x_own",
       "x": 500,
       "y": 560,
-      "text": "And here is the strange part: it carries its own DNA, and its own ribosomes"
+      "text": "Look in the matrix: its own ribosomes, and its own loop of DNA."
+    },
+    {
+      "kind": "note",
+      "id": "n_surface",
+      "x": 240,
+      "y": 190,
+      "w": 520,
+      "text": "Fold a bedsheet into a small box. The sheet is still the same size — the folds do not shrink it, they fit more of it into the same space.\n\nCristae do exactly that with membrane. And ATP is built ON that membrane, so more folds means more surface, and more surface means more ATP.",
+      "tone": "accent"
     },
     {
       "kind": "note",
       "id": "n_own",
-      "x": 250,
-      "y": 230,
-      "w": 500,
-      "text": "No other organelle except the chloroplast does this. It is why biologists think a mitochondrion was once a free-living bacterium that moved in and never left.",
+      "x": 240,
+      "y": 190,
+      "w": 520,
+      "text": "No other organelle except the chloroplast carries its own DNA. Which is why biologists think a mitochondrion was once a free-living bacterium that moved into a bigger cell and never left.",
       "tone": "good"
     },
     {
-      "kind": "formula",
-      "id": "f_atp",
+      "kind": "flow",
+      "id": "fl_atp",
+      "x": 70,
+      "y": 210,
+      "w": 860,
+      "steps": [
+        {
+          "label": "Glucose",
+          "note": "from your food"
+        },
+        {
+          "label": "Pyruvate",
+          "note": "made in the cytoplasm"
+        },
+        {
+          "label": "Cristae",
+          "note": "oxygen used here"
+        },
+        {
+          "label": "ATP",
+          "note": "the cell can spend this"
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "chart",
+      "id": "ch_count",
+      "x": 200,
+      "y": 120,
+      "w": 620,
+      "h": 390,
+      "chartType": "bar",
+      "caption": "How many mitochondria one cell holds",
+      "unit": "approximate count per cell",
+      "data": [
+        {
+          "label": "Heart muscle",
+          "value": 5000
+        },
+        {
+          "label": "Liver",
+          "value": 1500
+        },
+        {
+          "label": "Kidney",
+          "value": 1000
+        },
+        {
+          "label": "Skin",
+          "value": 200
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "h_takeaway",
       "x": 500,
       "y": 300,
-      "text": "ADP + P  ->  ATP"
+      "text": "More folds = more surface = more ATP",
+      "size": 40,
+      "tone": "good"
     },
     {
       "kind": "note",
       "id": "n_check",
-      "x": 220,
-      "y": 400,
-      "w": 560,
-      "text": "Your turn. A muscle cell doing heavy work has far more mitochondria than a skin cell. Say why in one sentence, before I do.",
+      "x": 240,
+      "y": 190,
+      "w": 520,
+      "text": "Your turn, and answer before I do.\n\nA heart muscle cell holds about twenty-five times as many mitochondria as a skin cell. Say why, in one sentence.",
       "tone": "bad"
     },
     {
-      "kind": "text",
-      "id": "x_recap",
+      "kind": "handwrite",
+      "id": "h_recap",
       "x": 500,
-      "y": 200,
-      "text": "Two membranes. The inner one folds into cristae. Folding buys surface area. Surface area buys ATP."
+      "y": 360,
+      "text": "Two membranes. The inner one folds.",
+      "size": 34,
+      "tone": "neutral"
     }
   ],
   "beats": [
     {
-      "id": "b1_hook",
+      "id": "b01_hook",
       "topic": "Why a cell needs a power plant",
-      "narration": "Every time you lift your hand, something inside your cells paid for it. Muscles do not run on food directly. They run on one molecule, and there is a specific place in the cell where that molecule gets made. Let's go and look at it.",
+      "narration": "Every time you lift your hand, something inside your cells paid for it. Muscles do not run on food directly — they run on one molecule, and there is a specific place in the cell where that molecule gets built. Let's go and find it.",
       "show": [
         "t_title",
-        "x_hook"
+        "h_hook"
       ],
       "teaches": [],
-      "minMs": 2000
+      "minMs": 3500
     },
     {
-      "id": "b2_outer",
+      "id": "b02_cell",
+      "topic": "Where mitochondria sit in a cell",
+      "narration": "This is an animal cell. The big circle on the left is the nucleus. And these orange capsules scattered through it are what we came for — mitochondria. A single cell does not have one. It has hundreds.",
+      "show": [
+        "d_cell",
+        "x_cell"
+      ],
+      "focus": [
+        "d_cell#mitochondria",
+        "x_cell"
+      ],
+      "teaches": [
+        "c9-cell-mito-location"
+      ],
+      "minMs": 2500
+    },
+    {
+      "id": "b03_whole",
+      "topic": "One mitochondrion, cut open",
+      "narration": "So let's take one and cut it open. Straight away you can see the thing that makes a mitochondrion unusual: it has two membranes, one inside the other. Almost nothing else in the cell is built that way.",
+      "show": [
+        "d_mito",
+        "x_whole"
+      ],
+      "teaches": [
+        "c9-cell-mito-two-membranes"
+      ],
+      "minMs": 2500
+    },
+    {
+      "id": "b04_outer",
       "topic": "The outer membrane",
-      "narration": "This is a mitochondrion, cut open so we can see inside. Start at the edge. The outer membrane is smooth, and it is the boundary between the mitochondrion and the rest of the cell. Nothing complicated yet — it is a bag.",
+      "narration": "Start at the edge. The outer membrane is smooth, and it is the boundary between the mitochondrion and the rest of the cell. Nothing complicated yet — it is a bag.",
       "show": [
         "d_mito",
         "x_outer"
@@ -149,9 +295,9 @@
       ]
     },
     {
-      "id": "b3_inner",
+      "id": "b05_inner",
       "topic": "The inner membrane",
-      "narration": "Now look just inside it. There is a second membrane. Two membranes, one inside the other — and the thin gap between them has a name too, the intermembrane space. But watch what the inner one does that the outer one does not.",
+      "narration": "Now look just inside it. There is a second membrane, and the thin gap between the two has a name of its own — the intermembrane space. But watch what this inner one does that the outer one does not.",
       "show": [
         "d_mito",
         "x_inner"
@@ -165,9 +311,9 @@
       ]
     },
     {
-      "id": "b4_cristae",
+      "id": "b06_cristae",
       "topic": "Cristae are folds of the inner membrane",
-      "narration": "It folds inward. Each of these fingers pushing into the middle is a fold of that same inner membrane — not a separate part sitting inside, a fold. One fold is called a crista. Many of them are cristae.",
+      "narration": "It folds inward. Each of these fingers pushing into the middle is a fold of that same inner membrane — not a separate part sitting inside it, a fold of it. One fold is called a crista. Many of them are cristae.",
       "show": [
         "d_mito",
         "x_cristae"
@@ -181,26 +327,21 @@
       ]
     },
     {
-      "id": "b5_why_folds",
+      "id": "b07_why_folds",
       "topic": "Why folding matters",
-      "narration": "Here is why that matters, and it is the one idea to take away. Fold a bedsheet into a small box and the sheet is still the same size — the folds do not shrink it, they fit more of it into the same space. Cristae do exactly that with membrane. And it is on that membrane that ATP gets made, so more folds means more surface, and more surface means more ATP.",
+      "narration": "Here is why that matters, and if you remember one thing from today, make it this. Fold a bedsheet into a small box. The sheet is still the same size — the folds do not shrink it, they fit more of it into the same space. Cristae do exactly that with membrane. And ATP is built on that membrane, so more folds means more surface, and more surface means more ATP.",
       "show": [
-        "d_mito",
-        "n_surface"
-      ],
-      "focus": [
-        "d_mito#cristae",
         "n_surface"
       ],
       "teaches": [
         "c9-cell-mito-surface-area"
       ],
-      "minMs": 3000
+      "minMs": 4500
     },
     {
-      "id": "b6_matrix",
+      "id": "b08_matrix",
       "topic": "The matrix",
-      "narration": "The space the folds sit in is the matrix. It is not empty — it is a thick fluid packed with enzymes, and a lot of the chemistry of respiration happens right here.",
+      "narration": "The space those folds sit in is the matrix. It is not empty — it is a thick fluid packed with enzymes, and a lot of the chemistry of respiration happens right here.",
       "show": [
         "d_mito",
         "x_matrix"
@@ -214,21 +355,62 @@
       ]
     },
     {
-      "id": "b7_atp",
-      "topic": "What it produces",
-      "narration": "And this is what all of it is for. ADP plus a phosphate becomes ATP — the molecule your muscles actually spend. This is why the mitochondrion is called the powerhouse of the cell.",
+      "id": "b09_zoom",
+      "topic": "ATP synthase on the folded membrane",
+      "narration": "Let's zoom right into one fold. Those studs along both faces are ATP synthase — tiny machines standing on the membrane, and each one builds ATP. Now you can see why surface area is the whole story: every extra bit of fold is room for more of these.",
       "show": [
-        "d_mito",
-        "f_atp"
+        "d_crista",
+        "x_zoom"
+      ],
+      "focus": [
+        "d_crista#atp_synthase",
+        "x_zoom"
+      ],
+      "teaches": [
+        "c9-cell-mito-atp-synthase"
+      ],
+      "minMs": 3000
+    },
+    {
+      "id": "b10_flow",
+      "topic": "From food to ATP",
+      "narration": "So the whole path looks like this. Glucose from your food is broken down in the cytoplasm into pyruvate. The pyruvate comes into the mitochondrion, oxygen is used at the cristae, and out comes ATP — the molecule your muscles actually spend.",
+      "show": [
+        "fl_atp"
       ],
       "teaches": [
         "c9-cell-mito-atp"
-      ]
+      ],
+      "minMs": 4000
     },
     {
-      "id": "b8_own_dna",
+      "id": "b11_takeaway",
+      "topic": "The one line to remember",
+      "narration": "Write this down, because everything else follows from it. More folds, more surface, more ATP.",
+      "show": [
+        "h_takeaway"
+      ],
+      "checks": [
+        "c9-cell-mito-surface-area"
+      ],
+      "minMs": 3500
+    },
+    {
+      "id": "b12_chart",
+      "topic": "Cells that work harder hold more",
+      "narration": "And here is the proof that it matters. A heart muscle cell, which never stops working, holds around five thousand mitochondria. A skin cell holds about two hundred. Same body, same DNA — the difference is how much ATP the cell has to spend.",
+      "show": [
+        "ch_count"
+      ],
+      "teaches": [
+        "c9-cell-mito-demand"
+      ],
+      "minMs": 4000
+    },
+    {
+      "id": "b13_own_dna",
       "topic": "Its own DNA and ribosomes",
-      "narration": "One more thing, and it is genuinely strange. Look in the matrix. Those small dots are ribosomes, and that little loop is DNA — the mitochondrion's own.",
+      "narration": "One more thing, and it is genuinely strange. Look back in the matrix. Those small dots are ribosomes, and that little loop is DNA — the mitochondrion's own.",
       "show": [
         "d_mito",
         "x_own"
@@ -243,42 +425,43 @@
       ]
     },
     {
-      "id": "b9_endosymbiosis",
+      "id": "b14_endosymbiosis",
       "topic": "Why that is strange",
       "narration": "No other organelle except the chloroplast carries its own DNA. Which is why biologists think a mitochondrion was once a free-living bacterium that moved into a bigger cell and never left. You are, in a small way, carrying a guest.",
       "show": [
-        "d_mito",
         "n_own"
       ],
       "teaches": [],
-      "minMs": 2500
+      "minMs": 3500
     },
     {
-      "id": "b10_check",
+      "id": "b15_check",
       "topic": "Check",
-      "narration": "Your turn, and do not let me answer it for you. A muscle cell doing heavy work has far more mitochondria than a skin cell. Say why in one sentence, before I do.",
+      "narration": "Your turn now, and answer before I do. A heart muscle cell holds about twenty-five times as many mitochondria as a skin cell. Say why, in one sentence.",
       "show": [
-        "d_mito",
         "n_check"
       ],
       "checks": [
-        "c9-cell-mito-atp",
-        "c9-cell-mito-surface-area"
+        "c9-cell-mito-demand",
+        "c9-cell-mito-atp"
       ],
-      "minMs": 4000
+      "minMs": 5000
     },
     {
-      "id": "b11_recap",
+      "id": "b16_recap",
       "topic": "Recap",
-      "narration": "So: two membranes. The inner one folds into cristae. Folding buys surface area. Surface area buys ATP. If you remember only the folding, the rest follows from it.",
+      "narration": "So: two membranes. The inner one folds into cristae. Folding buys surface area, surface area buys ATP, and the cells that spend the most ATP carry the most mitochondria. Remember the folding and the rest follows.",
       "show": [
         "t_title",
-        "x_recap"
+        "h_recap"
+      ],
+      "focus": [
+        "h_recap"
       ],
       "checks": [
-        "c9-cell-mito-cristae",
-        "c9-cell-mito-surface-area"
-      ]
+        "c9-cell-mito-cristae"
+      ],
+      "minMs": 3000
     }
   ]
 }

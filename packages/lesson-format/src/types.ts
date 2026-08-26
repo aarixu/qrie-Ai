@@ -61,6 +61,51 @@ export type Element =
       parts: string[];
       label?: string;
     }
+  /**
+   * A bar chart. Data, never markup — the numbers stay readable, translatable
+   * and checkable, and the renderer owns how a bar looks.
+   */
+  | {
+      kind: 'chart';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      /** Only bars for now. A line or a pie is a new value here, not a new kind. */
+      chartType: 'bar';
+      caption?: string;
+      /** What the numbers are, e.g. "mitochondria per cell". Drawn under the axis. */
+      unit?: string;
+      data: { label: string; value: number }[];
+      tone?: Tone;
+    }
+  /**
+   * A sequence of steps with arrows between them — a workflow.
+   *
+   * The renderer computes every box and arrow position from `x`, `y`, `w` and
+   * the step count, because layout arithmetic is the part an LLM author gets
+   * wrong. The author supplies meaning; the renderer supplies geometry.
+   */
+  | {
+      kind: 'flow';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      steps: { label: string; note?: string }[];
+      /** Default 'row'. Use 'column' when the labels are long. */
+      direction?: 'row' | 'column';
+      tone?: Tone;
+    }
+  /**
+   * A line the tutor writes out by hand, stroke by stroke, while she speaks.
+   *
+   * Separate from `text` on purpose: a board full of handwriting is slow and
+   * exhausting to watch, so this marks the one or two lines per lesson that are
+   * worth the wait — a definition, a formula, the sentence to remember.
+   */
+  | { kind: 'handwrite'; id: string; x: number; y: number; text: string; size?: number; tone?: Tone }
   | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };
 
 export type ElementKind = Element['kind'];

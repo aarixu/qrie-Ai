@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
-import { computeFrame, noteBoxHeight, type Rect } from './frame';
+import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -41,9 +41,20 @@ const PAGE_BG = '#ffffff';
 /** Headline/formula ink — darker than the neutral tone so titles anchor the page. */
 const INK = '#3c3c3c';
 
-/** Matches the app's UI face (Duolingo-style bold rounded sans). */
-const FONT_HAND = "'Nunito', 'Segoe UI', system-ui, sans-serif";
+/**
+ * The board's face, and it must be one the app actually loads.
+ *
+ * This used to name Nunito, which index.html has never requested — so every
+ * lesson has been drawn in the Segoe UI fallback while the surrounding UI used
+ * Quicksand, and the board quietly did not match the room it sits in.
+ */
+const FONT_HAND = "'Quicksand', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
+/** A real handwriting face, for the lines the tutor writes out rather than shows. */
+const FONT_WRITE = "'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
+
+/** How long a handwritten line takes to appear. Slow enough to read as writing. */
+const WRITE_MS = 1600;
 
 const DRAW_MS = 400;
 
@@ -74,6 +85,7 @@ function centerOf(el: Element): Point {
     case 'title':
     case 'text':
     case 'formula':
+    case 'handwrite':
       return { x: el.x, y: el.y };
     case 'note':
       return { x: el.x + el.w / 2, y: el.y + 30 };
@@ -81,8 +93,11 @@ function centerOf(el: Element): Point {
     case 'doc':
     case 'image':
     case 'diagram':
+    case 'chart':
     case 'model3d':
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
+    case 'flow':
+      return { x: el.x + el.w / 2, y: el.y + flowHeight(el.steps.length, el.direction) / 2 };
     case 'arrow':
       return { x: (el.from.x + el.to.x) / 2, y: (el.from.y + el.to.y) / 2 };
     case 'pen': {
@@ -96,17 +111,23 @@ function centerOf(el: Element): Point {
   }
 }
 
+/**
+ * An aside the tutor wrote on the board — not a UI card.
+ *
+ * The filled, bordered box this used to be read as a dialog dropped onto the
+ * lesson, and over artwork it read as a dialog COVERING the lesson. A rule down
+ * the left is how a person marks a passage on a page: it groups the text
+ * without enclosing it, so whatever is behind stays visible.
+ */
 const noteCardStyle = (color: string): CSSProperties => ({
   boxSizing: 'border-box',
-  background: `${color}14`,
-  border: `2px solid ${color}55`,
-  borderRadius: 12,
-  padding: '9px 12px',
+  borderLeft: `4px solid ${color}`,
+  padding: '2px 0 2px 14px',
   color: '#3c3c3c',
   fontFamily: FONT_HAND,
   fontWeight: 700,
-  fontSize: 14.5,
-  lineHeight: 1.45,
+  fontSize: 17,
+  lineHeight: 1.55,
 });
 
 /** Small halo behind free-floating labels so they read over strokes and fills. */
@@ -128,8 +149,19 @@ const SCENE_CSS = `
   stroke-dashoffset: 1;
   animation: stage-sweep ${DRAW_MS}ms ease-out forwards;
 }
+@keyframes stage-write { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes stage-nib { from { transform: translateX(0); } to { transform: translateX(var(--hw-travel, 0)); } }
+.stage-write {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: stage-write ${WRITE_MS}ms linear both;
+}
+.stage-nib {
+  animation: stage-nib ${WRITE_MS}ms linear both, stage-nib-out 200ms ${WRITE_MS}ms forwards;
+}
+@keyframes stage-nib-out { to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .stage-pop, .stage-sweep { animation-duration: 0.01ms; }
+  .stage-pop, .stage-sweep, .stage-write, .stage-nib { animation-duration: 0.01ms; }
 }
 `;
 
@@ -338,7 +370,7 @@ function renderDiagram(
     litParts.length === 0
       ? null
       : [
-          `.${cls} > g { opacity: 0.12; transition: opacity 320ms ease; }`,
+          `.${cls} > g { opacity: 0.34; transition: opacity 320ms ease; }`,
           ...litParts.map((part) => `.${cls} > g[id="${part}"] { opacity: 1; }`),
         ].join(' ');
 
@@ -347,6 +379,147 @@ function renderDiagram(
       {spotlight && <style>{spotlight}</style>}
       <g className={cls} dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }} />
     </g>
+  );
+}
+
+/**
+ * A bar chart drawn from numbers.
+ *
+ * Bars are horizontal because the labels are words ("heart muscle", "skin") and
+ * vertical bars would force them sideways or into abbreviations. Values are
+ * printed at the end of each bar, so a student reads the number without
+ * measuring against an axis.
+ */
+function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
+  const color = TONE_COLORS[toneOf(el)];
+  const rows = el.data;
+  const max = Math.max(1, ...rows.map((d) => d.value));
+  const labelW = el.w * 0.3;
+  const trackX = el.x + labelW + 12;
+  const trackW = el.w - labelW - 70;
+  const capH = el.caption ? 34 : 0;
+  const rowH = Math.min(46, (el.h - capH) / Math.max(1, rows.length));
+  const barH = rowH * 0.56;
+
+  return (
+    <>
+      {el.caption && (
+        <text x={el.x} y={el.y + 20} fontFamily={FONT_HAND} fontSize={19} fontWeight={800} fill={INK}>
+          {el.caption}
+        </text>
+      )}
+      {rows.map((d, i) => {
+        const cy = el.y + capH + i * rowH + rowH / 2;
+        const w = Math.max(2, (d.value / max) * trackW);
+        return (
+          <g key={d.label}>
+            <text x={el.x + labelW} y={cy} textAnchor="end" dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={700} fill={TONE_COLORS.neutral}>
+              {d.label}
+            </text>
+            <rect x={trackX} y={cy - barH / 2} width={trackW} height={barH} rx={barH / 2} fill={color} fillOpacity={0.1} />
+            <rect x={trackX} y={cy - barH / 2} width={w} height={barH} rx={barH / 2} fill={color} fillOpacity={0.85} />
+            <text x={trackX + w + 10} y={cy} dominantBaseline="middle" fontFamily={FONT_HAND} fontSize={15} fontWeight={800} fill={color}>
+              {d.value.toLocaleString('en-IN')}
+            </text>
+          </g>
+        );
+      })}
+      {el.unit && (
+        <text x={trackX} y={el.y + capH + rows.length * rowH + 18} fontFamily={FONT_HAND} fontSize={13} fill={TONE_COLORS.neutral} fillOpacity={0.7}>
+          {el.unit}
+        </text>
+      )}
+    </>
+  );
+}
+
+/**
+ * A workflow: boxes with arrows between them, laid out from the step count.
+ *
+ * The author writes the steps; every coordinate here is computed. That split is
+ * the point — asking a model to place seven boxes and six arrows on a 1000-unit
+ * board is asking it to do arithmetic it is bad at, and one wrong number puts a
+ * box on top of an arrow.
+ */
+function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
+  const color = TONE_COLORS[toneOf(el)];
+  const n = el.steps.length;
+  const row = (el.direction ?? 'row') === 'row';
+  const stepW = row ? (el.w - (n - 1) * FLOW_GAP) / Math.max(1, n) : el.w;
+
+  return (
+    <>
+      {el.steps.map((step, i) => {
+        const x = row ? el.x + i * (stepW + FLOW_GAP) : el.x;
+        const y = row ? el.y : el.y + i * (FLOW_STEP_H + FLOW_GAP);
+        const cx = x + stepW / 2;
+        const cy = y + FLOW_STEP_H / 2;
+        const last = i === n - 1;
+        return (
+          <g key={i}>
+            <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
+            <text x={cx} y={step.note ? cy - 8 : cy} dominantBaseline="middle" textAnchor="middle" fontFamily={FONT_HAND} fontSize={16} fontWeight={800} fill={color}>
+              {step.label}
+            </text>
+            {step.note && (
+              <text x={cx} y={cy + 13} dominantBaseline="middle" textAnchor="middle" fontFamily={FONT_HAND} fontSize={12.5} fill={color} fillOpacity={0.75}>
+                {step.note}
+              </text>
+            )}
+            {!last && (
+              <line
+                x1={row ? x + stepW + 8 : cx}
+                y1={row ? cy : y + FLOW_STEP_H + 8}
+                x2={row ? x + stepW + FLOW_GAP - 8 : cx}
+                y2={row ? cy : y + FLOW_STEP_H + FLOW_GAP - 8}
+                stroke={color}
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                markerEnd={`url(#stage-arrow-${toneOf(el)})`}
+              />
+            )}
+          </g>
+        );
+      })}
+    </>
+  );
+}
+
+/**
+ * A line written out by hand, left to right, with the nib leading.
+ *
+ * The reveal is a mask that widens rather than a per-glyph stroke animation:
+ * real stroke data would need a single-line font and glyph outlines, and what
+ * sells "someone is writing this" is the nib moving and the ink arriving behind
+ * it — which this gives for a fraction of the machinery.
+ */
+function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElement {
+  const color = TONE_COLORS[toneOf(el)];
+  const size = el.size ?? 26;
+  const width = el.text.length * size * 0.5;
+  const left = el.x - width / 2;
+  const maskId = `hw-${el.id}`;
+
+  return (
+    <>
+      <mask id={maskId} maskUnits="userSpaceOnUse" x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8}>
+        <rect className="stage-write" x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8} fill="#fff" />
+      </mask>
+      <text
+        x={el.x}
+        y={el.y}
+        textAnchor="middle"
+        fontFamily={FONT_WRITE}
+        fontSize={size}
+        fontWeight={600}
+        fill={color}
+        mask={`url(#${maskId})`}
+      >
+        {el.text}
+      </text>
+      {/* The nib: it travels the same distance in the same time as the mask. */}
+      <circle className="stage-nib" cx={left} cy={el.y - size * 0.28} r={size * 0.11} fill={color} style={{ ['--hw-travel' as string]: `${width}px` }} />
+    </>
   );
 }
 
@@ -397,6 +570,12 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
       return renderImage(el);
     case 'diagram':
       return renderDiagram(el, svg, litParts);
+    case 'chart':
+      return renderChart(el);
+    case 'flow':
+      return renderFlow(el);
+    case 'handwrite':
+      return renderHandwrite(el);
     case 'model3d':
       return renderModel3d(el);
   }
@@ -443,7 +622,12 @@ function SceneElement({ el, isNew, dimmed, focused, svg, litParts }: SceneElemen
   const transform = `rotate(${jitterDeg(el.id).toFixed(2)} ${c.x} ${c.y})`;
   const isStroke = el.kind === 'arrow' || el.kind === 'pen';
   const sweeping = isNew && isStroke;
-  const glow = focused ? { filter: `drop-shadow(0 0 7px ${TONE_COLORS[toneOf(el)]}b3)` } : undefined;
+  // Handwriting is excluded: a glow behind an outline reads as emphasis, but a
+  // glow behind a written line reads as a highlighter pen someone left on.
+  const glow =
+    focused && el.kind !== 'handwrite'
+      ? { filter: `drop-shadow(0 0 7px ${TONE_COLORS[toneOf(el)]}b3)` }
+      : undefined;
 
   return (
     <>
@@ -456,7 +640,7 @@ function SceneElement({ el, isNew, dimmed, focused, svg, litParts }: SceneElemen
       <g
         data-element-id={el.id}
         transform={transform}
-        opacity={dimmed ? 0.25 : undefined}
+        opacity={dimmed ? 0.4 : undefined}
         mask={sweeping ? `url(#stage-sweep-${el.id})` : undefined}
         style={glow}
       >

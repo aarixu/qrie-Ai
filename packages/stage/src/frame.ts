@@ -59,6 +59,23 @@ function centredText(x: number, y: number, text: string, size: number, em: numbe
   return { x: x - w / 2, y: y - size, w, h: size * 1.35 };
 }
 
+/** One step's box in a flow, and the gap to the next — shared by layout and hit-box. */
+export const FLOW_STEP_H = 118;
+export const FLOW_GAP = 40;
+
+/**
+ * How tall a flow is, from its step count alone.
+ *
+ * Exported because the renderer and the camera must agree to the pixel: if the
+ * camera framed a different box than the one drawn, a flow would sit half off
+ * the screen with nothing in the code saying why.
+ */
+export function flowHeight(steps: number, direction: 'row' | 'column' = 'row'): number {
+  if (steps <= 0) return 0;
+  if (direction === 'row') return FLOW_STEP_H;
+  return steps * FLOW_STEP_H + (steps - 1) * FLOW_GAP;
+}
+
 /** The box an element occupies on the board, in canvas units. */
 export function bboxOf(el: Element): Rect {
   switch (el.kind) {
@@ -76,8 +93,13 @@ export function bboxOf(el: Element): Rect {
     case 'box':
     case 'image':
     case 'diagram':
+    case 'chart':
     case 'model3d':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
+    case 'handwrite':
+      return centredText(el.x, el.y, el.text, el.size ?? 26, EM_SANS);
+    case 'flow':
+      return { x: el.x, y: el.y, w: el.w, h: flowHeight(el.steps.length, el.direction) };
     case 'doc':
       // The label sits below the page and is part of the element.
       return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 26 : 0) };

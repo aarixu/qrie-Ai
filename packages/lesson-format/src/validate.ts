@@ -90,6 +90,31 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
         }
       }
       break;
+    case 'chart':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'chart needs numeric x,y,w,h');
+      need(el.chartType === 'bar', 'chart needs chartType "bar"');
+      need(
+        Array.isArray(el.data) &&
+          el.data.length > 0 &&
+          el.data.every((d) => isObj(d) && isStr(d.label) && isNum(d.value) && d.value >= 0),
+        'chart needs data: at least one { label, value } with a non-negative value',
+      );
+      break;
+    case 'flow':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w), 'flow needs numeric x,y,w');
+      need(
+        Array.isArray(el.steps) && el.steps.length >= 2 && el.steps.every((st) => isObj(st) && isStr(st.label)),
+        'flow needs steps: at least two { label } entries',
+      );
+      // One box with an arrow to nowhere is not a workflow; it is a box.
+      if (el.direction !== undefined) {
+        need(el.direction === 'row' || el.direction === 'column', 'flow direction must be "row" or "column"');
+      }
+      break;
+    case 'handwrite':
+      need(isNum(el.x) && isNum(el.y), 'handwrite needs numeric x,y');
+      need(isStr(el.text), 'handwrite needs non-empty text');
+      break;
     case 'model3d':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'model3d needs numeric x,y,w,h');
       break;
