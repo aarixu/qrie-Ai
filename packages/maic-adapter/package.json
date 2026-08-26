@@ -1,0 +1,13 @@
+{
+  "name": "@ai-tutor/maic-adapter",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@ai-tutor/action-player": "*",
+    "@ai-tutor/lesson-format": "*",
+    "@openmaic/dsl": "0.10.1"
+  }
+}
