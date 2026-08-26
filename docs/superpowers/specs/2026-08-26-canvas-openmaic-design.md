@@ -27,7 +27,8 @@ student is. Everything about *what to teach and to whom* stays ours.
 |---|---|---|
 | The brain — what to teach, to whom | **ours, unchanged** | `syllabus`, `diagnostic`, `knowledge-graph`, `pedagogy`, `persona` |
 | The seam | **ours, new** | `lesson-plan`, `maic-adapter` |
-| The mouth and hands | **theirs** | `@openmaic/dsl`, `@openmaic/renderer`, `@openmaic/generation`, plus ported runtime |
+| The vocabulary and the prompts | **theirs** | `@openmaic/dsl`, `@openmaic/generation`, plus `widget-host` (619 ported lines) |
+| The hands — rendering and playback | **ours** | `stage` (`Scene.tsx`), `action-player` |
 | The room | **ours, unchanged** | `apps/classroom` (Meet shell), `voice`, `doubt-session` |
 
 ### 2.1 `lesson-plan` (renamed from `lesson-format`)
@@ -154,15 +155,40 @@ closed-vocabulary. Most beats use those. A widget is the exception, not the norm
 - `@openmaic/generation` — prompt templates + generation primitives, wired to our
   OpenRouter adapter through its `AICallFn` seam
 
-**Port (~3,300 lines, 14 files, MIT):**
+**Port (6 files, 619 lines, MIT) — `packages/widget-host`:**
 
-| Source | Bytes |
-|---|---|
-| `lib/action/engine.ts` | 28,631 |
-| `lib/whiteboard/runtime/*` (fold, store, validate, types, browser-projection) | 34,707 |
-| `components/whiteboard/*` (index, canvas, history) | 23,329 |
-| `lib/playback/action-{resume,navigation}.ts` | 7,765 |
-| `lib/store/widget-iframe.ts`, `lib/utils/iframe.ts`, `components/scene-renderers/InteractiveIframeHost.tsx`, `lib/store/interactive-iframe-pool.ts` | 22,062 |
+`lib/utils/iframe.ts`, `lib/utils/html-document.ts`,
+`components/scene-renderers/InteractiveIframeHost.tsx`,
+`lib/store/{widget-iframe,interactive-iframe-pool,scene-runtime-errors}.ts`.
+
+Needs only `zustand`, `parse5`, `react`. Self-contained, and it carries the
+three shims in §4.2 that we could not cheaply re-derive.
+
+**Build ourselves — `packages/action-player`:**
+
+An executor that walks `Action[]`, resolves each verb against our own
+`Scene.tsx`, and honours their `SYNC_ACTIONS` / `FIRE_AND_FORGET_ACTIONS`
+split. Roughly 600 lines. `packages/stage/state.ts` already holds a pure
+command state machine of exactly this shape; the vocabulary changes, the
+pattern does not.
+
+### 5.1 What we deliberately do NOT port, and why
+
+Measured, not estimated: the transitive closure of `lib/action/engine.ts` plus
+the whiteboard runtime is **100 files and 29,256 lines** — nine times our entire
+brain. It pulls in `@openmaic/storage`, `zustand`, the `ai` SDK with five
+provider adapters (a second LLM stack beside our OpenRouter boundary),
+ProseMirror ×4, Dexie, their agent framework, and `lib/pbl`, `lib/quiz`,
+`lib/web-search`, `lib/pdf`, `lib/orchestration`.
+
+That entanglement is not a flaw in their code. Their engine is an *application*
+engine, so it is coupled to the application. It is not a library and was never
+offered as one.
+
+What is genuinely hard to rebuild — the action vocabulary, the prompt
+engineering, and the iframe shims — we take. The executor itself is a switch
+statement over a closed vocabulary, which is the cheapest part to write and the
+most expensive part to inherit.
 
 Ported code lives in one package with its provenance recorded, so a new
 developer can tell at a glance what is ours and what is upstream.
@@ -171,30 +197,38 @@ developer can tell at a glance what is ours and what is upstream.
 
 ## 6. Costs, accepted knowingly
 
-- **Tailwind 3 → 4 across the app.** `whiteboard-canvas.tsx` imports
-  `ScreenElement` from the slide renderer, so the whiteboard cannot be taken
-  without the renderer, and the renderer emits Tailwind 4 arbitrary-value
-  classes. There is no cherry-pick.
-- **~3,300 ported lines become ours to maintain.**
-- **`packages/stage` retires** — `Scene.tsx`, `viewport.ts`, `frame.ts`. Real
-  deletion of working code.
-- New dependencies: `motion`, `echarts`, `katex`, zustand.
+- **619 ported lines become ours to maintain**, with upstream provenance
+  recorded so they can be re-synced deliberately.
+- **`packages/stage` survives, reduced.** `Scene.tsx` stays and grows the new
+  verbs. `viewport.ts` and `frame.ts` retire — the 3D viewport because 3D now
+  arrives as a widget, the camera because a widget frames itself.
+- New dependencies: `@openmaic/dsl`, `@openmaic/generation`, `zustand`,
+  `parse5`, `katex`, `echarts`.
 
-The Meet-style classroom shell stays ours. OpenMAIC's canvas mounts inside it as
-the shared surface — which is what a Meet call is: people, and a screen they are
+**What we are NOT paying, because we are not taking the renderer:** no Tailwind
+3 → 4 migration, no Next.js, no second LLM stack, no ProseMirror, no Dexie. The
+app stays Vite + React 19 + Tailwind 3.
+
+The Meet-style classroom shell stays ours. The canvas mounts inside it as the
+shared surface — which is what a Meet call is: people, and a screen they are
 looking at together.
 
 ---
 
 ## 7. Phases
 
+**Phase 0 is done.** It asked whether the runtime could be ported, and the
+answer — measured on a clone, not estimated — was no: 100 files, 29,256 lines,
+entangled with quizzes, PDF and web search. That answer is what produced §5.1
+and shrank the port from 3,300 lines to 619. The spike paid for itself.
+
 | # | Phase | Question it answers |
 |---|---|---|
-| **0** | **Spike.** Port the action engine + whiteboard runtime into a scratch route; play a hand-written `Action[]`. | Does it run outside Next.js? How costly is Tailwind 4? **Nothing else starts until this answers.** |
-| 1 | Adapter + one lesson end to end (Class 9 mitochondria) | Does the LOM join survive the format change? |
-| 2 | Live doubt as an action producer | The product's core. |
-| 3 | One interactive widget beat | Is the interactivity real? |
-| 4 | Handwriting polish (Vara.js, MIT) on beats where Meera writes | Does it feel like a human teacher? |
+| 1 | `@openmaic/dsl` + `action-player`: play a hand-written `Action[]` through our `Scene.tsx` | Does the vocabulary render in our stage at all? |
+| 2 | `maic-adapter`: `Beat[] → Action[]`, `beatRanges` back-map. Class 9 mitochondria end to end. | Does the LOM join survive the format change? |
+| 3 | Live doubt as a second action producer | The product's core. |
+| 4 | `widget-host` port + one interactive widget beat, authored via `@openmaic/generation` | Is the interactivity real? |
+| 5 | Handwriting (Vara.js, MIT) on beats where Meera writes | Does it feel like a human teacher? |
 
 Then: avatar, then the first real class.
 
