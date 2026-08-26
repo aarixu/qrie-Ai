@@ -69,6 +69,27 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       need(isStr(el.src), 'image needs src');
       need(isStr(el.alt), 'image needs alt text');
       break;
+    case 'diagram':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'diagram needs numeric x,y,w,h');
+      need(isStr(el.src), 'diagram needs src');
+      need(isStr(el.alt), 'diagram needs alt text');
+      // A diagram with no named parts is just an image with extra ceremony.
+      // The whole point of the kind is that a tutor can point INSIDE it.
+      need(
+        Array.isArray(el.parts) && el.parts.length > 0 && el.parts.every((p) => isStr(p)),
+        'diagram needs a non-empty parts array of group ids',
+      );
+      if (Array.isArray(el.parts)) {
+        for (const part of el.parts) {
+          if (String(part).includes(PART_SEPARATOR)) {
+            need(false, `diagram part "${String(part)}" must not contain "${PART_SEPARATOR}"`);
+          }
+        }
+        if (new Set(el.parts.map(String)).size !== el.parts.length) {
+          need(false, 'diagram lists the same part twice');
+        }
+      }
+      break;
     case 'model3d':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'model3d needs numeric x,y,w,h');
       break;
@@ -78,7 +99,28 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
   return errs;
 }
 
-function beatErrors(beat: Record<string, unknown>, path: string, elementIds: Set<string>): string[] {
+/**
+ * Separates a diagram's element id from the part inside it: `d_mito#cristae`.
+ *
+ * Chosen because `#` is already how a fragment inside a document is addressed,
+ * and because it cannot appear in a part id — the validator enforces that, so
+ * splitting is never ambiguous.
+ */
+export const PART_SEPARATOR = '#';
+
+/** Split a focus id into its element and, if present, the part inside it. */
+export function splitPartRef(ref: string): { elementId: string; part: string | null } {
+  const at = ref.indexOf(PART_SEPARATOR);
+  if (at < 0) return { elementId: ref, part: null };
+  return { elementId: ref.slice(0, at), part: ref.slice(at + 1) };
+}
+
+function beatErrors(
+  beat: Record<string, unknown>,
+  path: string,
+  elementIds: Set<string>,
+  partsByElement: Map<string, Set<string>>,
+): string[] {
   const errs: string[] = [];
   if (!isStr(beat.id)) errs.push(`${path}: beat needs a non-empty id`);
   if (!isStr(beat.topic)) errs.push(`${path}: beat needs a non-empty topic label`);
@@ -99,9 +141,21 @@ function beatErrors(beat: Record<string, unknown>, path: string, elementIds: Set
       errs.push(`${path}: focus must be an array when present`);
     } else {
       const shown = new Set(Array.isArray(beat.show) ? beat.show.map(String) : []);
-      for (const id of beat.focus) {
-        if (!shown.has(String(id))) {
-          errs.push(`${path}: focus "${String(id)}" is not in this beat's show list`);
+      for (const raw of beat.focus) {
+        const ref = String(raw);
+        const { elementId, part } = splitPartRef(ref);
+        if (!shown.has(elementId)) {
+          errs.push(`${path}: focus "${ref}" is not in this beat's show list`);
+          continue;
+        }
+        if (part === null) continue;
+        const parts = partsByElement.get(elementId);
+        if (!parts) {
+          errs.push(`${path}: focus "${ref}" names a part, but "${elementId}" is not a diagram`);
+        } else if (!parts.has(part)) {
+          // Pointing at a part the artwork never drew leaves the tutor
+          // gesturing at nothing, and nobody would see the mistake at runtime.
+          errs.push(`${path}: focus "${ref}" names a part "${elementId}" does not have`);
         }
       }
     }
@@ -155,6 +209,7 @@ export function validateLesson(json: unknown): ValidationResult {
   }
 
   const elementIds = new Set<string>();
+  const partsByElement = new Map<string, Set<string>>();
   if (!Array.isArray(json.elements) || json.elements.length === 0) {
     errors.push('lesson needs a non-empty elements array');
   } else {
@@ -170,6 +225,9 @@ export function validateLesson(json: unknown): ValidationResult {
         errors.push(`${path}: duplicate element id "${el.id}"`);
       } else {
         elementIds.add(el.id);
+      }
+      if (el.kind === 'diagram' && isStr(el.id) && Array.isArray(el.parts)) {
+        partsByElement.set(el.id, new Set(el.parts.map(String)));
       }
       errors.push(...elementErrors(el, path));
     });
@@ -189,7 +247,7 @@ export function validateLesson(json: unknown): ValidationResult {
         if (beatIds.has(beat.id)) errors.push(`${path}: duplicate beat id "${beat.id}"`);
         beatIds.add(beat.id);
       }
-      errors.push(...beatErrors(beat, path, elementIds));
+      errors.push(...beatErrors(beat, path, elementIds, partsByElement));
     });
   }
 

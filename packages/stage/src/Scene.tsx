@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
-import { CANVAS_H, CANVAS_W, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
+import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, noteBoxHeight, type Rect } from './frame';
 
 export interface SceneProps {
@@ -15,6 +15,14 @@ export interface SceneProps {
    * two words would be a worse preview than a small complete board.
    */
   wide?: boolean;
+  /**
+   * Markup for `diagram` elements, keyed by element id.
+   *
+   * Passed in rather than fetched because this renderer makes no network calls
+   * — the app already loads the lesson, so it loads the artwork beside it.
+   * A diagram with no entry here draws its frame and its alt text.
+   */
+  assets?: Record<string, string>;
 }
 
 /**
@@ -72,6 +80,7 @@ function centerOf(el: Element): Point {
     case 'box':
     case 'doc':
     case 'image':
+    case 'diagram':
     case 'model3d':
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
     case 'arrow':
@@ -272,7 +281,76 @@ function renderModel3d(el: Extract<Element, { kind: 'model3d' }>): ReactElement 
   );
 }
 
-function renderElement(el: Element): ReactElement {
+/** The intrinsic size an SVG declares, so we can fit it into the element's box. */
+function readViewBox(svg: string): { w: number; h: number } | null {
+  const m = svg.match(/viewBox\s*=\s*"([^"]+)"/i);
+  if (!m) return null;
+  const n = m[1].trim().split(/[\s,]+/).map(Number);
+  if (n.length !== 4 || n.some((v) => !Number.isFinite(v)) || n[2] <= 0 || n[3] <= 0) return null;
+  return { w: n[2], h: n[3] };
+}
+
+/** Everything between the artwork's own <svg> tags. */
+function innerMarkup(svg: string): string {
+  return svg.replace(/^[\s\S]*?<svg[^>]*>/i, '').replace(/<\/svg>\s*$/i, '');
+}
+
+/**
+ * A generated diagram, inlined so its named parts can be lit one at a time.
+ *
+ * `dangerouslySetInnerHTML` is safe HERE and only here: the markup is generated
+ * at authoring time and committed to the lesson folder, so it carries exactly
+ * the same trust as `lesson.json` beside it. Markup arriving at runtime from a
+ * model or a user must never reach this path.
+ *
+ * Dimming is done in CSS rather than by rewriting the markup, because the
+ * artwork must stay byte-identical to what was authored and reviewed — and a
+ * CSS transition gives the light a moment to move, the way a real pointer does.
+ */
+function renderDiagram(
+  el: Extract<Element, { kind: 'diagram' }>,
+  svg: string | undefined,
+  litParts: readonly string[],
+): ReactElement {
+  const color = TONE_COLORS.neutral;
+  if (svg === undefined) {
+    // The app has not handed the markup in yet. Draw the frame so the board
+    // keeps its layout instead of collapsing, and say what is missing.
+    return (
+      <>
+        <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={12} fill="none" stroke={color} strokeOpacity={0.35} strokeWidth={2} strokeDasharray="7 6" />
+        <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" fontFamily={FONT_HAND} fontSize={15} fill={color} fillOpacity={0.7}>
+          {el.alt}
+        </text>
+      </>
+    );
+  }
+
+  const view = readViewBox(svg) ?? { w: CANVAS_W, h: CANVAS_H };
+  const scale = Math.min(el.w / view.w, el.h / view.h);
+  const dx = el.x + (el.w - view.w * scale) / 2;
+  const dy = el.y + (el.h - view.h * scale) / 2;
+  const cls = `dg-${el.id}`;
+
+  // Scoped by the wrapper class so one diagram's spotlight never reaches
+  // another's parts, even though SVG group ids are document-global.
+  const spotlight =
+    litParts.length === 0
+      ? null
+      : [
+          `.${cls} > g { opacity: 0.12; transition: opacity 320ms ease; }`,
+          ...litParts.map((part) => `.${cls} > g[id="${part}"] { opacity: 1; }`),
+        ].join(' ');
+
+  return (
+    <g transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}>
+      {spotlight && <style>{spotlight}</style>}
+      <g className={cls} dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }} />
+    </g>
+  );
+}
+
+function renderElement(el: Element, svg?: string, litParts: readonly string[] = []): ReactElement {
   switch (el.kind) {
     case 'title':
       return renderTitle(el);
@@ -317,6 +395,8 @@ function renderElement(el: Element): ReactElement {
       );
     case 'image':
       return renderImage(el);
+    case 'diagram':
+      return renderDiagram(el, svg, litParts);
     case 'model3d':
       return renderModel3d(el);
   }
@@ -352,9 +432,13 @@ interface SceneElementProps {
   isNew: boolean;
   dimmed: boolean;
   focused: boolean;
+  /** Artwork for a `diagram` element, if the app handed any in. */
+  svg?: string;
+  /** Parts inside a `diagram` that are lit right now; everything else dims. */
+  litParts?: readonly string[];
 }
 
-function SceneElement({ el, isNew, dimmed, focused }: SceneElementProps): ReactElement {
+function SceneElement({ el, isNew, dimmed, focused, svg, litParts }: SceneElementProps): ReactElement {
   const c = centerOf(el);
   const transform = `rotate(${jitterDeg(el.id).toFixed(2)} ${c.x} ${c.y})`;
   const isStroke = el.kind === 'arrow' || el.kind === 'pen';
@@ -376,7 +460,7 @@ function SceneElement({ el, isNew, dimmed, focused }: SceneElementProps): ReactE
         mask={sweeping ? `url(#stage-sweep-${el.id})` : undefined}
         style={glow}
       >
-        <g className={isNew && !isStroke ? 'stage-pop' : undefined}>{renderElement(el)}</g>
+        <g className={isNew && !isStroke ? 'stage-pop' : undefined}>{renderElement(el, svg, litParts)}</g>
       </g>
     </>
   );
@@ -480,7 +564,7 @@ function useMeasure(
  * decided upstream and arrives as props, and where the camera points is
  * computed by `computeFrame`. All element animation is CSS inside the SVG.
  */
-export function Scene({ lesson, visible, focus, wide = false }: SceneProps): ReactElement {
+export function Scene({ lesson, visible, focus, wide = false, assets }: SceneProps): ReactElement {
   // Previous render's visible set, committed after paint so the render pass can
   // tell which elements just appeared and animate only those. On the first
   // render (prev === null) everything draws in — the canvas is coming from blank.
@@ -491,7 +575,21 @@ export function Scene({ lesson, visible, focus, wide = false }: SceneProps): Rea
   });
 
   const visibleSet = new Set(visible);
-  const focusSet = new Set(focus);
+
+  // A focus id may name a part inside a diagram ("d_mito#cristae"). The element
+  // it belongs to is what stays bright on the board; the part is what stays
+  // bright inside the drawing. Splitting here keeps both meanings straight.
+  const focusSet = new Set<string>();
+  const partsByElement = new Map<string, string[]>();
+  for (const ref of focus) {
+    const { elementId, part } = splitPartRef(ref);
+    focusSet.add(elementId);
+    if (part !== null) {
+      const list = partsByElement.get(elementId);
+      if (list) list.push(part);
+      else partsByElement.set(elementId, [part]);
+    }
+  }
   const dimming = focusSet.size > 0;
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -524,6 +622,8 @@ export function Scene({ lesson, visible, focus, wide = false }: SceneProps): Rea
             isNew={prev === null || !prev.has(el.id)}
             dimmed={dimming && !focusSet.has(el.id)}
             focused={dimming && focusSet.has(el.id)}
+            svg={assets?.[el.id]}
+            litParts={partsByElement.get(el.id)}
           />
         ))}
     </svg>

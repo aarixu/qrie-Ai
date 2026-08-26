@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620">
+  <g id="matrix">
+    <path d="M 290 166 L 308 166 L 314 280 A 6 6 0 0 0 326 280 L 332 166 L 428 166 L 434 280 A 6 6 0 0 0 446 280 L 452 166 L 548 166 L 554 280 A 6 6 0 0 0 566 280 L 572 166 L 668 166 L 674 280 A 6 6 0 0 0 686 280 L 692 166 L 710 166 A 144 144 0 0 1 710 454 L 632 454 L 626 340 A 6 6 0 0 0 614 340 L 608 454 L 512 454 L 506 340 A 6 6 0 0 0 494 340 L 488 454 L 392 454 L 386 340 A 6 6 0 0 0 374 340 L 368 454 L 290 454 A 144 144 0 0 1 290 166 Z" fill="var(--matrix-fill, #FFF3E0)" stroke="none" />
+  </g>
+  <g id="cristae">
+    <path d="M 308 166 L 314 280 A 6 6 0 0 0 326 280 L 332 166" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 428 166 L 434 280 A 6 6 0 0 0 446 280 L 452 166" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 548 166 L 554 280 A 6 6 0 0 0 566 280 L 572 166" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 668 166 L 674 280 A 6 6 0 0 0 686 280 L 692 166" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 632 454 L 626 340 A 6 6 0 0 0 614 340 L 608 454" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 512 454 L 506 340 A 6 6 0 0 0 494 340 L 488 454" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M 392 454 L 386 340 A 6 6 0 0 0 374 340 L 368 454" fill="none" stroke="var(--cristae-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="inner_membrane">
+    <path d="M 290 166 L 308 166 L 314 280 A 6 6 0 0 0 326 280 L 332 166 L 428 166 L 434 280 A 6 6 0 0 0 446 280 L 452 166 L 548 166 L 554 280 A 6 6 0 0 0 566 280 L 572 166 L 668 166 L 674 280 A 6 6 0 0 0 686 280 L 692 166 L 710 166 A 144 144 0 0 1 710 454 L 632 454 L 626 340 A 6 6 0 0 0 614 340 L 608 454 L 512 454 L 506 340 A 6 6 0 0 0 494 340 L 488 454 L 392 454 L 386 340 A 6 6 0 0 0 374 340 L 368 454 L 290 454 A 144 144 0 0 1 290 166 Z" fill="none" stroke="var(--inner-membrane-stroke, #E64A19)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="outer_membrane">
+    <path d="M 290 140 L 710 140 A 170 170 0 0 1 710 480 L 290 480 A 170 170 0 0 1 290 140 Z" fill="none" stroke="var(--outer-membrane-stroke, #5D4037)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="mtdna">
+    <path d="M 760 280 C 780 270, 795 295, 785 310 C 775 325, 790 345, 765 340 C 740 335, 725 345, 730 320 C 735 295, 715 280, 740 285 C 750 287, 745 285, 760 280 Z" fill="none" stroke="var(--mtdna-stroke, #1976D2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+  <g id="ribosome">
+    <circle cx="200" cy="310" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="240" cy="240" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="350" cy="220" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="410" cy="400" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="470" cy="220" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="530" cy="400" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="590" cy="220" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="650" cy="400" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+    <circle cx="800" cy="260" r="5" fill="var(--ribosome-fill, #C2185B)" stroke="none" />
+  </g>
+</svg>

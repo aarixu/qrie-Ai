@@ -32,6 +32,35 @@ export type Element =
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
   | { kind: 'formula'; id: string; x: number; y: number; text: string }
   | { kind: 'image'; id: string; x: number; y: number; w: number; h: number; src: string; alt: string; label?: string }
+  /**
+   * A generated SVG diagram whose named parts the tutor can point at.
+   *
+   * The difference from `image` is the whole reason this kind exists: an image
+   * is opaque, so a tutor can only gesture at the picture as a whole. A diagram
+   * is inlined into the page, so every `<g id="...">` inside it is a thing that
+   * can be lit up on its own. `focus: ['d_mito#cristae']` dims the rest of the
+   * drawing and leaves the cristae bright.
+   *
+   * `parts` lists the ids the artwork actually contains, so a lesson naming a
+   * part that was never drawn fails validation instead of pointing at nothing.
+   *
+   * The renderer never fetches `src` — `Scene` is network-free. The app loads
+   * the markup and hands it in.
+   */
+  | {
+      kind: 'diagram';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      /** Path inside the lesson folder, e.g. `assets/mitochondrion.svg`. */
+      src: string;
+      alt: string;
+      /** Ids of the `<g>` groups inside the artwork, in the order a tutor would walk them. */
+      parts: string[];
+      label?: string;
+    }
   | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };
 
 export type ElementKind = Element['kind'];

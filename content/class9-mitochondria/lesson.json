@@ -1,0 +1,284 @@
+{
+  "formatVersion": 1,
+  "id": "class9-mitochondria",
+  "title": "Mitochondria",
+  "subtitle": "Class 9 · The Fundamental Unit of Life",
+  "language": "en",
+  "topicRef": "class9-science/the-fundamental-unit-of-life/cell-organelles",
+  "canvas": {
+    "w": 1000,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "t_title",
+      "x": 500,
+      "y": 70,
+      "text": "Mitochondria",
+      "sub": "the powerhouse, opened up"
+    },
+    {
+      "kind": "text",
+      "id": "x_hook",
+      "x": 500,
+      "y": 200,
+      "text": "Every time you lift your hand, something inside your cells paid for it."
+    },
+    {
+      "kind": "diagram",
+      "id": "d_mito",
+      "x": 60,
+      "y": 120,
+      "w": 880,
+      "h": 400,
+      "src": "assets/mitochondrion.svg",
+      "alt": "A mitochondrion cut open: an outer membrane, an inner membrane folded into cristae, and the matrix inside, holding ribosomes and a loop of mitochondrial DNA",
+      "parts": [
+        "outer_membrane",
+        "inner_membrane",
+        "cristae",
+        "matrix",
+        "ribosome",
+        "mtdna"
+      ]
+    },
+    {
+      "kind": "text",
+      "id": "x_outer",
+      "x": 500,
+      "y": 560,
+      "text": "The outer membrane: a smooth bag, and the boundary with the rest of the cell"
+    },
+    {
+      "kind": "text",
+      "id": "x_inner",
+      "x": 500,
+      "y": 560,
+      "text": "Inside it sits a second membrane — and this one does not stay smooth"
+    },
+    {
+      "kind": "text",
+      "id": "x_cristae",
+      "x": 500,
+      "y": 560,
+      "text": "It folds inward. Each fold is a crista — and folding is the whole trick"
+    },
+    {
+      "kind": "note",
+      "id": "n_surface",
+      "x": 250,
+      "y": 250,
+      "w": 500,
+      "text": "Fold a bedsheet into a small box and the sheet is still the same size. The folds do not shrink the sheet — they fit more of it into the same space. Cristae do exactly that with membrane, and it is on that membrane that ATP is made.",
+      "tone": "accent"
+    },
+    {
+      "kind": "text",
+      "id": "x_matrix",
+      "x": 500,
+      "y": 560,
+      "text": "The space the folds sit in is the matrix — a thick fluid full of enzymes"
+    },
+    {
+      "kind": "text",
+      "id": "x_own",
+      "x": 500,
+      "y": 560,
+      "text": "And here is the strange part: it carries its own DNA, and its own ribosomes"
+    },
+    {
+      "kind": "note",
+      "id": "n_own",
+      "x": 250,
+      "y": 230,
+      "w": 500,
+      "text": "No other organelle except the chloroplast does this. It is why biologists think a mitochondrion was once a free-living bacterium that moved in and never left.",
+      "tone": "good"
+    },
+    {
+      "kind": "formula",
+      "id": "f_atp",
+      "x": 500,
+      "y": 300,
+      "text": "ADP + P  ->  ATP"
+    },
+    {
+      "kind": "note",
+      "id": "n_check",
+      "x": 220,
+      "y": 400,
+      "w": 560,
+      "text": "Your turn. A muscle cell doing heavy work has far more mitochondria than a skin cell. Say why in one sentence, before I do.",
+      "tone": "bad"
+    },
+    {
+      "kind": "text",
+      "id": "x_recap",
+      "x": 500,
+      "y": 200,
+      "text": "Two membranes. The inner one folds into cristae. Folding buys surface area. Surface area buys ATP."
+    }
+  ],
+  "beats": [
+    {
+      "id": "b1_hook",
+      "topic": "Why a cell needs a power plant",
+      "narration": "Every time you lift your hand, something inside your cells paid for it. Muscles do not run on food directly. They run on one molecule, and there is a specific place in the cell where that molecule gets made. Let's go and look at it.",
+      "show": [
+        "t_title",
+        "x_hook"
+      ],
+      "teaches": [],
+      "minMs": 2000
+    },
+    {
+      "id": "b2_outer",
+      "topic": "The outer membrane",
+      "narration": "This is a mitochondrion, cut open so we can see inside. Start at the edge. The outer membrane is smooth, and it is the boundary between the mitochondrion and the rest of the cell. Nothing complicated yet — it is a bag.",
+      "show": [
+        "d_mito",
+        "x_outer"
+      ],
+      "focus": [
+        "d_mito#outer_membrane",
+        "x_outer"
+      ],
+      "teaches": [
+        "c9-cell-mito-outer-membrane"
+      ]
+    },
+    {
+      "id": "b3_inner",
+      "topic": "The inner membrane",
+      "narration": "Now look just inside it. There is a second membrane. Two membranes, one inside the other — and the thin gap between them has a name too, the intermembrane space. But watch what the inner one does that the outer one does not.",
+      "show": [
+        "d_mito",
+        "x_inner"
+      ],
+      "focus": [
+        "d_mito#inner_membrane",
+        "x_inner"
+      ],
+      "teaches": [
+        "c9-cell-mito-inner-membrane"
+      ]
+    },
+    {
+      "id": "b4_cristae",
+      "topic": "Cristae are folds of the inner membrane",
+      "narration": "It folds inward. Each of these fingers pushing into the middle is a fold of that same inner membrane — not a separate part sitting inside, a fold. One fold is called a crista. Many of them are cristae.",
+      "show": [
+        "d_mito",
+        "x_cristae"
+      ],
+      "focus": [
+        "d_mito#cristae",
+        "x_cristae"
+      ],
+      "teaches": [
+        "c9-cell-mito-cristae"
+      ]
+    },
+    {
+      "id": "b5_why_folds",
+      "topic": "Why folding matters",
+      "narration": "Here is why that matters, and it is the one idea to take away. Fold a bedsheet into a small box and the sheet is still the same size — the folds do not shrink it, they fit more of it into the same space. Cristae do exactly that with membrane. And it is on that membrane that ATP gets made, so more folds means more surface, and more surface means more ATP.",
+      "show": [
+        "d_mito",
+        "n_surface"
+      ],
+      "focus": [
+        "d_mito#cristae",
+        "n_surface"
+      ],
+      "teaches": [
+        "c9-cell-mito-surface-area"
+      ],
+      "minMs": 3000
+    },
+    {
+      "id": "b6_matrix",
+      "topic": "The matrix",
+      "narration": "The space the folds sit in is the matrix. It is not empty — it is a thick fluid packed with enzymes, and a lot of the chemistry of respiration happens right here.",
+      "show": [
+        "d_mito",
+        "x_matrix"
+      ],
+      "focus": [
+        "d_mito#matrix",
+        "x_matrix"
+      ],
+      "teaches": [
+        "c9-cell-mito-matrix"
+      ]
+    },
+    {
+      "id": "b7_atp",
+      "topic": "What it produces",
+      "narration": "And this is what all of it is for. ADP plus a phosphate becomes ATP — the molecule your muscles actually spend. This is why the mitochondrion is called the powerhouse of the cell.",
+      "show": [
+        "d_mito",
+        "f_atp"
+      ],
+      "teaches": [
+        "c9-cell-mito-atp"
+      ]
+    },
+    {
+      "id": "b8_own_dna",
+      "topic": "Its own DNA and ribosomes",
+      "narration": "One more thing, and it is genuinely strange. Look in the matrix. Those small dots are ribosomes, and that little loop is DNA — the mitochondrion's own.",
+      "show": [
+        "d_mito",
+        "x_own"
+      ],
+      "focus": [
+        "d_mito#mtdna",
+        "d_mito#ribosome",
+        "x_own"
+      ],
+      "teaches": [
+        "c9-cell-mito-own-dna"
+      ]
+    },
+    {
+      "id": "b9_endosymbiosis",
+      "topic": "Why that is strange",
+      "narration": "No other organelle except the chloroplast carries its own DNA. Which is why biologists think a mitochondrion was once a free-living bacterium that moved into a bigger cell and never left. You are, in a small way, carrying a guest.",
+      "show": [
+        "d_mito",
+        "n_own"
+      ],
+      "teaches": [],
+      "minMs": 2500
+    },
+    {
+      "id": "b10_check",
+      "topic": "Check",
+      "narration": "Your turn, and do not let me answer it for you. A muscle cell doing heavy work has far more mitochondria than a skin cell. Say why in one sentence, before I do.",
+      "show": [
+        "d_mito",
+        "n_check"
+      ],
+      "checks": [
+        "c9-cell-mito-atp",
+        "c9-cell-mito-surface-area"
+      ],
+      "minMs": 4000
+    },
+    {
+      "id": "b11_recap",
+      "topic": "Recap",
+      "narration": "So: two membranes. The inner one folds into cristae. Folding buys surface area. Surface area buys ATP. If you remember only the folding, the rest follows from it.",
+      "show": [
+        "t_title",
+        "x_recap"
+      ],
+      "checks": [
+        "c9-cell-mito-cristae",
+        "c9-cell-mito-surface-area"
+      ]
+    }
+  ]
+}

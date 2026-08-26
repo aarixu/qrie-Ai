@@ -75,6 +75,7 @@ export function bboxOf(el: Element): Rect {
       return { x: el.x, y: el.y, w: el.w, h: noteBoxHeight(el.text, el.w) };
     case 'box':
     case 'image':
+    case 'diagram':
     case 'model3d':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
     case 'doc':

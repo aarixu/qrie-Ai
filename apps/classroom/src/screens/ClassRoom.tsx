@@ -11,6 +11,7 @@ import {
 } from '@ai-tutor/doubt-session';
 import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
+import { useDiagramAssets } from '../lib/diagrams';
 import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
@@ -54,6 +55,9 @@ export function LessonRoute() {
   // its controller when the adapter's identity changes: a voice that arrived a
   // moment late would restart the class from the top.
   const tts = useLessonVoice(entry, lesson, { enabled: preferences.voice });
+  // Resolved here for the same reason the voice is: the classroom should not
+  // remount because a picture arrived a moment after the lesson did.
+  const diagrams = useDiagramAssets(entry, lesson);
 
   useEffect(() => {
     let cancelled = false;
@@ -96,7 +100,7 @@ export function LessonRoute() {
       </div>
     );
   }
-  return <ClassRoom lesson={lesson} tts={tts} onExit={() => navigate('/')} />;
+  return <ClassRoom lesson={lesson} tts={tts} diagrams={diagrams} onExit={() => navigate("/")} />;
 }
 
 /** m:ss, the way a call timer reads. */
@@ -160,11 +164,14 @@ function ToolButton({
 export function ClassRoom({
   lesson,
   tts,
+  diagrams,
   onExit,
 }: {
   lesson: Lesson;
   /** Resolved by the route: the recorded take, her live voice, or the browser's. */
   tts: TtsAdapter;
+  /** SVG markup for the lesson's `diagram` elements, keyed by element id. */
+  diagrams: Record<string, string>;
   onExit(): void;
 }) {
   const navigate = useNavigate();
@@ -531,7 +538,7 @@ export function ClassRoom({
       {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
       <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
         <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} />
+          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} assets={diagrams} />
 
           {/* The caption: one line over the board, like Meet's captions. */}
           {caption && (

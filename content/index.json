@@ -53,6 +53,15 @@
       "subject": "Science",
       "path": "class9-particle-size/lesson.json",
       "topicRef": "class9-science/matter-in-our-surroundings/how-small-are-these-particles-of-matter"
+    },
+    {
+      "id": "class9-mitochondria",
+      "title": "Mitochondria",
+      "subtitle": "Class 9 · The Fundamental Unit of Life",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-mitochondria/lesson.json",
+      "topicRef": "class9-science/the-fundamental-unit-of-life/cell-organelles"
     }
   ]
 }

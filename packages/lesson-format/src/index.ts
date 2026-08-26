@@ -7,5 +7,5 @@ export type {
   Lesson,
 } from './types';
 export { CANVAS_W, CANVAS_H } from './types';
-export { validateLesson, findBeat, elementsForBeat } from './validate';
+export { validateLesson, findBeat, elementsForBeat, splitPartRef, PART_SEPARATOR } from './validate';
 export type { ValidationResult } from './validate';
