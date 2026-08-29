@@ -13,6 +13,9 @@ const beat = (board: Instruction[], narration = 'n'): ScriptBeat => ({
 const graphics = (elements: Element[]) =>
   elements.filter((e) => e.kind === 'graphic') as Extract<Element, { kind: 'graphic' }>[];
 
+/** The element id a place with this author id ends up carrying, in beat b1. */
+const placed = (authorId: string) => `b1__${authorId}`;
+
 /**
  * The scene Aarav described: "imagine you and your friend going to school",
  * two figures appear, then the school, then the road between them.
@@ -79,8 +82,8 @@ describe('the stroke between two things', () => {
       { kind: 'arrow' }
     >;
     const g = graphics(elements);
-    const you = g.find((e) => e.id === 'you')!;
-    const school = g.find((e) => e.id === 'school')!;
+    const you = g.find((e) => e.id === placed('you'))!;
+    const school = g.find((e) => e.id === placed('school'))!;
 
     expect(arrow.from.x).toBeGreaterThan(you.x + you.w);
     expect(arrow.to.x).toBeLessThan(school.x);
@@ -145,11 +148,11 @@ describe('the board fills in with the words', () => {
 
   it('shows each thing on the line that names it, and never before', () => {
     const { steps } = layoutBeat(beat(walkToSchool));
-    expect(steps[0].show).toContain('you');
-    expect(steps[0].show).toContain('friend');
-    expect(steps[0].show).not.toContain('school');
+    expect(steps[0].show).toContain(placed('you'));
+    expect(steps[0].show).toContain(placed('friend'));
+    expect(steps[0].show).not.toContain(placed('school'));
 
-    expect(steps[1].show).toContain('school');
+    expect(steps[1].show).toContain(placed('school'));
     expect(steps[2].show.length).toBeGreaterThan(steps[1].show.length);
   });
 
@@ -228,5 +231,111 @@ describe('two arrows to the same place do not become one', () => {
     >[];
     expect(labels).toHaveLength(2);
     expect(Math.abs(labels[0].y - labels[1].y)).toBeGreaterThan(15);
+  });
+});
+
+describe('the scene fills the board it was given', () => {
+  // Two figures drawn at their natural 132 in a 330-high band left a lesson on
+  // Newton's third law looking mostly empty.
+  it('draws a small scene large enough to use the band', () => {
+    const { elements } = layoutBeat(
+      beat([
+        { do: 'place', id: 'hand', noun: 'hand' },
+        { do: 'place', id: 'wall', noun: 'wall' },
+      ]),
+    );
+    const g = graphics(elements);
+    const tallest = Math.max(...g.map((e) => e.h));
+    expect(tallest).toBeGreaterThan(BOARD.MAIN.h * 0.55);
+  });
+
+  it('still never grows past the band', () => {
+    const { elements } = layoutBeat(beat([{ do: 'place', id: 'one', noun: 'boy' }]));
+    const g = graphics(elements)[0];
+    expect(g.y).toBeGreaterThanOrEqual(BOARD.MAIN.y);
+    expect(g.y + g.h).toBeLessThanOrEqual(BOARD.MAIN.y + BOARD.MAIN.h);
+  });
+
+  it('keeps a crowded scene inside the width, shrinking instead', () => {
+    const many: Instruction[] = Array.from({ length: 8 }, (_, n) => ({
+      do: 'place' as const,
+      id: `p${n}`,
+      noun: 'boy',
+    }));
+    const { elements } = layoutBeat(beat(many));
+    for (const g of graphics(elements)) {
+      expect(g.x).toBeGreaterThanOrEqual(0);
+      expect(g.x + g.w).toBeLessThanOrEqual(CANVAS_W);
+    }
+  });
+});
+
+describe('a connector label stays over its own arrow', () => {
+  // "push on wall" and "push on hand" were written across the hand and the
+  // wall, because a full-size label is wider than a short arrow.
+  const closeTogether: Instruction[] = [
+    { do: 'place', id: 'hand', noun: 'hand' },
+    { do: 'place', id: 'wall', noun: 'wall' },
+    { do: 'connect', from: 'hand', to: 'wall', label: 'push on wall' },
+    { do: 'connect', from: 'wall', to: 'hand', label: 'push on hand' },
+  ];
+
+  it('shrinks a label that would be wider than the arrow it sits on', () => {
+    const { elements } = layoutBeat(beat(closeTogether));
+    const labels = elements.filter((e) => e.kind === 'handwrite') as Extract<
+      Element,
+      { kind: 'handwrite' }
+    >[];
+    const arrows = elements.filter((e) => e.kind === 'arrow') as Extract<
+      Element,
+      { kind: 'arrow' }
+    >[];
+    const run = Math.hypot(
+      arrows[0].to.x - arrows[0].from.x,
+      arrows[0].to.y - arrows[0].from.y,
+    );
+    for (const label of labels) {
+      const width = label.text.length * (label.size ?? 30) * 0.5;
+      expect(width).toBeLessThanOrEqual(run * 1.15);
+    }
+  });
+
+  it('separates two labels far enough that neither is written on the other', () => {
+    const { elements } = layoutBeat(beat(closeTogether));
+    const labels = elements.filter((e) => e.kind === 'handwrite') as Extract<
+      Element,
+      { kind: 'handwrite' }
+    >[];
+    expect(labels).toHaveLength(2);
+    const apart = Math.abs(labels[0].y - labels[1].y);
+    const tallest = Math.max(labels[0].size ?? 30, labels[1].size ?? 30);
+    expect(apart).toBeGreaterThan(tallest);
+  });
+});
+
+describe('the same noun in two beats is two pictures', () => {
+  // A planner naturally writes place: person in two different beats and means
+  // two different pictures. Before the ids were namespaced this produced a
+  // duplicate element id, and a real run spent a whole repair round fixing
+  // something no author had got wrong.
+  it('namespaces a place id by its beat', () => {
+    const board: Instruction[] = [{ do: 'place', id: 'person', noun: 'boy' }];
+    const one = layoutBeat({ id: 'b1', topic: 't', narration: 'n', board });
+    const two = layoutBeat({ id: 'b2', topic: 't', narration: 'n', board });
+
+    expect(graphics(one.elements)[0].id).not.toBe(graphics(two.elements)[0].id);
+  });
+
+  it('still lets connect and annotate name the author\u2019s id inside the beat', () => {
+    const { elements } = layoutBeat(
+      beat([
+        { do: 'place', id: 'person', noun: 'boy' },
+        { do: 'place', id: 'boat', noun: 'canoe' },
+        { do: 'connect', from: 'person', to: 'boat', label: 'push' },
+        { do: 'annotate', target: 'boat', mark: 'circle' },
+      ]),
+    );
+    expect(elements.filter((e) => e.kind === 'arrow')).toHaveLength(1);
+    expect(elements.filter((e) => e.kind === 'mark')).toHaveLength(1);
   });
 });

@@ -1,6 +1,7 @@
-import { CANVAS_H, CANVAS_W, type Element } from '@ai-tutor/lesson-format';
+import { CANVAS_H, CANVAS_W, fitText, type Element } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
 import { annotateElement, connectElements, layoutScene } from './scene';
+import { resolveOverlaps, type Bond } from './collide';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -86,6 +87,16 @@ export function layoutBeat(beat: ScriptBeat): {
   elements: Element[];
   laid: LaidOutBeat;
   steps: RevealStep[];
+  /**
+   * Pairs that are MEANT to overlap — a mark and what it marks, a card's frame
+   * and the words inside it.
+   *
+   * Returned rather than kept private so a caller checking the board for
+   * collisions sees the same truth the solver did. A checker that re-derived
+   * this would eventually disagree with it, and then either flag a correct
+   * board or pass a broken one.
+   */
+  bonds: Bond[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -110,6 +121,8 @@ export function layoutBeat(beat: ScriptBeat): {
   // until both of its ends have somewhere to be. Collecting the places first is
   // what lets an arrow start at the edge of a box rather than guess.
   const places = items.filter((it) => it.do === 'place') as Extract<Instruction, { do: 'place' }>[];
+  /** Pairs that are meant to overlap, so the solver leaves them alone. */
+  const bonds: Bond[] = [];
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -302,13 +315,19 @@ export function layoutBeat(beat: ScriptBeat): {
                 label: '',
                 ...(card.tone ? { tone: card.tone } : {}),
               });
+              // The box is this card's own frame; its heading and body are
+              // meant to sit inside it.
+              bonds.push({ a: idFor(beat.id, index, `_c${n}`), b: idFor(beat.id, index, `_h${n}`) });
+              bonds.push({ a: idFor(beat.id, index, `_c${n}`), b: idFor(beat.id, index, `_b${n}`) });
               out.push({
                 kind: 'text',
                 id: idFor(beat.id, index, `_h${n}`),
                 x: x + cardW / 2,
                 y: y + 38,
                 text: card.heading,
-                size: 19,
+                // Sized to its own card: a heading wider than the box it sits
+                // in runs into the card beside it.
+                size: fitText(card.heading, cardW - 24, 19),
               });
               out.push({
                 kind: 'text',
@@ -316,7 +335,7 @@ export function layoutBeat(beat: ScriptBeat): {
                 x: x + cardW / 2,
                 y: y + 78,
                 text: card.body,
-                size: 16,
+                size: fitText(card.body, cardW - 24, 16),
               });
             });
             return out;
@@ -343,14 +362,14 @@ export function layoutBeat(beat: ScriptBeat): {
         blocks.push({
           height: null,
           place: (r) => {
-            const { elements: figures, boxes } = layoutScene(places, r);
+            const { elements: figures, boxes } = layoutScene(places, r, (authorId) => `${beat.id}__${authorId}`);
             const out: Element[] = [...figures];
             // Attribute each figure back to the instruction that placed it, so
             // it can appear on the word that named it rather than all at once.
-            figures.forEach((el) => {
-              const n = sceneSteps.findIndex((it) => it.do === 'place' && it.id === el.id);
-              if (n >= 0) byInstruction.set(n, [...(byInstruction.get(n) ?? []), el.id]);
-            });
+            for (const box of boxes.values()) {
+              const n = sceneSteps.findIndex((it) => it.do === 'place' && it.id === box.id);
+              if (n >= 0) byInstruction.set(n, [...(byInstruction.get(n) ?? []), box.elementId]);
+            }
             let connectors = 0;
             sceneSteps.forEach((it, n) => {
               if (it.do === 'connect') {
@@ -360,6 +379,10 @@ export function layoutBeat(beat: ScriptBeat): {
                 byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
               } else if (it.do === 'annotate') {
                 const made = annotateElement(it, boxes, idFor(beat.id, n));
+                // A mark is MEANT to sit on what it marks; the solver must not
+                // push the circle off the thing it is circling.
+                const target = boxes.get(it.target);
+                if (target) for (const m of made) bonds.push({ a: m.id, b: target.elementId });
                 out.push(...made);
                 byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
               }
@@ -398,11 +421,24 @@ export function layoutBeat(beat: ScriptBeat): {
     y += h + GUTTER;
   }
 
+  // Nothing on the board sits on anything else.
+  //
+  // The stacking rules already keep blocks apart; this catches the things drawn
+  // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
+  // they refer to and so can land anywhere. Fixing those case by case fixes one
+  // lesson at a time; this fixes every lesson.
+  const settled = resolveOverlaps(elements, bonds, { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H });
+
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
   const keptFocus = focus.filter((f) => shown.has(f.split('#')[0]));
 
-  return { elements, laid: { show, focus: keptFocus }, steps: revealSteps(beat, byInstruction, keptFocus) };
+  return {
+    elements: settled,
+    laid: { show, focus: keptFocus },
+    steps: revealSteps(beat, byInstruction, keptFocus),
+    bonds,
+  };
 }
 
 /**

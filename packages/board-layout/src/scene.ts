@@ -1,4 +1,4 @@
-import { type Element } from '@ai-tutor/lesson-format';
+import { fitText, type Element } from '@ai-tutor/lesson-format';
 import type { Instruction } from './types';
 
 export type PlaceStep = Extract<Instruction, { do: 'place' }>;
@@ -15,7 +15,17 @@ const IN_GROUP = 22;
 const BETWEEN_GROUPS = 96;
 
 export interface Placed {
+  /** The author's id, which is what `connect` and `annotate` name. */
   id: string;
+  /**
+   * The id the element actually carries on the board.
+   *
+   * Namespaced by beat, because a planner naturally writes `place: person` in
+   * two different beats and means two different pictures. Without this the
+   * lesson carries a duplicate element id and fails validation — which a real
+   * run did, costing a repair round to fix something no author got wrong.
+   */
+  elementId: string;
   x: number;
   y: number;
   w: number;
@@ -37,6 +47,8 @@ export interface Placed {
 export function layoutScene(
   places: readonly PlaceStep[],
   band: { x: number; y: number; w: number; h: number },
+  /** Makes an element id from the author's — see `Placed.elementId`. */
+  namespaced: (authorId: string) => string = (id) => id,
 ): { elements: Element[]; boxes: Map<string, Placed> } {
   const boxes = new Map<string, Placed>();
   const elements: Element[] = [];
@@ -76,7 +88,23 @@ export function layoutScene(
   const gap = IN_GROUP + (BETWEEN_GROUPS - IN_GROUP) * gapScale;
 
   const withGaps = naturalW + (groups.length - 1) * (gap - IN_GROUP);
-  const shrink = withGaps > band.w ? band.w / withGaps : 1;
+
+  /**
+   * Fill the band rather than sit in the middle of it.
+   *
+   * The natural sizes suit a crowded scene; two figures alone in a 330-unit
+   * band drawn at 132 leave the board looking mostly empty, which is what a
+   * lesson on Newton's third law actually looked like. So the scene scales to
+   * whichever of width or height runs out first — capped, because a scene blown
+   * up to fill every last unit stops looking like a board and starts looking
+   * like a poster.
+   */
+  const MAX_GROW = 1.9;
+  const roomH = band.h - (anyLabel ? LABEL_ROOM : 0);
+  const tallestNatural = Math.max(...places.map(natural));
+  const fitW = withGaps > 0 ? band.w / withGaps : 1;
+  const fitH = tallestNatural > 0 ? roomH / tallestNatural : 1;
+  const shrink = Math.min(MAX_GROW, Math.max(0.2, Math.min(fitW, fitH)));
 
   const sizeOf = (p: PlaceStep) => natural(p) * shrink;
   const tallest = Math.max(...places.map(sizeOf));
@@ -95,11 +123,11 @@ export function layoutScene(
       // Bottom-aligned on the shared baseline, so a small thing stands on the
       // same ground as a large one instead of floating in the middle of it.
       const y = baseline + (tallest - size);
-      const box: Placed = { id: p.id, x, y, w: size, h: size };
+      const box: Placed = { id: p.id, elementId: namespaced(p.id), x, y, w: size, h: size };
       boxes.set(p.id, box);
       elements.push({
         kind: 'graphic',
-        id: p.id,
+        id: box.elementId,
         x,
         y,
         w: size,
@@ -138,6 +166,10 @@ export function connectElements(
    */
   nudge = 0,
 ): Element[] {
+  // Connecting a thing to itself says nothing, and draws a zero-length arrow
+  // whose label lands dead centre on the picture with nowhere to escape to.
+  if (step.from === step.to) return [];
+
   const a = boxes.get(step.from);
   const b = boxes.get(step.to);
   if (!a || !b) return [];
@@ -151,8 +183,10 @@ export function connectElements(
   const uy = dy / len;
   const pad = 14;
 
-  // Perpendicular to the run of the arrow, alternating above and below.
-  const step2 = Math.ceil(nudge / 2) * 26 * (nudge % 2 === 1 ? -1 : 1);
+  // Perpendicular to the run of the arrow, alternating above and below. Wide
+  // enough that two handwritten labels cannot touch: 26 units left "push on
+  // wall" sitting on "push on hand".
+  const step2 = Math.ceil(nudge / 2) * 46 * (nudge % 2 === 1 ? -1 : 1);
   const nx = -uy * step2;
   const ny = ux * step2;
 
@@ -173,13 +207,19 @@ export function connectElements(
   if (step.label) {
     // Above the line, in the tutor's hand: a connector's label is something she
     // wrote over the arrow, not a caption belonging to either end.
+    //
+    // Its size is clamped to the run it has to sit over. Two things standing
+    // close together leave a short arrow, and a label at full size then spills
+    // across both of the pictures it was meant to be between.
+    const run = Math.hypot(to.x - from.x, to.y - from.y);
+    const size = fitText(step.label, run, 30, 17);
     out.push({
       kind: 'handwrite',
       id: `${id}_label`,
       x: (from.x + to.x) / 2,
-      y: (from.y + to.y) / 2 - 16,
+      y: (from.y + to.y) / 2 - size * 0.62,
       text: step.label,
-      size: 30,
+      size,
       ...(step.tone ? { tone: step.tone } : {}),
     });
   }

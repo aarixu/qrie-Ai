@@ -1,4 +1,11 @@
-import type { Element, Lesson } from '@ai-tutor/lesson-format';
+import {
+  boxOf,
+  flowHeight,
+  noteBoxHeight,
+  union,
+  type Lesson,
+  type Rect,
+} from '@ai-tutor/lesson-format';
 
 /**
  * WHERE THE CAMERA POINTS.
@@ -9,19 +16,19 @@ import type { Element, Lesson } from '@ai-tutor/lesson-format';
  *
  * So the board is not shown whole. Each beat is framed on what it is actually
  * teaching: every element the beat has on the board.
- * visible. That is the same thing a teacher does when she stops talking about
- * the whole diagram and points at one corner of it.
  *
  * Pure geometry, no DOM — the renderer asks where to point and does as it is
  * told, exactly like every other decision in this package.
  */
 
-export interface Rect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
+/**
+ * Element geometry moved to `@ai-tutor/lesson-format`, so the layout engine can
+ * see the same boxes this camera does. It used to live only here, which meant
+ * layout could put two things on top of each other and nothing in the system
+ * was able to notice. Re-exported because `Scene` asks this package for it.
+ */
+export { boxOf as bboxOf, flowHeight, noteBoxHeight, type Rect };
+export { FLOW_STEP_H, FLOW_GAP } from '@ai-tutor/lesson-format';
 
 /**
  * The board never zooms past this. Past ~3x a single small element fills the
@@ -31,108 +38,6 @@ const MAX_ZOOM = 3;
 
 /** Breathing room around the framed content, as a fraction of the frame's larger side. */
 const PAD = 0.09;
-
-/**
- * Advance-width estimates, in ems. Text has no measurable width without a DOM,
- * and the frame must be identical on the server, in a test and in a browser —
- * so it is estimated, generously. An over-wide estimate zooms out slightly;
- * an under-wide one clips a word, which is much worse.
- */
-const EM_SANS = 0.58;
-const EM_MONO = 0.62;
-
-/**
- * Mirrors Scene's note layout: the card wraps at roughly this many characters
- * and every wrapped line is 21px tall, over a 60px allowance for padding.
- *
- * Exported because Scene sizes the real foreignObject with it — two different
- * answers here would frame a note that is not the size it renders at.
- */
-export function noteBoxHeight(text: string, w: number): number {
-  const charsPerLine = Math.max(6, Math.floor((w - 26) / 7));
-  return Math.ceil(text.length / charsPerLine) * 21 + 60;
-}
-
-/** A rect around a centred single line of text. */
-function centredText(x: number, y: number, text: string, size: number, em: number): Rect {
-  const w = text.length * size * em;
-  return { x: x - w / 2, y: y - size, w, h: size * 1.35 };
-}
-
-/** One step's box in a flow, and the gap to the next — shared by layout and hit-box. */
-export const FLOW_STEP_H = 118;
-export const FLOW_GAP = 40;
-
-/**
- * How tall a flow is, from its step count alone.
- *
- * Exported because the renderer and the camera must agree to the pixel: if the
- * camera framed a different box than the one drawn, a flow would sit half off
- * the screen with nothing in the code saying why.
- */
-export function flowHeight(steps: number, direction: 'row' | 'column' = 'row'): number {
-  if (steps <= 0) return 0;
-  if (direction === 'row') return FLOW_STEP_H;
-  return steps * FLOW_STEP_H + (steps - 1) * FLOW_GAP;
-}
-
-/** The box an element occupies on the board, in canvas units. */
-export function bboxOf(el: Element): Rect {
-  switch (el.kind) {
-    case 'title': {
-      const head = centredText(el.x, el.y, el.text, 44, EM_SANS);
-      if (!el.sub) return head;
-      return union(head, centredText(el.x, el.y + 38, el.sub, 19, EM_SANS));
-    }
-    case 'text':
-      return centredText(el.x, el.y, el.text, el.size ?? 20, EM_SANS);
-    case 'formula':
-      return centredText(el.x, el.y, el.text, 24, EM_MONO);
-    case 'note':
-      return { x: el.x, y: el.y, w: el.w, h: noteBoxHeight(el.text, el.w) };
-    case 'box':
-    case 'image':
-    case 'diagram':
-    case 'chart':
-    case 'mark':
-    case 'model3d':
-      return { x: el.x, y: el.y, w: el.w, h: el.h };
-    // A graphic's label hangs below its box, and the camera has to know about
-    // it or the word the tutor just said sits half off the screen.
-    case 'graphic':
-      return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 34 : 0) };
-    case 'handwrite':
-      return centredText(el.x, el.y, el.text, el.size ?? 26, EM_SANS);
-    case 'flow':
-      return { x: el.x, y: el.y, w: el.w, h: flowHeight(el.steps.length, el.direction) };
-    case 'doc':
-      // The label sits below the page and is part of the element.
-      return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 26 : 0) };
-    case 'arrow':
-      return fromPoints([el.from, el.to]);
-    case 'pen':
-      return fromPoints(el.points);
-  }
-}
-
-function fromPoints(points: readonly { x: number; y: number }[]): Rect {
-  const xs = points.map((p) => p.x);
-  const ys = points.map((p) => p.y);
-  const x = Math.min(...xs);
-  const y = Math.min(...ys);
-  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
-}
-
-function union(a: Rect, b: Rect): Rect {
-  const x = Math.min(a.x, b.x);
-  const y = Math.min(a.y, b.y);
-  return {
-    x,
-    y,
-    w: Math.max(a.x + a.w, b.x + b.w) - x,
-    h: Math.max(a.y + a.h, b.y + b.h) - y,
-  };
-}
 
 /**
  * Grow a rect to `aspect` (w/h) about its own centre. The renderer letterboxes
@@ -152,6 +57,8 @@ function toAspect(rect: Rect, aspect: number): Rect {
   return { x: rect.x, y: rect.y - (h - rect.h) / 2, w: rect.w, h };
 }
 
+const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(v, hi));
+
 /**
  * Slide a rect back inside the board without shrinking it.
  *
@@ -160,18 +67,21 @@ function toAspect(rect: Rect, aspect: number): Rect {
  * gentler failure than a board that squashes.
  */
 function clampInto(rect: Rect, board: Rect): Rect {
-  const x = rect.w >= board.w ? board.x - (rect.w - board.w) / 2 : clamp(rect.x, 0, board.w - rect.w);
-  const y = rect.h >= board.h ? board.y - (rect.h - board.h) / 2 : clamp(rect.y, 0, board.h - rect.h);
+  const x =
+    rect.w >= board.w ? board.x - (rect.w - board.w) / 2 : clamp(rect.x, 0, board.w - rect.w);
+  const y =
+    rect.h >= board.h ? board.y - (rect.h - board.h) / 2 : clamp(rect.y, 0, board.h - rect.h);
   return { x, y, w: rect.w, h: rect.h };
 }
-
-const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.min(v, hi));
 
 /**
  * The viewBox for this moment.
  *
- * @param focus   kept for the signature; emphasis is not a camera decision
  * @param visible the beat's full element set — this is what gets framed
+ * @param _focus  kept so every caller keeps passing the beat's focus, for when
+ *                a beat gains an explicit zoom. Emphasis is not a camera
+ *                decision: framing the focus alone once cut a note in half
+ *                while the tutor was talking about it.
  * @param aspect  the renderer's w/h, so the frame comes back pre-shaped to the
  *                screen. Omitted (in a test, or before the first measure) it
  *                stays at the content's own shape.
@@ -183,7 +93,6 @@ const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.m
 export function computeFrame(
   lesson: Lesson,
   visible: readonly string[],
-  /** Unused: kept so every caller keeps passing the beat's focus, for when a beat gains an explicit zoom. */
   _focus: readonly string[],
   aspect?: number,
   minW?: number,
@@ -191,15 +100,8 @@ export function computeFrame(
   const board: Rect = { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h };
   const shape = (r: Rect): Rect => clampInto(aspect ? toAspect(r, aspect) : r, board);
 
-  // Frame what is VISIBLE, not what is focused.
-  //
-  // Framing the focus alone zoomed to whichever element was being pointed at
-  // and cut everything else off the board — a note would render with its left
-  // half outside the frame while the tutor talked about it. Focus decides what
-  // is BRIGHT; dimming already carries the emphasis, and the spotlight inside a
-  // diagram does the pointing. What is on screen is not the same question.
   const wanted = new Set(visible);
-  const boxes = lesson.elements.filter((el) => wanted.has(el.id)).map(bboxOf);
+  const boxes = lesson.elements.filter((el) => wanted.has(el.id)).map(boxOf);
   if (boxes.length === 0) return shape(board);
 
   let frame = boxes.reduce(union);

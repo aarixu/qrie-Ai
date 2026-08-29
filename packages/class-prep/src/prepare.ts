@@ -40,6 +40,31 @@ export interface PrepOptions {
   maxArtAttempts?: number;
 }
 
+/**
+ * Read a plan out of whatever the model actually sent.
+ *
+ * Models wrap JSON in prose, in fences, and occasionally emit a stray character
+ * halfway through. Slicing to the outermost braces recovers most of that
+ * without pretending to be a JSON repairer — and what it cannot recover becomes
+ * null, so the caller can ask for the plan again rather than failing the class.
+ */
+export function parsePlan(raw: string): Blueprint | null {
+  const text = stripFence(raw);
+  try {
+    return JSON.parse(text) as Blueprint;
+  } catch {
+    // fall through
+  }
+  const first = text.indexOf('{');
+  const last = text.lastIndexOf('}');
+  if (first < 0 || last <= first) return null;
+  try {
+    return JSON.parse(text.slice(first, last + 1)) as Blueprint;
+  } catch {
+    return null;
+  }
+}
+
 const stripFence = (s: string): string =>
   s
     .trim()
@@ -192,11 +217,21 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   say('planning', 'Working out how to teach this…', 0.05);
   const raw = await planner.complete(PLANNER_SYSTEM, plannerUser(topic, klass, minutes));
 
-  let blueprint: Blueprint;
-  try {
-    blueprint = JSON.parse(stripFence(raw)) as Blueprint;
-  } catch (e) {
-    throw new Error(`The planner did not return JSON: ${e instanceof Error ? e.message : e}`);
+  // Unreadable JSON gets the same second chance a bad plan does. A model that
+  // drops a brace has still done the thinking; failing the whole class over
+  // punctuation throws that away.
+  let blueprint = parsePlan(raw);
+  if (!blueprint) {
+    issues.push('The first plan was not readable JSON.');
+    say('planning', 'That came back garbled — asking again…', 0.2);
+    const retry = await planner.complete(
+      PLANNER_SYSTEM,
+      repairPlanUser(raw.slice(0, 4000), ['The reply was not valid JSON. Return the whole plan again, as one JSON object.']),
+    );
+    blueprint = parsePlan(retry);
+  }
+  if (!blueprint) {
+    throw new Error('The planner did not return readable JSON, twice.');
   }
   blueprint.beats ??= [];
   blueprint.visuals ??= [];

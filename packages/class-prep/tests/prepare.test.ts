@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateLesson, type Element } from '@ai-tutor/lesson-format';
-import { assemble, prepareClass, type LlmAdapter } from '../src/prepare';
+import { assemble, parsePlan, prepareClass, type LlmAdapter } from '../src/prepare';
 import type { Blueprint } from '../src/types';
 
 const blueprint: Blueprint = {
@@ -160,11 +160,38 @@ describe('prepareClass', () => {
     expect(seen.at(-1)).toBe('done');
   });
 
-  it('says plainly when the planner did not return JSON', async () => {
-    const planner: LlmAdapter = { complete: async () => 'Sure, here is a lesson!' };
+  it('gives up only after asking twice for readable JSON', async () => {
+    let calls = 0;
+    const planner: LlmAdapter = {
+      complete: async () => {
+        calls += 1;
+        return 'Sure, here is a lesson!';
+      },
+    };
     await expect(
       prepareClass({ topic: 'x', klass: 9, planner, artist: fakeArtist(['']) }),
-    ).rejects.toThrow(/did not return JSON/);
+    ).rejects.toThrow(/readable JSON, twice/);
+    expect(calls).toBe(2);
+  });
+
+  it('recovers when the second attempt is readable', async () => {
+    // A model that drops a brace has still done the thinking; failing the whole
+    // class over punctuation throws that away.
+    let calls = 0;
+    const planner: LlmAdapter = {
+      complete: async () => {
+        calls += 1;
+        return calls === 1 ? '{"beats": [ oops' : JSON.stringify(blueprint);
+      },
+    };
+    const result = await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner,
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+    });
+    expect(result.lesson.beats.length).toBeGreaterThan(0);
+    expect(result.report.issues.join(' ')).toContain('not readable JSON');
   });
 });
 
@@ -210,5 +237,30 @@ describe('a plan that fails validation gets one repair round', () => {
         artist: fakeArtist([svg(['axes', 'line_fast'])]),
       }),
     ).rejects.toThrow(/not valid/);
+  });
+});
+
+
+describe('parsePlan reads a plan out of whatever the model sent', () => {
+  const doc = { id: 'x', title: 'T', beats: [], visuals: [] };
+  const json = JSON.stringify(doc);
+
+  it('reads plain JSON', () => {
+    expect(parsePlan(json)).toMatchObject({ id: 'x' });
+  });
+
+  it('reads JSON inside a markdown fence', () => {
+    const fence = "```";
+    expect(parsePlan(`${fence}json\n${json}\n${fence}`)).toMatchObject({ id: 'x' });
+  });
+
+  it('reads JSON with prose wrapped around it', () => {
+    // Models introduce their answers however they like; the plan is still in there.
+    expect(parsePlan(`Sure! ${json} Hope that helps.`)).toMatchObject({ id: 'x' });
+  });
+
+  it('returns null rather than half a plan', () => {
+    expect(parsePlan('{"beats": [ oops')).toBeNull();
+    expect(parsePlan('no json here at all')).toBeNull();
   });
 });
