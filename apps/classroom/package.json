@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ai-tutor/action-player": "*",
+    "@ai-tutor/class-prep": "*",
     "@ai-tutor/diagnostic": "*",
     "@ai-tutor/doubt-session": "*",
     "@ai-tutor/knowledge-graph": "*",

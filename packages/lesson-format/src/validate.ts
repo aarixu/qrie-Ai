@@ -30,6 +30,19 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
   const need = (cond: boolean, msg: string) => {
     if (!cond) errs.push(`${path}: ${msg}`);
   };
+  /**
+   * An OPTIONAL number must still be a number when it is there.
+   *
+   * A live planner wrote `"size": "md"` once, which every other check waved
+   * through and the renderer turned into `NaN` width on a mask — an element
+   * that silently vanished with only a console warning. An optional field left
+   * unchecked is the one that reaches the board.
+   */
+  const optionalNumber = (key: string) => {
+    if (el[key] !== undefined && !isNum(el[key])) {
+      errs.push(`${path}: ${String(el.kind)} ${key} must be a number, got ${JSON.stringify(el[key])}`);
+    }
+  };
 
   switch (el.kind) {
     case 'title':
@@ -39,6 +52,7 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
     case 'text':
       need(isNum(el.x) && isNum(el.y), 'text needs numeric x,y');
       need(isStr(el.text), 'text needs non-empty text');
+      optionalNumber('size');
       break;
     case 'note':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w), 'note needs numeric x,y,w');
@@ -50,6 +64,7 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       break;
     case 'doc':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'doc needs numeric x,y,w,h');
+      optionalNumber('lines');
       break;
     case 'arrow':
       need(isPoint(el.from) && isPoint(el.to), 'arrow needs from:{x,y} and to:{x,y}');
@@ -114,6 +129,7 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
     case 'handwrite':
       need(isNum(el.x) && isNum(el.y), 'handwrite needs numeric x,y');
       need(isStr(el.text), 'handwrite needs non-empty text');
+      optionalNumber('size');
       break;
     case 'model3d':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'model3d needs numeric x,y,w,h');

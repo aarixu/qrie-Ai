@@ -23,6 +23,7 @@ import { Home } from './screens/Home';
 import { Chapter } from './screens/Chapter';
 import { LessonRoute } from './screens/ClassRoom';
 import { ActionLab } from './screens/ActionLab';
+import { CanvasLab } from './screens/CanvasLab';
 import { LessonComplete } from './screens/LessonComplete';
 import { Profile } from './screens/Profile';
 import { Search } from './screens/Search';
@@ -149,8 +150,13 @@ function Gate({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
-  if (booting) return <Splash />;
-  if (!isOnboarded(settings) && location.pathname !== '/onboarding') {
+  // The dev benches are not the product and have no student behind them.
+  // Sending them through onboarding just puts a name form in front of a tool
+  // whose whole job is to be opened and looked at.
+  const isBench = location.pathname === '/canvas-lab' || location.pathname.startsWith('/action-lab/');
+
+  if (booting && !isBench) return <Splash />;
+  if (!isBench && !isOnboarded(settings) && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
   return <>{children}</>;
@@ -195,6 +201,7 @@ export default function App() {
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
           <Route path="/action-lab/:lessonId" element={<ActionLab />} />
+          <Route path="/canvas-lab" element={<CanvasLab />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />
           <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
           <Route path="/profile" element={<Profile />} />

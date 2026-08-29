@@ -8,7 +8,7 @@ import type { Element, Lesson } from '@ai-tutor/lesson-format';
  * a note's 14.5px text at 5.7px. The content was always there; it was sub-pixel.
  *
  * So the board is not shown whole. Each beat is framed on what it is actually
- * teaching: the focused elements if the beat named any, otherwise everything
+ * teaching: every element the beat has on the board.
  * visible. That is the same thing a teacher does when she stops talking about
  * the whole diagram and points at one corner of it.
  *
@@ -165,8 +165,8 @@ const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.m
 /**
  * The viewBox for this moment.
  *
- * @param focus   the beat's focused ids — the beat is *about* these
- * @param visible the beat's full element set, the fallback when nothing is focused
+ * @param focus   kept for the signature; emphasis is not a camera decision
+ * @param visible the beat's full element set — this is what gets framed
  * @param aspect  the renderer's w/h, so the frame comes back pre-shaped to the
  *                screen. Omitted (in a test, or before the first measure) it
  *                stays at the content's own shape.
@@ -178,14 +178,22 @@ const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.m
 export function computeFrame(
   lesson: Lesson,
   visible: readonly string[],
-  focus: readonly string[],
+  /** Unused: kept so every caller keeps passing the beat's focus, for when a beat gains an explicit zoom. */
+  _focus: readonly string[],
   aspect?: number,
   minW?: number,
 ): Rect {
   const board: Rect = { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h };
   const shape = (r: Rect): Rect => clampInto(aspect ? toAspect(r, aspect) : r, board);
 
-  const wanted = new Set(focus.length > 0 ? focus : visible);
+  // Frame what is VISIBLE, not what is focused.
+  //
+  // Framing the focus alone zoomed to whichever element was being pointed at
+  // and cut everything else off the board — a note would render with its left
+  // half outside the frame while the tutor talked about it. Focus decides what
+  // is BRIGHT; dimming already carries the emphasis, and the spotlight inside a
+  // diagram does the pointing. What is on screen is not the same question.
+  const wanted = new Set(visible);
   const boxes = lesson.elements.filter((el) => wanted.has(el.id)).map(bboxOf);
   if (boxes.length === 0) return shape(board);
 
