@@ -16,6 +16,7 @@ export {
   noteBoxHeight,
   textWidth,
   fitText,
+  graphicLabelSize,
   flowHeight,
   FLOW_STEP_H,
   FLOW_GAP,

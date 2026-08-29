@@ -26,7 +26,25 @@ export type Element =
   | { kind: 'title'; id: string; x: number; y: number; text: string; sub?: string }
   | { kind: 'text'; id: string; x: number; y: number; text: string; size?: number; muted?: boolean }
   | { kind: 'note'; id: string; x: number; y: number; w: number; text: string; tone?: Tone }
-  | { kind: 'box'; id: string; x: number; y: number; w: number; h: number; label: string; tone?: Tone }
+  | {
+      kind: 'box';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      label: string;
+      tone?: Tone;
+      /**
+       * The frame's shape.
+       *
+       * A board where every idea arrives in an identical rounded rectangle
+       * reads as generated whatever the words say. Same box, said differently:
+       * a frame, a thought in a cloud, a line of speech, a banner, or nothing
+       * at all around the words.
+       */
+      as?: 'box' | 'cloud' | 'bubble' | 'plain' | 'banner';
+    }
   | { kind: 'doc'; id: string; x: number; y: number; w: number; h: number; label?: string; lines?: number }
   | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }

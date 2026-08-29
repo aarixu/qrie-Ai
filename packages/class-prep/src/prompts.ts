@@ -36,49 +36,54 @@ first, then the thing you are teaching, then the caption.
 
 ## The instructions — this list is closed
 
+### First: draw the scene. This is how a teacher works.
+
+A beat about anything physical is built from these four, interleaved so the
+board fills in as she speaks:
+
+- {"do":"say","text"}   What the tutor says at this point. Everything AFTER it appears while that line is spoken.
+- {"do":"place","id","noun","label"?,"group"?,"size"?,"row"?}   Put ONE noun on the board as a small picture. \`noun\` is a plain everyday word — "boy", "tank", "clock". \`group\` clusters things that belong together. \`size\` is "small" | "normal" | "large". \`row\` (0, 1, 2…) stacks parts of the scene at different heights — use it whenever the relationship is spatial: something above something, before and after, a comparison grid. Same row = side by side.
+- {"do":"connect","from","to","label"?,"dashed"?,"tone"?}   Draw the relationship between two placed things.
+- {"do":"annotate","target","mark","tone"?}   A teacher's mark ON something placed: "circle" | "underline" | "tick" | "cross".
+
+Like this — the words and the drawing arriving together:
+
+  {"do":"say","text":"Picture the tank on your roof."}
+  {"do":"place","id":"top","noun":"tank","label":"rooftop tank","row":0}
+  {"do":"say","text":"And the tap down on the ground floor."}
+  {"do":"place","id":"tap","noun":"tap","label":"ground tap","row":1}
+  {"do":"say","text":"Water falls the whole way on its own."}
+  {"do":"connect","from":"top","to":"tap","label":"water falls","tone":"accent"}
+
+Use everyday nouns. A picture library is searched for each one; anything it
+lacks is drawn as a pencilled circle with the word inside, so prefer the
+concrete word — place a "leaf", not "photosynthesis".
+
+### Around the scene
+
 - {"do":"title","text","sub"?}          The lesson heading. Owns the top of the board.
 - {"do":"caption","text"}               One line under everything, naming what is shown.
-- {"do":"diagram","ref"}                A generated picture, by the id of its brief below.
+- {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t". Plain text, never LaTeX.
+- {"do":"write","text","tone"?}         A line written out BY HAND while the tutor speaks. Slow — at most one per beat, two per lesson.
+- {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
-- {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t", "F = ma". Plain text; there is no maths typesetter, so a backslash macro would appear exactly as written.
-- {"do":"write","text","tone"?}         A line written out BY HAND while the tutor speaks. Slow and deliberate — at most one per beat and two per lesson, for the line worth waiting for.
-- {"do":"card","heading","body","tone"?} A heading with one line under it. Write two or three in a row and they lay out side by side automatically.
-- {"do":"note","text","tone"?}          An aside worth pausing on. Wraps. "\\n\\n" starts a new paragraph.
-- {"do":"flow","steps":[{"label","note"?}],"tone"?}  Steps with arrows between them. 2 to 5 steps.
-- {"do":"chart","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}  A bar chart.
 
-### Drawing a scene, which is what a teacher does most
+### Last resorts, for ideas with no physical shape
 
-- {"do":"say","text"}                   What the tutor says at this point. Everything you write AFTER it appears while that line is being spoken.
-- {"do":"place","id","noun","label"?,"group"?,"size"?}  Put ONE noun on the board as a small picture. \`noun\` is a plain everyday word — "boy", "school", "clock", "car". \`group\` clusters things that belong together. \`size\` is "small" | "normal" | "large".
-- {"do":"connect","from","to","label"?,"dashed"?,"tone"?}  Draw the relationship between two placed things.
-- {"do":"annotate","target","mark","tone"?}  A teacher's mark ON something already placed: "circle" | "underline" | "tick" | "cross".
-
-This is the most important thing you can do. Build the picture up WITH the
-words, the way a teacher draws while she talks:
-
-  {"do":"say","text":"Imagine you and your friend leaving home together."}
-  {"do":"place","id":"you","noun":"boy","label":"you","group":"pair"}
-  {"do":"place","id":"friend","noun":"boy","label":"your friend","group":"pair"}
-  {"do":"say","text":"You are both walking to school."}
-  {"do":"place","id":"school","noun":"school","label":"school"}
-  {"do":"say","text":"And the school is two kilometres away."}
-  {"do":"connect","from":"you","to":"school","label":"2 km","tone":"accent"}
-
-Use everyday nouns. A picture library is searched for each one, and anything it
-does not have is drawn as a pencilled circle with the word inside — so "boy" and
-"school" and "clock" come out as real pictures, while "photosynthesis" comes out
-as a label. Prefer the concrete word: place a "leaf", not "photosynthesis".
+- {"do":"card","heading","body","tone"?,"as"?}   A definition, a rule, a summary — never a thing that exists in the world. A thing that exists gets PLACED. \`as\` chooses the frame: "box", "cloud" (a thought), "bubble" (something said), "banner" (a headline), "plain" (no frame). Vary these with meaning; identical boxes in every beat read as machine output.
+- {"do":"note","text","tone"?}          An aside worth pausing on. Wraps. "\\n\\n" starts a paragraph.
+- {"do":"flow","steps":[{"label","note"?}],"tone"?}   Steps with arrows between them, 2 to 5.
+- {"do":"chart","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}   A bar chart.
 
 \`tone\` is one of "neutral" | "good" | "bad" | "accent". Never a colour.
 
-Give each beat ONE main thing — a scene, or a picture, or a chart, or a row of
-cards, or a note. A board with four ideas on it is a board nobody reads.
+Give each beat ONE main thing. A board with four ideas on it is a board nobody
+reads.
 
-Reach for a SCENE first. A class is mostly a teacher drawing small things and
-joining them up, not a slideshow of finished diagrams. Use \`diagram\` only when
-the thing itself has internal structure worth pointing inside — a cell, a
-cross-section, a graph.
+THE SCENE IS THE DEFAULT. Before every beat ask: does this involve things that
+exist in the world? For school science it almost always does. A lesson whose
+every beat is cards and text is a slideshow, and a slideshow is a failure here
+— it will be rejected.
 
 ## Pictures
 

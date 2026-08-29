@@ -84,7 +84,13 @@ function iconRelay(): Plugin {
     if (sets) return sets;
     sets = PREFERRED.map((prefix) => {
       const json = require(`@iconify/json/json/${prefix}.json`);
-      return { prefix, width: json.width ?? 24, height: json.height ?? 24, icons: json.icons };
+      return {
+        prefix,
+        width: json.width ?? 24,
+        height: json.height ?? 24,
+        icons: json.icons,
+        categories: json.categories,
+      };
     });
     return sets;
   };
@@ -99,11 +105,16 @@ function iconRelay(): Plugin {
         res.setHeader('content-type', 'application/json');
         try {
           // Resolution itself lives in @ai-tutor/graphics; this only feeds it.
-          const { resolveNoun, pencilGlyph } = require('../../packages/graphics/src/resolve.ts');
+          // Every plausible candidate, not one guess: which meaning of "tank"
+          // a lesson wants is decided by the lesson, and the page has a model
+          // to ask. The pencilled circle is always included as the last resort.
+          const { candidatesFor, pencilGlyph } = require('../../packages/graphics/src/resolve.ts');
           const out: Record<string, unknown> = {};
           for (const noun of nouns) {
-            const hit = resolveNoun(noun, load());
-            out[noun] = hit ?? { glyph: pencilGlyph(noun), source: null, how: 'pencil' };
+            out[noun] = {
+              candidates: candidatesFor(noun, load(), 8),
+              pencil: pencilGlyph(noun),
+            };
           }
           res.end(JSON.stringify(out));
         } catch (e) {

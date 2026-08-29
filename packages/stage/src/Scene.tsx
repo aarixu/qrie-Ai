@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
+import { graphicLabelSize } from '@ai-tutor/lesson-format';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -198,6 +199,78 @@ function renderTitle(el: Extract<Element, { kind: 'title' }>): ReactElement {
   );
 }
 
+/**
+ * The frame a card is drawn in.
+ *
+ * Same rectangle, said differently. A board where every idea arrives in an
+ * identical rounded box reads as generated however good the words are, so the
+ * shape is the author's choice and this is where the choices live.
+ *
+ * Each is built from the card's own rectangle, so whatever the shape, the words
+ * inside it land in the same place and the layout engine's guarantees hold.
+ */
+function cardFrame(
+  el: Extract<Element, { kind: 'box' }>,
+  color: string,
+): ReactElement | null {
+  const { x, y, w, h } = el;
+  const fill = { fill: color, fillOpacity: 0.12 };
+  const line = { stroke: color, strokeWidth: 2, strokeLinejoin: 'round' as const };
+
+  switch (el.as ?? 'box') {
+    case 'plain':
+      // Nothing at all. The quietest a card gets, and often the right one.
+      return null;
+
+    case 'banner':
+      // A ribbon: notched inward at both ends, the shape of a heading strip.
+      return (
+        <path
+          d={`M ${x} ${y} H ${x + w} L ${x + w - 22} ${y + h / 2} L ${x + w} ${y + h} H ${x} L ${x + 22} ${y + h / 2} Z`}
+          {...fill}
+          {...line}
+        />
+      );
+
+    case 'bubble': {
+      // Speech: a rounded rectangle with a tail dropping from the lower left.
+      const tail = x + w * 0.22;
+      return (
+        <path
+          d={
+            `M ${x + 16} ${y} H ${x + w - 16} A 16 16 0 0 1 ${x + w} ${y + 16} V ${y + h - 30}` +
+            ` A 16 16 0 0 1 ${x + w - 16} ${y + h - 14} H ${tail + 26}` +
+            ` L ${tail} ${y + h} L ${tail + 8} ${y + h - 14} H ${x + 16}` +
+            ` A 16 16 0 0 1 ${x} ${y + h - 30} V ${y + 16} A 16 16 0 0 1 ${x + 16} ${y} Z`
+          }
+          {...fill}
+          {...line}
+        />
+      );
+    }
+
+    case 'cloud': {
+      // A thought: overlapping arcs along the top and bottom, so the outline
+      // bulges the way a drawn cloud does.
+      const r = h * 0.42;
+      const puffs = Math.max(3, Math.round(w / (r * 1.5)));
+      const step = w / puffs;
+      let d = `M ${x} ${y + h - r * 0.4}`;
+      for (let i = 0; i < puffs; i += 1) {
+        d += ` A ${step * 0.62} ${r} 0 0 1 ${x + step * (i + 1)} ${y + h * 0.34}`;
+      }
+      for (let i = puffs; i > 0; i -= 1) {
+        d += ` A ${step * 0.62} ${r * 0.8} 0 0 1 ${x + step * (i - 1)} ${y + h - r * 0.4}`;
+      }
+      return <path d={`${d} Z`} {...fill} {...line} />;
+    }
+
+    case 'box':
+    default:
+      return <rect x={x} y={y} width={w} height={h} rx={10} {...fill} {...line} />;
+  }
+}
+
 function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const lines = el.label.split('\n');
@@ -205,7 +278,7 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
   const firstY = el.y + el.h / 2 - ((lines.length - 1) * lineHeight) / 2;
   return (
     <>
-      <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={10} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
+      {cardFrame(el, color)}
       {lines.map((line, i) => (
         <text
           key={i}
@@ -563,7 +636,17 @@ function renderGraphic(
         dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }}
       />
       {el.label && (
-        <text x={el.x + el.w / 2} y={labelY} textAnchor="middle" fontFamily={FONT_WRITE} fontSize={26} fill={color} {...HALO}>
+        <text
+          x={el.x + el.w / 2}
+          y={labelY}
+          textAnchor="middle"
+          fontFamily={FONT_WRITE}
+          // The same size the camera and the layout believe it is — see
+          // graphicLabelSize for why three guesses were one too many.
+          fontSize={graphicLabelSize(el.w, el.label)}
+          fill={color}
+          {...HALO}
+        >
           {el.label}
         </text>
       )}

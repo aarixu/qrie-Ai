@@ -1,4 +1,4 @@
-import { fitText, type Element } from '@ai-tutor/lesson-format';
+import { fitText, graphicLabelSize, textWidth, type Element } from '@ai-tutor/lesson-format';
 import type { Instruction } from './types';
 
 export type PlaceStep = Extract<Instruction, { do: 'place' }>;
@@ -54,6 +54,29 @@ export function layoutScene(
   const elements: Element[] = [];
   if (places.length === 0) return { elements, boxes };
 
+  // Rows stack down the band, each laid out on its own.
+  //
+  // The engine has no idea what a row MEANS — one lesson uses two rows for a
+  // tank above a tank, another for before and after, a third for a grid. That
+  // is the point: naming any of those would make this good at one and blind to
+  // the others.
+  const rows = [...new Set(places.map((p) => p.row ?? 0))].sort((a, b) => a - b);
+  if (rows.length > 1) {
+    const gapBetweenRows = 18;
+    const each = (band.h - gapBetweenRows * (rows.length - 1)) / rows.length;
+    for (const [n, row] of rows.entries()) {
+      const strip = { ...band, y: band.y + n * (each + gapBetweenRows), h: each };
+      const laid = layoutScene(
+        places.filter((p) => (p.row ?? 0) === row),
+        strip,
+        namespaced,
+      );
+      elements.push(...laid.elements);
+      for (const [k, v] of laid.boxes) boxes.set(k, v);
+    }
+    return { elements, boxes };
+  }
+
   const anyLabel = places.some((p) => p.label);
 
   // Groups in first-appearance order; ungrouped items are their own group.
@@ -74,8 +97,13 @@ export function layoutScene(
   }
 
   const natural = (p: PlaceStep) => SIZES[p.size ?? 'normal'];
+  const naturalSpan = (p: PlaceStep): number => {
+    const size = natural(p);
+    if (!p.label) return size;
+    return Math.max(size, textWidth(p.label, graphicLabelSize(size, p.label)));
+  };
   const naturalW =
-    places.reduce((sum, p) => sum + natural(p), 0) +
+    places.reduce((sum, p) => sum + naturalSpan(p), 0) +
     places.reduce((sum, _, n) => sum + (n > 0 ? IN_GROUP : 0), 0);
 
   // Close the gaps first — a crowded scene beats a scene of tiny pictures.
@@ -109,8 +137,19 @@ export function layoutScene(
   const sizeOf = (p: PlaceStep) => natural(p) * shrink;
   const tallest = Math.max(...places.map(sizeOf));
 
+  /**
+   * The width a place actually occupies: its icon, or its label, whichever is
+   * wider. Spacing by the icon alone let two icons stand politely apart while
+   * their labels lay printed across each other.
+   */
+  const spanOf = (p: PlaceStep): number => {
+    const size = sizeOf(p);
+    if (!p.label) return size;
+    return Math.max(size, textWidth(p.label, graphicLabelSize(size, p.label)));
+  };
+
   const groupW = (g: PlaceStep[]) =>
-    g.reduce((sum, p) => sum + sizeOf(p), 0) + (g.length - 1) * IN_GROUP * shrink;
+    g.reduce((sum, p) => sum + spanOf(p), 0) + (g.length - 1) * IN_GROUP * shrink;
   const laidW =
     groups.reduce((sum, g) => sum + groupW(g), 0) + (groups.length - 1) * gap * shrink;
 
@@ -120,22 +159,24 @@ export function layoutScene(
   for (const [gi, group] of groups.entries()) {
     for (const p of group) {
       const size = sizeOf(p);
-      // Bottom-aligned on the shared baseline, so a small thing stands on the
-      // same ground as a large one instead of floating in the middle of it.
+      const span = spanOf(p);
+      // The icon stands centred in its span, bottom-aligned on the shared
+      // baseline so a small thing stands on the same ground as a large one.
+      const iconX = x + (span - size) / 2;
       const y = baseline + (tallest - size);
-      const box: Placed = { id: p.id, elementId: namespaced(p.id), x, y, w: size, h: size };
+      const box: Placed = { id: p.id, elementId: namespaced(p.id), x: iconX, y, w: size, h: size };
       boxes.set(p.id, box);
       elements.push({
         kind: 'graphic',
         id: box.elementId,
-        x,
+        x: iconX,
         y,
         w: size,
         h: size,
         noun: p.noun,
         ...(p.label ? { label: p.label } : {}),
       });
-      x += size + IN_GROUP * shrink;
+      x += span + IN_GROUP * shrink;
     }
     x += (gap - IN_GROUP) * shrink;
     if (gi === groups.length - 1) break;

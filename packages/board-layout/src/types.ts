@@ -24,7 +24,22 @@ export type Instruction =
   /** A line the tutor writes out by hand while speaking. Slow; use sparingly. */
   | { do: 'write'; text: string; tone?: Tone }
   /** A heading with body text under it. Several in a row lay out side by side. */
-  | { do: 'card'; heading: string; body: string; tone?: Tone }
+  | {
+      do: 'card';
+      heading: string;
+      body: string;
+      tone?: Tone;
+      /**
+       * How this card is drawn.
+       *
+       * The same card said three ways: a framed box, a thought in a cloud, a
+       * line of speech, or nothing at all around the words. A board where every
+       * idea arrives in an identical coloured rectangle reads as generated,
+       * whatever the words say — so the shape is a choice, and the model makes
+       * it.
+       */
+      as?: 'box' | 'cloud' | 'bubble' | 'plain' | 'banner';
+    }
   /** An aside worth pausing on. Wraps; `\n\n` starts a paragraph. */
   | { do: 'note'; text: string; tone?: Tone }
   /** Steps with arrows between them. */
@@ -47,7 +62,24 @@ export type Instruction =
    * clusters things that belong together, so "you and your friend" stand next
    * to each other and the school stands apart.
    */
-  | { do: 'place'; id: string; noun: string; label?: string; group?: string; size?: 'small' | 'normal' | 'large' }
+  | {
+      do: 'place';
+      id: string;
+      noun: string;
+      label?: string;
+      /** Things sharing a group stand together; groups stand apart. */
+      group?: string;
+      size?: 'small' | 'normal' | 'large';
+      /**
+       * Which row of the scene this stands in. Rows stack down the band.
+       *
+       * Deliberately just "a row", not "high and low": a tank above another
+       * tank is one thing a lesson needs, a before-and-after pair is another, a
+       * grid of three is a third. Naming any one of them would make the engine
+       * good at that one and blind to the rest.
+       */
+      row?: number;
+    }
   /** Draw the relationship between two placed things. */
   | { do: 'connect'; from: string; to: string; label?: string; dashed?: boolean; tone?: Tone }
   /** Make a teacher's mark on something already placed. */

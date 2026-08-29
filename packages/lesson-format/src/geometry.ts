@@ -77,6 +77,21 @@ export function fitText(
   return Math.max(min, Math.min(preferred, maxWidth / (text.length * em)));
 }
 
+/**
+ * How big a graphic's label is written, and therefore how wide it is.
+ *
+ * One function, used by the renderer that draws the label, the camera that
+ * frames it and the layout that spaces neighbours around it. Three separate
+ * guesses is how two icons ended up standing politely apart while their labels
+ * lay printed across each other.
+ *
+ * Capped at 1.8x the icon's width: past that the label dominates the picture
+ * it names, and a long name should shrink rather than shout.
+ */
+export function graphicLabelSize(iconW: number, label: string): number {
+  return fitText(label, iconW * 1.8, 26, 14);
+}
+
 /** A rect around a centred single line of text. */
 function centredText(x: number, y: number, text: string, size: number, em: number): Rect {
   const w = text.length * size * em;
@@ -126,9 +141,20 @@ export function boxOf(el: Element): Rect {
     case 'model3d':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
     // A graphic's label hangs below its box and is part of the element: the
-    // camera has to know about it, and so does anything trying not to sit on it.
-    case 'graphic':
-      return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 34 : 0) };
+    // camera has to know about it, and so does anything trying not to sit on
+    // it. The label is usually WIDER than the icon — "Overhead Tank (Roof)"
+    // under a small picture — and a box that ignored that let other labels be
+    // pushed onto it by a solver that could not see it was there.
+    case 'graphic': {
+      const labelW = el.label ? textWidth(el.label, graphicLabelSize(el.w, el.label)) : 0;
+      const w = Math.max(el.w, labelW);
+      return {
+        x: el.x + el.w / 2 - w / 2,
+        y: el.y,
+        w,
+        h: el.h + (el.label ? 34 : 0),
+      };
+    }
     case 'doc':
       return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 26 : 0) };
     case 'flow':

@@ -24,6 +24,13 @@ export interface IconSet {
   width: number;
   height: number;
   icons: Record<string, { body: string; width?: number; height?: number }>;
+  /**
+   * The set's own grouping, category name to icon names, where the set ships
+   * one. It is the only clue to what an icon DEPICTS that is not its name:
+   * a bare name like `tank` says nothing about which meaning it draws, but
+   * "Vehicles" does.
+   */
+  categories?: Record<string, readonly string[]>;
 }
 
 export interface Resolved {
@@ -32,6 +39,8 @@ export interface Resolved {
   source: { set: string; icon: string };
   /** How the name was found — for the prep report, and for spotting bad matches. */
   how: 'exact' | 'synonym' | 'prefix' | 'contains';
+  /** The set's own grouping for this icon, when it ships one. */
+  category?: string;
 }
 
 /**
@@ -112,6 +121,13 @@ function bare(name: string): string {
 
 function take(set: IconSet, icon: string, how: Resolved['how']): Resolved {
   const entry = set.icons[icon];
+  let category: string | undefined;
+  for (const [name, members] of Object.entries(set.categories ?? {})) {
+    if (members.includes(icon)) {
+      category = name;
+      break;
+    }
+  }
   return {
     glyph: {
       body: entry.body,
@@ -120,6 +136,7 @@ function take(set: IconSet, icon: string, how: Resolved['how']): Resolved {
     },
     source: { set: set.prefix, icon },
     how,
+    ...(category ? { category } : {}),
   };
 }
 
@@ -161,6 +178,53 @@ export function resolveNoun(noun: string, sets: readonly IconSet[]): Resolved | 
 }
 
 /**
+ * Every icon that could plausibly be this noun, best guess first.
+ *
+ * String matching cannot tell a water tank from a military one — a lesson on
+ * water flowing between tanks put an armoured vehicle on the board. So the
+ * search stops trying to be right and instead offers everything it found, and
+ * something that understands the lesson picks.
+ *
+ * Ranked by how the match was made, then by name length, so a caller with no
+ * model to consult can still take the first and be no worse off than before.
+ */
+export function candidatesFor(
+  noun: string,
+  sets: readonly IconSet[],
+  limit = 8,
+): Resolved[] {
+  const key = bare(noun);
+  if (key === '') return [];
+
+  const found: Resolved[] = [];
+  const seen = new Set<string>();
+  const add = (set: IconSet, icon: string, how: Resolved['how']) => {
+    const id = `${set.prefix}:${icon}`;
+    if (seen.has(id) || !set.icons[icon]) return;
+    seen.add(id);
+    found.push(take(set, icon, how));
+  };
+
+  const wanted = [key, ...(SYNONYMS[key] ?? [])];
+  for (const set of sets) {
+    for (const [i, name] of wanted.entries()) add(set, name, i === 0 ? 'exact' : 'synonym');
+  }
+  for (const set of sets) {
+    for (const name of Object.keys(set.icons)) {
+      if (name === key || name.startsWith(`${key}-`)) add(set, name, 'prefix');
+    }
+  }
+  for (const set of sets) {
+    const containing = Object.keys(set.icons)
+      .filter((n) => n.includes(key))
+      .sort((a, b) => a.length - b.length);
+    for (const name of containing) add(set, name, 'contains');
+  }
+
+  return found.slice(0, limit);
+}
+
+/**
  * The picture for a noun nothing has a picture for.
  *
  * A pencil circle with the word inside it, the way a teacher draws a thing she
@@ -178,23 +242,35 @@ export function pencilGlyph(noun: string): Glyph {
     h ^= noun.charCodeAt(i);
     h = Math.imul(h, 0x01000193);
   }
-  const jitter = (n: number, spread: number) => (((h >>> (n * 3)) % 100) / 100 - 0.5) * spread;
+  const jitter = (n: number, spread: number) => (((h >>> (n * 2)) % 100) / 100 - 0.5) * spread;
 
-  // A closed, slightly uneven circle: four arcs with wandering radii.
-  const r = 44;
-  const pts = [0, 1, 2, 3].map((i) => {
-    const a = (i / 4) * Math.PI * 2;
-    const rr = r + jitter(i, 7);
-    return `${(50 + Math.cos(a) * rr).toFixed(1)} ${(50 + Math.sin(a) * rr).toFixed(1)}`;
+  // Twelve slightly-uneven spokes, joined through their midpoints with gentle
+  // quadratic curves. Midpoint-to-midpoint is what keeps the outline a wobbly
+  // LOOP: an earlier version curved corner-to-corner with far-flung control
+  // points, and the crossings drew a pinwheel where a circle should have been.
+  const N = 12;
+  const r = 42;
+  const pts = Array.from({ length: N }, (_, i) => {
+    const a = (i / N) * Math.PI * 2 - Math.PI / 2;
+    const rr = r + jitter(i, 8);
+    return { x: 50 + Math.cos(a) * rr, y: 50 + Math.sin(a) * rr };
   });
-  const ring =
-    `M ${pts[0]} Q ${(50 + jitter(4, 10)).toFixed(1)} ${(50 - r - 6).toFixed(1)} ${pts[1]}` +
-    ` Q ${(50 + r + 6).toFixed(1)} ${(50 + jitter(5, 10)).toFixed(1)} ${pts[2]}` +
-    ` Q ${(50 + jitter(6, 10)).toFixed(1)} ${(50 + r + 6).toFixed(1)} ${pts[3]}` +
-    ` Q ${(50 - r - 6).toFixed(1)} ${(50 + jitter(7, 10)).toFixed(1)} ${pts[0]} Z`;
+  const mid = (a: { x: number; y: number }, b: { x: number; y: number }) => ({
+    x: (a.x + b.x) / 2,
+    y: (a.y + b.y) / 2,
+  });
+
+  const m0 = mid(pts[N - 1], pts[0]);
+  let ring = `M ${m0.x.toFixed(1)} ${m0.y.toFixed(1)}`;
+  for (let i = 0; i < N; i += 1) {
+    const corner = pts[i];
+    const next = mid(pts[i], pts[(i + 1) % N]);
+    ring += ` Q ${corner.x.toFixed(1)} ${corner.y.toFixed(1)} ${next.x.toFixed(1)} ${next.y.toFixed(1)}`;
+  }
+  ring += ' Z';
 
   const label = noun.length > 12 ? `${noun.slice(0, 11)}…` : noun;
-  const size = label.length > 8 ? 12 : label.length > 5 ? 15 : 18;
+  const size = label.length > 8 ? 13 : label.length > 5 ? 16 : 20;
 
   return {
     width: 100,
@@ -202,7 +278,7 @@ export function pencilGlyph(noun: string): Glyph {
     body:
       `<path d="${ring}" fill="none" stroke="#4b4b4b" stroke-width="2.4"` +
       ` stroke-linejoin="round" stroke-linecap="round" opacity="0.75"/>` +
-      `<text x="50" y="50" text-anchor="middle" dominant-baseline="middle"` +
+      `<text x="50" y="52" text-anchor="middle" dominant-baseline="middle"` +
       ` font-family="Caveat, cursive" font-size="${size}" fill="#4b4b4b">${escapeXml(label)}</text>`,
   };
 }

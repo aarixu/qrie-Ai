@@ -11,3 +11,4 @@ export type {
   PrepPhase,
   PrepProgress,
 } from './types';
+export { pickIcons, ICON_PICKER_SYSTEM, iconPickerUser, type IconOption, type IconChoice } from './icons';

@@ -236,6 +236,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   blueprint.beats ??= [];
   blueprint.visuals ??= [];
   blueprint.id ||= `prep-${Date.now().toString(36)}`;
+  // A missing title is not worth a repair round; the topic is right there.
+  blueprint.title ||= topic;
   const planMs = Date.now() - t0;
 
   const t1 = Date.now();

@@ -314,6 +314,7 @@ export function layoutBeat(beat: ScriptBeat): {
                 h: CARD_H,
                 label: '',
                 ...(card.tone ? { tone: card.tone } : {}),
+                ...(card.as ? { as: card.as } : {}),
               });
               // The box is this card's own frame; its heading and body are
               // meant to sit inside it.

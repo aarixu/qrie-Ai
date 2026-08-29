@@ -2,8 +2,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import { Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
-import { prepareClass, type PrepProgress, type PrepReport } from '@ai-tutor/class-prep';
+import {
+  pickIcons,
+  prepareClass,
+  type LlmAdapter,
+  type PrepProgress,
+  type PrepReport,
+} from '@ai-tutor/class-prep';
 import { createBrowserLlm } from '../lib/browserLlm';
+
+/**
+ * Both jobs run on gemini-3.7-flash — measured as fastest AND best on this
+ * exact prompt pair (plan 13.7s Rs 0.74, draw 25.9s Rs 1.51; the pro model was
+ * four times slower, eight times dearer, and drew a worse diagram).
+ */
+const PLANNER_MODEL = 'google/gemini-3.7-flash';
+const ARTIST_MODEL = 'google/gemini-3.7-flash';
+/** Picks which meaning of a word to draw. One small call, so the fastest model. */
+const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 
 /**
  * The pictures for the nouns a lesson places.
@@ -13,64 +29,84 @@ import { createBrowserLlm } from '../lib/browserLlm';
  * handful one class needs. A noun no set has comes back as a pencilled circle
  * with the word in it, so the board is never blank and never wrong.
  */
-async function fetchGraphics(lesson: Lesson): Promise<Record<string, string>> {
+/**
+ * The pictures for the nouns a lesson places.
+ *
+ * Two steps, because the first one cannot be trusted on its own. The dev server
+ * searches the bundled icon sets by name and returns every plausible candidate;
+ * a model then picks which one the LESSON means. String matching put an
+ * armoured vehicle on a board about water tanks, and no better matching fixes
+ * that — "tank" is two things and only the topic says which.
+ *
+ * The choice never blocks the class: if the model fails, each noun keeps the
+ * best name match, which is exactly what it had before.
+ */
+async function fetchGraphics(
+  lesson: Lesson,
+  topic: string,
+  llm: LlmAdapter,
+): Promise<Record<string, string>> {
   const nouns = [
-    ...new Set(
-      lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun),
-    ),
+    ...new Set(lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun)),
   ];
   if (nouns.length === 0) return {};
 
   const res = await fetch(`/api/icons?nouns=${nouns.map(encodeURIComponent).join(',')}`);
   if (!res.ok) return {};
-  const found = (await res.json()) as Record<
-    string,
-    { glyph: { body: string; width: number; height: number } }
-  >;
+
+  type Glyph = { body: string; width: number; height: number };
+  type Found = {
+    candidates: { glyph: Glyph; source: { set: string; icon: string }; category?: string }[];
+    pencil: Glyph;
+  };
+  const found = (await res.json()) as Record<string, Found>;
+
+  const options = Object.fromEntries(
+    Object.entries(found).map(([noun, f]) => [
+      noun,
+      f.candidates.map((c) => ({
+        icon: c.source.icon,
+        set: c.source.set,
+        ...(c.category ? { category: c.category } : {}),
+      })),
+    ]),
+  );
+  const chosen = await pickIcons(topic, options, llm);
+
+  /**
+   * The picked glyph; the pencilled circle when the model REFUSED every
+   * option; the best name match only when the model was never heard from.
+   *
+   * The order matters: a deliberate null falling through to candidates[0]
+   * once put the very icon the model refused — a military tank — back on a
+   * board about water.
+   */
+  const glyphFor = (noun: string): Glyph => {
+    const f = found[noun];
+    if (!f) return { body: '', width: 100, height: 100 };
+    const pick = chosen[noun];
+    if (pick?.deliberate) {
+      const named =
+        pick.icon && pick.set
+          ? f.candidates.find((c) => c.source.icon === pick.icon && c.source.set === pick.set)
+          : undefined;
+      return named?.glyph ?? f.pencil;
+    }
+    return f.candidates[0]?.glyph ?? f.pencil;
+  };
 
   const assets: Record<string, string> = {};
   for (const el of lesson.elements) {
     if (el.kind !== 'graphic') continue;
-    const hit = found[el.noun];
-    if (!hit) continue;
+    const glyph = glyphFor(el.noun);
     // Keyed by ELEMENT id, not by noun: the same noun placed twice is two
     // pictures on the board, and the renderer looks each one up by its own id.
     assets[el.id] =
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${hit.glyph.width} ${hit.glyph.height}">` +
-      `${hit.glyph.body}</svg>`;
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${glyph.width} ${glyph.height}">` +
+      `${glyph.body}</svg>`;
   }
   return assets;
 }
-
-/**
- * The canvas test bench.
- *
- * Nothing here is product. It exists so the board can be judged on its own:
- * type a topic, watch a class actually get prepared — planned, drawn, checked —
- * and then watch it play with no classroom furniture around it.
- *
- * The preparation is REAL. Nothing is pre-generated and committed, because a
- * picture drawn in advance by hand proves nothing about a product whose whole
- * promise is drawing one in the minute before a cold class starts.
- */
-
-/**
- * Both jobs run on the same model, and it is not the expensive one.
- *
- * Measured on this exact prompt pair, planning a two-minute lesson and drawing
- * a distance-time graph:
- *
- *   gemini-3.7-flash       plan 13.7s Rs 0.74   draw 25.9s Rs 1.51
- *   gemini-3.5-flash       plan 19.7s Rs 3.25   draw 28.8s Rs 4.96
- *   gemini-3.1-pro-preview plan 55.7s Rs 8.36   draw 56.8s Rs 9.25
- *
- * The flash model was not a compromise: its drawing was the best of the three,
- * with a shaded slope triangle and a right-angle marker neither other model
- * thought to add. Roughly 40 seconds and Rs 2.25 for a whole cold class, which
- * is what makes the one-minute wait real rather than aspirational.
- */
-const PLANNER_MODEL = 'google/gemini-3.7-flash';
-const ARTIST_MODEL = 'google/gemini-3.7-flash';
 
 export function CanvasLab() {
   const [topic, setTopic] = useState('Speed: distance divided by time');
@@ -100,7 +136,7 @@ export function CanvasLab() {
       });
       // The drawings arrive with the plan; the noun pictures are a second,
       // much cheaper fetch, so the board is complete before it is shown.
-      const graphics = await fetchGraphics(result.lesson);
+      const graphics = await fetchGraphics(result.lesson, topic, createBrowserLlm(PICKER_MODEL, { json: true }));
       setPrepared({ ...result, assets: { ...result.assets, ...graphics } });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
