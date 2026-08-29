@@ -6,6 +6,43 @@ import { prepareClass, type PrepProgress, type PrepReport } from '@ai-tutor/clas
 import { createBrowserLlm } from '../lib/browserLlm';
 
 /**
+ * The pictures for the nouns a lesson places.
+ *
+ * Fetched from our own origin because the icon sets are a 443 MB package that
+ * must never reach a browser: the dev server holds them and answers for the
+ * handful one class needs. A noun no set has comes back as a pencilled circle
+ * with the word in it, so the board is never blank and never wrong.
+ */
+async function fetchGraphics(lesson: Lesson): Promise<Record<string, string>> {
+  const nouns = [
+    ...new Set(
+      lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun),
+    ),
+  ];
+  if (nouns.length === 0) return {};
+
+  const res = await fetch(`/api/icons?nouns=${nouns.map(encodeURIComponent).join(',')}`);
+  if (!res.ok) return {};
+  const found = (await res.json()) as Record<
+    string,
+    { glyph: { body: string; width: number; height: number } }
+  >;
+
+  const assets: Record<string, string> = {};
+  for (const el of lesson.elements) {
+    if (el.kind !== 'graphic') continue;
+    const hit = found[el.noun];
+    if (!hit) continue;
+    // Keyed by ELEMENT id, not by noun: the same noun placed twice is two
+    // pictures on the board, and the renderer looks each one up by its own id.
+    assets[el.id] =
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${hit.glyph.width} ${hit.glyph.height}">` +
+      `${hit.glyph.body}</svg>`;
+  }
+  return assets;
+}
+
+/**
  * The canvas test bench.
  *
  * Nothing here is product. It exists so the board can be judged on its own:
@@ -61,7 +98,10 @@ export function CanvasLab() {
         artist: createBrowserLlm(ARTIST_MODEL),
         onProgress: setProgress,
       });
-      setPrepared(result);
+      // The drawings arrive with the plan; the noun pictures are a second,
+      // much cheaper fetch, so the board is complete before it is shown.
+      const graphics = await fetchGraphics(result.lesson);
+      setPrepared({ ...result, assets: { ...result.assets, ...graphics } });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setProgress(null);

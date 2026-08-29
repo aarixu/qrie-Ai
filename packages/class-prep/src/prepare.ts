@@ -73,7 +73,7 @@ export function assemble(
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
     );
-    const { elements: laidOut, laid } = layoutBeat({ ...beat, board });
+    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board });
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -93,15 +93,27 @@ export function assemble(
       elements.push(el);
     }
 
-    beats.push({
-      id: beat.id,
-      topic: beat.topic,
-      narration: beat.narration,
-      show: laid.show,
-      ...(laid.focus.length > 0 ? { focus: laid.focus } : {}),
-      ...(beat.teaches ? { teaches: beat.teaches } : {}),
-      ...(beat.checks ? { checks: beat.checks } : {}),
-      ...(beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
+    // One lesson beat per spoken moment.
+    //
+    // "When the word school comes, the school appears" is a beat boundary, and
+    // making it one means the player, the camera and the doubt agent all keep
+    // working unchanged — a moment the tutor can be interrupted in is exactly
+    // the moment the board should be recallable at.
+    const usable = steps.filter((step) => step.narration.trim() !== '' && step.show.length > 0);
+    usable.forEach((step, n) => {
+      const last = n === usable.length - 1;
+      beats.push({
+        id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
+        topic: beat.topic,
+        narration: step.narration,
+        show: step.show,
+        ...(step.focus.length > 0 ? { focus: step.focus } : {}),
+        // Outcomes belong to the moment the point lands, not to every breath
+        // on the way there — otherwise one idea would raise belief four times.
+        ...(last && beat.teaches ? { teaches: beat.teaches } : {}),
+        ...(last && beat.checks ? { checks: beat.checks } : {}),
+        ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
+      });
     });
   }
 

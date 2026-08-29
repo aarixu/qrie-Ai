@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
 const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src`, import.meta.url));
@@ -63,12 +64,63 @@ function llmRelay(key: string): Plugin {
   };
 }
 
+/**
+ * Icons, served from the bundled sets.
+ *
+ * The Iconify package is 443 MB and must never reach a browser, so the lookup
+ * lives here and the page asks for the handful of nouns one lesson needs.
+ * Sets are tried in order: a friendly colour icon first, a line icon after,
+ * because a school board wants a picture a child recognises before it wants a
+ * tidy glyph.
+ *
+ * Dev only. In production this is a small static index built at deploy time.
+ */
+function iconRelay(): Plugin {
+  const require = createRequire(import.meta.url);
+  const PREFERRED = ['noto', 'fluent-emoji', 'ph', 'tabler'];
+  let sets: unknown[] | null = null;
+
+  const load = () => {
+    if (sets) return sets;
+    sets = PREFERRED.map((prefix) => {
+      const json = require(`@iconify/json/json/${prefix}.json`);
+      return { prefix, width: json.width ?? 24, height: json.height ?? 24, icons: json.icons };
+    });
+    return sets;
+  };
+
+  return {
+    name: 'curie-icon-relay',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/api/icons', (req, res) => {
+        const url = new URL(req.url ?? '', 'http://localhost');
+        const nouns = (url.searchParams.get('nouns') ?? '').split(',').filter(Boolean);
+        res.setHeader('content-type', 'application/json');
+        try {
+          // Resolution itself lives in @ai-tutor/graphics; this only feeds it.
+          const { resolveNoun, pencilGlyph } = require('../../packages/graphics/src/resolve.ts');
+          const out: Record<string, unknown> = {};
+          for (const noun of nouns) {
+            const hit = resolveNoun(noun, load());
+            out[noun] = hit ?? { glyph: pencilGlyph(noun), source: null, how: 'pencil' };
+          }
+          res.end(JSON.stringify(out));
+        } catch (e) {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: { message: String(e) } }));
+        }
+      });
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   // Read from the repo root, where .env.local lives beside the tools that share it.
   const env = loadEnv(mode, fileURLToPath(new URL('../..', import.meta.url)), '');
 
   return {
-    plugins: [react(), llmRelay(env.OPENROUTER_API_KEY ?? '')],
+    plugins: [react(), llmRelay(env.OPENROUTER_API_KEY ?? ''), iconRelay()],
     // Lessons are data, served as static files: /index.json, /<lesson>/lesson.json
     publicDir: fileURLToPath(new URL('../../content', import.meta.url)),
     resolve: {
@@ -85,6 +137,7 @@ export default defineConfig(({ mode }) => {
         '@ai-tutor/voice': pkg('voice'),
         '@ai-tutor/class-prep': pkg('class-prep'),
       '@ai-tutor/board-layout': pkg('board-layout'),
+      '@ai-tutor/graphics': pkg('graphics'),
         '@ai-tutor/action-player': pkg('action-player'),
         '@ai-tutor/maic-adapter': pkg('maic-adapter'),
       },

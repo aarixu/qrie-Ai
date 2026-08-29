@@ -1,5 +1,6 @@
 import { CANVAS_H, CANVAS_W, type Element } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
+import { annotateElement, connectElements, layoutScene } from './scene';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -64,23 +65,57 @@ function noteHeight(text: string, w: number): number {
  * means by two cards — side by side, equal width, aligned — and asking a model
  * to work that out is asking for the bug this package exists to remove.
  */
-export function layoutBeat(beat: ScriptBeat): { elements: Element[]; laid: LaidOutBeat } {
+export interface RevealStep {
+  /** What the tutor says while this step's elements arrive. */
+  narration: string;
+  /** Every element visible by the END of this step — a complete set, not a delta. */
+  show: string[];
+  focus: string[];
+}
+
+/**
+ * A beat, laid out once and revealed in pieces.
+ *
+ * Layout runs over the WHOLE beat before anything is revealed, so the school
+ * occupies the same spot whether it has appeared yet or not. Revealing it later
+ * then costs nothing: the board does not reflow when a word lands, it fills in.
+ * Reflowing on every noun is what would make a scene jump about while the tutor
+ * is talking over it.
+ */
+export function layoutBeat(beat: ScriptBeat): {
+  elements: Element[];
+  laid: LaidOutBeat;
+  steps: RevealStep[];
+} {
   const elements: Element[] = [];
   const show: string[] = [];
   const focus: string[] = [];
   const blocks: Block[] = [];
 
+  /** Which element ids each instruction produced, so reveal can follow the words. */
+  const byInstruction = new Map<number, string[]>();
+  let current = -1;
   const emit = (el: Element, focused = false): void => {
     elements.push(el);
     show.push(el.id);
     if (focused) focus.push(el.id);
+    const list = byInstruction.get(current);
+    if (list) list.push(el.id);
+    else byInstruction.set(current, [el.id]);
   };
 
   const items = beat.board;
+
+  // The scene is laid out as ONE block, because a connector cannot be drawn
+  // until both of its ends have somewhere to be. Collecting the places first is
+  // what lets an arrow start at the edge of a box rather than guess.
+  const places = items.filter((it) => it.do === 'place') as Extract<Instruction, { do: 'place' }>[];
+  let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
     const item = items[i];
     const index = i;
+    current = i;
 
     switch (item.do) {
       case 'title': {
@@ -290,6 +325,52 @@ export function layoutBeat(beat: ScriptBeat): { elements: Element[]; laid: LaidO
         break;
       }
 
+      case 'say': {
+        // Says no element of its own; it marks where the board pauses for words.
+        i += 1;
+        break;
+      }
+
+      case 'place':
+      case 'connect':
+      case 'annotate': {
+        if (sceneEmitted) {
+          i += 1;
+          break;
+        }
+        sceneEmitted = true;
+        const sceneSteps = items;
+        blocks.push({
+          height: null,
+          place: (r) => {
+            const { elements: figures, boxes } = layoutScene(places, r);
+            const out: Element[] = [...figures];
+            // Attribute each figure back to the instruction that placed it, so
+            // it can appear on the word that named it rather than all at once.
+            figures.forEach((el) => {
+              const n = sceneSteps.findIndex((it) => it.do === 'place' && it.id === el.id);
+              if (n >= 0) byInstruction.set(n, [...(byInstruction.get(n) ?? []), el.id]);
+            });
+            let connectors = 0;
+            sceneSteps.forEach((it, n) => {
+              if (it.do === 'connect') {
+                const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
+                connectors += 1;
+                out.push(...made);
+                byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
+              } else if (it.do === 'annotate') {
+                const made = annotateElement(it, boxes, idFor(beat.id, n));
+                out.push(...made);
+                byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
+              }
+            });
+            return out;
+          },
+        });
+        i += 1;
+        break;
+      }
+
       case 'point': {
         // Not a block: it moves no geometry, it only decides what is bright.
         focus.push(`${item.ref}#${item.part}`);
@@ -321,7 +402,71 @@ export function layoutBeat(beat: ScriptBeat): { elements: Element[]; laid: LaidO
   const shown = new Set(show);
   const keptFocus = focus.filter((f) => shown.has(f.split('#')[0]));
 
-  return { elements, laid: { show, focus: keptFocus } };
+  return { elements, laid: { show, focus: keptFocus }, steps: revealSteps(beat, byInstruction, keptFocus) };
+}
+
+/**
+ * Split a beat into the moments its words divide it into.
+ *
+ * Everything written after a `say` arrives while that line is spoken, so the
+ * board fills in with the sentence instead of appearing finished before the
+ * tutor has opened her mouth. A beat with no `say` is one moment, and its whole
+ * board arrives together — which is right for a beat that is one breath.
+ *
+ * `show` is cumulative because it is a complete set, not a delta: the board at
+ * any moment is everything said so far, which is also what makes any moment
+ * recallable on its own.
+ */
+function revealSteps(
+  beat: ScriptBeat,
+  byInstruction: ReadonlyMap<number, string[]>,
+  focus: readonly string[],
+): RevealStep[] {
+  const says = beat.board.filter((it) => it.do === 'say');
+  if (says.length === 0) {
+    return [
+      {
+        narration: beat.narration,
+        show: [...new Set([...byInstruction.values()].flat())],
+        focus: [...focus],
+      },
+    ];
+  }
+
+  const steps: RevealStep[] = [];
+  const cumulative: string[] = [];
+  let narration: string | null = null;
+
+  const flush = (): void => {
+    if (narration === null) return;
+    steps.push({ narration, show: [...cumulative], focus: [] });
+  };
+
+  beat.board.forEach((item, n) => {
+    if (item.do === 'say') {
+      flush();
+      narration = item.text;
+      return;
+    }
+    for (const id of byInstruction.get(n) ?? []) {
+      if (!cumulative.includes(id)) cumulative.push(id);
+    }
+  });
+  flush();
+
+  // Anything drawn before the first word still belongs on the board from the
+  // start — a title written above the scene should not wait for a sentence.
+  if (steps.length > 0) {
+    const early = beat.board
+      .slice(0, beat.board.findIndex((it) => it.do === 'say'))
+      .flatMap((_, n) => byInstruction.get(n) ?? []);
+    for (const step of steps) {
+      for (const id of early) if (!step.show.includes(id)) step.show.unshift(id);
+    }
+    // The beat's emphasis belongs to its last moment, where the point is made.
+    steps[steps.length - 1].focus = [...focus];
+  }
+  return steps;
 }
 
 /** The board is this tall and no taller; exported so callers can assert it. */

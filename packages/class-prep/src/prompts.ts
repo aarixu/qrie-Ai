@@ -47,10 +47,38 @@ first, then the thing you are teaching, then the caption.
 - {"do":"flow","steps":[{"label","note"?}],"tone"?}  Steps with arrows between them. 2 to 5 steps.
 - {"do":"chart","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}  A bar chart.
 
+### Drawing a scene, which is what a teacher does most
+
+- {"do":"say","text"}                   What the tutor says at this point. Everything you write AFTER it appears while that line is being spoken.
+- {"do":"place","id","noun","label"?,"group"?,"size"?}  Put ONE noun on the board as a small picture. \`noun\` is a plain everyday word — "boy", "school", "clock", "car". \`group\` clusters things that belong together. \`size\` is "small" | "normal" | "large".
+- {"do":"connect","from","to","label"?,"dashed"?,"tone"?}  Draw the relationship between two placed things.
+- {"do":"annotate","target","mark","tone"?}  A teacher's mark ON something already placed: "circle" | "underline" | "tick" | "cross".
+
+This is the most important thing you can do. Build the picture up WITH the
+words, the way a teacher draws while she talks:
+
+  {"do":"say","text":"Imagine you and your friend leaving home together."}
+  {"do":"place","id":"you","noun":"boy","label":"you","group":"pair"}
+  {"do":"place","id":"friend","noun":"boy","label":"your friend","group":"pair"}
+  {"do":"say","text":"You are both walking to school."}
+  {"do":"place","id":"school","noun":"school","label":"school"}
+  {"do":"say","text":"And the school is two kilometres away."}
+  {"do":"connect","from":"you","to":"school","label":"2 km","tone":"accent"}
+
+Use everyday nouns. A picture library is searched for each one, and anything it
+does not have is drawn as a pencilled circle with the word inside — so "boy" and
+"school" and "clock" come out as real pictures, while "photosynthesis" comes out
+as a label. Prefer the concrete word: place a "leaf", not "photosynthesis".
+
 \`tone\` is one of "neutral" | "good" | "bad" | "accent". Never a colour.
 
-Give each beat ONE main thing — a picture, or a chart, or a row of cards, or a
-note. A board with four ideas on it is a board nobody reads.
+Give each beat ONE main thing — a scene, or a picture, or a chart, or a row of
+cards, or a note. A board with four ideas on it is a board nobody reads.
+
+Reach for a SCENE first. A class is mostly a teacher drawing small things and
+joining them up, not a slideshow of finished diagrams. Use \`diagram\` only when
+the thing itself has internal structure worth pointing inside — a cell, a
+cross-section, a graph.
 
 ## Pictures
 

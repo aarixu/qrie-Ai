@@ -135,6 +135,17 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       need(isStr(el.text), 'handwrite needs non-empty text');
       optionalNumber('size');
       break;
+    case 'graphic':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'graphic needs numeric x,y,w,h');
+      need(isStr(el.noun), 'graphic needs a noun');
+      break;
+    case 'mark':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'mark needs numeric x,y,w,h');
+      need(
+        el.shape === 'circle' || el.shape === 'underline' || el.shape === 'tick' || el.shape === 'cross',
+        'mark shape must be circle, underline, tick or cross',
+      );
+      break;
     case 'model3d':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'model3d needs numeric x,y,w,h');
       break;

@@ -94,6 +94,8 @@ function centerOf(el: Element): Point {
     case 'image':
     case 'diagram':
     case 'chart':
+    case 'graphic':
+    case 'mark':
     case 'model3d':
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
     case 'flow':
@@ -523,6 +525,93 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
   );
 }
 
+/**
+ * One noun, drawn from the icon library.
+ *
+ * The glyph arrives with its own viewBox, so it is scaled into the element's
+ * box and centred. Inlined rather than dropped in an <img> for the same reason
+ * a diagram is: it has to take the board's colour, and it has to be able to be
+ * dimmed and lit with everything else.
+ */
+function renderGraphic(
+  el: Extract<Element, { kind: 'graphic' }>,
+  svg: string | undefined,
+): ReactElement {
+  const color = TONE_COLORS.neutral;
+  const labelY = el.y + el.h + 26;
+
+  if (svg === undefined) {
+    return (
+      <>
+        <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={10} fill="none" stroke={color} strokeOpacity={0.3} strokeWidth={2} strokeDasharray="6 6" />
+        <text x={el.x + el.w / 2} y={el.y + el.h / 2} textAnchor="middle" dominantBaseline="middle" fontFamily={FONT_WRITE} fontSize={18} fill={color}>
+          {el.noun}
+        </text>
+      </>
+    );
+  }
+
+  const view = readViewBox(svg) ?? { w: 100, h: 100 };
+  const scale = Math.min(el.w / view.w, el.h / view.h);
+  const dx = el.x + (el.w - view.w * scale) / 2;
+  const dy = el.y + (el.h - view.h * scale) / 2;
+
+  return (
+    <>
+      <g
+        transform={`translate(${dx.toFixed(2)} ${dy.toFixed(2)}) scale(${scale.toFixed(4)})`}
+        dangerouslySetInnerHTML={{ __html: innerMarkup(svg) }}
+      />
+      {el.label && (
+        <text x={el.x + el.w / 2} y={labelY} textAnchor="middle" fontFamily={FONT_WRITE} fontSize={26} fill={color} {...HALO}>
+          {el.label}
+        </text>
+      )}
+    </>
+  );
+}
+
+/**
+ * A mark the tutor makes on top of something already drawn.
+ *
+ * Drawn with the same sweep the pen strokes use, so it arrives the way a real
+ * one does — a line travelling, not a shape appearing.
+ */
+function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
+  const color = TONE_COLORS[toneOf(el)];
+  const cx = el.x + el.w / 2;
+  const cy = el.y + el.h / 2;
+  const common = { fill: 'none', stroke: color, strokeWidth: 4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+
+  switch (el.shape) {
+    case 'circle':
+      // An ellipse rather than a rect: nobody boxes a thing on a board, they
+      // loop around it, and the loop overshoots slightly where it closes.
+      return (
+        <path
+          d={`M ${cx + el.w / 2} ${cy} A ${el.w / 2} ${el.h / 2} 0 1 1 ${cx} ${cy - el.h / 2} A ${el.w / 2} ${el.h / 2} 0 0 1 ${cx + el.w / 2 + 6} ${cy + 8}`}
+          {...common}
+        />
+      );
+    case 'underline':
+      return (
+        <path
+          d={`M ${el.x} ${el.y + el.h} Q ${cx} ${el.y + el.h + 9} ${el.x + el.w} ${el.y + el.h - 2}`}
+          {...common}
+        />
+      );
+    case 'tick':
+      return <path d={`M ${el.x} ${cy} L ${cx - el.w * 0.1} ${el.y + el.h} L ${el.x + el.w} ${el.y}`} {...common} />;
+    case 'cross':
+      return (
+        <>
+          <path d={`M ${el.x} ${el.y} L ${el.x + el.w} ${el.y + el.h}`} {...common} />
+          <path d={`M ${el.x + el.w} ${el.y} L ${el.x} ${el.y + el.h}`} {...common} />
+        </>
+      );
+  }
+}
+
 function renderElement(el: Element, svg?: string, litParts: readonly string[] = []): ReactElement {
   switch (el.kind) {
     case 'title':
@@ -570,6 +659,10 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
       return renderImage(el);
     case 'diagram':
       return renderDiagram(el, svg, litParts);
+    case 'graphic':
+      return renderGraphic(el, svg);
+    case 'mark':
+      return renderMark(el);
     case 'chart':
       return renderChart(el);
     case 'flow':

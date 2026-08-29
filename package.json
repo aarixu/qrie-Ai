@@ -17,6 +17,7 @@
     "livekit:server": "node tools/livekit/src/cli.ts"
   },
   "devDependencies": {
+    "@iconify/json": "^2.2.522",
     "@types/node": "^24.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

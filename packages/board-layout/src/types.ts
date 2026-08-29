@@ -38,7 +38,29 @@ export type Instruction =
       tone?: Tone;
     }
   /** One line under the board, naming what is being shown. */
-  | { do: 'caption'; text: string };
+  | { do: 'caption'; text: string }
+  /**
+   * Put a noun on the board as a small picture.
+   *
+   * The unit a teacher actually works in. Several places in one beat form a
+   * scene, laid out left to right in the order they are written; `group`
+   * clusters things that belong together, so "you and your friend" stand next
+   * to each other and the school stands apart.
+   */
+  | { do: 'place'; id: string; noun: string; label?: string; group?: string; size?: 'small' | 'normal' | 'large' }
+  /** Draw the relationship between two placed things. */
+  | { do: 'connect'; from: string; to: string; label?: string; dashed?: boolean; tone?: Tone }
+  /** Make a teacher's mark on something already placed. */
+  | { do: 'annotate'; target: string; mark: 'circle' | 'underline' | 'tick' | 'cross'; tone?: Tone }
+  /**
+   * What the tutor says at this point in the beat.
+   *
+   * Everything written AFTER a `say` appears while that line is being spoken.
+   * This is what makes the board build up with the words instead of arriving
+   * finished: "imagine you and your friend" and two figures appear, then
+   * "walking to school" and the school does.
+   */
+  | { do: 'say'; text: string };
 
 export type InstructionKind = Instruction['do'];
 
@@ -46,6 +68,12 @@ export type InstructionKind = Instruction['do'];
 export interface ScriptBeat {
   id: string;
   topic: string;
+  /**
+   * What the tutor says, when the beat is one breath.
+   *
+   * A beat whose `board` contains `say` instructions uses those instead, and
+   * this is left empty — the words are interleaved with the drawing there.
+   */
   narration: string;
   board: Instruction[];
   teaches?: string[];

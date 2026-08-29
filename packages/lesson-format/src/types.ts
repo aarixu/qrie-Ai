@@ -106,6 +106,48 @@ export type Element =
    * worth the wait — a definition, a formula, the sentence to remember.
    */
   | { kind: 'handwrite'; id: string; x: number; y: number; text: string; size?: number; tone?: Tone }
+  /**
+   * One noun, drawn as a small picture.
+   *
+   * The unit a teacher actually works in: she says "you and your friend", two
+   * figures appear, she says "school", a school appears beside them, and then
+   * she draws the road between. A single big finished diagram cannot be built
+   * up that way, which is why this exists alongside `diagram` rather than
+   * inside it.
+   *
+   * The artwork comes from a bundled icon library, or from a pencilled circle
+   * with the word in it when no library has that noun. Either way the markup is
+   * handed to the renderer, which never fetches.
+   */
+  | {
+      kind: 'graphic';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      /** The word this draws, e.g. `school`. Also the asset key and the alt text. */
+      noun: string;
+      /** Written under the picture when the tutor names it. */
+      label?: string;
+    }
+  /**
+   * A teacher's mark on top of something already on the board.
+   *
+   * Circling a word, underlining a number, ticking an answer. It carries no
+   * meaning of its own — it points at meaning that is already there, which is
+   * why it is a separate element rather than a property of the thing beneath.
+   */
+  | {
+      kind: 'mark';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      shape: 'circle' | 'underline' | 'tick' | 'cross';
+      tone?: Tone;
+    }
   | { kind: 'model3d'; id: string; x: number; y: number; w: number; h: number; asset?: string; label?: string };
 
 export type ElementKind = Element['kind'];

@@ -94,8 +94,13 @@ export function bboxOf(el: Element): Rect {
     case 'image':
     case 'diagram':
     case 'chart':
+    case 'mark':
     case 'model3d':
       return { x: el.x, y: el.y, w: el.w, h: el.h };
+    // A graphic's label hangs below its box, and the camera has to know about
+    // it or the word the tutor just said sits half off the screen.
+    case 'graphic':
+      return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 34 : 0) };
     case 'handwrite':
       return centredText(el.x, el.y, el.text, el.size ?? 26, EM_SANS);
     case 'flow':
