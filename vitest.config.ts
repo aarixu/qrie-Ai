@@ -18,6 +18,7 @@ export default defineConfig({
       '@ai-tutor/pedagogy': pkg('pedagogy'),
       '@ai-tutor/voice': pkg('voice'),
       '@ai-tutor/class-prep': pkg('class-prep'),
+      '@ai-tutor/board-layout': pkg('board-layout'),
       '@ai-tutor/action-player': pkg('action-player'),
       '@ai-tutor/maic-adapter': pkg('maic-adapter'),
     },

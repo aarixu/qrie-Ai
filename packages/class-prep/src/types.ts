@@ -1,4 +1,5 @@
-import type { Beat, Element, Lesson } from '@ai-tutor/lesson-format';
+import type { ScriptBeat } from '@ai-tutor/board-layout';
+import type { Lesson } from '@ai-tutor/lesson-format';
 
 /**
  * Everything the artwork author needs to draw one picture, and everything the
@@ -17,8 +18,6 @@ export interface VisualBrief {
   brief: string;
   /** Accessibility text, and what the board falls back to if the art is dropped. */
   alt: string;
-  /** Where the picture sits on the 1000x620 board. */
-  box: { x: number; y: number; w: number; h: number };
 }
 
 /**
@@ -30,9 +29,15 @@ export interface Blueprint {
   title: string;
   subtitle?: string;
   topicRef?: string;
-  /** Every element EXCEPT the diagrams; those are built from `visuals`. */
-  elements: Element[];
-  beats: Beat[];
+  /**
+   * Beats carrying board INSTRUCTIONS, never positions.
+   *
+   * The planner says what belongs on the board; `@ai-tutor/board-layout` works
+   * out where. There is no coordinate anywhere in a Blueprint, which is what
+   * makes two things landing on top of each other inexpressible rather than
+   * merely invalid.
+   */
+  beats: ScriptBeat[];
   visuals: VisualBrief[];
 }
 

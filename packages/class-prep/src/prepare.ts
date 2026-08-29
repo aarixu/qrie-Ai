@@ -1,7 +1,6 @@
-import { validateLesson, type Element, type Lesson } from '@ai-tutor/lesson-format';
+import { layoutBeat } from '@ai-tutor/board-layout';
+import { validateLesson, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
 
-/** The diagram arm of the element union, so `parts` is reachable without a cast. */
-type DiagramElement = Extract<Element, { kind: 'diagram' }>;
 import {
   ARTIST_SYSTEM,
   PLANNER_SYSTEM,
@@ -19,6 +18,9 @@ import type {
   VisualBrief,
   VisualOutcome,
 } from './types';
+
+/** The diagram arm of the element union, so `parts` is reachable without a cast. */
+type DiagramElement = Extract<Element, { kind: 'diagram' }>;
 
 /** The one thing this package needs from the outside world. */
 export interface LlmAdapter {
@@ -48,52 +50,60 @@ const stripFence = (s: string): string =>
 /**
  * Turn a blueprint plus whatever artwork survived into a valid Lesson.
  *
- * Diagram elements are built HERE, not by the planner, so their `src` and
- * `parts` always agree with the brief the artist was given. A picture that
- * failed is simply absent, and the beats that referenced it lose the reference
- * rather than pointing at nothing.
+ * Every coordinate in the result comes from `layoutBeat`, never from the model.
+ * Diagram elements are finished HERE too — the layout engine knows a picture
+ * goes in the stack but not which parts it has, and `parts` must match the
+ * brief the artist was actually given.
+ *
+ * A picture that failed is simply absent: its `diagram` and `point`
+ * instructions are dropped before layout, so the board closes over the gap
+ * instead of leaving a hole where a drawing should be.
  */
 export function assemble(
   blueprint: Blueprint,
   drawn: ReadonlySet<string>,
 ): { lesson: unknown; dropped: string[] } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
+  const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
 
-  const diagrams: DiagramElement[] = blueprint.visuals
-    .filter((v) => drawn.has(v.id))
-    .map((v) => ({
-      kind: 'diagram' as const,
-      id: v.id,
-      x: v.box.x,
-      y: v.box.y,
-      w: v.box.w,
-      h: v.box.h,
-      src: `generated/${v.id}.svg`,
-      alt: v.alt,
-      parts: [...v.parts],
-    }));
+  const elements: Element[] = [];
+  const beats: Beat[] = [];
 
-  const elements = [...blueprint.elements, ...diagrams];
-  const known = new Set(elements.map((e) => e.id));
-  const partsOf = new Map(diagrams.map((d) => [d.id, new Set(d.parts)]));
+  for (const beat of blueprint.beats) {
+    const board = (beat.board ?? []).filter((step) =>
+      'ref' in step ? drawn.has(step.ref) : true,
+    );
+    const { elements: laidOut, laid } = layoutBeat({ ...beat, board });
 
-  /** Keep only references that still resolve, so a dropped picture cannot break the class. */
-  const keep = (ref: string): boolean => {
-    const hash = ref.indexOf('#');
-    if (hash < 0) return known.has(ref);
-    const parts = partsOf.get(ref.slice(0, hash));
-    return parts !== undefined && parts.has(ref.slice(hash + 1));
-  };
+    // A beat left with nothing to show was a beat about a picture that failed;
+    // its narration would talk about something invisible.
+    if (laid.show.length === 0) continue;
 
-  const beats = blueprint.beats
-    .map((beat) => {
-      const show = beat.show.filter(keep);
-      const focus = (beat.focus ?? []).filter((f) => keep(f) && show.includes(f.split('#')[0]));
-      return { ...beat, show, focus: focus.length > 0 ? focus : undefined };
-    })
-    // A beat with nothing left to show is a beat about a picture that failed.
-    // Its narration would talk about something invisible, so it goes too.
-    .filter((beat) => beat.show.length > 0);
+    for (const el of laidOut) {
+      if (el.kind === 'diagram') {
+        const brief = briefs.get(el.id);
+        const finished: DiagramElement = {
+          ...el,
+          alt: brief?.alt ?? el.alt,
+          parts: [...(brief?.parts ?? [])],
+        };
+        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
+        continue;
+      }
+      elements.push(el);
+    }
+
+    beats.push({
+      id: beat.id,
+      topic: beat.topic,
+      narration: beat.narration,
+      show: laid.show,
+      ...(laid.focus.length > 0 ? { focus: laid.focus } : {}),
+      ...(beat.teaches ? { teaches: beat.teaches } : {}),
+      ...(beat.checks ? { checks: beat.checks } : {}),
+      ...(beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
+    });
+  }
 
   return {
     lesson: {
@@ -176,7 +186,6 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   } catch (e) {
     throw new Error(`The planner did not return JSON: ${e instanceof Error ? e.message : e}`);
   }
-  blueprint.elements ??= [];
   blueprint.beats ??= [];
   blueprint.visuals ??= [];
   blueprint.id ||= `prep-${Date.now().toString(36)}`;
@@ -226,7 +235,6 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         repairPlanUser(JSON.stringify(blueprint), validated.errors.slice(0, 10)),
       );
       const fixed = JSON.parse(stripFence(reply)) as Blueprint;
-      fixed.elements ??= [];
       fixed.beats ??= [];
       // The artwork is already drawn; its briefs are not the model's to change.
       fixed.visuals = blueprint.visuals;

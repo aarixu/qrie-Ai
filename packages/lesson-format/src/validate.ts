@@ -60,7 +60,11 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
       break;
     case 'box':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'box needs numeric x,y,w,h');
-      need(isStr(el.label), 'box needs non-empty label');
+      // An EMPTY label is legitimate: a box is also the frame a card draws
+      // around its own heading and body. Requiring a label there forced the
+      // centred label to share the box's middle with the body line, which is
+      // exactly how the two used to collide.
+      need(typeof el.label === 'string', 'box needs a label string (may be empty)');
       break;
     case 'doc':
       need(isNum(el.x) && isNum(el.y) && isNum(el.w) && isNum(el.h), 'doc needs numeric x,y,w,h');

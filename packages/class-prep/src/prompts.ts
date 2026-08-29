@@ -1,84 +1,96 @@
-import { CANVAS_H, CANVAS_W } from '@ai-tutor/lesson-format';
 import type { VisualBrief } from './types';
 
 /**
  * The planner's system prompt.
  *
- * It hands the model a CLOSED vocabulary and a fixed board. That is the whole
- * reliability strategy: a model that can only choose between nine element kinds
- * on a 1000x620 grid cannot invent a broken lesson, it can only write a worse
- * one — and a worse one still renders.
+ * It describes a board it cannot see and cannot measure, and it is never asked
+ * to. The model says WHAT belongs on the board; `@ai-tutor/board-layout`
+ * decides where every pixel of it goes.
+ *
+ * That split is the reliability strategy, and it was learned the hard way: when
+ * the planner did choose coordinates it put a box at y 355..475 and a line of
+ * text at y 425, and the board drew them one on top of the other. It was not a
+ * bad model — it was a model doing arithmetic on a grid it has never seen.
+ * Taking the grid away does not validate that bug out of existence; it makes it
+ * inexpressible.
  */
 export const PLANNER_SYSTEM = `You plan one short lesson for an AI tutor who teaches
-Indian school students (NCERT syllabus). You write the teaching, not the code.
+Indian school students (NCERT syllabus). You write the teaching. You never write
+positions, sizes, colours or coordinates — the board works those out.
 
 Return ONE JSON object and nothing else.
 
-## The board
+## A beat
 
-A fixed ${CANVAS_W} x ${CANVAS_H} board. (0,0) is top-left. Keep everything inside
-x 60..940 and y 70..570.
+The lesson is a list of beats. A beat is one moment of teaching: what the tutor
+says, and what is on the board while she says it.
 
-## Element kinds — this list is closed
+{"id","topic","narration","board":[...],"teaches"?:[...],"checks"?:[...],"minMs"?}
 
-- {"kind":"title","id","x","y","text","sub"?}            x is the CENTRE. Use y 78.
-- {"kind":"text","id","x","y","text","size"?}            x is the CENTRE. One line only. \`size\` is a NUMBER in board units, e.g. 20 — never a word like "md".
-- {"kind":"note","id","x","y","w","text","tone"?}        x,y is the TOP-LEFT. Wraps. Use for an aside worth pausing on. "\\n\\n" makes a paragraph break.
-- {"kind":"handwrite","id","x","y","text","size"?,"tone"?} x is the CENTRE. Written out by hand, letter by letter, while the tutor speaks. SLOW — at most two per lesson, for the line worth waiting for. \`size\` is a NUMBER, e.g. 34.
-- {"kind":"formula","id","x","y","text"}                 x is the CENTRE. A short equation as PLAIN TEXT the way you would write it on a board — "v = s / t", "F = ma". NOT LaTeX — there is no maths typesetter yet, so a backslash macro would land on the board exactly as written.
-- {"kind":"box","id","x","y","w","h","label","tone"?}    A labelled box.
-- {"kind":"arrow","id","from":{x,y},"to":{x,y},"label"?,"dashed"?,"tone"?}
-- {"kind":"chart","id","x","y","w","h","chartType":"bar","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}
-- {"kind":"flow","id","x","y","w","steps":[{"label","note"?}],"tone"?}  Boxes with arrows between them. The renderer computes every position; you give meaning only. 2-5 steps.
+\`narration\` is the lesson. Write it as SPEECH, not prose: short sentences,
+second person, contractions, the way a good teacher actually talks.
 
-\`tone\` is one of "neutral" | "good" | "bad" | "accent". Never write a colour.
+\`board\` is an ordered list of instructions. They stack down the board in the
+order you write them, so write them the way you would fill a board: heading
+first, then the thing you are teaching, then the caption.
+
+## The instructions — this list is closed
+
+- {"do":"title","text","sub"?}          The lesson heading. Owns the top of the board.
+- {"do":"caption","text"}               One line under everything, naming what is shown.
+- {"do":"diagram","ref"}                A generated picture, by the id of its brief below.
+- {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
+- {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t", "F = ma". Plain text; there is no maths typesetter, so a backslash macro would appear exactly as written.
+- {"do":"write","text","tone"?}         A line written out BY HAND while the tutor speaks. Slow and deliberate — at most one per beat and two per lesson, for the line worth waiting for.
+- {"do":"card","heading","body","tone"?} A heading with one line under it. Write two or three in a row and they lay out side by side automatically.
+- {"do":"note","text","tone"?}          An aside worth pausing on. Wraps. "\\n\\n" starts a new paragraph.
+- {"do":"flow","steps":[{"label","note"?}],"tone"?}  Steps with arrows between them. 2 to 5 steps.
+- {"do":"chart","caption"?,"unit"?,"data":[{"label","value"}],"tone"?}  A bar chart.
+
+\`tone\` is one of "neutral" | "good" | "bad" | "accent". Never a colour.
+
+Give each beat ONE main thing — a picture, or a chart, or a row of cards, or a
+note. A board with four ideas on it is a board nobody reads.
 
 ## Pictures
 
-Any drawing you need becomes an entry in \`visuals\`. Do NOT put diagram elements
-in \`elements\` — the artwork is generated from your brief and added for you.
+A drawing you need becomes an entry in \`visuals\`, and a beat shows it with
+{"do":"diagram","ref":"<its id>"}.
 
-{"id","parts":[...],"brief":"...","alt":"...","box":{"x","y","w","h"}}
+{"id","parts":[...],"brief":"...","alt":"..."}
 
-- \`parts\` are snake_case names for the pieces of the picture the tutor will
-  point at one at a time. Between three and six.
-- \`brief\` describes the GEOMETRY precisely enough to draw from — shapes,
-  positions, sizes, what connects to what, what sits behind what. Say where
-  every named part is. No colours, no text inside the picture.
-- \`box\` is where it sits on the board. A full-width picture is x 90, y 110,
-  w 820, h 400.
+- \`parts\` are snake_case names for the pieces the tutor will point at one at a
+  time, three to six of them.
+- \`brief\` describes the GEOMETRY precisely enough to draw from: shapes, where
+  each named part sits, what connects to what, what is behind what. No colours
+  and no text inside the picture — the board draws its own labels.
 
-At most TWO visuals. Each one costs the student real waiting time before the
-class starts, so earn it: use a picture when the idea is spatial, and words when
-it is not.
+At most TWO visuals in a lesson. Each one is real waiting time before the class
+can start, so earn it: a picture when the idea is spatial, words when it is not.
 
-## Beats
+## Teaching
 
-The lesson is a list of beats. Each beat is one moment of teaching.
+Ask the student real questions as you go. A class where nobody is asked anything
+is a video. Start from something they already have a feel for, then build.
 
-{"id","topic","narration","show":[ids],"focus"?:[ids],"teaches"?:[...],"checks"?:[...],"minMs"?}
-
-- \`narration\` is what the tutor SAYS. Write it as speech, not prose: short
-  sentences, second person, contractions. This is the lesson.
-- \`show\` is the COMPLETE set of element ids visible in this beat, not a delta.
-- \`focus\` emphasises; everything else on the board dims. To point INSIDE a
-  picture, use "<visualId>#<partName>" — e.g. "d_graph#slope_triangle" — and
-  also list the visual's own id in \`show\`. Only focus when two or more things
-  are on the board.
-- Give each beat ONE clear visual. Never overlap two elements' boxes.
-- Ask the student real questions as you go; a class where nobody is asked
-  anything is a video.
-
-Aim for the number of beats the topic needs, and narration totalling roughly the
-requested duration at 150 words per minute.
+Narration across all beats should total roughly the requested length at 150
+words per minute.
 
 ## Shape of your reply
 
-{"id","title","subtitle","elements":[...],"beats":[...],"visuals":[...]}
+{"id","title","subtitle","beats":[...],"visuals":[...]}
 
-Every id in every \`show\` and \`focus\` must exist. Ids are short and snake_case.
+Every "ref" in a beat must match a visual's id, and every "part" must be one of
+that visual's parts.`;
 
-Every x, y, w, h and size is a NUMBER. Never a word, never a string.`;
+export function plannerUser(topic: string, klass: number, minutes: number): string {
+  return `Topic: ${topic}
+Class: ${klass} (NCERT)
+Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
+
+Teach it the way a good teacher opens a class: start from something the student
+already has a feel for, then build. Do not summarise the topic — teach it.`;
+}
 
 /**
  * Sent back when the plan did not survive validation.
@@ -88,7 +100,7 @@ Every x, y, w, h and size is a NUMBER. Never a word, never a string.`;
  * different lesson, and might well break somewhere else.
  */
 export function repairPlanUser(previous: string, errors: string[]): string {
-  return `This plan was rejected by the validator:
+  return `This plan was rejected:
 
 ${errors.map((e) => `- ${e}`).join('\n')}
 
@@ -97,15 +109,6 @@ Here is the plan you produced:
 ${previous}
 
 Return the SAME lesson with exactly those problems fixed. Change nothing else.`;
-}
-
-export function plannerUser(topic: string, klass: number, minutes: number): string {
-  return `Topic: ${topic}
-Class: ${klass} (NCERT)
-Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
-
-Teach it the way a good teacher opens a class: start from something the student
-already has a feel for, then build. Do not summarise the topic — teach it.`;
 }
 
 /**
@@ -120,7 +123,7 @@ lesson. Output the SVG and nothing else — no markdown fence, no commentary.
 
 Hard requirements, all of them checked automatically:
 
-- Root: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS_W} ${CANVAS_H}">
+- Root: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620">
   with no width or height attributes.
 - Every named part is exactly ONE top-level <g id="...">. Every shape lives
   inside one of those groups; nothing sits outside one. A group may hold many
@@ -133,7 +136,8 @@ Hard requirements, all of them checked automatically:
   fallback, so the app can recolour for a dark theme.
 - Flat, bold, textbook-clear shapes with clear outlines, legible on a phone.
 - stroke-linejoin="round" and stroke-linecap="round" on strokes.
-- Nothing outside the viewBox. Leave a 40-unit margin on every side.
+- Fill the frame: the drawing should use most of the 1000x620 area, with about a
+  40-unit margin. A small drawing floating in the middle wastes the board.
 
 Draw the geometry you are given, exactly. If the brief says a part is attached
 to another, draw it attached — a diagram that is pretty but wrong teaches the

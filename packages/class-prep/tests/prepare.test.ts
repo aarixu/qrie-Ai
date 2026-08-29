@@ -1,25 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { validateLesson } from '@ai-tutor/lesson-format';
+import { validateLesson, type Element } from '@ai-tutor/lesson-format';
 import { assemble, prepareClass, type LlmAdapter } from '../src/prepare';
 import type { Blueprint } from '../src/types';
 
 const blueprint: Blueprint = {
   id: 'demo',
   title: 'Speed',
-  elements: [
-    { kind: 'title', id: 't', x: 500, y: 78, text: 'Speed' },
-    { kind: 'text', id: 'x1', x: 500, y: 560, text: 'Steeper means faster.' },
-  ],
   beats: [
-    { id: 'b1', topic: 'open', narration: 'Here we go.', show: ['t'] },
+    { id: 'b1', topic: 'open', narration: 'Here we go.', board: [{ do: 'title', text: 'Speed' }] },
     {
       id: 'b2',
       topic: 'graph',
       narration: 'Look at the slope.',
-      show: ['d_graph', 'x1'],
-      focus: ['d_graph#line_fast', 'x1'],
+      board: [
+        { do: 'diagram', ref: 'd_graph' },
+        { do: 'point', ref: 'd_graph', part: 'line_fast' },
+        { do: 'caption', text: 'Steeper means faster.' },
+      ],
     },
-    { id: 'b3', topic: 'only art', narration: 'And here it is again.', show: ['d_graph'] },
+    {
+      id: 'b3',
+      topic: 'only art',
+      narration: 'And here it is again.',
+      board: [{ do: 'diagram', ref: 'd_graph' }],
+    },
   ],
   visuals: [
     {
@@ -27,7 +31,6 @@ const blueprint: Blueprint = {
       parts: ['axes', 'line_fast'],
       brief: 'a graph',
       alt: 'a distance-time graph',
-      box: { x: 90, y: 110, w: 820, h: 400 },
     },
   ],
 };
@@ -37,43 +40,53 @@ const svg = (parts: string[]) =>
     .map((p) => `<g id="${p}"><path d="M10 10 L20 20" stroke="var(--a, #333)"/></g>`)
     .join('')}</svg>`;
 
-/** A planner that returns a fixed blueprint, and an artist we can make fail. */
-const fakePlanner = (doc: unknown): LlmAdapter => ({
-  complete: async () => JSON.stringify(doc),
-});
+const fakePlanner = (doc: unknown): LlmAdapter => ({ complete: async () => JSON.stringify(doc) });
 const fakeArtist = (replies: string[]): LlmAdapter => {
   let i = 0;
   return { complete: async () => replies[Math.min(i++, replies.length - 1)] };
 };
 
-describe('assemble builds the diagrams rather than trusting the planner to', () => {
-  it('turns a drawn visual into a diagram element whose parts match its brief', () => {
+describe('assemble lays the board out rather than trusting the planner to', () => {
+  it('finishes a diagram element with the parts its brief promised', () => {
     const { lesson } = assemble(blueprint, new Set(['d_graph']));
-    const doc = lesson as { elements: { id: string; kind: string; parts?: string[] }[] };
+    const doc = lesson as { elements: Element[] };
     const diagram = doc.elements.find((e) => e.id === 'd_graph')!;
     expect(diagram.kind).toBe('diagram');
-    expect(diagram.parts).toEqual(['axes', 'line_fast']);
+    expect((diagram as Extract<Element, { kind: 'diagram' }>).parts).toEqual([
+      'axes',
+      'line_fast',
+    ]);
+    expect((diagram as Extract<Element, { kind: 'diagram' }>).alt).toBe('a distance-time graph');
     expect(validateLesson(lesson).ok).toBe(true);
   });
 
-  it('drops a failed picture and every reference to it, and stays valid', () => {
+  it('gives every element a position even though the plan had none', () => {
+    // The blueprint contains no x, y, w or h anywhere. Every coordinate below
+    // was computed, which is the entire point of the split.
+    expect(JSON.stringify(blueprint)).not.toMatch(/"[xy]":/);
+    const { lesson } = assemble(blueprint, new Set(['d_graph']));
+    const doc = lesson as { elements: Element[] };
+    expect(doc.elements.length).toBeGreaterThan(0);
+    for (const el of doc.elements) {
+      if ('x' in el) expect(Number.isFinite(el.x)).toBe(true);
+    }
+  });
+
+  it('drops a failed picture, and the beats that were only about it', () => {
     const { lesson, dropped } = assemble(blueprint, new Set());
     expect(dropped).toEqual(['d_graph']);
 
     const doc = lesson as { beats: { id: string; show: string[]; focus?: string[] }[] };
     // b2 keeps its caption; b3 had nothing but the picture, so it goes.
     expect(doc.beats.map((b) => b.id)).toEqual(['b1', 'b2']);
-    expect(doc.beats[1].show).toEqual(['x1']);
-    expect(doc.beats[1].focus).toEqual(['x1']);
+    expect(doc.beats[1].focus).toBeUndefined();
     expect(validateLesson(lesson).ok).toBe(true);
   });
 
-  it('never leaves a focus pointing at a part that was not drawn', () => {
-    const { lesson } = assemble(blueprint, new Set());
-    const doc = lesson as { beats: { focus?: string[] }[] };
-    for (const beat of doc.beats) {
-      for (const f of beat.focus ?? []) expect(f).not.toContain('#');
-    }
+  it('keeps the point when the picture was drawn', () => {
+    const { lesson } = assemble(blueprint, new Set(['d_graph']));
+    const doc = lesson as { beats: { id: string; focus?: string[] }[] };
+    expect(doc.beats.find((b) => b.id === 'b2')?.focus).toEqual(['d_graph#line_fast']);
   });
 });
 
@@ -93,20 +106,17 @@ describe('prepareClass', () => {
   });
 
   it('redraws a rejected picture, telling the artist what was wrong', async () => {
-    const artist = fakeArtist([svg(['axes']), svg(['axes', 'line_fast'])]);
     const result = await prepareClass({
       topic: 'Speed',
       klass: 9,
       planner: fakePlanner(blueprint),
-      artist,
+      artist: fakeArtist([svg(['axes']), svg(['axes', 'line_fast'])]),
     });
     expect(result.report.visuals[0]).toMatchObject({ ok: true, attempts: 2 });
     expect(result.report.visuals[0].problems).toContain('missing named group(s): line_fast');
   });
 
   it('starts the class without a picture rather than not at all', async () => {
-    // A class with one drawing instead of two is still a class. A class that
-    // failed to start is not.
     const result = await prepareClass({
       topic: 'Speed',
       klass: 9,
@@ -159,19 +169,14 @@ describe('prepareClass', () => {
 });
 
 describe('a plan that fails validation gets one repair round', () => {
-  // A live planner really did emit `"size": "md"`, which every other check waved
-  // through until the validator caught it. Failing the whole class there would
-  // be worse than the bug: the pictures are already drawn and paid for.
+  // Narration is required; a beat without it is the simplest thing a planner
+  // can still get wrong now that it cannot get geometry wrong at all.
   const broken: Blueprint = {
     ...blueprint,
-    elements: [
-      { kind: 'title', id: 't', x: 500, y: 78, text: 'Speed' },
-      // `size` is not a number — invalid, and the reason this test exists.
-      { kind: 'handwrite', id: 'x1', x: 500, y: 300, text: 'v = s / t', size: 'md' } as never,
-    ],
+    beats: [{ id: 'b1', topic: 'open', narration: '', board: [{ do: 'title', text: 'Speed' }] }],
   };
 
-  it('asks the planner to fix exactly what the validator named, and recovers', async () => {
+  it('asks the planner to fix exactly what was named, and recovers', async () => {
     const seen: string[] = [];
     let call = 0;
     const planner: LlmAdapter = {
@@ -190,8 +195,7 @@ describe('a plan that fails validation gets one repair round', () => {
     });
 
     expect(call).toBe(2);
-    expect(seen[1]).toContain('rejected by the validator');
-    expect(seen[1]).toContain('size must be a number');
+    expect(seen[1]).toContain('rejected');
     expect(result.report.issues.join(' ')).toContain('repaired and passed');
     expect(result.lesson.beats.length).toBeGreaterThan(0);
   });

@@ -7,7 +7,6 @@ const brief: VisualBrief = {
   parts: ['axes', 'line_fast'],
   brief: 'a graph',
   alt: 'a distance-time graph',
-  box: { x: 90, y: 110, w: 820, h: 400 },
 };
 
 const wrap = (inner: string, viewBox = '0 0 1000 620') =>
