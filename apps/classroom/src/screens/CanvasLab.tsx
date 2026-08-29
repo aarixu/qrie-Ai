@@ -3,6 +3,7 @@ import type { Lesson } from '@ai-tutor/lesson-format';
 import { Scene, computeVisible } from '@ai-tutor/stage';
 import { usePlayer, createBrowserTts } from '@ai-tutor/player';
 import {
+  drawMissingIcons,
   pickIcons,
   prepareClass,
   type LlmAdapter,
@@ -45,6 +46,8 @@ async function fetchGraphics(
   lesson: Lesson,
   topic: string,
   llm: LlmAdapter,
+  /** Draws the nouns nothing depicts. A stronger model than the picker. */
+  drawIcon: LlmAdapter,
 ): Promise<Record<string, string>> {
   const nouns = [
     ...new Set(lesson.elements.filter((el) => el.kind === 'graphic').map((el) => el.noun)),
@@ -74,33 +77,47 @@ async function fetchGraphics(
   const chosen = await pickIcons(topic, options, llm);
 
   /**
-   * The picked glyph; the pencilled circle when the model REFUSED every
-   * option; the best name match only when the model was never heard from.
+   * The picked glyph, or null when this noun has no picture worth using —
+   * the model refused every option, or nothing was found at all.
    *
    * The order matters: a deliberate null falling through to candidates[0]
    * once put the very icon the model refused — a military tank — back on a
    * board about water.
    */
-  const glyphFor = (noun: string): Glyph => {
+  const glyphFor = (noun: string): Glyph | null => {
     const f = found[noun];
-    if (!f) return { body: '', width: 100, height: 100 };
+    if (!f) return null;
     const pick = chosen[noun];
     if (pick?.deliberate) {
       const named =
         pick.icon && pick.set
           ? f.candidates.find((c) => c.source.icon === pick.icon && c.source.set === pick.set)
           : undefined;
-      return named?.glyph ?? f.pencil;
+      return named?.glyph ?? null;
     }
-    return f.candidates[0]?.glyph ?? f.pencil;
+    return f.candidates[0]?.glyph ?? null;
   };
+
+  // The nouns nothing depicts get DRAWN — a small flat SVG made to order, the
+  // way a code-drawing model makes a chart with code instead of pixels. Only
+  // the misses cost anything; the library answered the rest for free. What
+  // fails to draw falls back to the pencilled circle, never delays the class.
+  const missing = nouns.filter((n) => glyphFor(n) === null);
+  const drawn =
+    missing.length > 0 ? await drawMissingIcons(topic, missing, drawIcon) : {};
 
   const assets: Record<string, string> = {};
   for (const el of lesson.elements) {
     if (el.kind !== 'graphic') continue;
-    const glyph = glyphFor(el.noun);
-    // Keyed by ELEMENT id, not by noun: the same noun placed twice is two
-    // pictures on the board, and the renderer looks each one up by its own id.
+    const custom = drawn[el.noun];
+    if (custom) {
+      // Keyed by ELEMENT id, not by noun: the same noun placed twice is two
+      // pictures, and the renderer looks each one up by its own id.
+      assets[el.id] = custom;
+      continue;
+    }
+    const glyph = glyphFor(el.noun) ?? found[el.noun]?.pencil;
+    if (!glyph) continue;
     assets[el.id] =
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${glyph.width} ${glyph.height}">` +
       `${glyph.body}</svg>`;
@@ -136,7 +153,12 @@ export function CanvasLab() {
       });
       // The drawings arrive with the plan; the noun pictures are a second,
       // much cheaper fetch, so the board is complete before it is shown.
-      const graphics = await fetchGraphics(result.lesson, topic, createBrowserLlm(PICKER_MODEL, { json: true }));
+      const graphics = await fetchGraphics(
+        result.lesson,
+        topic,
+        createBrowserLlm(PICKER_MODEL, { json: true }),
+        createBrowserLlm(ARTIST_MODEL),
+      );
       setPrepared({ ...result, assets: { ...result.assets, ...graphics } });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

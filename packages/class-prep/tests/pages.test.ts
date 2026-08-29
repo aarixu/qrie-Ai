@@ -47,7 +47,6 @@ const lessonOf = (b: Blueprint) => {
 
 describe('each act is a page on an endless plane', () => {
   const lesson = lessonOf(twoActs);
-  const byId = new Map(lesson.elements.map((e) => [e.id, e]));
 
   it('lays the second act a full page to the right of the first', () => {
     const act1Xs = lesson.elements
