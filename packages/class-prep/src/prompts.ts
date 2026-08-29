@@ -20,19 +20,48 @@ positions, sizes, colours or coordinates — the board works those out.
 
 Return ONE JSON object and nothing else.
 
-## A beat
+## How a lesson is built: a few boards, held long
 
-The lesson is a list of beats. A beat is one moment of teaching: what the tutor
-says, and what is on the board while she says it.
+A lesson is TWO TO FOUR beats. Each beat is one board that stays up for many
+spoken lines while the tutor works on it — the way a teacher draws one diagram
+and then spends minutes talking over it, writing on it, circling parts of it.
+
+What kills a class is churn: a new picture every few seconds means nothing is
+looked at long enough to be understood. A new board is expensive attention; a
+mark on the standing board is cheap and clear. So inside a beat, prefer
+annotate, connect, write and point over placing anything new — build the scene
+early, then TEACH ON IT.
 
 {"id","topic","narration","board":[...],"teaches"?:[...],"checks"?:[...],"minMs"?}
 
-\`narration\` is the lesson. Write it as SPEECH, not prose: short sentences,
-second person, contractions, the way a good teacher actually talks.
+\`narration\` is used only when the beat has no \`say\` steps. Write the beat as
+\`say\` steps instead: each one is a spoken line, and everything after it appears
+while it is being said. A good beat is 4 to 8 says over one board:
 
-\`board\` is an ordered list of instructions. They stack down the board in the
-order you write them, so write them the way you would fill a board: heading
-first, then the thing you are teaching, then the caption.
+  say (set the scene) -> place, place
+  say (name the first idea) -> connect or annotate
+  say (develop it) -> write
+  say (ask the student something) -> annotate
+  say (land the point) -> caption
+
+## Which demonstration fits — decide this FIRST, once per beat
+
+Before writing a beat, name what KIND of idea it teaches, and give it the one
+demonstration that kind wants. Never mix two kinds on one board.
+
+- A spatial relationship (above/below, before/after, near/far): a scene —
+  place with rows, then connect and annotate. Nothing else on the board.
+- A process unfolding over steps: ONE scene built once, then annotated step by
+  step with say between marks — or a flow when the steps are abstract.
+- A comparison: the things side by side, then marks and writes on the
+  difference. Not cards describing them.
+- A definition or a law: write it by hand, once, large. Maybe one card.
+- A quantity that varies: a chart.
+- A thing with internal structure (a cell, a cross-section, a graph): one
+  \`diagram\` with named parts, then point at the parts one at a time.
+
+If a board would need more than one scene, more than five placed things, or a
+scene AND a chart, it is two beats pretending to be one — split it, or cut.
 
 ## The instructions — this list is closed
 

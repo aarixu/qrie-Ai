@@ -428,7 +428,16 @@ export function layoutBeat(beat: ScriptBeat): {
   // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
   // they refer to and so can land anywhere. Fixing those case by case fixes one
   // lesson at a time; this fixes every lesson.
-  const settled = resolveOverlaps(elements, bonds, { x: 0, y: 0, w: CANVAS_W, h: CANVAS_H });
+  const settled = resolveOverlaps(elements, bonds, [
+    // A label's first room is MAIN, where its scene lives. The whole canvas
+    // was once its playground, and a stuck label got parked above the lesson
+    // title — clear space, wrong room.
+    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: MAIN.h + 20 },
+    // When MAIN is genuinely full, everything below the title is fair — a
+    // label near the caption reads as a footnote; one over the heading reads
+    // as a mistake.
+    { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
+  ]);
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);

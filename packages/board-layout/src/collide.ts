@@ -90,14 +90,20 @@ function park(
   if (box.w > board.w) return null;
 
   const anchored = el as Element & { x: number; y: number };
-  const x = Math.max(board.x + half, Math.min(anchored.x, board.x + board.w - half));
+  const homeX = Math.max(board.x + half, Math.min(anchored.x, board.x + board.w - half));
 
+  // Outward from where the label wants to be, on BOTH axes. Searching one
+  // column of a thousand-unit board is how a label stayed stuck over a picture
+  // while half the room stood empty beside it.
   for (let away = 0; away <= board.h; away += 8) {
     for (const y of away === 0 ? [anchored.y] : [anchored.y - away, anchored.y + away]) {
-      const candidate = { ...anchored, x, y } as Element;
-      const shape = padded(boxOf(candidate));
-      if (!inside(shape, board)) continue;
-      if (all.every((other, k) => k === self || !clashes(candidate, other))) return candidate;
+      for (const dx of [0, -70, 70, -150, 150, -240, 240, -340, 340]) {
+        const x = Math.max(board.x + half, Math.min(homeX + dx, board.x + board.w - half));
+        const candidate = { ...anchored, x, y } as Element;
+        const shape = padded(boxOf(candidate));
+        if (!inside(shape, board)) continue;
+        if (all.every((other, k) => k === self || !clashes(candidate, other))) return candidate;
+      }
     }
   }
   return null;
@@ -149,9 +155,19 @@ function padded(rect: Rect): Rect {
 export function resolveOverlaps(
   elements: readonly Element[],
   bonds: readonly Bond[] = [],
-  /** Nothing is moved outside this. */
-  board?: Rect,
+  /**
+   * Where a label may go, tightest room first.
+   *
+   * Nudging keeps to the FIRST room; parking tries each in order. A label
+   * belongs in the room its scene lives in — but when that room is genuinely
+   * full, the next room beats leaving it printed across a picture. The rooms
+   * are the caller's to choose, which is how "never above the title" is said:
+   * no room offered up there.
+   */
+  rooms?: Rect | readonly Rect[],
 ): Element[] {
+  const boards = rooms === undefined ? [] : Array.isArray(rooms) ? rooms : [rooms as Rect];
+  const board = boards[0];
   const out = elements.map((el) => ({ ...el }) as Element);
   const exempt = new Set(bonds.map((b) => bondKey(b.a, b.b)));
   const movable = out.map((el, i) => (MOVABLE.has(el.kind) ? i : -1)).filter((i) => i >= 0);
