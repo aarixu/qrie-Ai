@@ -7,8 +7,12 @@ import type { Lesson } from '@ai-tutor/lesson-format';
 export function computeVisible(
   lesson: Lesson,
   beatIndex: number,
-): { visible: string[]; focus: string[] } {
+): { visible: string[]; focus: string[]; frame?: string[] } {
   const beat = lesson.beats[beatIndex];
   if (!beat) return { visible: [], focus: [] };
-  return { visible: [...beat.show], focus: [...(beat.focus ?? [])] };
+  return {
+    visible: [...beat.show],
+    focus: [...(beat.focus ?? [])],
+    ...(beat.frame ? { frame: [...beat.frame] } : {}),
+  };
 }

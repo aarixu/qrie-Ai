@@ -246,6 +246,21 @@ function beatErrors(
   if (beat.minMs !== undefined && (!isNum(beat.minMs) || beat.minMs < 0)) {
     errs.push(`${path}: minMs must be a non-negative number`);
   }
+
+  if (beat.frame !== undefined) {
+    if (!Array.isArray(beat.frame) || !beat.frame.every((id) => isStr(id))) {
+      errs.push(`${path}: frame must be an array of element ids`);
+    } else {
+      // The camera can only look at what exists this beat. A frame id outside
+      // show would aim the class at empty board and nobody would see why.
+      const shown = new Set(Array.isArray(beat.show) ? beat.show.map(String) : []);
+      for (const id of beat.frame) {
+        if (!shown.has(String(id))) {
+          errs.push(`${path}: frame references "${String(id)}" which is not shown`);
+        }
+      }
+    }
+  }
   return errs;
 }
 

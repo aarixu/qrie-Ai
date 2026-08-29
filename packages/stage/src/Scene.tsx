@@ -24,6 +24,13 @@ export interface SceneProps {
    * A diagram with no entry here draws its frame and its alt text.
    */
   assets?: Record<string, string>;
+  /**
+   * Element ids the camera frames, when the beat narrows it. Everything in
+   * `visible` still renders — on a long board the earlier pages stay drawn to
+   * the side, and panning to the framed page slides them out of view instead
+   * of blinking them away.
+   */
+  frame?: string[];
 }
 
 /**
@@ -924,7 +931,7 @@ function useMeasure(
  * decided upstream and arrives as props, and where the camera points is
  * computed by `computeFrame`. All element animation is CSS inside the SVG.
  */
-export function Scene({ lesson, visible, focus, wide = false, assets }: SceneProps): ReactElement {
+export function Scene({ lesson, visible, focus, wide = false, assets, frame }: SceneProps): ReactElement {
   // Previous render's visible set, committed after paint so the render pass can
   // tell which elements just appeared and animate only those. On the first
   // render (prev === null) everything draws in — the canvas is coming from blank.
@@ -956,7 +963,7 @@ export function Scene({ lesson, visible, focus, wide = false, assets }: ScenePro
   const { aspect, width } = useMeasure(svgRef);
   const target = wide
     ? { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h }
-    : computeFrame(lesson, visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
+    : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
   const box = useCamera(target);
 
   return (

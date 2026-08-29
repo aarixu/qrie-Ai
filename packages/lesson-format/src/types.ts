@@ -212,6 +212,16 @@ export interface Beat {
   checks?: string[];
   /** Minimum time on this beat even if narration finishes sooner. */
   minMs?: number;
+  /**
+   * Element ids the CAMERA frames this beat. Defaults to `show`.
+   *
+   * The split is what makes the board effectively endless. `show` is what
+   * exists — and on a long board, everything drawn so far still exists, off to
+   * the side, the way earlier work stays on a real whiteboard. `frame` is
+   * where the class is looking now. When it moves, the camera pans and the
+   * older boards slide aside instead of vanishing.
+   */
+  frame?: string[];
 }
 
 export interface Lesson {

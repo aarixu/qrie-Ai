@@ -3,6 +3,8 @@ import {
   flowHeight,
   noteBoxHeight,
   union,
+  CANVAS_H,
+  CANVAS_W,
   type Lesson,
   type Rect,
 } from '@ai-tutor/lesson-format';
@@ -110,7 +112,10 @@ export function computeFrame(
   frame = { x: frame.x - pad, y: frame.y - pad, w: frame.w + pad * 2, h: frame.h + pad * 2 };
 
   // A lone arrow or a two-word label would otherwise zoom to a wall of text.
-  const min = { w: board.w / MAX_ZOOM, h: board.h / MAX_ZOOM };
+  // The floor is one PAGE over MAX_ZOOM, not the whole board: an endless board
+  // grows to the right, and a floor that grew with it would eventually forbid
+  // the camera from framing any single page at all.
+  const min = { w: CANVAS_W / MAX_ZOOM, h: CANVAS_H / MAX_ZOOM };
   if (frame.w < min.w) frame = { ...frame, x: frame.x - (min.w - frame.w) / 2, w: min.w };
   if (frame.h < min.h) frame = { ...frame, y: frame.y - (min.h - frame.h) / 2, h: min.h };
 

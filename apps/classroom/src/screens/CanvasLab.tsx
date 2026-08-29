@@ -225,7 +225,7 @@ function Board({ lesson, assets }: { lesson: Lesson; assets: Record<string, stri
   return (
     <>
       <div style={S.board}>
-        <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} assets={assets} />
+        <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={assets} />
       </div>
 
       <div style={S.controls}>

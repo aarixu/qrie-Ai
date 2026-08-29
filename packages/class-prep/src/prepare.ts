@@ -1,4 +1,4 @@
-import { layoutBeat } from '@ai-tutor/board-layout';
+import { layoutBeat, offsetElement } from '@ai-tutor/board-layout';
 import { validateLesson, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
 
 import {
@@ -94,6 +94,20 @@ export function assemble(
   const elements: Element[] = [];
   const beats: Beat[] = [];
 
+  /**
+   * Each planner beat is a PAGE on an endless board.
+   *
+   * Every page is laid out in its own local coordinates, where the band rules
+   * and the overlap guarantee hold, and then slid to its slot. Earlier pages
+   * stay in `show` for every later beat — drawn work never vanishes, it
+   * stands to the side the way it does on a real whiteboard — while `frame`
+   * points the camera at the page being taught, so moving on is a pan that
+   * slides the old work aside rather than a cut that deletes it.
+   */
+  const PAGE_STRIDE = 1080;
+  let page = 0;
+  const shownSoFar: string[] = [];
+
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
@@ -104,18 +118,22 @@ export function assemble(
     // its narration would talk about something invisible.
     if (laid.show.length === 0) continue;
 
+    const dx = page * PAGE_STRIDE;
+    page += 1;
+
     for (const el of laidOut) {
-      if (el.kind === 'diagram') {
-        const brief = briefs.get(el.id);
+      const placed = offsetElement(el, dx);
+      if (placed.kind === 'diagram') {
+        const brief = briefs.get(placed.id);
         const finished: DiagramElement = {
-          ...el,
-          alt: brief?.alt ?? el.alt,
+          ...placed,
+          alt: brief?.alt ?? placed.alt,
           parts: [...(brief?.parts ?? [])],
         };
         if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
         continue;
       }
-      elements.push(el);
+      elements.push(placed);
     }
 
     // One lesson beat per spoken moment.
@@ -131,7 +149,10 @@ export function assemble(
         id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
         topic: beat.topic,
         narration: step.narration,
-        show: step.show,
+        // Everything ever drawn, plus this page so far. Old pages stay on the
+        // board; the frame below is what keeps the class looking here.
+        show: [...shownSoFar, ...step.show],
+        frame: [...step.show],
         ...(step.focus.length > 0 ? { focus: step.focus } : {}),
         // Outcomes belong to the moment the point lands, not to every breath
         // on the way there — otherwise one idea would raise belief four times.
@@ -140,6 +161,7 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
+    if (usable.length > 0) shownSoFar.push(...usable[usable.length - 1].show);
   }
 
   return {
@@ -150,7 +172,9 @@ export function assemble(
       subtitle: blueprint.subtitle,
       language: 'en',
       topicRef: blueprint.topicRef,
-      canvas: { w: 1000, h: 620 },
+      // The plane is as wide as its pages. Height never grows: a teacher's
+      // board runs sideways, and the camera's zoom floor is one page.
+      canvas: { w: Math.max(1000, (page - 1) * PAGE_STRIDE + 1000), h: 620 },
       elements,
       beats,
     },

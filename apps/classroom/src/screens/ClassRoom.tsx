@@ -538,7 +538,7 @@ export function ClassRoom({
       {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
       <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
         <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} assets={diagrams} />
+          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
 
           {/* The caption: one line over the board, like Meet's captions. */}
           {caption && (

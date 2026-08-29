@@ -515,5 +515,28 @@ function revealSteps(
   return steps;
 }
 
+/**
+ * Move a laid-out element sideways, whatever shape its geometry takes.
+ *
+ * This is what turns one board into an endless one: each beat is laid out in
+ * page-local coordinates — where every band rule and overlap guarantee holds —
+ * and then the whole page is slid to its slot on the plane.
+ */
+export function offsetElement(el: Element, dx: number): Element {
+  if (dx === 0) return el;
+  switch (el.kind) {
+    case 'arrow':
+      return {
+        ...el,
+        from: { x: el.from.x + dx, y: el.from.y },
+        to: { x: el.to.x + dx, y: el.to.y },
+      };
+    case 'pen':
+      return { ...el, points: el.points.map((pt) => ({ x: pt.x + dx, y: pt.y })) };
+    default:
+      return { ...el, x: el.x + dx };
+  }
+}
+
 /** The board is this tall and no taller; exported so callers can assert it. */
 export const BOARD = { w: CANVAS_W, h: CANVAS_H, TOP, MAIN, BOTTOM, SIDE, GUTTER };
