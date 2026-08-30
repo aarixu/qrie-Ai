@@ -29,12 +29,16 @@ export function useLessonVoice(
   opts: { enabled: boolean },
 ): TtsAdapter | null {
   const [tts, setTts] = useState<TtsAdapter | null>(null);
+  // Null means there is no recording to look for, not that we do not know yet.
+  // A class prepared live a moment ago has no catalogue entry and never will
+  // have a recorded take, so waiting for one leaves it silent forever — the
+  // room sat on "Loading…" because this hook never resolved.
   const audioUrl = entry ? lessonAudioUrl(entry) : null;
   const title = lesson?.title;
   const enabled = opts.enabled;
 
   useEffect(() => {
-    if (audioUrl === null || title === undefined) return;
+    if (title === undefined) return;
 
     // Voice off is not the browser voice at low volume — it is no voice. The
     // player still needs an adapter to time the beats, and the timer adapter
@@ -60,14 +64,21 @@ export function useLessonVoice(
           })
         : browser;
 
-      // A lesson with no recording is not an error — most are not recorded yet.
-      const manifest = await fetch(`${audioUrl}/${MANIFEST_FILE}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((raw) => (raw === null ? null : parseManifest(raw)))
-        .catch(() => null);
+      // A lesson with no recording is not an error — most are not recorded
+      // yet, and a class made thirty seconds ago never can be.
+      const manifest = audioUrl
+        ? await fetch(`${audioUrl}/${MANIFEST_FILE}`)
+            .then((res) => (res.ok ? res.json() : null))
+            .then((raw) => (raw === null ? null : parseManifest(raw)))
+            .catch(() => null)
+        : null;
 
       if (cancelled) return;
-      setTts(manifest ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live }) : live);
+      setTts(
+        manifest && audioUrl
+          ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live })
+          : live,
+      );
     })().catch(() => {
       if (!cancelled) setTts(createBrowserTts({ lang: 'en-IN' }));
     });

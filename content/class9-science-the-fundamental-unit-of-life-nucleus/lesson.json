@@ -1,0 +1,681 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-the-fundamental-unit-of-life-nucleus",
+  "title": "The Nucleus",
+  "subtitle": "The Control Centre of the Cell",
+  "language": "en",
+  "canvas": {
+    "w": 2260,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat-1-nucleus-anatomy_0",
+      "x": 500,
+      "y": 86,
+      "text": "The Nucleus: The Cell's Command Centre"
+    },
+    {
+      "kind": "text",
+      "id": "beat-1-nucleus-anatomy_17",
+      "x": 500,
+      "y": 562,
+      "text": "The nucleus controls all cellular metabolic activities."
+    },
+    {
+      "kind": "image",
+      "id": "nucleus_structure",
+      "x": 318.68333333333334,
+      "y": 150,
+      "w": 362.6333333333333,
+      "h": 197.8,
+      "src": "/class9-science-the-fundamental-unit-of-life-nucleus/generated/nucleus_structure.jpg",
+      "alt": "Anatomical cross section of a cell nucleus showing nuclear membrane, pores, nucleolus, and chromatin network.",
+      "parts": [
+        {
+          "name": "nuclear membrane",
+          "x": 0.793,
+          "y": 0.345,
+          "w": 0.079,
+          "h": 0.443
+        },
+        {
+          "name": "nuclear pore",
+          "x": 0.211,
+          "y": 0.393,
+          "w": 0.057,
+          "h": 0.089
+        },
+        {
+          "name": "nucleolus",
+          "x": 0.368,
+          "y": 0.354,
+          "w": 0.217,
+          "h": 0.353
+        },
+        {
+          "name": "chromatin",
+          "x": 0.543,
+          "y": 0.1675,
+          "w": 0.254,
+          "h": 0.45
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_5",
+      "x": 814.6583333333333,
+      "y": 263.5537,
+      "text": "Nuclear membrane",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-nucleus-anatomy_5_line",
+      "from": {
+        "x": 705.3166666666666,
+        "y": 257.1537
+      },
+      "to": {
+        "x": 634.8996000000001,
+        "y": 262.0537
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_8",
+      "x": 185.34166666666667,
+      "y": 238.03750000000002,
+      "text": "Nuclear pore",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-nucleus-anatomy_8_line",
+      "from": {
+        "x": 294.68333333333334,
+        "y": 231.63750000000002
+      },
+      "to": {
+        "x": 395.19896666666665,
+        "y": 236.53750000000002
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_12",
+      "x": 185.34166666666667,
+      "y": 285.0375,
+      "text": "Nucleolus",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-nucleus-anatomy_12_line",
+      "from": {
+        "x": 294.68333333333334,
+        "y": 278.63750000000005
+      },
+      "to": {
+        "x": 452.13239999999996,
+        "y": 254.93290000000002
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_15",
+      "x": 814.6583333333333,
+      "y": 310.5537,
+      "text": "Chromatin material",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-nucleus-anatomy_15_line",
+      "from": {
+        "x": 705.3166666666666,
+        "y": 304.1537
+      },
+      "to": {
+        "x": 607.7021000000001,
+        "y": 227.6365
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_9",
+      "x": 470.2,
+      "y": 386.8,
+      "text": "Nuclear pores allow transfer of material between nucleus and",
+      "size": 23
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_9_l1",
+      "x": 130.03,
+      "y": 427.85,
+      "text": "cytoplasm",
+      "size": 23,
+      "after": 2600
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_16",
+      "x": 423.51,
+      "y": 478.9,
+      "text": "Chromatin is an entangled mass of thread-like genetic",
+      "size": 23
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-nucleus-anatomy_16_l1",
+      "x": 123.36,
+      "y": 519.9499999999999,
+      "text": "material",
+      "size": 23,
+      "after": 2438
+    },
+    {
+      "kind": "mark",
+      "id": "beat-1-nucleus-anatomy_4",
+      "x": 596.2515666666667,
+      "y": 208.24099999999999,
+      "w": 48.64803333333333,
+      "h": 107.6254,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-1-nucleus-anatomy_7",
+      "x": 385.19896666666665,
+      "y": 217.73540000000003,
+      "w": 40.670100000000005,
+      "h": 37.6042,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-1-nucleus-anatomy_11",
+      "x": 442.13239999999996,
+      "y": 210.02120000000002,
+      "w": 98.69143333333334,
+      "h": 89.8234,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-1-nucleus-anatomy_14",
+      "x": 515.5932333333334,
+      "y": 183.13150000000002,
+      "w": 92.10886666666667,
+      "h": 89.01,
+      "shape": "underline",
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat-2-chromatin-to-dna_0",
+      "x": 1760,
+      "y": 86,
+      "text": "Chromatin, Chromosomes, and Genes"
+    },
+    {
+      "kind": "text",
+      "id": "beat-2-chromatin-to-dna_15",
+      "x": 1760,
+      "y": 562,
+      "text": "The nucleus acts as both the director of cell life and the vault of heredity."
+    },
+    {
+      "kind": "image",
+      "id": "chromosome_structure",
+      "x": 1573,
+      "y": 150,
+      "w": 374,
+      "h": 204,
+      "src": "/class9-science-the-fundamental-unit-of-life-nucleus/generated/chromosome_structure.jpg",
+      "alt": "Illustration showing a chromosome unravelling into a DNA double helix and gene segment.",
+      "parts": [
+        {
+          "name": "chromosome",
+          "x": 0.02,
+          "y": 0.03,
+          "w": 0.3,
+          "h": 0.42
+        },
+        {
+          "name": "dna double helix",
+          "x": 0.47,
+          "y": 0.295,
+          "w": 0.45,
+          "h": 0.45
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_5",
+      "x": 1442.5,
+      "y": 200.46,
+      "text": "Chromosome",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-2-chromatin-to-dna_5_line",
+      "from": {
+        "x": 1549,
+        "y": 194.06
+      },
+      "to": {
+        "x": 1580.48,
+        "y": 198.96
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_9",
+      "x": 2077.5,
+      "y": 257.58,
+      "text": "DNA double helix",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-2-chromatin-to-dna_9_line",
+      "from": {
+        "x": 1971,
+        "y": 251.17999999999998
+      },
+      "to": {
+        "x": 1917.08,
+        "y": 256.08
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_13",
+      "x": 1442.5,
+      "y": 247.46,
+      "text": "Gene segment",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_6",
+      "x": 1724.4,
+      "y": 390,
+      "text": "Chromatin condenses into rod-shaped chromosomes during cell division",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_10",
+      "x": 1585.2,
+      "y": 437,
+      "text": "Chromosomes are composed of DNA and proteins",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_14",
+      "x": 1660.6,
+      "y": 484,
+      "text": "Genes are functional segments of DNA carrying inheritance",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-chromatin-to-dna_14_l1",
+      "x": 1399.6,
+      "y": 521,
+      "text": "instructions",
+      "size": 20,
+      "after": 2600
+    },
+    {
+      "kind": "mark",
+      "id": "beat-2-chromatin-to-dna_4",
+      "x": 1570.48,
+      "y": 146.12,
+      "w": 132.2,
+      "h": 105.67999999999999,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-2-chromatin-to-dna_8",
+      "x": 1738.78,
+      "y": 200.18,
+      "w": 188.3,
+      "h": 111.8,
+      "shape": "circle"
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat-1-nucleus-anatomy_1",
+      "topic": "Structure of the Nucleus",
+      "narration": "Think of a school. There is always a principal's room that directs what happens in every classroom. In a cell, that role belongs to the nucleus.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure"
+      ],
+      "frame": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure"
+      ]
+    },
+    {
+      "id": "beat-1-nucleus-anatomy_2",
+      "topic": "Structure of the Nucleus",
+      "narration": "Look at its outer boundary. It is not a single wall, but a double-layered covering called the nuclear membrane.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line"
+      ],
+      "frame": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line"
+      ]
+    },
+    {
+      "id": "beat-1-nucleus-anatomy_3",
+      "topic": "Structure of the Nucleus",
+      "narration": "See those tiny openings breaking the surface? Those are nuclear pores. They act as checkpoints, allowing substances to move between the nucleus and the cytoplasm.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1"
+      ],
+      "frame": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1"
+      ]
+    },
+    {
+      "id": "beat-1-nucleus-anatomy_4",
+      "topic": "Structure of the Nucleus",
+      "narration": "Deep inside sits a dense round body called the nucleolus, where cellular machinery is assembled.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line"
+      ],
+      "frame": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line"
+      ]
+    },
+    {
+      "id": "beat-1-nucleus-anatomy_5",
+      "topic": "Structure of the Nucleus",
+      "narration": "And throughout the rest of the space, you see an entangled mass of thread-like material. We call this chromatin.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17"
+      ],
+      "frame": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17"
+      ]
+    },
+    {
+      "id": "beat-2-chromatin-to-dna_1",
+      "topic": "Chromosomes, DNA, and Genes",
+      "narration": "In a resting cell, genetic material remains spread out as tangled chromatin threads. But what happens when the cell is about to divide?",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17",
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure"
+      ],
+      "frame": [
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure"
+      ]
+    },
+    {
+      "id": "beat-2-chromatin-to-dna_2",
+      "topic": "Chromosomes, DNA, and Genes",
+      "narration": "Those loose threads condense and pack tightly into visible rod-shaped structures called chromosomes.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17",
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6"
+      ],
+      "frame": [
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6"
+      ]
+    },
+    {
+      "id": "beat-2-chromatin-to-dna_3",
+      "topic": "Chromosomes, DNA, and Genes",
+      "narration": "What are chromosomes actually built of? Two components: DNA molecules and proteins.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17",
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6",
+        "beat-2-chromatin-to-dna_8",
+        "beat-2-chromatin-to-dna_9",
+        "beat-2-chromatin-to-dna_9_line",
+        "beat-2-chromatin-to-dna_10"
+      ],
+      "frame": [
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6",
+        "beat-2-chromatin-to-dna_8",
+        "beat-2-chromatin-to-dna_9",
+        "beat-2-chromatin-to-dna_9_line",
+        "beat-2-chromatin-to-dna_10"
+      ]
+    },
+    {
+      "id": "beat-2-chromatin-to-dna_4",
+      "topic": "Chromosomes, DNA, and Genes",
+      "narration": "DNA molecules carry the blueprint for constructing and organising the entire cell. Functional segments of this DNA are called genes.",
+      "show": [
+        "beat-1-nucleus-anatomy_0",
+        "nucleus_structure",
+        "beat-1-nucleus-anatomy_4",
+        "beat-1-nucleus-anatomy_5",
+        "beat-1-nucleus-anatomy_5_line",
+        "beat-1-nucleus-anatomy_7",
+        "beat-1-nucleus-anatomy_8",
+        "beat-1-nucleus-anatomy_8_line",
+        "beat-1-nucleus-anatomy_9",
+        "beat-1-nucleus-anatomy_9_l1",
+        "beat-1-nucleus-anatomy_11",
+        "beat-1-nucleus-anatomy_12",
+        "beat-1-nucleus-anatomy_12_line",
+        "beat-1-nucleus-anatomy_14",
+        "beat-1-nucleus-anatomy_15",
+        "beat-1-nucleus-anatomy_15_line",
+        "beat-1-nucleus-anatomy_16",
+        "beat-1-nucleus-anatomy_16_l1",
+        "beat-1-nucleus-anatomy_17",
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6",
+        "beat-2-chromatin-to-dna_8",
+        "beat-2-chromatin-to-dna_9",
+        "beat-2-chromatin-to-dna_9_line",
+        "beat-2-chromatin-to-dna_10",
+        "beat-2-chromatin-to-dna_13",
+        "beat-2-chromatin-to-dna_14",
+        "beat-2-chromatin-to-dna_14_l1",
+        "beat-2-chromatin-to-dna_15"
+      ],
+      "frame": [
+        "beat-2-chromatin-to-dna_0",
+        "chromosome_structure",
+        "beat-2-chromatin-to-dna_4",
+        "beat-2-chromatin-to-dna_5",
+        "beat-2-chromatin-to-dna_5_line",
+        "beat-2-chromatin-to-dna_6",
+        "beat-2-chromatin-to-dna_8",
+        "beat-2-chromatin-to-dna_9",
+        "beat-2-chromatin-to-dna_9_line",
+        "beat-2-chromatin-to-dna_10",
+        "beat-2-chromatin-to-dna_13",
+        "beat-2-chromatin-to-dna_14",
+        "beat-2-chromatin-to-dna_14_l1",
+        "beat-2-chromatin-to-dna_15"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/the-fundamental-unit-of-life/nucleus"
+}

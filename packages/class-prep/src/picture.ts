@@ -133,23 +133,63 @@ export function partFinderUser(parts: readonly string[]): string {
  * was placed before any of this existed.
  */
 export function imageAspect(dataUrl: string): number | null {
+  const bytes = imageBytes(dataUrl);
+  if (bytes === null) return null;
+  const size = pngSize(bytes) ?? jpegSize(bytes);
+  if (size === null || size.w <= 0 || size.h <= 0) return null;
+  return size.w / size.h;
+}
+
+/** The whole picture, decoded. A megabyte once per class costs nothing. */
+function imageBytes(dataUrl: string): Uint8Array | null {
   const comma = dataUrl.indexOf(',');
-  if (!dataUrl.startsWith('data:image/png;base64,') || comma < 0) return null;
-  let bytes: Uint8Array;
+  if (!/^data:image\/[a-z]+;base64,/.test(dataUrl) || comma < 0) return null;
   try {
-    const binary = atob(dataUrl.slice(comma + 1, comma + 1 + 64));
-    bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+    const binary = atob(dataUrl.slice(comma + 1));
+    return Uint8Array.from(binary, (c) => c.charCodeAt(0));
   } catch {
     return null;
   }
-  // 8-byte signature, then a length and the four letters IHDR, then the width
-  // and height as big-endian 32-bit numbers.
-  if (bytes.length < 24) return null;
+}
+
+/** 8-byte signature, a length, the letters IHDR, then width and height. */
+function pngSize(bytes: Uint8Array): { w: number; h: number } | null {
+  if (bytes.length < 24 || bytes[0] !== 0x89 || bytes[1] !== 0x50) return null;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  const w = view.getUint32(16);
-  const h = view.getUint32(20);
-  if (w <= 0 || h <= 0) return null;
-  return w / h;
+  return { w: view.getUint32(16), h: view.getUint32(20) };
+}
+
+/**
+ * Walked segment by segment to the frame header.
+ *
+ * A JPEG's size is not at a fixed offset: it sits in whichever SOF segment
+ * comes after however many application and comment blocks the encoder felt
+ * like writing, and a generated picture carries a fat provenance block among
+ * them. So the segments are walked rather than guessed at.
+ */
+function jpegSize(bytes: Uint8Array): { w: number; h: number } | null {
+  if (bytes.length < 4 || bytes[0] !== 0xff || bytes[1] !== 0xd8) return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let at = 2;
+  while (at + 8 < bytes.length) {
+    if (bytes[at] !== 0xff) {
+      at += 1;
+      continue;
+    }
+    const marker = bytes[at + 1];
+    // A start-of-frame carries the dimensions. C4, C8 and CC share the range
+    // and are not frames — they describe how the frame is coded.
+    if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
+      return { h: view.getUint16(at + 5), w: view.getUint16(at + 7) };
+    }
+    // Padding and the standalone markers carry no length to skip.
+    if (marker === 0xff || marker === 0x01 || (marker >= 0xd0 && marker <= 0xd9)) {
+      at += 2;
+      continue;
+    }
+    at += 2 + view.getUint16(at + 2);
+  }
+  return null;
 }
 
 const stripFence = (s: string): string =>

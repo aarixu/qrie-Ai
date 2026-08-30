@@ -151,6 +151,11 @@ export function Home() {
           </div>
         </section>
 
+        {/* Ask her for anything, syllabus or not. */}
+        <section className="col-span-4 md:col-span-12">
+          <AskBox />
+        </section>
+
         {/* Subjects */}
         <section className="col-span-4 md:col-span-12">
           <h3 className="font-headline-md text-headline-md mb-stack-md text-on-surface">
@@ -183,6 +188,52 @@ export function Home() {
 
       <SideNav />
       <BottomNav />
+    </div>
+  );
+}
+
+/**
+ * Ask her to teach anything.
+ *
+ * The syllabus is what a student is MEANT to study; this is what they actually
+ * wondered about at nine at night. It goes to the same room by the same road —
+ * only without a topicRef, which is why a class from here is taught and not
+ * kept: there is nothing a later student could ask for it by.
+ */
+function AskBox() {
+  const navigate = useNavigate();
+  const [topic, setTopic] = useState('');
+  const go = () => {
+    const asked = topic.trim();
+    if (asked) navigate(`/class?topic=${encodeURIComponent(asked)}`);
+  };
+
+  return (
+    <div className="bg-surface-container-lowest rounded-[20px] p-4 shadow-sm flex items-center gap-3">
+      <div className="w-12 h-12 rounded-full grid place-items-center shrink-0 bg-primary text-on-primary">
+        <Icon name="auto_awesome" filled />
+      </div>
+      <div className="min-w-0 flex-1">
+        <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wide">
+          Ask Meera
+        </div>
+        <input
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && go()}
+          placeholder="What should she teach you?"
+          aria-label="What should she teach you?"
+          className="w-full bg-transparent outline-none font-headline-md text-[17px] leading-6 text-on-surface placeholder:text-on-surface-variant"
+        />
+      </div>
+      <button
+        onClick={go}
+        disabled={topic.trim() === ''}
+        aria-label="Start this class"
+        className="bg-primary text-on-primary rounded-full w-11 h-11 grid place-items-center shadow-md disabled:opacity-40 active:scale-95 transition-transform"
+      >
+        <Icon name="arrow_forward" filled />
+      </button>
     </div>
   );
 }

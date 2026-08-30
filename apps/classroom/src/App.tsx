@@ -22,6 +22,7 @@ import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
 import { Chapter } from './screens/Chapter';
 import { LessonRoute } from './screens/ClassRoom';
+import { LiveClassRoute } from './screens/LiveClass';
 import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
 import { LessonComplete } from './screens/LessonComplete';
@@ -200,6 +201,8 @@ export default function App() {
           <Route path="/syllabus" element={<Syllabus />} />
           <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
           <Route path="/lesson/:lessonId" element={<LessonRoute />} />
+          {/* Teach me this topic — fetched if somebody has had it, made if not. */}
+          <Route path="/class/*" element={<LiveClassRoute />} />
           <Route path="/action-lab/:lessonId" element={<ActionLab />} />
           <Route path="/canvas-lab" element={<CanvasLab />} />
           <Route path="/complete/:lessonId" element={<LessonComplete />} />

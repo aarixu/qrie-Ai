@@ -62,6 +62,15 @@
       "subject": "Science",
       "path": "class9-mitochondria/lesson.json",
       "topicRef": "class9-science/the-fundamental-unit-of-life/cell-organelles"
+    },
+    {
+      "id": "class9-science-the-fundamental-unit-of-life-nucleus",
+      "title": "The Nucleus",
+      "subtitle": "Class 9 · The Fundamental Unit of Life",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-the-fundamental-unit-of-life-nucleus/lesson.json",
+      "topicRef": "class9-science/the-fundamental-unit-of-life/nucleus"
     }
   ]
 }

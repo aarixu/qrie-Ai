@@ -311,3 +311,38 @@ describe('how big the picture actually is', () => {
     expect(got?.aspect).toBeCloseTo(2, 5);
   });
 });
+
+describe('the shape of a picture that is not a PNG', () => {
+  /**
+   * The image model returns a JPEG about as often as a PNG — the same prompt,
+   * on the same model, two runs apart. Reading only PNG headers meant every
+   * other picture had no shape, fell back to filling whatever box it was
+   * given, and had its parts circled in the empty board beside it. The fault
+   * this whole engine keeps paying for, wearing a different file format.
+   */
+  const jpeg = (w: number, h: number): string => {
+    const bytes = [0xff, 0xd8]; // SOI
+    // An APP0 segment first, so the scan has to walk past something to find
+    // the frame — which is what a real file looks like.
+    bytes.push(0xff, 0xe0, 0x00, 0x10);
+    for (let i = 0; i < 14; i += 1) bytes.push(0);
+    // SOF0: length, precision, height, width.
+    bytes.push(0xff, 0xc0, 0x00, 0x11, 0x08);
+    bytes.push((h >> 8) & 0xff, h & 0xff, (w >> 8) & 0xff, w & 0xff);
+    return `data:image/jpeg;base64,${Buffer.from(Uint8Array.from(bytes)).toString('base64')}`;
+  };
+
+  it('reads the shape out of a JPEG frame header', () => {
+    expect(imageAspect(jpeg(1024, 512))).toBeCloseTo(2, 5);
+    expect(imageAspect(jpeg(768, 768))).toBeCloseTo(1, 5);
+  });
+
+  it('walks past the segments before the frame rather than reading the first one', () => {
+    // A generated picture carries a fat metadata block ahead of its frame.
+    expect(imageAspect(jpeg(1408, 768))).toBeCloseTo(1408 / 768, 5);
+  });
+
+  it('says nothing when there is no frame header to find', () => {
+    expect(imageAspect('data:image/jpeg;base64,/9j/')).toBeNull();
+  });
+});

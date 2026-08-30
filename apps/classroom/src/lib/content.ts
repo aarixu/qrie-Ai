@@ -1,5 +1,5 @@
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
-import { loadSyllabus, type SubjectSyllabus, type Topic } from '@ai-tutor/syllabus';
+import { loadSyllabus, getTopic, type SubjectSyllabus, type Topic } from '@ai-tutor/syllabus';
 
 /**
  * The app's content access layer: joins the lesson catalog (content/index.json,
@@ -112,4 +112,35 @@ export async function nextLessonAfter(lessonId: string): Promise<CatalogEntry | 
   const after = here.slice(here.findIndex((l) => l.id === lessonId) + 1);
   if (after.length > 0) return after[0];
   return rows.slice(i + 1).flatMap((r) => r.lessons)[0] ?? null;
+}
+
+/**
+ * A topic, found by the same `topicRef` the catalogue joins on.
+ *
+ * The syllabus is the source of what may be taught; the catalogue is the
+ * record of what HAS been taught and kept. A topic in the first and not the
+ * second is a cold topic — nobody has had this class yet, so the first student
+ * to ask for it has it prepared live.
+ */
+export function findTopic(
+  topicRef: string,
+): { topic: Topic; syllabus: SubjectSyllabus; chapterTitle: string } | null {
+  const [syllabusId, chapterId] = topicRef.split('/');
+  const syllabus = SYLLABI.find((s) => s.id === syllabusId);
+  if (!syllabus) return null;
+  const topic = getTopic(syllabus, topicRef);
+  if (!topic) return null;
+  const chapter = syllabus.chapters.find((c) => c.id === chapterId);
+  return { topic, syllabus, chapterTitle: chapter?.title ?? '' };
+}
+
+/**
+ * Drop the remembered catalogue.
+ *
+ * Called after a live class is saved: the copy in memory was read before that
+ * class existed and still says its topic is cold, so the next visit would
+ * prepare it a second time and be refused as a duplicate.
+ */
+export function forgetCatalog(): void {
+  catalogCache = null;
 }

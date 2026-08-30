@@ -2,6 +2,8 @@ import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src`, import.meta.url));
@@ -128,12 +130,86 @@ function iconRelay(): Plugin {
   };
 }
 
+/**
+ * The first live class on a topic, written down.
+ *
+ * A cold topic costs most of a minute and a few rupees to prepare; the second
+ * student on it should pay neither. So the class that was just taught is
+ * written into `content/` in exactly the shape the hand-authored lessons have,
+ * and the catalogue's join by `topicRef` makes that topic warm for everyone —
+ * no new lookup, no cache to invalidate, and the content lint in the test
+ * suite checks the saved class the same way it checks the authored ones.
+ *
+ * WHAT to write is decided by `saveable` in @ai-tutor/class-prep, which is
+ * pure and tested. This only puts bytes on a disk.
+ *
+ * Dev only, deliberately: in production this is a real backend route with auth
+ * and a per-student budget, not a plugin.
+ */
+function classWriter(): Plugin {
+  const root = fileURLToPath(new URL('../../content', import.meta.url));
+  return {
+    name: 'curie-class-writer',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/api/class', (req, res) => {
+        const fail = (code: number, message: string) => {
+          res.statusCode = code;
+          res.setHeader('content-type', 'application/json');
+          res.end(JSON.stringify({ error: { message } }));
+        };
+        if (req.method !== 'POST') return fail(405, 'POST only');
+
+        const chunks: Buffer[] = [];
+        req.on('data', (c: Buffer) => chunks.push(c));
+        req.on('end', () => {
+          try {
+            const saved = JSON.parse(Buffer.concat(chunks).toString('utf8')) as {
+              id: string;
+              entry: { id: string };
+              files: { path: string; body: string; encoding: 'utf8' | 'base64' }[];
+            };
+            // A folder name is a path, and this one arrives over HTTP.
+            if (!/^[a-z0-9][a-z0-9-]*$/.test(saved.id)) return fail(400, 'bad class id');
+
+            const dir = path.join(root, saved.id);
+            // A topic is only cold once. Refusing rather than overwriting means
+            // a second student cannot replace the recording a first one made.
+            if (fs.existsSync(dir)) return fail(409, `${saved.id} already exists`);
+
+            for (const file of saved.files) {
+              if (file.path.includes('..')) return fail(400, 'bad file path');
+              const full = path.join(dir, file.path);
+              fs.mkdirSync(path.dirname(full), { recursive: true });
+              fs.writeFileSync(full, Buffer.from(file.body, file.encoding));
+            }
+
+            const indexPath = path.join(root, 'index.json');
+            const index = JSON.parse(fs.readFileSync(indexPath, 'utf8')) as {
+              lessons: { id: string }[];
+            };
+            if (!index.lessons.some((l) => l.id === saved.entry.id)) {
+              index.lessons.push(saved.entry as { id: string });
+              fs.writeFileSync(indexPath, `${JSON.stringify(index, null, 2)}\n`);
+            }
+
+            res.setHeader('content-type', 'application/json');
+            res.end(JSON.stringify({ ok: true, id: saved.id }));
+          } catch (e) {
+            fail(500, String(e));
+          }
+        });
+      });
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
   // Read from the repo root, where .env.local lives beside the tools that share it.
   const env = loadEnv(mode, fileURLToPath(new URL('../..', import.meta.url)), '');
 
   return {
-    plugins: [react(), llmRelay(env.OPENROUTER_API_KEY ?? ''), iconRelay()],
+    plugins: [react(), llmRelay(env.OPENROUTER_API_KEY ?? ''), iconRelay(), classWriter()],
     // Lessons are data, served as static files: /index.json, /<lesson>/lesson.json
     publicDir: fileURLToPath(new URL('../../content', import.meta.url)),
     resolve: {

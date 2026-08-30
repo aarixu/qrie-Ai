@@ -11,7 +11,7 @@ import {
 } from '@ai-tutor/doubt-session';
 import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
-import { useDiagramAssets } from '../lib/diagrams';
+import { useLessonAssets } from '../lib/diagrams';
 import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
@@ -57,7 +57,7 @@ export function LessonRoute() {
   const tts = useLessonVoice(entry, lesson, { enabled: preferences.voice });
   // Resolved here for the same reason the voice is: the classroom should not
   // remount because a picture arrived a moment after the lesson did.
-  const diagrams = useDiagramAssets(entry, lesson);
+  const diagrams = useLessonAssets(entry, lesson);
 
   useEffect(() => {
     let cancelled = false;

@@ -52,11 +52,11 @@ export function Chapter() {
           return (
             <button
               key={path}
-              onClick={() => next && navigate(`/lesson/${next.id}`)}
-              disabled={!available}
-              className={`flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all ${
-                available ? 'hover:shadow-md hover:scale-[1.01] cursor-pointer' : 'opacity-70 cursor-default'
-              }`}
+              // A topic nobody has studied yet is not locked — it is the one
+              // she has not had to teach before. Tapping it prepares the class
+              // live, and the student after this one is shown what she made.
+              onClick={() => navigate(available ? `/lesson/${next.id}` : `/class/${path}`)}
+              className="flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all hover:shadow-md hover:scale-[1.01] cursor-pointer"
             >
               <div
                 className={`w-12 h-12 rounded-full grid place-items-center shrink-0 ${
@@ -67,7 +67,7 @@ export function Chapter() {
                       : 'bg-surface-container text-on-surface-variant'
                 }`}
               >
-                <Icon name={done ? 'check' : available ? 'play_arrow' : 'lock'} filled={available && !done} />
+                <Icon name={done ? 'check' : available ? 'play_arrow' : 'auto_awesome'} filled={!done} />
               </div>
 
               <div className="min-w-0 flex-1">
@@ -77,7 +77,7 @@ export function Chapter() {
                 </div>
                 <div className="font-headline-md text-[17px] leading-6 text-on-surface">{topic.title}</div>
                 {!available ? (
-                  <div className="font-label-md text-label-md text-on-surface-variant">Coming soon</div>
+                  <div className="font-label-md text-label-md text-primary">Start this class</div>
                 ) : (
                   lessons.length > 1 && (
                     <div className="font-label-md text-label-md text-on-surface-variant">
