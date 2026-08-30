@@ -288,5 +288,8 @@ function escapeXml(s: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    // The apostrophe too, so this is safe wherever it is used rather than
+    // safe because of where it happens to be used today.
+    .replace(/'/g, '&apos;');
 }

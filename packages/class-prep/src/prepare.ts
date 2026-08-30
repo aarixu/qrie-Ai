@@ -307,7 +307,11 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         PLANNER_SYSTEM,
         repairPlanUser(JSON.stringify(blueprint), validated.errors.slice(0, 10)),
       );
-      const fixed = JSON.parse(stripFence(reply)) as Blueprint;
+      // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
+      // recovering JSON from prose is the whole reason parsePlan exists. The
+      // strict parse threw away plans that were sitting right there.
+      const fixed = parsePlan(reply);
+      if (!fixed) throw new Error('the repaired plan was unreadable');
       fixed.beats ??= [];
       // The artwork is already drawn; its briefs are not the model's to change.
       fixed.visuals = blueprint.visuals;

@@ -101,7 +101,9 @@ function iconRelay(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/icons', (req, res) => {
         const url = new URL(req.url ?? '', 'http://localhost');
-        const nouns = (url.searchParams.get('nouns') ?? '').split(',').filter(Boolean);
+        // One parameter per noun: no separator means no noun can be split
+        // by one. The comma-joined list tore "salt, sugar" into two.
+        const nouns = url.searchParams.getAll('noun').filter(Boolean);
         res.setHeader('content-type', 'application/json');
         try {
           // Resolution itself lives in @ai-tutor/graphics; this only feeds it.

@@ -13,6 +13,9 @@ export function computeVisible(
   return {
     visible: [...beat.show],
     focus: [...(beat.focus ?? [])],
-    ...(beat.frame ? { frame: [...beat.frame] } : {}),
+    // An EMPTY frame is not a frame. Forwarded, it reached the camera as a
+    // real but empty set, whose fallback is the whole board — so a beat that
+    // framed nothing zoomed out across every page instead of following show.
+    ...(beat.frame && beat.frame.length > 0 ? { frame: [...beat.frame] } : {}),
   };
 }

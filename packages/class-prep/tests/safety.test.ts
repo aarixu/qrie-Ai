@@ -44,6 +44,22 @@ describe('unsafeMarkup', () => {
     expect(unsafeMarkup(svg('<rect fill="url(#grad)" width="4" height="4"/>'))).toEqual([]);
   });
 
+  it('refuses a handler introduced with a slash, the way a parser reads it', () => {
+    // A tokenizer ends an attribute on a slash as readily as on a space, so
+    // a whitespace-only check walked straight past a live handler.
+    expect(unsafeMarkup(svg('<circle r="2"/onclick="x()"/>'))).toContain(
+      'contains an inline event handler',
+    );
+  });
+
+  it('refuses an unquoted external reference', () => {
+    // Quotes are optional in the markup a parser accepts; the gate had been
+    // reading only the quoted form.
+    expect(unsafeMarkup(svg('<a href=https://evil.example/x><circle r="2"/></a>'))).toContain(
+      'references an external resource',
+    );
+  });
+
   it('refuses script, handlers, embeds and javascript: URLs', () => {
     expect(unsafeMarkup(svg('<script>x()</script>'))).toContain('contains <script>');
     expect(unsafeMarkup(svg('<circle r="2" onclick="x()"/>'))).toContain(
@@ -57,7 +73,7 @@ describe('unsafeMarkup', () => {
 });
 
 describe('both picture paths are behind the same gate', () => {
-  const brief = { id: 'd1', alt: 'a cell', parts: [], prompt: 'draw a cell' };
+  const brief = { id: 'd1', alt: 'a cell', parts: [], brief: 'draw a cell' };
 
   it('the diagram verifier refuses a stylesheet', () => {
     const withStyle =

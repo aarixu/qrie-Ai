@@ -54,7 +54,11 @@ async function fetchGraphics(
   ];
   if (nouns.length === 0) return {};
 
-  const res = await fetch(`/api/icons?nouns=${nouns.map(encodeURIComponent).join(',')}`);
+  // One parameter per noun. Joined with commas, a noun containing one was
+  // torn in half and quietly lost both its lookup and its fallback.
+  const query = new URLSearchParams();
+  for (const noun of nouns) query.append('noun', noun);
+  const res = await fetch(`/api/icons?${query}`);
   if (!res.ok) return {};
 
   type Glyph = { body: string; width: number; height: number };
@@ -153,12 +157,21 @@ export function CanvasLab() {
       });
       // The drawings arrive with the plan; the noun pictures are a second,
       // much cheaper fetch, so the board is complete before it is shown.
-      const graphics = await fetchGraphics(
-        result.lesson,
-        topic,
-        createBrowserLlm(PICKER_MODEL, { json: true }),
-        createBrowserLlm(ARTIST_MODEL),
-      );
+      // Pictures never take the class down with them. The icon relay went
+      // down once mid-session and a fully prepared lesson was thrown away
+      // with it, which is the opposite of what this path promises.
+      let graphics: Record<string, string> = {};
+      try {
+        graphics = await fetchGraphics(
+          result.lesson,
+          topic,
+          createBrowserLlm(PICKER_MODEL, { json: true }),
+          createBrowserLlm(ARTIST_MODEL),
+        );
+      } catch {
+        // The board shows what it has; a noun with no picture is a gap, not
+        // a failure.
+      }
       setPrepared({ ...result, assets: { ...result.assets, ...graphics } });
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
