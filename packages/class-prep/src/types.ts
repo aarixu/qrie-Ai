@@ -12,7 +12,25 @@ import type { Lesson } from '@ai-tutor/lesson-format';
 export interface VisualBrief {
   /** The element id this artwork becomes, e.g. `d_graph`. */
   id: string;
-  /** Named `<g>` ids the artwork must contain, in the order a tutor walks them. */
+  /**
+   * How it gets made.
+   *
+   * `diagram` is drawn in SVG, so its parts can be lit from inside — right for
+   * anything schematic: a graph, a circuit, a flow of forces. `picture` is
+   * generated as an image on white, right for anything that has to LOOK like
+   * the real thing: an organ, a cross-section, a landscape. No SVG written by
+   * hand is going to look like a kidney.
+   *
+   * Absent means diagram, so every lesson written before this stays valid.
+   */
+  medium?: 'diagram' | 'picture';
+  /**
+   * The parts a tutor will point at.
+   *
+   * For a diagram these are `<g>` ids the artwork must contain. For a picture
+   * they are plain names — "cortex", "renal pelvis" — found by looking at the
+   * picture after it is made.
+   */
   parts: string[];
   /** Geometry, in prose, precise enough to draw from. */
   brief: string;

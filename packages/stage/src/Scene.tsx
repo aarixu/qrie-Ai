@@ -355,12 +355,23 @@ function renderArrow(el: Extract<Element, { kind: 'arrow' }>): ReactElement {
   );
 }
 
-function renderImage(el: Extract<Element, { kind: 'image' }>): ReactElement {
+/**
+ * A generated picture.
+ *
+ * `src` on the element is where the artwork LIVES once a lesson is saved;
+ * `asset` is the artwork itself, handed over at runtime by a class that was
+ * prepared just now and has not been written anywhere. A class prepared live
+ * has only the second, and rendering the first showed a broken-image icon
+ * where the kidney should have been.
+ */
+function renderImage(el: Extract<Element, { kind: 'image' }>, asset?: string): ReactElement {
   const color = TONE_COLORS.neutral;
   return (
     <>
-      <image href={el.src} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
-      <rect x={el.x} y={el.y} width={el.w} height={el.h} rx={4} fill="none" stroke={color} strokeOpacity={0.3} strokeWidth={1.5} />
+      {/* No frame. A picture is generated on white so it sits ON the board,
+          the way a chart pinned up there does — a border would make it a
+          panel dropped onto the lesson instead of part of it. */}
+      <image href={asset ?? el.src} x={el.x} y={el.y} width={el.w} height={el.h} preserveAspectRatio="xMidYMid meet" aria-label={el.alt} />
       {el.label && (
         <text x={el.x + el.w / 2} y={el.y + el.h + 20} textAnchor="middle" fontFamily={FONT_HAND} fontSize={14.5} fill={color} fillOpacity={0.7}>
           {el.label}
@@ -753,7 +764,7 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
         </text>
       );
     case 'image':
-      return renderImage(el);
+      return renderImage(el, svg);
     case 'diagram':
       return renderDiagram(el, svg, litParts);
     case 'graphic':

@@ -14,3 +14,14 @@ export type {
 export { pickIcons, ICON_PICKER_SYSTEM, iconPickerUser, type IconOption, type IconChoice } from './icons';
 export { drawMissingIcons, verifyIconSvg, ICON_ARTIST_SYSTEM, iconArtistUser } from './drawIcon';
 export { unsafeMarkup } from './safety';
+export {
+  drawPicture,
+  parseParts,
+  picturePrompt,
+  partFinderUser,
+  PART_FINDER_SYSTEM,
+  type ImageAdapter,
+  type PictureBrief,
+  type PictureResult,
+  type VisionAdapter,
+} from './picture';

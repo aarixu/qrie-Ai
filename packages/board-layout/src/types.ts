@@ -17,6 +17,16 @@ export type Instruction =
   | { do: 'title'; text: string; sub?: string }
   /** A generated picture, by the id of its brief. */
   | { do: 'diagram'; ref: string }
+  /**
+   * A generated PICTURE of a real thing, by the id of its brief.
+   *
+   * A diagram is drawn in SVG and its parts can be lit from inside. A picture
+   * is generated as an image, on white so it sits on the board rather than in
+   * a panel, and it is for subjects that have to LOOK right — an organ, a
+   * cross-section, a landscape. Its parts are marked ON it rather than lit
+   * inside it.
+   */
+  | { do: 'picture'; ref: string }
   /** Light one named part inside a picture and dim the rest of it. */
   | { do: 'point'; ref: string; part: string }
   /** A short equation, as it would be written on a board. */
@@ -83,6 +93,14 @@ export type Instruction =
   /** Draw the relationship between two placed things. */
   | { do: 'connect'; from: string; to: string; label?: string; dashed?: boolean; tone?: Tone }
   /** Make a teacher's mark on something already placed. */
+  /**
+   * A teacher's mark ON something already on the board.
+   *
+   * `target` is the id of a placed thing — or a part inside a picture, written
+   * `kidney#cortex`. That second form is what lets one generated picture carry
+   * a whole stretch of teaching: she circles the cortex, arrows to the pelvis,
+   * writes beside each, and never needs another image.
+   */
   | { do: 'annotate'; target: string; mark: 'circle' | 'underline' | 'tick' | 'cross'; tone?: Tone }
   /**
    * What the tutor says at this point in the beat.

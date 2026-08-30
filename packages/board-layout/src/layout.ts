@@ -2,6 +2,8 @@ import {
   boxOf,
   union,
   noteBoxHeight,
+  splitPartRef,
+  type ImagePart,
   CANVAS_H,
   CANVAS_W,
   fitText,
@@ -46,6 +48,14 @@ const CARD_H = 128;
 
 /** One thing to place, and how much vertical room it insists on. */
 interface Block {
+  /**
+   * The instruction that made it.
+   *
+   * The stack does not usually care — a block is a block. It matters for one
+   * arrangement: a picture with written points belongs BESIDE them, not above
+   * them, and recognising that shape needs to know which block is which.
+   */
+  kind: Instruction['do'];
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
   /**
@@ -83,6 +93,30 @@ const idFor = (beatId: string, index: number, suffix = ''): string =>
 const noteHeight = noteBoxHeight;
 
 /**
+ * Break a written line into lines that fit a column.
+ *
+ * On whole words, because a teacher does not hyphenate on a board. A single
+ * word longer than the column stays on its own line and overhangs slightly,
+ * which is what happens on a real board too.
+ */
+function wrapText(text: string, w: number, size: number): string[] {
+  const perLine = Math.max(8, Math.floor((w * 0.94) / (size * 0.5)));
+  const lines: string[] = [];
+  let line = '';
+  for (const word of text.split(/\s+/)) {
+    const next = line ? `${line} ${word}` : word;
+    if (next.length > perLine && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+/**
  * Turn one beat's instructions into positioned elements.
  *
  * Consecutive `card` instructions become one row, because that is what a person
@@ -106,7 +140,18 @@ export interface RevealStep {
  * Reflowing on every noun is what would make a scene jump about while the tutor
  * is talking over it.
  */
-export function layoutBeat(beat: ScriptBeat): {
+export function layoutBeat(
+  beat: ScriptBeat,
+  /**
+   * Where the named parts of each generated picture are, as fractions of it.
+   *
+   * Layout owns board geometry, always. But WHERE the cortex is inside a
+   * picture of a kidney is not a layout decision — it is a fact about that
+   * picture, discovered by looking at it. So it arrives here as a fact, and
+   * layout does what it always does: turns facts into coordinates.
+   */
+  parts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
+): {
   elements: Element[];
   laid: LaidOutBeat;
   steps: RevealStep[];
@@ -151,6 +196,17 @@ export function layoutBeat(beat: ScriptBeat): {
   /** Pairs that are meant to overlap, so the solver leaves them alone. */
   const bonds: Bond[] = [];
   const leashes: Leash[] = [];
+  /**
+   * Marks on things that are not scene places — a whole picture, or a named
+   * part inside one.
+   *
+   * They wait for the stacking pass, because a block does not know its own
+   * rectangle until every block in the beat has been counted. Held here with
+   * the instruction that asked for them, so they still appear on the word that
+   * named them.
+   */
+  const pendingMarks: { at: number; id: string; step: Extract<Instruction, { do: 'annotate' }> }[] =
+    [];
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -184,10 +240,37 @@ export function layoutBeat(beat: ScriptBeat): {
         break;
       }
 
+      case 'picture': {
+        const ref = item.ref;
+        // A picture takes whatever room the rest of the beat leaves it, and
+        // its named parts come with it so a mark can find them.
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: null,
+          place: (r) => [
+            {
+              kind: 'image',
+              id: ref,
+              x: r.x,
+              y: r.y,
+              w: r.w,
+              h: r.h,
+              src: `generated/${ref}.png`,
+              alt: ref.replace(/_/g, ' '),
+              ...(parts.get(ref) ? { parts: [...parts.get(ref)!] } : {}),
+            } as Element,
+          ],
+        });
+        i += 1;
+        break;
+      }
+
       case 'diagram': {
         const ref = item.ref;
         // A picture takes whatever room the rest of the beat leaves it.
         blocks.push({
+          kind: item.do,
           at: index,
           height: null,
           place: (r) => {
@@ -211,6 +294,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'chart': {
         blocks.push({
+          kind: item.do,
           at: index,
           height: null,
           place: (r) => [
@@ -235,6 +319,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'flow': {
         blocks.push({
+          kind: item.do,
           at: index,
           height: 120,
           place: (r) => [
@@ -255,6 +340,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'equation': {
         blocks.push({
+          kind: item.do,
           at: index,
           height: EQUATION_H,
           place: (r) => [
@@ -273,19 +359,33 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'write': {
         blocks.push({
+          kind: item.do,
           at: index,
           height: WRITE_H,
-          place: (r) => [
-            {
+          // Written on the centreline when it has the board, and inside its
+          // own column when it is sharing with a picture. In a column it
+          // WRAPS rather than shrinking: a key point squeezed to fit one line
+          // of a narrow column came out too small to read from a desk, which
+          // is the one thing a key point may not be.
+          place: (r) => {
+            const narrow = r.w < WIDTH * 0.75;
+            const size = narrow ? 27 : 36;
+            const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
+            // Wider than the overlap solver breathes (6 units a side): set
+            // tighter, consecutive lines read as a collision and the solver
+            // shrinks the point until it fits — down to unreadable.
+            const lead = size * 1.62;
+            const top = r.y + size * 0.9;
+            return lines.map((line, n) => ({
               kind: 'handwrite',
-              id: idFor(beat.id, index),
-              x: CANVAS_W / 2,
-              y: r.y + WRITE_H * 0.7,
-              text: item.text,
-              size: 36,
+              id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
+              x: r.x + r.w / 2,
+              y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
+              text: line,
+              size: narrow ? size : fitText(item.text, r.w * 0.94, 36, 17),
               ...(item.tone ? { tone: item.tone } : {}),
-            },
-          ],
+            }));
+          },
         });
         i += 1;
         break;
@@ -295,6 +395,7 @@ export function layoutBeat(beat: ScriptBeat): {
         const text = item.text;
         const tone = item.tone;
         blocks.push({
+          kind: item.do,
           at: index,
           height: noteHeight(text, WIDTH * 0.68),
           place: (r) => {
@@ -326,6 +427,7 @@ export function layoutBeat(beat: ScriptBeat): {
         const perRow = Math.max(1, Math.min(run.length, Math.floor(WIDTH / MIN_CARD_W)));
         const rows = Math.ceil(run.length / perRow);
         blocks.push({
+          kind: item.do,
           at: index,
           height: rows * CARD_H + (rows - 1) * GUTTER,
           place: (r) => {
@@ -389,6 +491,16 @@ export function layoutBeat(beat: ScriptBeat): {
       case 'place':
       case 'connect':
       case 'annotate': {
+        // A mark on something the SCENE owns is drawn inside the scene block,
+        // where that thing's box lives. A mark on anything else — a picture,
+        // or a named part inside one — waits for the stacking pass, because a
+        // picture does not know its own rectangle until every block in the
+        // beat has been counted.
+        if (item.do === 'annotate' && !places.some((q) => q.id === item.target)) {
+          pendingMarks.push({ at: index, id: idFor(beat.id, index), step: item });
+          i += 1;
+          break;
+        }
         if (sceneEmitted) {
           i += 1;
           break;
@@ -396,6 +508,7 @@ export function layoutBeat(beat: ScriptBeat): {
         sceneEmitted = true;
         const sceneSteps = items;
         blocks.push({
+          kind: 'place',
           // The scene records its own, per instruction, below.
           at: null,
           height: null,
@@ -461,6 +574,53 @@ export function layoutBeat(beat: ScriptBeat): {
     }
   }
 
+  /**
+   * A picture with the key points written beside it.
+   *
+   * This is the shape of a real board when a teacher is working on one figure:
+   * the drawing takes most of the space and stays big, and what she says gets
+   * written up the side as she says it. Stacked instead, four written lines
+   * squeezed a kidney down to a thumbnail — the picture the whole beat was
+   * about, reduced to make room for its own captions.
+   *
+   * Deliberately narrow: exactly one figure, at least one written line, and
+   * nothing else in the beat. Any other mixture falls through to the ordinary
+   * stack, which is still what most beats want.
+   */
+  const FIGURE: ReadonlySet<Instruction['do']> = new Set(['picture', 'diagram', 'chart', 'flow']);
+  const figures = blocks.filter((b) => FIGURE.has(b.kind));
+  const writes = blocks.filter((b) => b.kind === 'write');
+
+  if (figures.length === 1 && writes.length > 0 && blocks.length === 1 + writes.length) {
+    const GAP = 26;
+    const figureW = Math.round((WIDTH - GAP) * 0.6);
+    const columnW = WIDTH - GAP - figureW;
+
+    current = figures[0].at ?? -1;
+    for (const el of figures[0].place({ x: SIDE, y: MAIN.y, w: figureW, h: MAIN.h })) emit(el);
+
+    // From the top, because points accumulate down a board as they are said —
+    // a column that stayed vertically centred would slide everything already
+    // written whenever a new line arrived.
+    //
+    // Each point takes the room it actually takes: placed, measured, and the
+    // next one starts below it. Equal slots looked tidier until a point wrapped
+    // to three lines and ran into the next one.
+    const BETWEEN_POINTS = 16;
+    let ry = MAIN.y;
+    for (const block of writes) {
+      current = block.at ?? -1;
+      let bottom = ry;
+      for (const el of block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h: WRITE_H })) {
+        emit(el);
+        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+      }
+      ry = bottom + BETWEEN_POINTS;
+    }
+
+    blocks.length = 0;
+  }
+
   // --- stack the blocks down MAIN ---
   const fixed = blocks.reduce((sum, b) => sum + (b.height ?? 0), 0);
   const flexible = blocks.filter((b) => b.height === null).length;
@@ -480,6 +640,48 @@ export function layoutBeat(beat: ScriptBeat): {
     current = block.at ?? -1;
     for (const el of block.place({ x: SIDE, y, w: WIDTH, h })) emit(el);
     y += h + GUTTER;
+  }
+
+  // --- mark the things the scene does not own ---
+  //
+  // A picture now knows its rectangle, so a circle round the cortex can be
+  // worked out: the part's fractional box, scaled into the picture's box. This
+  // is the move that lets ONE picture carry a whole stretch of teaching — she
+  // marks it, writes beside it, and never needs another image.
+  for (const pending of pendingMarks) {
+    const { elementId, part } = splitPartRef(pending.step.target);
+    const host = elements.find((el) => el.id === elementId);
+    if (!host) continue;
+
+    let box = boxOf(host);
+    if (part !== null) {
+      const named =
+        host.kind === 'image' ? (host.parts ?? []).find((q) => q.name === part) : undefined;
+      // A part nobody could find is not marked at all. A circle in the middle
+      // of a picture, drawn because we guessed, teaches the wrong thing with
+      // complete confidence.
+      if (!named) continue;
+      box = {
+        x: box.x + named.x * box.w,
+        y: box.y + named.y * box.h,
+        w: named.w * box.w,
+        h: named.h * box.h,
+      };
+    }
+
+    const grow = pending.step.mark === 'underline' ? 0 : 10;
+    current = pending.at;
+    emit({
+      kind: 'mark',
+      id: pending.id,
+      x: box.x - grow,
+      y: box.y - grow,
+      w: box.w + grow * 2,
+      h: box.h + grow * 2,
+      shape: pending.step.mark,
+      ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+    });
+    bonds.push({ a: pending.id, b: host.id });
   }
 
   // Nothing on the board sits on anything else.

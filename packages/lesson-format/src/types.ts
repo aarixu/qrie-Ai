@@ -22,6 +22,21 @@ export interface Point {
 /** Visual tone. The renderer maps these to theme colors — content never picks hex codes. */
 export type Tone = 'neutral' | 'good' | 'bad' | 'accent';
 
+/**
+ * A named region inside a picture, as fractions of it (0..1).
+ *
+ * Fractions rather than units because a picture is placed by the layout and
+ * may be any size on the board; the cortex is a third of the way down the
+ * kidney whatever size the kidney is drawn.
+ */
+export interface ImagePart {
+  name: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export type Element =
   | { kind: 'title'; id: string; x: number; y: number; text: string; sub?: string }
   | { kind: 'text'; id: string; x: number; y: number; text: string; size?: number; muted?: boolean }
@@ -49,7 +64,28 @@ export type Element =
   | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
   | { kind: 'formula'; id: string; x: number; y: number; text: string }
-  | { kind: 'image'; id: string; x: number; y: number; w: number; h: number; src: string; alt: string; label?: string }
+  /**
+   * A generated picture of a real thing — an organ, a cross-section, a scene.
+   *
+   * Where a `diagram` is drawn in SVG so its parts can be lit from inside, a
+   * picture is a raster and opaque. The tutor works on it the way she works on
+   * a printed chart pinned to the board: she circles a part, draws an arrow to
+   * it, writes beside it. `parts` is what makes that possible — each named
+   * region as a FRACTION of the picture, found by looking at the picture once
+   * after it was made.
+   */
+  | {
+      kind: 'image';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      src: string;
+      alt: string;
+      label?: string;
+      parts?: ImagePart[];
+    }
   /**
    * A generated SVG diagram whose named parts the tutor can point at.
    *

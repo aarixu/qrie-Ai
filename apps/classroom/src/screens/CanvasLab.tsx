@@ -11,6 +11,7 @@ import {
   type PrepReport,
 } from '@ai-tutor/class-prep';
 import { createBrowserLlm } from '../lib/browserLlm';
+import { createBrowserImageArtist, createBrowserVision } from '../lib/browserImage';
 
 /**
  * Both jobs run on gemini-3.7-flash — measured as fastest AND best on this
@@ -21,6 +22,16 @@ const PLANNER_MODEL = 'google/gemini-3.7-flash';
 const ARTIST_MODEL = 'google/gemini-3.7-flash';
 /** Picks which meaning of a word to draw. One small call, so the fastest model. */
 const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
+/**
+ * Draws a picture of a real thing on white — a kidney, a cross-section.
+ *
+ * Measured on a half-cut kidney: 11s and about Rs 5.75, against Rs 2.25 for
+ * the whole class without one. So it is worth it exactly when the subject has
+ * to LOOK right, which is why the planner is told to earn it.
+ */
+const IMAGE_MODEL = 'google/gemini-3.1-flash-image';
+/** Looks at a generated picture to find where its named parts are. */
+const VISION_MODEL = 'google/gemini-3.7-flash';
 
 /**
  * The pictures for the nouns a lesson places.
@@ -153,6 +164,8 @@ export function CanvasLab() {
         minutes,
         planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
         artist: createBrowserLlm(ARTIST_MODEL),
+        imageArtist: createBrowserImageArtist(IMAGE_MODEL),
+        eyes: createBrowserVision(VISION_MODEL),
         onProgress: setProgress,
       });
       // The drawings arrive with the plan; the noun pictures are a second,

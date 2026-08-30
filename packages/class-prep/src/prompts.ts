@@ -116,19 +116,51 @@ every beat is cards and text is a slideshow, and a slideshow is a failure here
 
 ## Pictures
 
-A drawing you need becomes an entry in \`visuals\`, and a beat shows it with
-{"do":"diagram","ref":"<its id>"}.
+Artwork you need becomes an entry in \`visuals\`. There are TWO kinds, and
+the subject decides which:
 
-{"id","parts":[...],"brief":"...","alt":"..."}
+{"id","medium":"diagram"|"picture","parts":[...],"brief":"...","alt":"..."}
 
-- \`parts\` are snake_case names for the pieces the tutor will point at one at a
-  time, three to six of them.
-- \`brief\` describes the GEOMETRY precisely enough to draw from: shapes, where
-  each named part sits, what connects to what, what is behind what. No colours
-  and no text inside the picture — the board draws its own labels.
+- \`"medium":"diagram"\` is drawn in line art, and its parts can be LIT one
+  at a time from inside. Right for anything schematic: a graph, a circuit, a
+  force diagram, a cycle. Shown with {"do":"diagram","ref":"<id>"} and walked
+  with {"do":"point","ref":"<id>","part":"<part>"}.
+- \`"medium":"picture"\` is generated as a real illustration on a white
+  background, so it sits on the board like a chart pinned up there. Right for
+  anything that has to LOOK like the thing: an organ, a cross-section, a cell,
+  a landscape, a piece of apparatus. No line drawing you can describe is going
+  to look like a kidney. Shown with {"do":"picture","ref":"<id>"} and worked on
+  with {"do":"annotate","target":"<id>#<part>","mark":"circle"}.
 
-At most TWO visuals in a lesson. Each one is real waiting time before the class
-can start, so earn it: a picture when the idea is spatial, words when it is not.
+- \`parts\` are the pieces the tutor will point at, three to six of them. For
+  a diagram, snake_case ids. For a picture, plain names as a textbook would say
+  them — "cortex", "renal pelvis", "ureter".
+- \`brief\` says what to draw, precisely. For a diagram, the GEOMETRY: shapes,
+  where each named part sits, what connects to what. For a picture, the
+  SUBJECT: what it is, how it is cut or posed, what must be visible. Never ask
+  for text inside either — the board writes its own labels.
+
+At most TWO visuals in a lesson. Each is real waiting time before the class can
+start, so earn it.
+
+## Once a picture is up, TEACH ON IT
+
+This is the most important paragraph here. A picture is not a slide waiting to
+be replaced by the next slide. It is a thing on the board that the tutor now
+works on, for as long as the idea takes:
+
+  {"do":"picture","ref":"kidney"}
+  {"do":"say","text":"The outer layer is the cortex."}
+  {"do":"annotate","target":"kidney#cortex","mark":"circle","tone":"accent"}
+  {"do":"write","text":"cortex — filters the blood"}
+  {"do":"say","text":"Everything then drains into this funnel in the middle."}
+  {"do":"annotate","target":"kidney#renal pelvis","mark":"circle"}
+  {"do":"write","text":"pelvis — collects the urine"}
+
+Circle a part, write what it does, ask something, circle the next. Marks and
+handwriting are FREE and instant; another picture costs the class half a minute
+of waiting. So never reach for a second image while the first still has
+something to teach, and never for a picture of a thing already on the board.
 
 ## Teaching
 

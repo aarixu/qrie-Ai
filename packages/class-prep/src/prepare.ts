@@ -1,5 +1,12 @@
 import { layoutBeat, offsetElement } from '@ai-tutor/board-layout';
-import { validateLesson, type Beat, type Element, type Lesson } from '@ai-tutor/lesson-format';
+import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture';
+import {
+  validateLesson,
+  type Beat,
+  type Element,
+  type ImagePart,
+  type Lesson,
+} from '@ai-tutor/lesson-format';
 
 import {
   ARTIST_SYSTEM,
@@ -35,6 +42,13 @@ export interface PrepOptions {
   planner: LlmAdapter;
   /** The model that draws. Separate because drawing wants a stronger, slower model. */
   artist: LlmAdapter;
+  /**
+   * The model that generates pictures. Optional: without it a lesson simply
+   * gets no photographic artwork, which is a poorer class, not a broken one.
+   */
+  imageArtist?: ImageAdapter;
+  /** The model that looks at a generated picture to find its named parts. */
+  eyes?: VisionAdapter;
   onProgress?: (p: PrepProgress) => void;
   /** How many times one picture may be redrawn before the class goes on without it. */
   maxArtAttempts?: number;
@@ -87,6 +101,8 @@ const stripFence = (s: string): string =>
 export function assemble(
   blueprint: Blueprint,
   drawn: ReadonlySet<string>,
+  /** Where each generated picture’s named parts are, as fractions of it. */
+  pictureParts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
 ): { lesson: unknown; dropped: string[] } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
@@ -104,7 +120,13 @@ export function assemble(
    * points the camera at the page being taught, so moving on is a pan that
    * slides the old work aside rather than a cut that deletes it.
    */
-  const PAGE_STRIDE = 1080;
+  // A page is a thousand units wide; the rest is the gap between pages.
+  //
+  // It has to be wider than the breathing room the camera adds around what it
+  // frames — about 80 units on a full page — or the edge of the previous page
+  // leans into the shot, and a stray letter from an old heading appears beside
+  // the drawing being taught.
+  const PAGE_STRIDE = 1260;
   let page = 0;
   const shownSoFar: string[] = [];
 
@@ -118,7 +140,7 @@ export function assemble(
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
     );
-    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board });
+    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board }, pictureParts);
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -146,6 +168,14 @@ export function assemble(
 
     for (const el of laidOut) {
       const placed = offsetElement(el, dx);
+      if (placed.kind === 'image') {
+        // A picture's own alt comes from the brief, the same way a diagram's
+        // does; its src is filled in by the caller that holds the artwork.
+        const brief = briefs.get(placed.id);
+        const finished: Element = { ...placed, alt: brief?.alt ?? placed.alt };
+        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
+        continue;
+      }
       if (placed.kind === 'diagram') {
         const brief = briefs.get(placed.id);
         const finished: DiagramElement = {
@@ -258,7 +288,8 @@ async function drawOne(
  * two is still a class; a class that failed to start is not.
  */
 export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
-  const { topic, klass, minutes = 2, planner, artist, maxArtAttempts = 2 } = opts;
+  const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
+    opts;
   const say = (phase: PrepProgress['phase'], message: string, done: number) =>
     opts.onProgress?.({ phase, message, done });
 
@@ -296,8 +327,42 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   say('drawing', total === 0 ? 'No pictures needed.' : `Drawing ${total} picture${total === 1 ? '' : 's'}…`, 0.3);
 
   let finished = 0;
+  const pictureParts = new Map<string, readonly ImagePart[]>();
+
+  // Diagrams and pictures are made side by side. A picture is a different
+  // medium, not a different stage: both are just artwork the class is waiting
+  // on, and waiting on them one after the other would double the wait.
   const results = await Promise.all(
     blueprint.visuals.map(async (brief) => {
+      const wantsPicture = brief.medium === 'picture' && imageArtist !== undefined;
+      const started = Date.now();
+
+      if (wantsPicture) {
+        const made = await drawPicture(
+          { id: brief.id, alt: brief.alt, brief: brief.brief, parts: brief.parts },
+          imageArtist,
+          eyes ?? { look: async () => '{}' },
+        );
+        finished += 1;
+        say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.55 * finished) / Math.max(1, total));
+        if (made) pictureParts.set(brief.id, made.parts);
+        return {
+          brief,
+          svg: made?.src ?? null,
+          outcome: {
+            id: brief.id,
+            ok: made !== null,
+            attempts: 1,
+            ms: Date.now() - started,
+            problems: made
+              ? brief.parts.length > 0 && made.parts.length === 0
+                ? ['none of its named parts could be found in the picture']
+                : []
+              : ['the picture could not be generated'],
+          },
+        };
+      }
+
       const r = await drawOne(brief, artist, maxArtAttempts);
       finished += 1;
       say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.55 * finished) / Math.max(1, total));
@@ -315,7 +380,11 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   }
 
   say('checking', 'Checking the class holds together…', 0.9);
-  const { lesson: candidate, dropped } = assemble(blueprint, new Set(Object.keys(assets)));
+  const { lesson: candidate, dropped } = assemble(
+    blueprint,
+    new Set(Object.keys(assets)),
+    pictureParts,
+  );
   for (const id of dropped) issues.push(`Beats referring to "${id}" were trimmed.`);
 
   let validated = validateLesson(candidate);
@@ -344,7 +413,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       fixed.visuals = blueprint.visuals;
       fixed.id ||= blueprint.id;
 
-      const revalidated = validateLesson(assemble(fixed, new Set(Object.keys(assets))).lesson);
+      const revalidated = validateLesson(
+        assemble(fixed, new Set(Object.keys(assets)), pictureParts).lesson,
+      );
       if (revalidated.ok) {
         validated = revalidated;
         issues.push('The plan was repaired and passed.');

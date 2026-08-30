@@ -3,6 +3,7 @@ export type {
   Tone,
   Element,
   ElementKind,
+  ImagePart,
   Beat,
   Lesson,
 } from './types';
