@@ -236,50 +236,133 @@ export function candidatesFor(
  * time it appears — a placeholder that changed shape between beats would read
  * as two different things.
  */
+/**
+ * A QUICK PENCIL SKETCH, WITH THE THING'S NAME UNDER IT.
+ *
+ * The last resort, and a real one: a quarter of a million icons still miss
+ * plenty of everyday nouns, and generating a picture for each is half a minute
+ * and real money. What a teacher does instead is scribble a shape and write
+ * what it stands for — nobody mistakes it for a portrait, and the lesson keeps
+ * moving.
+ *
+ * The shape varies with the word, because a board of five identical circles
+ * says "the machine gave up" five times, while a board of five different quick
+ * sketches reads as someone drawing. It is not trying to DEPICT the noun — it
+ * cannot — it is trying to be an honest placeholder that looks drawn by hand.
+ */
 export function pencilGlyph(noun: string): Glyph {
   let h = 0x811c9dc5;
   for (let i = 0; i < noun.length; i += 1) {
     h ^= noun.charCodeAt(i);
     h = Math.imul(h, 0x01000193);
   }
-  const jitter = (n: number, spread: number) => (((h >>> (n * 2)) % 100) / 100 - 0.5) * spread;
+  /** Deterministic wobble, so the same word is always drawn the same way. */
+  const jitter = (n: number, spread: number) => (((h >>> (n % 14) * 2) % 100) / 100 - 0.5) * spread;
 
-  // Twelve slightly-uneven spokes, joined through their midpoints with gentle
-  // quadratic curves. Midpoint-to-midpoint is what keeps the outline a wobbly
-  // LOOP: an earlier version curved corner-to-corner with far-flung control
-  // points, and the crossings drew a pinwheel where a circle should have been.
-  const N = 12;
-  const r = 42;
-  const pts = Array.from({ length: N }, (_, i) => {
-    const a = (i / N) * Math.PI * 2 - Math.PI / 2;
-    const rr = r + jitter(i, 8);
-    return { x: 50 + Math.cos(a) * rr, y: 50 + Math.sin(a) * rr };
-  });
-  const mid = (a: { x: number; y: number }, b: { x: number; y: number }) => ({
-    x: (a.x + b.x) / 2,
-    y: (a.y + b.y) / 2,
-  });
+  type Pt = { x: number; y: number };
 
-  const m0 = mid(pts[N - 1], pts[0]);
-  let ring = `M ${m0.x.toFixed(1)} ${m0.y.toFixed(1)}`;
-  for (let i = 0; i < N; i += 1) {
-    const corner = pts[i];
-    const next = mid(pts[i], pts[(i + 1) % N]);
-    ring += ` Q ${corner.x.toFixed(1)} ${corner.y.toFixed(1)} ${next.x.toFixed(1)} ${next.y.toFixed(1)}`;
+  /**
+   * A closed line through these points, wobbled and rounded.
+   *
+   * Curving midpoint to midpoint keeps the outline a LOOP: curving corner to
+   * corner with far-flung control points crossed the strokes over each other
+   * and drew a pinwheel where a shape should have been.
+   */
+  const loop = (pts: Pt[], wob: number, seed: number): string => {
+    const p2 = pts.map((q, i) => ({
+      x: q.x + jitter(seed + i, wob),
+      y: q.y + jitter(seed + i + 7, wob),
+    }));
+    const mid = (a: Pt, b: Pt) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+    const m0 = mid(p2[p2.length - 1], p2[0]);
+    let d = `M ${m0.x.toFixed(1)} ${m0.y.toFixed(1)}`;
+    for (let i = 0; i < p2.length; i += 1) {
+      const next = mid(p2[i], p2[(i + 1) % p2.length]);
+      d += ` Q ${p2[i].x.toFixed(1)} ${p2[i].y.toFixed(1)} ${next.x.toFixed(1)} ${next.y.toFixed(1)}`;
+    }
+    return d + ' Z';
+  };
+
+  /** An open line, for the marks inside a sketch. */
+  const line = (pts: Pt[], wob: number, seed: number): string => {
+    const p2 = pts.map((q, i) => ({
+      x: q.x + jitter(seed + i, wob),
+      y: q.y + jitter(seed + i + 3, wob),
+    }));
+    return p2
+      .map((q, i) => `${i === 0 ? 'M' : 'L'} ${q.x.toFixed(1)} ${q.y.toFixed(1)}`)
+      .join(' ');
+  };
+
+  const ring = (cx: number, cy: number, rx: number, ry: number, n = 12): Pt[] =>
+    Array.from({ length: n }, (_, i) => {
+      const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+      return { x: cx + Math.cos(a) * rx, y: cy + Math.sin(a) * ry };
+    });
+
+  // Six shapes a hand reaches for. Which one a word gets is arbitrary and that
+  // is the point: it varies, so a board of placeholders looks drawn rather
+  // than generated.
+  const shape = h % 6;
+  const paths: string[] = [];
+
+  if (shape === 0) {
+    paths.push(loop(ring(50, 42, 36, 32), 7, 0));
+  } else if (shape === 1) {
+    // A sheet with a turned corner.
+    paths.push(loop([
+      { x: 18, y: 12 }, { x: 68, y: 12 }, { x: 82, y: 26 },
+      { x: 82, y: 72 }, { x: 18, y: 72 },
+    ], 4, 2));
+    paths.push(line([{ x: 68, y: 12 }, { x: 68, y: 26 }, { x: 82, y: 26 }], 3, 5));
+  } else if (shape === 2) {
+    // A drum on its end.
+    paths.push(loop(ring(50, 24, 30, 10), 3, 1));
+    paths.push(line([{ x: 20, y: 24 }, { x: 20, y: 62 }], 3, 4));
+    paths.push(line([{ x: 80, y: 24 }, { x: 80, y: 62 }], 3, 6));
+    paths.push(line([
+      { x: 20, y: 62 }, { x: 34, y: 71 }, { x: 66, y: 71 }, { x: 80, y: 62 },
+    ], 3, 8));
+  } else if (shape === 3) {
+    // A cloud: three overlapping puffs.
+    paths.push(loop(ring(36, 40, 20, 16), 5, 3));
+    paths.push(loop(ring(58, 34, 22, 18), 5, 9));
+    paths.push(loop(ring(62, 52, 18, 14), 5, 11));
+  } else if (shape === 4) {
+    // A flask.
+    paths.push(line([{ x: 40, y: 12 }, { x: 40, y: 34 }], 2, 1));
+    paths.push(line([{ x: 60, y: 12 }, { x: 60, y: 34 }], 2, 3));
+    paths.push(line([{ x: 34, y: 12 }, { x: 66, y: 12 }], 2, 5));
+    paths.push(loop([
+      { x: 40, y: 34 }, { x: 60, y: 34 }, { x: 80, y: 66 },
+      { x: 62, y: 78 }, { x: 38, y: 78 }, { x: 20, y: 66 },
+    ], 4, 7));
+  } else {
+    // Two layers, stacked.
+    // Set apart, or the two rims touch and the pair reads as a figure of eight
+    // rather than one thing resting on another.
+    paths.push(loop(ring(50, 26, 32, 12), 4, 2));
+    paths.push(loop(ring(50, 62, 32, 12), 4, 10));
   }
-  ring += ' Z';
 
-  const label = noun.length > 12 ? `${noun.slice(0, 11)}…` : noun;
-  const size = label.length > 8 ? 13 : label.length > 5 ? 16 : 20;
+  const label = noun.length > 13 ? `${noun.slice(0, 12)}…` : noun;
+  const size = label.length > 9 ? 13 : label.length > 6 ? 15 : 18;
+
+  const strokes = paths
+    .map(
+      (d) =>
+        `<path d="${d}" fill="none" stroke="#4b4b4b" stroke-width="2.2"` +
+        ' stroke-linejoin="round" stroke-linecap="round" opacity="0.72"/>',
+    )
+    .join('');
 
   return {
     width: 100,
     height: 100,
     body:
-      `<path d="${ring}" fill="none" stroke="#4b4b4b" stroke-width="2.4"` +
-      ` stroke-linejoin="round" stroke-linecap="round" opacity="0.75"/>` +
-      `<text x="50" y="52" text-anchor="middle" dominant-baseline="middle"` +
-      ` font-family="Caveat, cursive" font-size="${size}" fill="#4b4b4b">${escapeXml(label)}</text>`,
+      strokes +
+      `<text x="50" y="94" text-anchor="middle" font-family="Caveat, cursive"` +
+      ` font-size="${size}" fill="#4b4b4b">${escapeXml(label)}</text>`,
   };
 }
 
