@@ -82,7 +82,12 @@ picture: {"cortex": {"x": 0.12, "y": 0.20, "w": 0.30, "h": 0.25}}
 - If the picture happens to contain more than one of the subject, box the part
   on ONE of them, not a box spanning both.
 - If a part is genuinely not visible in this picture, give it null rather than
-  a guess. A confident circle around the wrong thing teaches the wrong thing.`;
+  a guess. A confident circle around the wrong thing teaches the wrong thing.
+
+Also include "_hasText": true or false — true if the picture has ANY words,
+letters or numbers printed on it, including labels with leader lines. The
+teacher writes every label on the board herself, so printed ones are a fault
+in the picture.`;
 
 export function partFinderUser(parts: readonly string[]): string {
   return `Find these parts:\n${parts.map((p) => `- ${p}`).join('\n')}`;
@@ -106,6 +111,16 @@ const fraction = (v: unknown): number | null =>
  * carries on without that circle. Marking the wrong place is far worse than
  * marking nothing.
  */
+/** Whether the eyes reported words printed on the picture. */
+export function sawText(raw: string): boolean {
+  try {
+    const parsed = JSON.parse(stripFence(raw)) as Record<string, unknown>;
+    return parsed?._hasText === true;
+  } catch {
+    return false;
+  }
+}
+
 export function parseParts(raw: string, wanted: readonly string[]): ImagePart[] {
   let parsed: unknown;
   try {
@@ -148,26 +163,64 @@ export function parseParts(raw: string, wanted: readonly string[]): ImagePart[] 
  * beat that wanted it is dropped the same way a failed diagram's is — a class
  * with one picture instead of two is still a class.
  */
+/** What to say on a second attempt, when the first came back with labels on it. */
+export function redrawPrompt(brief: PictureBrief): string {
+  return `${picturePrompt(brief)}
+
+CRITICAL: your previous attempt had words printed on it. This picture is going
+onto a board where a TEACHER writes every label herself, by hand, as she
+speaks. Printed labels fight with her handwriting and give away her next line.
+Draw the subject and NOTHING else: no words, no letters, no numbers, no leader
+lines, no key, no legend, no watermark.`;
+}
+
 export async function drawPicture(
   brief: PictureBrief,
   artist: ImageAdapter,
   eyes: VisionAdapter,
 ): Promise<PictureResult | null> {
-  let src: string | null;
-  try {
-    src = await artist.draw(picturePrompt(brief));
-  } catch {
-    return null;
-  }
-  if (!src || !src.startsWith('data:image/')) return null;
+  const draw = async (prompt: string): Promise<string | null> => {
+    try {
+      const got = await artist.draw(prompt);
+      return got && got.startsWith('data:image/') ? got : null;
+    } catch {
+      return null;
+    }
+  };
 
+  let src = await draw(picturePrompt(brief));
+  if (!src) return null;
+
+  // Nothing to look for and no labels to catch, so no second call at all.
   if (brief.parts.length === 0) return { src, parts: [] };
 
-  try {
-    const reply = await eyes.look(src, PART_FINDER_SYSTEM, partFinderUser(brief.parts));
-    return { src, parts: parseParts(reply, brief.parts) };
-  } catch {
-    // The picture is still worth showing; it just cannot be marked yet.
-    return { src, parts: [] };
+  const look = async (image: string) => {
+    try {
+      return await eyes.look(image, PART_FINDER_SYSTEM, partFinderUser(brief.parts));
+    } catch {
+      return null;
+    }
+  };
+
+  let reply = await look(src);
+  // The picture is still worth showing; it just cannot be marked yet.
+  if (reply === null) return { src, parts: [] };
+
+  // One redraw, and only when the eyes actually saw printed words. Image
+  // models ignore "no text" often enough to matter and not often enough to
+  // pay for a second picture every time — so the cost is spent exactly when
+  // there is something wrong to fix.
+  if (sawText(reply)) {
+    const second = await draw(redrawPrompt(brief));
+    if (second) {
+      const secondReply = await look(second);
+      // Keep the redraw only if it actually solved the problem; a second
+      // picture that still has labels is just a second picture.
+      if (secondReply !== null && !sawText(secondReply)) {
+        return { src: second, parts: parseParts(secondReply, brief.parts) };
+      }
+    }
   }
+
+  return { src, parts: parseParts(reply, brief.parts) };
 }

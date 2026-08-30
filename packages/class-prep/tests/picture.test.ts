@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   drawPicture,
+  redrawPrompt,
+  sawText,
   parseParts,
   picturePrompt,
   type ImageAdapter,
@@ -110,5 +112,56 @@ describe('drawPicture', () => {
       },
     };
     expect(await drawPicture(brief, angry, sees('{}'))).toBeNull();
+  });
+});
+
+describe('a picture that came back with labels printed on it', () => {
+  // The whole point is that SHE writes the labels, by hand, as she speaks.
+  // Printed ones fight with her handwriting and give away her next line.
+  const withText = '{"_hasText":true,"cortex":{"x":0.1,"y":0.2,"w":0.2,"h":0.2}}';
+  const clean = '{"_hasText":false,"cortex":{"x":0.3,"y":0.3,"w":0.2,"h":0.2}}';
+
+  const twice = (first: string, second: string) => {
+    let n = 0;
+    return {
+      artist: { draw: async () => (n++ === 0 ? first : second) } as ImageAdapter,
+      seen: () => n,
+    };
+  };
+  const answers = (replies: string[]) => {
+    let n = 0;
+    return { look: async () => replies[Math.min(n++, replies.length - 1)] } as VisionAdapter;
+  };
+
+  it('draws it once more, and keeps the clean one', async () => {
+    const a = twice(pixel, 'data:image/png;base64,SECOND');
+    const got = await drawPicture(brief, a.artist, answers([withText, clean]));
+    expect(a.seen()).toBe(2);
+    expect(got?.src).toBe('data:image/png;base64,SECOND');
+    expect(got?.parts[0].x).toBeCloseTo(0.3, 5);
+  });
+
+  it('keeps the first when the second is no better, rather than paying twice for nothing', async () => {
+    const a = twice(pixel, 'data:image/png;base64,SECOND');
+    const got = await drawPicture(brief, a.artist, answers([withText, withText]));
+    expect(got?.src).toBe(pixel);
+  });
+
+  it('never draws twice when the first picture was already clean', async () => {
+    // Image models ignore "no text" often enough to matter and not often
+    // enough to pay for a second picture every time.
+    const a = twice(pixel, 'data:image/png;base64,SECOND');
+    await drawPicture(brief, a.artist, answers([clean]));
+    expect(a.seen()).toBe(1);
+  });
+
+  it('reads the flag, and shrugs at a reply it cannot parse', () => {
+    expect(sawText(withText)).toBe(true);
+    expect(sawText(clean)).toBe(false);
+    expect(sawText('not json')).toBe(false);
+  });
+
+  it('says plainly what was wrong the first time', () => {
+    expect(redrawPrompt(brief)).toContain('previous attempt had words printed on it');
   });
 });

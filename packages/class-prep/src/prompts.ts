@@ -121,17 +121,23 @@ the subject decides which:
 
 {"id","medium":"diagram"|"picture","parts":[...],"brief":"...","alt":"..."}
 
-- \`"medium":"diagram"\` is drawn in line art, and its parts can be LIT one
-  at a time from inside. Right for anything schematic: a graph, a circuit, a
-  force diagram, a cycle. Shown with {"do":"diagram","ref":"<id>"} and walked
-  with {"do":"point","ref":"<id>","part":"<part>"}.
-- \`"medium":"picture"\` is generated as a real illustration on a white
-  background, so it sits on the board like a chart pinned up there. Right for
-  anything that has to LOOK like the thing: an organ, a cross-section, a cell,
-  a landscape, a piece of apparatus. No line drawing you can describe is going
-  to look like a kidney. Shown with {"do":"picture","ref":"<id>"} and worked on
-  with {"do":"annotate","target":"<id>#<part>","mark":"circle"}.
+Choose the medium by ONE question: is the subject a physical thing?
 
+- A real object or organism, or a part or slice of one — an organ, a cell, a
+  leaf, a piece of apparatus, a landscape — is ALWAYS \`"picture"\`. Nobody
+  can write a convincing heart in line art from a description, and a bad
+  drawing of a real thing is worse than no drawing. Shown with
+  {"do":"picture","ref":"<id>"} and taught on with
+  {"do":"annotate","target":"<id>#<part>","mark":"circle"}.
+- Anything that is NOT a physical thing — a graph, a circuit, a force diagram,
+  a cycle, a process, a set of relationships — is \`"diagram"\`, drawn in line
+  art, and its parts can be LIT one at a time from inside. Shown with
+  {"do":"diagram","ref":"<id>"} and walked with
+  {"do":"point","ref":"<id>","part":"<part>"}.
+
+"It has six named parts and lighting them would be neat" is not a reason to
+choose diagram for a heart. The heart is a physical thing; it gets a picture,
+and she circles the parts.
 - \`parts\` are the pieces the tutor will point at, three to six of them. For
   a diagram, snake_case ids. For a picture, plain names as a textbook would say
   them — "cortex", "renal pelvis", "ureter".
