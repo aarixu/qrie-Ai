@@ -134,6 +134,8 @@ export function assemble(
   // again at an existing picture stays with that picture instead of claiming a
   // blank page of its own beside it.
   let lastDx = 0;
+  /** Which page each element ended up on, so a beat can come back to it. */
+  const pageOf = new Map<string, number>();
   let lastFrame: string[] | null = null;
 
   for (const beat of blueprint.beats) {
@@ -157,14 +159,26 @@ export function assemble(
     // and elements no beat ever showed.
     if (usable.length === 0) continue;
 
-    // A page is claimed by DRAWING, not by speaking. A beat whose only picture
-    // was already drawn earlier belongs beside that picture.
+    // A page is claimed by DRAWING, not by speaking — and a beat that comes
+    // BACK to a picture belongs on that picture's page, however much new
+    // marking it adds.
+    //
+    // Getting this wrong split a beat in half: the picture was recognised as
+    // already drawn and left where it was, while the beat's fresh circles and
+    // its heading claimed the next page and landed on blank board, pointing at
+    // a diagram that was no longer under them.
+    const revisited = laidOut
+      .map((el) => elements.find((e) => e.id === el.id))
+      .find((e): e is Element => e !== undefined);
     const fresh = laidOut.filter((el) => !elements.some((e) => e.id === el.id));
-    const dx = fresh.length > 0 ? page * PAGE_STRIDE : lastDx;
-    if (fresh.length > 0) {
-      page += 1;
-      lastDx = dx;
-    }
+
+    const dx = revisited
+      ? pageOf.get(revisited.id) ?? lastDx
+      : fresh.length > 0
+        ? page * PAGE_STRIDE
+        : lastDx;
+    if (!revisited && fresh.length > 0) page += 1;
+    lastDx = dx;
 
     for (const el of laidOut) {
       const placed = offsetElement(el, dx);
@@ -173,7 +187,10 @@ export function assemble(
         // does; its src is filled in by the caller that holds the artwork.
         const brief = briefs.get(placed.id);
         const finished: Element = { ...placed, alt: brief?.alt ?? placed.alt };
-        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
+        if (!elements.some((e) => e.id === finished.id)) {
+          elements.push(finished);
+          pageOf.set(finished.id, dx);
+        }
         continue;
       }
       if (placed.kind === 'diagram') {
@@ -183,10 +200,16 @@ export function assemble(
           alt: brief?.alt ?? placed.alt,
           parts: [...(brief?.parts ?? [])],
         };
-        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
+        if (!elements.some((e) => e.id === finished.id)) {
+          elements.push(finished);
+          pageOf.set(finished.id, dx);
+        }
         continue;
       }
-      if (!elements.some((e) => e.id === placed.id)) elements.push(placed);
+      if (!elements.some((e) => e.id === placed.id)) {
+        elements.push(placed);
+        pageOf.set(placed.id, dx);
+      }
     }
 
     // One lesson beat per spoken moment.
@@ -352,12 +375,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           outcome: {
             id: brief.id,
             ok: made !== null,
-            attempts: 1,
+            attempts: made?.attempts ?? 1,
             ms: Date.now() - started,
             problems: made
-              ? brief.parts.length > 0 && made.parts.length === 0
-                ? ['none of its named parts could be found in the picture']
-                : []
+              ? [
+                  ...(brief.parts.length > 0 && made.parts.length === 0
+                    ? ['none of its named parts could be found in the picture']
+                    : []),
+                  ...(made.hasText ? ['it still has words printed on it'] : []),
+                ]
               : ['the picture could not be generated'],
           },
         };

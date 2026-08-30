@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { graphicLabelSize, BESIDE_GAP } from '@ai-tutor/lesson-format';
+import { graphicLabelSize, textWidth, BESIDE_GAP } from '@ai-tutor/lesson-format';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -62,9 +62,24 @@ const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 const FONT_WRITE = "'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
 
 /** How long a handwritten line takes to appear. Slow enough to read as writing. */
+/**
+ * How long a written line takes, per character.
+ *
+ * A fixed duration made a three-word label crawl and a full sentence blur
+ * past — the two things a person writing does not do. Clamped at both ends:
+ * fast enough that a long point does not outlast what she is saying over it,
+ * slow enough that a short one still reads as being written.
+ */
+const WRITE_MS_PER_CHAR = 46;
+const WRITE_MS_MIN = 480;
+const WRITE_MS_MAX = 2600;
+const writeMs = (text: string): number =>
+  Math.round(Math.min(WRITE_MS_MAX, Math.max(WRITE_MS_MIN, text.length * WRITE_MS_PER_CHAR)));
 const WRITE_MS = 1600;
 
 const DRAW_MS = 400;
+/** How long a circle, a tick or an underline takes to draw. */
+const MARK_MS = 620;
 
 /**
  * FNV-1a. Renders must be byte-identical across frames and test runs, so all
@@ -164,14 +179,30 @@ const SCENE_CSS = `
 .stage-write {
   transform-box: fill-box;
   transform-origin: left center;
-  animation: stage-write ${WRITE_MS}ms linear both;
+  /* Duration and delay come from the element: a line is as long as its words,
+     and a wrapped line waits for the one above it. */
+  animation: stage-write var(--hw-ms, ${WRITE_MS}ms) linear both var(--hw-after, 0ms);
 }
 .stage-nib {
-  animation: stage-nib ${WRITE_MS}ms linear both, stage-nib-out 200ms ${WRITE_MS}ms forwards;
+  /* The nib travels the line in the same time the ink appears, then lifts. */
+  animation:
+    stage-nib var(--hw-ms, ${WRITE_MS}ms) linear both var(--hw-after, 0ms),
+    stage-nib-out 200ms calc(var(--hw-ms, ${WRITE_MS}ms) + var(--hw-after, 0ms)) forwards;
+}
+@keyframes stage-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+/* A teacher's loop is DRAWN, not dropped in. pathLength="1" normalises every
+   shape to a single unit so one rule paces them all. */
+.stage-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: stage-draw ${MARK_MS}ms ease-out forwards;
 }
 @keyframes stage-nib-out { to { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .stage-pop, .stage-sweep, .stage-write, .stage-nib { animation-duration: 0.01ms; }
+  .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw {
+    animation-duration: 0.01ms;
+    animation-delay: 0ms;
+  }
 }
 `;
 
@@ -593,14 +624,32 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
 function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const size = el.size ?? 26;
-  const width = el.text.length * size * 0.5;
+  // The same ruler the layout and the camera use. A local guess of half an em
+  // per character ran short of the real thing, and the mask — which hides
+  // everything past its own right edge — clipped the last word off the line.
+  // A little over, because a mask that is too wide costs nothing and a mask
+  // that is too narrow eats words.
+  const width = textWidth(el.text, size) * 1.06;
   const left = el.x - width / 2;
   const maskId = `hw-${el.id}`;
+  // One object, shared by the ink and the nib, so they can never drift apart.
+  const pace = {
+    ['--hw-ms' as string]: `${writeMs(el.text)}ms`,
+    ['--hw-after' as string]: `${el.after ?? 0}ms`,
+  };
 
   return (
     <>
       <mask id={maskId} maskUnits="userSpaceOnUse" x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8}>
-        <rect className="stage-write" x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8} fill="#fff" />
+        <rect
+          className="stage-write"
+          x={left - 10}
+          y={el.y - size}
+          width={width + 20}
+          height={size * 1.8}
+          fill="#fff"
+          style={pace}
+        />
       </mask>
       <text
         x={el.x}
@@ -615,7 +664,14 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
         {el.text}
       </text>
       {/* The nib: it travels the same distance in the same time as the mask. */}
-      <circle className="stage-nib" cx={left} cy={el.y - size * 0.28} r={size * 0.11} fill={color} style={{ ['--hw-travel' as string]: `${width}px` }} />
+      <circle
+        className="stage-nib"
+        cx={left}
+        cy={el.y - size * 0.28}
+        r={size * 0.11}
+        fill={color}
+        style={{ ...pace, ['--hw-travel' as string]: `${width}px` }}
+      />
     </>
   );
 }
@@ -689,7 +745,16 @@ function renderMark(el: Extract<Element, { kind: 'mark' }>): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const cx = el.x + el.w / 2;
   const cy = el.y + el.h / 2;
-  const common = { fill: 'none', stroke: color, strokeWidth: 4, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+  const common = {
+    fill: 'none',
+    stroke: color,
+    strokeWidth: 4,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    // Drawn rather than dropped in: the stroke arrives along its own path.
+    className: 'stage-draw',
+    pathLength: 1,
+  };
 
   switch (el.shape) {
     case 'circle':

@@ -28,8 +28,15 @@ describe('picturePrompt', () => {
     const p = picturePrompt(brief);
     expect(p).toContain('EXACTLY ONE of the subject');
     expect(p).toContain('#ffffff');
-    expect(p.toLowerCase()).toContain('no text');
     expect(p).toContain(brief.brief);
+  });
+
+  it('puts the no-text demand first, where a model weighs it heaviest', () => {
+    // It is the rule that matters most: printed labels fight with her
+    // handwriting and give away her next line.
+    const p = picturePrompt(brief);
+    expect(p.slice(0, 90)).toContain('UNLABELLED');
+    expect(p.indexOf('No words')).toBeLessThan(p.indexOf(brief.brief));
   });
 });
 

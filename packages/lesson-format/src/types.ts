@@ -159,7 +159,23 @@ export type Element =
    * exhausting to watch, so this marks the one or two lines per lesson that are
    * worth the wait — a definition, a formula, the sentence to remember.
    */
-  | { kind: 'handwrite'; id: string; x: number; y: number; text: string; size?: number; tone?: Tone }
+  /**
+   * A line in the tutor's own hand, written out as she speaks.
+   *
+   * `after` holds it back that many milliseconds. A point that wraps onto
+   * three lines is three of these, and a person writes the second line after
+   * the first, not alongside it.
+   */
+  | {
+      kind: 'handwrite';
+      id: string;
+      x: number;
+      y: number;
+      text: string;
+      size?: number;
+      tone?: Tone;
+      after?: number;
+    }
   /**
    * One noun, drawn as a small picture.
    *

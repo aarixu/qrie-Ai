@@ -27,6 +27,18 @@ export type Instruction =
    * inside it.
    */
   | { do: 'picture'; ref: string }
+  /**
+   * Write a name in the margin and run a line from it to the part it names.
+   *
+   * The move every labelled diagram in every textbook is made of, and the one
+   * the tutor could not make: she could circle a part, but she could not SAY
+   * which part it was without saying it somewhere unconnected. A student then
+   * has to guess which circle the sentence belongs to.
+   *
+   * `target` is `<picture>#<part>`. The label goes to whichever margin its
+   * part is nearer, so the line is short and crosses nothing.
+   */
+  | { do: 'label'; target: string; text: string; tone?: Tone }
   /** Light one named part inside a picture and dim the rest of it. */
   | { do: 'point'; ref: string; part: string }
   /** A short equation, as it would be written on a board. */

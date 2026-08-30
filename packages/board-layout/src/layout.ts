@@ -4,6 +4,7 @@ import {
   noteBoxHeight,
   splitPartRef,
   type ImagePart,
+  type Rect,
   CANVAS_H,
   CANVAS_W,
   fitText,
@@ -56,6 +57,8 @@ interface Block {
    * them, and recognising that shape needs to know which block is which.
    */
   kind: Instruction['do'];
+  /** The artwork this block places, when it places artwork. */
+  ref?: string;
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
   /**
@@ -140,6 +143,31 @@ export interface RevealStep {
  * Reflowing on every noun is what would make a scene jump about while the tutor
  * is talking over it.
  */
+/**
+ * Where a named part of a picture is, in board units.
+ *
+ * The one place that turns `kidney#cortex` into a rectangle, so a circle round
+ * a part and a line pointing at it can never disagree about where it is.
+ */
+function partBox(target: string, elements: readonly Element[]): Rect | null {
+  const { elementId, part } = splitPartRef(target);
+  const host = elements.find((el) => el.id === elementId);
+  if (!host) return null;
+  const box = boxOf(host);
+  if (part === null) return box;
+  const named = host.kind === 'image' ? (host.parts ?? []).find((q) => q.name === part) : undefined;
+  // A part nobody could find is not pointed at. A line to the middle of a
+  // picture, drawn because we guessed, points at the wrong thing with complete
+  // confidence.
+  if (!named) return null;
+  return {
+    x: box.x + named.x * box.w,
+    y: box.y + named.y * box.h,
+    w: named.w * box.w,
+    h: named.h * box.h,
+  };
+}
+
 export function layoutBeat(
   beat: ScriptBeat,
   /**
@@ -207,6 +235,14 @@ export function layoutBeat(
    */
   const pendingMarks: { at: number; id: string; step: Extract<Instruction, { do: 'annotate' }> }[] =
     [];
+  /**
+   * Names to write in the margin, each with a line to the part it names.
+   *
+   * They wait alongside the marks, and for the same reason: neither can be
+   * placed until the picture knows its own rectangle.
+   */
+  const pendingLabels: { at: number; id: string; step: Extract<Instruction, { do: 'label' }> }[] =
+    [];
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -246,6 +282,7 @@ export function layoutBeat(
         // its named parts come with it so a mark can find them.
         blocks.push({
           kind: item.do,
+          ref,
           at: index,
           height: null,
           place: (r) => [
@@ -271,6 +308,7 @@ export function layoutBeat(
         // A picture takes whatever room the rest of the beat leaves it.
         blocks.push({
           kind: item.do,
+          ref,
           at: index,
           height: null,
           place: (r) => {
@@ -376,8 +414,12 @@ export function layoutBeat(
             // shrinks the point until it fits — down to unreadable.
             const lead = size * 1.62;
             const top = r.y + size * 0.9;
+            // Each line waits for the one above it — a person writes a second
+            // line after the first, not alongside it.
+            const perLine = 620;
             return lines.map((line, n) => ({
               kind: 'handwrite',
+              ...(n > 0 ? { after: n * perLine } : {}),
               id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
               x: r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
@@ -565,6 +607,12 @@ export function layoutBeat(
         break;
       }
 
+      case 'label': {
+        pendingLabels.push({ at: index, id: idFor(beat.id, index), step: item });
+        i += 1;
+        break;
+      }
+
       case 'point': {
         // Not a block: it moves no geometry, it only decides what is bright.
         focus.push(`${item.ref}#${item.part}`);
@@ -590,6 +638,151 @@ export function layoutBeat(
   const FIGURE: ReadonlySet<Instruction['do']> = new Set(['picture', 'diagram', 'chart', 'flow']);
   const figures = blocks.filter((b) => FIGURE.has(b.kind));
   const writes = blocks.filter((b) => b.kind === 'write');
+
+  /**
+   * A LABELLED PICTURE: the figure centred, its names written in the margins.
+   *
+   * This is what every labelled diagram in every textbook looks like, and it
+   * is the arrangement the leader lines need — a name written on the side its
+   * part is on reaches that part with a short line that crosses nothing. Put
+   * every name down one side instead and half the lines cross the picture.
+   *
+   * The figure gives up some width for it. That is the trade the layout is
+   * making on purpose: a smaller picture whose parts are all named beats a
+   * bigger one the student has to be told about in a sentence somewhere else.
+   */
+  if (figures.length === 1 && pendingLabels.length > 0) {
+    const MARGIN_GAP = 18;
+    const marginW = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
+    const pictureW = WIDTH - MARGIN_GAP * 2 - marginW * 2;
+    const pictureX = SIDE + marginW + MARGIN_GAP;
+
+    current = figures[0].at ?? -1;
+    for (const el of figures[0].place({ x: pictureX, y: MAIN.y, w: pictureW, h: MAIN.h })) {
+      emit(el);
+    }
+
+    const host = elements.find((el) => el.id === figures[0].ref);
+    const hostBox = host ? boxOf(host) : null;
+
+    /**
+     * Each name to the side its part is on, and level with it.
+     *
+     * Level matters as much as the side: a name written at the top of the
+     * margin for a part halfway down draws a long diagonal across the picture,
+     * and three of those turn a diagram into a cat's cradle. So a label starts
+     * beside its own part and only moves down when the one before it is
+     * already there.
+     */
+    type Pending = (typeof pendingLabels)[number];
+    const placedFor = pendingLabels.map((pending) => {
+      const box = hostBox ? partBox(pending.step.target, elements) : null;
+      return { pending, box };
+    });
+
+    // Which side each name goes to. A name whose part could not be found has
+    // no side of its own, so it takes whichever is emptier — better than
+    // piling every homeless label on the left.
+    const sideOf = new Map<Pending, 'left' | 'right'>();
+    let leftCount = 0;
+    for (const { pending, box } of placedFor) {
+      let side: 'left' | 'right';
+      if (box && hostBox) {
+        side = box.x + box.w / 2 < hostBox.x + hostBox.w / 2 ? 'left' : 'right';
+      } else {
+        side = leftCount * 2 <= sideOf.size ? 'left' : 'right';
+      }
+      if (side === 'left') leftCount += 1;
+      sideOf.set(pending, side);
+    }
+
+    /**
+     * How small the writing has to be for a side to hold all its names.
+     *
+     * A margin has one column of room, and five names in it at full size is a
+     * pile, not a list — and a pile gets crushed further by the overlap solver
+     * until nothing is readable. Better to write the whole side a little
+     * smaller and have every name legible.
+     */
+    const sizeFor = (side: 'left' | 'right'): number => {
+      const mine = placedFor.filter(({ pending }) => sideOf.get(pending) === side);
+      for (const size of [20, 18, 16, 14]) {
+        const lead = size * 1.5;
+        const total = mine.reduce(
+          (sum, { pending }) =>
+            sum + wrapText(pending.step.text, marginW, size).length * lead + 12,
+          0,
+        );
+        if (total <= MAIN.h) return size;
+      }
+      return 14;
+    };
+    const sizes = { left: sizeFor('left'), right: sizeFor('right') };
+
+    const lowest = { left: MAIN.y, right: MAIN.y };
+    for (const { pending, box } of placedFor) {
+      const side = sideOf.get(pending)!;
+      const onLeft = side === 'left';
+      const size = sizes[side];
+      const lines = wrapText(pending.step.text, marginW, size);
+      const lead = size * 1.5;
+      const height = lines.length * lead;
+      const cx = onLeft
+        ? SIDE + marginW / 2
+        : SIDE + marginW + MARGIN_GAP + pictureW + MARGIN_GAP + marginW / 2;
+
+      // Beside its part, then down if that room has gone, then kept on the
+      // board.
+      const wanted = box ? box.y + box.h / 2 - height / 2 : MAIN.y;
+      const top =
+        Math.min(Math.max(wanted, lowest[side]), MAIN.y + MAIN.h - height) + size;
+      lowest[side] = top + height - size + 10;
+
+      current = pending.at;
+      lines.forEach((line, n) => {
+        const id = n === 0 ? pending.id : `${pending.id}_l${n}`;
+        emit({
+          kind: 'handwrite',
+          id,
+          x: cx,
+          y: top + n * lead,
+          text: line,
+          size,
+          ...(n > 0 ? { after: n * 520 } : {}),
+          ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+        });
+        // A name barely moves. The line to its part is drawn from where the
+        // name IS, so a label the solver carried across the board would leave
+        // its own line pointing out of empty space.
+        leashes.push({
+          id,
+          region: { x: cx - 14, y: top + n * lead - 12, w: 28, h: 24 },
+        });
+      });
+
+      // The line, from the inner edge of the writing to the near edge of the
+      // part, so it points AT the thing rather than through it.
+      if (box) {
+        const midY = top + ((lines.length - 1) * lead) / 2 - size * 0.32;
+        const lineId = `${pending.id}_line`;
+        emit({
+          kind: 'arrow',
+          id: lineId,
+          from: { x: onLeft ? cx + marginW / 2 - 6 : cx - marginW / 2 + 6, y: midY },
+          to: { x: onLeft ? box.x : box.x + box.w, y: box.y + box.h / 2 },
+          ...(pending.step.tone ? { tone: pending.step.tone } : {}),
+        });
+        // The line and the name it leaves are meant to touch.
+        for (const n of lines.keys()) {
+          bonds.push({ a: lineId, b: n === 0 ? pending.id : `${pending.id}_l${n}` });
+        }
+      }
+    }
+
+    // Anything else the beat wanted still stacks, under the picture.
+    blocks.length = 0;
+    for (const block of writes) blocks.push(block);
+  }
 
   if (figures.length === 1 && writes.length > 0 && blocks.length === 1 + writes.length) {
     const GAP = 26;
@@ -649,25 +842,11 @@ export function layoutBeat(
   // is the move that lets ONE picture carry a whole stretch of teaching — she
   // marks it, writes beside it, and never needs another image.
   for (const pending of pendingMarks) {
-    const { elementId, part } = splitPartRef(pending.step.target);
+    const box = partBox(pending.step.target, elements);
+    if (!box) continue;
+    const { elementId } = splitPartRef(pending.step.target);
     const host = elements.find((el) => el.id === elementId);
     if (!host) continue;
-
-    let box = boxOf(host);
-    if (part !== null) {
-      const named =
-        host.kind === 'image' ? (host.parts ?? []).find((q) => q.name === part) : undefined;
-      // A part nobody could find is not marked at all. A circle in the middle
-      // of a picture, drawn because we guessed, teaches the wrong thing with
-      // complete confidence.
-      if (!named) continue;
-      box = {
-        x: box.x + named.x * box.w,
-        y: box.y + named.y * box.h,
-        w: named.w * box.w,
-        h: named.h * box.h,
-      };
-    }
 
     const grow = pending.step.mark === 'underline' ? 0 : 10;
     current = pending.at;

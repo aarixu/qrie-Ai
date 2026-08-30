@@ -38,6 +38,10 @@ export interface PictureResult {
   /** A `data:` URL, ready to inline. */
   src: string;
   parts: ImagePart[];
+  /** How many times it had to be drawn, so a prep report can say so. */
+  attempts: number;
+  /** Whether words are still printed on the picture we settled for. */
+  hasText: boolean;
 }
 
 /** Talks to a model that returns images rather than words. */
@@ -51,20 +55,25 @@ export interface VisionAdapter {
 }
 
 export function picturePrompt(brief: PictureBrief): string {
-  return `${brief.brief}
+  // The no-text rule goes FIRST, because that is where a model weighs it
+  // heaviest, and because it is the rule that matters most here: a teacher
+  // writes every label on this board by hand, and printed ones both fight
+  // with her writing and give away her next line.
+  return `An UNLABELLED educational illustration. No words, letters, numbers,
+labels, leader lines, captions, keys or watermarks anywhere in the image — not
+one. A teacher will write every label herself.
 
-Draw it as a clear educational illustration for a school textbook: flat
-colours, clean bold outlines, everything a student needs to recognise it.
+Subject: ${brief.brief}
+
+Draw it as a clear illustration for a school textbook: flat colours, clean
+bold outlines, everything a student needs to recognise it.
 
 EXACTLY ONE of the subject, alone, centred, filling most of the frame. Not a
 pair, not a mirrored pair, not a before-and-after, not a grid, not a series.
 If the subject is one of an organ the body has two of, draw ONE of them.
 
-NO text, letters, numbers, labels, arrows, leader lines or captions anywhere in
-the image — the teacher writes all of those on the board herself.
-
 Pure white background (#ffffff), edge to edge. No shadow, no vignette, no
-border, no frame, no background scene, no watermark.`;
+border, no frame, no background scene.`;
 }
 
 export const PART_FINDER_SYSTEM = `You are looking at one picture and saying where
@@ -192,7 +201,7 @@ export async function drawPicture(
   if (!src) return null;
 
   // Nothing to look for and no labels to catch, so no second call at all.
-  if (brief.parts.length === 0) return { src, parts: [] };
+  if (brief.parts.length === 0) return { src, parts: [], attempts: 1, hasText: false };
 
   const look = async (image: string) => {
     try {
@@ -204,7 +213,7 @@ export async function drawPicture(
 
   let reply = await look(src);
   // The picture is still worth showing; it just cannot be marked yet.
-  if (reply === null) return { src, parts: [] };
+  if (reply === null) return { src, parts: [], attempts: 1, hasText: false };
 
   // One redraw, and only when the eyes actually saw printed words. Image
   // models ignore "no text" often enough to matter and not often enough to
@@ -217,10 +226,20 @@ export async function drawPicture(
       // Keep the redraw only if it actually solved the problem; a second
       // picture that still has labels is just a second picture.
       if (secondReply !== null && !sawText(secondReply)) {
-        return { src: second, parts: parseParts(secondReply, brief.parts) };
+        return {
+          src: second,
+          parts: parseParts(secondReply, brief.parts),
+          attempts: 2,
+          hasText: false,
+        };
       }
     }
   }
 
-  return { src, parts: parseParts(reply, brief.parts) };
+  return {
+    src,
+    parts: parseParts(reply, brief.parts),
+    attempts: 1,
+    hasText: sawText(reply),
+  };
 }
