@@ -1,4 +1,10 @@
-import { fitText, graphicLabelSize, textWidth, type Element } from '@ai-tutor/lesson-format';
+import {
+  fitText,
+  graphicLabelSize,
+  textWidth,
+  type Element,
+  type Rect,
+} from '@ai-tutor/lesson-format';
 import type { Instruction } from './types';
 
 export type PlaceStep = Extract<Instruction, { do: 'place' }>;
@@ -256,7 +262,7 @@ export function connectElements(
     const size = fitText(step.label, run, 30, 17);
     out.push({
       kind: 'handwrite',
-      id: `${id}_label`,
+      id: labelIdFor(id),
       x: (from.x + to.x) / 2,
       y: (from.y + to.y) / 2 - size * 0.62,
       text: step.label,
@@ -265,6 +271,39 @@ export function connectElements(
     });
   }
   return out;
+}
+
+/**
+ * A connector's label is named after its arrow.
+ *
+ * The solver uses this to leash one to the other: a label that drifts away
+ * from its line stops meaning anything, so the rule cannot live in two places.
+ */
+export const labelIdFor = (arrowId: string): string => `${arrowId}_label`;
+
+/**
+ * Where a connector's label may be written: over the line, or anywhere around
+ * the two things the line joins.
+ *
+ * The label belongs to the CONNECTION, and the connection is both ends plus
+ * the run between them. Tied to the line alone, a long label over a short
+ * arrow had nowhere to go — every position on that line crosses one of the
+ * pictures — while a spot just above the pair, plainly theirs, was forbidden.
+ *
+ * Takes the ends' DRAWN boxes, labels and all. Measured around the icons
+ * alone, the region stopped short of the very strip under a row of pictures
+ * that a teacher writes in.
+ */
+export function connectionRegion(a: Rect, b: Rect): Rect {
+  const MARGIN = 34;
+  const x = Math.min(a.x, b.x) - MARGIN;
+  const y = Math.min(a.y, b.y) - MARGIN;
+  return {
+    x,
+    y,
+    w: Math.max(a.x + a.w, b.x + b.w) + MARGIN - x,
+    h: Math.max(a.y + a.h, b.y + b.h) + MARGIN - y,
+  };
 }
 
 /** A mark sits over its target, a little larger, the way a real loop overshoots. */

@@ -55,6 +55,30 @@ export interface Bond {
 
 const bondKey = (a: string, b: string): string => (a < b ? `${a}|${b}` : `${b}|${a}`);
 
+/**
+ * A LEASH: how far a label may travel from the thing it names.
+ *
+ * Room to hop above a picture or along a line, not to cross the board. The
+ * solver once carried "light trapped" a third of a board away from its arrow
+ * to clear an overlap — technically tidy, and completely meaningless to a
+ * student, because a label that far from its line is a label about nothing.
+ *
+ * The leash holds the label's CENTRE, not its whole box, which is what a
+ * person does: written near the line, allowed to stick out.
+ */
+export interface Leash {
+  /** The element that must stay near. */
+  id: string;
+  /** Where its centre may be. */
+  region: Rect;
+}
+
+function centreInside(rect: Rect, region: Rect): boolean {
+  const cx = rect.x + rect.w / 2;
+  const cy = rect.y + rect.h / 2;
+  return cx >= region.x && cx <= region.x + region.w && cy >= region.y && cy <= region.y + region.h;
+}
+
 function inside(rect: Rect, board: Rect): boolean {
   return (
     rect.x >= board.x &&
@@ -84,27 +108,40 @@ function park(
   board: Rect,
   clashes: (a: Element, b: Element) => boolean,
   self: number,
+  /** Where this label's centre may end up, when it is tied to something. */
+  leash?: Rect,
 ): Element | null {
   const box = boxOf(el);
-  const half = box.w / 2;
   if (box.w > board.w) return null;
 
   const anchored = el as Element & { x: number; y: number };
-  const homeX = Math.max(board.x + half, Math.min(anchored.x, board.x + board.w - half));
 
-  // Outward from where the label wants to be, on BOTH axes. Searching one
-  // column of a thousand-unit board is how a label stayed stuck over a picture
-  // while half the room stood empty beside it.
-  for (let away = 0; away <= board.h; away += 8) {
-    for (const y of away === 0 ? [anchored.y] : [anchored.y - away, anchored.y + away]) {
-      for (const dx of [0, -70, 70, -150, 150, -240, 240, -340, 340]) {
-        const x = Math.max(board.x + half, Math.min(homeX + dx, board.x + board.w - half));
-        const candidate = { ...anchored, x, y } as Element;
-        const shape = padded(boxOf(candidate));
-        if (!inside(shape, board)) continue;
-        if (all.every((other, k) => k === self || !clashes(candidate, other))) return candidate;
-      }
+  // How far the search may reach: the leash when there is one, otherwise the
+  // whole room. A leashed label has a small area to search and can afford a
+  // fine grid; an unleashed one has the board and needs a coarse one.
+  const reach = leash
+    ? Math.max(leash.w, leash.h)
+    : Math.max(board.w, board.h);
+  const step = leash ? 6 : 16;
+
+  // Candidate offsets, nearest first. Ordering by true distance is what makes
+  // "as close to what it names as the board allows" actually true — the old
+  // hand-written list of nine x-offsets left a leashed label only three
+  // columns to try, and it failed on one board in ten for want of searching.
+  const offsets: { dx: number; dy: number; d: number }[] = [];
+  for (let dx = -reach; dx <= reach; dx += step) {
+    for (let dy = -reach; dy <= reach; dy += step) {
+      offsets.push({ dx, dy, d: Math.hypot(dx, dy) });
     }
+  }
+  offsets.sort((a, b) => a.d - b.d || a.dy - b.dy || a.dx - b.dx);
+
+  for (const { dx, dy } of offsets) {
+    const candidate = { ...anchored, x: anchored.x + dx, y: anchored.y + dy } as Element;
+    const shape = padded(boxOf(candidate));
+    if (!inside(shape, board)) continue;
+    if (leash && !centreInside(boxOf(candidate), leash)) continue;
+    if (all.every((other, k) => k === self || !clashes(candidate, other))) return candidate;
   }
   return null;
 }
@@ -165,9 +202,15 @@ export function resolveOverlaps(
    * no room offered up there.
    */
   rooms?: Rect | readonly Rect[],
+  /**
+   * Labels tied to what they name. A leashed label would rather stay slightly
+   * crowded than end up somewhere tidy and meaningless.
+   */
+  leashes: readonly Leash[] = [],
 ): Element[] {
   const boards = rooms === undefined ? [] : Array.isArray(rooms) ? rooms : [rooms as Rect];
   const board = boards[0];
+  const leashOf = new Map(leashes.map((l) => [l.id, l.region]));
   const out = elements.map((el) => ({ ...el }) as Element);
   const exempt = new Set(bonds.map((b) => bondKey(b.a, b.b)));
   const movable = out.map((el, i) => (MOVABLE.has(el.kind) ? i : -1)).filter((i) => i >= 0);
@@ -213,10 +256,13 @@ export function resolveOverlaps(
         ? [[0, away(up)], [0, away(down)], [away(left), 0], [away(right), 0]]
         : [[away(left), 0], [away(right), 0], [0, away(up)], [0, away(down)]];
 
+      const leash = leashOf.get(out[i].id);
+
       for (const [dx, dy] of escapes) {
         const anchored = out[i] as Element & { x: number; y: number };
         const candidate = { ...anchored, x: anchored.x + dx, y: anchored.y + dy } as Element;
         if (board && !inside(padded(boxOf(candidate)), board)) continue;
+        if (leash && !centreInside(boxOf(candidate), leash)) continue;
         // Only accept a move that improves things; a jump into a third element
         // is how a solver ends up chasing its own tail.
         if (clashes(candidate, obstacle)) continue;
@@ -247,10 +293,17 @@ export function resolveOverlaps(
     }
 
     if (!firstClash(i)) continue;
-    if (!board) continue;
 
-    const parked = park(out[i], out, board, clashes, i);
-    if (parked) out[i] = parked;
+    // Rooms in order: a label belongs in the room its scene lives in, and only
+    // a genuinely full room justifies the next one.
+    const leash = leashOf.get(out[i].id);
+    for (const room of boards) {
+      const parked = park(out[i], out, room, clashes, i, leash);
+      if (parked) {
+        out[i] = parked;
+        break;
+      }
+    }
   }
 
   return out;

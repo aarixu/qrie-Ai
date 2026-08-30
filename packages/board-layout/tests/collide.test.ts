@@ -126,20 +126,66 @@ function collisions(elements: readonly Element[], bonds: readonly { a: string; b
 }
 
 describe('no board the planner can write ever overlaps itself', () => {
-  it('holds across 400 generated boards', () => {
+  /**
+   * The guarantee has two halves, and the second one is why the first has an
+   * exception.
+   *
+   * A connector's label may not wander: it belongs to the two things its line
+   * joins, and one carried across the board to keep the board tidy is a label
+   * about nothing. So when a long label has nowhere both CLEAR and NEAR, it
+   * stays near — written smaller, slightly crowded, still meaning something.
+   * That is the trade a teacher makes too.
+   */
+  it('holds across 400 generated boards, except where staying near costs a little room', () => {
     const rand = rng(20260830);
     const failures: string[] = [];
+    let crowded = 0;
 
     for (let n = 0; n < 400; n += 1) {
       const board = randomBoard(rand);
-      const { elements, bonds } = layoutBeat(beat(board, `b${n}`));
-      const hits = collisions(elements, bonds);
-      if (hits.length > 0) {
-        failures.push(`seed step ${n}: ${hits[0]}\n  board: ${JSON.stringify(board)}`);
+      const { elements, bonds, leashes } = layoutBeat(beat(board, `b${n}`));
+      const leashed = new Set(leashes.map((l) => l.id));
+
+      for (const hit of collisions(elements, bonds)) {
+        // The only overlap allowed is a connector's label choosing to stay
+        // with its connection. Everything else is a real failure.
+        const excused = [...leashed].some((id) => hit.includes(`handwrite:${id}`));
+        if (excused) crowded += 1;
+        else failures.push(`seed step ${n}: ${hit}\n  board: ${JSON.stringify(board)}`);
       }
     }
 
     expect(failures.slice(0, 3)).toEqual([]);
+    // And nearness is a rare cost, not a standing excuse: these boards are far
+    // busier than a real lesson's, and it still buys clearance almost always.
+    expect(crowded).toBeLessThan(12);
+  });
+
+  it('never carries a connector label away from what it joins', () => {
+    const rand = rng(20260830);
+    const strays: string[] = [];
+
+    for (let n = 0; n < 400; n += 1) {
+      const { elements, leashes } = layoutBeat(beat(randomBoard(rand), `b${n}`));
+      const byId = new Map(elements.map((el) => [el.id, el]));
+      for (const { id, region } of leashes) {
+        const el = byId.get(id);
+        if (!el) continue;
+        const box = boxOf(el);
+        const cx = box.x + box.w / 2;
+        const cy = box.y + box.h / 2;
+        if (
+          cx < region.x ||
+          cx > region.x + region.w ||
+          cy < region.y ||
+          cy > region.y + region.h
+        ) {
+          strays.push(`seed step ${n}: ${id} at ${cx.toFixed(0)},${cy.toFixed(0)} outside its connection`);
+        }
+      }
+    }
+
+    expect(strays.slice(0, 3)).toEqual([]);
   });
 
   it('keeps everything on the board across the same 400', () => {

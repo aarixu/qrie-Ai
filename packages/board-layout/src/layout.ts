@@ -1,7 +1,13 @@
-import { CANVAS_H, CANVAS_W, fitText, type Element } from '@ai-tutor/lesson-format';
+import { boxOf, CANVAS_H, CANVAS_W, fitText, type Element } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
-import { annotateElement, connectElements, layoutScene } from './scene';
-import { resolveOverlaps, type Bond } from './collide';
+import {
+  annotateElement,
+  connectElements,
+  connectionRegion,
+  labelIdFor,
+  layoutScene,
+} from './scene';
+import { resolveOverlaps, type Bond, type Leash } from './collide';
 
 /**
  * The board's three bands. Nothing is ever placed outside them, and nothing
@@ -97,6 +103,8 @@ export function layoutBeat(beat: ScriptBeat): {
    * board or pass a broken one.
    */
   bonds: Bond[];
+  /** Labels tied to what they name. */
+  leashes: Leash[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -123,6 +131,7 @@ export function layoutBeat(beat: ScriptBeat): {
   const places = items.filter((it) => it.do === 'place') as Extract<Instruction, { do: 'place' }>[];
   /** Pairs that are meant to overlap, so the solver leaves them alone. */
   const bonds: Bond[] = [];
+  const leashes: Leash[] = [];
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -375,6 +384,19 @@ export function layoutBeat(beat: ScriptBeat): {
             sceneSteps.forEach((it, n) => {
               if (it.do === 'connect') {
                 const made = connectElements(it, boxes, idFor(beat.id, n), connectors);
+                // A label may move anywhere around the pair it joins, and no
+                // further: see connectionRegion.
+                const drawn = [it.from, it.to].map((end) => {
+                  const placed = boxes.get(end);
+                  const figure = placed && figures.find((f) => f.id === placed.elementId);
+                  return figure ? boxOf(figure) : undefined;
+                });
+                if (drawn[0] && drawn[1]) {
+                  leashes.push({
+                    id: labelIdFor(idFor(beat.id, n)),
+                    region: connectionRegion(drawn[0], drawn[1]),
+                  });
+                }
                 connectors += 1;
                 out.push(...made);
                 byInstruction.set(n, [...(byInstruction.get(n) ?? []), ...made.map((m) => m.id)]);
@@ -437,7 +459,7 @@ export function layoutBeat(beat: ScriptBeat): {
     // label near the caption reads as a footnote; one over the heading reads
     // as a mistake.
     { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
-  ]);
+  ], leashes);
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
@@ -448,6 +470,7 @@ export function layoutBeat(beat: ScriptBeat): {
     laid: { show, focus: keptFocus },
     steps: revealSteps(beat, byInstruction, keptFocus),
     bonds,
+    leashes,
   };
 }
 
