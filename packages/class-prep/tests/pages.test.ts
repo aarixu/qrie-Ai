@@ -150,7 +150,15 @@ describe('a page is claimed by drawing, and a spoken line is never lost', () => 
     expect(lesson.beats).toHaveLength(1);
   });
 
-  it('looks again at a picture where it already is', () => {
+  it('draws the picture again, on its own page, when a later beat comes back to it', () => {
+    // Two beats about one diagram is two pages, each with the diagram on it
+    // and each with its own marks and names. That is what the endless board
+    // IS — she draws it again further along and works on it there.
+    //
+    // Keeping the second beat on the first beat's page was tried and is
+    // worse: it printed the second heading over the first, the second names
+    // over the first, the second caption over the first. Nothing on this
+    // board knows what is already written where.
     const lesson = lessonOfRaw({
       id: 'a',
       title: 'T',
@@ -160,8 +168,13 @@ describe('a page is claimed by drawing, and a spoken line is never lost', () => 
       ],
       visuals: [{ id: 'd1', alt: 'a cell', parts: ['wall'], brief: 'draw a cell' }],
     });
-    // No blank page beside it, and no id shown twice in one beat.
-    expect(lesson.canvas.w).toBe(1000);
+
+    expect(lesson.canvas.w).toBeGreaterThan(2000);
+    const art = lesson.elements.filter((el) => el.kind === 'diagram');
+    expect(art).toHaveLength(2);
+    // Far apart, so the second look is a page along rather than on top.
+    expect(Math.abs(art[1].x - art[0].x)).toBeGreaterThan(1000);
+    // And nothing is shown twice in one beat.
     for (const beat of lesson.beats) {
       expect(new Set(beat.show).size).toBe(beat.show.length);
     }

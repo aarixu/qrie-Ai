@@ -100,7 +100,9 @@ describe('prepareClass', () => {
     });
 
     expect(result.lesson.beats).toHaveLength(3);
-    expect(Object.keys(result.assets)).toEqual(['d_graph']);
+    // A later beat looking at the same picture gets its own copy, sharing the
+    // one drawing rather than paying for a second.
+    expect(Object.keys(result.assets)).toEqual(['d_graph', 'd_graph@b3']);
     expect(result.report.visuals[0]).toMatchObject({ id: 'd_graph', ok: true, attempts: 1 });
     expect(result.report.issues).toEqual([]);
   });

@@ -1,5 +1,6 @@
 import {
   boxOf,
+  textWidth,
   union,
   noteBoxHeight,
   splitPartRef,
@@ -103,12 +104,15 @@ const noteHeight = noteBoxHeight;
  * which is what happens on a real board too.
  */
 function wrapText(text: string, w: number, size: number): string[] {
-  const perLine = Math.max(8, Math.floor((w * 0.94) / (size * 0.5)));
+  // Measured with the ruler everything else uses. Half an em per character
+  // was a guess, and a generous one: it packed more onto a line than would
+  // fit, so lines ran past the very margin they were being wrapped for.
+  const usable = w * 0.94;
   const lines: string[] = [];
   let line = '';
   for (const word of text.split(/\s+/)) {
     const next = line ? `${line} ${word}` : word;
-    if (next.length > perLine && line) {
+    if (line && textWidth(next, size) > usable) {
       lines.push(line);
       line = word;
     } else {

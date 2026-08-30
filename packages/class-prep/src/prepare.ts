@@ -1,6 +1,7 @@
-import { layoutBeat, offsetElement } from '@ai-tutor/board-layout';
+import { layoutBeat, offsetElement, type Instruction } from '@ai-tutor/board-layout';
 import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture';
 import {
+  PART_SEPARATOR,
   validateLesson,
   type Beat,
   type Element,
@@ -98,17 +99,68 @@ const stripFence = (s: string): string =>
  * instructions are dropped before layout, so the board closes over the gap
  * instead of leaving a hole where a drawing should be.
  */
+/**
+ * A LATER LOOK AT THE SAME PICTURE IS A SECOND COPY OF IT.
+ *
+ * Two beats about one kidney is two pages, each with the kidney drawn on it
+ * and each with its own marks and names. That is what the endless board is —
+ * she draws it again further along and works on it there.
+ *
+ * The alternative was tried and is worse: keeping the second beat on the first
+ * beat's page printed its heading over the earlier heading, its names over the
+ * earlier names, and its caption over the earlier caption. Nothing on this
+ * board knows what is already written where, and teaching it to would cost
+ * far more than one more copy of a picture that is already made.
+ *
+ * The copy costs nothing: the artwork is drawn once and both ids point at it.
+ */
+function reuseId(ref: string, beatId: string): string {
+  return `${ref}@${beatId}`;
+}
+
 export function assemble(
   blueprint: Blueprint,
   drawn: ReadonlySet<string>,
   /** Where each generated picture’s named parts are, as fractions of it. */
   pictureParts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
-): { lesson: unknown; dropped: string[] } {
+): { lesson: unknown; dropped: string[]; aliases: Record<string, string> } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
+  /** A copy of a picture is described by the same brief the original was. */
+  const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
 
   const elements: Element[] = [];
   const beats: Beat[] = [];
+
+  /**
+   * Artwork already placed, and the id each later beat's copy gets.
+   *
+   * The first beat to show a picture keeps the plain id; every beat after it
+   * gets its own copy. Both point at the same artwork.
+   */
+  const shownArt = new Set<string>();
+  /** Part boxes, plus an entry for every copy of a picture. */
+  const partsByRef = new Map<string, readonly ImagePart[]>(pictureParts);
+  const aliases = new Map<string, string>();
+  const reuse = (step: Instruction, beatId: string): Instruction => {
+    if ('ref' in step) {
+      if (!shownArt.has(step.ref)) return step;
+      const id = reuseId(step.ref, beatId);
+      aliases.set(id, step.ref);
+      // The copy is the same picture, so its parts are in the same places. Not
+      // carrying them over left the second beat with names but no lines to
+      // draw from them, and circles with nothing to circle.
+      const known = pictureParts.get(step.ref);
+      if (known) partsByRef.set(id, known);
+      return { ...step, ref: id };
+    }
+    if (step.do === 'annotate' || step.do === 'label') {
+      const [head, ...rest] = step.target.split(PART_SEPARATOR);
+      if (!shownArt.has(head) || !aliases.has(reuseId(head, beatId))) return step;
+      return { ...step, target: [reuseId(head, beatId), ...rest].join(PART_SEPARATOR) };
+    }
+    return step;
+  };
 
   /**
    * Each planner beat is a PAGE on an endless board.
@@ -134,15 +186,13 @@ export function assemble(
   // again at an existing picture stays with that picture instead of claiming a
   // blank page of its own beside it.
   let lastDx = 0;
-  /** Which page each element ended up on, so a beat can come back to it. */
-  const pageOf = new Map<string, number>();
   let lastFrame: string[] | null = null;
 
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
-    );
-    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board }, pictureParts);
+    ).map((step) => reuse(step, beat.id));
+    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board }, partsByRef);
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -159,57 +209,35 @@ export function assemble(
     // and elements no beat ever showed.
     if (usable.length === 0) continue;
 
-    // A page is claimed by DRAWING, not by speaking — and a beat that comes
-    // BACK to a picture belongs on that picture's page, however much new
-    // marking it adds.
-    //
-    // Getting this wrong split a beat in half: the picture was recognised as
-    // already drawn and left where it was, while the beat's fresh circles and
-    // its heading claimed the next page and landed on blank board, pointing at
-    // a diagram that was no longer under them.
-    const revisited = laidOut
-      .map((el) => elements.find((e) => e.id === el.id))
-      .find((e): e is Element => e !== undefined);
+    // A page is claimed by DRAWING, not by speaking.
     const fresh = laidOut.filter((el) => !elements.some((e) => e.id === el.id));
-
-    const dx = revisited
-      ? pageOf.get(revisited.id) ?? lastDx
-      : fresh.length > 0
-        ? page * PAGE_STRIDE
-        : lastDx;
-    if (!revisited && fresh.length > 0) page += 1;
-    lastDx = dx;
+    const dx = fresh.length > 0 ? page * PAGE_STRIDE : lastDx;
+    if (fresh.length > 0) {
+      page += 1;
+      lastDx = dx;
+    }
 
     for (const el of laidOut) {
       const placed = offsetElement(el, dx);
       if (placed.kind === 'image') {
         // A picture's own alt comes from the brief, the same way a diagram's
         // does; its src is filled in by the caller that holds the artwork.
-        const brief = briefs.get(placed.id);
+        const brief = briefFor(placed.id);
         const finished: Element = { ...placed, alt: brief?.alt ?? placed.alt };
-        if (!elements.some((e) => e.id === finished.id)) {
-          elements.push(finished);
-          pageOf.set(finished.id, dx);
-        }
+        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
         continue;
       }
       if (placed.kind === 'diagram') {
-        const brief = briefs.get(placed.id);
+        const brief = briefFor(placed.id);
         const finished: DiagramElement = {
           ...placed,
           alt: brief?.alt ?? placed.alt,
           parts: [...(brief?.parts ?? [])],
         };
-        if (!elements.some((e) => e.id === finished.id)) {
-          elements.push(finished);
-          pageOf.set(finished.id, dx);
-        }
+        if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
         continue;
       }
-      if (!elements.some((e) => e.id === placed.id)) {
-        elements.push(placed);
-        pageOf.set(placed.id, dx);
-      }
+      if (!elements.some((e) => e.id === placed.id)) elements.push(placed);
     }
 
     // One lesson beat per spoken moment.
@@ -242,6 +270,7 @@ export function assemble(
       });
     });
     shownSoFar.push(...usable[usable.length - 1].show);
+    for (const step of board) if ('ref' in step) shownArt.add(aliases.get(step.ref) ?? step.ref);
   }
 
   return {
@@ -259,6 +288,8 @@ export function assemble(
       beats,
     },
     dropped,
+    /** A later copy's element id, to the artwork it shares. */
+    aliases: Object.fromEntries(aliases),
   };
 }
 
@@ -406,11 +437,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   }
 
   say('checking', 'Checking the class holds together…', 0.9);
-  const { lesson: candidate, dropped } = assemble(
-    blueprint,
-    new Set(Object.keys(assets)),
-    pictureParts,
-  );
+  const {
+    lesson: candidate,
+    dropped,
+    aliases,
+  } = assemble(blueprint, new Set(Object.keys(assets)), pictureParts);
+  // Both ids point at the one drawing.
+  for (const [copy, original] of Object.entries(aliases) as [string, string][]) {
+    if (assets[original]) assets[copy] = assets[original];
+  }
   for (const id of dropped) issues.push(`Beats referring to "${id}" were trimmed.`);
 
   let validated = validateLesson(candidate);

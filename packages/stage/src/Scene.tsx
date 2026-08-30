@@ -629,7 +629,10 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
   // everything past its own right edge — clipped the last word off the line.
   // A little over, because a mask that is too wide costs nothing and a mask
   // that is too narrow eats words.
-  const width = textWidth(el.text, size) * 1.06;
+  // Generously over: the shared ruler is tuned for a sans face and the
+  // tutor's hand is wider, and a mask that is too wide costs nothing while a
+  // mask that is too narrow eats the last word off the line.
+  const width = textWidth(el.text, size) * 1.3;
   const left = el.x - width / 2;
   const maskId = `hw-${el.id}`;
   // One object, shared by the ink and the nib, so they can never drift apart.
