@@ -21,6 +21,7 @@ export {
   textWidth,
   fitText,
   graphicLabelSize,
+  BESIDE_GAP,
   flowHeight,
   FLOW_STEP_H,
   FLOW_GAP,

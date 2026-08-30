@@ -146,8 +146,21 @@ export type Element =
       h: number;
       /** The word this draws, e.g. `school`. Also the asset key and the alt text. */
       noun: string;
-      /** Written under the picture when the tutor names it. */
+      /** Written beside the picture when the tutor names it. */
       label?: string;
+      /**
+       * Where the name is written.
+       *
+       * Beneath the picture by default, which is how a board usually reads.
+       * Beside it when the row is too short to write underneath — three things
+       * stacked in one band left each of them sixty units tall with its name
+       * squeezed under it, while nine hundred units of width sat unused. A
+       * teacher writes the name next to the thing when the room below is gone.
+       *
+       * The LAYOUT decides and the element carries the answer, so the camera,
+       * the collision solver and the renderer all read the same one.
+       */
+      labelSide?: 'below' | 'beside';
     }
   /**
    * A teacher's mark on top of something already on the board.

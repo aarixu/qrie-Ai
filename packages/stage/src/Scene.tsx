@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { graphicLabelSize } from '@ai-tutor/lesson-format';
+import { graphicLabelSize, BESIDE_GAP } from '@ai-tutor/lesson-format';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -412,10 +412,14 @@ function innerMarkup(svg: string): string {
 /**
  * A generated diagram, inlined so its named parts can be lit one at a time.
  *
- * `dangerouslySetInnerHTML` is safe HERE and only here: the markup is generated
- * at authoring time and committed to the lesson folder, so it carries exactly
- * the same trust as `lesson.json` beside it. Markup arriving at runtime from a
- * model or a user must never reach this path.
+ * `dangerouslySetInnerHTML` is the sink, and it is worth being exact about
+ * what protects it, because this comment used to claim protection it did not
+ * have. Committed lesson artwork carries the same trust as the `lesson.json`
+ * beside it. But a class prepared LIVE routes freshly generated model markup
+ * through this very path — with a lesson topic anyone can type — so for that
+ * traffic the gate in `@ai-tutor/class-prep`'s `unsafeMarkup` is the whole
+ * defence, not a second line of one. Anything reaching here must have passed
+ * it. Rejected, never sanitised; see that file for why.
  *
  * Dimming is done in CSS rather than by rewriting the markup, because the
  * artwork must stay byte-identical to what was authored and reviewed — and a
@@ -618,7 +622,9 @@ function renderGraphic(
   svg: string | undefined,
 ): ReactElement {
   const color = TONE_COLORS.neutral;
-  const labelY = el.y + el.h + 26;
+  const beside = el.labelSide === 'beside';
+  const labelSize = el.label ? graphicLabelSize(el.w, el.label, beside ? 'beside' : 'below') : 26;
+  const labelY = beside ? el.y + el.h / 2 : el.y + el.h + 26;
 
   if (svg === undefined) {
     return (
@@ -644,13 +650,14 @@ function renderGraphic(
       />
       {el.label && (
         <text
-          x={el.x + el.w / 2}
+          x={beside ? el.x + el.w + BESIDE_GAP : el.x + el.w / 2}
           y={labelY}
-          textAnchor="middle"
+          textAnchor={beside ? 'start' : 'middle'}
+          dominantBaseline={beside ? 'middle' : undefined}
           fontFamily={FONT_WRITE}
           // The same size the camera and the layout believe it is — see
           // graphicLabelSize for why three guesses were one too many.
-          fontSize={graphicLabelSize(el.w, el.label)}
+          fontSize={labelSize}
           fill={color}
           {...HALO}
         >

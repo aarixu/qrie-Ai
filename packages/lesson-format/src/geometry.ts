@@ -109,9 +109,23 @@ export function fitText(
  * Capped at 1.8x the icon's width: past that the label dominates the picture
  * it names, and a long name should shrink rather than shout.
  */
-export function graphicLabelSize(iconW: number, label: string): number {
-  return fitText(label, iconW * 1.8, 26, 14);
+export function graphicLabelSize(
+  iconW: number,
+  label: string,
+  side: 'below' | 'beside' = 'below',
+): number {
+  // Beneath, a label must not dominate the picture it names. Beside, it has
+  // the rest of the row and only needs to be legible.
+  return fitText(label, iconW * (side === 'beside' ? 3.5 : 1.8), 26, 14);
 }
+
+/**
+ * The gap between a picture and a name written beside it.
+ *
+ * Wide enough that a teacher's loop around the picture — which overshoots it
+ * by design — does not run into the first letter of its name.
+ */
+export const BESIDE_GAP = 22;
 
 /** A rect around a centred single line of text. */
 function centredText(x: number, y: number, text: string, size: number, em: number): Rect {
@@ -167,14 +181,14 @@ export function boxOf(el: Element): Rect {
     // under a small picture — and a box that ignored that let other labels be
     // pushed onto it by a solver that could not see it was there.
     case 'graphic': {
-      const labelW = el.label ? textWidth(el.label, graphicLabelSize(el.w, el.label)) : 0;
+      if (!el.label) return { x: el.x, y: el.y, w: el.w, h: el.h };
+      if (el.labelSide === 'beside') {
+        const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label, 'beside'));
+        return { x: el.x, y: el.y, w: el.w + BESIDE_GAP + labelW, h: el.h };
+      }
+      const labelW = textWidth(el.label, graphicLabelSize(el.w, el.label));
       const w = Math.max(el.w, labelW);
-      return {
-        x: el.x + el.w / 2 - w / 2,
-        y: el.y,
-        w,
-        h: el.h + (el.label ? 34 : 0),
-      };
+      return { x: el.x + el.w / 2 - w / 2, y: el.y, w, h: el.h + 34 };
     }
     case 'doc':
       return { x: el.x, y: el.y, w: el.w, h: el.h + (el.label ? 26 : 0) };

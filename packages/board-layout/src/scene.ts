@@ -2,6 +2,7 @@ import {
   fitText,
   graphicLabelSize,
   textWidth,
+  BESIDE_GAP,
   type Element,
   type Rect,
 } from '@ai-tutor/lesson-format';
@@ -85,6 +86,20 @@ export function layoutScene(
 
   const anyLabel = places.some((p) => p.label);
 
+  /**
+   * Which way the names run in this row.
+   *
+   * Beneath is how a board usually reads, so it is the default. But a row too
+   * short to hold a picture AND a line under it makes both small, and it does
+   * that while the board's width goes unused — three things stacked in one
+   * band came out sixty units tall each. When that happens the name goes
+   * beside the picture, which is what a teacher does when the room below is
+   * gone.
+   */
+  const labelSide: 'below' | 'beside' =
+    anyLabel && band.h - LABEL_ROOM < SIZES.small ? 'beside' : 'below';
+  const stacked = labelSide === 'below';
+
   // Groups in first-appearance order; ungrouped items are their own group.
   const groups: PlaceStep[][] = [];
   const byName = new Map<string, PlaceStep[]>();
@@ -113,14 +128,24 @@ export function layoutScene(
    * layout could not deliver, and five long-labelled pictures walked a
    * thousand units off the right-hand edge of the board.
    */
+  /**
+   * How wide a place stands at a given scale — the ONE answer.
+   *
+   * Beside, the name stands NEXT to the picture and both need room; below,
+   * they share a column and the wider of the two decides. Two copies of this
+   * sum, one for solving the scale and one for placing the pictures, is how
+   * three graphics ended up laid on top of each other.
+   */
+  const spanAt = (q: PlaceStep, k: number) => {
+    const size = natural(q) * k;
+    if (!q.label) return size;
+    const write = textWidth(q.label, graphicLabelSize(size, q.label, labelSide));
+    return labelSide === 'beside' ? size + BESIDE_GAP + write : Math.max(size, write);
+  };
+
   const widthOf = (list: readonly PlaceStep[], k: number, groupCount: number, gapAt: number) => {
-    const spanAt = (q: PlaceStep) => {
-      const size = natural(q) * k;
-      if (!q.label) return size;
-      return Math.max(size, textWidth(q.label, graphicLabelSize(size, q.label)));
-    };
     return (
-      list.reduce((sum, q) => sum + spanAt(q), 0) +
+      list.reduce((sum, q) => sum + spanAt(q, k), 0) +
       Math.max(0, list.length - groupCount) * IN_GROUP * k +
       Math.max(0, groupCount - 1) * gapAt * k
     );
@@ -149,7 +174,7 @@ export function layoutScene(
    */
   const MAX_GROW = 1.9;
   const MIN_SHRINK = 0.2;
-  const roomH = band.h - (anyLabel ? LABEL_ROOM : 0);
+  const roomH = band.h - (anyLabel && stacked ? LABEL_ROOM : 0);
   const tallestNatural = Math.max(...places.map(natural));
   const fitH = tallestNatural > 0 ? roomH / tallestNatural : 1;
   const ceiling = Math.min(MAX_GROW, Math.max(MIN_SHRINK, fitH));
@@ -204,18 +229,14 @@ export function layoutScene(
    * wider. Spacing by the icon alone let two icons stand politely apart while
    * their labels lay printed across each other.
    */
-  const spanOf = (p: PlaceStep): number => {
-    const size = sizeOf(p);
-    if (!p.label) return size;
-    return Math.max(size, textWidth(p.label, graphicLabelSize(size, p.label)));
-  };
+  const spanOf = (p: PlaceStep): number => spanAt(p, shrink);
 
   const groupW = (g: PlaceStep[]) =>
     g.reduce((sum, p) => sum + spanOf(p), 0) + (g.length - 1) * IN_GROUP * shrink;
   const laidW =
     groups.reduce((sum, g) => sum + groupW(g), 0) + (groups.length - 1) * gap * shrink;
 
-  const baseline = band.y + (band.h - (tallest + (anyLabel ? LABEL_ROOM : 0))) / 2;
+  const baseline = band.y + (band.h - (tallest + (anyLabel && stacked ? LABEL_ROOM : 0))) / 2;
   let x = band.x + Math.max(0, (band.w - laidW) / 2);
 
   for (const [gi, group] of groups.entries()) {
@@ -224,7 +245,7 @@ export function layoutScene(
       const span = spanOf(p);
       // The icon stands centred in its span, bottom-aligned on the shared
       // baseline so a small thing stands on the same ground as a large one.
-      const iconX = x + (span - size) / 2;
+      const iconX = stacked ? x + (span - size) / 2 : x;
       const y = baseline + (tallest - size);
       const box: Placed = { id: p.id, elementId: namespaced(p.id), x: iconX, y, w: size, h: size };
       boxes.set(p.id, box);
@@ -236,7 +257,7 @@ export function layoutScene(
         w: size,
         h: size,
         noun: p.noun,
-        ...(p.label ? { label: p.label } : {}),
+        ...(p.label ? { label: p.label, labelSide } : {}),
       });
       x += span + IN_GROUP * shrink;
     }
