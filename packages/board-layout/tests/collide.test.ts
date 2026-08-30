@@ -274,3 +274,23 @@ describe('resolveOverlaps on its own', () => {
     expect(resolveOverlaps(crowded)).toHaveLength(12);
   });
 });
+
+describe('when a scene fills its own room', () => {
+  // A label would rather be a footnote under the drawing than printed across
+  // it. It still never goes above the title: no room is offered up there.
+  const wall: Element = { kind: 'box', id: 'wall', x: 8, y: 140, w: 984, h: 350, label: 'scene' };
+  const label: Element = { kind: 'handwrite', id: 'lbl', x: 500, y: 300, text: 'reaction force' };
+  const main = { x: 8, y: 140, w: 984, h: 350 };
+  const belowTitle = { x: 8, y: 140, w: 984, h: 470 };
+
+  it('leaves the label crowded when that is the only room there is', () => {
+    const [, lbl] = resolveOverlaps([wall, label], [], [main]);
+    expect(overlaps(boxOf(lbl), boxOf(wall))).toBe(true);
+  });
+
+  it('takes the next room down rather than write across the drawing', () => {
+    const [, lbl] = resolveOverlaps([wall, label], [], [main, belowTitle]);
+    expect(overlaps(boxOf(lbl), boxOf(wall))).toBe(false);
+    expect(boxOf(lbl).y).toBeGreaterThan(main.y + main.h - 40);
+  });
+});
