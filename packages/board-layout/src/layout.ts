@@ -9,6 +9,7 @@ import {
   CANVAS_H,
   CANVAS_W,
   fitText,
+  writeMs,
   type Element,
 } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
@@ -46,6 +47,48 @@ const MIN_CARD_W = 240;
 const EQUATION_H = 52;
 const WRITE_H = 62;
 const CARD_H = 128;
+
+/**
+ * A figure with the key points written under it.
+ *
+ * A labelled picture has already given both margins to the names of its parts,
+ * so a sentence that belongs to no single part — a rule, a comparison, the line
+ * worth remembering — has nowhere to go but underneath. Which is where a
+ * teacher writes it anyway.
+ *
+ * The band borrows the room below MAIN first, because it is otherwise empty and
+ * the caption does not start until 548, and only then takes height off the
+ * picture. There is a floor on the picture: below it the figure is a thumbnail
+ * and the beat has become about its own captions.
+ */
+const SPARE_BELOW = 58;
+const BAND_GAP = 16;
+const POINT_GAP = 10;
+const MIN_FIGURE_H = 190;
+/** The sizes a band is written at, largest first. All its points share one. */
+const BAND_SIZES = [30, 26, 23, 20];
+
+/**
+ * From one handwritten line to the next.
+ *
+ * The height comes from the same function the camera and the overlap solver
+ * measure this element with, plus the clearance the solver wants. Guessed
+ * separately it was 1.5 em in one place and 1.62 in another, and the tighter
+ * of the two read as a collision — so the solver shrank a key point until it
+ * fitted a gap that was never real.
+ */
+const handLead = (size: number): number =>
+  boxOf({ kind: 'handwrite', id: '_lead', x: 0, y: 0, text: 'x', size }).h + 10;
+
+/**
+ * When the nth line of a written block may start: after every line above it.
+ *
+ * A line takes as long as its own words — that is the renderer's rule and now
+ * this one's too. A flat count per line meant a long line was still being
+ * written when the line below it began.
+ */
+const afterLines = (lines: readonly string[], n: number): number =>
+  lines.slice(0, n).reduce((sum, line) => sum + writeMs(line), 0);
 /** Rough wrapped height of a note at the renderer's 17px/1.55 in board units. */
 
 /** One thing to place, and how much vertical room it insists on. */
@@ -103,6 +146,36 @@ const noteHeight = noteBoxHeight;
  * word longer than the column stays on its own line and overhangs slightly,
  * which is what happens on a real board too.
  */
+/**
+ * How the key points written under a figure are laid out: one size for all of
+ * them, the largest that fits the room they have.
+ *
+ * One size because a list in three different sizes reads as a machine fitting
+ * text into gaps, not as a person writing. The room is what is left once the
+ * figure has kept its floor; if even the smallest size wants more than that,
+ * the smallest is used and the figure gives up the difference.
+ */
+function planBand(
+  texts: readonly string[],
+  w: number,
+  room: number,
+): { size: number; lines: string[][]; height: number } {
+  if (texts.length === 0) return { size: 0, lines: [], height: 0 };
+  let band = { size: 0, lines: [] as string[][], height: 0 };
+  for (const size of BAND_SIZES) {
+    const lines = texts.map((text) => wrapText(text, w, size));
+    const lead = handLead(size);
+    band = {
+      size,
+      lines,
+      height:
+        lines.reduce((sum, ls) => sum + ls.length * lead, 0) + (texts.length - 1) * POINT_GAP,
+    };
+    if (band.height <= room) break;
+  }
+  return band;
+}
+
 function wrapText(text: string, w: number, size: number): string[] {
   // Measured with the ruler everything else uses. Half an em per character
   // was a guess, and a generous one: it packed more onto a line than would
@@ -153,6 +226,29 @@ export interface RevealStep {
  * The one place that turns `kidney#cortex` into a rectangle, so a circle round
  * a part and a line pointing at it can never disagree about where it is.
  */
+/**
+ * The box a picture will actually be DRAWN in, inside the room it was given.
+ *
+ * The renderer fits an image to its box and centres it, so a square picture in
+ * a wide box is drawn narrower with empty board either side. Layout used to
+ * hand over the whole room and believe the picture filled it — and then place
+ * every part box as a fraction of that room. A part on the left of the picture
+ * was circled in the empty strip beside it.
+ *
+ * So the fitting happens HERE, once, and the element IS the picture. The
+ * renderer's `meet` then has nothing left to do, and a fraction of the element
+ * is a fraction of what the student sees.
+ *
+ * A picture whose shape was never measured keeps the whole room, which is
+ * exactly what happened before any of this existed.
+ */
+function fitPicture(r: Rect, aspect: number | undefined): Rect {
+  if (aspect === undefined || !Number.isFinite(aspect) || aspect <= 0) return r;
+  const w = Math.min(r.w, r.h * aspect);
+  const h = w / aspect;
+  return { x: r.x + (r.w - w) / 2, y: r.y + (r.h - h) / 2, w, h };
+}
+
 function partBox(target: string, elements: readonly Element[]): Rect | null {
   const { elementId, part } = splitPartRef(target);
   const host = elements.find((el) => el.id === elementId);
@@ -183,6 +279,14 @@ export function layoutBeat(
    * layout does what it always does: turns facts into coordinates.
    */
   parts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
+  /**
+   * The shape of each generated picture — its width over its height.
+   *
+   * Also a fact about the picture that was made rather than a layout decision,
+   * and it arrives the same way its parts do. Without it the board places a
+   * picture in a box of the wrong shape and then marks parts of the box.
+   */
+  shapes: ReadonlyMap<string, number> = new Map(),
 ): {
   elements: Element[];
   laid: LaidOutBeat;
@@ -247,6 +351,14 @@ export function layoutBeat(
    */
   const pendingLabels: { at: number; id: string; step: Extract<Instruction, { do: 'label' }> }[] =
     [];
+  /**
+   * The key points, held for the same reason the names are.
+   *
+   * They go under the figure, and how far under depends on how tall the figure
+   * turned out — which is not known until the whole beat has been read.
+   */
+  const pendingWrites: { at: number; id: string; step: Extract<Instruction, { do: 'write' }> }[] =
+    [];
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -293,10 +405,7 @@ export function layoutBeat(
             {
               kind: 'image',
               id: ref,
-              x: r.x,
-              y: r.y,
-              w: r.w,
-              h: r.h,
+              ...fitPicture(r, shapes.get(ref)),
               src: `generated/${ref}.png`,
               alt: ref.replace(/_/g, ' '),
               ...(parts.get(ref) ? { parts: [...parts.get(ref)!] } : {}),
@@ -400,6 +509,7 @@ export function layoutBeat(
       }
 
       case 'write': {
+        pendingWrites.push({ at: index, id: idFor(beat.id, index), step: item });
         blocks.push({
           kind: item.do,
           at: index,
@@ -413,17 +523,17 @@ export function layoutBeat(
             const narrow = r.w < WIDTH * 0.75;
             const size = narrow ? 27 : 36;
             const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
-            // Wider than the overlap solver breathes (6 units a side): set
-            // tighter, consecutive lines read as a collision and the solver
-            // shrinks the point until it fits — down to unreadable.
-            const lead = size * 1.62;
+            // Wide enough that the overlap solver does not read two
+            // consecutive lines as a collision and shrink the point until it
+            // fits a gap that was never there.
+            const lead = handLead(size);
             const top = r.y + size * 0.9;
             // Each line waits for the one above it — a person writes a second
-            // line after the first, not alongside it.
-            const perLine = 620;
+            // line after the first, not alongside it — and waits exactly as
+            // long as that line takes, which only the shared ruler knows.
             return lines.map((line, n) => ({
               kind: 'handwrite',
-              ...(n > 0 ? { after: n * perLine } : {}),
+              ...(n > 0 ? { after: afterLines(lines, n) } : {}),
               id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
               x: r.x + r.w / 2,
               y: narrow ? top + n * lead : r.y + Math.min(WRITE_H, r.h) * 0.7,
@@ -657,17 +767,58 @@ export function layoutBeat(
    */
   if (figures.length === 1 && pendingLabels.length > 0) {
     const MARGIN_GAP = 18;
-    const marginW = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
-    const pictureW = WIDTH - MARGIN_GAP * 2 - marginW * 2;
-    const pictureX = SIDE + marginW + MARGIN_GAP;
+    const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
+    const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
+    const columnX = SIDE + leastMargin + MARGIN_GAP;
+
+    // What she says out loud gets written under what she is saying it about.
+    // The band is measured first, because the picture's height is whatever is
+    // left once the points have the room they need.
+    const bandRoom = MAIN.h + SPARE_BELOW;
+    const band = planBand(
+      pendingWrites.map((point) => point.step.text),
+      WIDTH,
+      bandRoom - MIN_FIGURE_H - BAND_GAP,
+    );
+    const figureH =
+      band.height > 0 ? Math.max(MIN_FIGURE_H, bandRoom - band.height - BAND_GAP) : MAIN.h;
 
     current = figures[0].at ?? -1;
-    for (const el of figures[0].place({ x: pictureX, y: MAIN.y, w: pictureW, h: MAIN.h })) {
+    for (const el of figures[0].place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
       emit(el);
     }
 
     const host = elements.find((el) => el.id === figures[0].ref);
     const hostBox = host ? boxOf(host) : null;
+
+    /**
+     * The margins are whatever room is left either side of the picture ITSELF.
+     *
+     * A square picture in a short column is drawn narrower than the column, and
+     * the board beside it is empty. Reserving a fixed 26% margin and leaving
+     * that strip blank meant "Right atrium (receives deoxygenated blood)"
+     * wrapped onto three lines at 14 units while a hundred units of board sat
+     * unused next to it. The names get the room the picture did not take.
+     */
+    const marginOf = (side: 'left' | 'right'): { w: number; cx: number } => {
+      const near = hostBox
+        ? side === 'left'
+          ? hostBox.x
+          : hostBox.x + hostBox.w
+        : side === 'left'
+          ? columnX
+          : columnX + columnW;
+      // Floored, because a picture wide enough to leave no margin still has
+      // names to write beside it — and the floor has to be the SAME number the
+      // centre is worked out from, or the writing is measured for one strip
+      // and placed in the middle of another.
+      const w = Math.max(
+        60,
+        side === 'left' ? near - MARGIN_GAP - SIDE : SIDE + WIDTH - (near + MARGIN_GAP),
+      );
+      return { w, cx: side === 'left' ? SIDE + w / 2 : SIDE + WIDTH - w / 2 };
+    };
+    const margins = { left: marginOf('left'), right: marginOf('right') };
 
     /**
      * Each name to the side its part is on, and level with it.
@@ -711,13 +862,13 @@ export function layoutBeat(
     const sizeFor = (side: 'left' | 'right'): number => {
       const mine = placedFor.filter(({ pending }) => sideOf.get(pending) === side);
       for (const size of [20, 18, 16, 14]) {
-        const lead = size * 1.5;
+        const lead = handLead(size);
         const total = mine.reduce(
           (sum, { pending }) =>
-            sum + wrapText(pending.step.text, marginW, size).length * lead + 12,
+            sum + wrapText(pending.step.text, margins[side].w, size).length * lead + 12,
           0,
         );
-        if (total <= MAIN.h) return size;
+        if (total <= figureH) return size;
       }
       return 14;
     };
@@ -728,18 +879,15 @@ export function layoutBeat(
       const side = sideOf.get(pending)!;
       const onLeft = side === 'left';
       const size = sizes[side];
-      const lines = wrapText(pending.step.text, marginW, size);
-      const lead = size * 1.5;
+      const lines = wrapText(pending.step.text, margins[side].w, size);
+      const lead = handLead(size);
       const height = lines.length * lead;
-      const cx = onLeft
-        ? SIDE + marginW / 2
-        : SIDE + marginW + MARGIN_GAP + pictureW + MARGIN_GAP + marginW / 2;
+      const cx = margins[side].cx;
 
       // Beside its part, then down if that room has gone, then kept on the
       // board.
       const wanted = box ? box.y + box.h / 2 - height / 2 : MAIN.y;
-      const top =
-        Math.min(Math.max(wanted, lowest[side]), MAIN.y + MAIN.h - height) + size;
+      const top = Math.min(Math.max(wanted, lowest[side]), MAIN.y + figureH - height) + size;
       lowest[side] = top + height - size + 10;
 
       current = pending.at;
@@ -752,7 +900,7 @@ export function layoutBeat(
           y: top + n * lead,
           text: line,
           size,
-          ...(n > 0 ? { after: n * 520 } : {}),
+          ...(n > 0 ? { after: afterLines(lines, n) } : {}),
           ...(pending.step.tone ? { tone: pending.step.tone } : {}),
         });
         // A name barely moves. The line to its part is drawn from where the
@@ -772,7 +920,10 @@ export function layoutBeat(
         emit({
           kind: 'arrow',
           id: lineId,
-          from: { x: onLeft ? cx + marginW / 2 - 6 : cx - marginW / 2 + 6, y: midY },
+          from: {
+            x: onLeft ? cx + margins.left.w / 2 - 6 : cx - margins.right.w / 2 + 6,
+            y: midY,
+          },
           to: { x: onLeft ? box.x : box.x + box.w, y: box.y + box.h / 2 },
           ...(pending.step.tone ? { tone: pending.step.tone } : {}),
         });
@@ -783,9 +934,42 @@ export function layoutBeat(
       }
     }
 
-    // Anything else the beat wanted still stacks, under the picture.
+    /**
+     * And her key points, written under the figure as she says them.
+     *
+     * Left-aligned at the board's own margin rather than centred: a list of
+     * points is written down a board, and a centred line reads as a caption
+     * about the picture instead of a note she made while teaching on it.
+     */
+    const bandLead = handLead(band.size);
+    let by = MAIN.y + figureH + BAND_GAP;
+    pendingWrites.forEach((point, n) => {
+      current = point.at;
+      const lines = band.lines[n];
+      lines.forEach((line, k) => {
+        const id = k === 0 ? point.id : `${point.id}_l${k}`;
+        const x = SIDE + textWidth(line, band.size) / 2;
+        const y = by + band.size + k * bandLead;
+        emit({
+          kind: 'handwrite',
+          id,
+          x,
+          y,
+          text: line,
+          size: band.size,
+          ...(k > 0 ? { after: afterLines(lines, k) } : {}),
+          ...(point.step.tone ? { tone: point.step.tone } : {}),
+        });
+        // Kept where she wrote it. The solver may nudge a point clear of
+        // something, but a key point that wandered up beside the picture is no
+        // longer the note she made underneath it.
+        leashes.push({ id, region: { x: x - 16, y: y - 12, w: 32, h: 24 } });
+      });
+      by += lines.length * bandLead + POINT_GAP;
+    });
+
+    // Everything this beat wanted has now been placed by hand.
     blocks.length = 0;
-    for (const block of writes) blocks.push(block);
   }
 
   if (figures.length === 1 && writes.length > 0 && blocks.length === 1 + writes.length) {

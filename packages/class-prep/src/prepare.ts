@@ -123,6 +123,8 @@ export function assemble(
   drawn: ReadonlySet<string>,
   /** Where each generated picture’s named parts are, as fractions of it. */
   pictureParts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
+  /** The shape of each generated picture — its width over its height. */
+  pictureShapes: ReadonlyMap<string, number> = new Map(),
 ): { lesson: unknown; dropped: string[]; aliases: Record<string, string> } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
@@ -141,6 +143,8 @@ export function assemble(
   const shownArt = new Set<string>();
   /** Part boxes, plus an entry for every copy of a picture. */
   const partsByRef = new Map<string, readonly ImagePart[]>(pictureParts);
+  /** And the shape of it, for every copy too — a copy is the same picture. */
+  const shapesByRef = new Map<string, number>(pictureShapes);
   const aliases = new Map<string, string>();
   const reuse = (step: Instruction, beatId: string): Instruction => {
     if ('ref' in step) {
@@ -152,6 +156,8 @@ export function assemble(
       // draw from them, and circles with nothing to circle.
       const known = pictureParts.get(step.ref);
       if (known) partsByRef.set(id, known);
+      const shape = pictureShapes.get(step.ref);
+      if (shape !== undefined) shapesByRef.set(id, shape);
       return { ...step, ref: id };
     }
     if (step.do === 'annotate' || step.do === 'label') {
@@ -192,7 +198,11 @@ export function assemble(
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
     ).map((step) => reuse(step, beat.id));
-    const { elements: laidOut, laid, steps } = layoutBeat({ ...beat, board }, partsByRef);
+    const { elements: laidOut, laid, steps } = layoutBeat(
+      { ...beat, board },
+      partsByRef,
+      shapesByRef,
+    );
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -374,6 +384,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   blueprint.id ||= `prep-${Date.now().toString(36)}`;
   // A missing title is not worth a repair round; the topic is right there.
   blueprint.title ||= topic;
+  // Nor is a beat's topic label, for the same reason. A repair round is a
+  // whole model call — three seconds of a student sitting in front of a blank
+  // board — and it would be spent recovering a word we already have.
+  for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
   const planMs = Date.now() - t0;
 
   const t1 = Date.now();
@@ -382,6 +396,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   let finished = 0;
   const pictureParts = new Map<string, readonly ImagePart[]>();
+  /** And how each one is shaped, so the board places it as it will be drawn. */
+  const pictureShapes = new Map<string, number>();
 
   // Diagrams and pictures are made side by side. A picture is a different
   // medium, not a different stage: both are just artwork the class is waiting
@@ -400,6 +416,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.55 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
+        if (made?.aspect != null) pictureShapes.set(brief.id, made.aspect);
         return {
           brief,
           svg: made?.src ?? null,
@@ -413,7 +430,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
                   ...(brief.parts.length > 0 && made.parts.length === 0
                     ? ['none of its named parts could be found in the picture']
                     : []),
-                  ...(made.hasText ? ['it still has words printed on it'] : []),
+                  ...made.faults.map((f) => `it still has ${f}`),
                 ]
               : ['the picture could not be generated'],
           },
@@ -441,7 +458,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     lesson: candidate,
     dropped,
     aliases,
-  } = assemble(blueprint, new Set(Object.keys(assets)), pictureParts);
+  } = assemble(blueprint, new Set(Object.keys(assets)), pictureParts, pictureShapes);
   // Both ids point at the one drawing.
   for (const [copy, original] of Object.entries(aliases) as [string, string][]) {
     if (assets[original]) assets[copy] = assets[original];
@@ -475,7 +492,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       fixed.id ||= blueprint.id;
 
       const revalidated = validateLesson(
-        assemble(fixed, new Set(Object.keys(assets)), pictureParts).lesson,
+        assemble(fixed, new Set(Object.keys(assets)), pictureParts, pictureShapes).lesson,
       );
       if (revalidated.ok) {
         validated = revalidated;

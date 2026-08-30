@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { graphicLabelSize, textWidth, BESIDE_GAP } from '@ai-tutor/lesson-format';
+import { graphicLabelSize, textWidth, writeMs, BESIDE_GAP } from '@ai-tutor/lesson-format';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -61,20 +61,14 @@ const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 /** A real handwriting face, for the lines the tutor writes out rather than shows. */
 const FONT_WRITE = "'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
 
-/** How long a handwritten line takes to appear. Slow enough to read as writing. */
 /**
- * How long a written line takes, per character.
+ * How long a handwritten line takes to appear.
  *
- * A fixed duration made a three-word label crawl and a full sentence blur
- * past — the two things a person writing does not do. Clamped at both ends:
- * fast enough that a long point does not outlast what she is saying over it,
- * slow enough that a short one still reads as being written.
+ * Measured in `@ai-tutor/lesson-format`, beside the width of the same text,
+ * because layout needs the identical answer to know when the line BELOW this
+ * one may start. Two counts of the same thing meant a long line was still
+ * being written when its second line began.
  */
-const WRITE_MS_PER_CHAR = 46;
-const WRITE_MS_MIN = 480;
-const WRITE_MS_MAX = 2600;
-const writeMs = (text: string): number =>
-  Math.round(Math.min(WRITE_MS_MAX, Math.max(WRITE_MS_MIN, text.length * WRITE_MS_PER_CHAR)));
 const WRITE_MS = 1600;
 
 const DRAW_MS = 400;

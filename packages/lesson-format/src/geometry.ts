@@ -29,6 +29,27 @@ const EM_SANS = 0.58;
 const EM_MONO = 0.62;
 
 /**
+ * HOW LONG A WRITTEN LINE TAKES TO COME OUT OF HER HAND.
+ *
+ * A property of the text, like its width, so it lives here beside the width.
+ * The renderer times each line this way — a fixed duration made a three-word
+ * label crawl and a full sentence blur past, the two things a person writing
+ * does not do — while layout, deciding when the NEXT line could start, counted
+ * a flat 620ms of its own. A long first line was therefore still being written
+ * when its second line began.
+ *
+ * Clamped at both ends: fast enough that a long point does not outlast what
+ * she is saying over it, slow enough that a short one still reads as written
+ * rather than printed.
+ */
+const WRITE_MS_PER_CHAR = 46;
+const WRITE_MS_MIN = 480;
+const WRITE_MS_MAX = 2600;
+
+export const writeMs = (text: string): number =>
+  Math.round(Math.min(WRITE_MS_MAX, Math.max(WRITE_MS_MIN, text.length * WRITE_MS_PER_CHAR)));
+
+/**
  * Mirrors the renderer's note layout: the card wraps at roughly this many
  * characters and every wrapped line is 21 units tall, over a 60-unit allowance
  * for padding.

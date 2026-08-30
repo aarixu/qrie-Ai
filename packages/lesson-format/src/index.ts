@@ -21,6 +21,7 @@ export {
   NOTE_INSET_X,
   textWidth,
   fitText,
+  writeMs,
   graphicLabelSize,
   BESIDE_GAP,
   flowHeight,

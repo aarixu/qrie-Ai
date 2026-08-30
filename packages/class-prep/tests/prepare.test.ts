@@ -266,3 +266,120 @@ describe('parsePlan reads a plan out of whatever the model sent', () => {
     expect(parsePlan('no json here at all')).toBeNull();
   });
 });
+
+describe('what the planner forgets that is not worth asking it again for', () => {
+  // A repair round is a whole model call — three seconds of a student sitting
+  // in front of a blank board — and it is being spent on a label we already
+  // know. The title fill was the first of these; the beat's topic is the
+  // other one that keeps happening.
+  const noTopic = {
+    ...blueprint,
+    beats: [{ id: 'b1', narration: 'Here we go.', board: [{ do: 'title', text: 'Speed' }] }],
+  };
+
+  it('fills in a beat with no topic instead of paying for a repair round', async () => {
+    let calls = 0;
+    const planner: LlmAdapter = {
+      complete: async () => {
+        calls += 1;
+        return JSON.stringify(noTopic);
+      },
+    };
+
+    const result = await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner,
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+    });
+
+    expect(calls).toBe(1);
+    expect(result.lesson.beats[0].topic).toBe('Speed');
+    expect(result.report.issues.join(' ')).not.toContain('repaired');
+  });
+
+  it('leaves a topic the planner did write alone', async () => {
+    const result = await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner: fakePlanner(blueprint),
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+    });
+    expect(result.lesson.beats.map((b) => b.topic)).toContain('graph');
+  });
+});
+
+describe('the shape of a picture reaches the board', () => {
+  // Measured where the picture is made, used where it is placed. Anywhere it
+  // is dropped on the way, the board goes back to marking parts of a box
+  // instead of parts of a picture.
+  const png = (w: number, h: number): string => {
+    const bytes = new Uint8Array(24);
+    bytes.set([137, 80, 78, 71, 13, 10, 26, 10], 0);
+    const view = new DataView(bytes.buffer);
+    view.setUint32(8, 13);
+    bytes.set([73, 72, 68, 82], 12);
+    view.setUint32(16, w);
+    view.setUint32(20, h);
+    return `data:image/png;base64,${Buffer.from(bytes).toString('base64')}`;
+  };
+
+  const withPicture: Blueprint = {
+    id: 'heart',
+    title: 'The Heart',
+    beats: [
+      {
+        id: 'b1',
+        topic: 'chambers',
+        narration: 'Look at the apex.',
+        board: [
+          { do: 'picture', ref: 'heart_pic' },
+          { do: 'label', target: 'heart_pic#apex', text: 'Apex' },
+          { do: 'write', text: 'The apex is the tip of the left ventricle' },
+        ],
+      },
+    ],
+    visuals: [
+      {
+        id: 'heart_pic',
+        medium: 'picture',
+        parts: ['apex'],
+        brief: 'a human heart cut open',
+        alt: 'a human heart',
+      },
+    ],
+  };
+
+  it('places a square picture in a square box', async () => {
+    const result = await prepareClass({
+      topic: 'The Heart',
+      klass: 9,
+      planner: fakePlanner(withPicture),
+      artist: fakeArtist(['']),
+      imageArtist: { draw: async () => png(1024, 1024) },
+      eyes: { look: async () => '{"_count":1,"apex":{"x":0.1,"y":0.6,"w":0.2,"h":0.2}}' },
+    });
+    const image = result.lesson.elements.find((el) => el.kind === 'image') as Extract<
+      Element,
+      { kind: 'image' }
+    >;
+    expect(image).toBeDefined();
+    expect(image.w).toBeCloseTo(image.h, 0);
+  });
+
+  it('leaves a picture whose shape could not be read filling its room', async () => {
+    const result = await prepareClass({
+      topic: 'The Heart',
+      klass: 9,
+      planner: fakePlanner(withPicture),
+      artist: fakeArtist(['']),
+      imageArtist: { draw: async () => 'data:image/webp;base64,AAAA' },
+      eyes: { look: async () => '{"_count":1,"apex":{"x":0.1,"y":0.6,"w":0.2,"h":0.2}}' },
+    });
+    const image = result.lesson.elements.find((el) => el.kind === 'image') as Extract<
+      Element,
+      { kind: 'image' }
+    >;
+    expect(image.w).toBeGreaterThan(image.h);
+  });
+});

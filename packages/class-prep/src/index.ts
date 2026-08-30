@@ -17,6 +17,7 @@ export { unsafeMarkup } from './safety';
 export {
   drawPicture,
   parseParts,
+  imageAspect,
   picturePrompt,
   partFinderUser,
   PART_FINDER_SYSTEM,

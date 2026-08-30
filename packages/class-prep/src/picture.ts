@@ -40,8 +40,24 @@ export interface PictureResult {
   parts: ImagePart[];
   /** How many times it had to be drawn, so a prep report can say so. */
   attempts: number;
-  /** Whether words are still printed on the picture we settled for. */
-  hasText: boolean;
+  /**
+   * Its width divided by its height, or null if that could not be read.
+   *
+   * The board needs the shape a picture will be DRAWN at, not the shape of the
+   * space it was given. The renderer fits an image inside its box and centres
+   * it, so a square picture in a wide box leaves empty board either side — and
+   * a part box, being a fraction of the box, lands in that empty strip. The
+   * circle then misses the thing it was drawn around.
+   */
+  aspect: number | null;
+  /**
+   * What is still wrong with the picture we settled for.
+   *
+   * Empty on a good picture. A list rather than a flag because there is more
+   * than one way an image model ignores its instructions, and the prep report
+   * should be able to say which one happened.
+   */
+  faults: string[];
 }
 
 /** Talks to a model that returns images rather than words. */
@@ -93,13 +109,47 @@ picture: {"cortex": {"x": 0.12, "y": 0.20, "w": 0.30, "h": 0.25}}
 - If a part is genuinely not visible in this picture, give it null rather than
   a guess. A confident circle around the wrong thing teaches the wrong thing.
 
-Also include "_hasText": true or false — true if the picture has ANY words,
-letters or numbers printed on it, including labels with leader lines. The
-teacher writes every label on the board herself, so printed ones are a fault
-in the picture.`;
+Also include two facts about the picture as a whole:
+
+- "_hasText": true or false — true if the picture has ANY words, letters or
+  numbers printed on it, including labels with leader lines. The teacher
+  writes every label on the board herself, so printed ones are a fault in the
+  picture.
+- "_count": how many of the subject the picture contains. It was asked for
+  exactly one. Two kidneys, a mirrored pair, a before-and-after, a row of
+  cells: that is 2 or more, and it is a fault. One subject shown once is 1,
+  however many parts it has inside it.`;
 
 export function partFinderUser(parts: readonly string[]): string {
   return `Find these parts:\n${parts.map((p) => `- ${p}`).join('\n')}`;
+}
+
+/**
+ * The shape of a picture, read from the bytes it arrived as.
+ *
+ * PNG only, and deliberately: it is the format these models return, its header
+ * is fixed-width and unambiguous, and a format we cannot read honestly returns
+ * null rather than a guess. A null shape places the picture exactly the way it
+ * was placed before any of this existed.
+ */
+export function imageAspect(dataUrl: string): number | null {
+  const comma = dataUrl.indexOf(',');
+  if (!dataUrl.startsWith('data:image/png;base64,') || comma < 0) return null;
+  let bytes: Uint8Array;
+  try {
+    const binary = atob(dataUrl.slice(comma + 1, comma + 1 + 64));
+    bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+  } catch {
+    return null;
+  }
+  // 8-byte signature, then a length and the four letters IHDR, then the width
+  // and height as big-endian 32-bit numbers.
+  if (bytes.length < 24) return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const w = view.getUint32(16);
+  const h = view.getUint32(20);
+  if (w <= 0 || h <= 0) return null;
+  return w / h;
 }
 
 const stripFence = (s: string): string =>
@@ -108,6 +158,24 @@ const stripFence = (s: string): string =>
     .replace(/^```(?:json)?\s*/i, '')
     .replace(/```\s*$/, '')
     .trim();
+
+/**
+ * How much of a picture one named part may cover, and how much means the model
+ * boxed the whole subject instead of a part.
+ *
+ * The box the eyes return becomes the circle drawn on the board, so its size
+ * is a measurement like any other in this engine — and like every other one,
+ * it is settled in exactly one place. Asking for a tight box in the prompt was
+ * the first attempt and it does not hold: the model agrees and then hands back
+ * a box half the picture wide, and the circle swallows the organ it meant to
+ * point inside.
+ *
+ * A part of an organ is usually a fifth to a third of the picture across. 0.45
+ * leaves room for the genuinely large part — a leaf blade, a lung — while
+ * still cutting the boxes that were never about one part at all.
+ */
+const MAX_PART = 0.45;
+const WHOLE_SUBJECT = 0.75;
 
 const fraction = (v: unknown): number | null =>
   typeof v === 'number' && Number.isFinite(v) && v >= -0.05 && v <= 1.05 ? v : null;
@@ -120,14 +188,32 @@ const fraction = (v: unknown): number | null =>
  * carries on without that circle. Marking the wrong place is far worse than
  * marking nothing.
  */
-/** Whether the eyes reported words printed on the picture. */
-export function sawText(raw: string): boolean {
+/**
+ * What the eyes noticed wrong with the picture as a whole.
+ *
+ * Both faults ride on the call that was being made anyway to find the parts,
+ * so counting the subject costs nothing. Read as a list because one redraw has
+ * to answer for all of them: paying for a second picture per fault would mean
+ * three pictures for a labelled mirrored pair, and the third would be as
+ * likely to invent a fourth fault as to fix the first.
+ *
+ * A reply that says nothing about a fault is not evidence of one. Anything
+ * unparseable reports nothing, and the picture stands.
+ */
+export function faults(raw: string): string[] {
+  let parsed: Record<string, unknown>;
   try {
-    const parsed = JSON.parse(stripFence(raw)) as Record<string, unknown>;
-    return parsed?._hasText === true;
+    parsed = JSON.parse(stripFence(raw)) as Record<string, unknown>;
   } catch {
-    return false;
+    return [];
   }
+  if (typeof parsed !== 'object' || parsed === null) return [];
+  const out: string[] = [];
+  if (parsed._hasText === true) out.push('words printed on it');
+  if (typeof parsed._count === 'number' && parsed._count >= 2) {
+    out.push('more than one of the subject in it');
+  }
+  return out;
 }
 
 export function parseParts(raw: string, wanted: readonly string[]): ImagePart[] {
@@ -150,16 +236,25 @@ export function parseParts(raw: string, wanted: readonly string[]): ImagePart[] 
     const fh = fraction(h);
     if (fx === null || fy === null || fw === null || fh === null) continue;
     if (fw <= 0.01 || fh <= 0.01) continue;
+    // A box that took in the whole subject is not a part. Dropped rather than
+    // shrunk, because where the part actually is cannot be recovered from a
+    // box that missed it by that much — and a circle round everything points
+    // at nothing. The name is still written; it just has no line to leave.
+    if (fw > WHOLE_SUBJECT && fh > WHOLE_SUBJECT) continue;
+    // Otherwise pulled in to the size a part may be, around its OWN centre, so
+    // the circle stays on the thing the model was looking at.
+    const sw = Math.min(fw, MAX_PART);
+    const sh = Math.min(fh, MAX_PART);
     // Clamped, so a box that runs a little past an edge still marks the part
     // rather than being thrown away for a rounding error.
-    const cx = Math.max(0, Math.min(fx, 1));
-    const cy = Math.max(0, Math.min(fy, 1));
+    const cx = Math.max(0, Math.min(fx + (fw - sw) / 2, 1));
+    const cy = Math.max(0, Math.min(fy + (fh - sh) / 2, 1));
     out.push({
       name,
       x: cx,
       y: cy,
-      w: Math.min(fw, 1 - cx),
-      h: Math.min(fh, 1 - cy),
+      w: Math.min(sw, 1 - cx),
+      h: Math.min(sh, 1 - cy),
     });
   }
   return out;
@@ -172,15 +267,27 @@ export function parseParts(raw: string, wanted: readonly string[]): ImagePart[] 
  * beat that wanted it is dropped the same way a failed diagram's is — a class
  * with one picture instead of two is still a class.
  */
-/** What to say on a second attempt, when the first came back with labels on it. */
-export function redrawPrompt(brief: PictureBrief): string {
+/**
+ * What to say on a second attempt, with every fault named.
+ *
+ * All of them at once: a redraw per fault would cost a picture each time, and
+ * the model that ignored "exactly one" is no more likely to hear it on the
+ * third telling than the second.
+ */
+export function redrawPrompt(brief: PictureBrief, problems: readonly string[]): string {
   return `${picturePrompt(brief)}
 
-CRITICAL: your previous attempt had words printed on it. This picture is going
-onto a board where a TEACHER writes every label herself, by hand, as she
-speaks. Printed labels fight with her handwriting and give away her next line.
-Draw the subject and NOTHING else: no words, no letters, no numbers, no leader
-lines, no key, no legend, no watermark.`;
+CRITICAL: your previous attempt was rejected. What was wrong with it:
+${problems.map((p) => `- ${p}`).join('\n')}
+
+This picture goes onto a board where a TEACHER writes every label herself, by
+hand, as she speaks — printed labels fight with her handwriting and give away
+her next line. And she teaches on ONE subject: a second copy of it beside the
+first means every mark she makes lands on one of two things and the student
+does not know which.
+
+So: EXACTLY ONE of the subject, alone, and NOTHING written on it — no words, no
+letters, no numbers, no leader lines, no key, no legend, no watermark.`;
 }
 
 export async function drawPicture(
@@ -200,8 +307,9 @@ export async function drawPicture(
   let src = await draw(picturePrompt(brief));
   if (!src) return null;
 
-  // Nothing to look for and no labels to catch, so no second call at all.
-  if (brief.parts.length === 0) return { src, parts: [], attempts: 1, hasText: false };
+  // Nothing to look for and no faults to catch, so no second call at all.
+  if (brief.parts.length === 0)
+    return { src, parts: [], attempts: 1, faults: [], aspect: imageAspect(src) };
 
   const look = async (image: string) => {
     try {
@@ -211,26 +319,29 @@ export async function drawPicture(
     }
   };
 
-  let reply = await look(src);
+  const reply = await look(src);
   // The picture is still worth showing; it just cannot be marked yet.
-  if (reply === null) return { src, parts: [], attempts: 1, hasText: false };
+  if (reply === null) return { src, parts: [], attempts: 1, faults: [], aspect: imageAspect(src) };
 
-  // One redraw, and only when the eyes actually saw printed words. Image
-  // models ignore "no text" often enough to matter and not often enough to
-  // pay for a second picture every time — so the cost is spent exactly when
-  // there is something wrong to fix.
-  if (sawText(reply)) {
-    const second = await draw(redrawPrompt(brief));
+  // One redraw, and only when the eyes actually saw something wrong. Image
+  // models ignore "no text" and "exactly one" often enough to matter and not
+  // often enough to pay for a second picture every time — so the cost is
+  // spent exactly when there is a named fault to fix.
+  const wrong = faults(reply);
+  if (wrong.length > 0) {
+    const second = await draw(redrawPrompt(brief, wrong));
     if (second) {
       const secondReply = await look(second);
-      // Keep the redraw only if it actually solved the problem; a second
-      // picture that still has labels is just a second picture.
-      if (secondReply !== null && !sawText(secondReply)) {
+      // Keep the redraw only if it came back clean. A second picture with the
+      // same fault on it is just a second picture, and swapping one fault for
+      // another is not progress either.
+      if (secondReply !== null && faults(secondReply).length === 0) {
         return {
           src: second,
           parts: parseParts(secondReply, brief.parts),
           attempts: 2,
-          hasText: false,
+          faults: [],
+          aspect: imageAspect(second),
         };
       }
     }
@@ -240,6 +351,7 @@ export async function drawPicture(
     src,
     parts: parseParts(reply, brief.parts),
     attempts: 1,
-    hasText: sawText(reply),
+    faults: wrong,
+    aspect: imageAspect(src),
   };
 }

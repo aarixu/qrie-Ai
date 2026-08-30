@@ -94,7 +94,7 @@ concrete word — place a "leaf", not "photosynthesis".
 - {"do":"title","text","sub"?}          The lesson heading. Owns the top of the board.
 - {"do":"caption","text"}               One line under everything, naming what is shown.
 - {"do":"equation","text"}              A short equation as you would write it on a board — "v = s / t". Plain text, never LaTeX.
-- {"do":"write","text","tone"?}         A line written out BY HAND while the tutor speaks. Slow — at most one per beat, two per lesson.
+- {"do":"write","text","tone"?}         A KEY POINT, written out BY HAND while she says it. Every key point you say out loud gets written: two to four in a beat is normal.
 - {"do":"diagram","ref"}                A generated picture, by the id of its brief below. Only for things with internal structure worth pointing inside — a cell, a cross-section, a graph.
 - {"do":"point","ref","part"}           Light one named part of that picture, dim the rest.
 
@@ -156,10 +156,17 @@ This is the most important section here. A picture is not a slide waiting to
 be replaced by the next slide. It is a thing on the board that the tutor now
 works on, for as long as the idea takes.
 
-THE RULE: every part you name out loud gets WRITTEN on the board, with a line
-to the part it names. A student who hears "the cortex filters the blood" and
-sees an unlabelled circle has to guess which circle that sentence was about.
-Say it, mark it, name it — every time.
+THE RULE, and it has two halves. Every PART you name out loud gets written on
+the board with a line to it. And every KEY POINT you say out loud gets written
+up beside the figure, in her own hand, as she says it.
+
+A student who hears "the cortex filters the blood" and sees an unlabelled
+circle has to guess which circle that sentence was about. A student who hears
+the sentence the whole beat was building to and sees nothing written has
+nothing to take away from it — the board at the end of a beat is the notes
+that student goes home with.
+
+Say it, mark it, name it, write it — every time.
 
   {"do":"picture","ref":"heart"}
   {"do":"say","text":"Blood comes back from the body into this top-right chamber."}
@@ -169,20 +176,29 @@ Say it, mark it, name it — every time.
   {"do":"annotate","target":"heart#right ventricle","mark":"circle"}
   {"do":"label","target":"heart#right ventricle","text":"Right ventricle — to the lungs"}
   {"do":"write","text":"Right side handles used blood"}
+  {"do":"say","text":"So why does the left side have a much thicker wall?"}
+  {"do":"write","text":"Left side pushes blood to the whole body"}
 
 The difference between the two ways of writing:
 
 - {"do":"label","target":"<picture>#<part>","text","tone"?} names a PART. It is
   written in the margin beside that part with a line running to it. Use one
   for every part you discuss — four or five in a beat is normal and good.
+  The text is the part's NAME: three or four words, the way it is printed
+  beside a diagram in a textbook. "Right atrium", not "Right atrium: collects
+  used blood from the body". A margin is a narrow strip of board, and a
+  sentence written into it wraps to three lines and shrinks until it is
+  smaller than everything around it. What the part DOES is a key point, and
+  key points go under the picture where there is room for them.
 - {"do":"write","text","tone"?} is a KEY POINT that belongs to no single part:
   a rule, a comparison, the sentence you want remembered. Written in the
-  tutor’s hand beside the figure.
+  tutor’s hand under the figure, one line at a time, as she says it. Keep each
+  one to a sentence a student would actually copy down.
 
-Write generously. A board at the end of a beat should read like a board a
-teacher has been working on: the picture, its parts named, and the two or
-three sentences that matter written up beside it. A bare picture with one
-circle on it is a beat that was spoken and not taught.
+Write generously — two to four key points in a beat. A board at the end of a
+beat should read like a board a teacher has been working on: the picture, its
+parts named, and underneath it the sentences that matter, in her writing. A
+bare picture with one circle on it is a beat that was spoken and not taught.
 
 Marks and handwriting are FREE and instant; another picture costs the class
 half a minute of waiting. So never reach for a second image while the first
