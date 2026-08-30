@@ -1,4 +1,5 @@
 import { CANVAS_H, CANVAS_W } from '@ai-tutor/lesson-format';
+import { unsafeMarkup } from './safety';
 import type { VisualBrief } from './types';
 
 /**
@@ -28,14 +29,7 @@ export function verifySvg(svg: string, brief: VisualBrief): string[] {
   }
 
   // --- safety: nothing executable, nothing that reaches the network ---
-  if (/<script[\s>]/i.test(src)) problems.push('contains <script>');
-  if (/<foreignObject[\s>]/i.test(src)) problems.push('contains <foreignObject>');
-  if (/<(iframe|object|embed|use)[\s>]/i.test(src)) problems.push('contains an embedding tag');
-  if (/\son[a-z]+\s*=/i.test(src)) problems.push('contains an inline event handler');
-  if (/javascript:/i.test(src)) problems.push('contains a javascript: URL');
-  // An external reference would leak the student's IP to whoever the model
-  // decided to link, and would break the moment that host went away.
-  if (/(href|src)\s*=\s*["'](?!#)/i.test(src)) problems.push('references an external resource');
+  problems.push(...unsafeMarkup(src));
 
   // --- correctness: the brief's promises ---
   const viewBox = /viewBox\s*=\s*"([^"]+)"/i.exec(src);

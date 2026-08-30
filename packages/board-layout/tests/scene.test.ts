@@ -339,3 +339,79 @@ describe('the same noun in two beats is two pictures', () => {
     expect(elements.filter((e) => e.kind === 'mark')).toHaveLength(1);
   });
 });
+
+describe('a block appears on the word that asked for it', () => {
+  // Blocks are laid out after the whole beat is read, so they used to be
+  // attributed to whatever came last: a lesson that wrote a definition early
+  // and a caption late showed the definition on the caption's line, and the
+  // board arrived all at once instead of filling in.
+  const beat: ScriptBeat = {
+    id: 'b1',
+    topic: 't',
+    narration: '',
+    board: [
+      { do: 'say', text: 'Speed alone is not enough.' },
+      { do: 'equation', text: 'v = s / t' },
+      { do: 'say', text: 'Add a direction and you have velocity.' },
+      { do: 'card', heading: 'Velocity', body: 'speed in a stated direction' },
+      { do: 'say', text: 'Remember that difference.' },
+      { do: 'caption', text: 'Speed plus direction' },
+    ],
+  };
+
+  const { steps, elements } = layoutBeat(beat);
+  const kindsIn = (n: number) =>
+    steps[n].show.map((id) => elements.find((el) => el.id === id)?.kind);
+
+  it('shows the equation on its own line, not on the last', () => {
+    expect(kindsIn(0)).toContain('formula');
+    expect(kindsIn(0)).not.toContain('box');
+  });
+
+  it('adds the card only when the card is spoken, and the caption last', () => {
+    expect(kindsIn(1)).toContain('box');
+    // A card draws its own heading and body; the caption is the beat's last
+    // instruction and must wait for the beat's last line.
+    expect(steps[1].show).not.toContain('b1_5');
+    expect(steps[2].show).toContain('b1_5');
+  });
+
+  it('keeps everything once it is drawn', () => {
+    for (const id of steps[0].show) expect(steps[2].show).toContain(id);
+  });
+
+  it('leaves nothing unattributed — every element belongs to some line', () => {
+    // The scene keeps its own books; a block that kept neither would simply
+    // never be revealed, and nothing would say so.
+    const revealed = new Set(steps.flatMap((s) => s.show));
+    for (const el of elements) expect(revealed.has(el.id)).toBe(true);
+  });
+});
+
+describe('a scene block still reveals per instruction', () => {
+  const beat: ScriptBeat = {
+    id: 'b2',
+    topic: 't',
+    narration: '',
+    board: [
+      { do: 'say', text: 'You and your friend set off.' },
+      { do: 'place', id: 'you', noun: 'boy' },
+      { do: 'place', id: 'friend', noun: 'boy' },
+      { do: 'say', text: 'You are both heading to school.' },
+      { do: 'place', id: 'school', noun: 'school' },
+      { do: 'connect', from: 'you', to: 'school' },
+    ],
+  };
+
+  const { steps, elements } = layoutBeat(beat);
+
+  it('holds the school back until the word school', () => {
+    expect(steps[0].show).not.toContain('b2__school');
+    expect(steps[1].show).toContain('b2__school');
+  });
+
+  it('leaves nothing unattributed either', () => {
+    const revealed = new Set(steps.flatMap((s) => s.show));
+    for (const el of elements) expect(revealed.has(el.id)).toBe(true);
+  });
+});

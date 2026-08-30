@@ -42,6 +42,22 @@ const NOTE_PAD = 18;
 interface Block {
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
+  /**
+   * Which instruction made this block, or null if it records its own.
+   *
+   * Blocks are laid out AFTER the whole beat has been read, because a block's
+   * height depends on how many others there are. By then the reading position
+   * is at the end of the beat — so without this every card, note, equation and
+   * handwritten line was attributed to the last thing in the beat, and a board
+   * that should have filled in line by line arrived all at once on the final
+   * word.
+   *
+   * The scene is the one block made of MANY instructions — a place here, a
+   * connector three words later — so it writes its own attribution and passes
+   * null. Attributing it as a whole would show the school on the line that
+   * only mentioned the two children.
+   */
+  at: number | null;
   /** Turn an allotted rectangle into elements. */
   place: (rect: { x: number; y: number; w: number; h: number }) => Element[];
 }
@@ -118,6 +134,8 @@ export function layoutBeat(beat: ScriptBeat): {
     elements.push(el);
     show.push(el.id);
     if (focused) focus.push(el.id);
+    // -1 is a block that recorded its own ids, instruction by instruction.
+    if (current < 0) return;
     const list = byInstruction.get(current);
     if (list) list.push(el.id);
     else byInstruction.set(current, [el.id]);
@@ -169,6 +187,7 @@ export function layoutBeat(beat: ScriptBeat): {
         const ref = item.ref;
         // A picture takes whatever room the rest of the beat leaves it.
         blocks.push({
+          at: index,
           height: null,
           place: (r) => {
             const el: Element = {
@@ -191,6 +210,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'chart': {
         blocks.push({
+          at: index,
           height: null,
           place: (r) => [
             {
@@ -214,6 +234,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'flow': {
         blocks.push({
+          at: index,
           height: 120,
           place: (r) => [
             {
@@ -233,6 +254,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'equation': {
         blocks.push({
+          at: index,
           height: EQUATION_H,
           place: (r) => [
             {
@@ -250,6 +272,7 @@ export function layoutBeat(beat: ScriptBeat): {
 
       case 'write': {
         blocks.push({
+          at: index,
           height: WRITE_H,
           place: (r) => [
             {
@@ -271,6 +294,7 @@ export function layoutBeat(beat: ScriptBeat): {
         const text = item.text;
         const tone = item.tone;
         blocks.push({
+          at: index,
           height: noteHeight(text, WIDTH * 0.68),
           place: (r) => {
             const w = Math.min(r.w, WIDTH * 0.68);
@@ -301,6 +325,7 @@ export function layoutBeat(beat: ScriptBeat): {
         const perRow = Math.max(1, Math.min(run.length, Math.floor(WIDTH / MIN_CARD_W)));
         const rows = Math.ceil(run.length / perRow);
         blocks.push({
+          at: index,
           height: rows * CARD_H + (rows - 1) * GUTTER,
           place: (r) => {
             const out: Element[] = [];
@@ -370,6 +395,8 @@ export function layoutBeat(beat: ScriptBeat): {
         sceneEmitted = true;
         const sceneSteps = items;
         blocks.push({
+          // The scene records its own, per instruction, below.
+          at: null,
           height: null,
           place: (r) => {
             const { elements: figures, boxes } = layoutScene(places, r, (authorId) => `${beat.id}__${authorId}`);
@@ -440,6 +467,9 @@ export function layoutBeat(beat: ScriptBeat): {
 
   for (const block of blocks) {
     const h = block.height ?? flexH;
+    // Back to the word that asked for this block, so what emit records is
+    // where the tutor actually was when she drew it.
+    current = block.at ?? -1;
     for (const el of block.place({ x: SIDE, y, w: WIDTH, h })) emit(el);
     y += h + GUTTER;
   }

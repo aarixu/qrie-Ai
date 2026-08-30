@@ -1,4 +1,5 @@
 import type { LlmAdapter } from './prepare';
+import { unsafeMarkup } from './safety';
 
 /**
  * DRAWING THE NOUN NOBODY HAS.
@@ -50,12 +51,7 @@ export function verifyIconSvg(svg: string): string[] {
     return problems;
   }
   if (src.length > 20_000) problems.push('too large for an icon');
-  if (/<script[\s>]/i.test(src)) problems.push('contains <script>');
-  if (/<foreignObject[\s>]/i.test(src)) problems.push('contains <foreignObject>');
-  if (/<(iframe|object|embed|use|image)[\s>]/i.test(src)) problems.push('contains an embedding tag');
-  if (/\son[a-z]+\s*=/i.test(src)) problems.push('contains an inline event handler');
-  if (/javascript:/i.test(src)) problems.push('contains a javascript: URL');
-  if (/(href|src)\s*=\s*["'](?!#)/i.test(src)) problems.push('references an external resource');
+  problems.push(...unsafeMarkup(src));
   if (/<text[\s>]/i.test(src)) problems.push('contains <text> — the board writes its own labels');
 
   const viewBox = /viewBox\s*=\s*"([^"]+)"/i.exec(src);

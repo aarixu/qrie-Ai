@@ -342,7 +342,13 @@ export function ClassRoom({
   const recalled = recallBeatId ? findBeat(lesson, recallBeatId) : null;
   const canvas =
     inDoubt && recalled
-      ? { visible: [...recalled.show], focus: [...(recalled.focus ?? [])] }
+      ? {
+          visible: [...recalled.show],
+          focus: [...(recalled.focus ?? [])],
+          // Without its frame, recalling a moment on a long lesson framed the
+          // whole plane — every page at once, all of it too small to read.
+          ...(recalled.frame ? { frame: [...recalled.frame] } : {}),
+        }
       : computeVisible(lesson, player.beatIndex);
 
   const tutorMode: TutorMode = inDoubt

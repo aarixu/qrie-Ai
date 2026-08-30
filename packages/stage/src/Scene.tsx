@@ -798,9 +798,25 @@ interface SceneElementProps {
   svg?: string;
   /** Parts inside a `diagram` that are lit right now; everything else dims. */
   litParts?: readonly string[];
+  /**
+   * The whole plane, which on a long lesson is many pages wide.
+   *
+   * A sweep-in mask hides everything outside its own region, so a mask fixed
+   * at one page's size erased any stroke drawn on page two the moment it
+   * appeared — the exact vanishing the endless board exists to prevent.
+   */
+  canvas: { w: number; h: number };
 }
 
-function SceneElement({ el, isNew, dimmed, focused, svg, litParts }: SceneElementProps): ReactElement {
+function SceneElement({
+  el,
+  isNew,
+  dimmed,
+  focused,
+  svg,
+  litParts,
+  canvas,
+}: SceneElementProps): ReactElement {
   const c = centerOf(el);
   const transform = `rotate(${jitterDeg(el.id).toFixed(2)} ${c.x} ${c.y})`;
   const isStroke = el.kind === 'arrow' || el.kind === 'pen';
@@ -815,7 +831,14 @@ function SceneElement({ el, isNew, dimmed, focused, svg, litParts }: SceneElemen
   return (
     <>
       {sweeping && (
-        <mask id={`stage-sweep-${el.id}`} maskUnits="userSpaceOnUse" x={0} y={0} width={CANVAS_W} height={CANVAS_H}>
+        <mask
+          id={`stage-sweep-${el.id}`}
+          maskUnits="userSpaceOnUse"
+          x={0}
+          y={0}
+          width={canvas.w}
+          height={canvas.h}
+        >
           {/* Same jitter transform as the element, so the mask tracks it exactly. */}
           <g transform={transform}>{sweepStroke(el as StrokeElement)}</g>
         </mask>
@@ -991,6 +1014,7 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
             focused={dimming && focusSet.has(el.id)}
             svg={assets?.[el.id]}
             litParts={partsByElement.get(el.id)}
+            canvas={lesson.canvas}
           />
         ))}
     </svg>
