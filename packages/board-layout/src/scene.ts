@@ -103,14 +103,30 @@ export function layoutScene(
   }
 
   const natural = (p: PlaceStep) => SIZES[p.size ?? 'normal'];
-  const naturalSpan = (p: PlaceStep): number => {
-    const size = natural(p);
-    if (!p.label) return size;
-    return Math.max(size, textWidth(p.label, graphicLabelSize(size, p.label)));
+
+  /**
+   * How wide this row really is at a given scale.
+   *
+   * The one ruler. The scale used to be solved against a cheaper estimate that
+   * assumed every part of a place shrinks together — but a LABEL stops
+   * shrinking at the readable floor, so the estimate kept promising room the
+   * layout could not deliver, and five long-labelled pictures walked a
+   * thousand units off the right-hand edge of the board.
+   */
+  const widthOf = (list: readonly PlaceStep[], k: number, groupCount: number, gapAt: number) => {
+    const spanAt = (q: PlaceStep) => {
+      const size = natural(q) * k;
+      if (!q.label) return size;
+      return Math.max(size, textWidth(q.label, graphicLabelSize(size, q.label)));
+    };
+    return (
+      list.reduce((sum, q) => sum + spanAt(q), 0) +
+      Math.max(0, list.length - groupCount) * IN_GROUP * k +
+      Math.max(0, groupCount - 1) * gapAt * k
+    );
   };
-  const naturalW =
-    places.reduce((sum, p) => sum + naturalSpan(p), 0) +
-    places.reduce((sum, _, n) => sum + (n > 0 ? IN_GROUP : 0), 0);
+
+  const naturalW = widthOf(places, 1, places.length, 0);
 
   // Close the gaps first — a crowded scene beats a scene of tiny pictures.
   // Only when the drawings ALONE will not fit does everything shrink together,
@@ -120,8 +136,6 @@ export function layoutScene(
   const wantedGaps = (groups.length - 1) * (BETWEEN_GROUPS - IN_GROUP);
   const gapScale = wantedGaps > 0 ? Math.min(1, gapRoom / wantedGaps) : 1;
   const gap = IN_GROUP + (BETWEEN_GROUPS - IN_GROUP) * gapScale;
-
-  const withGaps = naturalW + (groups.length - 1) * (gap - IN_GROUP);
 
   /**
    * Fill the band rather than sit in the middle of it.
@@ -134,11 +148,53 @@ export function layoutScene(
    * like a poster.
    */
   const MAX_GROW = 1.9;
+  const MIN_SHRINK = 0.2;
   const roomH = band.h - (anyLabel ? LABEL_ROOM : 0);
   const tallestNatural = Math.max(...places.map(natural));
-  const fitW = withGaps > 0 ? band.w / withGaps : 1;
   const fitH = tallestNatural > 0 ? roomH / tallestNatural : 1;
-  const shrink = Math.min(MAX_GROW, Math.max(0.2, Math.min(fitW, fitH)));
+  const ceiling = Math.min(MAX_GROW, Math.max(MIN_SHRINK, fitH));
+
+  const fitsAt = (list: readonly PlaceStep[], k: number, groupCount: number) =>
+    widthOf(list, k, groupCount, gap) <= band.w;
+
+  /** The largest scale at which this row fits, or null if none does. */
+  const solve = (list: readonly PlaceStep[], groupCount: number): number | null => {
+    if (fitsAt(list, ceiling, groupCount)) return ceiling;
+    if (!fitsAt(list, MIN_SHRINK, groupCount)) return null;
+    let lo = MIN_SHRINK;
+    let hi = ceiling;
+    // Width is monotone in the scale, so bisection lands on the true answer
+    // rather than near it.
+    for (let n = 0; n < 24; n += 1) {
+      const mid = (lo + hi) / 2;
+      if (fitsAt(list, mid, groupCount)) lo = mid;
+      else hi = mid;
+    }
+    return lo;
+  };
+
+  const solved = solve(places, groups.length);
+
+  // Nothing fits on one line, so wrap onto more — the move a teacher makes
+  // when the board runs out sideways. Only ever from a single authored row:
+  // rows the lesson asked for are its own arrangement and are never re-cut.
+  if (solved === null) {
+    for (let rowCount = 2; rowCount <= Math.min(4, places.length); rowCount += 1) {
+      const per = Math.ceil(places.length / rowCount);
+      const chunks = Array.from({ length: rowCount }, (_, n) =>
+        places.slice(n * per, (n + 1) * per),
+      ).filter((c) => c.length > 0);
+      if (chunks.every((c) => solve(c, c.length) !== null)) {
+        return layoutScene(
+          places.map((q, n) => ({ ...q, row: Math.floor(n / per) })),
+          band,
+          namespaced,
+        );
+      }
+    }
+  }
+
+  const shrink = solved ?? MIN_SHRINK;
 
   const sizeOf = (p: PlaceStep) => natural(p) * shrink;
   const tallest = Math.max(...places.map(sizeOf));
@@ -237,8 +293,31 @@ export function connectElements(
   const nx = -uy * step2;
   const ny = ux * step2;
 
-  const from = { x: ac.x + ux * (a.w / 2 + pad) + nx, y: ac.y + uy * (a.h / 2 + pad) + ny };
-  const to = { x: bc.x - ux * (b.w / 2 + pad) + nx, y: bc.y - uy * (b.h / 2 + pad) + ny };
+  /**
+   * An arrow always points from its start to its finish.
+   *
+   * Both ends are set in from the centre so the line begins at the edge of a
+   * picture rather than under it — but when two things stand close together,
+   * those two insets can add up to more than the distance between them, and
+   * the endpoints cross. The arrowhead then lands on the wrong end and the
+   * lesson says the opposite of what it meant.
+   *
+   * So the insets are scaled back together, keeping a short forward run.
+   */
+  const MIN_RUN = 18;
+  const insetA = ux * ux * (a.w / 2 + pad) + uy * uy * (a.h / 2 + pad);
+  const insetB = ux * ux * (b.w / 2 + pad) + uy * uy * (b.h / 2 + pad);
+  const room = insetA + insetB;
+  const keep = room > 0 ? Math.min(1, Math.max(0, (len - MIN_RUN) / room)) : 1;
+
+  const from = {
+    x: ac.x + ux * (a.w / 2 + pad) * keep + nx,
+    y: ac.y + uy * (a.h / 2 + pad) * keep + ny,
+  };
+  const to = {
+    x: bc.x - ux * (b.w / 2 + pad) * keep + nx,
+    y: bc.y - uy * (b.h / 2 + pad) * keep + ny,
+  };
 
   const out: Element[] = [
     {

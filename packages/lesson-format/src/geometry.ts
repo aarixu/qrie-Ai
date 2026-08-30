@@ -33,9 +33,30 @@ const EM_MONO = 0.62;
  * characters and every wrapped line is 21 units tall, over a 60-unit allowance
  * for padding.
  */
+/**
+ * A note is written at 17px on a 1.55 line, indented past its rule.
+ *
+ * These are the renderer's own numbers, and they live here because three
+ * places needed them and each had guessed: the stacker budgeted 45 units for
+ * a one-line note, this box claimed 81, and the tutor actually drew 30. A
+ * budget smaller than the box let the next block land on the note; a box
+ * larger than the drawing made the camera frame empty air.
+ */
+export const NOTE_FONT = 17;
+export const NOTE_LINE_H = NOTE_FONT * 1.55;
+/** 2 above and 2 below, from the note's own padding. */
+export const NOTE_PAD_Y = 4;
+/** The rule and the gap after it, taken out of the writable width. */
+export const NOTE_INSET_X = 18;
+
 export function noteBoxHeight(text: string, w: number): number {
-  const charsPerLine = Math.max(6, Math.floor((w - 26) / 7));
-  return Math.ceil(text.length / charsPerLine) * 21 + 60;
+  // Slightly narrower than the font really measures, so a wrong guess reserves
+  // room rather than running out of it.
+  const perLine = Math.max(6, Math.floor((w - NOTE_INSET_X) / 8));
+  const lines = text
+    .split('\n')
+    .reduce((n, para) => n + Math.max(1, Math.ceil(para.length / perLine)), 0);
+  return lines * NOTE_LINE_H + NOTE_PAD_Y;
 }
 
 /** One step's box in a flow, and the gap to the next. */

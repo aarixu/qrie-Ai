@@ -294,3 +294,50 @@ describe('when a scene fills its own room', () => {
     expect(boxOf(lbl).y).toBeGreaterThan(main.y + main.h - 40);
   });
 });
+
+describe('a scene never runs off the side of the board', () => {
+  // The scale used to be solved against an estimate that assumed every part of
+  // a place shrinks together. A LABEL stops shrinking at the readable floor, so
+  // the estimate kept promising room the layout could not deliver: five
+  // long-labelled pictures walked a thousand units past the right-hand edge —
+  // and on an endless board, straight onto the next page.
+  const longLabel = 'reaction force: boat pushes foot forward';
+
+  const boardOf = (n: number): Instruction[] =>
+    Array.from({ length: n }, (_, i) => ({
+      do: 'place' as const,
+      id: `p${i}`,
+      noun: 'boat',
+      label: longLabel,
+    }));
+
+  it('keeps every picture and label inside the board, however many there are', () => {
+    for (let n = 1; n <= 6; n += 1) {
+      const { elements } = layoutBeat(beat(boardOf(n), `w${n}`));
+      for (const el of elements) {
+        const r = boxOf(el);
+        expect(r.x, `${n} places: ${el.id}`).toBeGreaterThanOrEqual(-2);
+        expect(r.x + r.w, `${n} places: ${el.id}`).toBeLessThanOrEqual(CANVAS_W + 2);
+      }
+    }
+  });
+
+  it('wraps onto another row rather than shrinking to nothing', () => {
+    const { elements } = layoutBeat(beat(boardOf(5), 'w5'));
+    const ys = new Set(elements.filter((el) => el.kind === 'graphic').map((el) => boxOf(el).y.toFixed(0)));
+    expect(ys.size).toBeGreaterThan(1);
+  });
+
+  it('leaves a row the lesson asked for exactly as asked', () => {
+    // Wrapping is a last resort for one authored row; an arrangement the
+    // lesson chose is never re-cut.
+    const board: Instruction[] = [
+      { do: 'place', id: 'high', noun: 'tank', label: 'rooftop tank', row: 0 },
+      { do: 'place', id: 'low', noun: 'tap', label: 'ground tap', row: 1 },
+    ];
+    const { elements } = layoutBeat(beat(board, 'rows'));
+    const graphics = elements.filter((el) => el.kind === 'graphic');
+    expect(graphics).toHaveLength(2);
+    expect(boxOf(graphics[0]).y).toBeLessThan(boxOf(graphics[1]).y);
+  });
+});

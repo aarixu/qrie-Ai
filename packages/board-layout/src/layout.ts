@@ -1,4 +1,12 @@
-import { boxOf, CANVAS_H, CANVAS_W, fitText, type Element } from '@ai-tutor/lesson-format';
+import {
+  boxOf,
+  union,
+  noteBoxHeight,
+  CANVAS_H,
+  CANVAS_W,
+  fitText,
+  type Element,
+} from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
 import {
   annotateElement,
@@ -35,8 +43,6 @@ const EQUATION_H = 52;
 const WRITE_H = 62;
 const CARD_H = 128;
 /** Rough wrapped height of a note at the renderer's 17px/1.55 in board units. */
-const NOTE_LINE_H = 27;
-const NOTE_PAD = 18;
 
 /** One thing to place, and how much vertical room it insists on. */
 interface Block {
@@ -73,13 +79,8 @@ const idFor = (beatId: string, index: number, suffix = ''): string =>
  * foreignObject that wraps on its own, so being a line out shifts the stack
  * slightly rather than clipping anything.
  */
-function noteHeight(text: string, w: number): number {
-  const perLine = Math.max(10, Math.floor(w / 8.4));
-  const lines = text
-    .split('\n')
-    .reduce((n, para) => n + Math.max(1, Math.ceil(para.length / perLine)), 0);
-  return lines * NOTE_LINE_H + NOTE_PAD;
-}
+/** The stacker budgets exactly what the box claims and the tutor draws. */
+const noteHeight = noteBoxHeight;
 
 /**
  * Turn one beat's instructions into positioned elements.
@@ -419,10 +420,17 @@ export function layoutBeat(beat: ScriptBeat): {
                   return figure ? boxOf(figure) : undefined;
                 });
                 if (drawn[0] && drawn[1]) {
-                  leashes.push({
-                    id: labelIdFor(idFor(beat.id, n)),
-                    region: connectionRegion(drawn[0], drawn[1]),
-                  });
+                  const labelId = labelIdFor(idFor(beat.id, n));
+                  // The label's own starting point belongs to the region too.
+                  // Siblings are nudged clear of one another perpendicular to
+                  // their lines, which can start a label just outside the pair
+                  // it joins — and a leash that excluded where the label was
+                  // BORN was a rule broken before the solver ever ran.
+                  const home = made.find((m) => m.id === labelId);
+                  const region = home
+                    ? union(connectionRegion(drawn[0], drawn[1]), boxOf(home))
+                    : connectionRegion(drawn[0], drawn[1]);
+                  leashes.push({ id: labelId, region });
                 }
                 connectors += 1;
                 out.push(...made);
