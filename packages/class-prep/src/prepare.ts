@@ -108,6 +108,12 @@ export function assemble(
   let page = 0;
   const shownSoFar: string[] = [];
 
+  // The last page anything was actually drawn on, so a beat that only looks
+  // again at an existing picture stays with that picture instead of claiming a
+  // blank page of its own beside it.
+  let lastDx = 0;
+  let lastFrame: string[] | null = null;
+
   for (const beat of blueprint.beats) {
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
@@ -118,8 +124,25 @@ export function assemble(
     // its narration would talk about something invisible.
     if (laid.show.length === 0) continue;
 
-    const dx = page * PAGE_STRIDE;
-    page += 1;
+    // Every spoken line survives. The filter used to require that a line also
+    // put something new on the board, which quietly deleted the sentence a
+    // tutor says BEFORE she draws anything — the one that sets up the whole
+    // scene. A teacher talks to a blank board all the time.
+    const usable = steps.filter((step) => step.narration.trim() !== '');
+
+    // A beat with nothing to say is not a beat. It used to claim a page all
+    // the same, leaving a permanently blank page in the middle of the lesson
+    // and elements no beat ever showed.
+    if (usable.length === 0) continue;
+
+    // A page is claimed by DRAWING, not by speaking. A beat whose only picture
+    // was already drawn earlier belongs beside that picture.
+    const fresh = laidOut.filter((el) => !elements.some((e) => e.id === el.id));
+    const dx = fresh.length > 0 ? page * PAGE_STRIDE : lastDx;
+    if (fresh.length > 0) {
+      page += 1;
+      lastDx = dx;
+    }
 
     for (const el of laidOut) {
       const placed = offsetElement(el, dx);
@@ -133,7 +156,7 @@ export function assemble(
         if (!elements.some((e) => e.id === finished.id)) elements.push(finished);
         continue;
       }
-      elements.push(placed);
+      if (!elements.some((e) => e.id === placed.id)) elements.push(placed);
     }
 
     // One lesson beat per spoken moment.
@@ -142,17 +165,21 @@ export function assemble(
     // making it one means the player, the camera and the doubt agent all keep
     // working unchanged — a moment the tutor can be interrupted in is exactly
     // the moment the board should be recallable at.
-    const usable = steps.filter((step) => step.narration.trim() !== '' && step.show.length > 0);
     usable.forEach((step, n) => {
       const last = n === usable.length - 1;
+      // A line spoken over a board that has nothing new on it keeps the camera
+      // where it was, rather than letting an empty frame widen to the plane.
+      const frame = step.show.length > 0 ? [...step.show] : lastFrame;
+      if (frame) lastFrame = frame;
       beats.push({
         id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
         topic: beat.topic,
         narration: step.narration,
         // Everything ever drawn, plus this page so far. Old pages stay on the
-        // board; the frame below is what keeps the class looking here.
-        show: [...shownSoFar, ...step.show],
-        frame: [...step.show],
+        // board; the frame is what keeps the class looking here. Deduplicated,
+        // because a beat may look again at a picture an earlier page drew.
+        show: [...new Set([...shownSoFar, ...step.show])],
+        ...(frame ? { frame: [...new Set(frame)] } : {}),
         ...(step.focus.length > 0 ? { focus: step.focus } : {}),
         // Outcomes belong to the moment the point lands, not to every breath
         // on the way there — otherwise one idea would raise belief four times.
@@ -161,7 +188,7 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
-    if (usable.length > 0) shownSoFar.push(...usable[usable.length - 1].show);
+    shownSoFar.push(...usable[usable.length - 1].show);
   }
 
   return {

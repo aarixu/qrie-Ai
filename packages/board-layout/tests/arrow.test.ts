@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { connectElements, type Placed } from '../src/scene';
-import type { ConnectStep } from '../src/types';
+import type { Instruction } from '../src/types';
 
 /**
  * An arrow always points from its start to its finish.
@@ -25,7 +25,7 @@ const arrowFor = (a: Placed, b: Placed) => {
     [a.id, a],
     [b.id, b],
   ]);
-  const step: ConnectStep = { do: 'connect', from: a.id, to: b.id };
+  const step = { do: 'connect', from: a.id, to: b.id } as Extract<Instruction, { do: 'connect' }>;
   const made = connectElements(step, boxes, 'c0', 0);
   const arrow = made.find((m) => m.kind === 'arrow');
   if (!arrow || arrow.kind !== 'arrow') throw new Error('no arrow');

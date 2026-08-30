@@ -99,3 +99,71 @@ describe('a single-act lesson stays a single ordinary board', () => {
     }
   });
 });
+
+describe('a page is claimed by drawing, and a spoken line is never lost', () => {
+  const lessonOfRaw = (b: Blueprint) => {
+    const { lesson } = assemble(b, new Set(['d1']));
+    const v = validateLesson(lesson);
+    if (!v.ok) throw new Error(v.errors.join('; '));
+    return v.lesson as { elements: Element[]; beats: Beat[]; canvas: { w: number } };
+  };
+
+  it('keeps the line spoken before anything is drawn', () => {
+    // A teacher talks to a blank board all the time. The filter used to
+    // require that a line also put something on the board, and quietly
+    // deleted the sentence that sets up the whole scene.
+    const lesson = lessonOfRaw({
+      id: 'a',
+      title: 'T',
+      beats: [
+        {
+          id: 'b',
+          topic: 'x',
+          narration: '',
+          board: [
+            { do: 'say', text: 'Think about this for a moment.' },
+            { do: 'say', text: 'Now here is a boy.' },
+            { do: 'place', id: 'p', noun: 'boy' },
+          ],
+        },
+      ],
+      visuals: [],
+    });
+    expect(lesson.beats.map((b) => b.narration)).toEqual([
+      'Think about this for a moment.',
+      'Now here is a boy.',
+    ]);
+  });
+
+  it('gives no page to a beat with nothing to say', () => {
+    const lesson = lessonOfRaw({
+      id: 'a',
+      title: 'T',
+      beats: [
+        { id: 'silent', topic: 'x', narration: '', board: [{ do: 'title', text: 'Hello' }] },
+        { id: 'spoken', topic: 'y', narration: 'Here we are.', board: [{ do: 'title', text: 'Hi' }] },
+      ],
+      visuals: [],
+    });
+    // One page, and no elements belonging to a beat nobody ever sees.
+    expect(lesson.canvas.w).toBe(1000);
+    expect(lesson.beats).toHaveLength(1);
+  });
+
+  it('looks again at a picture where it already is', () => {
+    const lesson = lessonOfRaw({
+      id: 'a',
+      title: 'T',
+      beats: [
+        { id: 'one', topic: 'x', narration: 'First look.', board: [{ do: 'diagram', ref: 'd1' }] },
+        { id: 'two', topic: 'y', narration: 'Look again.', board: [{ do: 'diagram', ref: 'd1' }] },
+      ],
+      visuals: [{ id: 'd1', alt: 'a cell', parts: ['wall'], brief: 'draw a cell' }],
+    });
+    // No blank page beside it, and no id shown twice in one beat.
+    expect(lesson.canvas.w).toBe(1000);
+    for (const beat of lesson.beats) {
+      expect(new Set(beat.show).size).toBe(beat.show.length);
+    }
+  });
+});

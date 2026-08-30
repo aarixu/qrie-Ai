@@ -885,18 +885,24 @@ const sameRect = (a: Rect, b: Rect): boolean =>
  * on the target and then stops; there is no idle animation running behind a
  * still class.
  */
-function useCamera(target: Rect): Rect {
+function useCamera(target: Rect, measured: boolean): Rect {
   const [shown, setShown] = useState(target);
   const shownRef = useRef(target);
   shownRef.current = shown;
 
-  // First frame lands instantly: a class opening with a 620ms zoom from
+  // The opening frame lands instantly: a class opening with a 620ms zoom from
   // nowhere is a transition the student did not ask for.
-  const mounted = useRef(false);
+  //
+  // The guard is "we have not yet shown a MEASURED frame", not "the component
+  // has mounted". The screen is measured just after mount, so a mount-only
+  // guard was spent on a frame computed before anyone knew the screen's shape,
+  // and the first real frame — the one the student actually sees — arrived on
+  // a 620ms pan every single time.
+  const opened = useRef(false);
 
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
+    if (!opened.current) {
+      opened.current = measured;
       setShown(target);
       return;
     }
@@ -917,7 +923,7 @@ function useCamera(target: Rect): Rect {
       if (t < 1) raf = requestAnimationFrame(step);
     });
     return () => cancelAnimationFrame(raf);
-  }, [target.x, target.y, target.w, target.h]);
+  }, [target.x, target.y, target.w, target.h, measured]);
 
   return shown;
 }
@@ -932,8 +938,11 @@ const MAX_UNIT_PX = 1.6;
 /** The rendered size of the SVG, so the frame can be shaped to the screen. */
 function useMeasure(
   ref: React.RefObject<SVGSVGElement | null>,
-): { aspect?: number; width?: number } {
+): { aspect?: number; width?: number; measured: boolean } {
   const [size, setSize] = useState<{ aspect?: number; width?: number }>({});
+  // Whether a real measurement has arrived. Where there is nothing to measure
+  // with, the content's own shape IS the answer and it is available at once.
+  const measured = size.aspect !== undefined || typeof ResizeObserver === 'undefined';
   useEffect(() => {
     const el = ref.current;
     // jsdom has no ResizeObserver and no layout; tests fall through to the
@@ -946,7 +955,7 @@ function useMeasure(
     ro.observe(el);
     return () => ro.disconnect();
   }, [ref]);
-  return size;
+  return { ...size, measured };
 }
 
 /**
@@ -955,14 +964,24 @@ function useMeasure(
  * computed by `computeFrame`. All element animation is CSS inside the SVG.
  */
 export function Scene({ lesson, visible, focus, wide = false, assets, frame }: SceneProps): ReactElement {
-  // Previous render's visible set, committed after paint so the render pass can
-  // tell which elements just appeared and animate only those. On the first
-  // render (prev === null) everything draws in — the canvas is coming from blank.
-  const prevVisibleRef = useRef<ReadonlySet<string> | null>(null);
-  const prev = prevVisibleRef.current;
-  useEffect(() => {
-    prevVisibleRef.current = new Set(visible);
-  });
+  // The visible set of the PREVIOUS BEAT, so the render pass can tell which
+  // elements just appeared and animate only those. On the first beat
+  // (prev === null) everything draws in — the canvas is coming from blank.
+  //
+  // It lags by a beat, not by a render. Committed after every paint, it was
+  // overwritten about sixteen milliseconds in by the camera pan's own
+  // re-renders, which flipped every element back to "not new" and cancelled
+  // the draw-in halfway through.
+  const keyRef = useRef<string | null>(null);
+  const prevRef = useRef<ReadonlySet<string> | null>(null);
+  const currentRef = useRef<ReadonlySet<string> | null>(null);
+  const visibleKey = visible.join(String.fromCharCode(0));
+  if (keyRef.current !== visibleKey) {
+    keyRef.current = visibleKey;
+    prevRef.current = currentRef.current;
+    currentRef.current = new Set(visible);
+  }
+  const prev = prevRef.current;
 
   const visibleSet = new Set(visible);
 
@@ -983,11 +1002,11 @@ export function Scene({ lesson, visible, focus, wide = false, assets, frame }: S
   const dimming = focusSet.size > 0;
 
   const svgRef = useRef<SVGSVGElement>(null);
-  const { aspect, width } = useMeasure(svgRef);
+  const { aspect, width, measured } = useMeasure(svgRef);
   const target = wide
     ? { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h }
     : computeFrame(lesson, frame ?? visible, focus, aspect, width ? width / MAX_UNIT_PX : undefined);
-  const box = useCamera(target);
+  const box = useCamera(target, measured);
 
   return (
     <svg
