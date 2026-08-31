@@ -84,15 +84,12 @@ function digest(lesson: any, report: any) {
 async function run(): Promise<void> {
   const out: any[] = [];
   for (const job of JOBS) {
-    // his instruction: if they already exist, prepare them again.
-    for (const id of job.old) {
-      const dir = path.join(CONTENT, id);
-      if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
-    }
-    pruneIndex(job.old);
-
+    // CREDITS MODE (Aarav: "jitna ho ske credits bachao"): one attempt per
+    // lesson - a second run doubles the image bill for marginal gain. The
+    // retry below fires only on a hard crash, and nothing old is deleted
+    // until the new class actually exists.
     let best: { made: any; d: any } | null = null;
-    for (let attempt = 1; attempt <= 2; attempt += 1) {
+    for (let attempt = 1; attempt <= 2 && !best; attempt += 1) {
       console.log(`\n=== ${job.topic} (attempt ${attempt}) ===`);
       try {
         const made = await prepareLiveClass(
@@ -101,14 +98,17 @@ async function run(): Promise<void> {
         );
         const d = digest(made.lesson, made.report);
         console.log('  digest:', JSON.stringify(d));
-        const clean = d.issues.filter((i: string) => i.includes('Still unwritten')).length === 0;
-        if (!best || d.issues.length < best.d.issues.length) best = { made, d };
-        if (clean && d.asks >= Math.max(3, d.beats - 1) && (d.board.image ?? 0) >= 1) break;
+        best = { made, d };
       } catch (e) {
         console.log('  FAILED:', String(e).slice(0, 300));
       }
     }
     if (!best) { out.push({ topic: job.topic, error: 'both attempts failed' }); continue; }
+    for (const id of job.old) {
+      const dir = path.join(CONTENT, id);
+      if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
+    }
+    pruneIndex(job.old);
 
     const saved = saveable(best.made, {
       topicRef: job.topicRef, klass: job.klass, subject: job.subject, subtitle: job.subtitle,

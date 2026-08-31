@@ -1,0 +1,1350 @@
+{
+  "formatVersion": 1,
+  "id": "class10-science-life-processes-transportation-in-human-beings",
+  "title": "The Human Heart and Circulation",
+  "subtitle": "How our four-chambered pump powers double circulation",
+  "language": "en",
+  "canvas": {
+    "w": 13600,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat_opening_hook_0",
+      "x": 500,
+      "y": 86,
+      "text": "The Human Heart and Circulation",
+      "sub": "Life Processes — Class 10"
+    },
+    {
+      "kind": "text",
+      "id": "beat_opening_hook_11",
+      "x": 500,
+      "y": 562,
+      "text": "Our heart is a non-stop muscular pump maintaining high circulation pressure."
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_opening_hook__runner",
+      "x": 295.4181818181818,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "boy",
+      "label": "After a 100m sprint",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_opening_hook__muscle_cell",
+      "x": 588.5818181818181,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "cell",
+      "label": "Working muscle cells",
+      "labelSide": "below"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_opening_hook_8",
+      "from": {
+        "x": 425.4181818181818,
+        "y": 208
+      },
+      "to": {
+        "x": 574.5818181818181,
+        "y": 208
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_opening_hook_8_label",
+      "x": 499.99999999999994,
+      "y": 325,
+      "text": "oxygen demand shoots up",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_opening_hook_4",
+      "x": 500,
+      "y": 373.4,
+      "text": "Why does your heartbeat speed up when you sprint?",
+      "size": 28.44475721323012
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_opening_hook_5",
+      "x": 500,
+      "y": 461.4,
+      "text": "Why does your heart beat faster when you sprint?",
+      "size": 29.037356321839084,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_opening_hook_9",
+      "x": 1760,
+      "y": 327.4,
+      "text": "Heart = Muscular pump that creates pressure to move blood continuously",
+      "size": 19.911330049261085,
+      "tone": "accent"
+    },
+    {
+      "kind": "image",
+      "id": "heart_cross_section",
+      "x": 2845.8333333333335,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class10-science-life-processes-transportation-in-human-beings/generated/heart_cross_section.jpg",
+      "alt": "Cross-section illustration of the human heart showing internal chambers, septum, and valves",
+      "parts": [
+        {
+          "name": "right atrium",
+          "x": 0.31,
+          "y": 0.35,
+          "w": 0.13,
+          "h": 0.32
+        },
+        {
+          "name": "right ventricle",
+          "x": 0.36,
+          "y": 0.54,
+          "w": 0.23,
+          "h": 0.36
+        },
+        {
+          "name": "left atrium",
+          "x": 0.5,
+          "y": 0.28,
+          "w": 0.15,
+          "h": 0.21
+        },
+        {
+          "name": "left ventricle",
+          "x": 0.5,
+          "y": 0.47,
+          "w": 0.17,
+          "h": 0.39
+        },
+        {
+          "name": "septum",
+          "x": 0.48,
+          "y": 0.53,
+          "w": 0.12,
+          "h": 0.38
+        },
+        {
+          "name": "valves",
+          "x": 0.54,
+          "y": 0.46,
+          "w": 0.1,
+          "h": 0.22
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_3",
+      "x": 2758.2333333333336,
+      "y": 248.4,
+      "text": "Right atrium",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_heart_anatomy_3_line",
+      "from": {
+        "x": 2833.8333333333335,
+        "y": 242
+      },
+      "to": {
+        "x": 2953.8166666666666,
+        "y": 246.9
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_5",
+      "x": 2740.8333333333335,
+      "y": 295.4,
+      "text": "Right ventricle",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_heart_anatomy_5_line",
+      "from": {
+        "x": 2833.8333333333335,
+        "y": 289
+      },
+      "to": {
+        "x": 2971.2333333333336,
+        "y": 286.8
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_8",
+      "x": 3275.9666666666667,
+      "y": 224.64999999999998,
+      "text": "Left atrium",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_heart_anatomy_8_line",
+      "from": {
+        "x": 3206.166666666667,
+        "y": 218.24999999999997
+      },
+      "to": {
+        "x": 3072.25,
+        "y": 223.14999999999998
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_10",
+      "x": 3293.366666666667,
+      "y": 277.85,
+      "text": "Left ventricle",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_heart_anatomy_10_line",
+      "from": {
+        "x": 3206.166666666667,
+        "y": 271.45000000000005
+      },
+      "to": {
+        "x": 3079.2166666666667,
+        "y": 276.35
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_13",
+      "x": 3246.9666666666667,
+      "y": 323,
+      "text": "Septum",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_heart_anatomy_13_line",
+      "from": {
+        "x": 3206.166666666667,
+        "y": 316.6
+      },
+      "to": {
+        "x": 3054.8333333333335,
+        "y": 286.8
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_16",
+      "x": 3100.4,
+      "y": 376,
+      "text": "Why is the left ventricle wall much thicker than",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_16_l1",
+      "x": 2880,
+      "y": 413,
+      "text": "the right?",
+      "size": 20,
+      "after": 2208
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_17",
+      "x": 3083,
+      "y": 460,
+      "text": "Why does the left ventricle have much thicker",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_17_l1",
+      "x": 3054,
+      "y": 497,
+      "text": "muscular walls than the right ventricle?",
+      "size": 20,
+      "after": 2070,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_18",
+      "x": 4122.6,
+      "y": 170,
+      "text": "Left ventricle wall is thickest: pumps blood to",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_18_l1",
+      "x": 3937,
+      "y": 207,
+      "text": "the entire body",
+      "size": 20,
+      "after": 2162,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_19",
+      "x": 4134.2,
+      "y": 254,
+      "text": "Right ventricle wall is thinner: pumps blood only",
+      "size": 20,
+      "tone": "neutral"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_heart_anatomy_19_l1",
+      "x": 3948.6,
+      "y": 291,
+      "text": "to adjacent lungs",
+      "size": 20,
+      "after": 2254,
+      "tone": "neutral"
+    },
+    {
+      "kind": "list",
+      "id": "beat_heart_anatomy_14",
+      "x": 5187.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "heading": "Four Chambers & Key Structures",
+      "items": [
+        {
+          "term": "Atria (Top)",
+          "meaning": "Thin-walled receiving chambers collecting blood from veins"
+        },
+        {
+          "term": "Ventricles (Bottom)",
+          "meaning": "Thick-walled pumping chambers pushing blood out through arteries"
+        },
+        {
+          "term": "Septum",
+          "meaning": "Muscular wall preventing oxygenated and deoxygenated blood from mixing"
+        },
+        {
+          "term": "Valves",
+          "meaning": "One-way flaps ensuring blood flows forward without backflow"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_heart_anatomy_2",
+      "x": 2943.8166666666666,
+      "y": 206.5,
+      "w": 65.28333333333333,
+      "h": 80.80000000000001,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_heart_anatomy_4",
+      "x": 2961.2333333333336,
+      "y": 242.60000000000002,
+      "w": 100.11666666666666,
+      "h": 88.39999999999999,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_heart_anatomy_7",
+      "x": 3010,
+      "y": 193.2,
+      "w": 72.25,
+      "h": 59.9,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_heart_anatomy_9",
+      "x": 3010,
+      "y": 229.3,
+      "w": 79.21666666666667,
+      "h": 94.10000000000001,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_heart_anatomy_12",
+      "x": 3013.0333333333333,
+      "y": 250.7,
+      "w": 41.8,
+      "h": 72.2,
+      "shape": "underline",
+      "tone": "accent"
+    },
+    {
+      "kind": "diagram",
+      "id": "double_circulation_loop",
+      "x": 6370,
+      "y": 150,
+      "w": 860,
+      "h": 184,
+      "src": "generated/double_circulation_loop.svg",
+      "alt": "Diagram showing the double circulation pathway between heart, lungs, and body tissues",
+      "parts": [
+        "lungs",
+        "heart_pump",
+        "body_tissues",
+        "pulmonary_circuit",
+        "systemic_circuit"
+      ]
+    },
+    {
+      "kind": "flow",
+      "id": "beat_double_circulation_6",
+      "x": 6370,
+      "y": 360,
+      "w": 860,
+      "steps": [
+        {
+          "label": "Right Atrium & Ventricle",
+          "note": "Receives deoxygenated blood via Vena Cava"
+        },
+        {
+          "label": "Lungs (Pulmonary Loop)",
+          "note": "Gas exchange: CO2 released, O2 absorbed"
+        },
+        {
+          "label": "Left Atrium & Ventricle",
+          "note": "Receives oxygenated blood via Pulmonary Vein"
+        },
+        {
+          "label": "Body Tissues (Systemic Loop)",
+          "note": "Oxygen delivered to active cells via Aorta"
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "beat_double_circulation_7_c0",
+      "x": 7630,
+      "y": 163,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "beat_double_circulation_7_h0",
+      "x": 8060,
+      "y": 201,
+      "text": "Double Circulation",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat_double_circulation_7_b0",
+      "x": 8060,
+      "y": 241,
+      "text": "Blood goes through the heart twice for each complete cycle around the body (Pulmonary circuit + Systemic circuit).",
+      "size": 12.643678160919542
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_double_circulation_9",
+      "x": 8060,
+      "y": 360.4,
+      "text": "Which blood vessel brings oxygen-rich blood from the lungs to the left atrium?",
+      "size": 17.869142351900972
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_double_circulation_10",
+      "x": 8060,
+      "y": 448.4,
+      "text": "Which vessel carries oxygenated blood from the lungs into the left atrium?",
+      "size": 18.835041938490217,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_double_circulation_11",
+      "x": 9320,
+      "y": 327.4,
+      "text": "Exception to remember: Pulmonary Vein carries OXYGENATED blood; Pulmonary Artery carries DEOXYGENATED blood.",
+      "size": 17,
+      "tone": "good"
+    },
+    {
+      "kind": "title",
+      "id": "beat_significance_and_summary_0",
+      "x": 10580,
+      "y": 86,
+      "text": "Why Complete Separation Matters",
+      "sub": "Energy demands of warm-blooded animals"
+    },
+    {
+      "kind": "text",
+      "id": "beat_significance_and_summary_13",
+      "x": 10580,
+      "y": 562,
+      "text": "The four-chambered heart: a biological pump engineered for non-stop, high-efficiency energy delivery."
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_significance_and_summary__human",
+      "x": 10375.418181818182,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "boy",
+      "label": "Mammal (Human)",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_significance_and_summary__thermometer",
+      "x": 10668.581818181818,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "clock",
+      "label": "Constant 37°C Body Temp",
+      "labelSide": "below"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_significance_and_summary_3",
+      "from": {
+        "x": 10505.418181818182,
+        "y": 208
+      },
+      "to": {
+        "x": 10654.581818181818,
+        "y": 208
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_3_label",
+      "x": 10580,
+      "y": 325,
+      "text": "requires high energy",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_5",
+      "x": 10580,
+      "y": 373.4,
+      "text": "Complete separation of oxygenated & deoxygenated blood",
+      "size": 25.810983397190295,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_6",
+      "x": 10580,
+      "y": 461.4,
+      "text": "Ensures highly efficient oxygen delivery to cells",
+      "size": 28.44475721323012,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_7",
+      "x": 11840,
+      "y": 239.4,
+      "text": "Supports continuous high energy needed to maintain constant body temperature",
+      "size": 18.339382940108894,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_9",
+      "x": 11840,
+      "y": 327.4,
+      "text": "Why do mammals and birds require complete separation of blood?",
+      "size": 15.115911012235816
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_significance_and_summary_10",
+      "x": 11840,
+      "y": 415.4,
+      "text": "Why do mammals and birds require a four-chambered heart with zero mixing of blood?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "beat_significance_and_summary_12_c0",
+      "x": 12670,
+      "y": 251,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "neutral",
+      "as": "box"
+    },
+    {
+      "kind": "text",
+      "id": "beat_significance_and_summary_12_h0",
+      "x": 13100,
+      "y": 289,
+      "text": "Lesson Summary",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat_significance_and_summary_12_b0",
+      "x": 13100,
+      "y": 329,
+      "text": "• 4 Chambers: Atria receive blood; ventricles pump blood.\n• Valves prevent backflow; Septum prevents mixing.\n• Double Circulation: Pulmonary (heart-lungs) + Systemic (heart-body).\n• Complete separation gives high energy efficiency for warm-blooded life.",
+      "size": 12
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_opening_hook_1",
+      "topic": "Why we need a dedicated pump",
+      "narration": "Hello! Quick question before we begin.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner"
+      ],
+      "frame": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner"
+      ]
+    },
+    {
+      "id": "beat_opening_hook_2",
+      "topic": "Why we need a dedicated pump",
+      "narration": "When you sprint for your school bus or run a race, your chest pounds hard. Why does your body speed up your heartbeat so urgently?",
+      "ask": {
+        "question": "Why does your heart beat faster when you sprint?",
+        "expect": "Muscles need more oxygen and energy quickly, so blood must be pumped faster.",
+        "hint": "Think about what your leg muscles are burning up while running and what delivers fresh fuel to them."
+      },
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5"
+      ],
+      "frame": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5"
+      ]
+    },
+    {
+      "id": "beat_opening_hook_3",
+      "topic": "Why we need a dedicated pump",
+      "narration": "Exactly. Your muscle cells are screaming for oxygen and glucose, and blood is the only delivery truck in town.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9"
+      ],
+      "frame": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9"
+      ]
+    },
+    {
+      "id": "beat_opening_hook_4",
+      "topic": "Why we need a dedicated pump",
+      "narration": "Today we are going to look inside this pump to see how it separates clean and used blood without ever mixing them up.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11"
+      ],
+      "frame": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11"
+      ]
+    },
+    {
+      "id": "beat_heart_anatomy_1",
+      "topic": "The Four Chambers of the Heart",
+      "narration": "Here is the heart cut open. Think of it as a two-storey house with two rooms on top and two on the bottom.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line"
+      ]
+    },
+    {
+      "id": "beat_heart_anatomy_2",
+      "topic": "The Four Chambers of the Heart",
+      "narration": "The upper rooms are atria — they receive incoming blood. The lower rooms are ventricles — they pump blood out.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line"
+      ]
+    },
+    {
+      "id": "beat_heart_anatomy_3",
+      "topic": "The Four Chambers of the Heart",
+      "narration": "Look closely at the wall between the two sides. That thick dividing wall is the septum.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14"
+      ]
+    },
+    {
+      "id": "beat_heart_anatomy_4",
+      "topic": "The Four Chambers of the Heart",
+      "narration": "Notice how the left ventricle wall is noticeably thicker than the right ventricle wall. Why do you think that is?",
+      "ask": {
+        "question": "Why does the left ventricle have much thicker muscular walls than the right ventricle?",
+        "expect": "Because it has to pump blood to the entire body against higher resistance, while the right ventricle only pumps to nearby lungs.",
+        "hint": "Think about how far each side has to push its blood — one sends blood next door to the lungs, the other pushes all the way down to your toes."
+      },
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1"
+      ],
+      "frame": [
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1"
+      ]
+    },
+    {
+      "id": "beat_double_circulation_1",
+      "topic": "The Flow: Pulmonary and Systemic Circulation",
+      "narration": "Now, let us follow one drop of blood on its full journey. In humans, blood travels through the heart twice during each complete cycle.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop"
+      ],
+      "frame": [
+        "double_circulation_loop"
+      ]
+    },
+    {
+      "id": "beat_double_circulation_2",
+      "topic": "The Flow: Pulmonary and Systemic Circulation",
+      "narration": "Circuit one is Pulmonary Circulation: deoxygenated blood leaves the right ventricle, travels to the lungs to drop carbon dioxide and pick up oxygen, and returns to the left atrium.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop"
+      ],
+      "frame": [
+        "double_circulation_loop"
+      ]
+    },
+    {
+      "id": "beat_double_circulation_3",
+      "topic": "The Flow: Pulmonary and Systemic Circulation",
+      "narration": "Circuit two is Systemic Circulation: oxygen-rich blood from the left ventricle is pumped through the aorta to all organs and tissues, then returns deoxygenated to the right atrium.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0"
+      ],
+      "frame": [
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0"
+      ]
+    },
+    {
+      "id": "beat_double_circulation_4",
+      "topic": "The Flow: Pulmonary and Systemic Circulation",
+      "narration": "Before we move on: which blood vessel brings oxygen-rich blood from the lungs back into the left atrium?",
+      "ask": {
+        "question": "Which vessel carries oxygenated blood from the lungs into the left atrium?",
+        "expect": "Pulmonary vein",
+        "hint": "Veins always carry blood into the heart, and this one comes from the lungs (pulmonary)."
+      },
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0",
+        "beat_double_circulation_9",
+        "beat_double_circulation_10",
+        "beat_double_circulation_11"
+      ],
+      "frame": [
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0",
+        "beat_double_circulation_9",
+        "beat_double_circulation_10",
+        "beat_double_circulation_11"
+      ],
+      "focus": [
+        "double_circulation_loop#pulmonary_circuit",
+        "double_circulation_loop#systemic_circuit"
+      ]
+    },
+    {
+      "id": "beat_significance_and_summary_1",
+      "topic": "Why Warm-Blooded Animals Need Double Circulation",
+      "narration": "Amphibians like frogs have a three-chambered heart where oxygenated and deoxygenated blood mix. But birds and mammals have four strict chambers.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0",
+        "beat_double_circulation_9",
+        "beat_double_circulation_10",
+        "beat_double_circulation_11",
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7"
+      ],
+      "frame": [
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7"
+      ]
+    },
+    {
+      "id": "beat_significance_and_summary_2",
+      "topic": "Why Warm-Blooded Animals Need Double Circulation",
+      "narration": "Why do mammals and birds need this ultra-efficient oxygen supply, while a lizard or frog can manage with some mixing?",
+      "ask": {
+        "question": "Why do mammals and birds require a four-chambered heart with zero mixing of blood?",
+        "expect": "Because they are warm-blooded and constantly use a huge amount of energy to maintain their body temperature.",
+        "hint": "Think about how we maintain 37 degrees Celsius regardless of whether it is freezing cold or scorching hot outside."
+      },
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0",
+        "beat_double_circulation_9",
+        "beat_double_circulation_10",
+        "beat_double_circulation_11",
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7",
+        "beat_significance_and_summary_9",
+        "beat_significance_and_summary_10"
+      ],
+      "frame": [
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7",
+        "beat_significance_and_summary_9",
+        "beat_significance_and_summary_10"
+      ]
+    },
+    {
+      "id": "beat_significance_and_summary_3",
+      "topic": "Why Warm-Blooded Animals Need Double Circulation",
+      "narration": "Spot on. Warm-blooded animals burn massive amounts of fuel just staying warm, so every drop of pumped blood must carry maximum oxygen.",
+      "show": [
+        "beat_opening_hook_0",
+        "beat_opening_hook__runner",
+        "beat_opening_hook_4",
+        "beat_opening_hook_5",
+        "beat_opening_hook__muscle_cell",
+        "beat_opening_hook_8",
+        "beat_opening_hook_8_label",
+        "beat_opening_hook_9",
+        "beat_opening_hook_11",
+        "heart_cross_section",
+        "beat_heart_anatomy_2",
+        "beat_heart_anatomy_3",
+        "beat_heart_anatomy_3_line",
+        "beat_heart_anatomy_4",
+        "beat_heart_anatomy_5",
+        "beat_heart_anatomy_5_line",
+        "beat_heart_anatomy_7",
+        "beat_heart_anatomy_8",
+        "beat_heart_anatomy_8_line",
+        "beat_heart_anatomy_9",
+        "beat_heart_anatomy_10",
+        "beat_heart_anatomy_10_line",
+        "beat_heart_anatomy_12",
+        "beat_heart_anatomy_13",
+        "beat_heart_anatomy_13_line",
+        "beat_heart_anatomy_14",
+        "beat_heart_anatomy_16",
+        "beat_heart_anatomy_16_l1",
+        "beat_heart_anatomy_17",
+        "beat_heart_anatomy_17_l1",
+        "beat_heart_anatomy_18",
+        "beat_heart_anatomy_18_l1",
+        "beat_heart_anatomy_19",
+        "beat_heart_anatomy_19_l1",
+        "double_circulation_loop",
+        "beat_double_circulation_6",
+        "beat_double_circulation_7_c0",
+        "beat_double_circulation_7_h0",
+        "beat_double_circulation_7_b0",
+        "beat_double_circulation_9",
+        "beat_double_circulation_10",
+        "beat_double_circulation_11",
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7",
+        "beat_significance_and_summary_9",
+        "beat_significance_and_summary_10",
+        "beat_significance_and_summary_12_c0",
+        "beat_significance_and_summary_12_h0",
+        "beat_significance_and_summary_12_b0",
+        "beat_significance_and_summary_13"
+      ],
+      "frame": [
+        "beat_significance_and_summary_0",
+        "beat_significance_and_summary__human",
+        "beat_significance_and_summary__thermometer",
+        "beat_significance_and_summary_3",
+        "beat_significance_and_summary_3_label",
+        "beat_significance_and_summary_5",
+        "beat_significance_and_summary_6",
+        "beat_significance_and_summary_7",
+        "beat_significance_and_summary_9",
+        "beat_significance_and_summary_10",
+        "beat_significance_and_summary_12_c0",
+        "beat_significance_and_summary_12_h0",
+        "beat_significance_and_summary_12_b0",
+        "beat_significance_and_summary_13"
+      ]
+    }
+  ],
+  "topicRef": "class10-science/life-processes/transportation-in-human-beings"
+}

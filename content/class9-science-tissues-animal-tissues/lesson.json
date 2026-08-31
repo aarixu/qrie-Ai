@@ -1,0 +1,1522 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-tissues-animal-tissues",
+  "title": "Animal Tissues",
+  "subtitle": "How specialised cells team up to protect, connect, move, and signal",
+  "language": "en",
+  "canvas": {
+    "w": 14860,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat_1_opening_0",
+      "x": 500,
+      "y": 86,
+      "text": "Animal Tissues: Four Workforces",
+      "sub": "Division of labour in multicellular animals"
+    },
+    {
+      "kind": "text",
+      "id": "beat_1_opening_12",
+      "x": 500,
+      "y": 562,
+      "text": "Every complex organ in our body is built from combinations of these four tissues."
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_2",
+      "x": 500,
+      "y": 193.4,
+      "text": "Pinch the back of your hand — what do you feel?",
+      "size": 29.655172413793103
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_3",
+      "x": 500,
+      "y": 281.4,
+      "text": "Pinch the back of your hand gently — what do you feel?",
+      "size": 25.810983397190295,
+      "tone": "accent"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_opening__skin",
+      "x": 295.4181818181818,
+      "y": 326,
+      "w": 116,
+      "h": 116,
+      "noun": "hand",
+      "label": "Skin on outside",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_opening__muscle",
+      "x": 588.5818181818181,
+      "y": 326,
+      "w": 116,
+      "h": 116,
+      "noun": "arm",
+      "label": "Muscle underneath",
+      "labelSide": "below"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_7",
+      "x": 1760,
+      "y": 239.4,
+      "text": "Why doesn't our body use one single cell type for everything?",
+      "size": 22.849067269643868
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_8",
+      "x": 1760,
+      "y": 327.4,
+      "text": "Why do you think our body doesn't just use one single type of cell to do all these jobs?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_10",
+      "x": 1760,
+      "y": 415.4,
+      "text": "Tissue = group of similar cells performing a specific function",
+      "size": 22.480533926585093,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_1_opening_11",
+      "x": 2667.4,
+      "y": 216.69,
+      "w": 705.1999999999999,
+      "heading": "Four Primary Animal Tissues",
+      "items": [
+        {
+          "term": "Epithelial tissue",
+          "meaning": "Protective covering and lining sheets"
+        },
+        {
+          "term": "Connective tissue",
+          "meaning": "Binds, supports, and transports substances"
+        },
+        {
+          "term": "Muscular tissue",
+          "meaning": "Contracts and relaxes to create movement"
+        },
+        {
+          "term": "Nervous tissue",
+          "meaning": "Transmits rapid electrical signals throughout the body"
+        }
+      ],
+      "tone": "neutral"
+    },
+    {
+      "kind": "title",
+      "id": "beat_2_epithelial_0",
+      "x": 4280,
+      "y": 86,
+      "text": "Epithelial Tissue",
+      "sub": "Tightly packed protective barriers"
+    },
+    {
+      "kind": "image",
+      "id": "epithelial_types",
+      "x": 4105.833333333333,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class9-science-tissues-animal-tissues/generated/epithelial_types.png",
+      "alt": "Types of epithelial tissues resting on a basement membrane",
+      "parts": [
+        {
+          "name": "squamous",
+          "x": 0.02,
+          "y": 0.38,
+          "w": 0.33,
+          "h": 0.27
+        },
+        {
+          "name": "columnar",
+          "x": 0.58,
+          "y": 0.17500000000000002,
+          "w": 0.39,
+          "h": 0.45
+        },
+        {
+          "name": "cuboidal",
+          "x": 0.31,
+          "y": 0.32,
+          "w": 0.27,
+          "h": 0.39
+        },
+        {
+          "name": "basement membrane",
+          "x": 0.26999999999999996,
+          "y": 0.5,
+          "w": 0.45,
+          "h": 0.25
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_4",
+      "x": 3989.2333333333336,
+      "y": 270.25,
+      "text": "Basement membrane",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_2_epithelial_4_line",
+      "from": {
+        "x": 4093.8333333333335,
+        "y": 263.85
+      },
+      "to": {
+        "x": 4199.883333333333,
+        "y": 268.75
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_6",
+      "x": 3977.633333333333,
+      "y": 317.25,
+      "text": "Squamous epithelium",
+      "size": 13.447999999999999
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_2_epithelial_6_line",
+      "from": {
+        "x": 4093.8333333333335,
+        "y": 310.85
+      },
+      "to": {
+        "x": 4112.8,
+        "y": 247.85
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_7",
+      "x": 3977.633333333333,
+      "y": 323,
+      "text": "Cuboidal epithelium",
+      "size": 13.447999999999999
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_2_epithelial_7_line",
+      "from": {
+        "x": 4093.8333333333335,
+        "y": 316.6
+      },
+      "to": {
+        "x": 4213.816666666667,
+        "y": 247.85000000000002
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_8",
+      "x": 4582.366666666667,
+      "y": 227.5,
+      "text": "Columnar epithelium",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_2_epithelial_8_line",
+      "from": {
+        "x": 4466.166666666667,
+        "y": 221.1
+      },
+      "to": {
+        "x": 4443.716666666667,
+        "y": 226
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_10",
+      "x": 4366.2,
+      "y": 376,
+      "text": "Squamous = thin and flat, ideal for diffusion and",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_10_l1",
+      "x": 4180.6,
+      "y": 413,
+      "text": "gentle protection",
+      "size": 20,
+      "after": 2254
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_12",
+      "x": 4354.6,
+      "y": 460,
+      "text": "Columnar & Cuboidal = specialised for secretion",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_12_l1",
+      "x": 4267.6,
+      "y": 497,
+      "text": "and absorption (kidneys, glands)",
+      "size": 20,
+      "after": 2162
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_13",
+      "x": 5400,
+      "y": 170,
+      "text": "Your skin is exposed to constant rubbing and wear.",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_13_l1",
+      "x": 5371,
+      "y": 207,
+      "text": "What should the squamous cells do so the skin",
+      "size": 20,
+      "after": 2300,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_13_l2",
+      "x": 5272.4,
+      "y": 244,
+      "text": "doesn't tear through easily?",
+      "size": 20,
+      "after": 4370,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_14",
+      "x": 5359.4,
+      "y": 291,
+      "text": "Stratified squamous = arranged in layers to",
+      "size": 20,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_epithelial_14_l1",
+      "x": 5231.8,
+      "y": 328,
+      "text": "prevent wear and tear",
+      "size": 20,
+      "after": 1978,
+      "tone": "good"
+    },
+    {
+      "kind": "list",
+      "id": "beat_2_epithelial_15",
+      "x": 6447.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "heading": "Epithelial Locations & Roles",
+      "items": [
+        {
+          "term": "Simple Squamous",
+          "meaning": "Oesophagus, lung alveoli (delicate diffusion barrier)"
+        },
+        {
+          "term": "Stratified Squamous",
+          "meaning": "Skin surface (prevents abrasion and mechanical injury)"
+        },
+        {
+          "term": "Ciliated Columnar",
+          "meaning": "Respiratory tract (cilia push mucus forward)"
+        },
+        {
+          "term": "Cuboidal",
+          "meaning": "Kidney tubules and salivary gland ducts (mechanical support)"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_2_epithelial_3",
+      "x": 4199.883333333333,
+      "y": 245,
+      "w": 156.75,
+      "h": 47.5,
+      "shape": "underline",
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat_3_connective_0",
+      "x": 8060,
+      "y": 86,
+      "text": "Connective Tissue",
+      "sub": "Cells embedded in a non-living intercellular matrix"
+    },
+    {
+      "kind": "image",
+      "id": "blood_and_bone",
+      "x": 7885.833333333333,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class9-science-tissues-animal-tissues/generated/blood_and_bone.jpg",
+      "alt": "Connective tissue comparison showing fluid blood matrix and solid bone matrix",
+      "parts": [
+        {
+          "name": "plasma",
+          "x": 0.197,
+          "y": 0.245,
+          "w": 0.109,
+          "h": 0.146
+        },
+        {
+          "name": "red blood cells",
+          "x": 0.233,
+          "y": 0.302,
+          "w": 0.048,
+          "h": 0.089
+        },
+        {
+          "name": "white blood cells",
+          "x": 0.264,
+          "y": 0.37,
+          "w": 0.075,
+          "h": 0.139
+        },
+        {
+          "name": "bone matrix",
+          "x": 0.673,
+          "y": 0.358,
+          "w": 0.146,
+          "h": 0.276
+        },
+        {
+          "name": "osteocytes",
+          "x": 0.749,
+          "y": 0.17,
+          "w": 0.046,
+          "h": 0.114
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_4",
+      "x": 7786.633333333333,
+      "y": 193.42000000000002,
+      "text": "Liquid matrix:",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_4_l1",
+      "x": 7786.633333333333,
+      "y": 230.42000000000002,
+      "text": "Plasma",
+      "size": 20,
+      "after": 644
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_connective_4_line",
+      "from": {
+        "x": 7873.833333333333,
+        "y": 205.52
+      },
+      "to": {
+        "x": 7954.455,
+        "y": 210.42000000000002
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_5",
+      "x": 7804.033333333334,
+      "y": 277.42,
+      "text": "RBCs & WBCs",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_connective_5_line",
+      "from": {
+        "x": 7873.833333333333,
+        "y": 271.02000000000004
+      },
+      "to": {
+        "x": 7966.995,
+        "y": 215.835
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_8",
+      "x": 8356.566666666668,
+      "y": 224.79999999999995,
+      "text": "Hard matrix: Calcium",
+      "size": 18
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_8_l1",
+      "x": 8356.566666666668,
+      "y": 257.09999999999997,
+      "text": "& Phosphorus",
+      "size": 18,
+      "after": 920
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_connective_8_line",
+      "from": {
+        "x": 8246.166666666666,
+        "y": 239.33
+      },
+      "to": {
+        "x": 8171.118333333334,
+        "y": 244.23999999999998
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_9",
+      "x": 8335.686666666666,
+      "y": 289.4,
+      "text": "Osteocytes (bone",
+      "size": 18
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_9_l1",
+      "x": 8335.686666666666,
+      "y": 323.7,
+      "text": "cells)",
+      "size": 18,
+      "after": 736
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_connective_9_line",
+      "from": {
+        "x": 8246.166666666666,
+        "y": 300.78999999999996
+      },
+      "to": {
+        "x": 8162.758333333333,
+        "y": 193.13000000000002
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_11",
+      "x": 8134.6,
+      "y": 376,
+      "text": "Matrix nature determines tissue function: fluid",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_11_l1",
+      "x": 8041.8,
+      "y": 413,
+      "text": "for transport, hard for support",
+      "size": 20,
+      "after": 2162
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_12",
+      "x": 9174.2,
+      "y": 170,
+      "text": "Muscles are attached to bones to pull them, while",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_12_l1",
+      "x": 9116.2,
+      "y": 207,
+      "text": "two bones meet at joints. Are these two",
+      "size": 20,
+      "after": 2254,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_12_l2",
+      "x": 9087.2,
+      "y": 244,
+      "text": "connections using the same tissue?",
+      "size": 20,
+      "after": 4048,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_13",
+      "x": 9174.2,
+      "y": 291,
+      "text": "Tendons = connect muscle to bone (strong, limited",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_13_l1",
+      "x": 8959.6,
+      "y": 328,
+      "text": "flexibility)",
+      "size": 20,
+      "after": 2254,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_14",
+      "x": 9168.4,
+      "y": 375,
+      "text": "Ligaments = connect bone to bone (elastic, great",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_connective_14_l1",
+      "x": 8942.2,
+      "y": 412,
+      "text": "strength)",
+      "size": 20,
+      "after": 2208,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_3_connective_15",
+      "x": 10227.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "heading": "Key Connective Tissues",
+      "items": [
+        {
+          "term": "Blood",
+          "meaning": "Fluid matrix (plasma) with RBCs, WBCs, and platelets for transport"
+        },
+        {
+          "term": "Bone & Cartilage",
+          "meaning": "Hard skeletal framework (bone) and flexible smoother at joints (cartilage)"
+        },
+        {
+          "term": "Areolar tissue",
+          "meaning": "Fills space inside organs, supports internal organs, aids repair"
+        },
+        {
+          "term": "Adipose tissue",
+          "meaning": "Stores fat below skin; acts as an insulator against heat loss"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_3_connective_3",
+      "x": 7944.455,
+      "y": 186.55,
+      "w": 57.968333333333334,
+      "h": 47.739999999999995,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_3_connective_7",
+      "x": 8110.261666666667,
+      "y": 208.01999999999998,
+      "w": 70.85666666666665,
+      "h": 72.44,
+      "shape": "circle",
+      "tone": "good"
+    },
+    {
+      "kind": "title",
+      "id": "beat_4_muscular_nervous_0",
+      "x": 11840,
+      "y": 86,
+      "text": "Muscular & Nervous Tissues",
+      "sub": "Contractile proteins and electrical impulses"
+    },
+    {
+      "kind": "image",
+      "id": "muscle_types",
+      "x": 11698.833333333334,
+      "y": 150,
+      "w": 282.3333333333333,
+      "h": 154,
+      "src": "/class9-science-tissues-animal-tissues/generated/muscle_types.jpg",
+      "alt": "Microscopic structure of skeletal, smooth, and cardiac muscle fibres",
+      "parts": [
+        {
+          "name": "striated muscle",
+          "x": 0.275,
+          "y": 0,
+          "w": 0.45,
+          "h": 0.35
+        },
+        {
+          "name": "smooth muscle",
+          "x": 0.26,
+          "y": 0.36,
+          "w": 0.45,
+          "h": 0.24
+        },
+        {
+          "name": "cardiac muscle",
+          "x": 0.275,
+          "y": 0.525,
+          "w": 0.45,
+          "h": 0.45
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_muscular_nervous_6",
+      "x": 11840,
+      "y": 373.4,
+      "text": "Skeletal: Voluntary, striped, multi-nucleated | Smooth: Involuntary, unstriped, spindle",
+      "size": 17
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_muscular_nervous_7",
+      "x": 11840,
+      "y": 461.4,
+      "text": "Cardiac: Involuntary, branched, rhythmic non-stop contraction throughout life",
+      "size": 18.101209135691896,
+      "tone": "accent"
+    },
+    {
+      "kind": "image",
+      "id": "neuron_structure",
+      "x": 12958.833333333334,
+      "y": 150,
+      "w": 282.3333333333333,
+      "h": 154,
+      "src": "/class9-science-tissues-animal-tissues/generated/neuron_structure.png",
+      "alt": "Structure of a neuron showing dendrites, cell body, axon, and nerve endings",
+      "parts": [
+        {
+          "name": "dendrite",
+          "x": 0.111,
+          "y": 0.003,
+          "w": 0.204,
+          "h": 0.383
+        },
+        {
+          "name": "nucleus",
+          "x": 0.206,
+          "y": 0.441,
+          "w": 0.075,
+          "h": 0.135
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_muscular_nervous_16",
+      "x": 13100,
+      "y": 373.4,
+      "text": "When you accidentally touch a hot vessel, which two tissues must work together for your arm to pull back in a split second?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_muscular_nervous_17",
+      "x": 13100,
+      "y": 461.4,
+      "text": "Nerve + Muscle integration = rapid response to stimuli",
+      "size": 25.810983397190295,
+      "tone": "good"
+    },
+    {
+      "kind": "list",
+      "id": "beat_4_muscular_nervous_18",
+      "x": 14007.4,
+      "y": 178.35,
+      "w": 705.1999999999999,
+      "heading": "Summary of 4 Animal Tissues",
+      "items": [
+        {
+          "term": "Epithelial",
+          "meaning": "Protective covering, tightly packed, basement membrane"
+        },
+        {
+          "term": "Connective",
+          "meaning": "Cells scattered in matrix (blood, bone, tendon, ligament, adipose)"
+        },
+        {
+          "term": "Muscular",
+          "meaning": "Contractile fibres: striated (voluntary), smooth & cardiac (involuntary)"
+        },
+        {
+          "term": "Nervous",
+          "meaning": "Neurons transmitting rapid electrical impulses across the body"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_4_muscular_nervous_10",
+      "x": 12980.172333333334,
+      "y": 140.462,
+      "w": 77.59599999999999,
+      "h": 78.982,
+      "shape": "circle",
+      "tone": "good"
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_1_opening_1",
+      "topic": "The Four Basic Animal Tissues",
+      "narration": "Hello! Pinch the back of your hand gently. What do you feel?",
+      "ask": {
+        "question": "Pinch the back of your hand gently — what do you feel?",
+        "expect": "Outer skin layer, firm tissue underneath, and a pinch sensation.",
+        "hint": "Notice the thin sheet on top, the firmer tissue below, and the feeling sent to your brain."
+      },
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle"
+      ]
+    },
+    {
+      "id": "beat_1_opening_2",
+      "topic": "The Four Basic Animal Tissues",
+      "narration": "You feel the outer skin sheet, the firm muscle below, and a pinch sensation that reaches your brain instantly.",
+      "ask": {
+        "question": "Why do you think our body doesn't just use one single type of cell to do all these jobs?",
+        "expect": "Different jobs require different structures, so cells specialise.",
+        "hint": "Think about whether a cell that contracts like rubber can also transmit electrical signals or act as a waterproof barrier."
+      },
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8"
+      ]
+    },
+    {
+      "id": "beat_1_opening_3",
+      "topic": "The Four Basic Animal Tissues",
+      "narration": "Exactly. A single cell cannot be a waterproof wall, a pulling rope, and an electric wire all at once. That is division of labour.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12"
+      ]
+    },
+    {
+      "id": "beat_2_epithelial_1",
+      "topic": "Epithelial Tissue: The Body's Lining",
+      "narration": "Look at epithelial tissue under the microscope. Notice how tightly packed the cells are — almost no space between them.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line"
+      ],
+      "frame": [
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line"
+      ]
+    },
+    {
+      "id": "beat_2_epithelial_2",
+      "topic": "Epithelial Tissue: The Body's Lining",
+      "narration": "All epithelium rests on this extracellular fibrous basement membrane that separates it from underlying tissues.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line"
+      ],
+      "frame": [
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line"
+      ]
+    },
+    {
+      "id": "beat_2_epithelial_3",
+      "topic": "Epithelial Tissue: The Body's Lining",
+      "narration": "Where we need delicate exchange — like inside lung alveoli or blood vessels — the cells are extremely thin and flat, called simple squamous.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1"
+      ],
+      "frame": [
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1"
+      ]
+    },
+    {
+      "id": "beat_2_epithelial_4",
+      "topic": "Epithelial Tissue: The Body's Lining",
+      "narration": "In the intestine, where absorption and secretion happen, cells are tall pillars — columnar epithelium.",
+      "ask": {
+        "question": "Your skin is exposed to constant rubbing and wear. What should the squamous cells do so the skin doesn't tear through easily?",
+        "expect": "They should arrange in multiple layers.",
+        "hint": "Think about whether a single sheet or a stack of many sheets gives better protection against wearing out."
+      },
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15"
+      ],
+      "frame": [
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15"
+      ]
+    },
+    {
+      "id": "beat_3_connective_1",
+      "topic": "Connective Tissue: Cells in a Matrix",
+      "narration": "Connective tissues are unique because their cells are loosely spaced and suspended in a matrix.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line"
+      ],
+      "frame": [
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line"
+      ]
+    },
+    {
+      "id": "beat_3_connective_2",
+      "topic": "Connective Tissue: Cells in a Matrix",
+      "narration": "In blood, the matrix is fluid plasma, carrying gases, digested food, hormones, and waste.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line"
+      ],
+      "frame": [
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line"
+      ]
+    },
+    {
+      "id": "beat_3_connective_3",
+      "topic": "Connective Tissue: Cells in a Matrix",
+      "narration": "In bone, that matrix is rigid and hard, made of calcium and phosphorus compounds to frame our body.",
+      "ask": {
+        "question": "Muscles are attached to bones to pull them, while two bones meet at joints. Are these two connections using the same tissue?",
+        "expect": "No, tendons connect muscle to bone, while ligaments connect bone to bone.",
+        "hint": "Think about whether you want high flexibility between two bones versus high tensile strength from muscle to bone."
+      },
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line",
+        "beat_3_connective_11",
+        "beat_3_connective_11_l1",
+        "beat_3_connective_12",
+        "beat_3_connective_12_l1",
+        "beat_3_connective_12_l2",
+        "beat_3_connective_13",
+        "beat_3_connective_13_l1",
+        "beat_3_connective_14",
+        "beat_3_connective_14_l1",
+        "beat_3_connective_15"
+      ],
+      "frame": [
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line",
+        "beat_3_connective_11",
+        "beat_3_connective_11_l1",
+        "beat_3_connective_12",
+        "beat_3_connective_12_l1",
+        "beat_3_connective_12_l2",
+        "beat_3_connective_13",
+        "beat_3_connective_13_l1",
+        "beat_3_connective_14",
+        "beat_3_connective_14_l1",
+        "beat_3_connective_15"
+      ]
+    },
+    {
+      "id": "beat_4_muscular_nervous_1",
+      "topic": "Muscular & Nervous Tissues: Action and Signal",
+      "narration": "Muscles contain special contractile proteins — actin and myosin — that contract and relax to cause movement.",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line",
+        "beat_3_connective_11",
+        "beat_3_connective_11_l1",
+        "beat_3_connective_12",
+        "beat_3_connective_12_l1",
+        "beat_3_connective_12_l2",
+        "beat_3_connective_13",
+        "beat_3_connective_13_l1",
+        "beat_3_connective_14",
+        "beat_3_connective_14_l1",
+        "beat_3_connective_15",
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure"
+      ],
+      "frame": [
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure"
+      ]
+    },
+    {
+      "id": "beat_4_muscular_nervous_2",
+      "topic": "Muscular & Nervous Tissues: Action and Signal",
+      "narration": "Now look at the unit of nervous tissue: the neuron. It can be up to a metre long!",
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line",
+        "beat_3_connective_11",
+        "beat_3_connective_11_l1",
+        "beat_3_connective_12",
+        "beat_3_connective_12_l1",
+        "beat_3_connective_12_l2",
+        "beat_3_connective_13",
+        "beat_3_connective_13_l1",
+        "beat_3_connective_14",
+        "beat_3_connective_14_l1",
+        "beat_3_connective_15",
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure",
+        "beat_4_muscular_nervous_10"
+      ],
+      "frame": [
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure",
+        "beat_4_muscular_nervous_10"
+      ]
+    },
+    {
+      "id": "beat_4_muscular_nervous_3",
+      "topic": "Muscular & Nervous Tissues: Action and Signal",
+      "narration": "Dendrites pick up a stimulus, the signal travels along the axon as an electrical nerve impulse, and reaches the nerve endings to pass to muscle or another neuron.",
+      "ask": {
+        "question": "When you accidentally touch a hot vessel, which two tissues must work together for your arm to pull back in a split second?",
+        "expect": "Nervous tissue sends the fast signal and muscular tissue contracts to pull the arm.",
+        "hint": "One tissue detects heat and carries the message; the other generates physical force to move your limb."
+      },
+      "show": [
+        "beat_1_opening_0",
+        "beat_1_opening_2",
+        "beat_1_opening_3",
+        "beat_1_opening__skin",
+        "beat_1_opening__muscle",
+        "beat_1_opening_7",
+        "beat_1_opening_8",
+        "beat_1_opening_10",
+        "beat_1_opening_11",
+        "beat_1_opening_12",
+        "beat_2_epithelial_0",
+        "epithelial_types",
+        "beat_2_epithelial_3",
+        "beat_2_epithelial_4",
+        "beat_2_epithelial_4_line",
+        "beat_2_epithelial_6",
+        "beat_2_epithelial_6_line",
+        "beat_2_epithelial_7",
+        "beat_2_epithelial_7_line",
+        "beat_2_epithelial_8",
+        "beat_2_epithelial_8_line",
+        "beat_2_epithelial_10",
+        "beat_2_epithelial_10_l1",
+        "beat_2_epithelial_12",
+        "beat_2_epithelial_12_l1",
+        "beat_2_epithelial_13",
+        "beat_2_epithelial_13_l1",
+        "beat_2_epithelial_13_l2",
+        "beat_2_epithelial_14",
+        "beat_2_epithelial_14_l1",
+        "beat_2_epithelial_15",
+        "beat_3_connective_0",
+        "blood_and_bone",
+        "beat_3_connective_3",
+        "beat_3_connective_4",
+        "beat_3_connective_4_l1",
+        "beat_3_connective_4_line",
+        "beat_3_connective_5",
+        "beat_3_connective_5_line",
+        "beat_3_connective_7",
+        "beat_3_connective_8",
+        "beat_3_connective_8_l1",
+        "beat_3_connective_8_line",
+        "beat_3_connective_9",
+        "beat_3_connective_9_l1",
+        "beat_3_connective_9_line",
+        "beat_3_connective_11",
+        "beat_3_connective_11_l1",
+        "beat_3_connective_12",
+        "beat_3_connective_12_l1",
+        "beat_3_connective_12_l2",
+        "beat_3_connective_13",
+        "beat_3_connective_13_l1",
+        "beat_3_connective_14",
+        "beat_3_connective_14_l1",
+        "beat_3_connective_15",
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure",
+        "beat_4_muscular_nervous_10",
+        "beat_4_muscular_nervous_16",
+        "beat_4_muscular_nervous_17",
+        "beat_4_muscular_nervous_18"
+      ],
+      "frame": [
+        "beat_4_muscular_nervous_0",
+        "muscle_types",
+        "beat_4_muscular_nervous_6",
+        "beat_4_muscular_nervous_7",
+        "neuron_structure",
+        "beat_4_muscular_nervous_10",
+        "beat_4_muscular_nervous_16",
+        "beat_4_muscular_nervous_17",
+        "beat_4_muscular_nervous_18"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/tissues/animal-tissues"
+}

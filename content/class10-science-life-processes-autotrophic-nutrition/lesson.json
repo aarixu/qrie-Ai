@@ -1,0 +1,1708 @@
+{
+  "formatVersion": 1,
+  "id": "class10-science-life-processes-autotrophic-nutrition",
+  "title": "Autotrophic Nutrition",
+  "subtitle": "How Green Plants Make Their Own Food",
+  "language": "en",
+  "canvas": {
+    "w": 16120,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat-1-opening_0",
+      "x": 500,
+      "y": 86,
+      "text": "Autotrophic Nutrition",
+      "sub": "Making food from inorganic raw materials"
+    },
+    {
+      "kind": "text",
+      "id": "beat-1-opening_13",
+      "x": 500,
+      "y": 562,
+      "text": "Green plants are autotrophs: they convert solar energy into chemical energy."
+    },
+    {
+      "kind": "graphic",
+      "id": "beat-1-opening__sun",
+      "x": 409.0133333333333,
+      "y": 150,
+      "w": 39.333333333333336,
+      "h": 39.333333333333336,
+      "noun": "sun",
+      "label": "Sunlight",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat-1-opening__tree",
+      "x": 400.5,
+      "y": 207.33333333333334,
+      "w": 39.333333333333336,
+      "h": 39.333333333333336,
+      "noun": "tree",
+      "label": "Green plant",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat-1-opening__soil",
+      "x": 400.5,
+      "y": 264.6666666666667,
+      "w": 39.333333333333336,
+      "h": 39.333333333333336,
+      "noun": "soil",
+      "label": "Water & minerals",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-opening_5",
+      "from": {
+        "x": 425.7452349686412,
+        "y": 189.43094174081335
+      },
+      "to": {
+        "x": 423.10143169802546,
+        "y": 207.2357249258533
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-opening_5_label",
+      "x": 371.43333333333334,
+      "y": 193.38333333333333,
+      "text": "energy",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-1-opening_6",
+      "from": {
+        "x": 374.1666666666667,
+        "y": 264.6666666666667
+      },
+      "to": {
+        "x": 374.1666666666667,
+        "y": 246.66666666666669
+      },
+      "tone": "neutral"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-opening_6_label",
+      "x": 308.69,
+      "y": 224.33333333333331,
+      "text": "absorbed by roots",
+      "size": 17,
+      "tone": "neutral"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-opening_8",
+      "x": 500,
+      "y": 373.4,
+      "text": "Where does a plant get its food if nobody feeds it?",
+      "size": 27.329276538201487,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-opening_9",
+      "x": 500,
+      "y": 461.4,
+      "text": "Where does a plant get its food if nobody feeds it?",
+      "size": 27.329276538201487,
+      "tone": "accent"
+    },
+    {
+      "kind": "box",
+      "id": "beat-1-opening_11_c0",
+      "x": 1330,
+      "y": 207,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "beat-1-opening_11_h0",
+      "x": 1760,
+      "y": 245,
+      "text": "Autotrophic Nutrition",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat-1-opening_11_b0",
+      "x": 1760,
+      "y": 285,
+      "text": "The process where organisms prepare their own food from simple inorganic substances like carbon dioxide and water in the presence of sunlight and chlorophyll.",
+      "size": 12
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-1-opening_12",
+      "x": 1760,
+      "y": 404.4,
+      "text": "'Auto' means self, 'trophe' means nutrition — self-nourishment.",
+      "size": 22.123700054734538,
+      "tone": "good"
+    },
+    {
+      "kind": "title",
+      "id": "beat-2-equation_0",
+      "x": 3020,
+      "y": 86,
+      "text": "The Chemical Recipe for Photosynthesis",
+      "sub": "Raw materials to stored carbohydrates"
+    },
+    {
+      "kind": "formula",
+      "id": "beat-2-equation_2",
+      "x": 3020,
+      "y": 279.32,
+      "text": "6CO2 + 12H2O --(chlorophyll + sunlight)--> C6H12O6 + 6O2 + 6H2O"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-equation_4",
+      "x": 3020,
+      "y": 366.4,
+      "text": "Carbon dioxide + Water -> Glucose + Oxygen + Water",
+      "size": 27.87586206896552,
+      "tone": "neutral"
+    },
+    {
+      "kind": "list",
+      "id": "beat-2-equation_7",
+      "x": 3927.4,
+      "y": 177.19,
+      "w": 705.1999999999999,
+      "heading": "What happens to the products?",
+      "items": [
+        {
+          "term": "Glucose",
+          "meaning": "Used immediately for cellular energy by the plant"
+        },
+        {
+          "term": "Starch",
+          "meaning": "Excess glucose stored in plant tissues as an internal energy reserve"
+        },
+        {
+          "term": "Oxygen",
+          "meaning": "Released as a by-product through the stomata into the atmosphere"
+        }
+      ],
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-equation_9",
+      "x": 4280,
+      "y": 434.21,
+      "text": "Plants store unused carbohydrates as starch; humans store them as glycogen.",
+      "size": 18.58390804597701,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-2-equation_10",
+      "x": 5540,
+      "y": 327.4,
+      "text": "If you test a leaf for stored food after a sunny day, which carbohydrate are you testing for?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat-3-leaf-structure_0",
+      "x": 6800,
+      "y": 86,
+      "text": "Cross-Section of a Leaf",
+      "sub": "Where the machinery sits"
+    },
+    {
+      "kind": "text",
+      "id": "beat-3-leaf-structure_20",
+      "x": 6800,
+      "y": 562,
+      "text": "Transverse section of a leaf showing photosynthetic mesophyll and epidermal layers."
+    },
+    {
+      "kind": "image",
+      "id": "leaf_cross_section",
+      "x": 6625.833333333333,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class10-science-life-processes-autotrophic-nutrition/generated/leaf_cross_section.png",
+      "alt": "Cross section diagram of a leaf showing waxy cuticle, upper epidermis, green chloroplasts inside mesophyll cells, and stomata with guard cells on the lower epidermis.",
+      "parts": [
+        {
+          "name": "waxy cuticle",
+          "x": 0.295,
+          "y": 0.01,
+          "w": 0.45,
+          "h": 0.17
+        },
+        {
+          "name": "upper epidermis",
+          "x": 0.275,
+          "y": 0.14,
+          "w": 0.45,
+          "h": 0.14
+        },
+        {
+          "name": "chloroplasts",
+          "x": 0.42,
+          "y": 0.26,
+          "w": 0.06,
+          "h": 0.26
+        },
+        {
+          "name": "guard cells",
+          "x": 0.47,
+          "y": 0.74,
+          "w": 0.11,
+          "h": 0.2
+        },
+        {
+          "name": "stomatal pore",
+          "x": 0.5,
+          "y": 0.77,
+          "w": 0.04,
+          "h": 0.15
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_4",
+      "x": 7054.806666666666,
+      "y": 168.9,
+      "text": "Waxy cuticle",
+      "size": 18
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-3-leaf-structure_4_line",
+      "from": {
+        "x": 6986.166666666667,
+        "y": 163.14000000000001
+      },
+      "to": {
+        "x": 6885.341666666667,
+        "y": 168.05
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_6",
+      "x": 7070.466666666667,
+      "y": 213.2,
+      "text": "Upper epidermis",
+      "size": 18
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-3-leaf-structure_6_line",
+      "from": {
+        "x": 6986.166666666667,
+        "y": 207.44
+      },
+      "to": {
+        "x": 6878.375,
+        "y": 189.9
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_9",
+      "x": 6538.233333333334,
+      "y": 225.6,
+      "text": "Chloroplasts",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-3-leaf-structure_9_line",
+      "from": {
+        "x": 6613.833333333333,
+        "y": 219.2
+      },
+      "to": {
+        "x": 6772.133333333333,
+        "y": 224.1
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_12",
+      "x": 7049.586666666667,
+      "y": 310.45000000000005,
+      "text": "Guard cells",
+      "size": 14.76
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-3-leaf-structure_12_line",
+      "from": {
+        "x": 6986.166666666667,
+        "y": 304.69000000000005
+      },
+      "to": {
+        "x": 6827.866666666667,
+        "y": 309.6
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_14",
+      "x": 7062.026666666667,
+      "y": 337.7,
+      "text": "Stomatal pore",
+      "size": 14.76
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-3-leaf-structure_14_line",
+      "from": {
+        "x": 6986.166666666667,
+        "y": 317.94
+      },
+      "to": {
+        "x": 6813.933333333333,
+        "y": 310.55
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_17",
+      "x": 6863,
+      "y": 376,
+      "text": "Which specific organelle inside the leaf cell",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_17_l1",
+      "x": 6758.6,
+      "y": 413,
+      "text": "carries out photosynthesis?",
+      "size": 20,
+      "after": 2070,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_18",
+      "x": 6863,
+      "y": 460,
+      "text": "Which specific organelle inside the leaf cell",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_18_l1",
+      "x": 6758.6,
+      "y": 497,
+      "text": "carries out photosynthesis?",
+      "size": 20,
+      "after": 2070,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_19",
+      "x": 7920,
+      "y": 170,
+      "text": "Chloroplasts are the actual site of photosynthesis",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-3-leaf-structure_19_l1",
+      "x": 7740.2,
+      "y": 207,
+      "text": "inside plant cells.",
+      "size": 20,
+      "after": 2300,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat-3-leaf-structure_15",
+      "x": 8967.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "heading": "Leaf Structures and Functions",
+      "items": [
+        {
+          "term": "Waxy cuticle",
+          "meaning": "Waterproof layer that reduces water loss through evaporation"
+        },
+        {
+          "term": "Epidermis",
+          "meaning": "Protective outermost layer of cells with no chloroplasts"
+        },
+        {
+          "term": "Chloroplasts",
+          "meaning": "Organelles containing chlorophyll where photosynthesis occurs"
+        },
+        {
+          "term": "Stomatal pore",
+          "meaning": "Microscopic opening for gas exchange (CO2 in, O2 out)"
+        },
+        {
+          "term": "Guard cells",
+          "meaning": "Kidney-shaped cells that swell or shrink to open and close the pore"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat-3-leaf-structure_3",
+      "x": 6728.591666666667,
+      "y": 151.9,
+      "w": 156.75,
+      "h": 32.300000000000004,
+      "shape": "underline"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-3-leaf-structure_5",
+      "x": 6711.625,
+      "y": 166.6,
+      "w": 176.75,
+      "h": 46.6,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-3-leaf-structure_8",
+      "x": 6762.133333333333,
+      "y": 189.4,
+      "w": 40.9,
+      "h": 69.4,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-3-leaf-structure_11",
+      "x": 6779.55,
+      "y": 280.6,
+      "w": 58.31666666666666,
+      "h": 58,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat-3-leaf-structure_13",
+      "x": 6790,
+      "y": 286.3,
+      "w": 33.93333333333334,
+      "h": 48.5,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat-4-three-events_0",
+      "x": 10580,
+      "y": 86,
+      "text": "The Three Key Events of Photosynthesis",
+      "sub": "NCERT core sequence"
+    },
+    {
+      "kind": "flow",
+      "id": "beat-4-three-events_2",
+      "x": 10150,
+      "y": 167,
+      "w": 860,
+      "steps": [
+        {
+          "label": "1. Absorption",
+          "note": "Chlorophyll absorbs light energy from the sun"
+        },
+        {
+          "label": "2. Conversion & Splitting",
+          "note": "Light energy becomes chemical energy; water (H2O) splits into H2 and O2"
+        },
+        {
+          "label": "3. Reduction",
+          "note": "Carbon dioxide (CO2) is reduced to carbohydrates (glucose)"
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-4-three-events_4",
+      "x": 10580,
+      "y": 356.4,
+      "text": "Water splitting provides hydrogen and releases oxygen gas.",
+      "size": 24.03091557669441,
+      "tone": "neutral"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-4-three-events_7",
+      "x": 10580,
+      "y": 444.4,
+      "text": "Do these three steps always take place immediately one after another?",
+      "size": 20.199900049975014,
+      "tone": "accent"
+    },
+    {
+      "kind": "note",
+      "id": "beat-4-three-events_8",
+      "x": 10287.6,
+      "y": 185.475,
+      "w": 584.8000000000001,
+      "text": "Desert plants (xerophytes) keep stomata CLOSED during hot days to prevent water loss. They take up CO2 at night, make an intermediate acid, and reduce it when the sun shines the next day!",
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-4-three-events_9",
+      "x": 11840,
+      "y": 337.92499999999995,
+      "text": "Where does the oxygen released during photosynthesis actually come from — carbon dioxide or water?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-4-three-events_10",
+      "x": 11840,
+      "y": 425.92499999999995,
+      "text": "Crucial fact: Oxygen gas comes from splitting WATER, not from carbon dioxide.",
+      "size": 18.101209135691896,
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat-5-stomata-control_0",
+      "x": 13100,
+      "y": 86,
+      "text": "How Stomata Open and Close",
+      "sub": "Turgidity controls the gate"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat-5-stomata-control__open_stoma",
+      "x": 12888.54,
+      "y": 150,
+      "w": 68,
+      "h": 68,
+      "noun": "circle",
+      "label": "Swollen Guard Cells (Turgid) -> Pore Open",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat-5-stomata-control__closed_stoma",
+      "x": 12880.42,
+      "y": 236,
+      "w": 68,
+      "h": 68,
+      "noun": "circle",
+      "label": "Shrunk Guard Cells (Flaccid) -> Pore Closed",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat-5-stomata-control_4",
+      "from": {
+        "x": 12919.32600479651,
+        "y": 218.0398506773447
+      },
+      "to": {
+        "x": 12917.633995203489,
+        "y": 235.9601493226553
+      },
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-5-stomata-control_4_label",
+      "x": 12919.43,
+      "y": 325.0000000000001,
+      "text": "Water moves out",
+      "size": 13.94,
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-5-stomata-control_6",
+      "x": 13100,
+      "y": 373.4,
+      "text": "Water flows IN -> Guard cells swell (turgid) -> Stomatal pore OPENS",
+      "size": 20.802882141019044,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-5-stomata-control_8",
+      "x": 13100,
+      "y": 461.4,
+      "text": "Water flows OUT -> Guard cells shrink (flaccid) -> Stomatal pore CLOSES",
+      "size": 19.63088878096163,
+      "tone": "bad"
+    },
+    {
+      "kind": "list",
+      "id": "beat-5-stomata-control_9",
+      "x": 14007.4,
+      "y": 185.47,
+      "w": 705.1999999999999,
+      "heading": "Summary of Autotrophic Nutrition",
+      "items": [
+        {
+          "term": "Raw Materials",
+          "meaning": "CO2 (via stomata) and H2O (via roots)"
+        },
+        {
+          "term": "Energy Source",
+          "meaning": "Sunlight trapped by green pigment chlorophyll"
+        },
+        {
+          "term": "Main Site",
+          "meaning": "Chloroplasts in leaf mesophyll cells"
+        },
+        {
+          "term": "Primary Output",
+          "meaning": "Glucose (stored as starch) and Oxygen gas"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-5-stomata-control_10",
+      "x": 14360,
+      "y": 425.92999999999995,
+      "text": "Why does a plant close its stomata when it does not need carbon dioxide for photosynthesis?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat-5-stomata-control_11",
+      "x": 15620,
+      "y": 327.4,
+      "text": "Closing stomata prevents massive water loss when CO2 is not actively needed.",
+      "size": 18.339382940108894,
+      "tone": "accent"
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat-1-opening_1",
+      "topic": "Where do plants get their energy?",
+      "narration": "Hello — let us jump straight in. You had breakfast this morning to get energy for the day.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label"
+      ],
+      "frame": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label"
+      ]
+    },
+    {
+      "id": "beat-1-opening_2",
+      "topic": "Where do plants get their energy?",
+      "narration": "Now look at the neem tree outside your window. Nobody feeds it dal, roti, or fruit. Where does it get its food from?",
+      "ask": {
+        "question": "Where does a plant get its food if nobody feeds it?",
+        "expect": "It makes its own food using sunlight, water, and carbon dioxide from the air.",
+        "hint": "Think about what the leaves catch from the air and what the roots pull from the ground."
+      },
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9"
+      ],
+      "frame": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9"
+      ]
+    },
+    {
+      "id": "beat-1-opening_3",
+      "topic": "Where do plants get their energy?",
+      "narration": "Exactly. It builds its own food right inside its leaves from simple substances in the air and soil.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13"
+      ],
+      "frame": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13"
+      ]
+    },
+    {
+      "id": "beat-2-equation_1",
+      "topic": "The Photosynthesis Equation",
+      "narration": "Let us write down the exact chemical recipe that happens in every green leaf.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2"
+      ],
+      "frame": [
+        "beat-2-equation_0",
+        "beat-2-equation_2"
+      ]
+    },
+    {
+      "id": "beat-2-equation_2",
+      "topic": "The Photosynthesis Equation",
+      "narration": "Look at the left side: carbon dioxide comes from the air, and water comes up through the roots.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4"
+      ],
+      "frame": [
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4"
+      ]
+    },
+    {
+      "id": "beat-2-equation_3",
+      "topic": "The Photosynthesis Equation",
+      "narration": "The plant needs two essential helpers that are written above and below the arrow: sunlight provides the energy, and chlorophyll traps it.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4"
+      ],
+      "frame": [
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4"
+      ]
+    },
+    {
+      "id": "beat-2-equation_4",
+      "topic": "The Photosynthesis Equation",
+      "narration": "What comes out? Glucose is the food. Oxygen is released into the air for us to breathe.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7"
+      ],
+      "frame": [
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7"
+      ]
+    },
+    {
+      "id": "beat-2-equation_5",
+      "topic": "The Photosynthesis Equation",
+      "narration": "In animals like us, spare energy is stored as glycogen. In plants, it is stored as starch.",
+      "ask": {
+        "question": "If you test a leaf for stored food after a sunny day, which carbohydrate are you testing for?",
+        "expect": "Starch.",
+        "hint": "It is the storage form of carbohydrate in plants, tested with iodine solution."
+      },
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10"
+      ],
+      "frame": [
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10"
+      ]
+    },
+    {
+      "id": "beat-3-leaf-structure_1",
+      "topic": "Inside the Leaf",
+      "narration": "If we slice a leaf thin and put it under a microscope, we see the specialised layers that make this possible.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line"
+      ],
+      "frame": [
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line"
+      ]
+    },
+    {
+      "id": "beat-3-leaf-structure_2",
+      "topic": "Inside the Leaf",
+      "narration": "Right on top is a waterproof waxy cuticle covering the upper epidermis to prevent water loss.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line"
+      ],
+      "frame": [
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line"
+      ]
+    },
+    {
+      "id": "beat-3-leaf-structure_3",
+      "topic": "Inside the Leaf",
+      "narration": "Below that are the mesophyll cells packed with tiny green cellular organelles called chloroplasts. These hold the chlorophyll.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15"
+      ],
+      "frame": [
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15"
+      ]
+    },
+    {
+      "id": "beat-3-leaf-structure_4",
+      "topic": "Inside the Leaf",
+      "narration": "Which cellular organelle in this cross-section is the actual factory that traps sunlight and makes glucose?",
+      "ask": {
+        "question": "Which specific organelle inside the leaf cell carries out photosynthesis?",
+        "expect": "Chloroplast.",
+        "hint": "Look at the green dots inside the mesophyll cells that contain chlorophyll."
+      },
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20"
+      ],
+      "frame": [
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20"
+      ]
+    },
+    {
+      "id": "beat-4-three-events_1",
+      "topic": "The Three Main Steps",
+      "narration": "Photosynthesis is not just one sudden reaction. It unfolds in three distinct events.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2"
+      ],
+      "frame": [
+        "beat-4-three-events_0",
+        "beat-4-three-events_2"
+      ]
+    },
+    {
+      "id": "beat-4-three-events_2",
+      "topic": "The Three Main Steps",
+      "narration": "First, chlorophyll absorbs photons of light. Second, that light energy splits water molecules into hydrogen and oxygen — this is called photolysis.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4"
+      ],
+      "frame": [
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4"
+      ]
+    },
+    {
+      "id": "beat-4-three-events_3",
+      "topic": "The Three Main Steps",
+      "narration": "Third, the hydrogen is used to reduce carbon dioxide into glucose.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4"
+      ],
+      "frame": [
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4"
+      ]
+    },
+    {
+      "id": "beat-4-three-events_4",
+      "topic": "The Three Main Steps",
+      "narration": "Here is a puzzle: do these three steps always happen one right after another in every plant?",
+      "ask": {
+        "question": "Where does the oxygen released during photosynthesis actually come from — carbon dioxide or water?",
+        "expect": "Water.",
+        "hint": "Think about which molecule gets split during the second step when light energy is converted."
+      },
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4",
+        "beat-4-three-events_7",
+        "beat-4-three-events_8",
+        "beat-4-three-events_9",
+        "beat-4-three-events_10"
+      ],
+      "frame": [
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4",
+        "beat-4-three-events_7",
+        "beat-4-three-events_8",
+        "beat-4-three-events_9",
+        "beat-4-three-events_10"
+      ]
+    },
+    {
+      "id": "beat-5-stomata-control_1",
+      "topic": "Opening and Closing of Stomata",
+      "narration": "Let us see how the plant controls when gases move in and out.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4",
+        "beat-4-three-events_7",
+        "beat-4-three-events_8",
+        "beat-4-three-events_9",
+        "beat-4-three-events_10",
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label"
+      ],
+      "frame": [
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label"
+      ]
+    },
+    {
+      "id": "beat-5-stomata-control_2",
+      "topic": "Opening and Closing of Stomata",
+      "narration": "When water flows into the guard cells, they swell like curved balloons and pull the pore open so CO2 can enter.",
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4",
+        "beat-4-three-events_7",
+        "beat-4-three-events_8",
+        "beat-4-three-events_9",
+        "beat-4-three-events_10",
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label",
+        "beat-5-stomata-control_6"
+      ],
+      "frame": [
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label",
+        "beat-5-stomata-control_6"
+      ]
+    },
+    {
+      "id": "beat-5-stomata-control_3",
+      "topic": "Opening and Closing of Stomata",
+      "narration": "When the plant is losing too much water, water leaves the guard cells. They shrink and become limp, closing the pore.",
+      "ask": {
+        "question": "Why does a plant close its stomata when it does not need carbon dioxide for photosynthesis?",
+        "expect": "To prevent water loss through transpiration.",
+        "hint": "Think about what else escapes through open pores along with gases."
+      },
+      "show": [
+        "beat-1-opening_0",
+        "beat-1-opening__sun",
+        "beat-1-opening__tree",
+        "beat-1-opening__soil",
+        "beat-1-opening_5",
+        "beat-1-opening_5_label",
+        "beat-1-opening_6",
+        "beat-1-opening_6_label",
+        "beat-1-opening_8",
+        "beat-1-opening_9",
+        "beat-1-opening_11_c0",
+        "beat-1-opening_11_h0",
+        "beat-1-opening_11_b0",
+        "beat-1-opening_12",
+        "beat-1-opening_13",
+        "beat-2-equation_0",
+        "beat-2-equation_2",
+        "beat-2-equation_4",
+        "beat-2-equation_7",
+        "beat-2-equation_9",
+        "beat-2-equation_10",
+        "beat-3-leaf-structure_0",
+        "leaf_cross_section",
+        "beat-3-leaf-structure_3",
+        "beat-3-leaf-structure_4",
+        "beat-3-leaf-structure_4_line",
+        "beat-3-leaf-structure_5",
+        "beat-3-leaf-structure_6",
+        "beat-3-leaf-structure_6_line",
+        "beat-3-leaf-structure_8",
+        "beat-3-leaf-structure_9",
+        "beat-3-leaf-structure_9_line",
+        "beat-3-leaf-structure_11",
+        "beat-3-leaf-structure_12",
+        "beat-3-leaf-structure_12_line",
+        "beat-3-leaf-structure_13",
+        "beat-3-leaf-structure_14",
+        "beat-3-leaf-structure_14_line",
+        "beat-3-leaf-structure_15",
+        "beat-3-leaf-structure_17",
+        "beat-3-leaf-structure_17_l1",
+        "beat-3-leaf-structure_18",
+        "beat-3-leaf-structure_18_l1",
+        "beat-3-leaf-structure_19",
+        "beat-3-leaf-structure_19_l1",
+        "beat-3-leaf-structure_20",
+        "beat-4-three-events_0",
+        "beat-4-three-events_2",
+        "beat-4-three-events_4",
+        "beat-4-three-events_7",
+        "beat-4-three-events_8",
+        "beat-4-three-events_9",
+        "beat-4-three-events_10",
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label",
+        "beat-5-stomata-control_6",
+        "beat-5-stomata-control_8",
+        "beat-5-stomata-control_9",
+        "beat-5-stomata-control_10",
+        "beat-5-stomata-control_11"
+      ],
+      "frame": [
+        "beat-5-stomata-control_0",
+        "beat-5-stomata-control__open_stoma",
+        "beat-5-stomata-control__closed_stoma",
+        "beat-5-stomata-control_4",
+        "beat-5-stomata-control_4_label",
+        "beat-5-stomata-control_6",
+        "beat-5-stomata-control_8",
+        "beat-5-stomata-control_9",
+        "beat-5-stomata-control_10",
+        "beat-5-stomata-control_11"
+      ]
+    }
+  ],
+  "topicRef": "class10-science/life-processes/autotrophic-nutrition"
+}
