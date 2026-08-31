@@ -150,10 +150,10 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
           <path d="M198 350 L198 368 M210 352 L210 366" fill="none" strokeWidth="3" />
         </g>
         {/* the tufts on top */}
-        <path d="M150 74 Q146 52 158 46 Q160 62 166 70 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
-        <path d="M168 72 Q174 54 186 52 Q178 66 176 76 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
+        <path d="M150 66 Q146 44 158 38 Q160 54 166 62 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
+        <path d="M168 64 Q174 46 186 44 Q178 58 176 68 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
         {/* the egg */}
-        <ellipse cx="160" cy="230" rx="112" ry="138" fill={BODY} stroke={OUTLINE} strokeWidth="6" />
+        <ellipse cx="160" cy="224" rx="112" ry="146" fill={BODY} stroke={OUTLINE} strokeWidth="6" />
         {/* belly */}
         <ellipse cx="160" cy="282" rx="80" ry="86" fill={BELLY} />
 
@@ -211,11 +211,11 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
       {/* ------------- the face ------------- */}
       <g ref={faceRef}>
         {/* the white face patch, up under the hood */}
-        <ellipse cx="160" cy="164" rx="88" ry="80" fill={BELLY} />
+        <ellipse cx="160" cy="170" rx="78" ry="74" fill={BELLY} />
         {/* brows: thick, expressive */}
         <g ref={browsRef} style={{ transition: 'transform 160ms ease' }}>
-          <path d="M100 104 Q122 92 142 100" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
-          <path d="M178 100 Q198 92 220 104" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M102 114 Q124 102 144 110" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M176 110 Q196 102 218 114" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
         </g>
         {/* eyes, huge, behind the glasses (the group squashes to blink) */}
         <g ref={eyesRef}>
@@ -229,8 +229,8 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
           <circle cx="186" cy="159" r="2" fill="#fff" />
         </g>
         {/* blush */}
-        <circle cx="94" cy="190" r="10" fill={BLUSH} />
-        <circle cx="226" cy="190" r="10" fill={BLUSH} />
+        <circle cx="100" cy="192" r="10" fill={BLUSH} />
+        <circle cx="220" cy="192" r="10" fill={BLUSH} />
         {/* THE GLASSES: big, round, red, low bridge */}
         <circle cx="124" cy="150" r="38" fill="none" stroke={FRAME} strokeWidth="10" />
         <circle cx="196" cy="150" r="38" fill="none" stroke={FRAME} strokeWidth="10" />
