@@ -474,11 +474,15 @@ export function ClassRoom({
         }
       : computeVisible(lesson, player.beatIndex);
 
+  // Her ear open counts as listening too: while the mic waits on a spoken
+  // answer she turns to her listening pose instead of gesturing through it.
   const tutorMode: TutorMode = inDoubt
     ? 'listening'
-    : player.state === 'playing'
-      ? 'teaching'
-      : 'idle';
+    : ear === 'listening'
+      ? 'listening'
+      : player.state === 'playing'
+        ? 'teaching'
+        : 'idle';
 
   // Progress + the data spine: save position per beat; completion routes to
   // the celebration screen; every raised hand is logged with its beat.
