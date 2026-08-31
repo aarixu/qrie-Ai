@@ -16,6 +16,8 @@ import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
 import { requestMic } from '../lib/mic';
+import { listenOnce } from '../lib/ear';
+import { judgeSpokenAnswer } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import { recordAnswerAtBeat, recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
@@ -336,6 +338,55 @@ export function ClassRoom({
 
   const inDoubt = handoffState !== 'PLAYING';
 
+  /**
+   * THE EAR. When she asks, the mic opens on its own, waits for the spoken
+   * answer, and closes when it lands — the raise-hand button stays for the
+   * doubts the STUDENT starts. The chips stay tappable underneath as the
+   * fallback for a denied mic, a silent room, or a dead network.
+   *
+   * Two rounds at most: an answer, and after a hint one more try. Then the
+   * ear rests and the chips carry it — a mic that reopens forever nags.
+   */
+  const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
+  const heldAskBeat = player.pendingAsk && !inDoubt ? (player.beat?.id ?? null) : null;
+  useEffect(() => {
+    if (!heldAskBeat) return;
+    let cancelled = false;
+    (async () => {
+      if ((await requestMic()) !== 'granted') return;
+      for (let round = 0; round < 2; round += 1) {
+        const ask = playerRef.current.pendingAsk;
+        if (cancelled || !ask) return;
+        setEar('listening');
+        const heard = await listenOnce({ isCancelled: () => cancelled });
+        if (cancelled || heard.text === null) return;
+        setEar('thinking');
+        const judged = await judgeSpokenAnswer(ask, heard.text).catch(() => null);
+        if (cancelled) return;
+        // A judge that failed says nothing and leaves the chips standing.
+        if (judged === null) return;
+        // "unclear" is not evidence about the student — nothing is recorded.
+        if (judged.verdict !== 'unclear') {
+          recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
+        }
+        setEar('off');
+        await tts.speak(judged.say);
+        if (cancelled) return;
+        if (judged.verdict === 'right') {
+          const options = ask.options ?? [];
+          playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
+          return;
+        }
+      }
+    })().finally(() => {
+      if (!cancelled) setEar('off');
+    });
+    return () => {
+      cancelled = true;
+      setEar('off');
+    };
+  }, [heldAskBeat, lesson, tts]);
+
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
   // student is looking for a button, not at a diagram.
@@ -589,6 +640,22 @@ export function ClassRoom({
               try. The whys live in the lesson, not on the board. */}
           {player.pendingAsk && !inDoubt && (
             <div className="absolute inset-x-3 bottom-16 z-30 flex flex-wrap justify-center gap-2">
+              {/* The ear's status over the chips: red while it listens, the
+                  way a call shows a hot mic. */}
+              {ear !== 'off' && (
+                <span className="w-full flex justify-center">
+                  <span className="flex items-center gap-2 rounded-full bg-stage-red px-3.5 py-1.5 font-label-md text-[12.5px] font-semibold text-white shadow-md">
+                    <Icon
+                      name={ear === 'listening' ? 'mic' : 'graphic_eq'}
+                      filled
+                      className="text-[15px] animate-pulse"
+                    />
+                    {ear === 'listening'
+                      ? 'Mic on — say your answer out loud'
+                      : 'Meera is listening to your answer…'}
+                  </span>
+                </span>
+              )}
               {/* An OPEN ask has no options — she wants it said out loud, and
                   until she can hear, one honest button stands in for the ear.
                   Without it the chips row rendered empty and the class held
