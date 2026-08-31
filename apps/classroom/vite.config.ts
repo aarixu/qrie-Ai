@@ -179,6 +179,20 @@ function llmRelay(key: string): Plugin {
         const chunks: Buffer[] = [];
         req.on('data', (c: Buffer) => chunks.push(c));
         req.on('end', () => {
+          // Cap max_tokens when the caller left it open. OpenRouter
+          // pre-authorises the model's FULL context (65k) per request, so a
+          // low balance 402s even though the actual reply costs a fraction
+          // of it. No reply in this app comes near 24k tokens.
+          let body = Buffer.concat(chunks).toString('utf8');
+          try {
+            const parsed = JSON.parse(body) as { max_tokens?: number };
+            if (parsed.max_tokens === undefined) {
+              parsed.max_tokens = 24_000;
+              body = JSON.stringify(parsed);
+            }
+          } catch {
+            // Not JSON — forward untouched and let upstream complain.
+          }
           void fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -187,7 +201,7 @@ function llmRelay(key: string): Plugin {
               'HTTP-Referer': 'https://github.com/aarixu/curie',
               'X-Title': 'Curie',
             },
-            body: Buffer.concat(chunks).toString('utf8'),
+            body,
           })
             .then(async (upstream) => {
               res.statusCode = upstream.status;
