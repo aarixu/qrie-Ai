@@ -4,43 +4,49 @@ import { sampleViseme, visemeTimeline, type Viseme, type VisemeStep } from './vi
 import { createBlinker, swayAt } from './microMotion';
 
 /**
- * THE PENGUIN — Aarav's mascot, and the avatar that ACTUALLY shows everything.
+ * THE PENGUIN — Aarav's mascot, drawn to his reference, and able to ACT.
  *
- * His words: a cartoon penguin in big round funny glasses. The Duolingo move
- * — a mascot, not a person — and the right one after the photo experiment:
- * a photograph can only be nudged before it breaks, a drawn character can
- * ACT. The engine underneath did not change at all: the same bus, viseme
- * timeline, blink clock and sway that drove the photo drive this — but here
- * a viseme is a whole different BEAK, a blink squashes the eyes flat behind
- * the glasses, a gesture is his own flipper, and nothing can glitch because
- * there is one character, drawn in code, no assets to mis-register.
+ * The look is his generated reference art (2026-09-01): chubby navy penguin,
+ * huge eyes with a double shine, big round RED glasses with a low bridge,
+ * two feather tufts on top, pink blush, chunky teal scarf with a fringed
+ * tail, orange beak and feet, dark outline on everything — sticker style.
  *
- * When Aarav's generated reference art lands, this drawing restyles to
- * match it — colours and shapes, same refs, same loop. A Rive artist can
- * replace the whole file later behind the same props.
+ * The engine underneath never changed through photo → human cartoon →
+ * penguin: the same bus, viseme timeline, blink clock and sway. Here a
+ * viseme is a whole different BEAK, a blink squashes the eyes flat behind
+ * the glasses, a question lifts the brows, and a gesture is his own
+ * flipper — nothing can glitch, there is one character and no assets.
  *
  * Rendering is imperative: one rAF loop pokes SVG attributes through refs.
  * React draws the penguin once; sixty reconciler passes a second would melt
- * a budget phone for nothing.
+ * a budget phone for nothing. A Rive artist can replace this file later
+ * behind the same props.
  */
 
 export type AvatarPose = 'idle' | 'point' | 'explain' | 'greet' | 'think' | 'listen' | 'cheer';
 
-const BODY = '#23303f';
-const BODY_DARK = '#18222e';
-const BELLY = '#f7f2e7';
-const BEAK = '#f5a623';
-const BEAK_DARK = '#d98c12';
-const MOUTH_DARK = '#5d2626';
-const FRAME = '#e2574c';
-const SCARF = '#177e89';
-const SCARF_DARK = '#10606a';
+const BODY = '#26314f';
+const OUTLINE = '#1b2440';
+const BELLY = '#fdf8ec';
+const BEAK = '#f8a71b';
+const BEAK_DARK = '#e5860a';
+const MOUTH_DARK = '#7a2e12';
+const TONGUE = '#f2705b';
+const FRAME = '#e8402a';
+const SCARF = '#2ba9ad';
+const SCARF_DARK = '#1d8489';
+const BLUSH = '#f5b5c0';
 
 const POSES: AvatarPose[] = ['idle', 'point', 'explain', 'greet', 'think', 'listen', 'cheer'];
 
-/** A flipper: one fat round-capped stroke. */
+/** A flipper: a fat round-capped stroke, outlined like everything else. */
 function Flipper({ d }: { d: string }) {
-  return <path d={d} stroke={BODY_DARK} strokeWidth="27" fill="none" strokeLinecap="round" />;
+  return (
+    <>
+      <path d={d} stroke={OUTLINE} strokeWidth="33" fill="none" strokeLinecap="round" />
+      <path d={d} stroke={BODY} strokeWidth="26" fill="none" strokeLinecap="round" />
+    </>
+  );
 }
 
 export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className?: string }) {
@@ -85,7 +91,7 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
         shownMouth = v;
       }
 
-      // The face bobs: breathing at rest, nodding with the voice.
+      // The face bobs: breathing at rest, nodding with his voice.
       const sway = swayAt(t, drive);
       faceRef.current?.setAttribute(
         'transform',
@@ -104,7 +110,7 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
         `translate(0 ${(150 * (1 - open)).toFixed(2)}) scale(1 ${open.toFixed(3)})`,
       );
 
-      // The brows: feather tufts up while he is asking something.
+      // The brows: up while he is asking something.
       const asking = p.text.includes('?');
       browsRef.current?.setAttribute('transform', asking ? 'translate(0 -7)' : 'translate(0 0)');
 
@@ -136,116 +142,128 @@ export function CartoonAvatar({ pose, className }: { pose: AvatarPose; className
   return (
     <svg viewBox="0 0 320 380" className={className} aria-hidden preserveAspectRatio="xMidYMid slice">
       <g ref={bodyRef}>
-        {/* feet */}
-        <ellipse cx="126" cy="362" rx="26" ry="11" fill={BEAK} />
-        <ellipse cx="194" cy="362" rx="26" ry="11" fill={BEAK} />
+        {/* feet, with split toes */}
+        <g stroke={OUTLINE} strokeWidth="4" fill={BEAK}>
+          <ellipse cx="120" cy="360" rx="27" ry="12" />
+          <ellipse cx="200" cy="360" rx="27" ry="12" />
+          <path d="M110 352 L110 366 M122 350 L122 368" fill="none" strokeWidth="3" />
+          <path d="M198 350 L198 368 M210 352 L210 366" fill="none" strokeWidth="3" />
+        </g>
+        {/* the tufts on top */}
+        <path d="M150 74 Q146 52 158 46 Q160 62 166 70 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
+        <path d="M168 72 Q174 54 186 52 Q178 66 176 76 Z" fill={BODY} stroke={OUTLINE} strokeWidth="4" />
         {/* the egg */}
-        <ellipse cx="160" cy="232" rx="112" ry="136" fill={BODY} />
+        <ellipse cx="160" cy="230" rx="112" ry="138" fill={BODY} stroke={OUTLINE} strokeWidth="6" />
         {/* belly */}
-        <ellipse cx="160" cy="266" rx="74" ry="94" fill={BELLY} />
+        <ellipse cx="160" cy="282" rx="80" ry="86" fill={BELLY} />
 
         {/* ------------- flipper sets, one per pose ------------- */}
         <g ref={arm('idle')} style={poseStyle('idle')}>
-          <Flipper d="M74 226 Q58 282 76 326" />
-          <Flipper d="M246 226 Q262 282 244 326" />
+          <Flipper d="M70 230 Q50 284 66 324" />
+          <Flipper d="M250 230 Q270 284 254 324" />
         </g>
         {/* point: a flipper straight out toward the board */}
         <g ref={arm('point')} style={poseStyle('point')}>
-          <Flipper d="M92 238 Q56 224 26 206" />
-          <Flipper d="M246 226 Q262 282 244 326" />
+          <Flipper d="M88 240 Q54 224 24 204" />
+          <Flipper d="M250 230 Q270 284 254 324" />
         </g>
         {/* explain: both flippers out, mid-sentence */}
         <g ref={arm('explain')} style={poseStyle('explain')}>
-          <Flipper d="M88 244 Q56 274 44 306" />
-          <Flipper d="M232 244 Q264 274 276 306" />
+          <Flipper d="M84 246 Q52 276 40 308" />
+          <Flipper d="M236 246 Q268 276 280 308" />
         </g>
         {/* greet: one flipper up, waving */}
         <g ref={arm('greet')} style={poseStyle('greet')}>
-          <Flipper d="M94 236 Q66 196 56 152" />
-          <Flipper d="M246 226 Q262 282 244 326" />
-          <path d="M30 150 Q38 138 52 132 M36 166 Q26 158 24 146" stroke={BODY_DARK} strokeWidth="4" fill="none" strokeLinecap="round" />
+          <Flipper d="M90 238 Q62 196 52 150" />
+          <Flipper d="M250 230 Q270 284 254 324" />
+          <path d="M26 148 Q34 136 48 130 M32 164 Q22 156 20 144" stroke={OUTLINE} strokeWidth="4" fill="none" strokeLinecap="round" />
         </g>
         {/* think: flipper tip to the chin */}
         <g ref={arm('think')} style={poseStyle('think')}>
-          <Flipper d="M74 226 Q58 282 76 326" />
-          <Flipper d="M234 246 Q216 226 192 214" />
+          <Flipper d="M70 230 Q50 284 66 324" />
+          <Flipper d="M238 248 Q220 226 194 214" />
         </g>
         {/* listen: flippers folded on the belly */}
         <g ref={arm('listen')} style={poseStyle('listen')}>
-          <Flipper d="M86 244 Q104 292 146 304" />
-          <Flipper d="M234 244 Q216 292 174 304" />
+          <Flipper d="M82 246 Q100 294 144 306" />
+          <Flipper d="M238 246 Q220 294 176 306" />
         </g>
         {/* cheer: a flipper thrown up */}
         <g ref={arm('cheer')} style={poseStyle('cheer')}>
-          <Flipper d="M74 226 Q58 282 76 326" />
-          <Flipper d="M228 238 Q252 194 250 152" />
-          <path d="M236 136 Q244 126 256 124" stroke={BODY_DARK} strokeWidth="9" fill="none" strokeLinecap="round" />
+          <Flipper d="M70 230 Q50 284 66 324" />
+          <Flipper d="M232 240 Q256 194 254 150" />
+          <path d="M240 134 Q248 124 260 122" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
         </g>
 
-        {/* scarf, over the flippers' shoulders */}
-        <path d="M92 236 Q160 268 228 236 L224 258 Q160 288 96 258 Z" fill={SCARF} />
-        <path d="M196 252 L210 300 L184 296 L182 258 Z" fill={SCARF_DARK} />
+        {/* the scarf, chunky, with its fringed tail — over the flippers */}
+        <path
+          d="M84 238 Q160 274 236 238 L232 268 Q160 300 88 268 Z"
+          fill={SCARF}
+          stroke={OUTLINE}
+          strokeWidth="5"
+          strokeLinejoin="round"
+        />
+        <path d="M196 262 L206 330 L172 326 L174 268 Z" fill={SCARF} stroke={OUTLINE} strokeWidth="5" strokeLinejoin="round" />
+        <path d="M176 326 L176 340 M187 328 L187 342 M199 328 L199 340" stroke={SCARF_DARK} strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M100 252 Q160 280 222 250" stroke={SCARF_DARK} strokeWidth="4" fill="none" strokeLinecap="round" />
       </g>
 
       {/* ------------- the face ------------- */}
       <g ref={faceRef}>
-        {/* white face patch */}
-        <ellipse cx="160" cy="152" rx="78" ry="62" fill={BELLY} />
-        {/* brows: little feather tufts */}
+        {/* the white face patch, up under the hood */}
+        <ellipse cx="160" cy="164" rx="88" ry="80" fill={BELLY} />
+        {/* brows: thick, expressive */}
         <g ref={browsRef} style={{ transition: 'transform 160ms ease' }}>
-          <path d="M104 106 Q122 96 140 102" stroke={BODY_DARK} strokeWidth="7" fill="none" strokeLinecap="round" />
-          <path d="M180 102 Q198 96 216 106" stroke={BODY_DARK} strokeWidth="7" fill="none" strokeLinecap="round" />
+          <path d="M100 104 Q122 92 142 100" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
+          <path d="M178 100 Q198 92 220 104" stroke={OUTLINE} strokeWidth="9" fill="none" strokeLinecap="round" />
         </g>
-        {/* eyes behind the glasses (the group squashes to blink) */}
+        {/* eyes, huge, behind the glasses (the group squashes to blink) */}
         <g ref={eyesRef}>
-          <circle cx="126" cy="150" r="21" fill="#fff" />
-          <circle cx="194" cy="150" r="21" fill="#fff" />
-          <circle cx="129" cy="152" r="9" fill="#2a1e16" />
-          <circle cx="191" cy="152" r="9" fill="#2a1e16" />
-          <circle cx="132" cy="148" r="3.2" fill="#fff" />
-          <circle cx="194" cy="148" r="3.2" fill="#fff" />
+          <ellipse cx="124" cy="150" rx="27" ry="31" fill="#fff" stroke={OUTLINE} strokeWidth="4" />
+          <ellipse cx="196" cy="150" rx="27" ry="31" fill="#fff" stroke={OUTLINE} strokeWidth="4" />
+          <circle cx="131" cy="154" r="13" fill={OUTLINE} />
+          <circle cx="189" cy="154" r="13" fill={OUTLINE} />
+          <circle cx="135" cy="149" r="4.6" fill="#fff" />
+          <circle cx="193" cy="149" r="4.6" fill="#fff" />
+          <circle cx="128" cy="159" r="2" fill="#fff" />
+          <circle cx="186" cy="159" r="2" fill="#fff" />
         </g>
-        {/* THE GLASSES: big, round, funny */}
-        <circle cx="126" cy="150" r="35" fill="none" stroke={FRAME} strokeWidth="9" />
-        <circle cx="194" cy="150" r="35" fill="none" stroke={FRAME} strokeWidth="9" />
-        <path d="M156 144 Q160 138 164 144" stroke={FRAME} strokeWidth="8" fill="none" strokeLinecap="round" />
-        <path d="M91 144 L74 136" stroke={FRAME} strokeWidth="8" strokeLinecap="round" />
-        <path d="M229 144 L246 136" stroke={FRAME} strokeWidth="8" strokeLinecap="round" />
-        {/* a little shine on each lens */}
-        <path d="M106 136 Q112 128 122 126" stroke="#fff" strokeWidth="5" opacity="0.7" fill="none" strokeLinecap="round" />
-        <path d="M174 136 Q180 128 190 126" stroke="#fff" strokeWidth="5" opacity="0.7" fill="none" strokeLinecap="round" />
         {/* blush */}
-        <ellipse cx="98" cy="184" rx="11" ry="6" fill="#f0917e" opacity="0.55" />
-        <ellipse cx="222" cy="184" rx="11" ry="6" fill="#f0917e" opacity="0.55" />
+        <circle cx="94" cy="190" r="10" fill={BLUSH} />
+        <circle cx="226" cy="190" r="10" fill={BLUSH} />
+        {/* THE GLASSES: big, round, red, low bridge */}
+        <circle cx="124" cy="150" r="38" fill="none" stroke={FRAME} strokeWidth="10" />
+        <circle cx="196" cy="150" r="38" fill="none" stroke={FRAME} strokeWidth="10" />
+        <path d="M156 164 Q160 158 164 164" stroke={FRAME} strokeWidth="9" fill="none" strokeLinecap="round" />
+        <path d="M86 144 L64 134" stroke={FRAME} strokeWidth="9" strokeLinecap="round" />
+        <path d="M234 144 L256 134" stroke={FRAME} strokeWidth="9" strokeLinecap="round" />
 
         {/* ------------- the beak, one drawing per viseme ------------- */}
         <g ref={mouth('rest')}>
-          <path d="M136 192 Q160 180 184 192 Q160 216 136 192 Z" fill={BEAK} />
-          <path d="M142 196 Q160 206 178 196" stroke={BEAK_DARK} strokeWidth="3.5" fill="none" strokeLinecap="round" />
+          <path d="M138 182 Q160 168 182 182 Q160 202 138 182 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
+          <path d="M148 202 Q160 212 172 202" stroke={BEAK_DARK} strokeWidth="4" fill="none" strokeLinecap="round" />
         </g>
         <g ref={mouth('press')} display="none">
-          <path d="M138 194 Q160 186 182 194 Q160 204 138 194 Z" fill={BEAK} />
-          <path d="M144 195 L176 195" stroke={BEAK_DARK} strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M140 184 Q160 174 180 184 Q160 198 140 184 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
+          <path d="M148 197 L172 197" stroke={BEAK_DARK} strokeWidth="4" strokeLinecap="round" />
         </g>
         <g ref={mouth('open')} display="none">
-          <ellipse cx="160" cy="200" rx="19" ry="15" fill={MOUTH_DARK} />
-          <path d="M136 190 Q160 176 184 190 Q160 198 136 190 Z" fill={BEAK} />
-          <path d="M142 210 Q160 226 178 210 Q160 218 142 210 Z" fill={BEAK_DARK} />
-          <path d="M150 208 Q160 214 170 208 L170 211 Q160 208 150 211 Z" fill="#c96a5f" />
+          <ellipse cx="160" cy="204" rx="18" ry="14" fill={MOUTH_DARK} stroke={OUTLINE} strokeWidth="4" />
+          <path d="M150 211 Q160 219 170 211 L170 214 Q160 211 150 214 Z" fill={TONGUE} />
+          <path d="M136 182 Q160 168 184 182 Q160 194 136 182 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
         </g>
         <g ref={mouth('wide')} display="none">
-          <ellipse cx="160" cy="198" rx="26" ry="11" fill={MOUTH_DARK} />
-          <path d="M130 190 Q160 180 190 190 Q160 197 130 190 Z" fill={BEAK} />
-          <path d="M136 206 Q160 216 184 206 Q160 212 136 206 Z" fill={BEAK_DARK} />
+          <ellipse cx="160" cy="200" rx="26" ry="11" fill={MOUTH_DARK} stroke={OUTLINE} strokeWidth="4" />
+          <path d="M132 184 Q160 172 188 184 Q160 194 132 184 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
         </g>
         <g ref={mouth('round')} display="none">
-          <circle cx="160" cy="198" r="11" fill={MOUTH_DARK} />
-          <circle cx="160" cy="198" r="11" fill="none" stroke={BEAK} strokeWidth="6" />
+          <circle cx="160" cy="200" r="11" fill={MOUTH_DARK} stroke={OUTLINE} strokeWidth="4" />
+          <path d="M142 184 Q160 172 178 184 Q160 192 142 184 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
         </g>
         <g ref={mouth('teeth')} display="none">
-          <ellipse cx="160" cy="197" rx="16" ry="9" fill={MOUTH_DARK} />
-          <path d="M138 190 Q160 182 182 190 Q160 196 138 190 Z" fill={BEAK} />
-          <path d="M144 204 Q160 211 176 204 Q160 208 144 204 Z" fill={BEAK_DARK} />
+          <ellipse cx="160" cy="200" rx="15" ry="9" fill={MOUTH_DARK} stroke={OUTLINE} strokeWidth="4" />
+          <path d="M148 198 Q160 194 172 198 L171 202 Q160 199 149 202 Z" fill="#fff" />
+          <path d="M138 183 Q160 170 182 183 Q160 193 138 183 Z" fill={BEAK} stroke={OUTLINE} strokeWidth="4" strokeLinejoin="round" />
         </g>
       </g>
     </svg>
