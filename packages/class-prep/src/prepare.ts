@@ -18,6 +18,7 @@ import {
   repairUser,
 } from './prompts';
 import { verifySvg } from './verify';
+import { saidButNotWritten } from './saidNotWritten';
 import type {
   Blueprint,
   PrepProgress,
@@ -388,6 +389,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // whole model call — three seconds of a student sitting in front of a blank
   // board — and it would be spent recovering a word we already have.
   for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
+
+
   const planMs = Date.now() - t0;
 
   const t1 = Date.now();
@@ -467,19 +470,32 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   let validated = validateLesson(candidate);
 
+  /**
+   * Said but never written — the deterministic check behind the prompt rule.
+   *
+   * "The board shows what you are saying" holds four beats in five; this
+   * catches the fifth (the spoken question nobody wrote, the landing line
+   * said over a silent board) and names it to the model beside whatever else
+   * validation found, so the one repair round fixes both. It can send a plan
+   * to repair on its own — but unlike a structural failure it is never fatal:
+   * a class with one unwritten question is a worse class, not no class.
+   */
+  let unwritten = saidButNotWritten(blueprint.beats);
+
   // One repair round.
   //
   // The pictures are already drawn and paid for, so a plan that fails
   // validation is worth fixing rather than abandoning — and the model fixes
   // what the validator NAMED, keeping the teaching it already worked out. A
   // regenerated plan would be a different lesson that might break elsewhere.
-  if (!validated.ok) {
-    issues.push(`The first plan failed validation: ${validated.errors[0]}`);
+  if (!validated.ok || unwritten.length > 0) {
+    const named = [...(validated.ok ? [] : validated.errors), ...unwritten];
+    issues.push(`The first plan failed validation: ${named[0]}`);
     say('checking', 'Fixing the plan…', 0.93);
     try {
       const reply = await planner.complete(
         PLANNER_SYSTEM,
-        repairPlanUser(JSON.stringify(blueprint), validated.errors.slice(0, 10)),
+        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10)),
       );
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists. The
@@ -496,12 +512,17 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       );
       if (revalidated.ok) {
         validated = revalidated;
+        unwritten = saidButNotWritten(fixed.beats);
         issues.push('The plan was repaired and passed.');
       }
     } catch (e) {
       issues.push(`Repair failed: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
+
+  // Whatever is still unwritten after the one repair is reported, not fatal:
+  // the class runs, and the report says what she said without writing.
+  for (const miss of unwritten) issues.push(`Still unwritten after repair: ${miss}`);
 
   if (!validated.ok) {
     say('failed', 'The plan did not hold together.', 1);

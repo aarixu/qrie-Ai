@@ -383,3 +383,62 @@ describe('the shape of a picture reaches the board', () => {
     expect(image.w).toBeGreaterThan(image.h);
   });
 });
+
+describe('a question she asks reaches the board, or the repair round hears about it', () => {
+  const asking: Blueprint = {
+    ...blueprint,
+    beats: [
+      {
+        id: 'q1',
+        topic: 'spaces',
+        narration: '',
+        board: [
+          { do: 'say', text: 'Where did the sugar go?' },
+          { do: 'write', text: 'Observation: the level did not rise' },
+          { do: 'say', text: 'It slips into the spaces between particles.' },
+          { do: 'write', text: 'Particles have spaces between them' },
+        ],
+      },
+    ],
+    visuals: [],
+  };
+  const fixedBeats: Blueprint = {
+    ...asking,
+    beats: [
+      {
+        ...asking.beats[0],
+        board: [
+          { do: 'say', text: 'Where did the sugar go?' },
+          { do: 'write', text: 'Where did the sugar go?' },
+          { do: 'say', text: 'It slips into the spaces between particles.' },
+          { do: 'write', text: 'Particles have spaces between them' },
+        ],
+      },
+    ],
+  };
+
+  it('sends the unwritten question to the one repair round, and takes the fix', async () => {
+    const seen: string[] = [];
+    let calls = 0;
+    const planner: LlmAdapter = {
+      complete: async (_s, user) => {
+        seen.push(user);
+        calls += 1;
+        return JSON.stringify(calls === 1 ? asking : fixedBeats);
+      },
+    };
+    const result = await prepareClass({ topic: 'Matter', klass: 9, planner, artist: fakeArtist(['']) });
+    expect(calls).toBe(2);
+    expect(seen[1]).toMatch(/asks a question/);
+    expect(result.report.issues.join(' ')).toContain('repaired and passed');
+    expect(result.report.issues.join(' ')).not.toContain('Still unwritten');
+  });
+
+  it('still holds the class when the repair does not fix it — reported, never fatal', async () => {
+    const planner: LlmAdapter = { complete: async () => JSON.stringify(asking) };
+    const result = await prepareClass({ topic: 'Matter', klass: 9, planner, artist: fakeArtist(['']) });
+    // A class with one unwritten question is a worse class, not no class.
+    expect(result.lesson.beats.length).toBeGreaterThan(0);
+    expect(result.report.issues.join(' ')).toContain('Still unwritten');
+  });
+});
