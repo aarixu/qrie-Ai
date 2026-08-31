@@ -1,5 +1,5 @@
 import { TUTOR } from '@ai-tutor/persona';
-import { PhotoAvatar, usePoseFor } from '../avatar/PhotoAvatar';
+import { CartoonAvatar, usePoseFor } from '../avatar/CartoonAvatar';
 
 export type TutorMode = 'idle' | 'teaching' | 'listening';
 
@@ -37,9 +37,10 @@ export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' |
         {TUTOR.name[0]}
       </div>
 
-      {/* Her photograph, alive — lipsync, blinks, gestures. Transparent until
-          the photo loads, so the initial above stays the fallback face. */}
-      <PhotoAvatar pose={pose} className="absolute inset-0 w-full h-full" />
+      {/* Meera the cartoon — lipsync, blinks, gestures, all drawn in code.
+          Aarav's call after seeing the photo-warp in a real class: a cartoon
+          can ACT, a photograph can only be nudged. */}
+      <CartoonAvatar pose={pose} className="absolute inset-0 w-full h-full" />
 
       {/* Sound bars: present while she is in the room, moving while the class is alive. */}
       {active && (
