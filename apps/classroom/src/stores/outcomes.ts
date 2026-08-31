@@ -28,11 +28,25 @@ export interface OutcomeSignals {
   taught: Record<string, number>;
   /** Outcome ids the student raised a hand on, with how many times. */
   confused: Record<string, number>;
+  /**
+   * Outcome ids the student ANSWERED on, mid-class. The third signal, and the
+   * strongest of the three: taught is attendance, confused is a located
+   * struggle, answered is the student retrieving it with the chalk in their
+   * hand. Right and wrong kept apart — they are opposite evidence.
+   */
+  answeredRight: Record<string, number>;
+  answeredWrong: Record<string, number>;
   /** ISO time of the last signal, so a later pass can pick up from here. */
   updatedAt: string | null;
 }
 
-const EMPTY: OutcomeSignals = { taught: {}, confused: {}, updatedAt: null };
+const EMPTY: OutcomeSignals = {
+  taught: {},
+  confused: {},
+  answeredRight: {},
+  answeredWrong: {},
+  updatedAt: null,
+};
 
 export const outcomeStore = createLocalStore<OutcomeSignals>('ai-tutor:outcomes', EMPTY);
 
@@ -79,6 +93,25 @@ export function recordDoubtAtBeat(lesson: Lesson, beatId: string): void {
   outcomeStore.update((s) => ({
     ...s,
     confused: bump(s.confused, ids),
+    updatedAt: new Date().toISOString(),
+  }));
+}
+
+/**
+ * Record an in-class answer against the outcomes the beat checks or teaches.
+ *
+ * `checks` first: a question about something already covered is evidence about
+ * THAT, not about whatever this beat happens to be teaching around it.
+ */
+export function recordAnswerAtBeat(lesson: Lesson, beatId: string, correct: boolean): void {
+  const beat = lesson.beats.find((b) => b.id === beatId);
+  const ids = beat?.checks?.length ? beat.checks : (beat?.teaches ?? []);
+  if (ids.length === 0) return;
+  outcomeStore.update((s) => ({
+    ...s,
+    ...(correct
+      ? { answeredRight: bump(s.answeredRight, ids) }
+      : { answeredWrong: bump(s.answeredWrong, ids) }),
     updatedAt: new Date().toISOString(),
   }));
 }

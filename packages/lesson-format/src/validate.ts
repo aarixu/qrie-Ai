@@ -194,6 +194,23 @@ function beatErrors(
   const errs: string[] = [];
   if (!isStr(beat.id)) errs.push(`${path}: beat needs a non-empty id`);
   if (!isStr(beat.topic)) errs.push(`${path}: beat needs a non-empty topic label`);
+
+  if (beat.ask !== undefined) {
+    const ask = beat.ask as { question?: unknown; options?: unknown };
+    if (!isStr(ask.question)) errs.push(`${path}: ask needs a non-empty question`);
+    if (ask.options !== undefined) {
+      const options = ask.options as { text?: unknown; correct?: unknown }[];
+      if (!Array.isArray(options) || options.length < 2) {
+        errs.push(`${path}: ask options need at least two choices`);
+      } else {
+        if (!options.every((o) => isObj(o) && isStr(o.text)))
+          errs.push(`${path}: every ask option needs text`);
+        // A question with no right answer is a trick with no door out of it.
+        if (!options.some((o) => o.correct === true))
+          errs.push(`${path}: one ask option must be marked correct`);
+      }
+    }
+  }
   if (!isStr(beat.narration)) errs.push(`${path}: beat needs non-empty narration`);
 
   if (!Array.isArray(beat.show)) {

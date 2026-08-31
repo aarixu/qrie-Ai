@@ -14,6 +14,7 @@ import {
   wrapLines,
   listBoxHeight,
   type Element,
+  type Beat,
 } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
 import {
@@ -345,6 +346,8 @@ export function layoutBeat(
    * assembler has to know how far to slide whatever comes next.
    */
   pages: number;
+  /** The questions this beat stops on, by the index of the say that asks. */
+  asks: { step: number; ask: NonNullable<Beat['ask']> }[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -365,7 +368,39 @@ export function layoutBeat(
     else byInstruction.set(current, [el.id]);
   };
 
-  const items = beat.board;
+  /**
+   * An ask becomes ordinary ink plus a marker.
+   *
+   * Expanded here, before anything else reads the board, so there is exactly
+   * one code path for writing and listing: the question is a `write` and the
+   * options are a lettered `list`, laid out and revealed like any other ink.
+   * The marker records WHICH spoken moment carries the question, for the
+   * assembler to pin on the lesson beat the player will hold.
+   */
+  const asks: { step: number; ask: NonNullable<Beat['ask']> }[] = [];
+  const items: Instruction[] = [];
+  let saysSeen = 0;
+  for (const step of beat.board) {
+    if (step.do === 'say') saysSeen += 1;
+    if (step.do !== 'ask') {
+      items.push(step);
+      continue;
+    }
+    asks.push({
+      step: Math.max(0, saysSeen - 1),
+      ask: { question: step.question, ...(step.options ? { options: step.options } : {}) },
+    });
+    items.push({ do: 'write', text: step.question, tone: 'accent' });
+    if (step.options && step.options.length > 0) {
+      items.push({
+        do: 'list',
+        items: step.options.map((option, n) => ({
+          term: String.fromCharCode(65 + n),
+          meaning: option.text,
+        })),
+      });
+    }
+  }
 
   // The scene is laid out as ONE block, because a connector cannot be drawn
   // until both of its ends have somewhere to be. Collecting the places first is
@@ -811,6 +846,14 @@ export function layoutBeat(
       case 'sketch': {
         // Waits, like a label does, for the picture to know its rectangle.
         pendingSketch = { at: index, id: idFor(beat.id, index), step: item };
+        i += 1;
+        break;
+      }
+
+      default: {
+        // An instruction this engine does not know is SKIPPED, never spun on.
+        // The switch used to have no default, and an unknown `do` left `i`
+        // untouched — the loop hung for two minutes until a test timed out.
         i += 1;
         break;
       }
@@ -1358,6 +1401,7 @@ export function layoutBeat(
     bonds,
     leashes,
     pages: sheetsUsed,
+    asks,
   };
 }
 

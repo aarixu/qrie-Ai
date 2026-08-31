@@ -114,13 +114,19 @@ export class PlayerController {
     const beat = this.lesson.beats[index];
     const minMs = beat.minMs ?? this.minBeatMs;
 
-    // Advance only when BOTH gates open: speech finished AND minMs elapsed.
+    // Advance only when EVERY gate opens: speech finished, minMs elapsed —
+    // and, when the beat asks a question, the student has answered it. The
+    // third gate has no timer behind it. A question is not a pause; it is the
+    // class handing the chalk over and waiting for as long as that takes.
     let speechDone = false;
     let minDone = minMs <= 0;
+    this._pendingAsk = beat.ask ?? null;
+    this.askAnswered = beat.ask === undefined;
     const gate = () => {
       if (gen !== this.generation) return; // superseded by pause/seek/stop
-      if (speechDone && minDone) this.advance();
+      if (speechDone && minDone && this.askAnswered) this.advance();
     };
+    this.askGate = gate;
 
     if (!minDone) {
       this.minTimer = setTimeout(() => {
@@ -164,9 +170,45 @@ export class PlayerController {
     this.startBeat(next);
   }
 
+  /** The question the class is holding on, if it is holding at all. */
+  private _pendingAsk: NonNullable<Lesson['beats'][number]['ask']> | null = null;
+  private askAnswered = true;
+  private askGate: (() => void) | null = null;
+
+  get pendingAsk(): NonNullable<Lesson['beats'][number]['ask']> | null {
+    return this._pendingAsk;
+  }
+
+  /**
+   * The student answers the held question.
+   *
+   * A right answer opens the gate — and hands back the option's WHY, because
+   * what the tutor says next is never "correct!", it is the reason. A wrong
+   * one hands back its own why-not and the class stays exactly where it is:
+   * wrong gets a hint and another try, not the answer and the exit.
+   */
+  answer(index: number): { correct: boolean; option: { text: string; why?: string; hint?: string } } | null {
+    const ask = this._pendingAsk;
+    if (!ask) return null;
+    const option = ask.options?.[index];
+    // An open question has no wrong answers — any reply resolves it.
+    const correct = option ? option.correct === true : true;
+    if (correct) {
+      this._pendingAsk = null;
+      this.askAnswered = true;
+      // Announced like any state change: the room renders the held question,
+      // so resolving it silently would leave the chips on screen.
+      this.emit('statechange');
+      this.askGate?.();
+    }
+    return { correct, option: option ?? { text: '' } };
+  }
+
   /** Invalidate in-flight speech + timer so their completions become no-ops. */
   private cancelPending(): void {
     this.generation++;
+    this._pendingAsk = null;
+    this.askAnswered = true;
     if (this.minTimer !== null) {
       clearTimeout(this.minTimer);
       this.minTimer = null;

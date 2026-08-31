@@ -158,3 +158,22 @@ describe('the board shows what is being SAID, not only its summary', () => {
     expect(PLANNER_SYSTEM).toMatch(/"do":"sketch"/);
   });
 });
+
+describe('the planner knows how to ask and wait', () => {
+  it('offers the ask instruction, options carrying their whys and hints', () => {
+    expect(PLANNER_SYSTEM).toContain('"do":"ask"');
+    expect(PLANNER_SYSTEM).toMatch(/"why"/);
+    expect(PLANNER_SYSTEM).toMatch(/"hint"/);
+  });
+
+  it('teaches retrieval and prediction, not rhetorical questions', () => {
+    expect(PLANNER_SYSTEM).toMatch(/prediction|predict/i);
+    expect(PLANNER_SYSTEM).toMatch(/retriev/i);
+  });
+
+  it('never congratulates — it asks why', () => {
+    // Tanmay's rule, verbatim in spirit: a right answer gets "why is this
+    // right", a wrong one gets a hint, never the solution.
+    expect(PLANNER_SYSTEM).toMatch(/never .*(correct!|congratulat)/i);
+  });
+});

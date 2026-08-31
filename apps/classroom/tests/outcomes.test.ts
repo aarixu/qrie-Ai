@@ -7,6 +7,7 @@ import {
   outcomesOf,
   recordDoubtAtBeat,
   recordLessonTaught,
+  recordAnswerAtBeat,
 } from '../src/stores/outcomes';
 
 /** A lesson shaped the way the planner shapes one: hook, teach, check, recap. */
@@ -30,7 +31,7 @@ const lesson: Lesson = {
 // previous test's counts in place.
 beforeEach(() => {
   localStorage.clear();
-  outcomeStore.set({ taught: {}, confused: {}, updatedAt: null });
+  outcomeStore.set({ taught: {}, confused: {}, answeredRight: {}, answeredWrong: {}, updatedAt: null });
 });
 
 describe('reading outcomes off a lesson', () => {
@@ -97,5 +98,40 @@ describe('what those signals are worth', () => {
     const confused = applyDoubt(taught, ['a']);
     // Sat through it, then stopped the class on it: back below where it began.
     expect(confused.a).toBeLessThan(taught.a);
+  });
+});
+
+describe('an in-class answer is the strongest signal of the three', () => {
+  const lesson = {
+    formatVersion: 1,
+    id: 'l',
+    title: 'T',
+    language: 'en',
+    canvas: { w: 1000, h: 620 },
+    elements: [],
+    beats: [
+      { id: 'b1', topic: 't', narration: 'n', show: [], teaches: ['out.a'], checks: ['out.b'] },
+      { id: 'b2', topic: 't', narration: 'n', show: [], teaches: ['out.c'] },
+      { id: 'b3', topic: 't', narration: 'n', show: [] },
+    ],
+  } as never;
+
+  it('lands on what the beat CHECKS, not what it happens to teach around', () => {
+    outcomeStore.update(() => ({ taught: {}, confused: {}, answeredRight: {}, answeredWrong: {}, updatedAt: null }));
+    recordAnswerAtBeat(lesson, 'b1', true);
+    expect(outcomeStore.get().answeredRight).toEqual({ 'out.b': 1 });
+    expect(outcomeStore.get().answeredWrong).toEqual({});
+  });
+
+  it('keeps wrong apart from right — they are opposite evidence', () => {
+    outcomeStore.update(() => ({ taught: {}, confused: {}, answeredRight: {}, answeredWrong: {}, updatedAt: null }));
+    recordAnswerAtBeat(lesson, 'b2', false);
+    expect(outcomeStore.get().answeredWrong).toEqual({ 'out.c': 1 });
+  });
+
+  it('records nothing for a beat that checks and teaches nothing', () => {
+    outcomeStore.update(() => ({ taught: {}, confused: {}, answeredRight: {}, answeredWrong: {}, updatedAt: null }));
+    recordAnswerAtBeat(lesson, 'b3', true);
+    expect(outcomeStore.get().answeredRight).toEqual({});
   });
 });

@@ -18,7 +18,7 @@ import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liv
 import { requestMic } from '../lib/mic';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
-import { recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
+import { recordAnswerAtBeat, recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore, setPreference } from '../stores/preferences';
@@ -176,6 +176,32 @@ export function ClassRoom({
 }) {
   const navigate = useNavigate();
   const player = usePlayer(lesson, tts);
+
+  /**
+   * The student answers a held question.
+   *
+   * Order matters on a RIGHT answer: the why is spoken while the class is
+   * still holding, THEN the gate opens — answering first would start the next
+   * beat's line and cancel the why mid-sentence. A wrong answer resolves
+   * nothing: the hint is spoken and the chips stay, because wrong gets a
+   * nudge and another try, never the solution on the first miss.
+   */
+  const answerAsk = async (index: number) => {
+    const ask = player.pendingAsk;
+    if (!ask || !player.beat) return;
+    const option = ask.options?.[index];
+    const correct = option ? option.correct === true : true;
+    recordAnswerAtBeat(lesson, player.beat.id, correct);
+    if (correct) {
+      const why = option?.why;
+      if (why) await tts.speak(`And why is that the right one? ${why}`);
+      player.answer(index);
+    } else {
+      player.answer(index);
+      const nudge = option?.hint ?? option?.why;
+      if (nudge) await tts.speak(nudge);
+    }
+  };
 
   // Refs so the (stable) handoff always calls the latest player controls.
   const playerRef = useRef(player);
@@ -555,6 +581,25 @@ export function ClassRoom({
             >
               {caption}
             </p>
+          )}
+
+          {/* The class is holding on a question. The chips ARE the answer
+              sheet: tap one, and what she says next is never "correct!" — a
+              right answer gets its why, a wrong one gets its hint and another
+              try. The whys live in the lesson, not on the board. */}
+          {player.pendingAsk && !inDoubt && (
+            <div className="absolute inset-x-3 bottom-16 z-30 flex flex-wrap justify-center gap-2">
+              {(player.pendingAsk.options ?? []).map((option, i) => (
+                <button
+                  key={i}
+                  onClick={() => void answerAsk(i)}
+                  className="max-w-[46%] rounded-2xl bg-stage-surface px-4 py-2.5 text-left font-body-md text-[13.5px] leading-snug text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95 hover:ring-stage-blue"
+                >
+                  <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span>{' '}
+                  {option.text}
+                </button>
+              ))}
+            </div>
           )}
 
           {/* Joining: the room readies itself, then the class begins on its own. */}

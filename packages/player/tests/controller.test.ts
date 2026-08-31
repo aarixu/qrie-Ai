@@ -387,3 +387,98 @@ describe('getting the next line ready', () => {
     expect(tts.primed).toEqual([lesson.beats[1].narration, lesson.beats[2].narration]);
   });
 });
+
+describe('a beat that asks holds the class', () => {
+  /**
+   * The door every teaching principle walks through: the class can finally
+   * STOP. A beat carrying `ask` finishes its line and then waits — no timer,
+   * no auto-advance — until the student answers.
+   */
+  const askLesson = (): Lesson => {
+    const l = miniLesson();
+    l.beats[1] = {
+      ...l.beats[1],
+      ask: {
+        question: 'Where did the sugar go?',
+        options: [
+          { text: 'It melted', why: 'Melting still adds volume.' },
+          { text: 'Into the spaces', correct: true, why: 'The gaps hold it.' },
+        ],
+      },
+    };
+    return l;
+  };
+
+  it('does not advance past the question, even with speech and time done', async () => {
+    const tts = makeFakeTts();
+    const c = new PlayerController(askLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    await tts.finishSpeech(); // beat 0 ends, beat 1 (the ask) begins
+    expect(c.beatIndex).toBe(1);
+    await tts.finishSpeech(); // the asking line has been fully spoken
+    await flush();
+    expect(c.beatIndex).toBe(1); // held
+    expect(c.pendingAsk?.question).toBe('Where did the sugar go?');
+  });
+
+  it('moves on once the student answers', async () => {
+    const tts = makeFakeTts();
+    const c = new PlayerController(askLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    await tts.finishSpeech();
+    await tts.finishSpeech();
+    await flush();
+    const result = c.answer(1);
+    expect(result?.correct).toBe(true);
+    expect(result?.option.why).toBe('The gaps hold it.');
+    await flush();
+    expect(c.beatIndex).toBe(2);
+  });
+
+  it('reports a wrong answer without moving anywhere', async () => {
+    // Wrong gets a hint and another chance, not the answer and the exit.
+    const tts = makeFakeTts();
+    const c = new PlayerController(askLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    await tts.finishSpeech();
+    await tts.finishSpeech();
+    await flush();
+    const result = c.answer(0);
+    expect(result?.correct).toBe(false);
+    await flush();
+    expect(c.beatIndex).toBe(1);
+    expect(c.pendingAsk).not.toBeNull();
+  });
+
+  it('accepts the right answer on the second try', async () => {
+    const tts = makeFakeTts();
+    const c = new PlayerController(askLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    await tts.finishSpeech();
+    await tts.finishSpeech();
+    await flush();
+    c.answer(0);
+    const second = c.answer(1);
+    expect(second?.correct).toBe(true);
+    await flush();
+    expect(c.beatIndex).toBe(2);
+  });
+
+  it('lets a seek walk away from an unanswered question', async () => {
+    const tts = makeFakeTts();
+    const c = new PlayerController(askLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    await tts.finishSpeech();
+    await tts.finishSpeech();
+    await flush();
+    c.seek(0);
+    expect(c.pendingAsk).toBeNull();
+  });
+
+  it('answers nothing when nothing was asked', () => {
+    const tts = makeFakeTts();
+    const c = new PlayerController(miniLesson(), { tts: tts.adapter, minBeatMs: 0 });
+    c.play();
+    expect(c.answer(0)).toBeNull();
+  });
+});

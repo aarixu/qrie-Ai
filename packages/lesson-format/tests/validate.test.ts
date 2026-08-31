@@ -97,3 +97,63 @@ describe('helpers', () => {
     expect(els.map((e) => e.id)).toEqual(['b_heart', 'x_pump']);
   });
 });
+
+describe('a beat that asks and waits', () => {
+  /**
+   * The class can finally stop. A beat carrying `ask` does not advance when
+   * the speech ends — it holds until the student answers, which is the door
+   * every principle on Tanmay's list walks through: retrieval, prediction,
+   * "why is this right", hints instead of answers.
+   */
+  const base = {
+    formatVersion: 1,
+    id: 'l',
+    title: 'T',
+    language: 'en',
+    canvas: { w: 1000, h: 620 },
+    elements: [{ kind: 'title', id: 'e1', x: 0, y: 0, text: 'T' }],
+  };
+  const beat = (ask: unknown) => ({
+    ...base,
+    beats: [{ id: 'b1', topic: 't', narration: 'n', show: ['e1'], ask }],
+  });
+
+  it('accepts a real question with options that know why they are right or wrong', () => {
+    const r = validateLesson(
+      beat({
+        question: 'Why does the water level not rise?',
+        options: [
+          { text: 'Sugar melts into liquid', why: 'Melting would still add volume.' },
+          { text: 'Sugar fits into spaces between water particles', correct: true, why: 'The gaps hold it.' },
+        ],
+      }),
+    );
+    expect(r.ok).toBe(true);
+  });
+
+  it('refuses an ask with no question', () => {
+    expect(validateLesson(beat({ options: [{ text: 'A', correct: true, why: 'w' }] })).ok).toBe(false);
+  });
+
+  it('refuses options where nothing is correct — a trick with no door out', () => {
+    const r = validateLesson(
+      beat({
+        question: 'Which one?',
+        options: [
+          { text: 'A', why: 'no' },
+          { text: 'B', why: 'also no' },
+        ],
+      }),
+    );
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.errors.join(' ')).toMatch(/correct/i);
+  });
+
+  it('accepts an open question with no options — a prediction the tutor resolves', () => {
+    expect(validateLesson(beat({ question: 'What do you think will happen?' })).ok).toBe(true);
+  });
+
+  it('still accepts every beat that never asks', () => {
+    expect(validateLesson({ ...base, beats: [{ id: 'b1', topic: 't', narration: 'n', show: ['e1'] }] }).ok).toBe(true);
+  });
+});

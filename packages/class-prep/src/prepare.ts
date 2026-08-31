@@ -200,6 +200,7 @@ export function assemble(
       laid,
       steps,
       pages: sheets,
+      asks,
     } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
 
     // A beat left with nothing to show was a beat about a picture that failed;
@@ -210,7 +211,11 @@ export function assemble(
     // put something new on the board, which quietly deleted the sentence a
     // tutor says BEFORE she draws anything — the one that sets up the whole
     // scene. A teacher talks to a blank board all the time.
-    const usable = steps.filter((step) => step.narration.trim() !== '');
+    // The original index rides along: an ask is pinned to a STEP, and
+    // filtering empty lines out would otherwise shift what it points at.
+    const usable = steps
+      .map((step, stepIndex) => ({ step, stepIndex }))
+      .filter(({ step }) => step.narration.trim() !== '');
 
     // A beat with nothing to say is not a beat. It used to claim a page all
     // the same, leaving a permanently blank page in the middle of the lesson
@@ -257,16 +262,20 @@ export function assemble(
     // making it one means the player, the camera and the doubt agent all keep
     // working unchanged — a moment the tutor can be interrupted in is exactly
     // the moment the board should be recallable at.
-    usable.forEach((step, n) => {
+    usable.forEach(({ step, stepIndex }, n) => {
       const last = n === usable.length - 1;
       // A line spoken over a board that has nothing new on it keeps the camera
       // where it was, rather than letting an empty frame widen to the plane.
       const frame = step.show.length > 0 ? [...step.show] : lastFrame;
       if (frame) lastFrame = frame;
+      // The question lands on the very moment that asks it — the beat the
+      // player will hold until the student answers.
+      const ask = asks.find((a) => a.step === stepIndex)?.ask;
       beats.push({
         id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
         topic: beat.topic,
         narration: step.narration,
+        ...(ask ? { ask } : {}),
         // Everything ever drawn, plus this page so far. Old pages stay on the
         // board; the frame is what keeps the class looking here. Deduplicated,
         // because a beat may look again at a picture an earlier page drew.
@@ -280,7 +289,7 @@ export function assemble(
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
-    shownSoFar.push(...usable[usable.length - 1].show);
+    shownSoFar.push(...usable[usable.length - 1].step.show);
     for (const step of board) if ('ref' in step) shownArt.add(aliases.get(step.ref) ?? step.ref);
   }
 

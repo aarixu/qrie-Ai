@@ -51,6 +51,20 @@ export type Instruction =
    * `<picture>#<part>`.
    */
   | { do: 'sketch'; ref: string; from: string }
+  /**
+   * A question the class STOPS on.
+   *
+   * On the board it is ordinary ink — the question written, the options
+   * lettered in a list — so the said-but-not-written check is satisfied by
+   * construction. What is new is what it does to TIME: the player holds this
+   * moment until the student answers. The whys and the correct flag never
+   * reach the board; they are for the tutor's mouth after the answer.
+   */
+  | {
+      do: 'ask';
+      question: string;
+      options?: { text: string; correct?: boolean; why?: string; hint?: string }[];
+    }
   /** A short equation, as it would be written on a board. */
   | { do: 'equation'; text: string }
   /** A line the tutor writes out by hand while speaking. Slow; use sparingly. */

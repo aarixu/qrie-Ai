@@ -291,6 +291,29 @@ export interface Beat {
    * Optional because five lessons were authored before the map existed. New
    * lessons are expected to carry it; see `pedagogyErrors`.
    */
+  /**
+   * A question the class STOPS on.
+   *
+   * The player does not advance past a beat that carries one — the speech
+   * ends, the board holds, and the student answers. This is the door every
+   * teaching principle walks through: retrieval instead of rereading, a
+   * prediction before the reveal, "why is this right" instead of applause.
+   *
+   * With `options`, one must be correct and each carries its own `why` — the
+   * tutor's answer is never "correct!", it is the reason. Without options it
+   * is an open prediction the tutor resolves herself.
+   */
+  ask?: {
+    question: string;
+    options?: {
+      text: string;
+      correct?: boolean;
+      /** What she says about this choice — why it is right, or why not. */
+      why?: string;
+      /** A nudge short of the answer, for the first wrong try. */
+      hint?: string;
+    }[];
+  };
   teaches?: string[];
   /**
    * Node ids this beat CHECKS rather than teaches — a question about something

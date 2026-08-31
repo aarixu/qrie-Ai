@@ -12,6 +12,9 @@ export interface UsePlayerResult {
   play(): void;
   pause(): void;
   seek(beatIndex: number): void;
+  /** The question the class is holding on, and the hand that answers it. */
+  pendingAsk: PlayerController['pendingAsk'];
+  answer(index: number): ReturnType<PlayerController['answer']>;
 }
 
 /**
@@ -50,6 +53,11 @@ export function usePlayer(lesson: Lesson, tts: TtsAdapter): UsePlayerResult {
     () => controller.beatIndex,
     () => controller.beatIndex,
   );
+  const pendingAsk = useSyncExternalStore(
+    subscribe,
+    () => controller.pendingAsk,
+    () => controller.pendingAsk,
+  );
 
   const beat: Beat | null = lesson.beats[beatIndex] ?? null;
 
@@ -58,6 +66,8 @@ export function usePlayer(lesson: Lesson, tts: TtsAdapter): UsePlayerResult {
     beatIndex,
     beat,
     caption: beat?.narration ?? '',
+    pendingAsk,
+    answer: (i: number) => controller.answer(i),
     play: () => controller.play(),
     pause: () => controller.pause(),
     seek: (i: number) => controller.seek(i),

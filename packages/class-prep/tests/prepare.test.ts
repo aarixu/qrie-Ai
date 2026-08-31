@@ -442,3 +442,51 @@ describe('a question she asks reaches the board, or the repair round hears about
     expect(result.report.issues.join(' ')).toContain('Still unwritten');
   });
 });
+
+describe('the question rides the split to the moment that asks it', () => {
+  /**
+   * A planner beat becomes several lesson beats — one per spoken line. The ask
+   * has to land on exactly the lesson beat whose line asks it, because that is
+   * the beat the player will refuse to advance past.
+   */
+  const asking: Blueprint = {
+    ...blueprint,
+    beats: [
+      {
+        id: 'q1',
+        topic: 'spaces',
+        narration: '',
+        board: [
+          { do: 'say', text: 'Watch the level as the sugar stirs in.' },
+          { do: 'write', text: 'Observation: the level does not rise' },
+          { do: 'say', text: 'So where did the sugar go?' },
+          {
+            do: 'ask',
+            question: 'Where did the sugar go?',
+            options: [
+              { text: 'It melted into liquid', why: 'Melting would still add volume.' },
+              { text: 'It slipped into the spaces', correct: true, why: 'The gaps hold it.' },
+            ],
+          },
+          { do: 'say', text: 'Exactly — the gaps between particles hold it.' },
+          { do: 'write', text: 'Particles have spaces between them' },
+        ],
+      },
+    ],
+    visuals: [],
+  };
+
+  it('pins the ask on the asking beat, and only that one', async () => {
+    const result = await prepareClass({
+      topic: 'Matter',
+      klass: 9,
+      planner: fakePlanner(asking),
+      artist: fakeArtist(['']),
+    });
+    const withAsk = result.lesson.beats.filter((b) => b.ask !== undefined);
+    expect(withAsk).toHaveLength(1);
+    expect(withAsk[0].ask!.question).toBe('Where did the sugar go?');
+    expect(withAsk[0].narration).toBe('So where did the sugar go?');
+    expect(withAsk[0].ask!.options![1].correct).toBe(true);
+  });
+});
