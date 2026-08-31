@@ -63,3 +63,65 @@ export function buildStudentContext(input: {
 
   return ctx;
 }
+
+/**
+ * The student, written down for the class PLANNER.
+ *
+ * Same discipline as `buildStudentContext`, same reason: every line comes from
+ * something the app really recorded, and a signal nobody measured produces no
+ * line at all. `statement` turns outcome ids into words a planner can teach
+ * to — injected, because this file must not care where the map lives.
+ */
+export function studentLinesForPlanner(input: {
+  profile: StudentProfile;
+  progress: Progress;
+  outcomes: {
+    confused: Record<string, number>;
+    answeredWrong: Record<string, number>;
+    answeredRight: Record<string, number>;
+  };
+  statement: (outcomeId: string) => string | undefined;
+  today?: Date;
+}): string[] {
+  const lines: string[] = [];
+
+  if (input.profile.name) lines.push(`The student's name is ${input.profile.name}.`);
+
+  const streak = computeStreak(input.progress, input.today);
+  if (streak >= 2) lines.push(`They have studied ${streak} days in a row.`);
+
+  const worded = (ids: Record<string, number>, cap: number): string[] =>
+    Object.keys(ids)
+      .map((id) => input.statement(id))
+      .filter((s): s is string => s !== undefined)
+      .slice(0, cap);
+
+  // Strongest signal first: what they got WRONG with the chalk in their hand.
+  const wrong = worded(input.outcomes.answeredWrong, 3);
+  if (wrong.length > 0) lines.push(`They answered wrong on: ${wrong.join('; ')}.`);
+
+  const confused = worded(input.outcomes.confused, 3);
+  if (confused.length > 0) lines.push(`They raised a hand on: ${confused.join('; ')}.`);
+
+  const right = worded(input.outcomes.answeredRight, 3);
+  if (right.length > 0) lines.push(`They answered correctly on: ${right.join('; ')}.`);
+
+  // Placement beliefs: only the settled ends, in the persona's own bands.
+  const diagnostic = input.profile.diagnostic;
+  if (diagnostic) {
+    const strong = Object.entries(diagnostic.mastery)
+      .filter(([, b]) => b >= 0.75)
+      .map(([id]) => input.statement(id))
+      .filter((s): s is string => s !== undefined)
+      .slice(0, 3);
+    if (strong.length > 0) lines.push(`They hold securely: ${strong.join('; ')}.`);
+    const shaky = Object.entries(diagnostic.mastery)
+      .filter(([, b]) => b <= 0.4)
+      .map(([id]) => input.statement(id))
+      .filter((s): s is string => s !== undefined)
+      .slice(0, 3);
+    if (shaky.length > 0) lines.push(`The ground is shaky under: ${shaky.join('; ')}.`);
+  }
+
+  return lines;
+}

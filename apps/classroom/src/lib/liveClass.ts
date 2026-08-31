@@ -166,13 +166,14 @@ export interface LivePrep {
  * here would be a class nobody gets to attend.
  */
 export async function prepareLiveClass(
-  ask: { topic: string; klass: number; minutes: number },
+  ask: { topic: string; klass: number; minutes: number; studentLines?: readonly string[] },
   onProgress: (progress: PrepProgress) => void,
 ): Promise<LivePrep> {
   const result = await prepareClass({
     topic: ask.topic,
     klass: ask.klass,
     minutes: ask.minutes,
+    studentLines: ask.studentLines,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),

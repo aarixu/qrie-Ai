@@ -589,6 +589,18 @@ export function ClassRoom({
               try. The whys live in the lesson, not on the board. */}
           {player.pendingAsk && !inDoubt && (
             <div className="absolute inset-x-3 bottom-16 z-30 flex flex-wrap justify-center gap-2">
+              {/* An OPEN ask has no options — she wants it said out loud, and
+                  until she can hear, one honest button stands in for the ear.
+                  Without it the chips row rendered empty and the class held
+                  forever on its very first question. */}
+              {(player.pendingAsk.options ?? []).length === 0 && (
+                <button
+                  onClick={() => void answerAsk(0)}
+                  className="rounded-2xl bg-stage-primary px-5 py-2.5 font-label-md text-label-md font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
+                >
+                  Say your answer out loud, then tap here
+                </button>
+              )}
               {(player.pendingAsk.options ?? []).map((option, i) => (
                 <button
                   key={i}

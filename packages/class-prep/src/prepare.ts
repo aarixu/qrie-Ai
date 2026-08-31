@@ -38,6 +38,12 @@ export interface LlmAdapter {
 
 export interface PrepOptions {
   topic: string;
+  /**
+   * What is known about the one student this class is being made for, as
+   * plain factual lines. Absent or empty: an anonymous class, and the planner
+   * hears not a word about students. See `plannerUser`.
+   */
+  studentLines?: readonly string[];
   klass: number;
   minutes?: number;
   /** The model that plans the lesson. */
@@ -371,7 +377,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const issues: string[] = [];
 
   say('planning', 'Working out how to teach this…', 0.05);
-  const raw = await planner.complete(PLANNER_SYSTEM, plannerUser(topic, klass, minutes));
+  const raw = await planner.complete(
+    PLANNER_SYSTEM,
+    plannerUser(topic, klass, minutes, opts.studentLines),
+  );
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
   // drops a brace has still done the thinking; failing the whole class over

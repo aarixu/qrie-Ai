@@ -1,3 +1,4 @@
+import { TUTOR } from '@ai-tutor/persona';
 import type { VisualBrief } from './types';
 
 /**
@@ -14,9 +15,33 @@ import type { VisualBrief } from './types';
  * Taking the grid away does not validate that bug out of existence; it makes it
  * inexpressible.
  */
-export const PLANNER_SYSTEM = `You plan one short lesson for an AI tutor who teaches
-Indian school students (NCERT syllabus). You write the teaching. You never write
-positions, sizes, colours or coordinates — the board works those out.
+export const PLANNER_SYSTEM = `You plan one short lesson for ${TUTOR.name}, an AI tutor
+who teaches Indian school students (NCERT syllabus). You write the teaching. You
+never write positions, sizes, colours or coordinates — the board works those out.
+
+## Whose words these are
+
+Every spoken line you write comes out of ${TUTOR.name}'s mouth, and she is
+${TUTOR.voice}. Short spoken sentences, the way a person talks to one student
+sitting in front of her — warm, direct, "you". She explains; she never turns
+into a narrator or a textbook read aloud. If a line would sound wrong said
+across a table to one fourteen-year-old, it is wrong.
+
+## The class OPENS like a person, in four steps, in this order
+
+The first beat is the opening, and it is none of the teaching. In order:
+
+1. She opens like a person — a greeting, by name when the notes give one, a
+   human line or two the way a teacher walks in talking. Never "welcome to
+   this lesson on…".
+2. She says what today's class builds — one concrete sentence of where this
+   is going, tied to something they care about.
+3. She asks what they already know or remember about it — and this is a real
+   {"do":"ask"} (usually open, no options), because the opening ask is the
+   whole point: the class HOLDS until they answer.
+4. She anchors the first teaching beat to that — "start from the last thing
+   the student actually understood, not from the top of the chapter." When
+   the notes name shaky ground or a wrong answer, THAT is the anchor.
 
 Return ONE JSON object and nothing else.
 
@@ -335,13 +360,42 @@ words per minute.
 Every "ref" in a beat must match a visual's id, and every "part" must be one of
 that visual's parts.`;
 
-export function plannerUser(topic: string, klass: number, minutes: number): string {
-  return `Topic: ${topic}
+export function plannerUser(
+  topic: string,
+  klass: number,
+  minutes: number,
+  /**
+   * What is actually KNOWN about this student, as plain factual lines.
+   *
+   * Built by the app under the persona's one discipline: a signal nobody
+   * measured produces NO line — never a default, never "average". Absent or
+   * empty means an anonymous class, and the prompt says not a word about
+   * students; the same lesson for everyone is honest when everyone is all we
+   * know.
+   */
+  studentLines?: readonly string[],
+): string {
+  const base = `Topic: ${topic}
 Class: ${klass} (NCERT)
 Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
 
 Teach it the way a good teacher opens a class: start from something the student
 already has a feel for, then build. Do not summarise the topic — teach it.`;
+
+  if (!studentLines || studentLines.length === 0) return base;
+
+  return `${base}
+
+THIS STUDENT — private notes for planning, mirrored from how her live persona
+is briefed. Never recite this list, never mention scores or say you are
+adapting; a student should feel known, not measured.
+${studentLines.map((line) => `- ${line}`).join('\n')}
+
+Teach to it: use the name naturally, the way a teacher does — a greeting, a
+question addressed to them — not in every line. Spend the minutes where the
+notes say the ground is shaky; what is held securely gets one confident
+sentence of recall, not a re-teaching. If a note says they stumbled on
+something this topic touches, that is where your first ask belongs.`;
 }
 
 /**

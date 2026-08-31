@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ARTIST_SYSTEM, PLANNER_SYSTEM } from '../src/prompts';
+import { ARTIST_SYSTEM, PLANNER_SYSTEM, plannerUser } from '../src/prompts';
 
 /**
  * The planner was being told two opposite things about writing.
@@ -175,5 +175,71 @@ describe('the planner knows how to ask and wait', () => {
     // Tanmay's rule, verbatim in spirit: a right answer gets "why is this
     // right", a wrong one gets a hint, never the solution.
     expect(PLANNER_SYSTEM).toMatch(/never .*(correct!|congratulat)/i);
+  });
+});
+
+describe('the planner is told who is sitting in the class', () => {
+  /**
+   * The map finally reaches the class. Everything known about the student
+   * arrives as plain factual lines — built by the app under the persona's
+   * discipline: a signal nobody measured produces NO line, never a default —
+   * and the planner is told to teach THIS student, not to recite the dossier.
+   */
+  it('folds the student lines into the user prompt when they exist', () => {
+    const p = plannerUser('The Human Heart', 9, 3, [
+      'Her name is Ananya.',
+      'She answered wrong on: valves prevent backflow of blood.',
+      'She holds securely: the heart has four chambers.',
+    ]);
+    expect(p).toContain('Ananya');
+    expect(p).toContain('valves prevent backflow');
+    expect(p).toMatch(/this student/i);
+  });
+
+  it('says how to use them: teach to it, never recite it', () => {
+    const p = plannerUser('The Human Heart', 9, 3, ['Her name is Ananya.']);
+    expect(p).toMatch(/never (recite|read) (this|the) (list|dossier)/i);
+    expect(p).toMatch(/name naturally|use the name/i);
+  });
+
+  it('adds not a word about students when nothing is known', () => {
+    const bare = plannerUser('The Human Heart', 9, 3);
+    expect(bare).not.toMatch(/this student/i);
+    const empty = plannerUser('The Human Heart', 9, 3, []);
+    expect(empty).toBe(bare);
+  });
+});
+
+describe('the class opens like a person, not a textbook', () => {
+  /**
+   * Aarav's four steps, in order: talk like a human first, say what today
+   * builds, ask what they already know or remember, and anchor the teaching
+   * to their answer. And the register throughout is Meera's own — the same
+   * tutor the student meets when they raise a hand, not a narrator.
+   */
+  it('demands the four-step opening, in order', () => {
+    const at = (re: RegExp) => {
+      const m = re.exec(PLANNER_SYSTEM);
+      expect(m, String(re)).not.toBeNull();
+      return m!.index;
+    };
+    const greet = at(/opens? like a person|greeting|namaste/i);
+    const today = at(/what today('s| is)? class (builds|is about)/i);
+    const recall = at(/what (do you|they) already (know|remember)/i);
+    const anchor = at(/anchor/i);
+    expect(greet).toBeLessThan(today);
+    expect(today).toBeLessThan(recall);
+    expect(recall).toBeLessThan(anchor);
+  });
+
+  it('makes the recall step a real ask, not a rhetorical one', () => {
+    expect(PLANNER_SYSTEM).toMatch(/opening .*"do":"ask"|"do":"ask" .*opening/is);
+  });
+
+  it('speaks in her register — warm, spoken, hers', () => {
+    expect(PLANNER_SYSTEM).toMatch(/Meera/);
+    expect(PLANNER_SYSTEM).toMatch(/short spoken sentences/i);
+    // "lecture" appears only ever negated — hers is the voice that refuses it.
+    expect(PLANNER_SYSTEM).toMatch(/rather than lectures|never .*lecture/i);
   });
 });

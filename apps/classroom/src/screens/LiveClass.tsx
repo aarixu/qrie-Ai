@@ -7,6 +7,11 @@ import { useLessonVoice } from '../lib/lessonVoice';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
+import { profileStore } from '../stores/profile';
+import { progressStore } from '../stores/progress';
+import { outcomeStore } from '../stores/outcomes';
+import { createOutcomeLookup } from '../lib/outcomeLookup';
+import { studentLinesForPlanner } from '../lib/student';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -126,7 +131,21 @@ export function LiveClassRoute() {
         }
       }
 
-      const made = await prepareLiveClass(ask, (p) => {
+      /**
+       * The map reaches the class. Everything the app really knows about this
+       * student — name, streak, what they answered wrong, where the placement
+       * found shaky ground — goes to the planner as private notes, so the
+       * same topic opens differently for different students. Nothing known,
+       * nothing said: the anonymous class is the honest default.
+       */
+      const lookup = createOutcomeLookup(profileStore.get().diagnostic?.mastery);
+      const studentLines = studentLinesForPlanner({
+        profile: profileStore.get(),
+        progress: progressStore.get(),
+        outcomes: outcomeStore.get(),
+        statement: (id) => lookup.statement(id),
+      });
+      const made = await prepareLiveClass({ ...ask, studentLines }, (p) => {
         if (!cancelled) setProgress(p);
       });
       if (cancelled) return;
