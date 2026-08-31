@@ -107,8 +107,9 @@ export function classMustAsk(beats: readonly ScriptBeat[]): string[] {
     if (i === 0) {
       errors.push(
         `${beat.id}: the opening beat never asks what the student already knows. ` +
-          `Its whole point is a real {"do":"ask"} — greet them, say what today builds, ` +
-          `then ask and WAIT.`,
+          `Its whole point is a real {"do":"ask"} — greet them, then build the context ` +
+          `by ASKING about the topic from their own life, and WAIT. What today covers ` +
+          `is said only after their answer.`,
       );
     } else {
       errors.push(

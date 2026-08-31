@@ -212,28 +212,31 @@ describe('the planner is told who is sitting in the class', () => {
 
 describe('the class opens like a person, not a textbook', () => {
   /**
-   * Aarav's four steps, in order: talk like a human first, say what today
-   * builds, ask what they already know or remember, and anchor the teaching
-   * to their answer. And the register throughout is Meera's own — the same
-   * tutor the student meets when they raise a hand, not a narrator.
+   * Aarav's four steps, reordered by him on 2026-08-31: talk like a human
+   * first, then build the CONTEXT ITSELF by asking about the topic from the
+   * student's own life, say what today builds only after their answer, and
+   * anchor the teaching to it. The register throughout is Meera's own — the
+   * same tutor the student meets when they raise a hand, not a narrator.
    */
-  it('demands the four-step opening, in order', () => {
+  it('demands the four-step opening, in order — the question before the topic', () => {
     const at = (re: RegExp) => {
       const m = re.exec(PLANNER_SYSTEM);
       expect(m, String(re)).not.toBeNull();
       return m!.index;
     };
     const greet = at(/opens? like a person|greeting|namaste/i);
-    const today = at(/what today('s| is)? class (builds|is about)/i);
-    const recall = at(/what (do you|they) already (know|remember)/i);
+    const context = at(/context itself is built by asking/i);
+    const today = at(/what today('s| is)? class builds/i);
     const anchor = at(/anchor/i);
-    expect(greet).toBeLessThan(today);
-    expect(today).toBeLessThan(recall);
-    expect(recall).toBeLessThan(anchor);
+    expect(greet).toBeLessThan(context);
+    expect(context).toBeLessThan(today);
+    expect(today).toBeLessThan(anchor);
   });
 
-  it('makes the recall step a real ask, not a rhetorical one', () => {
-    expect(PLANNER_SYSTEM).toMatch(/opening .*"do":"ask"|"do":"ask" .*opening/is);
+  it('makes the context question a real ask, not a rhetorical one', () => {
+    expect(PLANNER_SYSTEM).toMatch(/built by asking.*{"do":"ask"}/is);
+    // And what today covers is never announced before the student answers.
+    expect(PLANNER_SYSTEM).toMatch(/never announced before|only after their answer/i);
   });
 
   it('speaks in her register — warm, spoken, hers', () => {

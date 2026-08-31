@@ -25,3 +25,16 @@ describe('holding the judge to shape', () => {
     expect(() => parseVerdict('no json at all')).toThrow();
   });
 });
+
+describe('holding the close to shape', () => {
+  it('takes the closing line', async () => {
+    const { parseFollowUp } = await import('../src/lib/judge');
+    expect(parseFollowUp('{"say":"Exactly - the gaps hold it, so the level stays."}')).toContain('gaps');
+  });
+
+  it('refuses a wordless close', async () => {
+    const { parseFollowUp } = await import('../src/lib/judge');
+    expect(() => parseFollowUp('{"say":"  "}')).toThrow();
+    expect(() => parseFollowUp('nope')).toThrow();
+  });
+});

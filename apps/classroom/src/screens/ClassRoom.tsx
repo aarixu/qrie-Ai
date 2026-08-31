@@ -17,7 +17,7 @@ import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
 import { requestMic } from '../lib/mic';
 import { listenOnce } from '../lib/ear';
-import { judgeSpokenAnswer } from '../lib/judge';
+import { judgeSpokenAnswer, resolveCrossQuestion } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import { recordAnswerAtBeat, recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
@@ -364,12 +364,41 @@ export function ClassRoom({
     let cancelled = false;
     (async () => {
       if ((await requestMic()) !== 'granted') return;
-      for (let round = 0; round < 2; round += 1) {
+      /**
+       * The exchange, Aarav's shape: a wrong answer gets a hint and another
+       * try; a RIGHT answer is not the exit either — she asks one why/how/
+       * when about their own answer, hears the reasoning, closes the loop,
+       * and only then the class moves. Thinking is the point, both ways.
+       */
+      let probe: { answer: string; question: string } | null = null;
+      let tries = 0;
+      while (!cancelled) {
         const ask = playerRef.current.pendingAsk;
-        if (cancelled || !ask) return;
+        if (!ask) return;
         setEar('listening');
         const heard = await listenOnce({ isCancelled: () => cancelled });
-        if (cancelled || heard.text === null) return;
+        if (cancelled) return;
+
+        if (probe) {
+          // Their reasoning — or their silence — closes it either way. The
+          // cross-question deepens a right answer; it never blocks the class.
+          setEar('thinking');
+          const close = await resolveCrossQuestion(
+            ask,
+            probe.answer,
+            probe.question,
+            heard.text ?? '(said nothing)',
+          ).catch(() => null);
+          setEar('off');
+          if (cancelled) return;
+          if (close) await tts.speak(close);
+          if (cancelled) return;
+          const options = ask.options ?? [];
+          playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
+          return;
+        }
+
+        if (heard.text === null) return; // silence — the chips carry it
         setEar('thinking');
         const judged = await judgeSpokenAnswer(ask, heard.text).catch(() => null);
         if (cancelled) return;
@@ -383,10 +412,13 @@ export function ClassRoom({
         await tts.speak(judged.say);
         if (cancelled) return;
         if (judged.verdict === 'right') {
-          const options = ask.options ?? [];
-          playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
-          return;
+          // Her line just ended on the cross-question; the next listen takes
+          // their reasoning, and the probe branch above always resolves.
+          probe = { answer: heard.text, question: judged.say };
+          continue;
         }
+        tries += 1;
+        if (tries >= 2) return; // two misses — the hint stands, the chips wait
       }
     })().finally(() => {
       if (!cancelled) setEar('off');
