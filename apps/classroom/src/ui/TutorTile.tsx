@@ -1,4 +1,5 @@
 import { TUTOR } from '@ai-tutor/persona';
+import { PhotoAvatar, usePoseFor } from '../avatar/PhotoAvatar';
 
 export type TutorMode = 'idle' | 'teaching' | 'listening';
 
@@ -17,6 +18,7 @@ export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' |
   const listening = mode === 'listening';
   const active = mode !== 'idle';
   const pip = variant === 'pip';
+  const pose = usePoseFor(mode);
 
   return (
     <div
@@ -34,6 +36,10 @@ export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' |
       >
         {TUTOR.name[0]}
       </div>
+
+      {/* Her photograph, alive — lipsync, blinks, gestures. Transparent until
+          the photo loads, so the initial above stays the fallback face. */}
+      <PhotoAvatar pose={pose} className="absolute inset-0 w-full h-full" />
 
       {/* Sound bars: present while she is in the room, moving while the class is alive. */}
       {active && (

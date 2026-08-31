@@ -8,6 +8,7 @@ import {
 } from '@ai-tutor/voice';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import { lessonAudioUrl, type CatalogEntry } from './content';
+import { announceLine, avatarAudio } from '../avatar/avatarBus';
 
 /**
  * The voice a lesson is narrated in — three layers, best first.
@@ -85,6 +86,9 @@ export function useLessonVoice(
       live = createStreamingTts({
         endpoint: '/api/speech',
         ...TUTOR_VOICE,
+        // Her face listens in: the avatar builds the audio elements, taps
+        // their loudness, and lipsyncs to the same clock the student hears.
+        audio: avatarAudio,
         fallback: browser,
       });
 
@@ -99,9 +103,11 @@ export function useLessonVoice(
 
       if (cancelled) return;
       setTts(
-        manifest && audioUrl
-          ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live })
-          : live,
+        withFace(
+          manifest && audioUrl
+            ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live })
+            : live,
+        ),
       );
     })().catch(() => {
       if (!cancelled) setTts(createBrowserTts({ lang: 'en-IN' }));
@@ -121,5 +127,26 @@ function createSilentTts(): TtsAdapter {
   return {
     speak: () => Promise.resolve(),
     cancel: () => undefined,
+  };
+}
+
+/**
+ * The face is told every line the voice speaks, whichever voice it is.
+ *
+ * For the streamed voice the avatar also hears the real audio (avatarAudio);
+ * for the recorded take and the browser robot this announcement is all it
+ * gets, and the mouth runs shape-only on wall time — quieter, never wrong.
+ */
+function withFace(inner: TtsAdapter): TtsAdapter {
+  return {
+    speak: (text: string) => {
+      announceLine(text);
+      return inner.speak(text).finally(() => announceLine(''));
+    },
+    cancel: () => {
+      announceLine('');
+      inner.cancel();
+    },
+    ...(inner.prime ? { prime: inner.prime.bind(inner) } : {}),
   };
 }
