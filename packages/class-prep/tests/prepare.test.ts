@@ -394,6 +394,7 @@ describe('a question she asks reaches the board, or the repair round hears about
         narration: '',
         board: [
           { do: 'say', text: 'Where did the sugar go?' },
+          { do: 'ask', question: 'What do you think happened to the sugar?' },
           { do: 'write', text: 'Observation: the level did not rise' },
           { do: 'say', text: 'It slips into the spaces between particles.' },
           { do: 'write', text: 'Particles have spaces between them' },
@@ -409,6 +410,7 @@ describe('a question she asks reaches the board, or the repair round hears about
         ...asking.beats[0],
         board: [
           { do: 'say', text: 'Where did the sugar go?' },
+          { do: 'ask', question: 'What do you think happened to the sugar?' },
           { do: 'write', text: 'Where did the sugar go?' },
           { do: 'say', text: 'It slips into the spaces between particles.' },
           { do: 'write', text: 'Particles have spaces between them' },

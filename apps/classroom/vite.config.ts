@@ -105,6 +105,59 @@ function speechRelay(key: string): Plugin {
   };
 }
 
+/**
+ * HER EAR. The student's spoken answer, piped to a transcriber.
+ *
+ * Raw audio bytes in the POST body (the browser records a webm/opus blob),
+ * wrapped into the multipart form OpenRouter's transcription endpoint expects.
+ * nova-3 was measured against her own synthesised speech: word-perfect in
+ * 0.8s. Dev only, like every relay here.
+ */
+function hearRelay(key: string): Plugin {
+  return {
+    name: 'curie-hear-relay',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/api/hear', (req, res) => {
+        const fail = (code: number, message: string) => {
+          res.statusCode = code;
+          res.setHeader('content-type', 'application/json');
+          res.end(JSON.stringify({ error: { message } }));
+        };
+        if (req.method !== 'POST') return fail(405, 'POST only');
+        if (!key) return fail(503, 'No OPENROUTER_API_KEY in .env.local');
+
+        const chunks: Buffer[] = [];
+        req.on('data', (c: Buffer) => chunks.push(c));
+        req.on('end', () => {
+          const audio = Buffer.concat(chunks);
+          if (audio.length < 200) return fail(400, 'no audio to hear');
+          const form = new FormData();
+          form.set('model', 'deepgram/nova-3');
+          form.set(
+            'file',
+            new Blob([new Uint8Array(audio)], {
+              type: req.headers['content-type'] ?? 'audio/webm',
+            }),
+            'answer.webm',
+          );
+          void fetch('https://openrouter.ai/api/v1/audio/transcriptions', {
+            method: 'POST',
+            headers: { authorization: `Bearer ${key}` },
+            body: form,
+          })
+            .then(async (upstream) => {
+              res.statusCode = upstream.status;
+              res.setHeader('content-type', 'application/json');
+              res.end(await upstream.text());
+            })
+            .catch((e: unknown) => fail(502, String(e)));
+        });
+      });
+    },
+  };
+}
+
 function llmRelay(key: string): Plugin {
   return {
     name: 'curie-llm-relay',
@@ -299,6 +352,7 @@ export default defineConfig(({ mode }) => {
       react(),
       llmRelay(env.OPENROUTER_API_KEY ?? ''),
       speechRelay(env.OPENROUTER_API_KEY ?? ''),
+      hearRelay(env.OPENROUTER_API_KEY ?? ''),
       iconRelay(),
       classWriter(),
       ...(env.HTTPS === '1' ? [basicSsl()] : []),

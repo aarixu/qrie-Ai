@@ -107,6 +107,15 @@
       "subject": "Science",
       "path": "class9-science-matter-in-our-surroundings-characteristics-of-particles-of-matter/lesson.json",
       "topicRef": "class9-science/matter-in-our-surroundings/characteristics-of-particles-of-matter"
+    },
+    {
+      "id": "class9-science-matter-in-our-surroundings-evaporation",
+      "title": "Evaporation and Why It Cools",
+      "subtitle": "Class 9 · Matter in Our Surroundings",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-matter-in-our-surroundings-evaporation/lesson.json",
+      "topicRef": "class9-science/matter-in-our-surroundings/evaporation"
     }
   ]
 }

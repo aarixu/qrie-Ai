@@ -1,0 +1,997 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-matter-in-our-surroundings-evaporation",
+  "title": "Evaporation and Why It Cools",
+  "subtitle": "How surface particles escape below boiling point",
+  "language": "en",
+  "canvas": {
+    "w": 9820,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat_1_open_0",
+      "x": 500,
+      "y": 86,
+      "text": "Evaporation",
+      "sub": "Class 9 NCERT Science"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_open__spill",
+      "x": 295.4181818181818,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "water",
+      "label": "water spill on table",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_open__clothes",
+      "x": 588.5818181818181,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "shirt",
+      "label": "wet clothes drying",
+      "labelSide": "below"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_open_6",
+      "x": 500,
+      "y": 373.4,
+      "text": "Water disappears without reaching its boiling point (100°C)",
+      "size": 23.623611922852135
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_open_8",
+      "x": 500,
+      "y": 461.4,
+      "text": "Where did the liquid water go when it disappeared from the table?",
+      "size": 21.44297082228117,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_1_open_9",
+      "x": 1407.4,
+      "y": 254.88,
+      "w": 705.1999999999999,
+      "items": [
+        {
+          "term": "A",
+          "meaning": "It turned into water vapor and mixed into the surrounding air"
+        },
+        {
+          "term": "B",
+          "meaning": "It seeped completely inside the solid wood or floor"
+        },
+        {
+          "term": "C",
+          "meaning": "It was destroyed and ceased to exist"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "beat_2_particle_level_0",
+      "x": 3020,
+      "y": 86,
+      "text": "Evaporation at the Particle Level",
+      "sub": "A surface phenomenon"
+    },
+    {
+      "kind": "diagram",
+      "id": "particle_surface_diagram",
+      "x": 2590,
+      "y": 150,
+      "w": 860,
+      "h": 176,
+      "src": "generated/particle_surface_diagram.svg",
+      "alt": "Diagram showing particles in an open container with surface particles escaping into vapor.",
+      "parts": [
+        "bulk_liquid",
+        "surface_particles",
+        "escaping_vapor"
+      ]
+    },
+    {
+      "kind": "box",
+      "id": "beat_2_particle_level_10_c0",
+      "x": 2590,
+      "y": 352,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "beat_2_particle_level_10_h0",
+      "x": 3020,
+      "y": 390,
+      "text": "Definition of Evaporation",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat_2_particle_level_10_b0",
+      "x": 3020,
+      "y": 430,
+      "text": "The phenomenon of change of a liquid into vapors at any temperature below its boiling point is called evaporation.",
+      "size": 12.643678160919542
+    },
+    {
+      "kind": "list",
+      "id": "beat_2_particle_level_11",
+      "x": 3927.4,
+      "y": 164.41000000000003,
+      "w": 705.1999999999999,
+      "heading": "Key characteristics of evaporation",
+      "items": [
+        {
+          "term": "Surface phenomenon",
+          "meaning": "takes place only at the exposed liquid surface"
+        },
+        {
+          "term": "Occurs at any temperature",
+          "meaning": "happens well below the boiling point"
+        },
+        {
+          "term": "Kinetic energy difference",
+          "meaning": "only particles with higher energy escape"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_particle_level_12",
+      "x": 4280,
+      "y": 446.99,
+      "text": "Boiling is a bulk phenomenon; Evaporation is a surface phenomenon",
+      "size": 21.44297082228117
+    },
+    {
+      "kind": "title",
+      "id": "beat_3_factors_0",
+      "x": 5540,
+      "y": 86,
+      "text": "Factors Affecting Evaporation",
+      "sub": "Why clothes dry faster on some days"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_3_factors__spread_cloth",
+      "x": 5349.3381818181815,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "shirt",
+      "label": "spread out cloth",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_3_factors__folded_cloth",
+      "x": 5628.581818181819,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "shirt",
+      "label": "folded cloth",
+      "labelSide": "below"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_3_factors_5",
+      "x": 5335.3381818181815,
+      "y": 136,
+      "w": 144,
+      "h": 144,
+      "shape": "tick",
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_factors_6",
+      "x": 5540,
+      "y": 373.4,
+      "text": "1. Surface Area: Greater surface area means more particles can escape at once.",
+      "size": 17.869142351900972
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_factors_8",
+      "x": 5540,
+      "y": 461.4,
+      "text": "2. Temperature: Higher temperature increases particle kinetic energy.",
+      "size": 20.199900049975014
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_factors_10",
+      "x": 6800,
+      "y": 239.4,
+      "text": "How does high humidity in the air affect evaporation?",
+      "size": 26.297983083929733
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_factors_11",
+      "x": 6800,
+      "y": 327.4,
+      "text": "3. Humidity: If air already holds a lot of moisture, evaporation slows down.",
+      "size": 18.339382940108894
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_factors_13",
+      "x": 6800,
+      "y": 415.4,
+      "text": "4. Wind Speed: Increases evaporation rate by blowing vapor away.",
+      "size": 21.77801724137931
+    },
+    {
+      "kind": "title",
+      "id": "beat_4_cooling_effect_0",
+      "x": 8060,
+      "y": 86,
+      "text": "Evaporation Causes Cooling",
+      "sub": "Energy exchange with surroundings"
+    },
+    {
+      "kind": "image",
+      "id": "earthen_pot_cooling",
+      "x": 7885.833333333333,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class9-science-matter-in-our-surroundings-evaporation/generated/earthen_pot_cooling.jpg",
+      "alt": "Illustration of an earthen pot showing water seeping through pores and evaporating.",
+      "parts": [
+        {
+          "name": "porous wall",
+          "x": 0.75,
+          "y": 0.14,
+          "w": 0.25,
+          "h": 0.44
+        },
+        {
+          "name": "seeping droplets",
+          "x": 0.02,
+          "y": 0.57,
+          "w": 0.4,
+          "h": 0.42
+        },
+        {
+          "name": "interior water",
+          "x": 0.39,
+          "y": 0.43000000000000005,
+          "w": 0.28,
+          "h": 0.45
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_4",
+      "x": 8315.966666666667,
+      "y": 219.89999999999998,
+      "text": "Porous wall",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_4_cooling_effect_4_line",
+      "from": {
+        "x": 8246.166666666666,
+        "y": 213.49999999999997
+      },
+      "to": {
+        "x": 8234.166666666666,
+        "y": 218.39999999999998
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_5",
+      "x": 7775.033333333334,
+      "y": 299.7,
+      "text": "Seeping droplets",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_4_cooling_effect_5_line",
+      "from": {
+        "x": 7873.833333333333,
+        "y": 293.3
+      },
+      "to": {
+        "x": 7892.8,
+        "y": 298.2
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_6",
+      "x": 8333.366666666667,
+      "y": 275.95,
+      "text": "Interior water",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_4_cooling_effect_6_line",
+      "from": {
+        "x": 8246.166666666666,
+        "y": 269.55
+      },
+      "to": {
+        "x": 8119.216666666667,
+        "y": 274.45
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_2",
+      "x": 8128.8,
+      "y": 376,
+      "text": "When the highest-energy particles escape, what",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_2_l1",
+      "x": 8047.6,
+      "y": 413,
+      "text": "happens to the remaining liquid?",
+      "size": 20,
+      "after": 2116
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_13",
+      "x": 8105.6,
+      "y": 460,
+      "text": "Escaping particles take heat energy away →",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_cooling_effect_13_l1",
+      "x": 7989.6,
+      "y": 497,
+      "text": "Surroundings cool down",
+      "size": 20,
+      "after": 1932
+    },
+    {
+      "kind": "list",
+      "id": "beat_4_cooling_effect_12",
+      "x": 8967.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "heading": "Everyday examples of evaporative cooling",
+      "items": [
+        {
+          "term": "Earthen pot (Matka)",
+          "meaning": "water seeps through pores and evaporates, keeping stored water cold"
+        },
+        {
+          "term": "Sweating (Perspiration)",
+          "meaning": "sweat evaporates from skin, absorbing body heat to cool us down"
+        },
+        {
+          "term": "Acetone or sanitizer on palm",
+          "meaning": "evaporates rapidly, absorbing heat and feeling instantly cold"
+        },
+        {
+          "term": "Sprinkling water on roofs in summer",
+          "meaning": "large latent heat of water cools the hot ground"
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_4_cooling_effect_8",
+      "x": 7882.8,
+      "y": 248.3,
+      "w": 159.33333333333334,
+      "h": 99.8,
+      "shape": "circle",
+      "tone": "accent"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_4_cooling_effect_10",
+      "x": 8021.683333333333,
+      "y": 231.7,
+      "w": 97.53333333333333,
+      "h": 85.5,
+      "shape": "underline",
+      "tone": "good"
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_1_open_1",
+      "topic": "The mystery of drying water",
+      "narration": "Hello Aarav! Good to have you here today.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill"
+      ],
+      "frame": [
+        "beat_1_open_0",
+        "beat_1_open__spill"
+      ]
+    },
+    {
+      "id": "beat_1_open_2",
+      "topic": "The mystery of drying water",
+      "narration": "Think about when a few drops of water spill on your study table or when wet clothes are hung outside on a line.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes"
+      ],
+      "frame": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes"
+      ]
+    },
+    {
+      "id": "beat_1_open_3",
+      "topic": "The mystery of drying water",
+      "narration": "After an hour, the water is completely gone. But you definitely did not heat that table to a hundred degrees Celsius to boil it away!",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6"
+      ],
+      "frame": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6"
+      ]
+    },
+    {
+      "id": "beat_1_open_4",
+      "topic": "The mystery of drying water",
+      "narration": "Today we are going to see how liquids change into vapor without ever boiling, and why this simple process cools down your surroundings.",
+      "ask": {
+        "question": "Where did the liquid water go when it disappeared from the table?",
+        "options": [
+          {
+            "text": "It turned into water vapor and mixed into the surrounding air",
+            "correct": true,
+            "why": "The surface particles gained enough kinetic energy to leave the liquid and mix into the air as vapor."
+          },
+          {
+            "text": "It seeped completely inside the solid wood or floor",
+            "why": "While porous surfaces absorb some, water vanishes even from smooth glass and metal because it enters the air as vapor.",
+            "hint": "Think about wet clothes hanging on a plastic line in open air."
+          },
+          {
+            "text": "It was destroyed and ceased to exist",
+            "why": "Matter cannot be destroyed; the liquid particles simply changed state into gas.",
+            "hint": "Recall that matter is conserved and merely changes its physical state."
+          }
+        ]
+      },
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8"
+      ],
+      "frame": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8"
+      ]
+    },
+    {
+      "id": "beat_2_particle_level_1",
+      "topic": "What happens at the surface?",
+      "narration": "You already know that matter is made of tiny particles that are in continuous motion.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ],
+      "frame": [
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ]
+    },
+    {
+      "id": "beat_2_particle_level_2",
+      "topic": "What happens at the surface?",
+      "narration": "Inside the bulk liquid, particles are pulled in all directions equally by neighboring particles.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ],
+      "frame": [
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ]
+    },
+    {
+      "id": "beat_2_particle_level_3",
+      "topic": "What happens at the surface?",
+      "narration": "Now look at the particles sitting right at the top surface. They have attractions only from below and sideways.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ],
+      "frame": [
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ]
+    },
+    {
+      "id": "beat_2_particle_level_4",
+      "topic": "What happens at the surface?",
+      "narration": "Particles in a liquid do not all have the same speed. A small fraction at the surface has higher kinetic energy.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ],
+      "frame": [
+        "beat_2_particle_level_0",
+        "particle_surface_diagram"
+      ]
+    },
+    {
+      "id": "beat_2_particle_level_5",
+      "topic": "What happens at the surface?",
+      "narration": "These energetic surface particles break free from the attractive forces of other particles and escape into the air as gas.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12"
+      ],
+      "frame": [
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12"
+      ],
+      "focus": [
+        "particle_surface_diagram#bulk_liquid",
+        "particle_surface_diagram#surface_particles",
+        "particle_surface_diagram#escaping_vapor"
+      ]
+    },
+    {
+      "id": "beat_3_factors_1",
+      "topic": "Factors affecting the rate of evaporation",
+      "narration": "Let us think about how we can make wet clothes dry faster on a laundry line.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth"
+      ],
+      "frame": [
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth"
+      ]
+    },
+    {
+      "id": "beat_3_factors_2",
+      "topic": "Factors affecting the rate of evaporation",
+      "narration": "When you spread a shirt out instead of leaving it crumpled, you increase the surface area exposed to air.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6"
+      ],
+      "frame": [
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6"
+      ]
+    },
+    {
+      "id": "beat_3_factors_3",
+      "topic": "Factors affecting the rate of evaporation",
+      "narration": "On a hot sunny day, clothes dry much faster because higher temperature gives more kinetic energy to particles.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8"
+      ],
+      "frame": [
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8"
+      ]
+    },
+    {
+      "id": "beat_3_factors_4",
+      "topic": "Factors affecting the rate of evaporation",
+      "narration": "What about humidity, which is the amount of water vapor already present in air?",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11"
+      ],
+      "frame": [
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11"
+      ]
+    },
+    {
+      "id": "beat_3_factors_5",
+      "topic": "Factors affecting the rate of evaporation",
+      "narration": "And on a windy day, wind carries away the evaporated vapor particles quickly, speeding up the process.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13"
+      ],
+      "frame": [
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13"
+      ]
+    },
+    {
+      "id": "beat_4_cooling_effect_1",
+      "topic": "Why evaporation causes cooling",
+      "narration": "Here is the key question: when the most energetic particles leave, what happens to the remaining liquid?",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13",
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line"
+      ],
+      "frame": [
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line"
+      ]
+    },
+    {
+      "id": "beat_4_cooling_effect_2",
+      "topic": "Why evaporation causes cooling",
+      "narration": "In an earthen pot (matka), water continuously seeps through microscopic pores to the outside surface.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13",
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8"
+      ],
+      "frame": [
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8"
+      ]
+    },
+    {
+      "id": "beat_4_cooling_effect_3",
+      "topic": "Why evaporation causes cooling",
+      "narration": "These droplets evaporate into the air, absorbing the latent heat of vaporization directly from the pot and the water inside.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13",
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8",
+        "beat_4_cooling_effect_10"
+      ],
+      "frame": [
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8",
+        "beat_4_cooling_effect_10"
+      ]
+    },
+    {
+      "id": "beat_4_cooling_effect_4",
+      "topic": "Why evaporation causes cooling",
+      "narration": "Because heat is taken away during evaporation, the temperature of the water inside drops, making it delightfully cool.",
+      "show": [
+        "beat_1_open_0",
+        "beat_1_open__spill",
+        "beat_1_open__clothes",
+        "beat_1_open_6",
+        "beat_1_open_8",
+        "beat_2_particle_level_0",
+        "particle_surface_diagram",
+        "beat_2_particle_level_10_c0",
+        "beat_2_particle_level_10_h0",
+        "beat_2_particle_level_10_b0",
+        "beat_2_particle_level_11",
+        "beat_2_particle_level_12",
+        "beat_3_factors_0",
+        "beat_3_factors__spread_cloth",
+        "beat_3_factors__folded_cloth",
+        "beat_3_factors_5",
+        "beat_3_factors_6",
+        "beat_3_factors_8",
+        "beat_3_factors_10",
+        "beat_3_factors_11",
+        "beat_3_factors_13",
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8",
+        "beat_4_cooling_effect_10",
+        "beat_4_cooling_effect_12",
+        "beat_4_cooling_effect_13",
+        "beat_4_cooling_effect_13_l1"
+      ],
+      "frame": [
+        "beat_4_cooling_effect_0",
+        "beat_4_cooling_effect_2",
+        "beat_4_cooling_effect_2_l1",
+        "earthen_pot_cooling",
+        "beat_4_cooling_effect_4",
+        "beat_4_cooling_effect_4_line",
+        "beat_4_cooling_effect_5",
+        "beat_4_cooling_effect_5_line",
+        "beat_4_cooling_effect_6",
+        "beat_4_cooling_effect_6_line",
+        "beat_4_cooling_effect_8",
+        "beat_4_cooling_effect_10",
+        "beat_4_cooling_effect_12",
+        "beat_4_cooling_effect_13",
+        "beat_4_cooling_effect_13_l1"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/matter-in-our-surroundings/evaporation"
+}

@@ -82,3 +82,41 @@ export function saidButNotWritten(beats: readonly ScriptBeat[]): string[] {
 
   return errors;
 }
+
+/**
+ * "Involve them through question and answer — teach, don't make them recite."
+ *
+ * Aarav's rule, made structural after a class shipped without a single
+ * question. The first beat must ask what they already know (that ask is the
+ * opening's whole point), and every beat must carry at least one ask — a beat
+ * in which nobody is asked anything is a beat being recited at.
+ *
+ * Feeds the same repair round as everything else, and like the rest of this
+ * file it is never fatal: a class that still under-asks after repair runs,
+ * and the report says so.
+ */
+export function classMustAsk(beats: readonly ScriptBeat[]): string[] {
+  const errors: string[] = [];
+  // Only beats that SPEAK are held to it: recitation happens in says, and a
+  // legacy or synthetic beat with bare narration has no lines to hang an ask
+  // on. The first speaking beat is the opening.
+  const speaking = beats.filter((b) => b.board.some((step) => step.do === 'say'));
+  speaking.forEach((beat, i) => {
+    const asks = beat.board.filter((step) => step.do === 'ask').length;
+    if (asks > 0) return;
+    if (i === 0) {
+      errors.push(
+        `${beat.id}: the opening beat never asks what the student already knows. ` +
+          `Its whole point is a real {"do":"ask"} — greet them, say what today builds, ` +
+          `then ask and WAIT.`,
+      );
+    } else {
+      errors.push(
+        `${beat.id}: nobody is asked anything in this beat — it is being recited, not taught. ` +
+          `Add one {"do":"ask"}: retrieve what was just taught, or ask for a prediction ` +
+          `before the next reveal.`,
+      );
+    }
+  });
+  return errors;
+}

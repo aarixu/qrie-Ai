@@ -18,7 +18,7 @@ import {
   repairUser,
 } from './prompts';
 import { verifySvg } from './verify';
-import { saidButNotWritten } from './saidNotWritten';
+import { classMustAsk, saidButNotWritten } from './saidNotWritten';
 import type {
   Blueprint,
   PrepProgress,
@@ -498,7 +498,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * to repair on its own — but unlike a structural failure it is never fatal:
    * a class with one unwritten question is a worse class, not no class.
    */
-  let unwritten = saidButNotWritten(blueprint.beats);
+  let unwritten = [...saidButNotWritten(blueprint.beats), ...classMustAsk(blueprint.beats)];
 
   // One repair round.
   //
@@ -530,7 +530,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       );
       if (revalidated.ok) {
         validated = revalidated;
-        unwritten = saidButNotWritten(fixed.beats);
+        unwritten = [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)];
         issues.push('The plan was repaired and passed.');
       }
     } catch (e) {

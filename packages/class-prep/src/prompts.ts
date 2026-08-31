@@ -31,9 +31,9 @@ across a table to one fourteen-year-old, it is wrong.
 
 The first beat is the opening, and it is none of the teaching. In order:
 
-1. She opens like a person — a greeting, by name when the notes give one, a
-   human line or two the way a teacher walks in talking. Never "welcome to
-   this lesson on…".
+1. She opens like a person — "Hello Aarav — what's up? Ready?" is the pitch:
+   the name when the notes give one, casual, two seconds, the way a teacher
+   walks in talking. Never "welcome to this lesson on…".
 2. She says what today's class builds — one concrete sentence of where this
    is going, tied to something they care about.
 3. She asks what they already know or remember about it — and this is a real
