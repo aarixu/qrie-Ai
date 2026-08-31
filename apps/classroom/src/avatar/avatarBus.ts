@@ -50,6 +50,9 @@ export function avatarAudio(src: string): SpeechElement {
   tap(el);
   el.addEventListener('play', () => {
     currentEl = el;
+    // The context may have been born before the browser trusted us with
+    // sound; a play that reaches here rides a user gesture, so ask again.
+    if (audioCtx?.state === 'suspended') void audioCtx.resume().catch(() => undefined);
   });
   return el as unknown as SpeechElement;
 }
@@ -85,5 +88,10 @@ export function level(): number | null {
     const v = (samples[i] - 128) / 128;
     sum += v * v;
   }
-  return Math.min(1, Math.sqrt(sum / samples.length) * 4);
+  const rms = Math.sqrt(sum / samples.length);
+  // A suspended context reads a dead-flat line. That is "cannot hear", not
+  // "she is silent" — null lets the face fall back to shape-only drive
+  // instead of clamping the mouth nearly shut for the whole class.
+  if (rms < 0.004) return null;
+  return Math.min(1, rms * 4);
 }

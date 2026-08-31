@@ -106,11 +106,14 @@ export function PhotoAvatar({
       const fade = Math.min(1, (now - fadeStart) / 160);
       if (fade >= 1) prev = null;
 
-      // Cover the tile with the (square) photo, remembering the mapping so
-      // the rig's fractions can reach pixel space in both directions.
-      const scale = Math.max(w / base.naturalWidth, h / base.naturalHeight);
-      const dx = (w - base.naturalWidth * scale) / 2;
-      const dy = (h - base.naturalHeight * scale) / 2;
+      // The tile frames her like a call tile — head and shoulders, the rig's
+      // frame crop covering the tile — not the whole photo shrunk into it.
+      const fr = MEERA_RIG.frame;
+      const iw = base.naturalWidth;
+      const ih = base.naturalHeight;
+      const scale = Math.max(w / (fr.w * iw), h / (fr.h * ih));
+      const dx = w / 2 - (fr.x + fr.w / 2) * iw * scale;
+      const dy = h / 2 - (fr.y + fr.h / 2) * ih * scale;
       const px = (r: Rect) => ({
         x: dx + r.x * base.naturalWidth * scale,
         y: dy + r.y * base.naturalHeight * scale,
@@ -154,7 +157,7 @@ export function PhotoAvatar({
 
       const paint = (image: HTMLImageElement, alpha: number): void => {
         ctx.globalAlpha = alpha;
-        ctx.drawImage(image, dx, dy, image.naturalWidth * scale, image.naturalHeight * scale);
+        ctx.drawImage(image, dx, dy, iw * scale, ih * scale);
         ctx.globalAlpha = 1;
       };
       const prevImg = prev ? poseImage(prev) : null;
@@ -238,17 +241,14 @@ export function PhotoAvatar({
 }
 
 /**
- * Which pose fits the room's mood, with a slow explain/point/idle rotation
- * while she teaches so the body never freezes for minutes.
+ * Which pose fits the room's mood.
+ *
+ * Body swaps are OFF for now, everywhere: Aarav watched the first live class
+ * and the pose photographs are not pixel-registered — the hair and framing
+ * move wholesale, so every swap read as a glitch, not a gesture. The pose
+ * set stays (the lab shows any of them on demand); the rotation returns
+ * when the sprites are aligned to the base shot.
  */
-export function usePoseFor(mode: 'idle' | 'teaching' | 'listening'): AvatarPose {
-  const [beat, setBeat] = useState(0);
-  useEffect(() => {
-    if (mode !== 'teaching') return;
-    const timer = setInterval(() => setBeat((b) => b + 1), 8000);
-    return () => clearInterval(timer);
-  }, [mode]);
-  if (mode === 'listening') return 'listen';
-  if (mode === 'teaching') return beat % 3 === 1 ? 'explain' : beat % 3 === 2 ? 'point' : 'idle';
+export function usePoseFor(_mode: 'idle' | 'teaching' | 'listening'): AvatarPose {
   return 'idle';
 }

@@ -17,6 +17,12 @@ export interface Rect {
 }
 
 export interface AvatarRig {
+  /**
+   * The crop the TILE shows — head and shoulders, like a call tile. Without
+   * it the whole photo cover-fits the tile and Meera shrinks to a figurine;
+   * Aarav's first look called it "not adjusted in the box", and he was right.
+   */
+  frame: Rect;
   /** The mouth strip: lips and their margin, reshaped per viseme. */
   mouth: Rect;
   /** Inner-mouth ellipse centre/size at full open, drawn behind the lips. */
@@ -48,7 +54,7 @@ import type { Viseme } from './visemes';
  * together is the classic trick.
  */
 export function mouthShapeOf(v: Viseme, level: number): MouthShape {
-  const drive = 0.35 + 0.65 * Math.min(1, level * 1.6);
+  const drive = 0.5 + 0.5 * Math.min(1, level * 1.6);
   switch (v) {
     case 'open':
       return { open: 0.85 * drive, stretchX: 1.02, stretchY: 1.15 };
@@ -81,10 +87,12 @@ export function scaledAbout(r: Rect, sx: number, sy: number): Rect {
  * boxes over the photo so recalibrating is looking, not guessing.
  */
 export const MEERA_RIG: AvatarRig = {
+  frame: { x: 0.13, y: 0.07, w: 0.74, h: 0.6 },
   mouth: { x: 0.428, y: 0.354, w: 0.128, h: 0.058 },
-  innerMouth: { x: 0.449, y: 0.37, w: 0.087, h: 0.028 },
+  innerMouth: { x: 0.449, y: 0.368, w: 0.087, h: 0.034 },
   jaw: { x: 0.398, y: 0.412, w: 0.188, h: 0.095 },
-  jawDrop: 0.018,
+  // Watched at tile size on the first live class: 0.018 was invisible.
+  jawDrop: 0.032,
   eyeL: { x: 0.406, y: 0.248, w: 0.073, h: 0.038 },
   eyeR: { x: 0.52, y: 0.248, w: 0.073, h: 0.038 },
 };
