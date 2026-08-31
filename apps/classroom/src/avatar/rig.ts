@@ -76,14 +76,38 @@ export function scaledAbout(r: Rect, sx: number, sy: number): Rect {
 }
 
 /**
- * MEERA'S RIG. Calibrated against content/avatar/meera.png; the avatar lab
- * draws these boxes over the photo so recalibrating is looking, not guessing.
+ * MEERA'S RIG. Calibrated by eye against content/avatar/meera.png (the
+ * ChatGPT set Aarav generated on 2026-08-31); the avatar lab draws these
+ * boxes over the photo so recalibrating is looking, not guessing.
  */
 export const MEERA_RIG: AvatarRig = {
-  mouth: { x: 0.415, y: 0.615, w: 0.17, h: 0.075 },
-  innerMouth: { x: 0.44, y: 0.635, w: 0.12, h: 0.05 },
-  jaw: { x: 0.36, y: 0.68, w: 0.28, h: 0.16 },
-  jawDrop: 0.022,
-  eyeL: { x: 0.395, y: 0.445, w: 0.075, h: 0.045 },
-  eyeR: { x: 0.53, y: 0.445, w: 0.075, h: 0.045 },
+  mouth: { x: 0.428, y: 0.354, w: 0.128, h: 0.058 },
+  innerMouth: { x: 0.449, y: 0.37, w: 0.087, h: 0.028 },
+  jaw: { x: 0.398, y: 0.412, w: 0.188, h: 0.095 },
+  jawDrop: 0.018,
+  eyeL: { x: 0.406, y: 0.248, w: 0.073, h: 0.038 },
+  eyeR: { x: 0.52, y: 0.248, w: 0.073, h: 0.038 },
+};
+
+/**
+ * Where the face sits in each POSE photo, relative to the base photo.
+ *
+ * The set is consistent but not pixel-registered: the pointing shot leans
+ * the whole figure right, the greeting shot rides higher. One offset-and-
+ * scale per pose (applied to every rig box, about the image centre) keeps
+ * the lips synced mid-gesture without seven hand-tuned rigs.
+ */
+export interface PoseFit {
+  dx: number;
+  dy: number;
+  s: number;
+}
+
+export const MEERA_POSE_FIT: Record<string, PoseFit> = {
+  idle: { dx: 0, dy: 0, s: 1 },
+  point: { dx: 0.108, dy: -0.01, s: 1 },
+  explain: { dx: 0.008, dy: -0.022, s: 1 },
+  greet: { dx: 0.011, dy: -0.03, s: 1 },
+  think: { dx: 0.011, dy: 0.003, s: 1 },
+  listen: { dx: 0.015, dy: 0.028, s: 1.03 },
 };

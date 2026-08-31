@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { level, progress } from './avatarBus';
 import { sampleViseme, visemeTimeline, type Viseme, type VisemeStep } from './visemes';
 import { createBlinker, swayAt } from './microMotion';
-import { MEERA_RIG, mouthShapeOf, scaledAbout, type Rect } from './rig';
+import { MEERA_POSE_FIT, MEERA_RIG, mouthShapeOf, scaledAbout, type Rect } from './rig';
 
 /**
  * THE PHOTOREAL TUTOR — one photograph, alive.
@@ -123,6 +123,15 @@ export function PhotoAvatar({
         w: r.w * base.naturalWidth,
         h: r.h * base.naturalHeight,
       });
+      // The rig is drawn for the base photo; the pose being warped may hold
+      // its face elsewhere. One offset-and-scale moves every box onto it.
+      const f = MEERA_POSE_FIT[img ? shown : 'idle'] ?? { dx: 0, dy: 0, s: 1 };
+      const fit = (r: Rect): Rect => ({
+        x: 0.5 + (r.x + r.w / 2 - 0.5) * f.s + f.dx - (r.w * f.s) / 2,
+        y: 0.5 + (r.y + r.h / 2 - 0.5) * f.s + f.dy - (r.h * f.s) / 2,
+        w: r.w * f.s,
+        h: r.h * f.s,
+      });
 
       // What is being said, and how loudly, this exact frame.
       const p = progress();
@@ -158,7 +167,7 @@ export function PhotoAvatar({
 
       // The dark of the open mouth, behind the lips.
       if (shape.open > 0.04) {
-        const m = px(rig.innerMouth);
+        const m = px(fit(rig.innerMouth));
         ctx.fillStyle = '#33161a';
         ctx.beginPath();
         ctx.ellipse(
@@ -175,22 +184,25 @@ export function PhotoAvatar({
 
       // The jaw slab slides down and stretches a hair.
       {
-        const s = src(rig.jaw);
-        const d = px(rig.jaw);
+        const j = fit(rig.jaw);
+        const s = src(j);
+        const d = px(j);
         ctx.drawImage(base, s.x, s.y, s.w, s.h, d.x, d.y + drop, d.w, d.h * (1 + shape.open * 0.06));
       }
 
       // The lips themselves: reshaped per viseme, riding half the jaw drop.
       {
-        const s = src(rig.mouth);
-        const d = scaledAbout(px(rig.mouth), shape.stretchX, shape.stretchY);
+        const m = fit(rig.mouth);
+        const s = src(m);
+        const d = scaledAbout(px(m), shape.stretchX, shape.stretchY);
         ctx.drawImage(base, s.x, s.y, s.w, s.h, d.x, d.y + drop * 0.55, d.w, d.h);
       }
 
       // --- Layer C: the blink --------------------------------------------
       const open01 = blinker.opennessAt(now - born);
       if (open01 < 0.98) {
-        for (const eye of [rig.eyeL, rig.eyeR]) {
+        for (const raw of [rig.eyeL, rig.eyeR]) {
+          const eye = fit(raw);
           const s = src({ ...eye, y: eye.y - eye.h * 1.35, h: eye.h * 1.1 });
           const d = px(eye);
           const lid = d.h * (1 - open01);
@@ -202,7 +214,7 @@ export function PhotoAvatar({
         ctx.strokeStyle = 'rgba(0,255,120,0.9)';
         ctx.lineWidth = 1;
         for (const r of [rig.mouth, rig.innerMouth, rig.jaw, rig.eyeL, rig.eyeR]) {
-          const d = px(r);
+          const d = px(fit(r));
           ctx.strokeRect(d.x, d.y, d.w, d.h);
         }
       }
