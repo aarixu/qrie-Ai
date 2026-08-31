@@ -137,6 +137,21 @@ export class PlayerController {
       gate();
     };
     this.tts.speak(beat.narration).then(onSpeechDone, onSpeechDone);
+
+    /**
+     * And the line after it, started now.
+     *
+     * A voice that fetches pays its time-to-first-byte as silence BETWEEN
+     * sentences — about four tenths of a second, once per line, for the whole
+     * class. Speech arrives roughly three times faster than it plays, so a
+     * line begun at the start of the one before it is ready long before it is
+     * wanted, and the pause disappears.
+     *
+     * The controller is where this belongs because it is the only thing that
+     * knows what comes next.
+     */
+    const next = this.lesson.beats[index + 1];
+    if (next) this.tts.prime?.(next.narration);
   }
 
   private advance(): void {

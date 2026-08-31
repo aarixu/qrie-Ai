@@ -61,6 +61,29 @@ export type Element =
       as?: 'box' | 'cloud' | 'bubble' | 'plain' | 'banner';
     }
   | { kind: 'doc'; id: string; x: number; y: number; w: number; h: number; label?: string; lines?: number }
+  /**
+   * A heading over numbered "term — meaning" items.
+   *
+   * What most of a good notes page is actually made of, and the shape this
+   * board could not draw. A `card` is a heading over ONE paragraph, so four
+   * named chambers written as a card come out as a blob a student cannot scan;
+   * a `write` is a single line. Neither is a list.
+   *
+   * No height: it is computed from the items and the column by `listBoxHeight`,
+   * so the stacker, the solver and the renderer cannot disagree about it.
+   */
+  | {
+      kind: 'list';
+      id: string;
+      x: number;
+      y: number;
+      w: number;
+      heading?: string;
+      items: { term: string; meaning?: string }[];
+      /** Item text size; the heading scales with it. */
+      size?: number;
+      tone?: Tone;
+    }
   | { kind: 'arrow'; id: string; from: Point; to: Point; label?: string; dashed?: boolean; tone?: Tone }
   | { kind: 'pen'; id: string; points: Point[]; tone?: Tone }
   | { kind: 'formula'; id: string; x: number; y: number; text: string }
@@ -306,3 +329,12 @@ export interface Lesson {
 
 export const CANVAS_W = 1000;
 export const CANVAS_H = 620;
+/**
+ * How far apart two pages of the endless board sit.
+ *
+ * Wider than a page, so the camera's breathing room never pulls the edge of a
+ * neighbouring page into the shot. It lives HERE because two packages have to
+ * agree on it: the layout engine, which decides where a page ends, and the
+ * camera, which must never frame the gap between two.
+ */
+export const PAGE_STRIDE = 1260;

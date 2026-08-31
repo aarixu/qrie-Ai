@@ -7,7 +7,7 @@ export type {
   Beat,
   Lesson,
 } from './types';
-export { CANVAS_W, CANVAS_H } from './types';
+export { CANVAS_W, CANVAS_H, PAGE_STRIDE } from './types';
 export { validateLesson, findBeat, elementsForBeat, splitPartRef, PART_SEPARATOR } from './validate';
 export type { ValidationResult } from './validate';
 export {
@@ -20,6 +20,17 @@ export {
   NOTE_PAD_Y,
   NOTE_INSET_X,
   textWidth,
+  wrapLines,
+  titleSize,
+  TITLE_SIZE,
+  listBoxHeight,
+  listItemText,
+  LIST_HEADING_SIZE,
+  LIST_ITEM_SIZE,
+  LIST_LINE_H,
+  LIST_ITEM_GAP,
+  LIST_INDENT,
+  LIST_HEADING_GAP,
   fitText,
   writeMs,
   graphicLabelSize,

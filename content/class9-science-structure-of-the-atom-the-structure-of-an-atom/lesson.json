@@ -1,0 +1,882 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-structure-of-the-atom-the-structure-of-an-atom",
+  "title": "The Structure of an Atom",
+  "subtitle": "From indivisible spheres to the nuclear atom",
+  "language": "en",
+  "canvas": {
+    "w": 6040,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "charged-particles_0",
+      "x": 500,
+      "y": 86,
+      "text": "Is the Atom Really Indivisible?"
+    },
+    {
+      "kind": "graphic",
+      "id": "charged-particles__comb",
+      "x": 342.52,
+      "y": 150,
+      "w": 112,
+      "h": 112,
+      "noun": "comb",
+      "label": "plastic comb",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "charged-particles__paper",
+      "x": 334.98,
+      "y": 280,
+      "w": 112,
+      "h": 112,
+      "noun": "paper",
+      "label": "bits of paper",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "charged-particles_5",
+      "from": {
+        "x": 395.27112420501237,
+        "y": 262.01509991358
+      },
+      "to": {
+        "x": 394.22887579498763,
+        "y": 279.98490008642
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "charged-particles_5_label",
+      "x": 302.71000000000004,
+      "y": 264.01000000000005,
+      "text": "attracts",
+      "size": 13.94,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "charged-particles_7",
+      "x": 500,
+      "y": 461.4,
+      "text": "Atoms contain smaller, charged subatomic particles",
+      "size": 27.87586206896552,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "charged-particles_9",
+      "x": 1407.4,
+      "y": 194.47,
+      "w": 705.1999999999999,
+      "heading": "First Subatomic Particles Discovered",
+      "items": [
+        {
+          "term": "Electron (e⁻)",
+          "meaning": "Discovered by J.J. Thomson (1897); carries negative charge (-1)"
+        },
+        {
+          "term": "Proton (p⁺)",
+          "meaning": "Identified by E. Goldstein via canal rays (1886); carries positive charge (+1)"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "charged-particles_11",
+      "x": 1760,
+      "y": 416.92999999999995,
+      "text": "An atom is electrically neutral: total positive charge equals total negative charge",
+      "size": 17
+    },
+    {
+      "kind": "title",
+      "id": "thomson-model_0",
+      "x": 3020,
+      "y": 86,
+      "text": "Thomson's Model: The Watermelon"
+    },
+    {
+      "kind": "diagram",
+      "id": "thomson_model",
+      "x": 2590,
+      "y": 150,
+      "w": 384,
+      "h": 330,
+      "src": "generated/thomson_model.svg",
+      "alt": "Thomson's plum pudding or watermelon model of the atom",
+      "parts": [
+        "positive_sphere",
+        "electrons"
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "thomson-model_5",
+      "x": 3225,
+      "y": 174.3,
+      "text": "Positive charge is spread",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "after": 1150,
+      "id": "thomson-model_5_l1",
+      "x": 3225,
+      "y": 220.75,
+      "text": "uniformly over a sphere",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "id": "thomson-model_8",
+      "x": 3225,
+      "y": 270.5,
+      "text": "Electrons are studded",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "after": 966,
+      "id": "thomson-model_8_l1",
+      "x": 3225,
+      "y": 316.95,
+      "text": "inside like seeds in",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "after": 1886,
+      "id": "thomson-model_8_l2",
+      "x": 3225,
+      "y": 363.4,
+      "text": "watermelon pulp",
+      "size": 27
+    },
+    {
+      "kind": "list",
+      "id": "thomson-model_9",
+      "x": 3000,
+      "y": 388.84999999999997,
+      "w": 450,
+      "heading": "Thomson's Postulates",
+      "items": [
+        {
+          "term": "Sphere of positive charge",
+          "meaning": "constitutes the main bulk and volume of the atom"
+        },
+        {
+          "term": "Embedded electrons",
+          "meaning": "negative charges distributed inside to ensure electrical neutrality"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "rutherford-experiment_0",
+      "x": 4280,
+      "y": 86,
+      "text": "Rutherford's Alpha-Particle Scattering"
+    },
+    {
+      "kind": "diagram",
+      "id": "rutherford_experiment",
+      "x": 3850,
+      "y": 150,
+      "w": 384,
+      "h": 330,
+      "src": "generated/rutherford_experiment.svg",
+      "alt": "Rutherford's alpha particle scattering experiment on gold foil",
+      "parts": [
+        "alpha_source",
+        "gold_foil",
+        "straight_rays",
+        "deflected_rays",
+        "rebound_ray"
+      ]
+    },
+    {
+      "kind": "list",
+      "id": "rutherford-experiment_10",
+      "x": 4260,
+      "y": 150,
+      "w": 450,
+      "heading": "Observations & Rutherford's Deductions",
+      "items": [
+        {
+          "term": "Most particles pass straight",
+          "meaning": "most space inside an atom is empty"
+        },
+        {
+          "term": "Few deflect at small angles",
+          "meaning": "positive charge occupies very little volume"
+        },
+        {
+          "term": "1 in 12,000 rebounds 180°",
+          "meaning": "all mass and positive charge is packed in a tiny central nucleus"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "rutherford-experiment_11",
+      "x": 4485,
+      "y": 454.59999999999997,
+      "text": "The nucleus is tiny, dense,",
+      "size": 27,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "after": 1242,
+      "id": "rutherford-experiment_11_l1",
+      "x": 4485,
+      "y": 501.04999999999995,
+      "text": "and positively charged at",
+      "size": 27,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "after": 2392,
+      "id": "rutherford-experiment_11_l2",
+      "x": 4485,
+      "y": 547.5,
+      "text": "the atom's centre",
+      "size": 27,
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "bohr-model_0",
+      "x": 5540,
+      "y": 86,
+      "text": "Bohr's Model & The Complete Atom"
+    },
+    {
+      "kind": "diagram",
+      "id": "bohr_atom",
+      "x": 5110,
+      "y": 150,
+      "w": 384,
+      "h": 330,
+      "src": "generated/bohr_atom.svg",
+      "alt": "Bohr's model of atom showing nucleus and discrete energy shells K, L, M",
+      "parts": [
+        "nucleus",
+        "k_shell",
+        "l_shell",
+        "m_shell",
+        "electrons"
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "bohr-model_7",
+      "x": 5745,
+      "y": 174.3,
+      "text": "Electrons in discrete",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "after": 966,
+      "id": "bohr-model_7_l1",
+      "x": 5745,
+      "y": 220.75,
+      "text": "orbits do NOT radiate",
+      "size": 27
+    },
+    {
+      "kind": "handwrite",
+      "after": 1932,
+      "id": "bohr-model_7_l2",
+      "x": 5745,
+      "y": 267.20000000000005,
+      "text": "energy while revolving",
+      "size": 27
+    },
+    {
+      "kind": "list",
+      "id": "bohr-model_9",
+      "x": 5520,
+      "y": 292.65000000000003,
+      "w": 450,
+      "heading": "The Three Subatomic Particles",
+      "items": [
+        {
+          "term": "Proton (p⁺)",
+          "meaning": "Mass ~ 1 u, charge +1, located inside the nucleus"
+        },
+        {
+          "term": "Neutron (n⁰)",
+          "meaning": "Mass ~ 1 u, charge 0 (neutral), located inside the nucleus"
+        },
+        {
+          "term": "Electron (e⁻)",
+          "meaning": "Mass ~ 1/2000 u (negligible), charge -1, revolves in discrete shells"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "bohr-model_11",
+      "x": 5745,
+      "y": 571.6899999999999,
+      "text": "Mass of atom = Mass of",
+      "size": 27,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "after": 1012,
+      "id": "bohr-model_11_l1",
+      "x": 5745,
+      "y": 618.14,
+      "text": "protons + Mass of neutrons",
+      "size": 27,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "after": 2208,
+      "id": "bohr-model_11_l2",
+      "x": 5745,
+      "y": 664.5899999999999,
+      "text": "(Nucleons)",
+      "size": 27,
+      "tone": "good"
+    }
+  ],
+  "beats": [
+    {
+      "id": "charged-particles_1",
+      "topic": "The Structure of an Atom",
+      "narration": "Run a dry plastic comb through your hair on a winter morning, and bring it near tiny bits of paper.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper"
+      ],
+      "frame": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper"
+      ]
+    },
+    {
+      "id": "charged-particles_2",
+      "topic": "The Structure of an Atom",
+      "narration": "The paper leaps right up to the comb. Where did that attraction come from?",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label"
+      ],
+      "frame": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label"
+      ]
+    },
+    {
+      "id": "charged-particles_3",
+      "topic": "The Structure of an Atom",
+      "narration": "Dalton told us atoms are indivisible spheres. But if rubbing two neutral objects creates an electric charge, that charge must come from inside the atom itself.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7"
+      ],
+      "frame": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7"
+      ]
+    },
+    {
+      "id": "charged-particles_4",
+      "topic": "The Structure of an Atom",
+      "narration": "By 1900, physicists had discovered two distinct particles hiding within all matter.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9"
+      ],
+      "frame": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9"
+      ]
+    },
+    {
+      "id": "charged-particles_5",
+      "topic": "The Structure of an Atom",
+      "narration": "Because an atom overall has zero charge, the positive and negative parts must balance each other out. But how do they sit together inside?",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11"
+      ],
+      "frame": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11"
+      ]
+    },
+    {
+      "id": "thomson-model_1",
+      "topic": "The Structure of an Atom",
+      "narration": "J.J. Thomson proposed the very first structural model of an atom, comparing it to a watermelon or a Christmas pudding.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model"
+      ],
+      "frame": [
+        "thomson-model_0",
+        "thomson_model"
+      ]
+    },
+    {
+      "id": "thomson-model_2",
+      "topic": "The Structure of an Atom",
+      "narration": "In his view, the positive charge forms a continuous sphere spread throughout the entire atom, just like the red edible part of a watermelon.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1"
+      ],
+      "frame": [
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1"
+      ]
+    },
+    {
+      "id": "thomson-model_3",
+      "topic": "The Structure of an Atom",
+      "narration": "And the electrons? They are embedded in this positive sphere like black seeds studded throughout the flesh.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9"
+      ],
+      "frame": [
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9"
+      ]
+    },
+    {
+      "id": "thomson-model_4",
+      "topic": "The Structure of an Atom",
+      "narration": "It was simple and elegant. But could it survive an experiment firing fast particles straight at it?",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9"
+      ],
+      "frame": [
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9"
+      ],
+      "focus": [
+        "thomson_model#positive_sphere",
+        "thomson_model#electrons"
+      ]
+    },
+    {
+      "id": "rutherford-experiment_1",
+      "topic": "The Structure of an Atom",
+      "narration": "Ernest Rutherford tested this by firing fast-moving, positively charged alpha particles at an extremely thin sheet of gold foil.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ],
+      "frame": [
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ]
+    },
+    {
+      "id": "rutherford-experiment_2",
+      "topic": "The Structure of an Atom",
+      "narration": "If Thomson was right, the positive charge was spread thinly, and alpha particles would pass through with barely a nudge. Most did go straight through!",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ],
+      "frame": [
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ]
+    },
+    {
+      "id": "rutherford-experiment_3",
+      "topic": "The Structure of an Atom",
+      "narration": "However, a small fraction deflected at noticeable angles. And astonishingly, about one in twelve thousand turned right back!",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ],
+      "frame": [
+        "rutherford-experiment_0",
+        "rutherford_experiment"
+      ]
+    },
+    {
+      "id": "rutherford-experiment_4",
+      "topic": "The Structure of an Atom",
+      "narration": "Rutherford remarked it was like firing a 15-inch shell at a piece of tissue paper and having it bounce back and hit you.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2"
+      ],
+      "frame": [
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2"
+      ],
+      "focus": [
+        "rutherford_experiment#alpha_source",
+        "rutherford_experiment#straight_rays",
+        "rutherford_experiment#deflected_rays",
+        "rutherford_experiment#rebound_ray"
+      ]
+    },
+    {
+      "id": "bohr-model_1",
+      "topic": "The Structure of an Atom",
+      "narration": "Rutherford's model had one big puzzle: an orbiting electron should lose energy and spiral into the nucleus within a fraction of a second. Neils Bohr solved this in 1913.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2",
+        "bohr-model_0",
+        "bohr_atom"
+      ],
+      "frame": [
+        "bohr-model_0",
+        "bohr_atom"
+      ]
+    },
+    {
+      "id": "bohr-model_2",
+      "topic": "The Structure of an Atom",
+      "narration": "Bohr explained that electrons only travel in specific, allowed paths called discrete orbits or energy levels, labelled K, L, M, and N.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2",
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2"
+      ],
+      "frame": [
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2"
+      ]
+    },
+    {
+      "id": "bohr-model_3",
+      "topic": "The Structure of an Atom",
+      "narration": "In 1932, J. Chadwick discovered the third particle: the neutron, an uncharged particle sitting right beside the protons in the nucleus.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2",
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2",
+        "bohr-model_9"
+      ],
+      "frame": [
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2",
+        "bohr-model_9"
+      ]
+    },
+    {
+      "id": "bohr-model_4",
+      "topic": "The Structure of an Atom",
+      "narration": "Almost the entire mass of the atom sits in that tiny central nucleus, surrounded by clouds of electrons in designated shells.",
+      "show": [
+        "charged-particles_0",
+        "charged-particles__comb",
+        "charged-particles__paper",
+        "charged-particles_5",
+        "charged-particles_5_label",
+        "charged-particles_7",
+        "charged-particles_9",
+        "charged-particles_11",
+        "thomson-model_0",
+        "thomson_model",
+        "thomson-model_5",
+        "thomson-model_5_l1",
+        "thomson-model_8",
+        "thomson-model_8_l1",
+        "thomson-model_8_l2",
+        "thomson-model_9",
+        "rutherford-experiment_0",
+        "rutherford_experiment",
+        "rutherford-experiment_10",
+        "rutherford-experiment_11",
+        "rutherford-experiment_11_l1",
+        "rutherford-experiment_11_l2",
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2",
+        "bohr-model_9",
+        "bohr-model_11",
+        "bohr-model_11_l1",
+        "bohr-model_11_l2"
+      ],
+      "frame": [
+        "bohr-model_0",
+        "bohr_atom",
+        "bohr-model_7",
+        "bohr-model_7_l1",
+        "bohr-model_7_l2",
+        "bohr-model_9",
+        "bohr-model_11",
+        "bohr-model_11_l1",
+        "bohr-model_11_l2"
+      ],
+      "focus": [
+        "bohr_atom#nucleus",
+        "bohr_atom#k_shell",
+        "bohr_atom#l_shell"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/structure-of-the-atom/the-structure-of-an-atom"
+}

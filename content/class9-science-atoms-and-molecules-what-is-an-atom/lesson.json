@@ -1,0 +1,751 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-atoms-and-molecules-what-is-an-atom",
+  "title": "What is an Atom?",
+  "subtitle": "The fundamental building block of all matter",
+  "language": "en",
+  "canvas": {
+    "w": 4780,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat_1_breaking_matter_0",
+      "x": 500,
+      "y": 86,
+      "text": "What is an Atom?",
+      "sub": "The ultimate building block"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_breaking_matter__block",
+      "x": 170.29636363636362,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "chalk",
+      "label": "piece of chalk",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_breaking_matter__powder",
+      "x": 441.99999999999994,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "powder",
+      "label": "fine powder",
+      "labelSide": "below"
+    },
+    {
+      "kind": "graphic",
+      "id": "beat_1_breaking_matter__particle",
+      "x": 713.7036363636363,
+      "y": 150,
+      "w": 116,
+      "h": 116,
+      "noun": "circle",
+      "label": "indivisible unit",
+      "labelSide": "below"
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_1_breaking_matter_5",
+      "from": {
+        "x": 300.2963636363636,
+        "y": 208
+      },
+      "to": {
+        "x": 427.99999999999994,
+        "y": 208
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_breaking_matter_5_label",
+      "x": 409.7163636363636,
+      "y": 325,
+      "text": "divide further",
+      "size": 17
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_1_breaking_matter_8",
+      "from": {
+        "x": 572,
+        "y": 162
+      },
+      "to": {
+        "x": 699.7036363636363,
+        "y": 162
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_breaking_matter_8_label",
+      "x": 636.8081818181818,
+      "y": 320.4163636363637,
+      "text": "ultimate limit",
+      "size": 13.94
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_breaking_matter_10",
+      "x": 500,
+      "y": 373.4,
+      "text": "Atom: The smallest particle of an element that retains its chemical identity",
+      "size": 18.339382940108894,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_breaking_matter_11",
+      "x": 500,
+      "y": 461.4,
+      "text": "Greek 'atomos' = indivisible / uncuttable",
+      "size": 33.994953742640874
+    },
+    {
+      "kind": "title",
+      "id": "beat_2_scale_of_atoms_0",
+      "x": 1760,
+      "y": 86,
+      "text": "Scale of an Atom",
+      "sub": "Atomic radius is measured in nanometres (nm)"
+    },
+    {
+      "kind": "text",
+      "id": "beat_2_scale_of_atoms_7",
+      "x": 1760,
+      "y": 562,
+      "text": "Atoms cannot be seen with normal optical microscopes"
+    },
+    {
+      "kind": "formula",
+      "id": "beat_2_scale_of_atoms_2",
+      "x": 1760,
+      "y": 184.32,
+      "text": "1 nm = 10^-9 m  (1 metre = 1,000,000,000 nm)"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_scale_of_atoms_4",
+      "x": 1760,
+      "y": 271.4,
+      "text": "Atomic radius of Hydrogen = 10^-10 m (0.1 nm)",
+      "size": 30.973180076628353,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_2_scale_of_atoms_6",
+      "x": 1407.4,
+      "y": 316,
+      "w": 705.1999999999999,
+      "heading": "Relative Sizes (in metres)",
+      "items": [
+        {
+          "term": "Atom of Hydrogen",
+          "meaning": "10^-10 m (smallest)"
+        },
+        {
+          "term": "Molecule of Water",
+          "meaning": "10^-9 m"
+        },
+        {
+          "term": "Haemoglobin molecule",
+          "meaning": "10^-8 m"
+        },
+        {
+          "term": "Grain of sand",
+          "meaning": "10^-4 m"
+        },
+        {
+          "term": "An Apple",
+          "meaning": "10^-1 m (0.1 m)"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "beat_3_subatomic_particles_0",
+      "x": 3020,
+      "y": 86,
+      "text": "Inside the Atom",
+      "sub": "Protons, Neutrons, and Electrons"
+    },
+    {
+      "kind": "diagram",
+      "id": "atom_structure",
+      "x": 2822,
+      "y": 150,
+      "w": 396,
+      "h": 193.94,
+      "src": "generated/atom_structure.svg",
+      "alt": "Diagram showing the internal structure of an atom with central nucleus and surrounding electron shells",
+      "parts": [
+        "nucleus",
+        "protons",
+        "neutrons",
+        "electron_orbits",
+        "electrons"
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_subatomic_particles_5",
+      "x": 2711.2,
+      "y": 170,
+      "text": "Nucleus (centre)",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_subatomic_particles_8",
+      "x": 3305.6,
+      "y": 170,
+      "text": "Protons (p+)",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_subatomic_particles_11",
+      "x": 2728.6,
+      "y": 217,
+      "text": "Neutrons (n0)",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_subatomic_particles_14",
+      "x": 3317.2,
+      "y": 217,
+      "text": "Electrons (e-)",
+      "size": 20
+    },
+    {
+      "kind": "list",
+      "id": "beat_3_subatomic_particles_15",
+      "x": 2667.4,
+      "y": 359.94,
+      "w": 705.1999999999999,
+      "heading": "The Three Subatomic Particles",
+      "items": [
+        {
+          "term": "Proton (p+)",
+          "meaning": "Positive charge (+1), Mass = 1 u, inside nucleus"
+        },
+        {
+          "term": "Neutron (n)",
+          "meaning": "No charge (0), Mass = 1 u, inside nucleus"
+        },
+        {
+          "term": "Electron (e-)",
+          "meaning": "Negative charge (-1), negligible mass (1/2000 u), orbits nucleus"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "beat_4_mass_and_neutrality_0",
+      "x": 4280,
+      "y": 86,
+      "text": "How an Atom Stays Balanced",
+      "sub": "Charge and mass distribution"
+    },
+    {
+      "kind": "text",
+      "id": "beat_4_mass_and_neutrality_7",
+      "x": 4280,
+      "y": 562,
+      "text": "The atom: electrically neutral, mostly empty space, with mass locked in the nucleus"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_mass_and_neutrality_2",
+      "x": 4280,
+      "y": 193.4,
+      "text": "In a neutral atom: Number of Protons = Number of Electrons",
+      "size": 24.03091557669441,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_mass_and_neutrality_5",
+      "x": 4280,
+      "y": 281.4,
+      "text": "Almost entire mass is concentrated in the Nucleus",
+      "size": 28.44475721323012,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_4_mass_and_neutrality_6",
+      "x": 3927.4,
+      "y": 326,
+      "w": 705.1999999999999,
+      "heading": "Key Takeaways",
+      "items": [
+        {
+          "term": "Atomic Neutrality",
+          "meaning": "Equal number of positive protons and negative electrons"
+        },
+        {
+          "term": "Mass Distribution",
+          "meaning": "Protons and neutrons give the atom mass; electrons have negligible mass"
+        },
+        {
+          "term": "Empty Space",
+          "meaning": "Most of the volume inside an atom is empty space between nucleus and electrons"
+        }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_1_breaking_matter_1",
+      "topic": "The idea of the indivisible particle",
+      "narration": "Imagine you take a piece of chalk or a grain of gold and start breaking it into smaller pieces.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block"
+      ],
+      "frame": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block"
+      ]
+    },
+    {
+      "id": "beat_1_breaking_matter_2",
+      "topic": "The idea of the indivisible particle",
+      "narration": "You crush it into fine powder. Each tiny grain is still chalk.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label"
+      ],
+      "frame": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label"
+      ]
+    },
+    {
+      "id": "beat_1_breaking_matter_3",
+      "topic": "The idea of the indivisible particle",
+      "narration": "If you keep dividing that powder again and again, do you reach a stage where you cannot divide it any further?",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label"
+      ],
+      "frame": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label"
+      ]
+    },
+    {
+      "id": "beat_1_breaking_matter_4",
+      "topic": "The idea of the indivisible particle",
+      "narration": "Ancient Indian philosopher Maharishi Kanad called this ultimate particle 'Parmanu'. John Dalton later called it the 'Atom', from the Greek word atomos, meaning indivisible.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11"
+      ],
+      "frame": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11"
+      ]
+    },
+    {
+      "id": "beat_2_scale_of_atoms_1",
+      "topic": "How small is an atom?",
+      "narration": "Just how small is an atom? They are smaller than anything we can ever imagine or compare with.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2"
+      ],
+      "frame": [
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2"
+      ]
+    },
+    {
+      "id": "beat_2_scale_of_atoms_2",
+      "topic": "How small is an atom?",
+      "narration": "Millions of atoms stacked together would barely make a layer as thick as a single sheet of paper!",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4"
+      ],
+      "frame": [
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4"
+      ]
+    },
+    {
+      "id": "beat_2_scale_of_atoms_3",
+      "topic": "How small is an atom?",
+      "narration": "Look at how atoms compare to things around us in order of size.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7"
+      ],
+      "frame": [
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7"
+      ]
+    },
+    {
+      "id": "beat_3_subatomic_particles_1",
+      "topic": "Inside the atom: Subatomic particles",
+      "narration": "Dalton thought atoms were solid, indivisible spheres. But later experiments revealed that an atom has an internal structure.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure"
+      ],
+      "frame": [
+        "beat_3_subatomic_particles_0",
+        "atom_structure"
+      ]
+    },
+    {
+      "id": "beat_3_subatomic_particles_2",
+      "topic": "Inside the atom: Subatomic particles",
+      "narration": "At the very centre lies a tiny, extremely dense core called the nucleus.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5"
+      ],
+      "frame": [
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5"
+      ]
+    },
+    {
+      "id": "beat_3_subatomic_particles_3",
+      "topic": "Inside the atom: Subatomic particles",
+      "narration": "Inside the nucleus are protons, which carry a positive electric charge.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8"
+      ],
+      "frame": [
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8"
+      ]
+    },
+    {
+      "id": "beat_3_subatomic_particles_4",
+      "topic": "Inside the atom: Subatomic particles",
+      "narration": "Also packed into the nucleus are neutrons, which have no electric charge at all.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11"
+      ],
+      "frame": [
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11"
+      ]
+    },
+    {
+      "id": "beat_3_subatomic_particles_5",
+      "topic": "Inside the atom: Subatomic particles",
+      "narration": "Whizzing rapidly around the nucleus in fixed orbits are the electrons, which carry a negative charge.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11",
+        "beat_3_subatomic_particles_14",
+        "beat_3_subatomic_particles_15"
+      ],
+      "frame": [
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11",
+        "beat_3_subatomic_particles_14",
+        "beat_3_subatomic_particles_15"
+      ],
+      "focus": [
+        "atom_structure#nucleus",
+        "atom_structure#protons",
+        "atom_structure#neutrons",
+        "atom_structure#electrons"
+      ]
+    },
+    {
+      "id": "beat_4_mass_and_neutrality_1",
+      "topic": "Electrical neutrality and atomic mass",
+      "narration": "Now ask yourself: if an atom contains charged particles, why does a piece of iron or gold not give you an electric shock?",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11",
+        "beat_3_subatomic_particles_14",
+        "beat_3_subatomic_particles_15",
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2"
+      ],
+      "frame": [
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2"
+      ]
+    },
+    {
+      "id": "beat_4_mass_and_neutrality_2",
+      "topic": "Electrical neutrality and atomic mass",
+      "narration": "The total positive charge of the protons exactly cancels out the total negative charge of the electrons, making the atom electrically neutral.",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11",
+        "beat_3_subatomic_particles_14",
+        "beat_3_subatomic_particles_15",
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2"
+      ],
+      "frame": [
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2"
+      ]
+    },
+    {
+      "id": "beat_4_mass_and_neutrality_3",
+      "topic": "Electrical neutrality and atomic mass",
+      "narration": "Where does all the mass of an atom live?",
+      "show": [
+        "beat_1_breaking_matter_0",
+        "beat_1_breaking_matter__block",
+        "beat_1_breaking_matter__powder",
+        "beat_1_breaking_matter_5",
+        "beat_1_breaking_matter_5_label",
+        "beat_1_breaking_matter__particle",
+        "beat_1_breaking_matter_8",
+        "beat_1_breaking_matter_8_label",
+        "beat_1_breaking_matter_10",
+        "beat_1_breaking_matter_11",
+        "beat_2_scale_of_atoms_0",
+        "beat_2_scale_of_atoms_2",
+        "beat_2_scale_of_atoms_4",
+        "beat_2_scale_of_atoms_6",
+        "beat_2_scale_of_atoms_7",
+        "beat_3_subatomic_particles_0",
+        "atom_structure",
+        "beat_3_subatomic_particles_5",
+        "beat_3_subatomic_particles_8",
+        "beat_3_subatomic_particles_11",
+        "beat_3_subatomic_particles_14",
+        "beat_3_subatomic_particles_15",
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2",
+        "beat_4_mass_and_neutrality_5",
+        "beat_4_mass_and_neutrality_6",
+        "beat_4_mass_and_neutrality_7"
+      ],
+      "frame": [
+        "beat_4_mass_and_neutrality_0",
+        "beat_4_mass_and_neutrality_2",
+        "beat_4_mass_and_neutrality_5",
+        "beat_4_mass_and_neutrality_6",
+        "beat_4_mass_and_neutrality_7"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/atoms-and-molecules/what-is-an-atom"
+}

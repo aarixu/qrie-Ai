@@ -54,14 +54,19 @@ async function flush(): Promise<void> {
 function makeFakeTts(opts: { resolveOnCancel?: boolean } = {}) {
   const resolveOnCancel = opts.resolveOnCancel ?? true;
   const spoken: string[] = [];
+  const primed: string[] = [];
   let queue: Array<() => void> = [];
   const fake = {
     spoken,
+    primed,
     cancels: 0,
     adapter: {
       speak(text: string): Promise<void> {
         spoken.push(text);
         return new Promise<void>((res) => queue.push(res));
+      },
+      prime(text: string): void {
+        primed.push(text);
       },
       cancel(): void {
         fake.cancels += 1;
@@ -341,5 +346,44 @@ describe('PlayerController — events', () => {
     await tts.finishSpeech(); // advances to beat 1
     expect(c.beatIndex).toBe(1);
     expect(cb).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('getting the next line ready', () => {
+  /**
+   * A voice that fetches each line pays its time-to-first-byte as SILENCE
+   * between sentences — about four tenths of a second, once per line, all class
+   * long. The controller knows what comes next, so it says so.
+   */
+  it('asks for the next beat while the current one is being spoken', async () => {
+    const tts = makeFakeTts();
+    const lesson = miniLesson();
+    const player = new PlayerController(lesson, { tts: tts.adapter, minBeatMs: 0 });
+    player.play();
+    expect(tts.spoken).toEqual([lesson.beats[0].narration]);
+    expect(tts.primed).toEqual([lesson.beats[1].narration]);
+  });
+
+  it('keeps one line ahead as the class moves', async () => {
+    const tts = makeFakeTts();
+    const lesson = miniLesson();
+    const player = new PlayerController(lesson, { tts: tts.adapter, minBeatMs: 0 });
+    player.play();
+    await tts.finishSpeech();
+    expect(tts.spoken[1]).toBe(lesson.beats[1].narration);
+    expect(tts.primed[1]).toBe(lesson.beats[2].narration);
+  });
+
+  it('asks for nothing after the last beat', async () => {
+    // Nothing follows the end of the class, so nothing is fetched for it.
+    const tts = makeFakeTts();
+    const lesson = miniLesson();
+    const player = new PlayerController(lesson, { tts: tts.adapter, minBeatMs: 0 });
+    player.play();
+    await tts.finishSpeech();
+    await tts.finishSpeech();
+    expect(tts.spoken).toHaveLength(lesson.beats.length);
+    // One ahead of each beat except the last: two primes for three beats.
+    expect(tts.primed).toEqual([lesson.beats[1].narration, lesson.beats[2].narration]);
   });
 });

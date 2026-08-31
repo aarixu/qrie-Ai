@@ -7,6 +7,15 @@ export interface TtsAdapter {
   speak(text: string): Promise<void>;
   /** Must make any pending speak() resolve promptly. */
   cancel(): void;
+  /**
+   * Get a line ready that is about to be spoken, without speaking it.
+   *
+   * Optional, because a voice that is already instant has nothing to gain. For
+   * one that fetches, this is the difference between a class and a class with
+   * a pause in it: every line is its own request, so with nothing started
+   * ahead you hear the whole time-to-first-byte as silence between sentences.
+   */
+  prime?(text: string): void;
 }
 
 /** Rough speech duration used for fallback timing and progress estimates. */

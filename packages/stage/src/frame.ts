@@ -5,6 +5,7 @@ import {
   union,
   CANVAS_H,
   CANVAS_W,
+  PAGE_STRIDE,
   type Lesson,
   type Rect,
 } from '@ai-tutor/lesson-format';
@@ -42,6 +43,15 @@ const MAX_ZOOM = 3;
 const PAD = 0.09;
 
 /**
+ * The most board the camera will ever show at once: one page.
+ *
+ * Not a comfort setting — it is what stops the board from paying for its own
+ * length. Past one page the writing is smaller than it was authored to be, and
+ * the fix for "there is more to show" is to move, not to widen.
+ */
+const WINDOW = { w: CANVAS_W, h: CANVAS_H };
+
+/**
  * Grow a rect to `aspect` (w/h) about its own centre. The renderer letterboxes
  * whatever it is given, so handing it a frame that already matches the screen
  * is the difference between a board that fills the phone and one that floats
@@ -69,10 +79,18 @@ const clamp = (v: number, lo: number, hi: number): number => Math.max(lo, Math.m
  * gentler failure than a board that squashes.
  */
 function clampInto(rect: Rect, board: Rect): Rect {
+  // From the board's own origin. The old form clamped into [0, w] because the
+  // one board there was began at zero — a PAGE of an endless board does not,
+  // and clamping a page-2 frame into page 0's range dragged the camera three
+  // pages left of the thing it was framing.
   const x =
-    rect.w >= board.w ? board.x - (rect.w - board.w) / 2 : clamp(rect.x, 0, board.w - rect.w);
+    rect.w >= board.w
+      ? board.x - (rect.w - board.w) / 2
+      : clamp(rect.x, board.x, board.x + board.w - rect.w);
   const y =
-    rect.h >= board.h ? board.y - (rect.h - board.h) / 2 : clamp(rect.y, 0, board.h - rect.h);
+    rect.h >= board.h
+      ? board.y - (rect.h - board.h) / 2
+      : clamp(rect.y, board.y, board.y + board.h - rect.h);
   return { x, y, w: rect.w, h: rect.h };
 }
 
@@ -100,13 +118,44 @@ export function computeFrame(
   minW?: number,
 ): Rect {
   const board: Rect = { x: 0, y: 0, w: lesson.canvas.w, h: lesson.canvas.h };
-  const shape = (r: Rect): Rect => clampInto(aspect ? toAspect(r, aspect) : r, board);
+  const shape = (r: Rect, within: Rect = board): Rect =>
+    clampInto(aspect ? toAspect(r, aspect) : r, within);
 
-  const wanted = new Set(visible);
-  const boxes = lesson.elements.filter((el) => wanted.has(el.id)).map(boxOf);
+  /**
+   * In the order they were DRAWN, so the last one is what she is working on
+   * now. Reading them off `lesson.elements` instead sorted them by however the
+   * lesson was written, which is not the same thing and is not what a camera
+   * follows.
+   */
+  const byId = new Map(lesson.elements.map((el) => [el.id, el]));
+  const boxes = visible
+    .map((id) => byId.get(id))
+    .filter((el): el is NonNullable<typeof el> => el !== undefined)
+    .map(boxOf);
   if (boxes.length === 0) return shape(board);
 
-  let frame = boxes.reduce(union);
+  /**
+   * THE CAMERA SCROLLS; IT DOES NOT ZOOM OUT.
+   *
+   * The board is endless, so there is always somewhere to put the next thing —
+   * which means there is never a reason to make the last thing smaller. This
+   * used to be `boxes.reduce(union)`: a frame that grew to hold everything it
+   * was given, so a fuller board simply rendered at a smaller scale until the
+   * writing was unreadable. Three pages of work came back as a frame 3327
+   * units wide, every word at a third of its size.
+   *
+   * So the frame is built from the NEWEST backwards, taking as much of what
+   * came before as fits the window and no more. What does not fit is not
+   * shrunk — it is off to the side, and going back to it is a scroll, which is
+   * what an endless board is for.
+   */
+  const anchor = boxes[boxes.length - 1];
+  let frame = anchor;
+  for (let i = boxes.length - 2; i >= 0; i -= 1) {
+    const grown = union(frame, boxes[i]);
+    if (grown.w > WINDOW.w || grown.h > WINDOW.h) break;
+    frame = grown;
+  }
 
   const pad = Math.max(frame.w, frame.h) * PAD;
   frame = { x: frame.x - pad, y: frame.y - pad, w: frame.w + pad * 2, h: frame.h + pad * 2 };
@@ -130,5 +179,30 @@ export function computeFrame(
     };
   }
 
-  return shape(frame);
+  // Padding and the floors above can push past the window; the window wins,
+  // and it stays over what she is drawing now.
+  if (frame.w > WINDOW.w) {
+    frame = { ...frame, x: anchor.x + anchor.w / 2 - WINDOW.w / 2, w: WINDOW.w };
+  }
+  if (frame.h > WINDOW.h) {
+    frame = { ...frame, y: anchor.y + anchor.h / 2 - WINDOW.h / 2, h: WINDOW.h };
+  }
+
+  /**
+   * And it never leaves the PAGE she is working on.
+   *
+   * Centred on the newest thing alone, the window followed a short wrapped
+   * line to the left edge of its page and slid into the empty gutter between
+   * pages — a student saw blank board on the left and the title cut off on
+   * the right. A page is the unit of attention: the window moves along the
+   * board page by page, and frames the gap between two pages never.
+   */
+  const page = Math.floor((anchor.x + anchor.w / 2) / PAGE_STRIDE);
+  const pageRect: Rect = {
+    x: page * PAGE_STRIDE,
+    y: 0,
+    w: Math.min(CANVAS_W, board.w),
+    h: board.h,
+  };
+  return shape(frame, pageRect);
 }

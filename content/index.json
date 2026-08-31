@@ -71,6 +71,42 @@
       "subject": "Science",
       "path": "class9-science-the-fundamental-unit-of-life-nucleus/lesson.json",
       "topicRef": "class9-science/the-fundamental-unit-of-life/nucleus"
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-what-is-an-atom",
+      "title": "What is an Atom?",
+      "subtitle": "Class 9 · Atoms and Molecules",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-atoms-and-molecules-what-is-an-atom/lesson.json",
+      "topicRef": "class9-science/atoms-and-molecules/what-is-an-atom"
+    },
+    {
+      "id": "class9-science-atoms-and-molecules-law-of-conservation-of-mass",
+      "title": "Law of Conservation of Mass",
+      "subtitle": "Class 9 · Atoms and Molecules",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-atoms-and-molecules-law-of-conservation-of-mass/lesson.json",
+      "topicRef": "class9-science/atoms-and-molecules/law-of-conservation-of-mass"
+    },
+    {
+      "id": "class9-science-structure-of-the-atom-the-structure-of-an-atom",
+      "title": "The Structure of an Atom",
+      "subtitle": "Class 9 · Structure of the Atom",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-structure-of-the-atom-the-structure-of-an-atom/lesson.json",
+      "topicRef": "class9-science/structure-of-the-atom/the-structure-of-an-atom"
+    },
+    {
+      "id": "class9-science-matter-in-our-surroundings-characteristics-of-particles-of-matter",
+      "title": "Characteristics of Particles of Matter",
+      "subtitle": "Class 9 · Matter in Our Surroundings",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-matter-in-our-surroundings-characteristics-of-particles-of-matter/lesson.json",
+      "topicRef": "class9-science/matter-in-our-surroundings/characteristics-of-particles-of-matter"
     }
   ]
 }

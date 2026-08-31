@@ -130,6 +130,20 @@ function elementErrors(el: Record<string, unknown>, path: string): string[] {
         need(el.direction === 'row' || el.direction === 'column', 'flow direction must be "row" or "column"');
       }
       break;
+    case 'list':
+      need(isNum(el.x) && isNum(el.y) && isNum(el.w), 'list needs numeric x,y,w');
+      // No height: a list is as tall as its items make it, measured by
+      // listBoxHeight. A width it must have, because that is what it wraps to.
+      need(
+        Array.isArray(el.items) && el.items.length > 0,
+        'list needs at least one item',
+      );
+      need(
+        Array.isArray(el.items) && el.items.every((it) => isObj(it) && isStr(it.term)),
+        'every list item needs a term — the term is the thing being defined',
+      );
+      optionalNumber('size');
+      break;
     case 'handwrite':
       need(isNum(el.x) && isNum(el.y), 'handwrite needs numeric x,y');
       need(isStr(el.text), 'handwrite needs non-empty text');

@@ -1,4 +1,4 @@
-import { layoutBeat, offsetElement, type Instruction } from '@ai-tutor/board-layout';
+import { layoutBeat, offsetElement, PAGE_STRIDE, type Instruction } from '@ai-tutor/board-layout';
 import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture';
 import {
   PART_SEPARATOR,
@@ -178,13 +178,9 @@ export function assemble(
    * points the camera at the page being taught, so moving on is a pan that
    * slides the old work aside rather than a cut that deletes it.
    */
-  // A page is a thousand units wide; the rest is the gap between pages.
-  //
-  // It has to be wider than the breathing room the camera adds around what it
-  // frames — about 80 units on a full page — or the edge of the previous page
-  // leans into the shot, and a stray letter from an old heading appears beside
-  // the drawing being taught.
-  const PAGE_STRIDE = 1260;
+  // The stride lives with the layout engine now, because that is what decides
+  // where a page ENDS: a beat carrying more than a board's worth turns the
+  // page itself rather than writing smaller.
   let page = 0;
   const shownSoFar: string[] = [];
 
@@ -198,11 +194,12 @@ export function assemble(
     const board = (beat.board ?? []).filter((step) =>
       'ref' in step ? drawn.has(step.ref) : true,
     ).map((step) => reuse(step, beat.id));
-    const { elements: laidOut, laid, steps } = layoutBeat(
-      { ...beat, board },
-      partsByRef,
-      shapesByRef,
-    );
+    const {
+      elements: laidOut,
+      laid,
+      steps,
+      pages: sheets,
+    } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -223,7 +220,10 @@ export function assemble(
     const fresh = laidOut.filter((el) => !elements.some((e) => e.id === el.id));
     const dx = fresh.length > 0 ? page * PAGE_STRIDE : lastDx;
     if (fresh.length > 0) {
-      page += 1;
+      // By however many the beat used, not by one. A beat that turned its own
+      // page and then had the next beat start on top of it would put two
+      // lessons' work in the same place.
+      page += sheets;
       lastDx = dx;
     }
 

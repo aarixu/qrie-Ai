@@ -1,7 +1,23 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { graphicLabelSize, textWidth, writeMs, BESIDE_GAP } from '@ai-tutor/lesson-format';
+import {
+  graphicLabelSize,
+  textWidth,
+  fitText,
+  titleSize,
+  writeMs,
+  wrapLines,
+  listItemText,
+  listBoxHeight,
+  LIST_HEADING_SIZE,
+  LIST_ITEM_SIZE,
+  LIST_LINE_H,
+  LIST_ITEM_GAP,
+  LIST_INDENT,
+  LIST_HEADING_GAP,
+  BESIDE_GAP,
+} from '@ai-tutor/lesson-format';
 
 export interface SceneProps {
   lesson: Lesson;
@@ -117,6 +133,11 @@ function centerOf(el: Element): Point {
       return { x: el.x + el.w / 2, y: el.y + el.h / 2 };
     case 'flow':
       return { x: el.x + el.w / 2, y: el.y + flowHeight(el.steps.length, el.direction) / 2 };
+    case 'list':
+      return {
+        x: el.x + el.w / 2,
+        y: el.y + listBoxHeight(el.items, el.heading, el.w, el.size ?? LIST_ITEM_SIZE) / 2,
+      };
     case 'arrow':
       return { x: (el.from.x + el.to.x) / 2, y: (el.from.y + el.to.y) / 2 };
     case 'pen': {
@@ -192,11 +213,54 @@ const SCENE_CSS = `
   animation: stage-draw ${MARK_MS}ms ease-out forwards;
 }
 @keyframes stage-nib-out { to { opacity: 0; } }
+
+/* THE PAINTER'S FOUR MOTIONS.
+
+   A generated drawing may mark a shape with exactly one of these — the gate in
+   class-prep rejects every other class — and this is where each one gets its
+   meaning. Ink wanders, a current runs along its own line, a heart beats, a
+   leaf rocks. Small and slow on purpose: the motion is there to say "this is a
+   PROCESS", never to perform.
+
+   fill-box, because an SVG transform otherwise pivots on the page corner and a
+   pulsing atom would orbit the title instead of beating in place. */
+.curie-drift, .curie-pulse, .curie-sway {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.curie-drift { animation: curie-drift 5.2s ease-in-out infinite alternate; }
+@keyframes curie-drift {
+  from { transform: translate(0, 0) rotate(0deg); }
+  33%  { transform: translate(7px, -6px) rotate(2deg); }
+  66%  { transform: translate(-5px, -10px) rotate(-2deg); }
+  to   { transform: translate(4px, -14px) rotate(1deg); }
+}
+/* Flow is a marching dash, so it reads as movement ALONG the stroke — a
+   current in its wire, water in its pipe — without needing a motion path. */
+.curie-flow {
+  stroke-dasharray: 10 14;
+  animation: curie-flow 1.4s linear infinite;
+}
+@keyframes curie-flow { to { stroke-dashoffset: -24; } }
+.curie-pulse { animation: curie-pulse 1.6s ease-in-out infinite; }
+@keyframes curie-pulse {
+  0%, 100% { transform: scale(1); }
+  35%      { transform: scale(1.1); }
+  50%      { transform: scale(0.98); }
+}
+.curie-sway { animation: curie-sway 3.4s ease-in-out infinite alternate; }
+@keyframes curie-sway {
+  from { transform: rotate(-2.5deg); }
+  to   { transform: rotate(2.5deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .stage-pop, .stage-sweep, .stage-write, .stage-nib, .stage-draw {
     animation-duration: 0.01ms;
     animation-delay: 0ms;
   }
+  /* The painter's motions LOOP, so they stop outright rather than speeding up. */
+  .curie-drift, .curie-flow, .curie-pulse, .curie-sway { animation: none; }
 }
 `;
 
@@ -219,7 +283,7 @@ const ARROW_MARKERS = (Object.keys(TONE_COLORS) as Tone[]).map((tone) => (
 function renderTitle(el: Extract<Element, { kind: 'title' }>): ReactElement {
   return (
     <>
-      <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_HAND} fontSize={44} fontWeight={900} fill={INK}>
+      <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_HAND} fontSize={titleSize(el.text)} fontWeight={900} fill={INK}>
         {el.text}
       </text>
       {el.sub && (
@@ -329,6 +393,81 @@ function renderBox(el: Extract<Element, { kind: 'box' }>): ReactElement {
       ))}
     </>
   );
+}
+
+/**
+ * A heading over numbered "term — meaning" items.
+ *
+ * Drawn the way a section of a good notes page is: the heading underlined, the
+ * numbers hanging in their own margin so wrapped lines line up under the words
+ * rather than under the digit, and the TERM in each item carrying the weight —
+ * a student scanning the board for "left ventricle" should find it without
+ * reading the sentence around it.
+ *
+ * In the tutor's printed hand rather than her written one. Her handwriting is
+ * for the two or three sentences she wants remembered; four definitions in
+ * cursive on a phone screen is a paragraph nobody reads.
+ */
+function renderList(el: Extract<Element, { kind: 'list' }>): ReactElement {
+  const color = TONE_COLORS[toneOf(el)];
+  const size = el.size ?? LIST_ITEM_SIZE;
+  const lead = size * LIST_LINE_H;
+  const headSize = LIST_HEADING_SIZE * (size / LIST_ITEM_SIZE);
+  const out: ReactElement[] = [];
+  let y = el.y;
+
+  if (el.heading) {
+    const baseline = y + headSize;
+    out.push(
+      <text key="heading" x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={headSize} fontWeight={800} letterSpacing={0.4} fill={color}>
+        {el.heading}
+      </text>,
+      <path
+        key="rule"
+        d={`M ${el.x} ${baseline + 5} L ${el.x + Math.min(el.w, textWidth(el.heading, headSize) + 8)} ${baseline + 5}`}
+        stroke={color}
+        strokeOpacity={0.45}
+        strokeWidth={1.6}
+        strokeLinecap="round"
+      />,
+    );
+    y += headSize * LIST_LINE_H + LIST_HEADING_GAP;
+  }
+
+  el.items.forEach((item, n) => {
+    const prefix = `${n + 1}. `;
+    const lines = wrapLines(`${prefix}${listItemText(item)}`, el.w - LIST_INDENT, size);
+    lines.forEach((line, k) => {
+      const baseline = y + size + k * lead;
+      if (k > 0) {
+        // Hanging indent: a continued line starts under the words, not the digit.
+        out.push(
+          <text key={`${n}-${k}`} x={el.x + LIST_INDENT} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
+            {line}
+          </text>,
+        );
+        return;
+      }
+      // The first line carries the number and the term, which are the two
+      // things a student's eye is looking for.
+      const rest = line.slice(prefix.length);
+      const dash = rest.indexOf(' — ');
+      const term = dash >= 0 ? rest.slice(0, dash) : rest;
+      const after = dash >= 0 ? rest.slice(dash) : '';
+      out.push(
+        <text key={`${n}-0`} x={el.x} y={baseline} fontFamily={FONT_HAND} fontSize={size} fill={INK}>
+          <tspan fill={color} fontWeight={700}>
+            {prefix}
+          </tspan>
+          <tspan fontWeight={700}>{term}</tspan>
+          {after && <tspan fillOpacity={0.85}>{after}</tspan>}
+        </text>,
+      );
+    });
+    y += lines.length * lead + LIST_ITEM_GAP;
+  });
+
+  return <>{out}</>;
 }
 
 function renderDoc(el: Extract<Element, { kind: 'doc' }>): ReactElement {
@@ -563,11 +702,25 @@ function renderChart(el: Extract<Element, { kind: 'chart' }>): ReactElement {
  * board is asking it to do arithmetic it is bad at, and one wrong number puts a
  * box on top of an arrow.
  */
+/**
+ * Steps with arrows between them.
+ *
+ * Every line is fitted and wrapped to the step it belongs to. It used to be
+ * drawn at a fixed size and centred, which is fine on a wide board and ruinous
+ * anywhere else: sharing a beat with a list, this flow was handed a narrow
+ * column where five steps left forty-two units each, and labels needing a
+ * hundred and thirty overhung both sides and landed on the steps next door.
+ * Five notes became one unreadable stripe.
+ *
+ * A step is as wide as it is; the writing is what gives way.
+ */
 function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
   const color = TONE_COLORS[toneOf(el)];
   const n = el.steps.length;
   const row = (el.direction ?? 'row') === 'row';
   const stepW = row ? (el.w - (n - 1) * FLOW_GAP) / Math.max(1, n) : el.w;
+  /** Kept clear of the rounded corners on both sides. */
+  const inner = Math.max(12, stepW - 14);
 
   return (
     <>
@@ -577,17 +730,45 @@ function renderFlow(el: Extract<Element, { kind: 'flow' }>): ReactElement {
         const cx = x + stepW / 2;
         const cy = y + FLOW_STEP_H / 2;
         const last = i === n - 1;
+
+        // Sized by the LONGEST WORD, because that is the one thing wrapping
+        // cannot help with: "refraction" has to fit the step or it hangs out
+        // of it however the rest of the sentence is broken up.
+        const widest = (text: string) =>
+          text.split(/\s+/).reduce((a, b) => (a.length >= b.length ? a : b), '');
+        const labelSize = fitText(widest(step.label), inner, 16, 11);
+        const labelLines = wrapLines(step.label, inner, labelSize);
+        const noteSize = step.note ? fitText(widest(step.note), inner, 12.5, 10) : 0;
+        const noteLines = step.note ? wrapLines(step.note, inner, noteSize) : [];
+
+        const labelLead = labelSize * 1.2;
+        const noteLead = noteSize * 1.25;
+        const total = labelLines.length * labelLead + noteLines.length * noteLead;
+        let ty = cy - total / 2 + labelLead * 0.75;
+
+        const drawn: ReactElement[] = [];
+        labelLines.forEach((line, k) => {
+          drawn.push(
+            <text key={`l${k}`} x={cx} y={ty} textAnchor="middle" fontFamily={FONT_HAND} fontSize={labelSize} fontWeight={800} fill={color}>
+              {line}
+            </text>,
+          );
+          ty += labelLead;
+        });
+        ty += noteLines.length > 0 ? noteLead * 0.15 : 0;
+        noteLines.forEach((line, k) => {
+          drawn.push(
+            <text key={`n${k}`} x={cx} y={ty} textAnchor="middle" fontFamily={FONT_HAND} fontSize={noteSize} fill={color} fillOpacity={0.75}>
+              {line}
+            </text>,
+          );
+          ty += noteLead;
+        });
+
         return (
           <g key={i}>
             <rect x={x} y={y} width={stepW} height={FLOW_STEP_H} rx={14} fill={color} fillOpacity={0.12} stroke={color} strokeWidth={2} />
-            <text x={cx} y={step.note ? cy - 8 : cy} dominantBaseline="middle" textAnchor="middle" fontFamily={FONT_HAND} fontSize={16} fontWeight={800} fill={color}>
-              {step.label}
-            </text>
-            {step.note && (
-              <text x={cx} y={cy + 13} dominantBaseline="middle" textAnchor="middle" fontFamily={FONT_HAND} fontSize={12.5} fill={color} fillOpacity={0.75}>
-                {step.note}
-              </text>
-            )}
+            {drawn}
             {!last && (
               <line
                 x1={row ? x + stepW + 8 : cx}
@@ -804,6 +985,8 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
     }
     case 'box':
       return renderBox(el);
+    case 'list':
+      return renderList(el);
     case 'doc':
       return renderDoc(el);
     case 'arrow':

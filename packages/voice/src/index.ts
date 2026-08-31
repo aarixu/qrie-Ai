@@ -91,3 +91,5 @@ export {
   type UtteranceQueue,
   type Schedule,
 } from './utterance';
+
+export { createStreamingTts, type StreamingTtsOptions, type SpeechElement } from './streamingTts';

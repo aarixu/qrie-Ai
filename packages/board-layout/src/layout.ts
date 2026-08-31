@@ -10,6 +10,9 @@ import {
   CANVAS_W,
   fitText,
   writeMs,
+  PAGE_STRIDE,
+  wrapLines,
+  listBoxHeight,
   type Element,
 } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
@@ -42,6 +45,31 @@ const WIDTH = CANVAS_W - SIDE * 2;
 
 /** A card row never gets thinner than this before it wraps to fewer per row. */
 const MIN_CARD_W = 240;
+
+/**
+ * How far apart two pages of an endless board sit.
+ *
+ * Wider than a page, so the camera's breathing room never lets the edge of the
+ * last page lean into the shot. It lives here because layout now decides where
+ * a page ENDS — when a beat has more than a board's worth on it, the rest goes
+ * on the next one — and the assembler slides whole beats by the same stride.
+ */
+export { PAGE_STRIDE } from '@ai-tutor/lesson-format';
+
+/**
+ * The least room a block that would otherwise take "whatever is left" may have.
+ *
+ * There used to be no floor, and the arithmetic did exactly what it was told:
+ * a beat carrying a list and two key points needed 397 units of a 330-unit
+ * band, so the leftover was zero, the scene was given a height of zero, and its
+ * icons came out with a NEGATIVE picture inside a 26-unit box. The stack, being
+ * taller than the band, was then centred — which put it above the band
+ * entirely, on top of the title.
+ *
+ * Nothing about that was recoverable by shrinking. The board is endless; the
+ * answer to "this does not fit" is another page.
+ */
+const MIN_FLEXIBLE_H = 150;
 
 /** Heights the renderer needs to agree with; see the notes on each. */
 const EQUATION_H = 52;
@@ -105,6 +133,16 @@ interface Block {
   ref?: string;
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
+  /**
+   * Whether this can be drawn in half a board without becoming unreadable.
+   *
+   * A picture can be shrunk; a row of five boxes cannot. Squeezed into a
+   * column beside a list, a five-step flow left forty-two units per step, and
+   * "refraction" does not fit in forty-two units at any size a person reads —
+   * so its labels overhung into the steps on either side and five notes came
+   * out as one stripe across the board.
+   */
+  narrow?: boolean;
   /**
    * Which instruction made this block, or null if it records its own.
    *
@@ -176,24 +214,20 @@ function planBand(
   return band;
 }
 
+/**
+ * Wrapped to a column, keeping a little of it clear.
+ *
+ * The BREAKING is `wrapLines` in lesson-format, beside the width measurement it
+ * is made of — this file used to carry its own copy that guessed half an em per
+ * character, packed more onto a line than would fit, and ran text past the very
+ * margin it was wrapping for.
+ *
+ * The six percent held back is the only part that belongs here: a board is not
+ * a page, and text that reaches the edge of its column reads as though it ran
+ * out of room.
+ */
 function wrapText(text: string, w: number, size: number): string[] {
-  // Measured with the ruler everything else uses. Half an em per character
-  // was a guess, and a generous one: it packed more onto a line than would
-  // fit, so lines ran past the very margin they were being wrapped for.
-  const usable = w * 0.94;
-  const lines: string[] = [];
-  let line = '';
-  for (const word of text.split(/\s+/)) {
-    const next = line ? `${line} ${word}` : word;
-    if (line && textWidth(next, size) > usable) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = next;
-    }
-  }
-  if (line) lines.push(line);
-  return lines;
+  return wrapLines(text, w * 0.94, size);
 }
 
 /**
@@ -303,6 +337,14 @@ export function layoutBeat(
   bonds: Bond[];
   /** Labels tied to what they name. */
   leashes: Leash[];
+  /**
+   * How many pages of the endless board this beat used.
+   *
+   * Usually one. More when the beat had more on it than a board holds, which
+   * is answered by turning the page rather than by writing smaller — so the
+   * assembler has to know how far to slide whatever comes next.
+   */
+  pages: number;
 } {
   const elements: Element[] = [];
   const show: string[] = [];
@@ -359,6 +401,9 @@ export function layoutBeat(
    */
   const pendingWrites: { at: number; id: string; step: Extract<Instruction, { do: 'write' }> }[] =
     [];
+  /** A drawing to put beside the picture, once the picture knows where it is. */
+  let pendingSketch: { at: number; id: string; step: Extract<Instruction, { do: 'sketch' }> } | null =
+    null;
   let sceneEmitted = false;
   let i = 0;
   while (i < items.length) {
@@ -472,6 +517,9 @@ export function layoutBeat(
         blocks.push({
           kind: item.do,
           at: index,
+          // Four steps across half a board is about eighty units each, which is
+          // already tight; five is past what fitting can rescue.
+          narrow: item.steps.length <= 3,
           height: 120,
           place: (r) => [
             {
@@ -542,6 +590,32 @@ export function layoutBeat(
               ...(item.tone ? { tone: item.tone } : {}),
             }));
           },
+        });
+        i += 1;
+        break;
+      }
+
+      case 'list': {
+        const { heading, items: listItems, tone } = item;
+        // As wide as a note, because both are read rather than glanced at, and
+        // a line of text that runs the whole board is a line the eye loses.
+        const w = Math.min(WIDTH, WIDTH * 0.82);
+        blocks.push({
+          kind: item.do,
+          at: index,
+          height: listBoxHeight(listItems, heading, w),
+          place: (r) => [
+            {
+              kind: 'list',
+              id: idFor(beat.id, index),
+              x: r.x + (r.w - Math.min(w, r.w)) / 2,
+              y: r.y,
+              w: Math.min(w, r.w),
+              ...(heading ? { heading } : {}),
+              items: listItems.map((it) => ({ ...it })),
+              ...(tone ? { tone } : {}),
+            },
+          ],
         });
         i += 1;
         break;
@@ -733,6 +807,13 @@ export function layoutBeat(
         i += 1;
         break;
       }
+
+      case 'sketch': {
+        // Waits, like a label does, for the picture to know its rectangle.
+        pendingSketch = { at: index, id: idFor(beat.id, index), step: item };
+        i += 1;
+        break;
+      }
     }
   }
 
@@ -749,9 +830,39 @@ export function layoutBeat(
    * nothing else in the beat. Any other mixture falls through to the ordinary
    * stack, which is still what most beats want.
    */
+  /**
+   * What a column arrangement can be built around — and a SCENE is not one.
+   *
+   * It was tried: three cells with the four tissues listed beside them is the
+   * same shape as a heart with its chambers listed, so a scene seemed to
+   * belong here. It does not. A picture shrinks gracefully into half a board;
+   * a row of placed things with connectors between them does not — at 46% the
+   * icons packed together until the connectors ran across them, and the key
+   * points beside them spilled past the caption. Two new collisions and a
+   * bleed, to keep two things on one page.
+   *
+   * A scene that shares a beat with a list stacks instead, which means it turns
+   * the page. That is the cheaper answer on an endless board, and the one the
+   * research argues for: move to clean board rather than pack.
+   */
+  /** Pages the band under a labelled figure needed, when it turned one. */
+  let bandSheets = 1;
+
   const FIGURE: ReadonlySet<Instruction['do']> = new Set(['picture', 'diagram', 'chart', 'flow']);
   const figures = blocks.filter((b) => FIGURE.has(b.kind));
-  const writes = blocks.filter((b) => b.kind === 'write');
+  /** Written under a labelled figure, in the order the beat asked for them. */
+  const written = blocks.filter((b) => b.kind === 'list');
+  /**
+   * What reads well in a narrow column beside a figure.
+   *
+   * A key point and a list are both things a student READS rather than glances
+   * at, and both belong next to the thing they are about — which is how a notes
+   * page is laid out: the diagram in one column, what it is made of written
+   * down the other. Stacked underneath instead, a four-item list left a heart
+   * seventy units tall: the picture the whole beat was about, shrunk to make
+   * room for its own caption.
+   */
+  const beside = blocks.filter((b) => b.kind === 'write' || b.kind === 'list');
 
   /**
    * A LABELLED PICTURE: the figure centred, its names written in the margins.
@@ -765,7 +876,7 @@ export function layoutBeat(
    * making on purpose: a smaller picture whose parts are all named beats a
    * bigger one the student has to be told about in a sentence somewhere else.
    */
-  if (figures.length === 1 && pendingLabels.length > 0) {
+  if (figures.length === 1 && (pendingLabels.length > 0 || pendingSketch !== null)) {
     const MARGIN_GAP = 18;
     const leastMargin = Math.round((WIDTH - MARGIN_GAP * 2) * 0.26);
     const columnW = WIDTH - MARGIN_GAP * 2 - leastMargin * 2;
@@ -775,13 +886,21 @@ export function layoutBeat(
     // The band is measured first, because the picture's height is whatever is
     // left once the points have the room they need.
     const bandRoom = MAIN.h + SPARE_BELOW;
+    // Lists are written under the figure too, and they are measured before the
+    // key points because they are the taller thing: a four-item list is most of
+    // a band on its own, and the figure has to know that before it takes a size.
+    const listsH = written.reduce((sum, b) => sum + (b.height ?? 0) + BAND_GAP, 0);
+    // Wrapped to the room the band actually has: it starts at the figure's
+    // edge, not the board's, so a line wrapped to the full width would walk
+    // off the right side.
+    const bandWidth = WIDTH - leastMargin - MARGIN_GAP;
     const band = planBand(
       pendingWrites.map((point) => point.step.text),
-      WIDTH,
-      bandRoom - MIN_FIGURE_H - BAND_GAP,
+      bandWidth,
+      Math.max(0, bandRoom - MIN_FIGURE_H - BAND_GAP - listsH),
     );
-    const figureH =
-      band.height > 0 ? Math.max(MIN_FIGURE_H, bandRoom - band.height - BAND_GAP) : MAIN.h;
+    const under = band.height + listsH;
+    const figureH = under > 0 ? Math.max(MIN_FIGURE_H, bandRoom - under - BAND_GAP) : MAIN.h;
 
     current = figures[0].at ?? -1;
     for (const el of figures[0].place({ x: columnX, y: MAIN.y, w: columnW, h: figureH })) {
@@ -842,7 +961,11 @@ export function layoutBeat(
     let leftCount = 0;
     for (const { pending, box } of placedFor) {
       let side: 'left' | 'right';
-      if (box && hostBox) {
+      // The sketch owns the right-hand room; every name goes left of the
+      // picture so nothing shares it.
+      if (pendingSketch) {
+        side = 'left';
+      } else if (box && hostBox) {
         side = box.x + box.w / 2 < hostBox.x + hostBox.w / 2 ? 'left' : 'right';
       } else {
         side = leftCount * 2 <= sideOf.size ? 'left' : 'right';
@@ -882,7 +1005,27 @@ export function layoutBeat(
       const lines = wrapText(pending.step.text, margins[side].w, size);
       const lead = handLead(size);
       const height = lines.length * lead;
-      const cx = margins[side].cx;
+      /**
+       * Written AGAINST the picture, not centred in the margin.
+       *
+       * The margin is where there is room; it is not where the writing
+       * belongs. Centred in it, a short name drifted furthest: "Cornea" ended
+       * up ninety units clear of the eye it named, with a long line reaching
+       * back across the gap, while a long label sat much closer for no reason
+       * a student could see. A person writes the word as near the thing as it
+       * fits and draws a short line.
+       */
+      const widest = Math.max(...lines.map((line) => textWidth(line, size)));
+      const edge = hostBox
+        ? onLeft
+          ? hostBox.x - MARGIN_GAP
+          : hostBox.x + hostBox.w + MARGIN_GAP
+        : onLeft
+          ? SIDE + margins.left.w
+          : SIDE + WIDTH - margins.right.w;
+      const cx = onLeft
+        ? Math.max(SIDE + widest / 2, edge - widest / 2)
+        : Math.min(SIDE + WIDTH - widest / 2, edge + widest / 2);
 
       // Beside its part, then down if that room has gone, then kept on the
       // board.
@@ -920,10 +1063,9 @@ export function layoutBeat(
         emit({
           kind: 'arrow',
           id: lineId,
-          from: {
-            x: onLeft ? cx + margins.left.w / 2 - 6 : cx - margins.right.w / 2 + 6,
-            y: midY,
-          },
+          // From the edge of the WRITING. Starting it at the margin's edge
+          // left a stretch of blank board between the word and its own line.
+          from: { x: onLeft ? cx + widest / 2 + 6 : cx - widest / 2 - 6, y: midY },
           to: { x: onLeft ? box.x : box.x + box.w, y: box.y + box.h / 2 },
           ...(pending.step.tone ? { tone: pending.step.tone } : {}),
         });
@@ -935,6 +1077,51 @@ export function layoutBeat(
     }
 
     /**
+     * The sketch: a drawing beside the picture, with an arrow from the part it
+     * explains.
+     *
+     * "Take a long arrow from the water inside the glass and draw tiny
+     * particles" — the zoom-in every textbook makes and this board could not,
+     * because a page held exactly one figure. It takes the right-hand room
+     * (the names go left), sits level with its part, and the arrow leaves the
+     * part and lands on the sketch's near edge, so it points AT the drawing
+     * rather than through it.
+     */
+    if (pendingSketch && hostBox) {
+      const x = hostBox.x + hostBox.w + MARGIN_GAP;
+      const w = Math.max(150, SIDE + WIDTH - x);
+      const h = Math.max(120, Math.min(figureH, Math.round(w * 0.8)));
+      const part = partBox(pendingSketch.step.from, elements);
+      const wanted = part ? part.y + part.h / 2 - h / 2 : MAIN.y;
+      const y = Math.min(Math.max(wanted, MAIN.y), MAIN.y + figureH - h);
+      const ref = pendingSketch.step.ref;
+      current = pendingSketch.at;
+      emit({
+        kind: 'diagram',
+        id: ref,
+        x,
+        y,
+        w,
+        h,
+        src: `generated/${ref}.svg`,
+        alt: ref.replace(/_/g, ' '),
+        parts: [],
+      });
+      if (part) {
+        const arrowId = `${pendingSketch.id}_arrow`;
+        emit({
+          kind: 'arrow',
+          id: arrowId,
+          from: { x: part.x + part.w * 0.6, y: part.y + part.h / 2 },
+          to: { x: x - 4, y: y + h / 2 },
+          tone: 'accent',
+        });
+        bonds.push({ a: arrowId, b: ref });
+        bonds.push({ a: arrowId, b: figures[0].ref ?? '' });
+      }
+    }
+
+    /**
      * And her key points, written under the figure as she says them.
      *
      * Left-aligned at the board's own margin rather than centred: a list of
@@ -942,13 +1129,40 @@ export function layoutBeat(
      * about the picture instead of a note she made while teaching on it.
      */
     const bandLead = handLead(band.size);
+    /**
+     * From the figure's own left edge, not the board's. Written from the far
+     * margin while the picture sat centred, a sentence about the figure began
+     * a hundred and fifty units to its left and visually belonged to nothing.
+     * A note about a figure starts where the figure starts.
+     */
+    const bandLeft = hostBox
+      ? Math.min(Math.max(SIDE, hostBox.x - MARGIN_GAP), columnX)
+      : SIDE;
     let by = MAIN.y + figureH + BAND_GAP;
+    /**
+     * The band borrows the empty strip below the teaching band, and the caption
+     * is where the borrowing stops. Past it, the page turns.
+     *
+     * It used to just keep going: a labelled heart with three key points and a
+     * four-item list wrote down to 668 on a board that ends at 620 — off the
+     * bottom of its own page, through the caption on the way.
+     */
+    const bandBottom = MAIN.y + MAIN.h + SPARE_BELOW;
+    let sheet = 0;
+    const roomFor = (h: number): void => {
+      if (by + h <= bandBottom) return;
+      sheet += 1;
+      by = MAIN.y;
+    };
+
     pendingWrites.forEach((point, n) => {
       current = point.at;
       const lines = band.lines[n];
+      roomFor(lines.length * bandLead);
+      const px = (sheet === 0 ? bandLeft : SIDE) + sheet * PAGE_STRIDE;
       lines.forEach((line, k) => {
         const id = k === 0 ? point.id : `${point.id}_l${k}`;
-        const x = SIDE + textWidth(line, band.size) / 2;
+        const x = px + textWidth(line, band.size) / 2;
         const y = by + band.size + k * bandLead;
         emit({
           kind: 'handwrite',
@@ -968,13 +1182,47 @@ export function layoutBeat(
       by += lines.length * bandLead + POINT_GAP;
     });
 
+    /**
+     * And the lists, under the key points.
+     *
+     * Placed here rather than left to the stacker, because this branch ends by
+     * emptying the block list — and anything it had not placed itself simply
+     * vanished. A list written into a beat with a labelled picture appeared
+     * nowhere at all: no error, no gap, just a board missing the half the
+     * student was meant to copy down.
+     */
+    for (const block of written) {
+      current = block.at ?? -1;
+      roomFor(block.height ?? 0);
+      let bottom = by;
+      for (const el of block.place({
+        x: SIDE + sheet * PAGE_STRIDE,
+        y: by,
+        w: WIDTH,
+        h: block.height ?? 0,
+      })) {
+        emit(el);
+        bottom = Math.max(bottom, boxOf(el).y + boxOf(el).h);
+      }
+      by = bottom + BAND_GAP;
+    }
+    bandSheets = sheet + 1;
+
     // Everything this beat wanted has now been placed by hand.
     blocks.length = 0;
   }
 
-  if (figures.length === 1 && writes.length > 0 && blocks.length === 1 + writes.length) {
+  if (
+    figures.length === 1 &&
+    figures[0].narrow !== false &&
+    beside.length > 0 &&
+    blocks.length === 1 + beside.length
+  ) {
     const GAP = 26;
-    const figureW = Math.round((WIDTH - GAP) * 0.6);
+    // A list needs more of the width than a key point does — it carries a
+    // term AND its meaning on every line — so the figure gives some back.
+    const wide = beside.some((b) => b.kind === 'list');
+    const figureW = Math.round((WIDTH - GAP) * (wide ? 0.46 : 0.6));
     const columnW = WIDTH - GAP - figureW;
 
     current = figures[0].at ?? -1;
@@ -989,7 +1237,7 @@ export function layoutBeat(
     // to three lines and ran into the next one.
     const BETWEEN_POINTS = 16;
     let ry = MAIN.y;
-    for (const block of writes) {
+    for (const block of beside) {
       current = block.at ?? -1;
       let bottom = ry;
       for (const el of block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h: WRITE_H })) {
@@ -1002,26 +1250,57 @@ export function layoutBeat(
     blocks.length = 0;
   }
 
-  // --- stack the blocks down MAIN ---
-  const fixed = blocks.reduce((sum, b) => sum + (b.height ?? 0), 0);
-  const flexible = blocks.filter((b) => b.height === null).length;
-  const gutters = Math.max(0, blocks.length - 1) * GUTTER;
-  const spare = Math.max(0, MAIN.h - fixed - gutters);
-  const flexH = flexible > 0 ? spare / flexible : 0;
-
-  // With no flexible block the stack is shorter than MAIN, so centre it rather
-  // than leaving all the empty space at the bottom.
-  const stackH = fixed + gutters + flexible * flexH;
-  let y = MAIN.y + (flexible === 0 ? Math.max(0, (MAIN.h - stackH) / 2) : 0);
-
+  /**
+   * --- stack the blocks down MAIN, turning the page when it runs out ---
+   *
+   * Filled greedily at each block's MINIMUM height: as long as what is already
+   * on this page plus the next block's floor still fits the band, it goes on
+   * this page. The moment it does not, the page ends and the next one starts.
+   * Nothing is ever compressed to make it fit, because the thing that gives way
+   * on an endless board is the page count, not the writing.
+   */
+  const leastOf = (b: Block): number => b.height ?? MIN_FLEXIBLE_H;
+  const sheets: Block[][] = [[]];
+  let taken = 0;
   for (const block of blocks) {
-    const h = block.height ?? flexH;
-    // Back to the word that asked for this block, so what emit records is
-    // where the tutor actually was when she drew it.
-    current = block.at ?? -1;
-    for (const el of block.place({ x: SIDE, y, w: WIDTH, h })) emit(el);
-    y += h + GUTTER;
+    const here = sheets[sheets.length - 1];
+    const gutter = here.length > 0 ? GUTTER : 0;
+    if (here.length > 0 && taken + gutter + leastOf(block) > MAIN.h) {
+      sheets.push([block]);
+      taken = leastOf(block);
+      continue;
+    }
+    here.push(block);
+    taken += gutter + leastOf(block);
   }
+
+  sheets.forEach((sheet, sheetIndex) => {
+    if (sheet.length === 0) return;
+    const dx = sheetIndex * PAGE_STRIDE;
+    const fixed = sheet.reduce((sum, b) => sum + (b.height ?? 0), 0);
+    const flexible = sheet.filter((b) => b.height === null).length;
+    const gutters = Math.max(0, sheet.length - 1) * GUTTER;
+    const spare = Math.max(0, MAIN.h - fixed - gutters);
+    // Never below the floor: a flexible block that cannot have its floor here
+    // was already moved to a page where it can.
+    const flexH = flexible > 0 ? Math.max(MIN_FLEXIBLE_H, spare / flexible) : 0;
+
+    // With no flexible block the stack is shorter than MAIN, so centre it
+    // rather than leaving all the empty space at the bottom — but never above
+    // the band, however tall the stack turned out.
+    const stackH = fixed + gutters + flexible * flexH;
+    let y = MAIN.y + (flexible === 0 ? Math.max(0, (MAIN.h - stackH) / 2) : 0);
+
+    for (const block of sheet) {
+      const h = block.height ?? flexH;
+      // Back to the word that asked for this block, so what emit records is
+      // where the tutor actually was when she drew it.
+      current = block.at ?? -1;
+      for (const el of block.place({ x: SIDE + dx, y, w: WIDTH, h })) emit(el);
+      y += h + GUTTER;
+    }
+  });
+  const sheetsUsed = Math.max(1, sheets.filter((s) => s.length > 0).length, bandSheets);
 
   // --- mark the things the scene does not own ---
   //
@@ -1078,6 +1357,7 @@ export function layoutBeat(
     steps: revealSteps(beat, byInstruction, keptFocus),
     bonds,
     leashes,
+    pages: sheetsUsed,
   };
 }
 

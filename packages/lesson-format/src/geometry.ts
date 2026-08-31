@@ -1,4 +1,5 @@
 import type { Element } from './types';
+import { CANVAS_W } from './types';
 
 /**
  * HOW BIG IS THIS ELEMENT.
@@ -97,6 +98,96 @@ export function textWidth(text: string, size: number, mono = false): number {
 }
 
 /**
+ * Break a line into lines that fit a column, on whole words.
+ *
+ * On whole words because a teacher does not hyphenate on a board, and a single
+ * word longer than the column stays on its own line and overhangs slightly,
+ * which is what happens on a real board too.
+ *
+ * It lives beside `textWidth` because it is that measurement applied — the
+ * layout engine had its own copy that guessed half an em per character, packed
+ * more onto a line than would fit, and ran text past the very margin it was
+ * wrapping for. One ruler.
+ */
+export function wrapLines(text: string, w: number, size: number): string[] {
+  const lines: string[] = [];
+  let line = '';
+  for (const word of text.split(/\s+/)) {
+    const next = line ? `${line} ${word}` : word;
+    if (line && textWidth(next, size) > w) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.length > 0 ? lines : [''];
+}
+
+/**
+ * A LIST: a heading over numbered "term — meaning" items.
+ *
+ * The shape most of a notes page is made of, and the one this board could not
+ * draw — a card gives a heading over one paragraph, which turns four named
+ * parts into a blob.
+ *
+ * These are the renderer's own numbers, and they live here because the stacker,
+ * the collision solver and the renderer all need the identical answer.
+ */
+/**
+ * How big a board's heading is drawn.
+ *
+ * Forty-four, unless the words do not fit the board — "Summary: The Journey of
+ * Light in the Eye" at forty-four is a thousand and twenty-one units wide on a
+ * board a thousand wide, and ran off both edges of its own page. It lives here
+ * because the renderer draws it and `boxOf` measures it, and the two agreeing
+ * is what stops the camera framing a heading that is not the size it renders.
+ */
+export const TITLE_SIZE = 44;
+export function titleSize(text: string): number {
+  return fitText(text, CANVAS_W, TITLE_SIZE, 24);
+}
+
+export const LIST_HEADING_SIZE = 21;
+export const LIST_ITEM_SIZE = 18;
+/** Line spacing inside one item, and the gap between two items. */
+export const LIST_LINE_H = 1.42;
+export const LIST_ITEM_GAP = 9;
+/** The numbers hang in this much room, so wrapped lines line up under the text. */
+export const LIST_INDENT = 26;
+/** Under the heading, before the first item. */
+export const LIST_HEADING_GAP = 12;
+
+/**
+ * The text of one item as it is drawn: "Right atrium — receives blood".
+ *
+ * A term that arrives already numbered — "1. Spaces between them" — loses its
+ * number here, because the list draws its own and a real board came out
+ * reading "1. 1. Spaces between them". The list owns the numbering; a term is
+ * the words.
+ */
+export function listItemText(item: { term: string; meaning?: string }): string {
+  const term = item.term.replace(/^\s*\(?\d+[.)]\s*/, '').trim();
+  return item.meaning ? `${term} — ${item.meaning}` : term;
+}
+
+export function listBoxHeight(
+  items: readonly { term: string; meaning?: string }[],
+  heading: string | undefined,
+  w: number,
+  size: number = LIST_ITEM_SIZE,
+): number {
+  const lead = size * LIST_LINE_H;
+  const body = items.reduce((sum, item, n) => {
+    const lines = wrapLines(`${n + 1}. ${listItemText(item)}`, w - LIST_INDENT, size);
+    return sum + lines.length * lead + LIST_ITEM_GAP;
+  }, 0);
+  const head = heading ? LIST_HEADING_SIZE * LIST_LINE_H + LIST_HEADING_GAP : 0;
+  return head + Math.max(0, body - LIST_ITEM_GAP);
+}
+
+/**
  * The largest size at which this text still fits the width it is given.
  *
  * Anything that can be longer than its container must ASK rather than hope. A
@@ -177,7 +268,7 @@ export function overlaps(a: Rect, b: Rect): boolean {
 export function boxOf(el: Element): Rect {
   switch (el.kind) {
     case 'title': {
-      const head = centredText(el.x, el.y, el.text, 44, EM_SANS);
+      const head = centredText(el.x, el.y, el.text, titleSize(el.text), EM_SANS);
       if (!el.sub) return head;
       return union(head, centredText(el.x, el.y + 38, el.sub, 19, EM_SANS));
     }
@@ -189,6 +280,13 @@ export function boxOf(el: Element): Rect {
       return centredText(el.x, el.y, el.text, el.size ?? 26, EM_SANS);
     case 'note':
       return { x: el.x, y: el.y, w: el.w, h: noteBoxHeight(el.text, el.w) };
+    case 'list':
+      return {
+        x: el.x,
+        y: el.y,
+        w: el.w,
+        h: listBoxHeight(el.items, el.heading, el.w, el.size ?? LIST_ITEM_SIZE),
+      };
     case 'box':
     case 'image':
     case 'diagram':

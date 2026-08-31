@@ -41,6 +41,16 @@ export type Instruction =
   | { do: 'label'; target: string; text: string; tone?: Tone }
   /** Light one named part inside a picture and dim the rest of it. */
   | { do: 'point'; ref: string; part: string }
+  /**
+   * A small drawing BESIDE the picture, joined by an arrow to the part it
+   * explains.
+   *
+   * The textbook zoom-in: the photograph shows the glass, and what is inside
+   * the water is a sketch next to it — tiny particles, drawn — with a long
+   * arrow from the exact spot. `ref` is a diagram brief; `from` is
+   * `<picture>#<part>`.
+   */
+  | { do: 'sketch'; ref: string; from: string }
   /** A short equation, as it would be written on a board. */
   | { do: 'equation'; text: string }
   /** A line the tutor writes out by hand while speaking. Slow; use sparingly. */
@@ -64,6 +74,20 @@ export type Instruction =
     }
   /** An aside worth pausing on. Wraps; `\n\n` starts a paragraph. */
   | { do: 'note'; text: string; tone?: Tone }
+  /**
+   * A heading over numbered "term — meaning" items.
+   *
+   * What most of a notes page is made of, and the shape this board could not
+   * draw. Four chambers of a heart are four things with four meanings: as a
+   * `card` they arrive as one paragraph nobody scans, as four `write` lines
+   * they lose the heading that binds them. This is the list a student copies.
+   */
+  | {
+      do: 'list';
+      heading?: string;
+      items: { term: string; meaning?: string }[];
+      tone?: Tone;
+    }
   /** Steps with arrows between them. */
   | { do: 'flow'; steps: { label: string; note?: string }[]; tone?: Tone }
   /** A bar chart from numbers. */

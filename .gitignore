@@ -19,3 +19,6 @@ Thumbs.db
 tools/bin/
 # livekit-server, downloaded on demand by tools/livekit. Never committed.
 tools/livekit/bin/
+
+# Voice samples for picking a tutor voice. Throwaway.
+content/voices/

@@ -104,3 +104,70 @@ describe('a name stays where its line expects it', () => {
     expect(leash!.region.w).toBeLessThan(60);
   });
 });
+
+describe('a name sits close to the thing it names', () => {
+  /**
+   * On a real board — the human eye — "Cornea" and "Iris" were written at the
+   * far left of the margin with a long line reaching across to the picture.
+   * The name was being centred in the MARGIN rather than placed against the
+   * picture, so the wider the margin, the further the name drifted from what
+   * it was pointing at.
+   *
+   * A person writing on a board puts the word as close to the thing as the
+   * room allows and draws a short line. The margin is where there is space,
+   * not where the writing belongs.
+   */
+  // SHORT names, which is where the fault shows: the shorter the word, the
+  // further a margin's centre is from the picture's edge. "Cornea" drifted
+  // further out than "Left ventricle: thickest wall" ever did.
+  const eye = new Map([
+    [
+      'eye',
+      [
+        { name: 'cornea', x: 0.08, y: 0.42, w: 0.12, h: 0.16 },
+        { name: 'retina', x: 0.72, y: 0.44, w: 0.14, h: 0.16 },
+      ],
+    ],
+  ]);
+  const short: Instruction[] = [
+    { do: 'picture', ref: 'eye' },
+    { do: 'say', text: 'Light enters through the cornea.' },
+    { do: 'label', target: 'eye#cornea', text: 'Cornea' },
+    { do: 'label', target: 'eye#retina', text: 'Retina' },
+  ];
+  const board2 = layoutBeat({ id: 'e', topic: 'eye', narration: '', board: short }, eye);
+  const picture = boxOf(board2.elements.find((el) => el.kind === 'image')!);
+
+  const gapToPicture = (id: string): number => {
+    const box = boxOf(board2.elements.find((el) => el.id === id)!);
+    return box.x < picture.x ? picture.x - (box.x + box.w) : box.x - (picture.x + picture.w);
+  };
+
+  it('leaves only a short gap between the writing and the picture', () => {
+    expect(gapToPicture('e_2')).toBeLessThan(40);
+    expect(gapToPicture('e_3')).toBeLessThan(40);
+  });
+
+  it('still keeps the writing clear of the picture', () => {
+    expect(gapToPicture('e_2')).toBeGreaterThan(0);
+    expect(gapToPicture('e_3')).toBeGreaterThan(0);
+  });
+
+  it('draws the line from the writing, not from somewhere out in the margin', () => {
+    const lines = board2.elements.filter((el) => el.kind === 'arrow') as Extract<
+      Element,
+      { kind: 'arrow' }
+    >[];
+    expect(lines.length).toBeGreaterThan(0);
+    for (const line of lines) {
+      const name = board2.elements.find((el) => `${el.id}_line` === line.id);
+      if (!name) continue;
+      const box = boxOf(name);
+      const nearer = Math.min(
+        Math.abs(line.from.x - box.x),
+        Math.abs(line.from.x - (box.x + box.w)),
+      );
+      expect(nearer).toBeLessThan(20);
+    }
+  });
+});

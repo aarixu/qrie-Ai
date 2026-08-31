@@ -104,3 +104,28 @@ describe('key points go in a band under the figure', () => {
     expect(laid.steps[2].show).toContain('h_10');
   });
 });
+
+describe('the writing belongs to the figure', () => {
+  it('starts key points under the picture, not at the far edge of the board', () => {
+    /**
+     * They were written from the board's left margin while the picture sat
+     * centred — so the sentence about the figure began a hundred and fifty
+     * units to its left, visually belonging to nothing. A note about a figure
+     * starts where the figure starts.
+     */
+    const first = laid.elements.find((el) => el.id === 'h_5')!;
+    const box = boxOf(first);
+    expect(box.x).toBeGreaterThanOrEqual(picture.x - 24);
+  });
+});
+
+  it('keeps a long point inside the board, wrapped to the room it actually has', () => {
+    // Starting at the figure's edge means less width than the full board; the
+    // wrapping has to know that, or a long line walks off the right edge.
+    for (const id of ['h_5', 'h_8', 'h_10']) {
+      for (const el of laid.elements.filter((e) => e.id === id || e.id.startsWith(`${id}_l`))) {
+        const b = boxOf(el);
+        expect(b.x + b.w, `${el.id} overflows`).toBeLessThanOrEqual(70 + 860 + 1);
+      }
+    }
+  });

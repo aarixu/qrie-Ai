@@ -1,9 +1,23 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+/**
+ * `HTTPS=1 npm run dev -- --host` — a self-signed cert, for testing on a phone.
+ *
+ * A phone on the LAN reaching this server over plain http is not a SECURE
+ * CONTEXT, and a browser withholds most of what this product now depends on
+ * there: WebGPU, the Cache API, the microphone, even the device-memory
+ * reading. Testing that way measures the protocol rather than the phone, which
+ * cost a whole round of device measurements before anyone noticed.
+ *
+ * Kept, rather than thrown away with the bench that needed it, because the
+ * phone is the primary device and testing on one is not a one-off.
+ */
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import { Readable } from 'node:stream';
 
 const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src`, import.meta.url));
@@ -19,6 +33,78 @@ const pkg = (name: string) =>
  * Dev only, deliberately: in production this is a real backend route with auth
  * and a per-student budget, not a plugin.
  */
+/**
+ * HER VOICE, PIPED THROUGH AS IT IS MADE.
+ *
+ * A GET, deliberately: the browser's own `<audio>` element can stream a URL,
+ * and streaming is the whole point. Measured on a real class line, the first
+ * byte arrives at 0.36 s while the full 8.4 seconds of speech takes 2.5 to
+ * generate — so playing it as it arrives starts her almost at once, and
+ * downloading it first would have cost every line two and a half seconds for
+ * nothing.
+ *
+ * The bytes are piped, never buffered. Buffering here would undo the streaming
+ * this endpoint exists for.
+ *
+ * Dev only, like the others: in production this is a real backend route with
+ * auth and a per-student budget.
+ */
+function speechRelay(key: string): Plugin {
+  const DEFAULT_MODEL = 'deepgram/aura-2';
+  return {
+    name: 'curie-speech-relay',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/api/speech', (req, res) => {
+        const fail = (code: number, message: string) => {
+          res.statusCode = code;
+          res.setHeader('content-type', 'application/json');
+          res.end(JSON.stringify({ error: { message } }));
+        };
+        if (!key) return fail(503, 'No OPENROUTER_API_KEY in .env.local');
+
+        const asked = new URL(req.url ?? '', 'http://localhost');
+        const text = asked.searchParams.get('text')?.trim();
+        if (!text) return fail(400, 'nothing to say');
+
+        void fetch('https://openrouter.ai/api/v1/audio/speech', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+            authorization: `Bearer ${key}`,
+            'HTTP-Referer': 'https://github.com/aarixu/curie',
+            'X-Title': 'Curie',
+          },
+          body: JSON.stringify({
+            model: asked.searchParams.get('model') ?? DEFAULT_MODEL,
+            input: text,
+            // Named, and the same every line. Aura refuses to speak without
+            // one — "An explicit voice is required for this TTS provider" —
+            // which is the consistency guarantee stated as an error.
+            ...(asked.searchParams.get('voice')
+              ? { voice: asked.searchParams.get('voice') }
+              : {}),
+            // Not raw PCM: an audio element can play mp3 straight from the
+            // wire, and it is a tenth of the bytes.
+            response_format: 'mp3',
+          }),
+        })
+          .then(async (upstream) => {
+            if (!upstream.ok || !upstream.body) {
+              const why = await upstream.text().catch(() => '');
+              return fail(upstream.status, `speech ${upstream.status}: ${why.slice(0, 200)}`);
+            }
+            res.statusCode = 200;
+            res.setHeader('content-type', upstream.headers.get('content-type') ?? 'audio/mpeg');
+            // Piped as it arrives. Collecting it first would defeat the point.
+            Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]).pipe(res);
+          })
+          .catch((e: unknown) => fail(502, String(e)));
+      });
+    },
+  };
+}
+
 function llmRelay(key: string): Plugin {
   return {
     name: 'curie-llm-relay',
@@ -209,7 +295,14 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, fileURLToPath(new URL('../..', import.meta.url)), '');
 
   return {
-    plugins: [react(), llmRelay(env.OPENROUTER_API_KEY ?? ''), iconRelay(), classWriter()],
+    plugins: [
+      react(),
+      llmRelay(env.OPENROUTER_API_KEY ?? ''),
+      speechRelay(env.OPENROUTER_API_KEY ?? ''),
+      iconRelay(),
+      classWriter(),
+      ...(env.HTTPS === '1' ? [basicSsl()] : []),
+    ],
     // Lessons are data, served as static files: /index.json, /<lesson>/lesson.json
     publicDir: fileURLToPath(new URL('../../content', import.meta.url)),
     resolve: {
@@ -231,6 +324,18 @@ export default defineConfig(({ mode }) => {
         '@ai-tutor/maic-adapter': pkg('maic-adapter'),
       },
     },
-    server: { port: 5173 },
+    server: {
+      port: 5173,
+      /**
+       * Vite refuses requests whose Host it does not recognise, which is the
+       * right default and exactly wrong for a tunnel: a public URL forwards
+       * its own hostname and every page comes back "Blocked request".
+       *
+       * Dev only — this config's `server` block does not exist in a build —
+       * and the tunnel itself is the thing that decides who can reach this,
+       * not the host header.
+       */
+      allowedHosts: true,
+    },
   };
 });

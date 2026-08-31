@@ -80,3 +80,46 @@ describe('a picture that breaks the brief is rejected', () => {
     expect(problems).toEqual(['does not start with <svg']);
   });
 });
+
+describe('motion, from a closed set of four', () => {
+  /**
+   * The painter's whole trick: a generated diagram may mark a group with one
+   * of four known classes — drift, flow, pulse, sway — and the renderer owns
+   * what each one means. The model gets a vocabulary, never a stylesheet.
+   *
+   * Anything OUTSIDE the four is rejected, not ignored. A class this board
+   * does not know is a promise the drawing appears to make and the renderer
+   * will not keep — and the gate's posture everywhere is reject, never shrug.
+   */
+  const drawing = (body: string) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620">${body}</svg>`;
+  const brief = { id: 'd', parts: ['ink'], brief: 'ink in water', alt: 'ink diffusing' };
+
+  it('accepts each of the four motions', () => {
+    for (const motion of ['curie-drift', 'curie-flow', 'curie-pulse', 'curie-sway']) {
+      const svg = drawing(
+        `<g id="ink"><circle class="${motion}" cx="500" cy="300" r="8" fill="var(--a, #06c)"/></g>`,
+      );
+      expect(verifySvg(svg, brief)).toEqual([]);
+    }
+  });
+
+  it('rejects a class it has never heard of', () => {
+    const svg = drawing(
+      `<g id="ink"><circle class="spinny" cx="500" cy="300" r="8" fill="var(--a, #06c)"/></g>`,
+    );
+    expect(verifySvg(svg, brief).join(' ')).toMatch(/class/i);
+  });
+
+  it('rejects a known motion smuggled in beside an unknown one', () => {
+    const svg = drawing(
+      `<g id="ink"><circle class="curie-drift evil" cx="500" cy="300" r="8" fill="var(--a, #06c)"/></g>`,
+    );
+    expect(verifySvg(svg, brief).length).toBeGreaterThan(0);
+  });
+
+  it('still accepts a drawing with no classes at all', () => {
+    const svg = drawing(`<g id="ink"><circle cx="500" cy="300" r="8" fill="var(--a, #06c)"/></g>`);
+    expect(verifySvg(svg, brief)).toEqual([]);
+  });
+});
