@@ -16,18 +16,18 @@ describe('hearing one answer end', () => {
     for (let i = 0; i < 5; i += 1) expect(ear.feed(QUIET, MS)).toBe('waiting');
     expect(ear.feed(SPEECH, MS)).toBe('listening');
     for (let i = 0; i < 9; i += 1) expect(ear.feed(SPEECH, MS)).toBe('listening');
-    // 1300 ms of silence is a breath, not the end...
-    for (let i = 0; i < 13; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
-    // ...1400 ms is the end.
+    // 800 ms of silence is a breath, not the end...
+    for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
+    // ...900 ms is the end.
     expect(ear.feed(QUIET, MS)).toBe('heard');
   });
 
   it('a mid-answer pause resets the silence clock instead of ending the answer', () => {
     const ear = createEndpointer();
     ear.feed(SPEECH, MS);
-    for (let i = 0; i < 12; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
+    for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
     expect(ear.feed(SPEECH, MS)).toBe('listening'); // they carried on
-    for (let i = 0; i < 13; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
+    for (let i = 0; i < 8; i += 1) expect(ear.feed(QUIET, MS)).toBe('listening');
     expect(ear.feed(QUIET, MS)).toBe('heard');
   });
 

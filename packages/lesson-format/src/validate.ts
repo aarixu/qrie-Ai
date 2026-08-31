@@ -196,8 +196,12 @@ function beatErrors(
   if (!isStr(beat.topic)) errs.push(`${path}: beat needs a non-empty topic label`);
 
   if (beat.ask !== undefined) {
-    const ask = beat.ask as { question?: unknown; options?: unknown };
+    const ask = beat.ask as { question?: unknown; options?: unknown; expect?: unknown; hint?: unknown };
     if (!isStr(ask.question)) errs.push(`${path}: ask needs a non-empty question`);
+    if (ask.expect !== undefined && !isStr(ask.expect))
+      errs.push(`${path}: ask expect must be a non-empty string when present`);
+    if (ask.hint !== undefined && !isStr(ask.hint))
+      errs.push(`${path}: ask hint must be a non-empty string when present`);
     if (ask.options !== undefined) {
       const options = ask.options as { text?: unknown; correct?: unknown }[];
       if (!Array.isArray(options) || options.length < 2) {

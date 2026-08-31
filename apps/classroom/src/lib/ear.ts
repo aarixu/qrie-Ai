@@ -40,7 +40,7 @@ export interface EndpointConfig {
 export const EAR_DEFAULTS: EndpointConfig = {
   startLevel: 0.1,
   stopLevel: 0.06,
-  silenceMs: 1400,
+  silenceMs: 900,
   maxSpeechMs: 10_000,
   graceMs: 7_000,
 };

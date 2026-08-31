@@ -17,6 +17,10 @@ import { createBrowserLlm } from './browserLlm';
 
 export interface SpokenAsk {
   question: string;
+  /** What a right answer contains, in the planner's words. */
+  expect?: string;
+  /** The planner's own nudge for a wrong try. */
+  hint?: string;
   options?: {
     text: string;
     correct?: boolean;
@@ -70,7 +74,12 @@ const describe = (ask: SpokenAsk): string => {
     lines.push(`${letter}. ${o.text}${marks}`);
   });
   if ((ask.options ?? []).length === 0) {
-    lines.push('An open question - no options. Weigh whether their idea is on the right track.');
+    lines.push(
+      ask.expect
+        ? `A right answer contains: ${ask.expect}`
+        : 'An open question - no options. Weigh whether their idea is on the right track.',
+    );
+    if (ask.hint) lines.push(`If they are wrong, lead with this nudge: ${ask.hint}`);
   }
   return lines.join('\n');
 };

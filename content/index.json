@@ -116,6 +116,15 @@
       "subject": "Science",
       "path": "class9-science-matter-in-our-surroundings-evaporation/lesson.json",
       "topicRef": "class9-science/matter-in-our-surroundings/evaporation"
+    },
+    {
+      "id": "class9-science-is-matter-around-us-pure-what-is-a-mixture",
+      "title": "What is a Mixture?",
+      "subtitle": "Class 9 · Is Matter Around Us Pure",
+      "class": 9,
+      "subject": "Science",
+      "path": "class9-science-is-matter-around-us-pure-what-is-a-mixture/lesson.json",
+      "topicRef": "class9-science/is-matter-around-us-pure/what-is-a-mixture"
     }
   ]
 }

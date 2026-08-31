@@ -1,0 +1,1405 @@
+{
+  "formatVersion": 1,
+  "id": "class9-science-is-matter-around-us-pure-what-is-a-mixture",
+  "title": "What is a Mixture?",
+  "subtitle": "Understanding physical combinations and variable composition",
+  "language": "en",
+  "canvas": {
+    "w": 12340,
+    "h": 620
+  },
+  "elements": [
+    {
+      "kind": "title",
+      "id": "beat_1_opening_0",
+      "x": 500,
+      "y": 86,
+      "text": "What is a Mixture?",
+      "sub": "Matter Around Us"
+    },
+    {
+      "kind": "image",
+      "id": "lemonade_setup",
+      "x": 325.83333333333337,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class9-science-is-matter-around-us-pure-what-is-a-mixture/generated/lemonade_setup.jpg",
+      "alt": "A glass of lemonade with lemon, sugar, and salt nearby",
+      "parts": [
+        {
+          "name": "glass",
+          "x": 0.325,
+          "y": 0.3325,
+          "w": 0.288,
+          "h": 0.45
+        },
+        {
+          "name": "lemon_slice",
+          "x": 0.516,
+          "y": 0,
+          "w": 0.183,
+          "h": 0.335
+        },
+        {
+          "name": "sugar_grains",
+          "x": 0.631,
+          "y": 0.635,
+          "w": 0.19,
+          "h": 0.145
+        },
+        {
+          "name": "salt_pinch",
+          "x": 0.829,
+          "y": 0.828,
+          "w": 0.138,
+          "h": 0.17
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_5",
+      "x": 226.63333333333338,
+      "y": 257.425,
+      "text": "Water in glass",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_1_opening_5_line",
+      "from": {
+        "x": 313.83333333333337,
+        "y": 251.025
+      },
+      "to": {
+        "x": 439.0416666666667,
+        "y": 255.925
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_6",
+      "x": 755.9666666666667,
+      "y": 183.325,
+      "text": "Lemon juice",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_1_opening_6_line",
+      "from": {
+        "x": 686.1666666666667,
+        "y": 176.92499999999998
+      },
+      "to": {
+        "x": 569.3183333333334,
+        "y": 181.825
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_7",
+      "x": 721.1666666666667,
+      "y": 285.92499999999995,
+      "text": "Sugar",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_1_opening_7_line",
+      "from": {
+        "x": 686.1666666666667,
+        "y": 279.525
+      },
+      "to": {
+        "x": 611.815,
+        "y": 284.42499999999995
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_9",
+      "x": 586.2,
+      "y": 376,
+      "text": "If you add extra sugar, is it still lemonade or a",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_9_l1",
+      "x": 383.2,
+      "y": 413,
+      "text": "new substance?",
+      "size": 20,
+      "after": 2254,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_10",
+      "x": 1573.6,
+      "y": 170,
+      "text": "If you add an extra spoon of sugar to your",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_10_l1",
+      "x": 1585.2,
+      "y": 207,
+      "text": "lemonade, does it become a totally different",
+      "size": 20,
+      "after": 1932,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_10_l2",
+      "x": 1585.2,
+      "y": 244,
+      "text": "chemical substance, or is it still lemonade?",
+      "size": 20,
+      "after": 3956,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_13",
+      "x": 1596.8,
+      "y": 291,
+      "text": "Mixture: Two or more substances simply mingled",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_1_opening_13_l1",
+      "x": 1376.4,
+      "y": 328,
+      "text": "together",
+      "size": 20,
+      "after": 2116,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_1_opening_11",
+      "x": 1407.4,
+      "y": 355,
+      "w": 705.1999999999999,
+      "items": [
+        {
+          "term": "A",
+          "meaning": "It becomes a new chemical compound with fixed proportions."
+        },
+        {
+          "term": "B",
+          "meaning": "It is still lemonade, just sweeter, because the parts are only mixed together."
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "beat_2_fixed_vs_variable_0",
+      "x": 3020,
+      "y": 86,
+      "text": "Pure Substance vs Mixture",
+      "sub": "Composition and Properties"
+    },
+    {
+      "kind": "box",
+      "id": "beat_2_fixed_vs_variable_2_c0",
+      "x": 2590,
+      "y": 163,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "beat_2_fixed_vs_variable_2_h0",
+      "x": 3020,
+      "y": 201,
+      "text": "Key Distinction",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat_2_fixed_vs_variable_2_b0",
+      "x": 3020,
+      "y": 241,
+      "text": "Pure substances have a fixed chemical composition; mixtures have a variable composition.",
+      "size": 16
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_fixed_vs_variable_4",
+      "x": 3020,
+      "y": 360.4,
+      "text": "Pure Water: Fixed ratio (H:O = 1:8 by mass)",
+      "size": 32.41379310344828
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_fixed_vs_variable_7",
+      "x": 3020,
+      "y": 448.4,
+      "text": "Sugar Water: Variable ratio (any amount of sugar in water)",
+      "size": 24.03091557669441
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_2_fixed_vs_variable_9",
+      "x": 4280,
+      "y": 258.78,
+      "text": "If you boil two beakers of sugar water—one with 5 g sugar and one with 50 g sugar—will they boil at the exact same temperature?",
+      "size": 17,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_2_fixed_vs_variable_10",
+      "x": 3927.4,
+      "y": 303.38,
+      "w": 705.1999999999999,
+      "items": [
+        {
+          "term": "A",
+          "meaning": "Yes, all liquid mixtures boil at a fixed point like pure water."
+        },
+        {
+          "term": "B",
+          "meaning": "No, the boiling point varies depending on how much sugar is dissolved."
+        }
+      ]
+    },
+    {
+      "kind": "list",
+      "id": "beat_2_fixed_vs_variable_11",
+      "x": 5187.4,
+      "y": 238.47,
+      "w": 705.1999999999999,
+      "heading": "Comparing Pure Substances and Mixtures",
+      "items": [
+        {
+          "term": "Pure Substance",
+          "meaning": "Single type of particle with fixed composition and sharp, definite properties"
+        },
+        {
+          "term": "Mixture",
+          "meaning": "Contains two or more substances in any proportion, with variable properties"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "beat_3_retaining_identity_0",
+      "x": 6800,
+      "y": 86,
+      "text": "Physical Combination",
+      "sub": "No chemical reaction takes place"
+    },
+    {
+      "kind": "image",
+      "id": "iron_sulfur_experiment",
+      "x": 6625.833333333333,
+      "y": 150,
+      "w": 348.3333333333333,
+      "h": 190,
+      "src": "/class9-science-is-matter-around-us-pure-what-is-a-mixture/generated/iron_sulfur_experiment.jpg",
+      "alt": "Iron filings and yellow sulfur powder on a watch glass with a magnet separating the iron",
+      "parts": [
+        {
+          "name": "watch_glass",
+          "x": 0.2,
+          "y": 0.49,
+          "w": 0.45,
+          "h": 0.44
+        },
+        {
+          "name": "iron_filings",
+          "x": 0.155,
+          "y": 0.32000000000000006,
+          "w": 0.45,
+          "h": 0.45
+        },
+        {
+          "name": "sulfur_powder",
+          "x": 0.2,
+          "y": 0.59,
+          "w": 0.45,
+          "h": 0.21
+        },
+        {
+          "name": "magnet",
+          "x": 0.57,
+          "y": 0.07,
+          "w": 0.39,
+          "h": 0.33
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_3",
+      "x": 6538.233333333334,
+      "y": 255.05,
+      "text": "Iron filings",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_retaining_identity_3_line",
+      "from": {
+        "x": 6613.833333333333,
+        "y": 248.65
+      },
+      "to": {
+        "x": 6679.825,
+        "y": 253.55
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_4",
+      "x": 6532.433333333333,
+      "y": 302.05,
+      "text": "Sulfur powder",
+      "size": 20
+    },
+    {
+      "kind": "arrow",
+      "id": "beat_3_retaining_identity_4_line",
+      "from": {
+        "x": 6613.833333333333,
+        "y": 295.65000000000003
+      },
+      "to": {
+        "x": 6695.5,
+        "y": 282.05
+      }
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_9",
+      "x": 6839.8,
+      "y": 376,
+      "text": "What happens when a magnet approaches the",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_9_l1",
+      "x": 6718,
+      "y": 413,
+      "text": "iron-sulfur mixture?",
+      "size": 20,
+      "after": 1886,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_10",
+      "x": 6892,
+      "y": 460,
+      "text": "What will happen when you bring a magnet near this",
+      "size": 20,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_10_l1",
+      "x": 6857.2,
+      "y": 497,
+      "text": "unheated mixture of iron filings and sulfur?",
+      "size": 20,
+      "after": 2300,
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_13",
+      "x": 7896.8,
+      "y": 170,
+      "text": "Observation: Magnet pulls iron out completely;",
+      "size": 20,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_13_l1",
+      "x": 7711.2,
+      "y": 207,
+      "text": "sulfur remains",
+      "size": 20,
+      "after": 2116,
+      "tone": "good"
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_15",
+      "x": 7879.4,
+      "y": 254,
+      "text": "Components retain their individual original",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_15_l1",
+      "x": 7688,
+      "y": 291,
+      "text": "properties",
+      "size": 20,
+      "after": 1978
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_16",
+      "x": 7896.8,
+      "y": 338,
+      "text": "Components can be separated by simple physical",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_3_retaining_identity_16_l1",
+      "x": 7670.6,
+      "y": 375,
+      "text": "methods",
+      "size": 20,
+      "after": 2116
+    },
+    {
+      "kind": "list",
+      "id": "beat_3_retaining_identity_11",
+      "x": 8967.4,
+      "y": 150,
+      "w": 705.1999999999999,
+      "items": [
+        {
+          "term": "A",
+          "meaning": "The magnet attracts only the iron filings, leaving sulfur behind."
+        },
+        {
+          "term": "B",
+          "meaning": "Nothing happens because sulfur destroys iron's magnetic property."
+        },
+        {
+          "term": "C",
+          "meaning": "Both iron and sulfur get pulled onto the magnet together."
+        }
+      ]
+    },
+    {
+      "kind": "mark",
+      "id": "beat_3_retaining_identity_6",
+      "x": 6685.5,
+      "y": 233.1,
+      "w": 176.75,
+      "h": 103.6,
+      "shape": "circle"
+    },
+    {
+      "kind": "mark",
+      "id": "beat_3_retaining_identity_8",
+      "x": 6824.383333333333,
+      "y": 163.3,
+      "w": 135.85,
+      "h": 62.7,
+      "shape": "underline",
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "beat_4_everyday_mixtures_0",
+      "x": 10580,
+      "y": 86,
+      "text": "Everyday Examples of Mixtures",
+      "sub": "Gases, liquids, and solids"
+    },
+    {
+      "kind": "list",
+      "id": "beat_4_everyday_mixtures_2",
+      "x": 10227.4,
+      "y": 159.91000000000003,
+      "w": 705.1999999999999,
+      "heading": "Common Daily Life Mixtures",
+      "items": [
+        {
+          "term": "Air",
+          "meaning": "Mixture of gases: nitrogen (~78%), oxygen (~21%), argon, CO2, and water vapour"
+        },
+        {
+          "term": "Milk",
+          "meaning": "Mixture of water, fats, proteins, and minerals"
+        },
+        {
+          "term": "Soil",
+          "meaning": "Mixture of rock particles, minerals, decayed organic matter, and air"
+        },
+        {
+          "term": "Brass",
+          "meaning": "Solid mixture (alloy) of copper (~70%) and zinc (~30%)"
+        }
+      ]
+    },
+    {
+      "kind": "handwrite",
+      "id": "beat_4_everyday_mixtures_5",
+      "x": 10580,
+      "y": 451.49,
+      "text": "Why is soil classified as a mixture rather than a pure substance?",
+      "size": 21.44297082228117,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "beat_4_everyday_mixtures_6",
+      "x": 11487.4,
+      "y": 182.38,
+      "w": 705.1999999999999,
+      "items": [
+        {
+          "term": "A",
+          "meaning": "Because its particles have reacted chemically to form a single giant crystal."
+        },
+        {
+          "term": "B",
+          "meaning": "Because it contains varying amounts of sand, clay, and organic matter with no fixed formula."
+        }
+      ]
+    },
+    {
+      "kind": "box",
+      "id": "beat_4_everyday_mixtures_8_c0",
+      "x": 11410,
+      "y": 319.62,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "beat_4_everyday_mixtures_8_h0",
+      "x": 11840,
+      "y": 357.62,
+      "text": "Summary to Remember",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "beat_4_everyday_mixtures_8_b0",
+      "x": 11840,
+      "y": 397.62,
+      "text": "A mixture contains two or more pure substances physically mixed in any ratio, retaining their original properties, and separable by physical means.",
+      "size": 12
+    }
+  ],
+  "beats": [
+    {
+      "id": "beat_1_opening_1",
+      "topic": "Starting with Nimbu Pani",
+      "narration": "Hello Aarav, good to have you here today.",
+      "show": [
+        "beat_1_opening_0"
+      ],
+      "frame": [
+        "beat_1_opening_0"
+      ]
+    },
+    {
+      "id": "beat_1_opening_2",
+      "topic": "Starting with Nimbu Pani",
+      "narration": "Today we are looking at what actually happens when you put two or more substances together without making anything chemically new.",
+      "show": [
+        "beat_1_opening_0"
+      ],
+      "frame": [
+        "beat_1_opening_0"
+      ]
+    },
+    {
+      "id": "beat_1_opening_3",
+      "topic": "Starting with Nimbu Pani",
+      "narration": "Think about making a glass of nimbu pani on a hot afternoon.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line"
+      ]
+    },
+    {
+      "id": "beat_1_opening_4",
+      "topic": "Starting with Nimbu Pani",
+      "narration": "If you like it sweeter, you might stir in two spoons of sugar instead of one.",
+      "ask": {
+        "question": "If you add an extra spoon of sugar to your lemonade, does it become a totally different chemical substance, or is it still lemonade?",
+        "options": [
+          {
+            "text": "It becomes a new chemical compound with fixed proportions.",
+            "why": "Adding more sugar doesn't form chemical bonds; it just makes the lemonade sweeter.",
+            "hint": "Think about whether a chemical reaction happened in the glass."
+          },
+          {
+            "text": "It is still lemonade, just sweeter, because the parts are only mixed together.",
+            "correct": true,
+            "why": "The sugar, water, and lemon juice retain their own properties and aren't locked in a fixed chemical formula."
+          }
+        ]
+      },
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2"
+      ]
+    },
+    {
+      "id": "beat_1_opening_5",
+      "topic": "Starting with Nimbu Pani",
+      "narration": "Exactly. You can change the amounts however you like, and the sugar still tastes sweet while the lemon stays sour.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2"
+      ],
+      "frame": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2"
+      ]
+    },
+    {
+      "id": "beat_2_fixed_vs_variable_1",
+      "topic": "Pure Substance vs Mixture",
+      "narration": "Let us put pure water and sugar water side by side to see the real difference.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0"
+      ],
+      "frame": [
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0"
+      ]
+    },
+    {
+      "id": "beat_2_fixed_vs_variable_2",
+      "topic": "Pure Substance vs Mixture",
+      "narration": "You know that pure water is always H2O — two hydrogen atoms to one oxygen atom, everywhere in the universe.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4"
+      ],
+      "frame": [
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4"
+      ]
+    },
+    {
+      "id": "beat_2_fixed_vs_variable_3",
+      "topic": "Pure Substance vs Mixture",
+      "narration": "Its boiling point is exactly 100 degrees Celsius at sea level. That never changes.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4"
+      ],
+      "frame": [
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4"
+      ]
+    },
+    {
+      "id": "beat_2_fixed_vs_variable_4",
+      "topic": "Pure Substance vs Mixture",
+      "narration": "Now look at sugar water. You could dissolve five grams of sugar in a glass, or fifty grams.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7"
+      ],
+      "frame": [
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7"
+      ]
+    },
+    {
+      "id": "beat_2_fixed_vs_variable_5",
+      "topic": "Pure Substance vs Mixture",
+      "narration": "There is no fixed formula for sugar water because no chemical bonds were made.",
+      "ask": {
+        "question": "If you boil two beakers of sugar water—one with 5 g sugar and one with 50 g sugar—will they boil at the exact same temperature?",
+        "options": [
+          {
+            "text": "Yes, all liquid mixtures boil at a fixed point like pure water.",
+            "why": "Mixtures do not have sharp, fixed boiling points; their boiling temperature varies with concentration.",
+            "hint": "Remember that pure substances have fixed boiling points, but mixtures have variable composition."
+          },
+          {
+            "text": "No, the boiling point varies depending on how much sugar is dissolved.",
+            "correct": true,
+            "why": "Because mixtures have variable composition, their physical properties like boiling point change with concentration."
+          }
+        ]
+      },
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10"
+      ],
+      "frame": [
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10"
+      ]
+    },
+    {
+      "id": "beat_3_retaining_identity_1",
+      "topic": "Substances Keep Their Identity",
+      "narration": "Let us see what happens when we mix dry iron filings and yellow sulfur powder in a lab.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line"
+      ],
+      "frame": [
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line"
+      ]
+    },
+    {
+      "id": "beat_3_retaining_identity_2",
+      "topic": "Substances Keep Their Identity",
+      "narration": "We just grind them together on a watch glass. No heating, no sparks, no chemical reaction.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6"
+      ],
+      "frame": [
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6"
+      ]
+    },
+    {
+      "id": "beat_3_retaining_identity_3",
+      "topic": "Substances Keep Their Identity",
+      "narration": "Now let us see what happens if we bring a bar magnet close to this greyish-yellow powder.",
+      "ask": {
+        "question": "What will happen when you bring a magnet near this unheated mixture of iron filings and sulfur?",
+        "options": [
+          {
+            "text": "The magnet attracts only the iron filings, leaving sulfur behind.",
+            "correct": true,
+            "why": "Since it is just a physical mixture, iron retains its magnetic property and can be physically separated."
+          },
+          {
+            "text": "Nothing happens because sulfur destroys iron's magnetic property.",
+            "why": "In a physical mixture, components retain their individual properties without interfering chemically.",
+            "hint": "Did a chemical reaction occur to change the iron?"
+          },
+          {
+            "text": "Both iron and sulfur get pulled onto the magnet together.",
+            "why": "Sulfur is non-magnetic and is not chemically bound to the iron, so only iron is attracted.",
+            "hint": "Is sulfur magnetic?"
+          }
+        ]
+      },
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1"
+      ],
+      "frame": [
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1"
+      ]
+    },
+    {
+      "id": "beat_3_retaining_identity_4",
+      "topic": "Substances Keep Their Identity",
+      "narration": "Every single bit of iron leaps onto the magnet, leaving pure sulfur behind.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1"
+      ],
+      "frame": [
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1"
+      ]
+    },
+    {
+      "id": "beat_3_retaining_identity_5",
+      "topic": "Substances Keep Their Identity",
+      "narration": "Because they were only physically combined, the iron stayed magnetic and the sulfur stayed yellow.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1"
+      ],
+      "frame": [
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1"
+      ]
+    },
+    {
+      "id": "beat_4_everyday_mixtures_1",
+      "topic": "Mixtures All Around Us",
+      "narration": "Most things you touch, breathe, and drink every day are actually mixtures.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1",
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2"
+      ],
+      "frame": [
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2"
+      ]
+    },
+    {
+      "id": "beat_4_everyday_mixtures_2",
+      "topic": "Mixtures All Around Us",
+      "narration": "Take air, for example. In an open garden, there is more oxygen; in a crowded hall, carbon dioxide levels rise slightly.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1",
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2"
+      ],
+      "frame": [
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2"
+      ]
+    },
+    {
+      "id": "beat_4_everyday_mixtures_3",
+      "topic": "Mixtures All Around Us",
+      "narration": "Because its composition varies from place to place and the gases are not bonded, air is a mixture, not a compound.",
+      "ask": {
+        "question": "Why is soil classified as a mixture rather than a pure substance?",
+        "options": [
+          {
+            "text": "Because its particles have reacted chemically to form a single giant crystal.",
+            "why": "Soil particles do not chemically react to make one compound; you can see sand, clay, and twigs sitting side by side.",
+            "hint": "Think about whether two handfuls of soil from different gardens have the exact same ingredients."
+          },
+          {
+            "text": "Because it contains varying amounts of sand, clay, and organic matter with no fixed formula.",
+            "correct": true,
+            "why": "Soil is a physical blend of different components that vary depending on where you dig."
+          }
+        ]
+      },
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1",
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2",
+        "beat_4_everyday_mixtures_5"
+      ],
+      "frame": [
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2",
+        "beat_4_everyday_mixtures_5"
+      ]
+    },
+    {
+      "id": "beat_4_everyday_mixtures_4",
+      "topic": "Mixtures All Around Us",
+      "narration": "Spot on. Soil from your garden has different amounts of clay and organic matter than soil from a beach.",
+      "show": [
+        "beat_1_opening_0",
+        "lemonade_setup",
+        "beat_1_opening_5",
+        "beat_1_opening_5_line",
+        "beat_1_opening_6",
+        "beat_1_opening_6_line",
+        "beat_1_opening_7",
+        "beat_1_opening_7_line",
+        "beat_1_opening_9",
+        "beat_1_opening_9_l1",
+        "beat_1_opening_10",
+        "beat_1_opening_10_l1",
+        "beat_1_opening_10_l2",
+        "beat_2_fixed_vs_variable_0",
+        "beat_2_fixed_vs_variable_2_c0",
+        "beat_2_fixed_vs_variable_2_h0",
+        "beat_2_fixed_vs_variable_2_b0",
+        "beat_2_fixed_vs_variable_4",
+        "beat_2_fixed_vs_variable_7",
+        "beat_2_fixed_vs_variable_9",
+        "beat_2_fixed_vs_variable_10",
+        "beat_3_retaining_identity_0",
+        "iron_sulfur_experiment",
+        "beat_3_retaining_identity_3",
+        "beat_3_retaining_identity_3_line",
+        "beat_3_retaining_identity_4",
+        "beat_3_retaining_identity_4_line",
+        "beat_3_retaining_identity_6",
+        "beat_3_retaining_identity_8",
+        "beat_3_retaining_identity_9",
+        "beat_3_retaining_identity_9_l1",
+        "beat_3_retaining_identity_10",
+        "beat_3_retaining_identity_10_l1",
+        "beat_3_retaining_identity_15",
+        "beat_3_retaining_identity_15_l1",
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2",
+        "beat_4_everyday_mixtures_5"
+      ],
+      "frame": [
+        "beat_4_everyday_mixtures_0",
+        "beat_4_everyday_mixtures_2",
+        "beat_4_everyday_mixtures_5"
+      ]
+    }
+  ],
+  "topicRef": "class9-science/is-matter-around-us-pure/what-is-a-mixture"
+}

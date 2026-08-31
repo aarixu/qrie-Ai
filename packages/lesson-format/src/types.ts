@@ -305,6 +305,10 @@ export interface Beat {
    */
   ask?: {
     question: string;
+    /** What a right answer contains — for the ear that judges a spoken reply; never written on the board. */
+    expect?: string;
+    /** The nudge a wrong spoken try gets, short of the answer. */
+    hint?: string;
     options?: {
       text: string;
       correct?: boolean;

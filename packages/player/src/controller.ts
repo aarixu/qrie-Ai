@@ -122,6 +122,7 @@ export class PlayerController {
     let minDone = minMs <= 0;
     this._pendingAsk = beat.ask ?? null;
     this.askAnswered = beat.ask === undefined;
+    this.askRevealed = false;
     const gate = () => {
       if (gen !== this.generation) return; // superseded by pause/seek/stop
       if (speechDone && minDone && this.askAnswered) this.advance();
@@ -140,6 +141,14 @@ export class PlayerController {
     // a voice line, never stall the class.
     const onSpeechDone = () => {
       speechDone = true;
+      // The question SURFACES only now. It used to surface at beat start —
+      // and once every beat carried an ask, resolving one made the next
+      // beat's options appear instantly, hanging over a line still being
+      // spoken. The student read that as "the options never vanish".
+      if (gen === this.generation && this._pendingAsk !== null && !this.askRevealed) {
+        this.askRevealed = true;
+        this.emit('statechange');
+      }
       gate();
     };
     this.tts.speak(beat.narration).then(onSpeechDone, onSpeechDone);
@@ -173,10 +182,12 @@ export class PlayerController {
   /** The question the class is holding on, if it is holding at all. */
   private _pendingAsk: NonNullable<Lesson['beats'][number]['ask']> | null = null;
   private askAnswered = true;
+  /** False while the beat's narration is still being spoken — the held ask is invisible until she finishes asking it. */
+  private askRevealed = true;
   private askGate: (() => void) | null = null;
 
   get pendingAsk(): NonNullable<Lesson['beats'][number]['ask']> | null {
-    return this._pendingAsk;
+    return this.askRevealed ? this._pendingAsk : null;
   }
 
   /**

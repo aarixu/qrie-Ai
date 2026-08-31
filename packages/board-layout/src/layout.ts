@@ -388,7 +388,12 @@ export function layoutBeat(
     }
     asks.push({
       step: Math.max(0, saysSeen - 1),
-      ask: { question: step.question, ...(step.options ? { options: step.options } : {}) },
+      ask: {
+        question: step.question,
+        ...(step.options ? { options: step.options } : {}),
+        ...(step.expect ? { expect: step.expect } : {}),
+        ...(step.hint ? { hint: step.hint } : {}),
+      },
     });
     items.push({ do: 'write', text: step.question, tone: 'accent' });
     if (step.options && step.options.length > 0) {

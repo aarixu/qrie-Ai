@@ -188,20 +188,30 @@ export function ClassRoom({
    * nothing: the hint is spoken and the chips stay, because wrong gets a
    * nudge and another try, never the solution on the first miss.
    */
+  // True while an answer is being weighed or spoken about — the choices hide
+  // AT ONCE on a tap or a heard answer, so nothing on screen suggests the
+  // class did not register it. They return only if the answer was wrong.
+  const [askBusy, setAskBusy] = useState(false);
+
   const answerAsk = async (index: number) => {
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
     const option = ask.options?.[index];
     const correct = option ? option.correct === true : true;
     recordAnswerAtBeat(lesson, player.beat.id, correct);
-    if (correct) {
-      const why = option?.why;
-      if (why) await tts.speak(`And why is that the right one? ${why}`);
-      player.answer(index);
-    } else {
-      player.answer(index);
-      const nudge = option?.hint ?? option?.why;
-      if (nudge) await tts.speak(nudge);
+    setAskBusy(true);
+    try {
+      if (correct) {
+        const why = option?.why;
+        if (why) await tts.speak(`And why is that the right one? ${why}`);
+        player.answer(index);
+      } else {
+        player.answer(index);
+        const nudge = option?.hint ?? option?.why;
+        if (nudge) await tts.speak(nudge);
+      }
+    } finally {
+      setAskBusy(false);
     }
   };
 
@@ -386,6 +396,10 @@ export function ClassRoom({
       setEar('off');
     };
   }, [heldAskBeat, lesson, tts]);
+
+  // The choices leave the screen the moment an answer is in flight — a tap,
+  // or a spoken answer being judged. What remains is the status chip.
+  const askChoicesHidden = askBusy || ear === 'thinking';
 
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
@@ -660,7 +674,7 @@ export function ClassRoom({
                   until she can hear, one honest button stands in for the ear.
                   Without it the chips row rendered empty and the class held
                   forever on its very first question. */}
-              {(player.pendingAsk.options ?? []).length === 0 && (
+              {!askChoicesHidden && (player.pendingAsk.options ?? []).length === 0 && (
                 <button
                   onClick={() => void answerAsk(0)}
                   className="rounded-2xl bg-stage-primary px-5 py-2.5 font-label-md text-label-md font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
@@ -668,7 +682,8 @@ export function ClassRoom({
                   Say your answer out loud, then tap here
                 </button>
               )}
-              {(player.pendingAsk.options ?? []).map((option, i) => (
+              {!askChoicesHidden &&
+                (player.pendingAsk.options ?? []).map((option, i) => (
                 <button
                   key={i}
                   onClick={() => void answerAsk(i)}

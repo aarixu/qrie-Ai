@@ -63,6 +63,10 @@ export type Instruction =
   | {
       do: 'ask';
       question: string;
+      /** What a right answer contains — for the judge, never for the board. */
+      expect?: string;
+      /** The nudge a wrong spoken try gets. */
+      hint?: string;
       options?: { text: string; correct?: boolean; why?: string; hint?: string }[];
     }
   /** A short equation, as it would be written on a board. */
