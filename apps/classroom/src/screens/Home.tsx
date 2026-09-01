@@ -4,6 +4,7 @@ import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from '../lib/cont
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { profileStore } from '../stores/profile';
 import { BRAND } from '../brand';
+import { StreakFlame } from '../ui/StreakFlame';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { BottomNav, SideNav } from '../ui/Nav';
@@ -82,16 +83,7 @@ export function Home() {
               {profile.name ? `, ${profile.name}!` : '!'}
             </h1>
           </div>
-          {streak > 0 && (
-            <button
-              onClick={() => navigate('/streak')}
-              aria-label={`${streak} day streak`}
-              className="flex items-center gap-1 bg-secondary-container text-on-secondary-container rounded-full px-3 py-1 shadow-sm font-label-md text-label-md active:scale-95 transition-transform"
-            >
-              <Icon name="local_fire_department" filled className="text-[18px]" />
-              {streak} {streak === 1 ? 'Day' : 'Days'}
-            </button>
-          )}
+          {streak > 0 && <StreakFlame days={streak} onClick={() => navigate('/streak')} />}
         </div>
       </header>
 
