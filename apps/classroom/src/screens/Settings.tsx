@@ -12,7 +12,7 @@ import { useStore } from '../stores/localStore';
 import { Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
 import { useAccount } from '../lib/account';
-import { cloudConfigured, signOut } from '../lib/supabase';
+import { cloudConfigured, deleteOwnAccount, signOut } from '../lib/supabase';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
 
@@ -95,6 +95,8 @@ function Switch({
 
 export function Settings() {
   const { account } = useAccount();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteProblem, setDeleteProblem] = useState<string | null>(null);
   const navigate = useNavigate();
   const settings = useStore(settingsStore);
   const profile = useStore(profileStore);
@@ -155,6 +157,41 @@ export function Settings() {
               ? 'Your streak, notes and answers are saved to this account.'
               : 'Everything works without an account. Signing in only keeps a copy.'}
           </p>
+
+          {/* Two taps, deliberately: this is not undoable, and a control that
+              destroys an account on one tap is a control people hit by
+              accident. The second tap says exactly what will go. */}
+          {account && (
+            <button
+              onClick={() => {
+                if (!deleting) {
+                  setDeleting(true);
+                  return;
+                }
+                void deleteOwnAccount().then((problem) => {
+                  setDeleting(false);
+                  if (problem) setDeleteProblem(problem);
+                });
+              }}
+              className={`${ROW} text-left hover:scale-[1.01] transition-transform`}
+            >
+              <Icon name="delete_forever" className="text-error" />
+              <span className="flex-1 font-body-md text-body-md text-on-surface">
+                {deleting ? 'Delete it permanently — tap again' : 'Delete your account'}
+              </span>
+            </button>
+          )}
+          {deleteProblem && (
+            <p role="alert" className="px-4 font-label-md text-label-md text-error">
+              {deleteProblem}
+            </p>
+          )}
+          {account && (
+            <p className="px-4 font-label-md text-label-md text-on-surface-variant">
+              This removes your account and everything saved to it. What is on this device stays
+              until you clear it below.
+            </p>
+          )}
         </Section>
       )}
 

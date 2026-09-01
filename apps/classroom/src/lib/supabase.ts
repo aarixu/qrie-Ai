@@ -179,6 +179,34 @@ export async function signInWithGoogle(): Promise<string | null> {
 }
 
 /**
+ * DELETE THE ACCOUNT, FOR REAL.
+ *
+ * "Reset progress" in Settings only ever cleared local state, leaving the
+ * Supabase user and every row of their work behind. Apple has required real
+ * deletion since June 2022 and Google requires it both in-app and on the web,
+ * so that alone was an automatic rejection on both stores.
+ *
+ * The work is done by a database function running under the caller's own
+ * identity: a browser holding the anon key cannot delete an auth user, and it
+ * must never be given a key that could. student_state cascades from
+ * auth.users, so the rows go with the account rather than being orphaned
+ * under a dead id.
+ *
+ * Returns a message on failure and null on success, the same shape the
+ * sign-in calls use, so a screen never has to learn a second convention.
+ */
+export async function deleteOwnAccount(): Promise<string | null> {
+  const db = supabase();
+  if (!db) return 'There is no account to delete.';
+  const { error } = await db.rpc('delete_own_account');
+  if (error) return error.message;
+  // The session is meaningless once the user is gone; without this the app
+  // would keep trying to sync for somebody who no longer exists.
+  await db.auth.signOut();
+  return null;
+}
+
+/**
  * Sign out.
  *
  * The device's own copy is deliberately LEFT ALONE. A student signing out on
