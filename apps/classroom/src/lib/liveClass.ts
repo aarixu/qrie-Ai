@@ -166,11 +166,22 @@ export interface LivePrep {
  * here would be a class nobody gets to attend.
  */
 export async function prepareLiveClass(
-  ask: { topic: string; klass: number; minutes: number; studentLines?: readonly string[] },
+  ask: {
+    topic: string;
+    klass: number;
+    minutes: number;
+    studentLines?: readonly string[];
+    /**
+     * How a REAL teacher being cloned teaches (styleBrief). Absent for every
+     * ordinary class - Curie own tutor has a persona of her own.
+     */
+    teacherStyle?: string;
+  },
   onProgress: (progress: PrepProgress) => void,
 ): Promise<LivePrep> {
   const result = await prepareClass({
     topic: ask.topic,
+    ...(ask.teacherStyle ? { teacherStyle: ask.teacherStyle } : {}),
     klass: ask.klass,
     minutes: ask.minutes,
     studentLines: ask.studentLines,
