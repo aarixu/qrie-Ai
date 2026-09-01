@@ -15,9 +15,39 @@ document.body.style.margin = '0';
 // stale cache.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {
-      /* not installable here — the app works fine without it */
-    });
+    void navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        /**
+         * A new version is never taken mid-class.
+         *
+         * The worker no longer calls skipWaiting on its own, so a waiting
+         * version sits there until this asks for it — and this only asks when
+         * the student is on a screen where a reload costs nothing. Anywhere
+         * else it waits, and the next ordinary visit picks it up.
+         */
+        registration.addEventListener('updatefound', () => {
+          const incoming = registration.installing;
+          if (!incoming) return;
+          incoming.addEventListener('statechange', () => {
+            if (incoming.state !== 'installed' || !navigator.serviceWorker.controller) return;
+            const inAClass = /^\/(lesson|class)\//.test(window.location.pathname);
+            if (inAClass) return;
+            incoming.postMessage('take-over');
+          });
+        });
+
+        // The new worker is in charge; reload once so the page matches it.
+        let reloaded = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (reloaded) return;
+          reloaded = true;
+          window.location.reload();
+        });
+      })
+      .catch(() => {
+        /* not installable here — the app works fine without it */
+      });
   });
 }
 

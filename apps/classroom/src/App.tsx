@@ -18,6 +18,7 @@ import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI } from './lib/content';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
+import { ErrorBoundary } from './ui/ErrorBoundary';
 import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
 import { Chapter } from './screens/Chapter';
@@ -85,7 +86,8 @@ function StudyPlanRoute() {
 
   // The stored plan may hold steps from earlier classes (the placement looks
   // back), so the index that renders it must be the same merged one.
-  const data = settings.klass !== null ? loadDiagnosticDataFor(settings.klass, profile.subjects) : null;
+  const data =
+    settings.klass !== null ? loadDiagnosticDataFor(settings.klass, profile.subjects) : null;
   if (!hasDiagnostic(profile) || !data) return <Navigate to="/" replace />;
 
   return (
@@ -157,9 +159,10 @@ function Gate({ children }: { children: React.ReactNode }) {
   // Sending them through onboarding just puts a name form in front of a tool
   // whose whole job is to be opened and looked at.
   const isBench =
-    location.pathname === '/canvas-lab' ||
-    location.pathname === '/avatar-lab' ||
-    location.pathname.startsWith('/action-lab/');
+    import.meta.env.DEV &&
+    (location.pathname === '/canvas-lab' ||
+      location.pathname === '/avatar-lab' ||
+      location.pathname.startsWith('/action-lab/'));
 
   if (booting && !isBench) return <Splash />;
   if (!isBench && !isOnboarded(settings) && location.pathname !== '/onboarding') {
@@ -193,40 +196,61 @@ function useAppearance(): void {
   useEffect(() => watchTheme(preferences.theme), [preferences.theme]);
 }
 
+/**
+ * The boundary sits INSIDE the router so it can be keyed by path: a student
+ * who navigates away from a screen that threw is recovered by the navigation
+ * itself, with no button to press. Outside the router it would have no way to
+ * know they had moved.
+ */
+function Boundaried({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  return <ErrorBoundary resetKey={location.pathname}>{children}</ErrorBoundary>;
+}
+
 export default function App() {
   useAppearance();
   return (
     <BrowserRouter>
-      <Gate>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/diagnostic" element={<DiagnosticRoute />} />
-          <Route path="/plan" element={<StudyPlanRoute />} />
-          <Route path="/syllabus" element={<Syllabus />} />
-          <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
-          <Route path="/lesson/:lessonId" element={<LessonRoute />} />
-          {/* Teach me this topic — fetched if somebody has had it, made if not. */}
-          <Route path="/class/*" element={<LiveClassRoute />} />
-          <Route path="/action-lab/:lessonId" element={<ActionLab />} />
-          <Route path="/canvas-lab" element={<CanvasLab />} />
-          <Route path="/avatar-lab" element={<AvatarLab />} />
-          <Route path="/complete/:lessonId" element={<LessonComplete />} />
-          <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/progress" element={<Progress />} />
-          <Route path="/doubts" element={<DoubtHistory />} />
-          <Route path="/streak" element={<StreakDetail />} />
-          <Route path="/notes" element={<Notes />} />
-          <Route path="/bookmarks" element={<Bookmarks />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Gate>
+      <Boundaried>
+        <Gate>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/diagnostic" element={<DiagnosticRoute />} />
+            <Route path="/plan" element={<StudyPlanRoute />} />
+            <Route path="/syllabus" element={<Syllabus />} />
+            <Route path="/chapter/:syllabusId/:chapterId" element={<Chapter />} />
+            <Route path="/lesson/:lessonId" element={<LessonRoute />} />
+            {/* Teach me this topic — fetched if somebody has had it, made if not. */}
+            <Route path="/class/*" element={<LiveClassRoute />} />
+            {/* The benches are tools, not product. A store reviewer can reach
+              any route that exists, so in a production build these do not.
+              import.meta.env.DEV is a literal at build time, so the screens
+              are dropped from the bundle rather than merely hidden. */}
+            {import.meta.env.DEV && (
+              <>
+                <Route path="/action-lab/:lessonId" element={<ActionLab />} />
+                <Route path="/canvas-lab" element={<CanvasLab />} />
+                <Route path="/avatar-lab" element={<AvatarLab />} />
+              </>
+            )}
+            <Route path="/complete/:lessonId" element={<LessonComplete />} />
+            <Route path="/quiz/:lessonRef" element={<QuizRoute />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/progress" element={<Progress />} />
+            <Route path="/doubts" element={<DoubtHistory />} />
+            <Route path="/streak" element={<StreakDetail />} />
+            <Route path="/notes" element={<Notes />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+            <Route path="/achievements" element={<Achievements />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Gate>
+      </Boundaried>
     </BrowserRouter>
   );
 }
