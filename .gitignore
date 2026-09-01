@@ -23,3 +23,6 @@ tools/livekit/bin/
 # Voice samples for picking a tutor voice. Throwaway.
 content/voices/
 clone-source/
+
+# RunPod MCP config carries the API key. Same rule as .env.local.
+.mcp.json
