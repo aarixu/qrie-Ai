@@ -25,7 +25,8 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",
-    "three": "^0.185.1"
+    "three": "^0.185.1",
+    "@ai-tutor/teacher-clone": "*"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",
