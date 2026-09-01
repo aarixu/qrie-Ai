@@ -5,10 +5,18 @@ import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
 import { loadDiagnosticData } from '../lib/diagnosticData';
 import { Icon } from '../ui/Icon';
+import {
+  DEFAULT_SCHEDULE,
+  WEEKDAY_NAMES,
+  formatMinute,
+  type Weekday,
+} from '../lib/studySchedule';
+import { setRemindersEnabled, setStudyDays, setStudyMinute } from '../stores/schedule';
+import { askForNotifications } from '../lib/reminders';
 import { TutorTile } from '../ui/TutorTile';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
-const STEPS = ['name', 'class', 'subjects', 'ready'] as const;
+const STEPS = ['name', 'class', 'subjects', 'when', 'ready'] as const;
 type Step = (typeof STEPS)[number];
 
 /**
@@ -26,6 +34,8 @@ type Step = (typeof STEPS)[number];
 export function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState<Step>('name');
+  const [days, setDays] = useState<Weekday[]>([...DEFAULT_SCHEDULE.days]);
+  const [minute, setMinute] = useState(DEFAULT_SCHEDULE.minute);
   const [name, setName] = useState('');
   const [klass, setKlass] = useState<number | null>(null);
   const [subjects, setSubjects] = useState<string[]>([]);
@@ -179,13 +189,85 @@ export function Onboarding() {
                 })}
               </div>
               <button
-                onClick={() => setStep('ready')}
+                onClick={() => setStep('when')}
                 // A class with no authored subjects yet must still get through —
                 // an empty selection is only a refusal when there was a choice.
                 disabled={subjects.length === 0 && available.length > 0}
                 className={`mt-stack-lg ${PRIMARY}`}
               >
                 Continue
+              </button>
+            </div>
+          )}
+
+          {step === 'when' && (
+            <div>
+              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2 text-center">
+                When do you study?
+              </h1>
+              {/* Asked here rather than buried in settings, because a reminder
+                  nobody set up is a retention design that does not run. The
+                  wording is a plan they are making, not a permission we want. */}
+              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md text-center">
+                We will remind you then. Change it any time, or turn it off.
+              </p>
+
+              <div className="flex flex-wrap gap-2 justify-center mb-stack-md">
+                {WEEKDAY_NAMES.map((label, day) => {
+                  const on = days.includes(day as Weekday);
+                  return (
+                    <button
+                      key={label}
+                      onClick={() =>
+                        setDays(
+                          on
+                            ? days.filter((d) => d !== day)
+                            : [...days, day as Weekday].sort((a, b) => a - b),
+                        )
+                      }
+                      aria-pressed={on}
+                      className={`w-12 h-12 rounded-full border-2 font-label-md text-label-md transition-colors ${
+                        on
+                          ? 'bg-primary-fixed border-primary text-on-primary-fixed-variant'
+                          : 'bg-surface-container-lowest border-surface-variant text-on-surface-variant'
+                      }`}
+                    >
+                      {label[0]}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <label className="flex flex-col items-center gap-2 mb-stack-lg">
+                <span className="font-label-md text-label-md text-on-surface-variant">
+                  At {formatMinute(minute)}
+                </span>
+                <input
+                  type="range"
+                  min={6 * 60}
+                  max={22 * 60}
+                  step={30}
+                  value={minute}
+                  onChange={(e) => setMinute(Number(e.target.value))}
+                  aria-label="What time you study"
+                  className="w-full max-w-[280px] accent-primary"
+                />
+              </label>
+
+              <button
+                onClick={() => {
+                  setStudyDays(days);
+                  setStudyMinute(minute);
+                  setRemindersEnabled(days.length > 0);
+                  // Asked HERE, where the reason is on screen. A notification
+                  // prompt on first open is the fastest way to be denied
+                  // forever, and an iOS denial is painful to undo.
+                  if (days.length > 0) void askForNotifications();
+                  setStep('ready');
+                }}
+                className={PRIMARY}
+              >
+                {days.length > 0 ? 'Remind me then' : 'No reminders for now'}
               </button>
             </div>
           )}

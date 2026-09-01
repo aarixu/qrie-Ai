@@ -4,6 +4,7 @@ import './fonts';
 import './index.css';
 import App from './App';
 import { startAccountSync } from './lib/account';
+import { nudgeIfDue } from './lib/reminders';
 
 // Body owns no colour: the page ground is `html { background }` in index.css,
 // which reads --c-background and so follows the theme. An inline background
@@ -81,6 +82,19 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 // configured this is a no-op and the app stays exactly the local-only app it
 // has always been - nothing is gated behind signing in.
 startAccountSync();
+
+/**
+ * The nudge, checked once when the app opens.
+ *
+ * Not a timer: a student who leaves the tab open all evening is one person
+ * having one evening, and studySchedule already refuses to fire twice in a
+ * day or to speak at all on a day they have studied. On a phone this becomes
+ * a Capacitor local notification scheduled ahead of time, which needs no
+ * server and no network - the device holds the schedule itself.
+ */
+void nudgeIfDue().catch(() => {
+  // A reminder that fails is a reminder not shown, never a broken app.
+});
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SYLLABI, fetchCatalog, type CatalogEntry } from '../lib/content';
+import { SYLLABI, fetchCatalog, type CatalogEntry, subjectsAvailable } from '../lib/content';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
 import { Screen } from '../ui/Screen';
+import { profileStore } from '../stores/profile';
+import { subjectNeedingAttention, subjectProgress } from '../lib/subjectProgress';
 import { Icon } from '../ui/Icon';
 
 /** Doubts grouped by (lesson, beat), most-asked first — the data spine, visible. */
@@ -35,6 +37,15 @@ export function Progress() {
 
   const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
   const streak = computeStreak(progress);
+
+  const profile = useStore(profileStore);
+  const subjects = subjectProgress({
+    catalog: profile.klass === null ? catalog : catalog.filter((e) => e.class === profile.klass),
+    progress,
+    chosen: profile.subjects,
+    offered: profile.klass === null ? [] : subjectsAvailable(profile.klass),
+  });
+  const dropping = subjectNeedingAttention(subjects);
 
   /**
    * A tile is a button when there is somewhere to go and a plain div when
@@ -72,6 +83,66 @@ export function Progress() {
         {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'ink-orange', '/streak')}
         {stat('back_hand', String(doubts.length), 'doubts asked', 'tile-blue', 'ink-blue', '/doubts')}
       </div>
+
+      {/* WHERE THEY STAND IN EACH SUBJECT.
+
+          The two numbers above are true and neither answers the question a
+          student with more than one subject actually has, which is which one
+          they are behind in. */}
+      {subjects.length > 0 && (
+        <section className="mb-stack-md">
+          <h2 className="font-label-sm text-label-sm uppercase tracking-wider text-outline mb-stack-sm">
+            By subject
+          </h2>
+          <ul className="flex flex-col gap-3">
+            {subjects.map((row) => (
+              <li
+                key={row.subject}
+                className="bg-surface-container-lowest rounded-[20px] p-4 shadow-soft-indigo"
+              >
+                <div className="flex items-baseline gap-2">
+                  <span className="flex-1 font-headline-md text-[18px] leading-6 text-on-surface">
+                    {row.subject}
+                  </span>
+                  <span className="font-label-md text-label-md text-on-surface-variant">
+                    {row.empty ? 'Coming soon' : `${row.done} of ${row.available}`}
+                  </span>
+                </div>
+
+                {/* A bar at zero would say "you have done none of it" when the
+                    truth is "there is none of it yet" — so an empty subject
+                    gets a sentence instead of a bar. */}
+                {row.empty ? (
+                  <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+                    Lessons for this subject are still being written.
+                  </p>
+                ) : (
+                  <>
+                    <div
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={row.available}
+                      aria-valuenow={row.done}
+                      aria-valuetext={`${row.done} of ${row.available} lessons finished in ${row.subject}`}
+                      className="h-2 rounded-full bg-surface-variant overflow-hidden mt-3"
+                    >
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${Math.round((row.share ?? 0) * 100)}%` }}
+                      />
+                    </div>
+                    {row.subject === dropping && (
+                      <p className="font-label-md text-label-md text-on-surface-variant mt-2">
+                        The one you have not touched in a while.
+                      </p>
+                    )}
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Per-chapter completion */}
       {SYLLABI.map((syllabus) =>
