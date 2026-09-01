@@ -25,7 +25,7 @@ import { progressStore, type Progress } from '../src/stores/progress';
 const ROOT = process.cwd();
 const NUTRITION = ((): Lesson => {
   const raw = JSON.parse(
-    fs.readFileSync(path.join(ROOT, 'content/class10-nutrition/lesson.json'), 'utf8'),
+    fs.readFileSync(path.join(ROOT, 'content/class10-science-life-processes-autotrophic-nutrition/lesson.json'), 'utf8'),
   ) as unknown;
   const result = validateLesson(raw);
   if (!result.ok) throw new Error(`the nutrition lesson is invalid: ${result.errors.join('; ')}`);

@@ -10,7 +10,7 @@ import { QuizResult } from '../src/screens/QuizResult';
  * If the bank changes shape, these fail here rather than in a student's face.
  */
 
-const LESSON = 'class10-nutrition';
+const LESSON = 'class10-science-life-processes-autotrophic-nutrition';
 
 const quiz = buildQuiz(LESSON);
 if (!quiz) throw new Error(`the committed data built no quiz for "${LESSON}"`);

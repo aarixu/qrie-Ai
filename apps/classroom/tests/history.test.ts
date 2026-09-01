@@ -33,7 +33,7 @@ const loadLesson = (id: string): Lesson => {
   return result.lesson;
 };
 
-const NUTRITION = loadLesson('class10-nutrition');
+const NUTRITION = loadLesson('class10-science-life-processes-autotrophic-nutrition');
 const CATALOG = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'content/index.json'), 'utf8'),
 ) as { lessons: CatalogEntry[] };
@@ -58,10 +58,10 @@ const progressWith = (...days: string[]): Progress => ({
  * changes, these two must never land in the same bucket.
  */
 const LOG: DoubtEntry[] = [
-  doubt('2026-08-20T09:15:00.000Z', 'class10-nutrition', 'leaf_factory'),
-  doubt('2026-08-21T23:58:00.000Z', 'class10-nutrition', 'photosynthesis'),
+  doubt('2026-08-20T09:15:00.000Z', 'class10-science-life-processes-autotrophic-nutrition', 'leaf_factory'),
+  doubt('2026-08-21T23:58:00.000Z', 'class10-science-life-processes-autotrophic-nutrition', 'photosynthesis'),
   doubt('2026-08-22T00:02:00.000Z', 'class10-respiration', 'hook'),
-  doubt('2026-08-22T18:40:00.000Z', 'class10-nutrition', 'photosynthesis'),
+  doubt('2026-08-22T18:40:00.000Z', 'class10-science-life-processes-autotrophic-nutrition', 'photosynthesis'),
 ];
 
 describe('groupDoubtsByDay', () => {
@@ -110,7 +110,7 @@ describe('groupDoubtsByLesson', () => {
   it('puts the most-asked lesson first, with its total', () => {
     const [first, second] = groupDoubtsByLesson(LOG);
 
-    expect(first).toMatchObject({ lessonId: 'class10-nutrition', count: 3 });
+    expect(first).toMatchObject({ lessonId: 'class10-science-life-processes-autotrophic-nutrition', count: 3 });
     expect(second).toMatchObject({ lessonId: 'class10-respiration', count: 1 });
   });
 
@@ -131,7 +131,7 @@ describe('groupDoubtsByLesson', () => {
 describe('mostAskedBeat', () => {
   it('names the single beat that drew the most questions', () => {
     expect(mostAskedBeat(LOG)).toEqual({
-      lessonId: 'class10-nutrition',
+      lessonId: 'class10-science-life-processes-autotrophic-nutrition',
       beatId: 'photosynthesis',
       count: 2,
     });
@@ -146,7 +146,7 @@ describe('mostAskedBeat', () => {
       doubt('2026-08-22T19:05:00.000Z', 'class10-respiration', 'hook'),
     ];
 
-    expect(groupDoubtsByLesson(log)[0].lessonId).toBe('class10-nutrition');
+    expect(groupDoubtsByLesson(log)[0].lessonId).toBe('class10-science-life-processes-autotrophic-nutrition');
     expect(mostAskedBeat(log)).toEqual({
       lessonId: 'class10-respiration',
       beatId: 'hook',
@@ -287,9 +287,9 @@ describe('labelBook', () => {
   it('takes titles from the catalog and beat topics from the lesson', () => {
     const book = labelBook(CATALOG.lessons, [NUTRITION]);
 
-    expect(book['class10-nutrition'].title).toBe('Nutrition');
+    expect(book['class10-science-life-processes-autotrophic-nutrition'].title).toBe('Autotrophic Nutrition');
     for (const beat of NUTRITION.beats) {
-      expect(book['class10-nutrition'].beats[beat.id]).toBe(beat.topic);
+      expect(book['class10-science-life-processes-autotrophic-nutrition'].beats[beat.id]).toBe(beat.topic);
     }
   });
 
@@ -303,7 +303,7 @@ describe('labelBook', () => {
   it("falls back to the lesson's own title when it is not in the catalog", () => {
     const book = labelBook([], [NUTRITION]);
 
-    expect(book['class10-nutrition'].title).toBe(NUTRITION.title);
+    expect(book['class10-science-life-processes-autotrophic-nutrition'].title).toBe(NUTRITION.title);
   });
 
   it('has nothing to say about a lesson it has never seen', () => {

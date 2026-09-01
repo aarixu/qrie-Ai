@@ -7,7 +7,7 @@ import { PlayerController } from '../src/controller';
 import type { TtsAdapter } from '../src/narration';
 
 // Vitest runs from the repo root; the fixture is the committed dev lesson.
-const fixturePath = path.resolve(process.cwd(), 'content/class10-heart-mini/lesson.json');
+const fixturePath = path.resolve(process.cwd(), 'packages/lesson-format/tests/fixtures/heart.lesson.json');
 
 function loadFixture(): Lesson {
   const r = validateLesson(JSON.parse(fs.readFileSync(fixturePath, 'utf8')));

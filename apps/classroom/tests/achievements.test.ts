@@ -71,7 +71,7 @@ const finished = (...agos: number[]): Progress =>
   progressOf(Object.fromEntries(agos.map((ago, i) => [`lesson-${i}`, ago])));
 
 const asked = (...agos: number[]): DoubtEntry[] =>
-  agos.map((ago, i) => ({ lessonId: 'class10-nutrition', beatId: `beat-${i}`, at: at(ago) }));
+  agos.map((ago, i) => ({ lessonId: 'class10-science-life-processes-autotrophic-nutrition', beatId: `beat-${i}`, at: at(ago) }));
 
 const attempt = (lessonRef: string, score: number, total: number, ago: number): QuizAttempt => ({
   lessonRef,
@@ -100,7 +100,7 @@ describe('chaptersOf', () => {
   it('joins the real catalogue to the real syllabus', () => {
     expect(LIFE.id).toBe('class10-science/life-processes');
     expect(LIFE.title).toBe('Life Processes');
-    expect(LIFE.lessonIds).toContain('class10-nutrition');
+    expect(LIFE.lessonIds).toContain('class10-science-life-processes-autotrophic-nutrition');
     expect(LIFE.lessonIds.length).toBeGreaterThan(1);
   });
 

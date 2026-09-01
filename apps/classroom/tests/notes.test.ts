@@ -21,10 +21,10 @@ const texts = () => notesStore.get().map((n) => n.text);
 
 describe('notes: writing one down', () => {
   it('keeps the moment it was written at, not just the lesson', () => {
-    addNote('class10-nutrition', 'beat-arteries', 'valves stop the backflow');
+    addNote('class10-science-life-processes-autotrophic-nutrition', 'beat-arteries', 'valves stop the backflow');
 
     const [note] = notesStore.get();
-    expect(note.lessonId).toBe('class10-nutrition');
+    expect(note.lessonId).toBe('class10-science-life-processes-autotrophic-nutrition');
     expect(note.beatId).toBe('beat-arteries');
     expect(note.text).toBe('valves stop the backflow');
     expect(Number.isNaN(Date.parse(note.at))).toBe(false);

@@ -8,7 +8,7 @@ import { computeVisible } from '../src/visible';
 
 // The committed fixture is the real contract test: if the format or this
 // renderer drifts, the lesson every other package tests against breaks here.
-const fixturePath = resolve(process.cwd(), 'content/class10-heart-mini/lesson.json');
+const fixturePath = resolve(process.cwd(), 'packages/lesson-format/tests/fixtures/heart.lesson.json');
 const parsed = validateLesson(JSON.parse(readFileSync(fixturePath, 'utf8')));
 if (!parsed.ok) throw new Error(`fixture lesson invalid: ${parsed.errors.join('; ')}`);
 const lesson = parsed.lesson;

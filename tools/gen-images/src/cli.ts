@@ -7,7 +7,7 @@ import { generateForLesson } from './generate.ts';
 /**
  * CLI. Thin on purpose — everything worth testing lives in generate.ts.
  *
- *   node tools/gen-images/src/cli.ts --lesson content/class10-nutrition [--force] [--dry-run]
+ *   node tools/gen-images/src/cli.ts --lesson content/class10-respiration [--force] [--dry-run]
  */
 
 function usage(message: string): never {
@@ -16,7 +16,7 @@ function usage(message: string): never {
 Usage:
   node tools/gen-images/src/cli.ts --lesson <dir> [--force] [--dry-run]
 
-  --lesson    lesson folder, e.g. content/class10-nutrition
+  --lesson    lesson folder, e.g. content/class10-respiration
   --force     regenerate images that already exist
   --dry-run   print the prompts and generate nothing
 

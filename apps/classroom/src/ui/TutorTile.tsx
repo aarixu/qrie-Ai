@@ -1,5 +1,7 @@
 import { TUTOR } from '@ai-tutor/persona';
 import { CartoonAvatar, usePoseFor } from '../avatar/CartoonAvatar';
+import { VideoAvatar } from '../avatar/VideoAvatar';
+import type { ClipManifest } from '@ai-tutor/teacher-clone';
 
 export type TutorMode = 'idle' | 'teaching' | 'listening';
 
@@ -14,15 +16,37 @@ export type TutorMode = 'idle' | 'teaching' | 'listening';
  * Abstract on purpose — a real character or viseme avatar replaces the inside
  * of this tile later without touching anything that uses it.
  */
-export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' | 'rail' }) {
+export function TutorTile({
+  mode,
+  variant,
+  clone,
+}: {
+  mode: TutorMode;
+  variant: 'pip' | 'rail';
+  /**
+   * A real teacher, lip-dubbed. Absent — every ordinary class — the penguin
+   * plays: he is Curie own tutor, and a client engagement must not quietly
+   * replace him. This is a second renderer, not a replacement.
+   */
+  clone?: {
+    manifest: ClipManifest;
+    baseUrl: string;
+    beatId: string | null;
+    /** What the caption calls them. Curie tutor name under a real
+     * teacher face is the kind of detail a client notices first. */
+    name: string;
+  };
+}) {
   const listening = mode === 'listening';
   const active = mode !== 'idle';
   const pip = variant === 'pip';
   const pose = usePoseFor(mode);
+  /** Whoever is actually teaching in this tile. */
+  const who = clone?.name ?? TUTOR.name;
 
   return (
     <div
-      aria-label={`Tutor ${mode}`}
+      aria-label={`${who} ${mode}`}
       className={`relative overflow-hidden rounded-[14px] bg-gradient-to-br from-[#3f41c8] to-[#23246e] grid place-items-center transition-colors ${
         pip ? 'w-[104px] h-[138px]' : 'w-full h-[180px] rounded-2xl'
       } border-[2.5px] ${
@@ -34,13 +58,22 @@ export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' |
           pip ? 'w-[60px] h-[60px] text-[28px]' : 'w-[84px] h-[84px] text-[38px]'
         }`}
       >
-        {TUTOR.name[0]}
+        {who[0]}
       </div>
 
       {/* Meera the cartoon — lipsync, blinks, gestures, all drawn in code.
           Aarav's call after seeing the photo-warp in a real class: a cartoon
           can ACT, a photograph can only be nudged. */}
-      <CartoonAvatar pose={pose} className="absolute inset-0 w-full h-full" />
+      {clone ? (
+        <VideoAvatar
+          manifest={clone.manifest}
+          baseUrl={clone.baseUrl}
+          beatId={clone.beatId}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      ) : (
+        <CartoonAvatar pose={pose} className="absolute inset-0 w-full h-full" />
+      )}
 
       {/* Sound bars: present while she is in the room, moving while the class is alive. */}
       {active && (
@@ -60,7 +93,7 @@ export function TutorTile({ mode, variant }: { mode: TutorMode; variant: 'pip' |
           pip ? 'text-[10px]' : 'text-label-sm'
         }`}
       >
-        {TUTOR.name}
+        {who}
       </span>
     </div>
   );

@@ -7,7 +7,7 @@ import { loadSyllabus, getTopic } from '../../../packages/syllabus/src/index.ts'
 import type { Lesson } from '../../../packages/lesson-format/src/index.ts';
 
 const root = process.cwd();
-const fixtureJson = fs.readFileSync(path.resolve(root, 'content/class10-heart-mini/lesson.json'), 'utf8');
+const fixtureJson = fs.readFileSync(path.resolve(root, 'packages/lesson-format/tests/fixtures/heart.lesson.json'), 'utf8');
 const syllabus = loadSyllabus(
   JSON.parse(fs.readFileSync(path.resolve(root, 'packages/syllabus/data/class10-science.json'), 'utf8')),
 );

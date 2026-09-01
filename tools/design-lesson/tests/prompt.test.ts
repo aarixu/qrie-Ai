@@ -37,7 +37,7 @@ describe('buildPrompt', () => {
   });
 
   it('embeds the committed example lesson as a few-shot', () => {
-    const example = fs.readFileSync(path.resolve(root, 'content/class10-heart-mini/lesson.json'), 'utf8');
+    const example = fs.readFileSync(path.resolve(root, 'packages/lesson-format/tests/fixtures/heart.lesson.json'), 'utf8');
     expect(system).toContain(example.trim());
   });
 

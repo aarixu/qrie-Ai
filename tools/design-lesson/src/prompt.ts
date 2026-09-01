@@ -38,7 +38,19 @@ export interface PromptOptions {
 // The committed dev lesson doubles as the few-shot example: it is validated by
 // lesson-format's own tests, so the model always imitates a known-good lesson.
 const here = path.dirname(fileURLToPath(import.meta.url));
-const EXAMPLE_PATH = path.resolve(here, '../../../content/class10-heart-mini/lesson.json');
+/**
+ * The few-shot example, kept as a FIXTURE rather than as whichever class
+ * happens to be in content/ today.
+ *
+ * Content is regenerated - a topic gets re-prepared and its folder is
+ * renamed after its topicRef - and every test that reached into content/
+ * broke the day five classes were re-made. A prompt whose example vanishes
+ * is worse than that: it fails at the moment somebody is planning a lesson.
+ */
+const EXAMPLE_PATH = path.resolve(
+  here,
+  '../../../packages/lesson-format/tests/fixtures/heart.lesson.json',
+);
 let exampleCache: string | null = null;
 function exampleLesson(): string {
   exampleCache ??= fs.readFileSync(EXAMPLE_PATH, 'utf8').trim();

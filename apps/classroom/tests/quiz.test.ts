@@ -28,7 +28,7 @@ const NODES = new Map<string, LearningNode>(
 );
 
 /** A lesson the committed map actually teaches, with more probes than a quiz asks. */
-const LESSON = 'class10-nutrition';
+const LESSON = 'class10-science-life-processes-autotrophic-nutrition';
 /** The shortest lesson in the map — five probes, so `minimum` can be tested for real. */
 const SHORT_LESSON = 'class10-excretion';
 
