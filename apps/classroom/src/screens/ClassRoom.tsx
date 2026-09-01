@@ -27,6 +27,7 @@ import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
+import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 
 /**
@@ -167,9 +168,16 @@ export function ClassRoom({
   lesson,
   tts,
   diagrams,
+  clone,
   onExit,
 }: {
   lesson: Lesson;
+  /**
+   * A real teacher, lip-dubbed, instead of Curie own penguin. Absent for
+   * every ordinary class - this is the client-clone path, and the room is
+   * otherwise identical either way.
+   */
+  clone?: { manifest: ClipManifest; baseUrl: string; name: string };
   /** Resolved by the route: the recorded take, her live voice, or the browser's. */
   tts: TtsAdapter;
   /** SVG markup for the lesson's `diagram` elements, keyed by element id. */
@@ -476,6 +484,9 @@ export function ClassRoom({
 
   // Her ear open counts as listening too: while the mic waits on a spoken
   // answer she turns to her listening pose instead of gesturing through it.
+  /** The clone, told which beat is playing, or nothing at all. */
+  const tile = clone ? { ...clone, beatId: player.beat?.id ?? null } : undefined;
+
   const tutorMode: TutorMode = inDoubt
     ? 'listening'
     : ear === 'listening'
@@ -785,7 +796,7 @@ export function ClassRoom({
 
         {/* The rail: Meera's window over the doubt conversation. Wide screens only. */}
         <aside className="hidden lg:flex w-[300px] flex-shrink-0 flex-col gap-3">
-          <TutorTile mode={tutorMode} variant="rail" />
+          <TutorTile mode={tutorMode} variant="rail" clone={tile} />
           <DoubtPanel
             active={inDoubt}
             lines={doubtLines}
@@ -798,7 +809,7 @@ export function ClassRoom({
 
       {/* On a phone Meera floats over the board, Meet PiP style. */}
       <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
-        <TutorTile mode={tutorMode} variant="pip" />
+        <TutorTile mode={tutorMode} variant="pip" clone={tile} />
       </div>
 
       {/* Typed doubt on a phone: a slim input row the keyboard button summons. */}
