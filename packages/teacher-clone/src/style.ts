@@ -1,5 +1,5 @@
 /**
- * HOW THIS TEACHER TEACHES, IN SEVEN LINES.
+ * HOW THIS TEACHER TEACHES, IN EIGHT LINES.
  *
  * A cloned voice reading somebody else's phrasing sounds like a stranger
  * using that teacher's throat — and their own colleague hears it in one
@@ -9,7 +9,7 @@
  * planned it. The voice clone then only has to say it.
  *
  * Deliberately short. A long card gets averaged away by the model — it reads
- * as background colour and writes generic lines anyway. Seven concrete lines,
+ * as background colour and writes generic lines anyway. Eight concrete lines,
  * one of them their own phrases verbatim, survive into the writing.
  */
 
@@ -28,12 +28,23 @@ export interface StyleCard {
   questioning: string;
   /** The world their examples come from. */
   examples: string;
+  /**
+   * What reaches the BOARD, and when.
+   *
+   * Aarav watched both source videos and named this himself: these teachers
+   * write while they speak - every definition, every key point, in full, as
+   * it is said. That is half of how they teach, and Curie already has an
+   * engine built around exactly this ("the board shows what you are SAYING"),
+   * so the card must carry it or the clone teaches with its hands in its
+   * pockets.
+   */
+  board: string;
 }
 
 export const STYLE_SYSTEM = `You are given a transcript of one real teacher teaching. Describe HOW they teach, so another writer can plan a lesson that sounds like them.
 
 Reply with ONE JSON object and nothing else:
-{"teacher","sound","languageMix","phrases":["..."],"opening","questioning","examples"}
+{"teacher","sound","languageMix","phrases":["..."],"opening","questioning","examples","board"}
 
 - "teacher": what the students appear to call them. If the transcript never says, use "the teacher".
 - "sound": pace, warmth, and WHERE the emphasis falls — one sentence.
@@ -42,6 +53,7 @@ Reply with ONE JSON object and nothing else:
 - "opening": how they get into a topic — one sentence.
 - "questioning": how they ask a question, and what they do when the answer does not come.
 - "examples": the world their examples come from (the kitchen, cricket, the classroom itself).
+- "board": what they WRITE while they speak, and when. Do they write a definition out in full as they say it, or only the term? Do they number points? Do they draw and then label, or label as they draw? Do they underline or box what matters? Be specific about the RELATIONSHIP between what is said and what is written - it is half of how a teacher like this teaches.
 
 Describe only what the transcript shows. Do not flatter, do not generalise about how Indian teachers teach, and never invent a phrase they did not say.`;
 
@@ -84,6 +96,7 @@ export function parseStyleCard(raw: string): StyleCard {
     opening: str('opening'),
     questioning: str('questioning'),
     examples: str('examples'),
+    board: str('board'),
   };
 }
 
@@ -103,6 +116,7 @@ export function styleBrief(card: StyleCard): string {
 - How they open a topic: ${card.opening}
 - How they question: ${card.questioning}
 - Where their examples come from: ${card.examples}
+- What they WRITE on the board while speaking, and when: ${card.board}
 
-Write their lines the way they speak them. Never say, mention or describe any of this — a student hears a teacher, not a description of one.`;
+Write their lines the way they speak them, and put on the board what THEY would put on it. Never say, mention or describe any of this — a student hears a teacher, not a description of one.`;
 }

@@ -9,6 +9,7 @@ const card = {
   opening: 'Starts from something in the room before naming the topic.',
   questioning: 'Asks, waits, then asks the same thing a smaller way.',
   examples: 'Kitchen and cricket.',
+  board: 'Writes every definition out in full as he says it, and underlines the term.',
 };
 
 describe('reading a style card out of a model reply', () => {
@@ -36,11 +37,24 @@ describe('what the planner is told', () => {
     expect(brief).toContain('Sharma sir');
     expect(brief).toContain('dekhiye beta');
     expect(brief).toContain('Kitchen and cricket');
+    expect(brief).toContain('underlines the term');
     expect(brief).toContain('Asks, waits');
   });
 
   it('tells the planner to teach AS them, not to describe them', () => {
     expect(styleBrief(parseStyleCard(JSON.stringify(card)))).toMatch(/never (say|mention|describe)/i);
+  });
+});
+
+describe('the board, which is half of how they teach', () => {
+  it('asks what reaches the board and WHEN', () => {
+    expect(STYLE_SYSTEM).toMatch(/board/i);
+    expect(STYLE_SYSTEM).toMatch(/writ/i);
+  });
+
+  it('refuses a card that never looked at the board', () => {
+    const { board, ...noBoard } = card;
+    expect(() => parseStyleCard(JSON.stringify(noBoard))).toThrow();
   });
 });
 
