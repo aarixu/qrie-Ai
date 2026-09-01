@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Navigate,
@@ -18,32 +18,42 @@ import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI } from './lib/content';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
+
+/**
+ * EVERY SCREEN BUT THE OPENING ONES, LOADED WHEN IT IS ASKED FOR.
+ *
+ * One chunk meant a student on a ₹10,000 Android over 4G waited for the quiz,
+ * the placement test, the settings and every library screen before they could
+ * see the home page. Home, onboarding, the splash and the classroom stay
+ * eager: those are the first seconds of the app, and a spinner there is a
+ * worse trade than the bytes.
+ */
+const Chapter = lazy(() => import('./screens/Chapter').then((m) => ({ default: m.Chapter })));
+const LiveClassRoute = lazy(() => import('./screens/LiveClass').then((m) => ({ default: m.LiveClassRoute })));
+const LessonComplete = lazy(() => import('./screens/LessonComplete').then((m) => ({ default: m.LessonComplete })));
+const Profile = lazy(() => import('./screens/Profile').then((m) => ({ default: m.Profile })));
+const Search = lazy(() => import('./screens/Search').then((m) => ({ default: m.Search })));
+const Syllabus = lazy(() => import('./screens/Syllabus').then((m) => ({ default: m.Syllabus })));
+const Progress = lazy(() => import('./screens/Progress').then((m) => ({ default: m.Progress })));
+const Diagnostic = lazy(() => import('./screens/Diagnostic').then((m) => ({ default: m.Diagnostic })));
+const StudyPlan = lazy(() => import('./screens/StudyPlan').then((m) => ({ default: m.StudyPlan })));
+const PracticeQuiz = lazy(() => import('./screens/PracticeQuiz').then((m) => ({ default: m.PracticeQuiz })));
+const QuizResult = lazy(() => import('./screens/QuizResult').then((m) => ({ default: m.QuizResult })));
+const Settings = lazy(() => import('./screens/Settings').then((m) => ({ default: m.Settings })));
+const Help = lazy(() => import('./screens/Help').then((m) => ({ default: m.Help })));
+const DoubtHistory = lazy(() => import('./screens/DoubtHistory').then((m) => ({ default: m.DoubtHistory })));
+const StreakDetail = lazy(() => import('./screens/StreakDetail').then((m) => ({ default: m.StreakDetail })));
+const Notes = lazy(() => import('./screens/Notes').then((m) => ({ default: m.Notes })));
+const Bookmarks = lazy(() => import('./screens/Bookmarks').then((m) => ({ default: m.Bookmarks })));
+const Achievements = lazy(() => import('./screens/Achievements').then((m) => ({ default: m.Achievements })));
+const SignIn = lazy(() => import('./screens/SignIn').then((m) => ({ default: m.SignIn })));
 import { ErrorBoundary } from './ui/ErrorBoundary';
 import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
-import { Chapter } from './screens/Chapter';
 import { LessonRoute } from './screens/ClassRoom';
-import { LiveClassRoute } from './screens/LiveClass';
 import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
 import { AvatarLab } from './screens/AvatarLab';
-import { SignIn } from './screens/SignIn';
-import { LessonComplete } from './screens/LessonComplete';
-import { Profile } from './screens/Profile';
-import { Search } from './screens/Search';
-import { Syllabus } from './screens/Syllabus';
-import { Progress } from './screens/Progress';
-import { Diagnostic } from './screens/Diagnostic';
-import { StudyPlan } from './screens/StudyPlan';
-import { PracticeQuiz } from './screens/PracticeQuiz';
-import { QuizResult } from './screens/QuizResult';
-import { Settings } from './screens/Settings';
-import { Help } from './screens/Help';
-import { DoubtHistory } from './screens/DoubtHistory';
-import { StreakDetail } from './screens/StreakDetail';
-import { Notes } from './screens/Notes';
-import { Bookmarks } from './screens/Bookmarks';
-import { Achievements } from './screens/Achievements';
 
 /**
  * The subjects a student is being placed in.
@@ -212,6 +222,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Boundaried>
+        <Suspense fallback={<Splash />}>
         <Gate>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -250,6 +261,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Gate>
+        </Suspense>
       </Boundaried>
     </BrowserRouter>
   );
