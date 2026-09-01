@@ -21,6 +21,15 @@ export interface TokenServerConfig {
   port: number;
   /** The single browser origin allowed to call this server. Never "*". */
   allowedOrigin: string;
+  /**
+   * The Supabase project a caller's sign-in is checked against.
+   *
+   * Required, deliberately: a token server that cannot verify anyone is a
+   * token server that mints for everyone, and defaulting to "off" is how
+   * that ships by accident.
+   */
+  supabaseUrl: string;
+  supabaseAnonKey: string;
 }
 
 /**
@@ -82,6 +91,8 @@ export function readTokenServerConfig(env: Env): TokenServerConfig {
     host: env.TOKEN_SERVER_HOST?.trim() || DEFAULT_HOST,
     port: readPort(env.TOKEN_SERVER_PORT),
     allowedOrigin: readOrigin(env.TOKEN_SERVER_ORIGIN),
+    supabaseUrl: required(env, 'SUPABASE_URL').replace(/\/+$/, ''),
+    supabaseAnonKey: required(env, 'SUPABASE_ANON_KEY'),
   };
 }
 

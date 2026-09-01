@@ -12,6 +12,7 @@ import {
   type DoubtResponse,
 } from './protocol.ts';
 import { mintStudentToken } from './token.ts';
+import { createSupabaseVerifier } from './auth.ts';
 
 /**
  * THE TOKEN SERVER — the smallest possible amount of server.
@@ -35,6 +36,13 @@ import { mintStudentToken } from './token.ts';
 
 loadLocalEnv();
 const config = readTokenServerConfig(process.env);
+
+/**
+ * Every request to this server is checked against the student's own sign-in
+ * before anything is minted or dispatched. See auth.ts for why it asks
+ * Supabase rather than checking a signature here.
+ */
+const verify = createSupabaseVerifier(config.supabaseUrl, config.supabaseAnonKey);
 
 const dispatcher = new AgentDispatchClient(config.livekitUrl, config.apiKey, config.apiSecret);
 
@@ -100,8 +108,20 @@ async function handleToken(req: IncomingMessage, res: ServerResponse): Promise<v
     return sendJson(res, 400, { error: 'expected { room, identity, name? } with printable names' });
   }
 
-  sendJson(res, 200, await mintStudentToken(config, request));
-  console.log(`[token] ${request.identity} -> room ${request.room}`);
+  /**
+   * THE IDENTITY IS NOT THE CALLER'S TO CHOOSE.
+   *
+   * Whatever the body says, the token is minted for the user Supabase says is
+   * signed in. Anything else lets one student join a room as another — and
+   * this server holds the LiveKit secret, so it is the last place that can
+   * still be checked.
+   */
+  const who = await verify(req.headers.authorization);
+  if (!who.ok) return sendJson(res, who.status, { error: who.why });
+
+  const minted = await mintStudentToken(config, { ...request, identity: who.user.userId });
+  sendJson(res, 200, minted);
+  console.log(`[token] ${who.user.userId} -> room ${request.room}`);
 }
 
 async function handleDoubt(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -114,6 +134,16 @@ async function handleDoubt(req: IncomingMessage, res: ServerResponse): Promise<v
       error:
         'expected { room, brief } where brief has lessonId, beatId, beatTopic, studentIdentity and student.klass (6-12)',
     });
+  }
+
+  const who = await verify(req.headers.authorization);
+  if (!who.ok) return sendJson(res, who.status, { error: who.why });
+
+  // Dispatching costs money, so a brief must be about the caller. A student
+  // raising a hand on somebody else's behalf is either a bug or an attack,
+  // and neither should reach the agent.
+  if (request.brief.studentIdentity !== who.user.userId) {
+    return sendJson(res, 403, { error: 'that brief belongs to a different student' });
   }
 
   // The room already exists: the student is in it. Dispatch metadata is

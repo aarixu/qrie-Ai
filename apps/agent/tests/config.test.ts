@@ -13,9 +13,18 @@ const livekit = {
   LIVEKIT_URL: 'ws://127.0.0.1:7880',
   LIVEKIT_API_KEY: 'devkey',
   LIVEKIT_API_SECRET: 'secret',
+  // Required now: this server mints join tokens and dispatches a paid agent,
+  // and it cannot check who is asking without a project to ask.
+  SUPABASE_URL: 'https://p.supabase.co',
+  SUPABASE_ANON_KEY: 'anon',
 };
 
 describe('readTokenServerConfig', () => {
+  it('trims a trailing slash off the project URL, which would 404 as a bad sign-in', () => {
+    const config = readTokenServerConfig({ ...livekit, SUPABASE_URL: 'https://p.supabase.co/' });
+    expect(config.supabaseUrl).toBe('https://p.supabase.co');
+  });
+
   it('fills in the local defaults around the three LiveKit values', () => {
     expect(readTokenServerConfig(livekit)).toEqual({
       livekitUrl: 'ws://127.0.0.1:7880',
@@ -24,11 +33,21 @@ describe('readTokenServerConfig', () => {
       host: DEFAULT_HOST,
       port: DEFAULT_PORT,
       allowedOrigin: DEFAULT_ORIGIN,
+      supabaseUrl: 'https://p.supabase.co',
+      supabaseAnonKey: 'anon',
     });
   });
 
   it('names the variable that is missing', () => {
-    for (const name of ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET']) {
+    for (const name of [
+      'LIVEKIT_URL',
+      'LIVEKIT_API_KEY',
+      'LIVEKIT_API_SECRET',
+      // A token server that cannot verify anyone mints for everyone, so
+      // these are required rather than defaulted to "off".
+      'SUPABASE_URL',
+      'SUPABASE_ANON_KEY',
+    ]) {
       const env: Record<string, string | undefined> = { ...livekit };
       delete env[name];
       expect(() => readTokenServerConfig(env)).toThrow(name);
