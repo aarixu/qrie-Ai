@@ -15,6 +15,58 @@ export interface Store<T> {
   subscribe(cb: () => void): () => void;
 }
 
+/**
+ * EVERY STORE, BY ITS KEY.
+ *
+ * Filled by createLocalStore itself, so the eleven store files stay exactly
+ * as they are and none of them learns that a cloud exists. lib/sync.ts walks
+ * this when a student signs in.
+ */
+const stores = new Map<string, Store<unknown>>();
+
+export function registeredStores(): ReadonlyMap<string, Store<unknown>> {
+  return stores;
+}
+
+/**
+ * When this device last wrote a store, kept BESIDE the value rather than
+ * inside it: the stored shape has to keep loading for students who already
+ * have data, and a version bump on eleven stores to add one field would be a
+ * migration for nothing.
+ *
+ * Null means never written here — which sync treats as "always take the
+ * cloud", the branch that stops a fresh phone erasing a year of work.
+ */
+const stampKey = (key: string): string => `${key}:at`;
+
+export function touchedAt(key: string): number | null {
+  try {
+    const raw = localStorage.getItem(stampKey(key));
+    const at = raw === null ? NaN : Number(raw);
+    return Number.isFinite(at) ? at : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Apply a value the cloud won with, without claiming this device wrote it.
+ *
+ * The stamp is the CLOUD's, not now: stamping it now would make this device
+ * look newer than the one that actually made the change, and the next sync
+ * would push it back.
+ */
+export function writeFromCloud(key: string, value: unknown, updatedAt: number): void {
+  const store = stores.get(key);
+  if (!store) return;
+  try {
+    localStorage.setItem(stampKey(key), String(updatedAt));
+  } catch {
+    // Same tolerance as everywhere else here: no storage, no stamp, carry on.
+  }
+  store.set(value);
+}
+
 export function createLocalStore<T>(key: string, initial: T): Store<T> {
   let cache: T | null = null;
   const listeners = new Set<() => void>();
@@ -34,13 +86,16 @@ export function createLocalStore<T>(key: string, initial: T): Store<T> {
     cache = next;
     try {
       localStorage.setItem(key, JSON.stringify(next));
+      // Stamped on every write so sync can tell which device is ahead.
+      // writeFromCloud overwrites this with the cloud's own moment.
+      localStorage.setItem(`${key}:at`, String(Date.now()));
     } catch {
       // storage full/blocked — keep the in-memory value and carry on
     }
     for (const cb of [...listeners]) cb();
   };
 
-  return {
+  const store: Store<T> = {
     get: read,
     set: write,
     update: (fn) => write(fn(read())),
@@ -51,6 +106,9 @@ export function createLocalStore<T>(key: string, initial: T): Store<T> {
       };
     },
   };
+
+  stores.set(key, store as Store<unknown>);
+  return store;
 }
 
 /** React binding. Server snapshot = same getter (no SSR in this app). */
