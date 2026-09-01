@@ -14,206 +14,71 @@ import react from '@vitejs/plugin-react';
  */
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import { fileURLToPath } from 'node:url';
+import {
+  hearRelay,
+  llmRelay,
+  sendRelayResponse,
+  speechRelay,
+  toRelayRequest,
+} from '../../packages/relay/src/index.ts';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Readable } from 'node:stream';
 
 const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src`, import.meta.url));
 
 /**
- * A dev-only relay to the LLM provider.
+ * The three OpenRouter relays, in dev.
  *
- * The canvas lab prepares a class live, which means the browser needs a model —
- * but putting the key in a `VITE_` variable would bake it into the bundle for
- * anyone who opens devtools. The key stays here, in the dev server, and the
- * browser posts to a same-origin path that knows nothing.
- *
- * Dev only, deliberately: in production this is a real backend route with auth
- * and a per-student budget, not a plugin.
+ * The DECISIONS live in @ai-tutor/relay so that the deployed backend and this
+ * dev server are one implementation rather than two that drift apart. What is
+ * left here is mounting them on vite middleware.
  */
-/**
- * HER VOICE, PIPED THROUGH AS IT IS MADE.
- *
- * A GET, deliberately: the browser's own `<audio>` element can stream a URL,
- * and streaming is the whole point. Measured on a real class line, the first
- * byte arrives at 0.36 s while the full 8.4 seconds of speech takes 2.5 to
- * generate — so playing it as it arrives starts her almost at once, and
- * downloading it first would have cost every line two and a half seconds for
- * nothing.
- *
- * The bytes are piped, never buffered. Buffering here would undo the streaming
- * this endpoint exists for.
- *
- * Dev only, like the others: in production this is a real backend route with
- * auth and a per-student budget.
- */
-function speechRelay(key: string): Plugin {
-  const DEFAULT_MODEL = 'deepgram/aura-2';
+function openRouterRelays(key: string): Plugin {
   return {
-    name: 'curie-speech-relay',
-    apply: 'serve',
-    configureServer(server) {
-      server.middlewares.use('/api/speech', (req, res) => {
-        const fail = (code: number, message: string) => {
-          res.statusCode = code;
-          res.setHeader('content-type', 'application/json');
-          res.end(JSON.stringify({ error: { message } }));
-        };
-        if (!key) return fail(503, 'No OPENROUTER_API_KEY in .env.local');
-
-        const asked = new URL(req.url ?? '', 'http://localhost');
-        const text = asked.searchParams.get('text')?.trim();
-        if (!text) return fail(400, 'nothing to say');
-
-        void fetch('https://openrouter.ai/api/v1/audio/speech', {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-            authorization: `Bearer ${key}`,
-            'HTTP-Referer': 'https://github.com/aarixu/curie',
-            'X-Title': 'Curie',
-          },
-          body: JSON.stringify({
-            model: asked.searchParams.get('model') ?? DEFAULT_MODEL,
-            input: text,
-            // Named, and the same every line. Aura refuses to speak without
-            // one — "An explicit voice is required for this TTS provider" —
-            // which is the consistency guarantee stated as an error.
-            ...(asked.searchParams.get('voice')
-              ? { voice: asked.searchParams.get('voice') }
-              : {}),
-            // Not raw PCM: an audio element can play mp3 straight from the
-            // wire, and it is a tenth of the bytes.
-            response_format: 'mp3',
-          }),
-        })
-          .then(async (upstream) => {
-            if (!upstream.ok || !upstream.body) {
-              const why = await upstream.text().catch(() => '');
-              return fail(upstream.status, `speech ${upstream.status}: ${why.slice(0, 200)}`);
-            }
-            res.statusCode = 200;
-            res.setHeader('content-type', upstream.headers.get('content-type') ?? 'audio/mpeg');
-            // Piped as it arrives. Collecting it first would defeat the point.
-            Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]).pipe(res);
-          })
-          .catch((e: unknown) => fail(502, String(e)));
-      });
-    },
-  };
-}
-
-/**
- * HER EAR. The student's spoken answer, piped to a transcriber.
- *
- * Raw audio bytes in the POST body (the browser records a webm/opus blob),
- * wrapped into the multipart form OpenRouter's transcription endpoint expects.
- * nova-3 was measured against her own synthesised speech: word-perfect in
- * 0.8s. Dev only, like every relay here.
- */
-function hearRelay(key: string): Plugin {
-  return {
-    name: 'curie-hear-relay',
-    apply: 'serve',
-    configureServer(server) {
-      server.middlewares.use('/api/hear', (req, res) => {
-        const fail = (code: number, message: string) => {
-          res.statusCode = code;
-          res.setHeader('content-type', 'application/json');
-          res.end(JSON.stringify({ error: { message } }));
-        };
-        if (req.method !== 'POST') return fail(405, 'POST only');
-        if (!key) return fail(503, 'No OPENROUTER_API_KEY in .env.local');
-
-        const chunks: Buffer[] = [];
-        req.on('data', (c: Buffer) => chunks.push(c));
-        req.on('end', () => {
-          const audio = Buffer.concat(chunks);
-          if (audio.length < 200) return fail(400, 'no audio to hear');
-          const form = new FormData();
-          form.set('model', 'deepgram/nova-3');
-          form.set(
-            'file',
-            new Blob([new Uint8Array(audio)], {
-              type: req.headers['content-type'] ?? 'audio/webm',
-            }),
-            'answer.webm',
-          );
-          void fetch('https://openrouter.ai/api/v1/audio/transcriptions', {
-            method: 'POST',
-            headers: { authorization: `Bearer ${key}` },
-            body: form,
-          })
-            .then(async (upstream) => {
-              res.statusCode = upstream.status;
-              res.setHeader('content-type', 'application/json');
-              res.end(await upstream.text());
-            })
-            .catch((e: unknown) => fail(502, String(e)));
-        });
-      });
-    },
-  };
-}
-
-function llmRelay(key: string): Plugin {
-  return {
-    name: 'curie-llm-relay',
+    name: 'curie-openrouter-relays',
     apply: 'serve',
     configureServer(server) {
       server.middlewares.use('/api/llm', (req, res) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405;
-          res.end('POST only');
-          return;
-        }
-        if (!key) {
-          res.statusCode = 503;
-          res.setHeader('content-type', 'application/json');
-          res.end(JSON.stringify({ error: { message: 'No OPENROUTER_API_KEY in .env.local' } }));
-          return;
-        }
+        void (async () => {
+          await sendRelayResponse(res, llmRelay(await toRelayRequest(req), key));
+        })();
+      });
 
-        const chunks: Buffer[] = [];
-        req.on('data', (c: Buffer) => chunks.push(c));
-        req.on('end', () => {
-          // Cap max_tokens when the caller left it open. OpenRouter
-          // pre-authorises the model's FULL context (65k) per request, so a
-          // low balance 402s even though the actual reply costs a fraction
-          // of it. No reply in this app comes near 24k tokens.
-          let body = Buffer.concat(chunks).toString('utf8');
-          try {
-            const parsed = JSON.parse(body) as { max_tokens?: number };
-            if (parsed.max_tokens === undefined) {
-              parsed.max_tokens = 24_000;
-              body = JSON.stringify(parsed);
-            }
-          } catch {
-            // Not JSON — forward untouched and let upstream complain.
+      server.middlewares.use('/api/speech', (req, res) => {
+        void (async () => {
+          await sendRelayResponse(res, speechRelay(await toRelayRequest(req), key));
+        })();
+      });
+
+      server.middlewares.use('/api/hear', (req, res) => {
+        void (async () => {
+          const heard = hearRelay(await toRelayRequest(req), key);
+          if (!heard.ok) {
+            await sendRelayResponse(res, heard.response);
+            return;
           }
-          void fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-              'content-type': 'application/json',
-              authorization: `Bearer ${key}`,
-              'HTTP-Referer': 'https://github.com/aarixu/curie',
-              'X-Title': 'Curie',
-            },
-            body,
-          })
-            .then(async (upstream) => {
-              res.statusCode = upstream.status;
-              res.setHeader('content-type', 'application/json');
-              res.end(await upstream.text());
-            })
-            .catch((e: unknown) => {
-              res.statusCode = 502;
-              res.setHeader('content-type', 'application/json');
-              res.end(JSON.stringify({ error: { message: String(e) } }));
+          // Multipart assembly belongs to the adapter: FormData is a platform
+          // thing, and the relay package deliberately depends on none.
+          const form = new FormData();
+          form.append('model', heard.model);
+          form.append('file', new Blob([heard.audio], { type: heard.contentType }), 'answer.wav');
+          try {
+            const upstream = await fetch('https://openrouter.ai/api/v1/audio/transcriptions', {
+              method: 'POST',
+              headers: { authorization: `Bearer ${key}` },
+              body: form,
             });
-        });
+            res.statusCode = upstream.status;
+            res.setHeader('content-type', 'application/json');
+            res.end(await upstream.text());
+          } catch (e: unknown) {
+            res.statusCode = 502;
+            res.setHeader('content-type', 'application/json');
+            res.end(JSON.stringify({ error: { message: String(e) } }));
+          }
+        })();
       });
     },
   };
@@ -364,9 +229,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react(),
-      llmRelay(env.OPENROUTER_API_KEY ?? ''),
-      speechRelay(env.OPENROUTER_API_KEY ?? ''),
-      hearRelay(env.OPENROUTER_API_KEY ?? ''),
+      openRouterRelays(env.OPENROUTER_API_KEY ?? ''),
       iconRelay(),
       classWriter(),
       ...(env.HTTPS === '1' ? [basicSsl()] : []),
