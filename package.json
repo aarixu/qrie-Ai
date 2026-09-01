@@ -14,7 +14,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "agent:worker": "npm run worker --workspace @ai-tutor/agent",
     "agent:token": "npm run token --workspace @ai-tutor/agent",
-    "livekit:server": "node tools/livekit/src/cli.ts"
+    "livekit:server": "node tools/livekit/src/cli.ts",
+    "style-card": "node tools/teacher-clone/src/style-card.ts"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.522",
