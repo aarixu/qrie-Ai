@@ -17,6 +17,7 @@ export default defineConfig({
       '@ai-tutor/persona': pkg('persona'),
       '@ai-tutor/pedagogy': pkg('pedagogy'),
       '@ai-tutor/voice': pkg('voice'),
+      '@ai-tutor/teacher-clone': pkg('teacher-clone'),
       '@ai-tutor/class-prep': pkg('class-prep'),
       '@ai-tutor/board-layout': pkg('board-layout'),
       '@ai-tutor/graphics': pkg('graphics'),
