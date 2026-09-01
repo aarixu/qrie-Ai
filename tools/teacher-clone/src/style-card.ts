@@ -2,7 +2,7 @@
  * BUILD ONE TEACHER'S STYLE CARD.
  *
  *   npm run style-card -- --transcript clone-source/derived/ap-sir.txt \
- *                         --board "notes on what their board looks like" \
+ *                         --board-file clone-source/derived/ap-sir.board.txt \
  *                         --out clone-source/derived/ap-sir.card.json
  *
  * TWO KINDS OF EVIDENCE, AND WHY BOTH.
@@ -22,7 +22,15 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseStyleCard, STYLE_SYSTEM, styleBrief, styleUser } from '@ai-tutor/teacher-clone';
+// Straight at the source with an extension, the way every other tool here
+// reaches into a package: node runs these files directly, and its ESM
+// resolver will not guess at a missing .ts.
+import {
+  parseStyleCard,
+  STYLE_SYSTEM,
+  styleBrief,
+  styleUser,
+} from '../../../packages/teacher-clone/src/style.ts';
 
 /** The model that reads a transcript. The planner's own, so one bill, one behaviour. */
 const MODEL = 'google/gemini-3.7-flash';
@@ -73,9 +81,12 @@ async function complete(system: string, user: string): Promise<string> {
 async function main(): Promise<void> {
   const transcriptPath = arg('transcript');
   const outPath = arg('out');
-  const boardNote = arg('board');
+  // A file, not a flag: the board note runs to a paragraph, and a shell
+  // splits it on every space long before it reaches argv.
+  const boardFile = arg('board-file');
+  const boardNote = boardFile ? fs.readFileSync(path.resolve(boardFile), 'utf8').trim() : undefined;
   if (!transcriptPath || !outPath) {
-    throw new Error('Usage: --transcript <file> --out <file> [--board "<what their board looks like>"]');
+    throw new Error('Usage: --transcript <file> --out <file> [--board-file <file describing their board>]');
   }
 
   const transcript = fs.readFileSync(path.resolve(transcriptPath), 'utf8').trim();
