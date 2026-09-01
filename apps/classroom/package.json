@@ -20,13 +20,14 @@
     "@ai-tutor/player": "*",
     "@ai-tutor/stage": "*",
     "@ai-tutor/syllabus": "*",
+    "@ai-tutor/teacher-clone": "*",
     "@ai-tutor/voice": "*",
+    "@supabase/supabase-js": "^2.112.4",
     "livekit-client": "^2.22.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.2",
-    "three": "^0.185.1",
-    "@ai-tutor/teacher-clone": "*"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^2.3.0",

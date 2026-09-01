@@ -2,6 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { startAccountSync } from './lib/account';
 
 // Body owns no colour: the page ground is `html { background }` in index.css,
 // which reads --c-background and so follows the theme. An inline background
@@ -19,6 +20,11 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     });
   });
 }
+
+// The student work follows their account when there is one. With no project
+// configured this is a no-op and the app stays exactly the local-only app it
+// has always been - nothing is gated behind signing in.
+startAccountSync();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
