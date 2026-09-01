@@ -41,6 +41,14 @@ export interface GeminiAgentOptions {
    * is the same class of model through OpenRouter's one key.
    */
   provider?: 'relay' | 'gemini' | 'openrouter';
+  /**
+   * Who answers when the model cannot.
+   *
+   * A raised hand that ends in "having trouble connecting" is worse than a
+   * short scripted answer that at least belongs to the lesson — and until the
+   * relay is deployed, a built app has nothing behind /api/llm at all.
+   */
+  fallback?: AgentAdapter;
 }
 
 /** One turn of the conversation, in this file's own vocabulary. */
@@ -93,11 +101,14 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
           ],
         }),
       });
-      const data = (await res.json()) as {
+      // Parsed defensively and AFTER the status is known: a gateway error
+      // body is often HTML or empty, and letting JSON.parse throw first would
+      // replace a useful "LLM 502" with a SyntaxError.
+      const data = (await res.json().catch(() => ({}))) as {
         choices?: { message?: { content?: string } }[];
         error?: { message?: string };
       };
-      if (!res.ok) throw new Error(`LLM ${res.status}`);
+      if (!res.ok) throw new Error(`LLM ${res.status}: ${data.error?.message ?? 'no detail'}`);
       // A 200 carrying an error body is how upstream failures arrive.
       if (data.error) throw new Error(data.error.message ?? 'unknown LLM error');
       return data.choices?.[0]?.message?.content ?? '';
@@ -214,6 +225,10 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
       let stopped = false;
       const controller = new AbortController();
       const history: Turn[] = [];
+      // Started only if the model actually fails, so the ordinary path costs
+      // nothing for a safety net it never touches.
+      let relief: AgentSession | null = null;
+      if (opts.fallback) relief = opts.fallback.start(ctx, io);
 
       const call = async (userText: string): Promise<AgentReply> => {
         history.push({ role: 'user', text: userText });
@@ -244,6 +259,13 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           .catch(async () => {
             // Rule 1: a failed call must hand the room back, never hold it.
             if (stopped) return;
+            if (relief) {
+              // The scripted tutor takes the question instead. Same persona,
+              // same room, and the student gets an answer rather than an
+              // apology about our plumbing.
+              relief.sendUserText(userText);
+              return;
+            }
             await io.say("Hmm, I'm having trouble connecting right now. Let's continue the class — try raising your hand again in a bit.");
             if (!stopped) io.done();
           });
@@ -259,6 +281,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
         stop(): void {
           stopped = true;
           controller.abort();
+          relief?.stop();
         },
       };
     },

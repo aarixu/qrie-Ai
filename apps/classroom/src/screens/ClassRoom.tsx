@@ -317,7 +317,12 @@ export function ClassRoom({
     }
     // Same origin, no key: the server holds the credential and decides what
     // this student may spend.
-    return createGeminiAgent({ student });
+    //
+    // The scripted tutor stays the FLOOR beneath it. The relay is not live in
+    // a deployed build until the Edge Function ships, and a raised hand that
+    // ends in "having trouble connecting" is worse than a short scripted
+    // answer that at least belongs to the lesson.
+    return createGeminiAgent({ student, fallback: createStubAgent() });
   }, [liveVoiceKey, voiceMode, student]);
 
   const handoff = useMemo(

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildDoubtSystemPrompt, parseAgentReply, createTransport } from '../src/lib/geminiAgent';
+import { buildDoubtSystemPrompt, parseAgentReply, createTransport, createGeminiAgent } from '../src/lib/geminiAgent';
 import type { DoubtContext } from '@ai-tutor/doubt-session';
 import type { StudentContext } from '@ai-tutor/persona';
 
@@ -150,5 +150,55 @@ describe('createTransport', () => {
     stub({}, false, 401);
     const or = createTransport({ apiKey: 'k', student, provider: 'openrouter' });
     await expect(or('S', turns, new AbortController().signal)).rejects.toThrow(/OpenRouter 401/);
+  });
+});
+
+const student = { klass: 10 } as never;
+
+describe('when the model cannot answer', () => {
+  const ctx = { beatId: 'b1', lessonId: 'l', beatTopic: 't', said: '' } as never;
+
+  it('hands the question to the scripted tutor instead of apologising', async () => {
+    vi.stubGlobal('fetch', async () => ({ ok: false, status: 502, json: async () => ({}) }));
+    const said: string[] = [];
+    const io = { say: async (t: string) => void said.push(t), recall: () => {}, done: () => {} };
+
+    const scripted: string[] = [];
+    const fallback = {
+      start: () => ({
+        sendUserText: (t: string) => scripted.push(t),
+        stop: () => {},
+      }),
+    };
+
+    const agent = createGeminiAgent({ student, fallback } as never);
+    const session = agent.start(ctx, io as never);
+    session.sendUserText('why is the sky blue?');
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(scripted).toEqual(['why is the sky blue?']);
+    expect(said.join(' ')).not.toMatch(/trouble connecting/i);
+    vi.unstubAllGlobals();
+  });
+
+  it('still hands the room back when there is no fallback at all', async () => {
+    vi.stubGlobal('fetch', async () => ({ ok: false, status: 502, json: async () => ({}) }));
+    const said: string[] = [];
+    let handedBack = false;
+    const io = {
+      say: async (t: string) => void said.push(t),
+      recall: () => {},
+      done: () => {
+        handedBack = true;
+      },
+    };
+
+    const session = createGeminiAgent({ student } as never).start(ctx, io as never);
+    session.sendUserText('anything');
+    await new Promise((r) => setTimeout(r, 0));
+
+    expect(said.join(' ')).toMatch(/trouble connecting/i);
+    expect(handedBack).toBe(true);
+    vi.unstubAllGlobals();
   });
 });

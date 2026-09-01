@@ -3,7 +3,15 @@
  * lesson data (so content updates reach students, but a flaky connection
  * still plays cached lessons). Registered by the app in production only.
  */
-const CACHE = 'ai-tutor-v1';
+/**
+ * Bumped whenever this file changes, which a deploy does.
+ *
+ * A constant name plus cache-first was the bug underneath the update
+ * problem: the new worker took over, the page reloaded, and the reload was
+ * served the OLD index.html out of the cache — which points at the old
+ * hashed assets, so the update quietly did not apply.
+ */
+const CACHE = 'ai-tutor-v2';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/'])));
@@ -34,8 +42,12 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET' || !request.url.startsWith(self.location.origin)) return;
 
+  // Navigations go to the network first. The HTML names the hashed assets,
+  // so serving a stale one pins the whole app to the previous build; the
+  // assets themselves are content-hashed and safe to keep forever.
+  const isDocument = request.mode === 'navigate';
   const isData = request.url.includes('.json');
-  event.respondWith(isData ? networkFirst(request) : cacheFirst(request));
+  event.respondWith(isDocument || isData ? networkFirst(request) : cacheFirst(request));
 });
 
 async function cacheFirst(request) {

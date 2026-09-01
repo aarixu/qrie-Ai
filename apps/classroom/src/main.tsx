@@ -14,33 +14,58 @@ document.body.style.margin = '0';
 // Offline shell + installability — production only, so dev never fights a
 // stale cache.
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  /**
+   * A NEW VERSION IS NEVER TAKEN MID-CLASS.
+   *
+   * The worker no longer calls skipWaiting on install, so a new one sits in
+   * "waiting" until this asks for it — and this only asks when the student is
+   * somewhere a reload costs nothing.
+   *
+   * Three things the first version of this got wrong, all found in review:
+   *
+   *  - A FIRST visit has no controller. When the very first worker activates
+   *    and claims the page, controllerchange fires and the old code reloaded —
+   *    on a pasted /class/... link that meant reloading inside the room. Only
+   *    a page that WAS controlled is a page whose controller changed.
+   *  - A worker that installed during a class is already waiting on the next
+   *    visit, and "updatefound" never fires again for it. It has to be looked
+   *    for directly, or it waits until every tab closes.
+   *  - A reload is not free on every screen. The placement test and the quiz
+   *    hold their state in memory, so a reload there restarts them from the
+   *    first question.
+   */
+  const SAFE_TO_RELOAD = (): boolean =>
+    !/^\/(lesson|class|diagnostic|quiz)\b/.test(window.location.pathname);
+
   window.addEventListener('load', () => {
+    // Captured BEFORE registering: this is what tells a first visit apart
+    // from an update.
+    const wasControlled = navigator.serviceWorker.controller !== null;
+
     void navigator.serviceWorker
       .register('/sw.js')
       .then((registration) => {
-        /**
-         * A new version is never taken mid-class.
-         *
-         * The worker no longer calls skipWaiting on its own, so a waiting
-         * version sits there until this asks for it — and this only asks when
-         * the student is on a screen where a reload costs nothing. Anywhere
-         * else it waits, and the next ordinary visit picks it up.
-         */
+        const askWhenSafe = (worker: ServiceWorker | null): void => {
+          if (!worker || !SAFE_TO_RELOAD()) return;
+          worker.postMessage('take-over');
+        };
+
+        // One that installed during an earlier class is sitting here already.
+        askWhenSafe(registration.waiting);
+
         registration.addEventListener('updatefound', () => {
           const incoming = registration.installing;
           if (!incoming) return;
           incoming.addEventListener('statechange', () => {
-            if (incoming.state !== 'installed' || !navigator.serviceWorker.controller) return;
-            const inAClass = /^\/(lesson|class)\//.test(window.location.pathname);
-            if (inAClass) return;
-            incoming.postMessage('take-over');
+            if (incoming.state === 'installed') askWhenSafe(incoming);
           });
         });
 
-        // The new worker is in charge; reload once so the page matches it.
         let reloaded = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          if (reloaded) return;
+          // A first visit has nothing to reload INTO — the page it is showing
+          // is already the new version.
+          if (!wasControlled || reloaded || !SAFE_TO_RELOAD()) return;
           reloaded = true;
           window.location.reload();
         });
