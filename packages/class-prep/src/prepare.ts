@@ -44,6 +44,11 @@ export interface PrepOptions {
    * hears not a word about students. See `plannerUser`.
    */
   studentLines?: readonly string[];
+  /**
+   * How a real teacher being cloned teaches (`styleBrief` from
+   * @ai-tutor/teacher-clone). Absent for Curie own classes.
+   */
+  teacherStyle?: string;
   klass: number;
   minutes?: number;
   /** The model that plans the lesson. */
@@ -379,7 +384,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   say('planning', 'Working out how to teach this…', 0.05);
   const raw = await planner.complete(
     PLANNER_SYSTEM,
-    plannerUser(topic, klass, minutes, opts.studentLines),
+    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle),
   );
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that

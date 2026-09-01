@@ -246,3 +246,26 @@ describe('the class opens like a person, not a textbook', () => {
     expect(PLANNER_SYSTEM).toMatch(/rather than lectures|never .*lecture/i);
   });
 });
+
+describe("planning in a real teacher's style", () => {
+  const brief = 'TEACH AS THIS TEACHER. Their own phrases: "dekhiye beta".';
+
+  it('carries the brief into the prompt, last, where it colours everything above', () => {
+    const p = plannerUser('Evaporation', 9, 4, undefined, brief);
+    expect(p).toContain('dekhiye beta');
+    expect(p.indexOf('dekhiye beta')).toBeGreaterThan(p.indexOf('Evaporation'));
+  });
+
+  it('says not a word about a teacher when there is no brief', () => {
+    expect(plannerUser('Evaporation', 9, 4)).not.toMatch(/TEACH AS THIS TEACHER/);
+    expect(plannerUser('Evaporation', 9, 4, undefined, '   ')).not.toMatch(/TEACH AS/);
+  });
+
+  it('takes a student dossier and a teacher brief together', () => {
+    const p = plannerUser('Evaporation', 9, 4, ['Her name is Ananya.'], brief);
+    expect(p).toContain('Ananya');
+    expect(p).toContain('TEACH AS THIS TEACHER.');
+    // The teacher's voice is the LAST word, even after the student notes.
+    expect(p.indexOf('TEACH AS')).toBeGreaterThan(p.indexOf('Ananya'));
+  });
+});

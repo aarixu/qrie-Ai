@@ -386,7 +386,21 @@ export function plannerUser(
    * know.
    */
   studentLines?: readonly string[],
+  /**
+   * How a REAL teacher being cloned teaches, from `styleBrief`.
+   *
+   * Appended LAST on purpose: it is the voice everything above has to come
+   * out in, and a model weights the end of its instructions most heavily.
+   * Absent for Curie own tutor, who has a persona of her own.
+   */
+  teacherStyle?: string,
 ): string {
+
+  /** The brief, when there is one. Whitespace-only counts as none. */
+  const withStyle = (body: string): string =>
+    teacherStyle && teacherStyle.trim() !== "" ? `${body}
+
+${teacherStyle.trim()}` : body;
   const base = `Topic: ${topic}
 Class: ${klass} (NCERT)
 Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
@@ -394,9 +408,9 @@ Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
 Teach it the way a good teacher opens a class: start from something the student
 already has a feel for, then build. Do not summarise the topic — teach it.`;
 
-  if (!studentLines || studentLines.length === 0) return base;
+  if (!studentLines || studentLines.length === 0) return withStyle(base);
 
-  return `${base}
+  return withStyle(`${base}
 
 THIS STUDENT — private notes for planning, mirrored from how her live persona
 is briefed. Never recite this list, never mention scores or say you are
@@ -407,7 +421,7 @@ Teach to it: use the name naturally, the way a teacher does — a greeting, a
 question addressed to them — not in every line. Spend the minutes where the
 notes say the ground is shaky; what is held securely gets one confident
 sentence of recall, not a re-teaching. If a note says they stumbled on
-something this topic touches, that is where your first ask belongs.`;
+something this topic touches, that is where your first ask belongs.`);
 }
 
 /**
