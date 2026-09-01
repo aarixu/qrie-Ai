@@ -1,6 +1,5 @@
 import { BRAND } from '../brand';
 import { Wordmark } from '../ui/Logo';
-import { CartoonAvatar } from '../avatar/CartoonAvatar';
 
 /**
  * How long the splash stays up once it has been shown.
@@ -9,48 +8,45 @@ import { CartoonAvatar } from '../avatar/CartoonAvatar';
  * as a brand moment — so the integrator holds it for at least this long even
  * when startup work finishes sooner. Kept here, next to the screen it governs,
  * so the two cannot drift apart.
- *
- * Longer than it was, because there is now something worth watching: he waves,
- * and a wave that is cut off halfway is worse than no wave.
  */
-export const MIN_SPLASH_MS = 1_500;
+export const MIN_SPLASH_MS = 900;
 
 /**
- * The first thing a student sees — and now it is the tutor, not a spinner.
+ * The first thing a student sees.
  *
- * The penguin IS the product's face: he blinks, breathes and waves the moment
- * the app opens, and a student meets him before they meet a single control.
- * This is the one screen every student sees every time, and it used to be a
- * wordmark over three pulsing dots — true of any app, memorable in none.
- *
- * He needs nothing to run: the avatar drives itself from its own clock, and
- * with no line being spoken his beak simply rests while he blinks and sways.
- * `prefers-reduced-motion` is honoured inside the avatar's own loop.
+ * Deliberately still: a mark, a name, a promise, and a quiet sign that
+ * something is happening. This is a held breath before the app, so nothing
+ * here bounces or slides — the only motion is the loading dots fading, and
+ * `prefers-reduced-motion` in the base stylesheet neutralises even that.
  *
  * The screen takes no props and routes nowhere on its own; deciding when it
  * gives way is the integrator's job.
  */
 export function Splash() {
   return (
-    <div className="bg-background text-on-background min-h-screen font-body-md grid place-items-center px-margin-mobile py-10 overflow-hidden">
-      <div className="w-full max-w-[360px] flex flex-col items-center text-center">
-        {/* He arrives first, and the name settles under him. */}
-        <div className="w-[190px] h-[210px] splash-rise" aria-hidden>
-          <CartoonAvatar pose="greet" className="w-full h-full" />
-        </div>
+    <div className="bg-background text-on-background min-h-screen font-body-md grid place-items-center px-margin-mobile py-10">
+      <div className="w-full max-w-[360px] flex flex-col items-center text-center gap-stack-md">
+        <Wordmark size={112} />
 
-        <div className="splash-settle flex flex-col items-center gap-stack-md">
-          <Wordmark size={92} />
-          <p className="font-body-md text-body-md text-on-surface-variant max-w-[30ch]">
-            {BRAND.tagline}
-          </p>
-        </div>
+        <p className="font-body-md text-body-md text-on-surface-variant max-w-[30ch]">
+          {BRAND.tagline}
+        </p>
 
-        {/* Announced, not drawn: the wave is the visible sign that something
-            is happening, and a screen reader needs the words for it. */}
-        <span role="status" aria-label={`Loading ${BRAND.name}`} className="sr-only">
-          {`Loading ${BRAND.name}`}
-        </span>
+        <div
+          role="status"
+          aria-label={`Loading ${BRAND.name}`}
+          className="flex items-center gap-2 mt-stack-sm"
+        >
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="w-2 h-2 rounded-full bg-primary/40 animate-pulse"
+              // Staggering by delay rather than by three keyframe sets keeps the
+              // dots reading as one calm wave instead of three blinking lights.
+              style={{ animationDelay: `${i * 220}ms` }}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
