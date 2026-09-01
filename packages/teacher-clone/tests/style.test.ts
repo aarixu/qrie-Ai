@@ -58,6 +58,20 @@ describe('the board, which is half of how they teach', () => {
   });
 });
 
+describe('the card must transfer to ANY topic', () => {
+  it('asks for phrases that survive a change of subject', () => {
+    expect(STYLE_SYSTEM).toMatch(/any topic|another topic|different (subject|topic)/i);
+  });
+
+  it('forbids phrases welded to the subject they happened to be teaching', () => {
+    expect(STYLE_SYSTEM).toMatch(/not.*(subject|topic)-specific|never.*belongs? to the (subject|topic)|no phrase that only makes sense/i);
+  });
+
+  it('says outright that the script itself is not being copied', () => {
+    expect(STYLE_SYSTEM).toMatch(/not.*(copy|reproduc).*(lesson|script|content)|manner, not.*(material|content)/i);
+  });
+});
+
 describe('what the model is asked for', () => {
   it('asks for the switch POINT, not just the languages', () => {
     expect(STYLE_SYSTEM).toMatch(/where .*switch|switch .*point|switch/i);

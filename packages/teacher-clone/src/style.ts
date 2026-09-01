@@ -41,7 +41,9 @@ export interface StyleCard {
   board: string;
 }
 
-export const STYLE_SYSTEM = `You are given a transcript of one real teacher teaching. Describe HOW they teach, so another writer can plan a lesson that sounds like them.
+export const STYLE_SYSTEM = `You are given a transcript of one real teacher teaching. Describe HOW they teach, so another writer can plan a lesson ON ANY TOPIC that sounds like them.
+
+THE ONE RULE THAT MATTERS: you are capturing their MANNER, not their material. Their lesson is not being copied — a completely different subject will be taught with this card, and every line of it must still fit. So describe only what would still be true if this teacher walked into a different class tomorrow and taught something else.
 
 Reply with ONE JSON object and nothing else:
 {"teacher","sound","languageMix","phrases":["..."],"opening","questioning","examples","board"}
@@ -49,13 +51,15 @@ Reply with ONE JSON object and nothing else:
 - "teacher": what the students appear to call them. If the transcript never says, use "the teacher".
 - "sound": pace, warmth, and WHERE the emphasis falls — one sentence.
 - "languageMix": which language carries the technical terms and which carries the explanation, and WHERE they switch between them. The switch point matters far more than the ratio: many Indian teachers keep the term in English and explain it in Hindi, and some switch only when a student looks lost. Say what THIS teacher does.
-- "phrases": 3 to 6 of their actual recurring phrases, copied VERBATIM from the transcript, in the script they were said in. Not paraphrases, not translations.
+- "phrases": 3 to 6 of their actual recurring phrases, copied VERBATIM from the transcript, in the script they were said in. Not paraphrases, not translations. These must be phrases that TRANSFER: greetings, how they address the student, the aside they keep making, the tic they open a sentence with, what they say when landing a point. NEVER a phrase that belongs to the subject they happened to be teaching — "bends towards the normal" is physics, not personality, and would be nonsense in a biology class. If a phrase only makes sense inside that topic, leave it out.
 - "opening": how they get into a topic — one sentence.
 - "questioning": how they ask a question, and what they do when the answer does not come.
-- "examples": the world their examples come from (the kitchen, cricket, the classroom itself).
+- "examples": the WORLD their examples are drawn from — the village, the kitchen, cricket, the hostel, the street — so that a new example can be invented from the same world for a different topic. The world, not the examples themselves.
 - "board": what they WRITE while they speak, and when. Do they write a definition out in full as they say it, or only the term? Do they number points? Do they draw and then label, or label as they draw? Do they underline or box what matters? Be specific about the RELATIONSHIP between what is said and what is written - it is half of how a teacher like this teaches.
 
-Describe only what the transcript shows. Do not flatter, do not generalise about how Indian teachers teach, and never invent a phrase they did not say.`;
+Describe only what the transcript shows. Do not flatter, do not generalise about how Indian teachers teach, and never invent a phrase they did not say.
+
+Before you answer, check every field against one question: would this still be true if they were teaching a different chapter? If not, it does not belong in the card.`;
 
 export function styleUser(transcript: string): string {
   return `TRANSCRIPT\n\n${transcript}`;
