@@ -118,7 +118,36 @@ export function onAccountChange(cb: (account: Account | null) => void): () => vo
 }
 
 /**
+ * EMAIL OTP — the one that works with nothing else set up.
+ *
+ * Supabase serves this itself: no SMS provider to pay, no OAuth client to
+ * register. Phone and Google are better for this audience and are wired
+ * below, but both wait on an external account, and a sign-in that works
+ * today beats a better one that is blocked.
+ *
+ * The shared mailer is rate-limited on the free tier - a handful of messages
+ * an hour. Fine for building; a real SMTP (Resend, Brevo) goes in Supabase
+ * settings before students see it.
+ */
+export async function sendEmailOtp(email: string): Promise<string | null> {
+  const db = supabase();
+  if (!db) return "Sign-in is not set up yet.";
+  const { error } = await db.auth.signInWithOtp({ email });
+  return error?.message ?? null;
+}
+
+export async function verifyEmailOtp(email: string, token: string): Promise<string | null> {
+  const db = supabase();
+  if (!db) return "Sign-in is not set up yet.";
+  const { error } = await db.auth.verifyOtp({ email, token, type: "email" });
+  return error?.message ?? null;
+}
+
+/**
  * Phone OTP — the sign-in Indian students actually use.
+ *
+ * Needs an SMS provider configured in Supabase (Twilio and friends) before it
+ * will send anything, which is why email leads for now.
  *
  * Two steps because it is two steps for the student: a number, then the code
  * that arrives. Errors come back as plain strings for a screen to show; this

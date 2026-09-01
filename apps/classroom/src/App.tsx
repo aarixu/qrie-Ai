@@ -26,6 +26,7 @@ import { LiveClassRoute } from './screens/LiveClass';
 import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
 import { AvatarLab } from './screens/AvatarLab';
+import { SignIn } from './screens/SignIn';
 import { LessonComplete } from './screens/LessonComplete';
 import { Profile } from './screens/Profile';
 import { Search } from './screens/Search';
@@ -220,6 +221,7 @@ export default function App() {
           <Route path="/notes" element={<Notes />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/achievements" element={<Achievements />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -11,6 +11,8 @@ import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
 import { Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
+import { useAccount } from '../lib/account';
+import { cloudConfigured, signOut } from '../lib/supabase';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
 
@@ -92,6 +94,7 @@ function Switch({
 }
 
 export function Settings() {
+  const { account } = useAccount();
   const navigate = useNavigate();
   const settings = useStore(settingsStore);
   const profile = useStore(profileStore);
@@ -132,6 +135,29 @@ export function Settings() {
 
   return (
     <Screen title="Settings" onBack={() => navigate('/profile')}>
+      {cloudConfigured() && (
+        <Section title="Your account">
+          <button
+            onClick={() => (account ? void signOut() : navigate('/signin'))}
+            className={`${ROW} text-left hover:scale-[1.01] transition-transform`}
+          >
+            <Icon name={account ? 'cloud_done' : 'cloud_off'} className="text-primary" />
+            <span className="flex-1 font-body-md text-body-md text-on-surface">
+              {account ? account.label : 'Keep your progress on any device'}
+            </span>
+            <span className="font-label-md text-label-md text-on-surface-variant">
+              {account ? 'Sign out' : 'Sign in'}
+            </span>
+            <Icon name="chevron_right" className="text-outline-variant" />
+          </button>
+          <p className="px-4 font-label-md text-label-md text-on-surface-variant">
+            {account
+              ? 'Your streak, notes and answers are saved to this account.'
+              : 'Everything works without an account. Signing in only keeps a copy.'}
+          </p>
+        </Section>
+      )}
+
       <Section title="Learning">
         <button
           onClick={() => setPickingClass((open) => !open)}
