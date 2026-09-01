@@ -28,7 +28,11 @@ import { createOutcomeLookup } from './outcomeLookup';
  */
 
 export interface GeminiAgentOptions {
-  apiKey: string;
+  /**
+   * Only the DIRECT providers need one, and those are dev-only paths now.
+   * The relay carries no key at all — that is the whole point of it.
+   */
+  apiKey?: string;
   /** Who is in front of her, forwarded to the persona exactly as measured. */
   student: StudentContext;
   model?: string;
@@ -36,7 +40,7 @@ export interface GeminiAgentOptions {
    * Where the model is reached. 'gemini' is Google's own endpoint; 'openrouter'
    * is the same class of model through OpenRouter's one key.
    */
-  provider?: 'gemini' | 'openrouter';
+  provider?: 'relay' | 'gemini' | 'openrouter';
 }
 
 /** One turn of the conversation, in this file's own vocabulary. */
@@ -49,14 +53,56 @@ export interface Turn {
 export type Transport = (system: string, turns: readonly Turn[], signal: AbortSignal) => Promise<string>;
 
 const DEFAULT_MODEL = {
+  // The relay speaks OpenRouter's shape today and Gemini's tomorrow; either
+  // way the browser names a model, never a vendor account.
+  relay: 'google/gemini-3-flash-preview',
   gemini: 'gemini-3.7-flash',
   // OpenRouter names the same family with a vendor prefix.
   openrouter: 'google/gemini-3-flash-preview',
 } as const;
 
 export function createTransport(opts: GeminiAgentOptions): Transport {
-  const provider = opts.provider ?? 'gemini';
+  const provider = opts.provider ?? 'relay';
   const model = opts.model ?? DEFAULT_MODEL[provider];
+
+  /**
+   * THE ONE THAT SHIPS.
+   *
+   * Same origin, no key, no vendor in the browser at all — the server holds
+   * the credential and decides what this student may spend. The two direct
+   * transports below predate this and are dev-only now: Vite inlines every
+   * VITE_ variable, so a key read in the browser is a key printed into
+   * dist/assets/index-*.js for anyone who unzips the APK.
+   */
+  if (provider === 'relay') {
+    return async (system, turns, signal) => {
+      const res = await fetch('/api/llm', {
+        method: 'POST',
+        signal,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          model,
+          response_format: { type: 'json_object' },
+          temperature: 0.7,
+          messages: [
+            { role: 'system', content: system },
+            ...turns.map((t) => ({
+              role: t.role === 'model' ? 'assistant' : 'user',
+              content: t.text,
+            })),
+          ],
+        }),
+      });
+      const data = (await res.json()) as {
+        choices?: { message?: { content?: string } }[];
+        error?: { message?: string };
+      };
+      if (!res.ok) throw new Error(`LLM ${res.status}`);
+      // A 200 carrying an error body is how upstream failures arrive.
+      if (data.error) throw new Error(data.error.message ?? 'unknown LLM error');
+      return data.choices?.[0]?.message?.content ?? '';
+    };
+  }
 
   if (provider === 'openrouter') {
     return async (system, turns, signal) => {
@@ -92,6 +138,7 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
     };
   }
 
+  if (!opts.apiKey) throw new Error('The direct providers need a key; use the relay instead.');
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${opts.apiKey}`;
   return async (system, turns, signal) => {
     const res = await fetch(url, {

@@ -80,9 +80,39 @@ describe('createTransport', () => {
 
   afterEach(() => vi.unstubAllGlobals());
 
+  /**
+   * The transport that actually ships. The two below it are dev-only now:
+   * Vite inlines every VITE_ variable, so a key read in the browser is a key
+   * printed into the bundle for anyone who unzips the APK.
+   */
+  it('relay: sends no key anywhere, because it has none', async () => {
+    const calls = stub({ choices: [{ message: { content: 'hi' } }] });
+    const send = createTransport({ student, provider: 'relay' });
+    expect(await send('SYS', turns, new AbortController().signal)).toBe('hi');
+    expect(calls[0].url).toBe('/api/llm');
+    expect(JSON.stringify(calls[0].init.headers ?? {}).toLowerCase()).not.toContain('authorization');
+    expect(String(calls[0].init.body)).not.toMatch(/api[-_]?key/i);
+  });
+
+  it('relay: is what you get when nobody names a provider', async () => {
+    const calls = stub({ choices: [{ message: { content: 'hi' } }] });
+    await createTransport({ student })('SYS', turns, new AbortController().signal);
+    expect(calls[0].url).toBe('/api/llm');
+  });
+
+  it('relay: surfaces a 200 carrying an error body, the way upstream sends them', async () => {
+    stub({ error: { message: 'over budget' } });
+    const send = createTransport({ student });
+    await expect(send('SYS', turns, new AbortController().signal)).rejects.toThrow('over budget');
+  });
+
+  it('refuses to call a direct provider with no key rather than calling it unauthenticated', () => {
+    expect(() => createTransport({ student, provider: 'gemini' })).toThrow(/key/i);
+  });
+
   it('Gemini: posts contents with the model/user roles it expects', async () => {
     const calls = stub({ candidates: [{ content: { parts: [{ text: 'hi' }] } }] });
-    const send = createTransport({ apiKey: 'gk', student });
+    const send = createTransport({ apiKey: 'gk', student, provider: 'gemini' });
     expect(await send('SYS', turns, new AbortController().signal)).toBe('hi');
     expect(calls[0].url).toContain('/models/gemini-3.7-flash:generateContent?key=gk');
     const body = JSON.parse(calls[0].init.body as string);
@@ -115,7 +145,7 @@ describe('createTransport', () => {
 
   it('both surface an HTTP failure, so the session can hand the room back', async () => {
     stub({}, false, 429);
-    const gem = createTransport({ apiKey: 'k', student });
+    const gem = createTransport({ apiKey: 'k', student, provider: 'gemini' });
     await expect(gem('S', turns, new AbortController().signal)).rejects.toThrow(/Gemini 429/);
     stub({}, false, 401);
     const or = createTransport({ apiKey: 'k', student, provider: 'openrouter' });

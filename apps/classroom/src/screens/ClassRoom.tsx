@@ -254,13 +254,25 @@ export function ClassRoom({
    *   text   — Gemini over REST, the student types (key, no mic)
    *   stub   — a scripted script (no key at all), so the app always runs
    */
-  const geminiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
-  const openRouterKey = import.meta.env.VITE_OPENROUTER_API_KEY as string | undefined;
-  // Typed doubts can go through either. OpenRouter first when its key exists,
-  // because one key reaches the same models when a Google project is blocked.
-  // The LIVE VOICE cannot follow: OpenRouter serves text only, so speaking to
-  // her still needs the Gemini key.
-  const apiKey = openRouterKey ?? geminiKey;
+  /**
+   * THE LIVE VOICE KEY, AND WHY IT IS THE ONLY ONE LEFT.
+   *
+   * Gemini's Live API opens a socket from the browser and authenticates it
+   * with a raw key, so there is no way to speak to it without one in the
+   * page. Vite inlines every VITE_ variable, which means a key read here is a
+   * key printed into dist/assets/index-*.js for anyone who unzips the APK —
+   * so this read is fenced to DEV and voice doubts simply do not exist in a
+   * production build.
+   *
+   * Nothing is lost by that today: the TYPED doubt path is the same tutor,
+   * the same persona and the same recall, and it goes through /api/llm where
+   * the credential belongs. Voice comes back when the server can mint an
+   * ephemeral token for it.
+   */
+  const liveVoiceKey = import.meta.env.DEV
+    ? (import.meta.env.VITE_GEMINI_API_KEY as string | undefined)
+    : undefined;
+
 
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
@@ -284,11 +296,10 @@ export function ClassRoom({
   const agent = useMemo(() => {
     // No class on file means nothing true to tell her about the student, and a
     // guessed class is a tutor pitching a lesson at a child who is not there.
-    if (!apiKey || student === null) return createStubAgent();
-    if (voiceMode) {
-      // Voice is Gemini-only, and voiceMode is never entered without that key.
+    if (student === null) return createStubAgent();
+    if (voiceMode && liveVoiceKey) {
       return createLiveAgent({
-        apiKey: geminiKey!,
+        apiKey: liveVoiceKey,
         student,
         onState: setLiveState,
         isMuted: () => mutedRef.current,
@@ -304,12 +315,10 @@ export function ClassRoom({
           }),
       });
     }
-    return createGeminiAgent({
-      apiKey,
-      student,
-      provider: openRouterKey ? 'openrouter' : 'gemini',
-    });
-  }, [apiKey, geminiKey, openRouterKey, voiceMode, student]);
+    // Same origin, no key: the server holds the credential and decides what
+    // this student may spend.
+    return createGeminiAgent({ student });
+  }, [liveVoiceKey, voiceMode, student]);
 
   const handoff = useMemo(
     () =>
@@ -522,9 +531,10 @@ export function ClassRoom({
     // not about the chapter it happens to sit in.
     recordDoubtAtBeat(lesson, ctx.beatId);
 
-    if (apiKey && student !== null) {
-      // A mic is no use without the key that can carry speech.
-      const status = geminiKey ? await requestMic() : 'denied';
+    if (student !== null) {
+      // A mic is no use without a live voice session to carry it, and that
+      // exists in dev only until the server can mint a token for one.
+      const status = liveVoiceKey ? await requestMic() : 'denied';
       const useVoice = status === 'granted';
       setVoiceMode(useVoice);
       if (useVoice) {
