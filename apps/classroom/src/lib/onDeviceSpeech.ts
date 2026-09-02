@@ -25,8 +25,7 @@ import type { Synthesiser } from '@ai-tutor/voice';
  */
 
 /** Her voice. F1 is the one the tutor uses; the repo ships several. */
-const VOICE =
-  'https://huggingface.co/onnx-community/Supertonic-TTS-2-ONNX/resolve/main/voices/F1.bin';
+const VOICE = '/models/onnx-community/Supertonic-TTS-2-ONNX/voices/F1.bin';
 
 const TTS_MODEL = 'onnx-community/Supertonic-TTS-2-ONNX';
 const STT_MODEL = 'onnx-community/whisper-tiny.en';
@@ -35,6 +34,35 @@ const STT_MODEL = 'onnx-community/whisper-tiny.en';
 export const STT_SAMPLE_RATE = 16000;
 
 type Pipeline = (input: unknown, options?: Record<string, unknown>) => Promise<unknown>;
+
+/**
+ * THE MODELS SHIP WITH THE APP, and are never fetched from Hugging Face.
+ *
+ * Two reasons, and the second is the one that matters. A student on a phone
+ * would wait through three hundred megabytes before the tutor said a word —
+ * and a student with no network would never get a voice at all, which is the
+ * entire point of putting the models on the device.
+ *
+ * `content/` is this app's publicDir, so content/models is served from the
+ * app's own origin in dev and copied into the APK's assets by `cap sync`.
+ * `allowRemoteModels` is FALSE deliberately: with it on, a file missing from
+ * the build silently becomes a quarter-gigabyte download over a student's
+ * mobile data, and nobody would find out until a bill did.
+ */
+let configured = false;
+async function transformers() {
+  const mod = await import('@huggingface/transformers');
+  if (!configured) {
+    configured = true;
+    mod.env.allowLocalModels = true;
+    mod.env.allowRemoteModels = false;
+    mod.env.localModelPath = '/models/';
+    // The WASM backend's own files come from the bundle too, for the same
+    // reason: a CDN fetch here is a class that does not start on a train.
+    if (mod.env.backends?.onnx?.wasm) mod.env.backends.onnx.wasm.wasmPaths = '/wasm/';
+  }
+  return mod;
+}
 
 /**
  * One load per model per session, shared by every caller.
@@ -47,7 +75,7 @@ let ttsLoad: Promise<Pipeline | null> | null = null;
 let sttLoad: Promise<Pipeline | null> | null = null;
 
 async function load(task: string, model: string, options: Record<string, unknown> = {}) {
-  const { pipeline } = await import('@huggingface/transformers');
+  const { pipeline } = await transformers();
   return (await pipeline(task as never, model, options as never)) as unknown as Pipeline;
 }
 

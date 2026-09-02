@@ -43,3 +43,10 @@ clone-source/
 .secrets/
 *service-account*.json
 *-serviceaccount.json
+
+# Speech models, ~306 MB, fetched by tools/bin/fetch-speech-models.mjs.
+# Downloadable artefacts, not source, and they would dwarf the repo.
+content/models/
+# The onnxruntime WASM binaries, copied out of node_modules by the same
+# script. 39 MB of build output, not source.
+content/wasm/

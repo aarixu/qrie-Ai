@@ -1,5 +1,6 @@
 import type { TtsAdapter } from '@ai-tutor/player';
 import type { SpeechElement } from './streamingTts.ts';
+import { noteSpoken, noteTrouble } from './voiceReport.ts';
 import { wavUrl } from './wav.ts';
 
 /**
@@ -77,10 +78,29 @@ export function createOnDeviceTts(options: OnDeviceTtsOptions): TtsAdapter {
     const already = ready.get(text);
     if (already) return already;
 
+    /**
+     * Timed, and the failure is REPORTED rather than swallowed.
+     *
+     * This layer is built to fail quietly — the cloud voice is behind it and
+     * the class carries on — which is right for a student and useless for
+     * anyone testing whether the phone did the work at all. A class that
+     * sounds fine proves nothing without this.
+     */
+    const started = Date.now();
     const work = synth
       .speak(text)
-      .then((made) => (made ? wavUrl(made.samples, made.sampleRate) : null))
-      .catch(() => null);
+      .then((made) => {
+        if (!made) {
+          noteTrouble('on-device', 'the model made no audio for a line');
+          return null;
+        }
+        noteSpoken('on-device', text, Date.now() - started);
+        return wavUrl(made.samples, made.sampleRate);
+      })
+      .catch((e: unknown) => {
+        noteTrouble('on-device', (e as Error)?.message ?? 'synthesis threw');
+        return null;
+      });
     ready.set(text, work);
 
     // Oldest first, and the URL is revoked: a blob nobody released is a leak

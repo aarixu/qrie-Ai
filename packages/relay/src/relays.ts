@@ -1,3 +1,4 @@
+import { isAllowedClassPath, unsafeMarkup } from './markup.ts';
 /**
  * THE FIVE RELAYS, WITHOUT A SERVER AROUND THEM.
  *
@@ -272,15 +273,43 @@ export function checkSavedClass(saved: unknown): { ok: true; value: SavedClass }
   if (bytes > MAX_CLASS_BYTES) {
     return { ok: false, why: 'that class is larger than any class this app makes' };
   }
+  /**
+   * The catalogue row is written from `saved.id`, and the files under it.
+   * An entry naming a different id is either a bug or somebody trying to
+   * point a row at another student's folder.
+   */
+  if (entry.id !== c.id) return { ok: false, why: 'the entry names a different class' };
+
   for (const file of c.files) {
     if (typeof file?.path !== 'string' || file.path === '') return { ok: false, why: 'bad file path' };
-    // Anything that could climb out of the class folder, in any spelling.
-    if (file.path.includes('..') || file.path.startsWith('/') || file.path.includes('\\')) {
-      return { ok: false, why: `unsafe file path: ${file.path}` };
+    /**
+     * An ALLOW-LIST. The check here used to be a deny-list — no `..`, no
+     * leading slash, no backslash — which stopped a climb out of the folder
+     * and let through every extension there is, including .svg, which this
+     * bucket serves as image/svg+xml.
+     */
+    if (!isAllowedClassPath(file.path)) {
+      return { ok: false, why: `a class does not hold "${file.path}"` };
     }
     if (typeof file.body !== 'string') return { ok: false, why: 'file has no body' };
     if (file.encoding !== 'utf8' && file.encoding !== 'base64') {
       return { ok: false, why: 'file encoding must be utf8 or base64' };
+    }
+    /**
+     * THE MARKUP GATE, on the server, where it belongs.
+     *
+     * Diagram markup travels inside assets.json and is inlined into the page
+     * with dangerouslySetInnerHTML by every student who later opens this
+     * topic. The gate existed and ran in the BROWSER during preparation, so it
+     * protected only the traffic that chose to walk through it — a hand-made
+     * POST went straight past. Demonstrated: an anonymous identity posted
+     * `<svg><g><script>…` and this endpoint answered 200.
+     */
+    if (file.encoding === 'utf8') {
+      const problems = unsafeMarkup(file.body);
+      if (problems.length > 0) {
+        return { ok: false, why: `${file.path} ${problems[0]}` };
+      }
     }
   }
   return { ok: true, value: c as SavedClass };

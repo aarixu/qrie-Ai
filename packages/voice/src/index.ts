@@ -99,3 +99,14 @@ export {
   type OnDeviceTtsOptions,
   type Synthesiser,
 } from './onDeviceTts';
+export {
+  forgetVoiceReport,
+  noteSpoken,
+  noteTrouble,
+  onVoiceReport,
+  voiceReport,
+  voiceTally,
+  type SpokenLine,
+  type VoiceSource,
+  type VoiceTrouble,
+} from './voiceReport';

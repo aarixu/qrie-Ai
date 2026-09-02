@@ -13,33 +13,11 @@
  * One gate, one place to fix, both callers safer than either was.
  */
 
-export function unsafeMarkup(src: string): string[] {
-  const problems: string[] = [];
-
-  if (/<script[\s>]/i.test(src)) problems.push('contains <script>');
-  if (/<foreignObject[\s>]/i.test(src)) problems.push('contains <foreignObject>');
-  if (/<(iframe|object|embed|use|image)[\s>]/i.test(src)) problems.push('contains an embedding tag');
-  // A tokenizer ends an attribute on whitespace OR a slash, so
-  // `<circle r="2"/onclick="x()">` is a live handler that a whitespace-only
-  // check walks straight past.
-  if (/[\s/]on[a-z]+\s*=/i.test(src)) problems.push('contains an inline event handler');
-  if (/javascript:/i.test(src)) problems.push('contains a javascript: URL');
-
-  // A stylesheet can fetch, and it can do it in ways that look nothing like a
-  // link: @import, url(), even a font face. We never need one — the board's
-  // own styling is ours — so the whole element is refused.
-  if (/<style[\s>]/i.test(src)) problems.push('contains <style>');
-  if (/@import/i.test(src)) problems.push('contains an @import');
-
-  // An external reference would leak the student's IP to whoever the model
-  // decided to link, and would break the moment that host went away. A
-  // reference INTO the same document is how gradients and clip paths work, so
-  // `#name` stays allowed and everything else does not.
-  // Quoted or not: an unquoted href is an ordinary attribute to a parser,
-  // and the quoted-only check let one straight through.
-  if (/(href|src)\s*=\s*(?:["'](?!#)|(?!["'#\s>]))/i.test(src))
-    problems.push('references an external resource');
-  if (/url\(\s*["']?(?!#)/i.test(src)) problems.push('references an external resource');
-
-  return problems;
-}
+/**
+ * MOVED. The gate now lives in @ai-tutor/relay, because the browser was the
+ * wrong side of the wall for it: a class prepared here is POSTed to /api/class
+ * and served to every later student, and a hand-made POST never ran this code
+ * at all. Re-exported so there is still exactly one implementation and the
+ * prep-time callers keep working unchanged.
+ */
+export { unsafeMarkup } from '../../relay/src/markup.ts';
