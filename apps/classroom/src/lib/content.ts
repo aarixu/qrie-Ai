@@ -1,5 +1,10 @@
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import { loadSyllabus, getTopic, type SubjectSyllabus, type Topic } from '@ai-tutor/syllabus';
+import { supabase } from './supabase';
+
+/** Where a public bucket's files are served from, for the project we are on. */
+const supabaseStorageBase = (): string =>
+  `${(import.meta.env.VITE_SUPABASE_URL as string | undefined) ?? ''}/storage/v1/object/public`;
 
 /**
  * The app's content access layer: joins the lesson catalog (content/index.json,
@@ -53,10 +58,58 @@ export const subjectsAvailable = (klass: number): string[] =>
 
 let catalogCache: CatalogEntry[] | null = null;
 
+/**
+ * EVERY CLASS THAT EXISTS — the authored ones and the ones the tutor made.
+ *
+ * Two sources, because they arrive two ways. The authored lessons are files in
+ * content/, shipped with the app and available offline. A class prepared live
+ * is written to Storage and its catalogue row to Postgres, so that a topic one
+ * student paid fifty seconds and ₹2.25 to prepare is free for everyone after.
+ *
+ * The kept ones are a BONUS, not a requirement: if that query fails — offline,
+ * signed out, the project unreachable — the app carries on with the lessons it
+ * shipped with, and a topic that was already prepared simply looks cold and is
+ * prepared again. A worse day, not a broken app. So this never throws for the
+ * second half.
+ */
+async function fetchKeptClasses(): Promise<CatalogEntry[]> {
+  const db = supabase();
+  if (!db) return [];
+  const { data, error } = await db
+    .from('prepared_class')
+    .select('id, topic_ref, title, subtitle, klass, subject');
+  if (error || !data) return [];
+
+  return (data as {
+    id: string;
+    topic_ref: string;
+    title: string;
+    subtitle: string | null;
+    klass: number;
+    subject: string;
+  }[]).map((row) => ({
+    id: row.id,
+    title: row.title,
+    ...(row.subtitle ? { subtitle: row.subtitle } : {}),
+    class: row.klass,
+    subject: row.subject,
+    // An ABSOLUTE url, unlike an authored lesson's repo-relative path. fetchLesson
+    // below tells them apart, so nothing else has to know where a class came from.
+    path: `${supabaseStorageBase()}/classes/${row.id}/lesson.json`,
+    topicRef: row.topic_ref,
+  }));
+}
+
 export async function fetchCatalog(): Promise<CatalogEntry[]> {
   if (catalogCache) return catalogCache;
   const doc = (await (await fetch('/index.json')).json()) as { lessons: CatalogEntry[] };
-  catalogCache = doc.lessons;
+
+  const kept = await fetchKeptClasses();
+  // Authored first, and an authored lesson wins a clash: a hand-written class
+  // is somebody's deliberate work and a prepared one is a cache of the first
+  // time nobody had written it.
+  const seen = new Set(doc.lessons.map((l) => l.id));
+  catalogCache = [...doc.lessons, ...kept.filter((k) => !seen.has(k.id))];
   return catalogCache;
 }
 
@@ -68,10 +121,19 @@ export async function fetchCatalog(): Promise<CatalogEntry[]> {
  * what a lesson folder is called.
  */
 export const lessonAudioUrl = (entry: CatalogEntry): string =>
-  `/${entry.path.replace(/\/[^/]+$/, '')}/audio`;
+  `${isAbsolute(entry.path) ? '' : '/'}${entry.path.replace(/\/[^/]+$/, '')}/audio`;
+
+/**
+ * A class kept in Storage carries a whole URL; an authored one carries a path
+ * relative to the static root. One character of difference, in one place.
+ */
+const isAbsolute = (path: string): boolean => /^https?:\/\//.test(path);
+
+export const lessonUrl = (entry: CatalogEntry): string =>
+  isAbsolute(entry.path) ? entry.path : `/${entry.path}`;
 
 export async function fetchLesson(entry: CatalogEntry): Promise<Lesson> {
-  const raw = await (await fetch(`/${entry.path}`)).json();
+  const raw = await (await fetch(lessonUrl(entry))).json();
   const result = validateLesson(raw);
   if (!result.ok) {
     // Specific errors go to the console for the author; the caller shows a

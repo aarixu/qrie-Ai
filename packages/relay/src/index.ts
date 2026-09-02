@@ -51,6 +51,8 @@ export { TICKET_TTL_MS, mintTicket, readTicket, type Ticket } from './ticket.ts'
 
 export { handleRelay, handleTicket, relayFor, type HandlerDeps } from './handler.ts';
 
+export { keepClass, publicUrlFor, readSavedClass, type ClassStoreOptions } from './classStore.ts';
+
 export { readBody, sendRelayResponse, toRelayRequest } from './node.ts';
 
 export {

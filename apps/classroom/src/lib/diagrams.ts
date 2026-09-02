@@ -41,7 +41,16 @@ export function useLessonAssets(
       return;
     }
 
-    const folder = entry.path.replace(/\/[^/]+$/, '');
+    /**
+     * The folder the lesson's artwork sits in, beside its lesson.json.
+     *
+     * An authored lesson's path is relative to the static root; a class kept
+     * in Storage carries a whole URL. Prefixing the second with a slash would
+     * ask this origin for "/https://…", which 404s into the SPA fallback and
+     * arrives as index.html.
+     */
+    const base = entry.path.replace(/\/[^/]+$/, '');
+    const folder = /^https?:\/\//.test(base) ? base : `/${base}`;
     let cancelled = false;
 
     const svgOrThrow = async (url: string): Promise<string> => {
@@ -55,7 +64,7 @@ export function useLessonAssets(
     };
 
     (async () => {
-      const bundled = await fetch(`/${folder}/assets.json`)
+      const bundled = await fetch(`${folder}/assets.json`)
         .then((res) => (res.ok ? (res.json() as Promise<Record<string, string>>) : null))
         .catch(() => null);
       if (bundled) {
@@ -66,7 +75,7 @@ export function useLessonAssets(
       const loaded: Record<string, string> = {};
       await Promise.all(
         diagrams.map(async (el) => {
-          const url = `/${folder}/${(el as Extract<Element, { kind: 'diagram' }>).src}`;
+          const url = `${folder}/${(el as Extract<Element, { kind: 'diagram' }>).src}`;
           try {
             loaded[el.id] = await svgOrThrow(url);
           } catch (e) {

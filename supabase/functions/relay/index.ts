@@ -32,6 +32,7 @@ import {
 } from '../../../packages/relay/src/auth.ts';
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
 import { handleRelay } from '../../../packages/relay/src/handler.ts';
+import { keepClass } from '../../../packages/relay/src/classStore.ts';
 import { toRelayRequest, toResponse, transcribeViaFormData } from '../../../packages/relay/src/web.ts';
 
 const env = (name: string): string => Deno.env.get(name) ?? '';
@@ -75,6 +76,13 @@ const deps = {
   },
   transcribe: (model: string, contentType: string, audio: Uint8Array) =>
     transcribeViaFormData(OPENROUTER_API_KEY, model, contentType, audio),
+  /**
+   * The files go to a public Storage bucket and the catalogue row to Postgres,
+   * both with the service role key. That key never leaves this function — a
+   * student's browser must not be able to add a row pointing every later
+   * student at a lesson file of its choosing.
+   */
+  keep: (saved) => keepClass(saved, { supabaseUrl: SUPABASE_URL, serviceRoleKey: SERVICE_ROLE_KEY }),
 };
 
 Deno.serve(async (request: Request) => {

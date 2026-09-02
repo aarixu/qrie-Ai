@@ -5,9 +5,11 @@ import {
   speechRelay,
   type RelayRequest,
   type RelayResponse,
+  type SavedClass,
 } from './relays.ts';
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
+import { readSavedClass } from './classStore.ts';
 
 /**
  * ONE ROUTER, RUN BY BOTH SIDES.
@@ -32,6 +34,15 @@ export interface HandlerDeps {
    * web.ts is the implementation both hosts use.
    */
   transcribe(model: string, contentType: string, audio: Uint8Array): Promise<RelayResponse>;
+  /**
+   * Keep a class the tutor just made, so the next student gets it free.
+   *
+   * Optional because the dev server writes into content/ with its own plugin
+   * and has no Storage to reach. Absent means the relay says so rather than
+   * pretending: a class that quietly is not kept costs every later student the
+   * whole preparation again, and nothing would ever show it.
+   */
+  keep?(saved: SavedClass): Promise<RelayResponse>;
   now?: () => number;
 }
 
@@ -98,10 +109,11 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   const relay = relayFor(req.url);
   if (relay === null) return fail(404, 'no such relay');
 
-  // Neither of these is served here yet, and saying so is better than a 404
-  // that reads as a deploy problem. See the Edge Function's own notes.
-  if (relay === 'icons' || relay === 'class') {
-    return fail(501, `the ${relay} relay is not hosted here yet`);
+  // Still not served here: the icon lookup needs a static index built at
+  // deploy time, because @iconify/json is 443 MB and must never reach a
+  // browser. Saying so is better than a 404 that reads as a deploy problem.
+  if (relay === 'icons') {
+    return fail(501, 'the icons relay is not hosted here yet');
   }
 
   const admitted = await admit(req, relay, deps.gate);
@@ -109,6 +121,14 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
 
   if (relay === 'llm') return llmRelay(req, deps.key);
   if (relay === 'speech') return speechRelay(req, deps.key);
+
+  if (relay === 'class') {
+    if (req.method !== 'POST') return fail(405, 'POST only');
+    if (!deps.keep) return fail(501, 'this host cannot keep a class');
+    const saved = readSavedClass(req.body);
+    if (!saved.ok) return saved.response;
+    return deps.keep(saved.value);
+  }
 
   const heard = hearRelay(req, deps.key);
   if (!heard.ok) return heard.response;

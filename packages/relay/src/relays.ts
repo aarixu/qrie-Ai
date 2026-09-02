@@ -168,7 +168,24 @@ export function hearRelay(
 /** A class the room made and wants kept. */
 export interface SavedClass {
   id: string;
-  entry: { id: string };
+  /**
+   * The catalogue row, in the same shape an authored lesson has.
+   *
+   * Every field is here because the deployed writer READS it — a row goes into
+   * Postgres with this title, this class and this subject. It used to be typed
+   * as { id } alone, which is exactly the amount of checking a browser-supplied
+   * object should not get when its contents become a row every later student
+   * is served.
+   */
+  entry: {
+    id: string;
+    title: string;
+    subtitle?: string;
+    class: number;
+    subject: string;
+    path: string;
+    topicRef: string;
+  };
   files: { path: string; body: string; encoding: 'utf8' | 'base64' }[];
 }
 
@@ -187,8 +204,27 @@ export function checkSavedClass(saved: unknown): { ok: true; value: SavedClass }
   if (typeof c.id !== 'string' || !/^[a-z0-9][a-z0-9-]*$/.test(c.id)) {
     return { ok: false, why: 'bad class id' };
   }
-  if (typeof c.entry !== 'object' || c.entry === null || typeof c.entry.id !== 'string') {
-    return { ok: false, why: 'bad catalogue entry' };
+  const entry = c.entry as Partial<SavedClass['entry']> | undefined;
+  if (typeof entry !== 'object' || entry === null) return { ok: false, why: 'bad catalogue entry' };
+  // Checked field by field because every one of them becomes a row that every
+  // later student is served, and all of it arrived over HTTP from a browser.
+  if (typeof entry.id !== 'string' || entry.id === '') return { ok: false, why: 'entry has no id' };
+  if (typeof entry.title !== 'string' || entry.title === '') {
+    return { ok: false, why: 'entry has no title' };
+  }
+  if (entry.subtitle !== undefined && typeof entry.subtitle !== 'string') {
+    return { ok: false, why: 'entry subtitle must be text' };
+  }
+  if (typeof entry.class !== 'number' || !Number.isInteger(entry.class) || entry.class < 6 || entry.class > 12) {
+    return { ok: false, why: 'entry class must be a school class from 6 to 12' };
+  }
+  if (typeof entry.subject !== 'string' || entry.subject === '') {
+    return { ok: false, why: 'entry has no subject' };
+  }
+  // Three segments, the same shape every other topicRef in the product has.
+  // A row whose topic nothing can ask for is a lesson nobody will ever reach.
+  if (typeof entry.topicRef !== 'string' || entry.topicRef.split('/').length !== 3) {
+    return { ok: false, why: 'entry needs a "<syllabus>/<chapter>/<topic>" topicRef' };
   }
   if (!Array.isArray(c.files) || c.files.length === 0) return { ok: false, why: 'no files' };
   for (const file of c.files) {

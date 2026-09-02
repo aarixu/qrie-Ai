@@ -93,12 +93,47 @@ describe('the ear', () => {
 describe('what a browser is allowed to write', () => {
   const good = {
     id: 'class9-tissues',
-    entry: { id: 'class9-tissues' },
+    entry: {
+      id: 'class9-tissues',
+      title: 'Animal Tissues',
+      class: 9,
+      subject: 'Science',
+      path: 'class9-tissues/lesson.json',
+      topicRef: 'class9-science/tissues/animal-tissues',
+    },
     files: [{ path: 'lesson.json', body: '{}', encoding: 'utf8' as const }],
   };
 
   it('takes a well-formed class', () => {
     expect(checkSavedClass(good).ok).toBe(true);
+  });
+
+  /**
+   * THE ENTRY BECOMES A ROW EVERY LATER STUDENT IS SERVED.
+   *
+   * It used to be checked as `typeof entry.id === 'string'` and nothing else,
+   * while the deployed writer reads its title, class, subject and topicRef
+   * straight into Postgres — all of it arriving over HTTP from a browser.
+   */
+  const brokenEntries: [string, Record<string, unknown>][] = [
+    ['no title', { title: undefined }],
+    ['empty title', { title: '' }],
+    ['no subject', { subject: undefined }],
+    ['a class that is not a school class', { class: 3 }],
+    ['a class that is not a number', { class: '9' }],
+    ['no topicRef', { topicRef: undefined }],
+    ['a topicRef of the wrong shape', { topicRef: 'just-a-slug' }],
+    ['a subtitle that is not text', { subtitle: 42 }],
+  ];
+
+  it.each(brokenEntries)('refuses an entry with %s', (_why, over) => {
+    expect(checkSavedClass({ ...good, entry: { ...good.entry, ...over } }).ok).toBe(false);
+  });
+
+  it('takes an optional subtitle when it is text', () => {
+    expect(
+      checkSavedClass({ ...good, entry: { ...good.entry, subtitle: 'Class 9 · Tissues' } }).ok,
+    ).toBe(true);
   });
 
   it('refuses an id that is not a plain slug — it becomes a folder name', () => {
