@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  ALLOWED_MODELS,
+  CAP_OUTPUT_TOKENS,
+  MAX_REQUEST_BYTES,
   bareModel,
   completeOnVertex,
   inlineFromDataUrl,
@@ -254,5 +257,63 @@ describe('completeOnVertex', () => {
   it('refuses a request that named no model', async () => {
     const out = await completeOnVertex({ messages: [] }, { tokens, fetch: (async () => reply({})) as never });
     expect(out.status).toBe(400);
+  });
+});
+
+// -------------------------------------------------- what a caller may ask --
+
+describe('what this relay will spend on', () => {
+  const reply = (value: unknown) => ({ ok: true, status: 200, json: async () => value }) as unknown as Response;
+  const ask = (model: string) =>
+    completeOnVertex(
+      { model, messages: [{ role: 'user', content: 'hi' }] },
+      { tokens, fetch: (async () => reply({ candidates: [] })) as never },
+    );
+
+  it('serves the four models the app actually names', async () => {
+    for (const model of ALLOWED_MODELS) {
+      expect((await ask(`google/${model}`)).status).toBe(200);
+    }
+  });
+
+  it('refuses a model the app never names', async () => {
+    /**
+     * The model comes out of a request body, and the request body comes out of
+     * a student's phone. gemini-3-pro-image takes thirty-one seconds and bills
+     * like it; a pro model bills several times a flash one; and an anonymous
+     * identity costs nothing to make.
+     */
+    for (const model of ['gemini-3-pro-image', 'gemini-3.1-pro-preview', 'gemini-2.5-pro']) {
+      const out = await ask(`google/${model}`);
+      expect(out.status).toBe(400);
+      expect(String((out.body as { error: { message: string } }).error.message)).toContain('does not serve');
+    }
+  });
+
+  it('caps the output whether or not the caller asked for one', () => {
+    // The OpenRouter path has capped this since a batch of lesson prep died on
+    // it. The Vertex path was written without the cap and put it straight back.
+    expect(toVertexBody({ model: 'gemini-3.7-flash', messages: [] }).generationConfig.maxOutputTokens)
+      .toBe(CAP_OUTPUT_TOKENS);
+  });
+
+  it('does not let a caller ask for more than the cap', () => {
+    const asked = toVertexBody({
+      model: 'gemini-3.7-flash',
+      messages: [],
+      max_tokens: 1_000_000,
+    });
+    expect(asked.generationConfig.maxOutputTokens).toBe(CAP_OUTPUT_TOKENS);
+  });
+
+  it('honours a smaller request', () => {
+    const asked = toVertexBody({ model: 'gemini-3.7-flash', messages: [], max_tokens: 500 });
+    expect(asked.generationConfig.maxOutputTokens).toBe(500);
+  });
+
+  it('has a request ceiling above every prompt this app builds', () => {
+    // A planner prompt is a few thousand tokens; a vision call carries a
+    // picture. Both sit well inside this.
+    expect(MAX_REQUEST_BYTES).toBeGreaterThan(200_000);
   });
 });

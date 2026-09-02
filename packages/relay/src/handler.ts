@@ -10,7 +10,7 @@ import {
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
-import { completeOnVertex, type VertexOptions } from './vertex.ts';
+import { MAX_REQUEST_BYTES, completeOnVertex, type VertexOptions } from './vertex.ts';
 
 /**
  * ONE ROUTER, RUN BY BOTH SIDES.
@@ -152,6 +152,11 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   if (relay === 'llm') {
     if (deps.vertex) {
       if (req.method !== 'POST') return fail(405, 'POST only');
+      // Before the parse, not after: a refusal should not cost the memory of
+      // decoding what it is refusing.
+      if (req.body.byteLength > MAX_REQUEST_BYTES) {
+        return fail(413, 'that request is larger than anything this app sends');
+      }
       let chat: unknown;
       try {
         chat = JSON.parse(new TextDecoder().decode(req.body));

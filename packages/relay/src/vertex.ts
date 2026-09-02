@@ -27,6 +27,47 @@ import type { TokenSource } from './googleAuth.ts';
  * model was never the problem; the free tier was.
  */
 
+/**
+ * THE ONLY MODELS A BROWSER MAY NAME.
+ *
+ * The model comes out of the request body, and the request body comes from a
+ * student's phone. Without a list, an identity that costs nothing can name
+ * anything Google publishes — gemini-3-pro-image takes thirty-one seconds and
+ * bills like it, and a pro model bills several times a flash one. The app
+ * names exactly four models, in apps/classroom/src/lib/liveClass.ts; a request
+ * for a fifth did not come from the app.
+ *
+ * Adding one is a deliberate line here, which is the point.
+ */
+export const ALLOWED_MODELS: ReadonlySet<string> = new Set([
+  'gemini-3.7-flash',
+  'gemini-3.8-flash',
+  'gemini-3.1-flash-lite',
+  'gemini-3.1-flash-image',
+]);
+
+/**
+ * A CEILING ON WHAT ONE CALL MAY COST.
+ *
+ * The OpenRouter path has capped max_tokens since a batch of lesson prep died
+ * on it — an uncapped call is refused on a low balance even when the reply is
+ * three hundred tokens. The Vertex path was written without that cap, which
+ * put the regression straight back and pointed it at a credit balance rather
+ * than a prepaid one.
+ */
+export const CAP_OUTPUT_TOKENS = 24_000;
+
+/**
+ * And a ceiling on what one call may SEND.
+ *
+ * Nothing else limited this. A prepared class's planner prompt is a few
+ * thousand tokens; a megabyte of text posted three hundred times a day, from
+ * as many free anonymous identities as somebody cares to make, is billed
+ * input. 256 KB is comfortably above every prompt this app builds, including
+ * a vision call carrying a picture.
+ */
+export const MAX_REQUEST_BYTES = 256 * 1024;
+
 /** Location, not region. Every regional host 404s on these models. */
 export const LOCATION = 'global';
 export const HOST = 'https://aiplatform.googleapis.com';
@@ -127,7 +168,12 @@ export function toVertexBody(chat: OpenAiChat): VertexBody {
   if (chat.response_format?.type === 'json_object') {
     generationConfig.responseMimeType = 'application/json';
   }
-  if (typeof chat.max_tokens === 'number') generationConfig.maxOutputTokens = chat.max_tokens;
+  // Capped whether or not the caller asked for one, and a caller asking for
+  // more does not get more.
+  generationConfig.maxOutputTokens = Math.min(
+    typeof chat.max_tokens === 'number' && chat.max_tokens > 0 ? chat.max_tokens : CAP_OUTPUT_TOKENS,
+    CAP_OUTPUT_TOKENS,
+  );
   if (typeof chat.temperature === 'number') generationConfig.temperature = chat.temperature;
   if (isImageModel(model)) {
     generationConfig.responseModalities = ['IMAGE'];
@@ -223,6 +269,9 @@ export async function completeOnVertex(
   const doFetch = options.fetch ?? globalThis.fetch;
   const model = chat.model ?? '';
   if (!model) return { status: 400, body: { error: { message: 'no model named' } } };
+  if (!ALLOWED_MODELS.has(bareModel(model))) {
+    return { status: 400, body: { error: { message: `this relay does not serve ${model}` } } };
+  }
 
   let token: string;
   try {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NOTHING LEAVES THIS APP IN THE CLEAR.
+
+  Android 9 and later already default to this, so the file is here for the two
+  things a default cannot do: it says the intent out loud where somebody
+  auditing the app will look, and it holds if the target SDK is ever lowered.
+
+  Every destination is https - Supabase for the relay and for storage, and
+  nothing else. The speech models are inside the APK, so the one situation
+  where a plaintext fallback would be tempting does not arise.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
