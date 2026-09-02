@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
-import { namesInSpine, saveable } from '../src/save';
+import { namesInSpine, remembersASession, saveable } from '../src/save';
 import type { PrepReport } from '../src/types';
 
 /**
@@ -194,6 +194,38 @@ describe('saveable', () => {
     expect(
       saveable({ lesson: lessonWith('Ready?'), assets: {}, report: cleanReport }, meta),
     ).not.toBeNull();
+  });
+});
+
+describe('a spine that remembers a session', () => {
+  // The name check catches "Aarav". It cannot catch "last time we did the
+  // nucleus" — just as personal, and now just as likely, because the planner
+  // is told what the student did last class so she can open where they left
+  // off. That belongs in the fill.
+  const claims = [
+    'Last time we did the nucleus, so today we go inside it.',
+    'Welcome back! Ready for the next one?',
+    'Remember what we looked at yesterday?',
+    'Picking up from where we left off.',
+  ];
+
+  it.each(claims)('is refused: "%s"', (narration) => {
+    expect(remembersASession(lessonWith(narration))).not.toEqual([]);
+    expect(
+      saveable({ lesson: lessonWith(narration), assets: {}, report: cleanReport }, meta),
+    ).toBeNull();
+  });
+
+  const ordinary = [
+    'The nucleus is the control centre of the cell.',
+    'Last week the moon was full — that is one lunar cycle.',
+    'We will do this one step at a time.',
+  ];
+
+  it.each(ordinary)('leaves ordinary teaching alone: "%s"', (narration) => {
+    // The TOPIC is not the problem — "the nucleus" belongs in a class about
+    // cells. A narration claiming a shared past is.
+    expect(remembersASession(lessonWith(narration))).toEqual([]);
   });
 });
 

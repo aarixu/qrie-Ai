@@ -13,6 +13,8 @@ import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
 import { studentLinesForPlanner } from '../lib/student';
+import { outcomesForTopic } from '../lib/topicOutcomes';
+import { lastClassBefore } from '../lib/lastClass';
 import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
 import { quoteForPrompt, screen } from '@ai-tutor/safety';
@@ -268,14 +270,34 @@ export function LiveClassRoute() {
        * nothing said: the anonymous class is the honest default.
        */
       const lookup = createOutcomeLookup(profileStore.get().diagnostic?.mastery);
+      /**
+       * What they did last time, so she can open where they left off.
+       *
+       * Awaited before the plan because it is one line in the same prompt —
+       * and it never blocks the class: a catalogue that will not answer means
+       * a tutor who starts fresh, which is how she started every class before
+       * today.
+       */
+      const lastClass = await lastClassBefore().catch(() => null);
+      if (cancelled) return;
+
       const studentLines = studentLinesForPlanner({
         profile: profileStore.get(),
         progress: progressStore.get(),
         outcomes: outcomeStore.get(),
         statement: (id) => lookup.statement(id),
+        lastClass,
       });
+      /**
+       * The outcomes the map holds for this topic, so the class can be
+       * MEASURED and not merely taught. A free-text class has no topicRef and
+       * therefore no outcomes, which is the honest answer for something the
+       * curriculum has no entry for.
+       */
+      const outcomes = outcomesForTopic(ask.topicRef);
+
       const made = await prepareLiveClass(
-        { ...ask, studentLines },
+        { ...ask, studentLines, outcomes },
         (p) => {
           if (!cancelled) setProgress(p);
         },

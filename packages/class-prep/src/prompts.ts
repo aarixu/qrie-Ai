@@ -83,6 +83,13 @@ early, then TEACH ON IT.
 
 {"id","topic","narration","board":[...],"teaches"?:[...],"checks"?:[...],"minMs"?}
 
+\`teaches\` and \`checks\` hold OUTCOME IDS, and the only ids that exist are the
+ones listed under THIS TOPIC TEACHES below. Never invent one. An invented id
+is not a small mistake: it is how the app finds out whether this class landed,
+so a made-up one means the class is taught, tested, and measured as nothing.
+If no listed outcome fits a beat, leave the field out — a hook that teaches
+nothing new is an honest empty, not a gap to fill.
+
 \`narration\` is used only when the beat has no \`say\` steps. Write the beat as
 \`say\` steps instead: each one is a spoken line, and everything after it appears
 while it is being said. A good beat is 4 to 8 says over one board:
@@ -386,6 +393,13 @@ words per minute.
 Every "ref" in a beat must match a visual's id, and every "part" must be one of
 that visual's parts.`;
 
+/** What the map says this topic is FOR — the ids a beat may claim to teach. */
+export interface TopicOutcome {
+  id: string;
+  /** What the student should be able to DO, in the map's own words. */
+  statement: string;
+}
+
 export function plannerUser(
   topic: string,
   klass: number,
@@ -408,6 +422,18 @@ export function plannerUser(
    * Absent for Curie own tutor, who has a persona of her own.
    */
   teacherStyle?: string,
+  /**
+   * THE OUTCOMES THIS TOPIC IS FOR, from the Learning Outcome Map.
+   *
+   * The planner was asked for `teaches` ids and never shown a single one, so
+   * it invented them — and an invented outcome id is a class that is taught,
+   * tested and measured as nothing, because the map has never heard of it.
+   * Exactly the mistake `lessonRef` made, one field along.
+   *
+   * Absent means the map has nothing for this topic yet, which is an ordinary
+   * state: the class is still taught, it just cannot be measured.
+   */
+  outcomes?: readonly TopicOutcome[],
 ): string {
 
   /** The brief, when there is one. Whitespace-only counts as none. */
@@ -422,9 +448,24 @@ Length: about ${minutes} minute${minutes === 1 ? '' : 's'} of speech.
 Teach it the way a good teacher opens a class: start from something the student
 already has a feel for, then build. Do not summarise the topic — teach it.`;
 
-  if (!studentLines || studentLines.length === 0) return withStyle(base);
+  /**
+   * Listed with their statements, not just their ids.
+   *
+   * An id is a slug and tells the model nothing; the statement is the thing a
+   * student should be able to do afterwards, which is what makes choosing the
+   * right one possible rather than a guess at spelling.
+   */
+  const withOutcomes = (body: string): string =>
+    !outcomes || outcomes.length === 0
+      ? body
+      : `${body}
 
-  return withStyle(`${base}
+THIS TOPIC TEACHES — the only ids "teaches" and "checks" may contain:
+${outcomes.map((o) => `  ${o.id}: ${o.statement}`).join('\n')}`;
+
+  if (!studentLines || studentLines.length === 0) return withStyle(withOutcomes(base));
+
+  return withStyle(`${withOutcomes(base)}
 
 THIS STUDENT — private notes for planning, mirrored from how her live persona
 is briefed. Never recite this list, never mention scores or say you are
@@ -433,8 +474,10 @@ ${studentLines.map((line) => `- ${line}`).join('\n')}
 
 Teach to it, and keep the two halves apart. The NAME and anything else true
 only of this student go in "fill" — a greeting, a "you had trouble with this
-on Tuesday" — never in a beat's narration, which is kept and replayed for
-everyone. Everything else you may do freely in the narration itself: spend the
+on Tuesday", ANYTHING ABOUT THEIR LAST CLASS — never in a beat's narration,
+which is kept and replayed for everyone. "Last time we did the nucleus" in a
+narration is a sentence the next fifty students hear about a class they never
+had. Everything else you may do freely in the narration itself: spend the
 minutes where the notes say the ground is shaky, give one confident sentence
 of recall for what is held securely rather than re-teaching it, and put your
 first ask where they stumbled. Choosing WHAT to teach from these notes leaves

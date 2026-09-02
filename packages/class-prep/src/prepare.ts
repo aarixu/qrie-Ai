@@ -16,6 +16,7 @@ import {
   plannerUser,
   repairPlanUser,
   repairUser,
+  type TopicOutcome,
 } from './prompts';
 import { verifySvg } from './verify';
 import { classMustAsk, saidButNotWritten } from './saidNotWritten';
@@ -62,6 +63,14 @@ export interface PrepOptions {
   imageArtist?: ImageAdapter;
   /** The model that looks at a generated picture to find its named parts. */
   eyes?: VisionAdapter;
+  /**
+   * What the Learning Outcome Map says this topic is for.
+   *
+   * The one link between a class and the map that measures it. Without it the
+   * planner invents outcome ids, the map never recognises them, and a class is
+   * taught, tested and recorded as having taught nothing.
+   */
+  outcomes?: readonly TopicOutcome[];
   onProgress?: (p: PrepProgress) => void;
   /**
    * THE CLASS, AS SOON AS THE TEACHING HOLDS — before a picture exists.
@@ -414,7 +423,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   say('planning', 'Working out how to teach this…', 0.05);
   const raw = await planner.complete(
     PLANNER_SYSTEM,
-    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle),
+    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes),
   );
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
@@ -442,6 +451,35 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // whole model call — three seconds of a student sitting in front of a blank
   // board — and it would be spent recovering a word we already have.
   for (const beat of blueprint.beats) beat.topic ||= blueprint.title;
+
+  /**
+   * AN OUTCOME THE MAP DOES NOT HAVE IS NOT AN OUTCOME.
+   *
+   * The prompt now lists what may be claimed, and a good model obeys it. This
+   * is what happens when one does not: the id is dropped rather than written,
+   * because a class reporting that it taught "photosynthesis-basics" to a map
+   * that has never heard of it is measured as having taught nothing at all —
+   * silently, and for good.
+   *
+   * Dropped rather than sent to repair: an invented id is one bad field, not a
+   * bad class, and a repair round costs a student thirteen seconds of blank
+   * board to fix a word.
+   */
+  if (opts.outcomes && opts.outcomes.length > 0) {
+    const real = new Set(opts.outcomes.map((o) => o.id));
+    let invented = 0;
+    for (const beat of blueprint.beats) {
+      for (const field of ['teaches', 'checks'] as const) {
+        const claimed = beat[field];
+        if (!Array.isArray(claimed)) continue;
+        const kept = claimed.filter((id) => real.has(id));
+        invented += claimed.length - kept.length;
+        if (kept.length > 0) beat[field] = kept;
+        else delete beat[field];
+      }
+    }
+    if (invented > 0) issues.push(`Dropped ${invented} outcome id(s) the map does not have.`);
+  }
 
 
   const planMs = Date.now() - t0;

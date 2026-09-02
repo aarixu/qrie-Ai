@@ -81,6 +81,11 @@ export function studentLinesForPlanner(input: {
     answeredRight: Record<string, number>;
   };
   statement: (outcomeId: string) => string | undefined;
+  /**
+   * The class they last finished, if any — the one thing the app can honestly
+   * say it remembers about the last time these two met.
+   */
+  lastClass?: { title: string; daysAgo: number } | null;
   today?: Date;
 }): string[] {
   const lines: string[] = [];
@@ -121,6 +126,27 @@ export function studentLinesForPlanner(input: {
       .filter((s): s is string => s !== undefined)
       .slice(0, 3);
     if (shaky.length > 0) lines.push(`The ground is shaky under: ${shaky.join('; ')}.`);
+  }
+
+  /**
+   * WHAT WE DID LAST TIME.
+   *
+   * Step one of Aarav's class opening, and the difference between a tutor and
+   * a playlist: a teacher who has met you before starts from the last thing
+   * you did together, and the student can tell within one sentence which kind
+   * they are talking to.
+   *
+   * Named as a TITLE rather than described, because that is all the app
+   * honestly knows: it holds which class was finished, not what was said in
+   * it. Claiming to remember a conversation nobody recorded would be the app
+   * pretending, which is worse than starting fresh — and this product's whole
+   * persona rests on not doing that (packages/persona: "Say the honest thing").
+   */
+  if (input.lastClass) {
+    const when = input.lastClass.daysAgo;
+    const ago =
+      when === 0 ? 'earlier today' : when === 1 ? 'yesterday' : `${when} days ago`;
+    lines.push(`Their last class with you was "${input.lastClass.title}", ${ago}.`);
   }
 
   return lines;

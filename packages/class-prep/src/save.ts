@@ -154,6 +154,41 @@ export function namesInSpine(lesson: Lesson, names: readonly string[]): string[]
   return found;
 }
 
+/**
+ * A SPINE THAT REMEMBERS A SESSION IS NOT A SPINE.
+ *
+ * The name check catches "Aarav". It cannot catch "last time we did the
+ * nucleus", which is just as personal and now just as likely: the planner is
+ * told what the student did last class so she can open where they left off,
+ * and that belongs in `fill`.
+ *
+ * Matched on the PHRASE rather than the topic, because the topic is ordinary
+ * curriculum vocabulary — "the nucleus" belongs in a class about cells. What
+ * does not belong is a narration claiming a shared past, and there are only a
+ * few ways to write one.
+ */
+const REMEMBERS_A_SESSION: RegExp[] = [
+  // "last time" needs a "we" or a "you" near it to be about the pair.
+  // Without that clause this rejected "Last week the moon was full", which is
+  // a lunar cycle lesson and exactly the kind of teaching a spine is for.
+  /last (?:time|class|lesson)[^.!?]{0,40}\b(?:we|you|your)\b/i,
+  /(?:when|what|remember what) we (?:did|looked at|covered|talked about)/i,
+  /yesterday we /i,
+  /welcome back/i,
+  /picking up (?:from )?where (?:we|you) (?:left|stopped)/i,
+];
+
+/** The phrases in a spine that claim a shared past, if any. */
+export function remembersASession(lesson: Lesson): string[] {
+  const spine = [
+    lesson.title,
+    lesson.subtitle ?? '',
+    ...lesson.beats.map((b) => JSON.stringify(b)),
+  ].join(' ');
+
+  return REMEMBERS_A_SESSION.filter((pattern) => pattern.test(spine)).map((p) => p.source);
+}
+
 export function saveable(
   prep: { lesson: Lesson; assets: Record<string, string>; report: PrepReport },
   meta: SaveMeta,
@@ -171,6 +206,7 @@ export function saveable(
    */
   const personal = namesInSpine(prep.lesson, meta.studentNames ?? []);
   if (personal.length > 0) return null;
+  if (remembersASession(prep.lesson).length > 0) return null;
   // A picture that never drew was already reported. Its beat may have been
   // dropped, but the class is one demonstration short of the one that was
   // planned, and that is not the one to keep forever.

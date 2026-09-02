@@ -1,5 +1,6 @@
 import type { Lesson } from "@ai-tutor/lesson-format";
 import { relayFetch } from './relay';
+import type { TopicOutcome } from '@ai-tutor/class-prep';
 import {
   drawMissingIcons,
   pickIcons,
@@ -173,6 +174,13 @@ export async function prepareLiveClass(
     minutes: number;
     studentLines?: readonly string[];
     /**
+     * What the map says this topic is FOR.
+     *
+     * Without it the planner invents outcome ids and the class is measured as
+     * having taught nothing — see lib/topicOutcomes.
+     */
+    outcomes?: readonly TopicOutcome[];
+    /**
      * How a REAL teacher being cloned teaches (styleBrief). Absent for every
      * ordinary class - Curie own tutor has a persona of her own.
      */
@@ -198,6 +206,7 @@ export async function prepareLiveClass(
     klass: ask.klass,
     minutes: ask.minutes,
     studentLines: ask.studentLines,
+    outcomes: ask.outcomes,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),
