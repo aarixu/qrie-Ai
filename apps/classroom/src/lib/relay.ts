@@ -45,6 +45,33 @@ export const relayUrl = (path: string): string => `${BASE}${path}`;
  * fail: no class is worse than an unmetered one, but only for the moment it
  * takes to flip a switch.
  */
+/**
+ * One sign-in at a time.
+ *
+ * A class opens with several relay calls at once — the planner, the artist,
+ * the icon lookup — and on a fresh device every one of them would find no
+ * session and ask for an anonymous account of its own. That mints several
+ * users for one student, only one of which is kept, so the others become
+ * orphaned rows and the meter counts a fraction of what was actually spent.
+ * The ticket below already had this guard; the session needed it more.
+ */
+let signingIn: Promise<string | null> | null = null;
+
+async function startAnonymousSession(): Promise<string | null> {
+  const db = supabase();
+  if (!db) return null;
+  try {
+    const { data, error } = await db.auth.signInAnonymously();
+    if (error) {
+      console.error('[relay] could not start an anonymous session:', error.message);
+      return null;
+    }
+    return data.session?.access_token ?? null;
+  } finally {
+    signingIn = null;
+  }
+}
+
 async function accessToken(): Promise<string | null> {
   const db = supabase();
   if (!db) return null;
@@ -52,12 +79,8 @@ async function accessToken(): Promise<string | null> {
   const { data } = await db.auth.getSession();
   if (data.session) return data.session.access_token;
 
-  const { data: made, error } = await db.auth.signInAnonymously();
-  if (error) {
-    console.error('[relay] could not start an anonymous session:', error.message);
-    return null;
-  }
-  return made.session?.access_token ?? null;
+  signingIn ??= startAnonymousSession();
+  return signingIn;
 }
 
 /**
@@ -157,4 +180,5 @@ export function currentSpeechTicket(): string | null {
 export function forgetTicket(): void {
   ticket = null;
   minting = null;
+  signingIn = null;
 }

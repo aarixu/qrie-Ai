@@ -95,12 +95,17 @@ begin
   end if;
 
   if row_units + p_units > units_per_day then
+    -- Midnight UTC, which is when `today` above rolls over. Written as
+    -- "at time zone 'utc'" rather than a plain cast: a bare ::timestamptz
+    -- reads the date in the SESSION's zone, so on a database that is not set
+    -- to UTC this came out negative and clamped to a one-second wait — a
+    -- Retry-After that told a client to come straight back to the same refusal.
     return query select
       false,
       'budget'::text,
       greatest(
         1,
-        ceil(extract(epoch from ((today + 1)::timestamptz - now_at)))::integer
+        ceil(extract(epoch from (((today + 1)::timestamp at time zone 'utc') - now_at)))::integer
       );
     return;
   end if;

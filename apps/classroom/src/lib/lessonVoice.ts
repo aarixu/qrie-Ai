@@ -84,13 +84,23 @@ export function useLessonVoice(
        * browser's robot voice. `createGeminiTts` is still in @ai-tutor/voice
        * for whenever that access comes back.
        */
-      // Minted before the first line rather than during it: asking for a pass
-      // mid-sentence would put a round trip in front of her voice, which is
-      // the one thing the streaming relay exists to avoid. Read per line after
-      // that, because a class outlives a ten-minute ticket and the holder
-      // renews it in the background a minute early.
-      await speechTicket();
-
+      /**
+       * THE PASS FOR HER VOICE — started, NOT awaited.
+       *
+       * The pass has to be asked for before the first line — a round trip
+       * mid-sentence is the one thing the streaming relay exists to avoid —
+       * but awaiting it here would hang the whole classroom on a request with
+       * no timeout: a half-open connection would leave the room on its
+       * skeleton for good, and this path never sets an error, so the Try again
+       * button could not appear. It also has to be started AFTER `live` is
+       * assigned, or the cleanup below can run against a null and leave a
+       * cancelled class still speaking.
+       *
+       * Fired here, in an effect that runs when the route mounts, it has the
+       * whole join screen to finish in. A line that still arrives without one
+       * falls back to the browser's own voice, which is what the fallback is
+       * for — a class that keeps its lesson and loses its voice, not silence.
+       */
       live = createStreamingTts({
         endpoint: relayUrl('/api/speech'),
         ticket: currentSpeechTicket,
@@ -100,6 +110,7 @@ export function useLessonVoice(
         audio: avatarAudio,
         fallback: browser,
       });
+      void speechTicket();
 
       // A lesson with no recording is not an error — most are not recorded
       // yet, and a class made thirty seconds ago never can be.

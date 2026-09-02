@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, type CatalogEntry, subjectsAvailable } from '../lib/content';
 import { useAsync, dataOr } from '../lib/async';
-import { OfflineNotice, SkeletonList } from '../ui/States';
+import { InlineError, OfflineNotice, SkeletonList } from '../ui/States';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
@@ -34,7 +34,7 @@ export function Progress() {
   // catalogue would silently report every subject at 0% — a student's year of
   // work erased by a train tunnel. Loading and failed both hold the bars back
   // rather than drawing a wrong number.
-  const { state: catalogState } = useAsync(fetchCatalog, []);
+  const { state: catalogState, retry } = useAsync(fetchCatalog, []);
   const catalog = dataOr<CatalogEntry[]>(catalogState, []);
 
   const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
@@ -93,9 +93,19 @@ export function Progress() {
           The two numbers above are true and neither answers the question a
           student with more than one subject actually has, which is which one
           they are behind in. */}
-      {catalogState.status === 'loading' ? (
+      {catalogState.status === 'loading' && (
         <SkeletonList rows={3} label="Working out where you stand" className="h-[64px]" />
-      ) : null}
+      )}
+
+      {/* Silence here would be the very thing this screen set out to remove:
+          a student whose subjects simply vanished, with nothing to press. */}
+      {catalogState.status === 'failed' && (
+        <InlineError
+          message="We could not work out where you stand in each subject."
+          onRetry={retry}
+          className="mb-stack-md"
+        />
+      )}
 
       {catalogState.status === 'ready' && subjects.length > 0 && (
         <section className="mb-stack-md">

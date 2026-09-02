@@ -155,8 +155,16 @@ export function Home() {
                 onClick={() => {
                   if (hero) return navigate(`/lesson/${hero.id}`);
                   const first = catalog?.[0];
-                  navigate(first ? `/lesson/${first.id}` : firstTopic);
+                  if (first) return navigate(`/lesson/${first.id}`);
+                  // Only once we KNOW there is no recorded lesson. Falling
+                  // through while the catalogue is still in flight would send
+                  // a student off to have a class prepared from scratch —
+                  // a minute of waiting and about 140 units of their daily
+                  // budget — moments before the recorded one landed.
+                  if (catalogState.status === 'loading') return;
+                  navigate(firstTopic);
                 }}
+                aria-busy={catalogState.status === 'loading'}
                 className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-on-primary-fixed-variant hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
               >
                 <Icon name="play_arrow" filled />
