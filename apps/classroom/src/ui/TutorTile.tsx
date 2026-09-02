@@ -47,7 +47,7 @@ export function TutorTile({
   return (
     <div
       aria-label={`${who} ${mode}`}
-      className={`relative overflow-hidden rounded-[14px] bg-gradient-to-br from-[#3f41c8] to-[#23246e] grid place-items-center transition-colors ${
+      className={`relative overflow-hidden rounded-[14px] bg-gradient-to-br from-[#3a332a] to-[#1c1915] grid place-items-center transition-colors ${
         pip ? 'w-[104px] h-[138px]' : 'w-full h-[180px] rounded-2xl'
       } border-[2.5px] ${
         listening ? 'border-stage-green' : active ? 'border-stage-blue' : 'border-stage-surface'

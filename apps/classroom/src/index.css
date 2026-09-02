@@ -7,20 +7,29 @@
 
 /* Subject tints — tile (card wash), ring (icon circle) and ink (text/icon),
    each with its dark-room value beside it. One place, so every subject card
-   matches and no screen carries a raw hex of its own. */
+   matches and no screen carries a raw hex of its own.
+
+   PULLED INTO THE PALETTE. These were Tailwind's stock blue-50, green-50,
+   purple-50 and orange-50 — four hues from a different design system sitting
+   on a cream page, and the blue in particular read as somebody else's app.
+   They are still four DISTINGUISHABLE families, because a student finds Maths
+   by its colour before they read the word, but each is now a muted earth tone
+   that belongs beside the amber: a slate teal, a moss, a plum-brown and the
+   amber itself. Saturation is low on purpose — on cream, a saturated tint
+   fights the ground; on the warm black it would glow. */
 @layer components {
-  .tile-green  { @apply bg-[#f0fdf4] dark:bg-[#132b1d]; }
-  .tile-blue   { @apply bg-[#eff6ff] dark:bg-[#12233f]; }
-  .tile-purple { @apply bg-[#faf5ff] dark:bg-[#2a1840]; }
-  .tile-orange { @apply bg-[#fff7ed] dark:bg-[#33200e]; }
-  .ring-tint-green  { @apply bg-[#dcfce7] dark:bg-[#1b4030]; }
-  .ring-tint-blue   { @apply bg-[#dbeafe] dark:bg-[#1c3765]; }
-  .ring-tint-purple { @apply bg-[#f3e8ff] dark:bg-[#40245f]; }
-  .ring-tint-orange { @apply bg-[#ffedd5] dark:bg-[#4c2c12]; }
-  .ink-green  { @apply text-[#166534] dark:text-[#86efac]; }
-  .ink-blue   { @apply text-[#1e40af] dark:text-[#93c5fd]; }
-  .ink-purple { @apply text-[#6b21a8] dark:text-[#d8b4fe]; }
-  .ink-orange { @apply text-[#9a3412] dark:text-[#fdba74]; }
+  .tile-green  { @apply bg-[#eef5e9] dark:bg-[#1e2a19]; }
+  .tile-blue   { @apply bg-[#e9f1f2] dark:bg-[#182728]; }
+  .tile-purple { @apply bg-[#f5edee] dark:bg-[#2a1e20]; }
+  .tile-orange { @apply bg-[#fbf0dd] dark:bg-[#2e2413]; }
+  .ring-tint-green  { @apply bg-[#d9e8cf] dark:bg-[#2d3f26]; }
+  .ring-tint-blue   { @apply bg-[#d2e3e5] dark:bg-[#243b3d]; }
+  .ring-tint-purple { @apply bg-[#ebd9dc] dark:bg-[#3d2b2e]; }
+  .ring-tint-orange { @apply bg-[#f7e0b4] dark:bg-[#453519]; }
+  .ink-green  { @apply text-[#3f5c33] dark:text-[#b7d3a5]; }
+  .ink-blue   { @apply text-[#2b5a5e] dark:text-[#9dcbcf]; }
+  .ink-purple { @apply text-[#6d4046] dark:text-[#dcb0b6]; }
+  .ink-orange { @apply text-[#7a5710] dark:text-[#f0ca76]; }
 }
 
 @layer base {

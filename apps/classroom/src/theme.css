@@ -1,95 +1,130 @@
 /* THE PALETTE — one set of role names, two rooms. Every colour the app
    wears is a CSS variable, so dark mode is these two blocks and zero
    markup changes. Values are RGB triplets because Tailwind's opacity
-   modifiers (bg-primary/25) need to compose an alpha in. */
+   modifiers (bg-primary/25) need to compose an alpha in.
+
+   TAKEN FROM THE LANDING PAGE, and only the colours: amber, cream, a warm
+   near-black and white cards. The layout, the illustrations and the type of
+   that page are its own; this is the app wearing the same clothes.
+
+   THE ONE DECISION WORTH WRITING DOWN. Amber is not the primary. On the
+   landing page the amber is the GROUND and the highlight — the hero behind
+   everything, the oval drawn round a word — while the thing you press is
+   near-black. So `primary` is that near-black and `primary-container` is the
+   amber, which is also what the contrast wants: amber carries dark text at
+   about 9:1 and white text at 2:1, so an amber button with white on it would
+   have failed every accessibility check in the product.
+
+   The neutrals are warm on purpose. A grey with no hue in it under a cream
+   ground reads as an accident; these are pulled a few degrees toward the
+   amber so the whole page looks like one decision. */
 :root {
-  --c-primary: 70 72 212;
-  --c-on-primary: 255 255 255;
-  --c-primary-container: 96 99 238;
-  --c-on-primary-container: 255 251 255;
-  --c-primary-fixed: 225 224 255;
-  --c-primary-fixed-dim: 192 193 255;
-  --c-on-primary-fixed: 7 0 108;
-  --c-on-primary-fixed-variant: 47 46 190;
-  --c-inverse-primary: 192 193 255;
-  --c-surface-tint: 73 75 214;
-  --c-secondary: 133 83 0;
+  /* The thing you press: a warm near-black, not the amber. */
+  --c-primary: 31 28 23;
+  --c-on-primary: 253 248 238;
+  --c-primary-container: 243 184 77;
+  --c-on-primary-container: 38 27 6;
+  --c-primary-fixed: 253 226 168;
+  --c-primary-fixed-dim: 247 205 122;
+  --c-on-primary-fixed: 32 22 3;
+  --c-on-primary-fixed-variant: 122 87 16;
+  --c-inverse-primary: 245 194 96;
+  --c-surface-tint: 176 124 26;
+
+  /* Bronze: the amber taken darker, for the second thing on a screen. */
+  --c-secondary: 133 96 24;
   --c-on-secondary: 255 255 255;
-  --c-secondary-container: 254 166 25;
-  --c-on-secondary-container: 104 64 0;
-  --c-secondary-fixed: 255 221 184;
-  --c-secondary-fixed-dim: 255 185 95;
-  --c-on-secondary-fixed: 42 23 0;
-  --c-on-secondary-fixed-variant: 101 62 0;
-  --c-tertiary: 144 73 0;
+  --c-secondary-container: 250 224 165;
+  --c-on-secondary-container: 60 42 4;
+  --c-secondary-fixed: 250 224 165;
+  --c-secondary-fixed-dim: 240 202 118;
+  --c-on-secondary-fixed: 40 27 0;
+  --c-on-secondary-fixed-variant: 104 74 12;
+
+  /* A green that belongs beside amber rather than fighting it — the doodles
+     on that page are olive and sage, not the blue a default would give. */
+  --c-tertiary: 79 106 66;
   --c-on-tertiary: 255 255 255;
-  --c-tertiary-container: 181 93 0;
-  --c-on-tertiary-container: 255 251 255;
-  --c-tertiary-fixed: 255 220 197;
-  --c-tertiary-fixed-dim: 255 183 131;
-  --c-on-tertiary-fixed: 48 20 0;
-  --c-on-tertiary-fixed-variant: 112 55 0;
-  --c-error: 186 26 26;
+  --c-tertiary-container: 213 232 200;
+  --c-on-tertiary-container: 20 41 12;
+  --c-tertiary-fixed: 213 232 200;
+  --c-tertiary-fixed-dim: 185 213 168;
+  --c-on-tertiary-fixed: 15 33 8;
+  --c-on-tertiary-fixed-variant: 59 84 47;
+
+  /* Warmed too: a pure red beside amber reads as a different palette. */
+  --c-error: 176 46 32;
   --c-on-error: 255 255 255;
-  --c-error-container: 255 218 214;
-  --c-on-error-container: 147 0 10;
-  --c-background: 247 249 251;
-  --c-on-background: 25 28 30;
-  --c-surface: 247 249 251;
-  --c-on-surface: 25 28 30;
-  --c-surface-variant: 224 227 229;
-  --c-on-surface-variant: 70 69 84;
-  --c-surface-bright: 247 249 251;
-  --c-surface-dim: 216 218 220;
+  --c-error-container: 255 223 214;
+  --c-on-error-container: 122 25 14;
+
+  /* Cream, and white cards that lift off it. */
+  --c-background: 253 246 234;
+  --c-on-background: 30 27 22;
+  --c-surface: 253 246 234;
+  --c-on-surface: 30 27 22;
+  --c-surface-variant: 237 226 208;
+  --c-on-surface-variant: 84 76 62;
+  --c-surface-bright: 255 252 246;
+  --c-surface-dim: 232 222 205;
   --c-surface-container-lowest: 255 255 255;
-  --c-surface-container-low: 242 244 246;
-  --c-surface-container: 236 238 240;
-  --c-surface-container-high: 230 232 234;
-  --c-surface-container-highest: 224 227 229;
-  --c-inverse-surface: 45 49 51;
-  --c-inverse-on-surface: 239 241 243;
-  --c-outline: 118 117 134;
-  --c-outline-variant: 199 196 215;
+  --c-surface-container-low: 252 243 228;
+  --c-surface-container: 248 238 221;
+  --c-surface-container-high: 243 232 212;
+  --c-surface-container-highest: 238 226 204;
+  --c-inverse-surface: 30 27 22;
+  --c-inverse-on-surface: 250 242 229;
+  --c-outline: 132 121 101;
+  --c-outline-variant: 219 206 185;
 }
 
 /* Elevation in a dark room reads as LIGHTER, not darker: every screen uses
    surface-container-lowest as the card that lifts off the page, so here the
    ramp starts above the background and climbs, rather than following M3's
-   literal tone order downward. */
+   literal tone order downward.
+
+   And here the amber becomes the primary, which is the same choice the
+   landing page makes in its own dark section: on cream the pressable thing is
+   black, on black it is amber. The role swaps because the ground did. */
 .dark {
-  --c-primary: 192 193 255;
-  --c-on-primary: 27 26 163;
-  --c-primary-container: 47 46 190;
-  --c-on-primary-container: 225 224 255;
-  --c-inverse-primary: 70 72 212;
-  --c-surface-tint: 192 193 255;
-  --c-secondary: 255 185 95;
-  --c-on-secondary: 71 42 0;
-  --c-secondary-container: 101 62 0;
-  --c-on-secondary-container: 255 221 184;
-  --c-tertiary: 255 183 131;
-  --c-on-tertiary: 74 40 0;
-  --c-tertiary-container: 112 55 0;
-  --c-on-tertiary-container: 255 220 197;
-  --c-error: 255 180 171;
-  --c-on-error: 105 0 5;
-  --c-error-container: 147 0 10;
-  --c-on-error-container: 255 218 214;
-  --c-background: 16 20 24;
-  --c-on-background: 225 227 232;
-  --c-surface: 16 20 24;
-  --c-on-surface: 225 227 232;
-  --c-surface-variant: 45 50 59;
-  --c-on-surface-variant: 195 199 207;
-  --c-surface-bright: 54 58 63;
-  --c-surface-dim: 11 14 19;
-  --c-surface-container-lowest: 25 29 35;
-  --c-surface-container-low: 30 34 42;
-  --c-surface-container: 34 39 47;
-  --c-surface-container-high: 39 44 52;
-  --c-surface-container-highest: 45 50 59;
-  --c-inverse-surface: 225 227 232;
-  --c-inverse-on-surface: 46 49 53;
-  --c-outline: 141 145 153;
-  --c-outline-variant: 54 59 68;
+  --c-primary: 245 194 96;
+  --c-on-primary: 56 39 0;
+  --c-primary-container: 122 87 16;
+  --c-on-primary-container: 253 226 168;
+  --c-inverse-primary: 122 87 16;
+  --c-surface-tint: 245 194 96;
+
+  --c-secondary: 240 202 118;
+  --c-on-secondary: 68 47 0;
+  --c-secondary-container: 104 74 12;
+  --c-on-secondary-container: 250 224 165;
+
+  --c-tertiary: 185 213 168;
+  --c-on-tertiary: 34 57 24;
+  --c-tertiary-container: 59 84 47;
+  --c-on-tertiary-container: 213 232 200;
+
+  --c-error: 255 180 168;
+  --c-on-error: 99 15 6;
+  --c-error-container: 140 32 20;
+  --c-on-error-container: 255 223 214;
+
+  /* Warm near-black, not the blue-black a default dark theme gives. */
+  --c-background: 24 21 17;
+  --c-on-background: 237 230 218;
+  --c-surface: 24 21 17;
+  --c-on-surface: 237 230 218;
+  --c-surface-variant: 60 53 43;
+  --c-on-surface-variant: 209 199 183;
+  --c-surface-bright: 66 59 48;
+  --c-surface-dim: 18 16 13;
+  --c-surface-container-lowest: 33 29 24;
+  --c-surface-container-low: 39 34 28;
+  --c-surface-container: 45 40 33;
+  --c-surface-container-high: 52 46 38;
+  --c-surface-container-highest: 60 53 43;
+  --c-inverse-surface: 237 230 218;
+  --c-inverse-on-surface: 51 45 37;
+  --c-outline: 155 145 128;
+  --c-outline-variant: 60 53 43;
 }

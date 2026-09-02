@@ -72,15 +72,21 @@ export default {
         // themes (a lesson board is a lit screen in a dark auditorium, the way
         // Meet presents a shared screen), so an accent that flipped with the
         // app theme would be the one thing on it that changed for no reason.
-        stage: '#202124',
-        'stage-primary': '#4648d4',
-        'on-stage-primary': '#ffffff',
-        'stage-primary-edge': '#2f2ebe',
-        'stage-surface': '#3c4043',
-        'stage-panel': '#2b2d31',
-        'stage-ink': '#e8eaed',
-        'stage-ink-dim': '#bdc1c6',
-        'stage-blue': '#8ab4f8',
+        //
+        // The ROOM stays Meet: a dark auditorium with a lit board, which was
+        // decided and is not being reopened. What changed is the ACCENT — the
+        // thing you press in it is the brand's amber rather than a borrowed
+        // indigo, so the room belongs to this product while still reading as a
+        // video call. Warm greys for the same reason the app's are warm.
+        stage: '#1c1a17',
+        'stage-primary': '#f3b84d',
+        'on-stage-primary': '#2a1d02',
+        'stage-primary-edge': '#d99f33',
+        'stage-surface': '#3d382f',
+        'stage-panel': '#2a2620',
+        'stage-ink': '#ede6da',
+        'stage-ink-dim': '#c2b8a6',
+        'stage-blue': '#f5c260',
         'stage-green': '#34d872',
         'stage-green-container': '#0f5c2e',
         'stage-green-ink': '#7ce7a2',
