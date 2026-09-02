@@ -32,3 +32,10 @@ clone-source/
 
 # The .env file relay-secrets.mjs writes and deletes. Never committed.
 .relay-secrets.*.env
+
+# Google Cloud service account keys. A JSON in here is the credential that
+# stands between a phone and somebody's Cloud balance — it is a Supabase
+# secret and a local file, and it is never a commit.
+.secrets/
+*service-account*.json
+*-serviceaccount.json
