@@ -186,8 +186,30 @@ describe('Help', () => {
   });
 
   it('builds the FAQ from native details/summary, one summary per question', () => {
-    expect(html.split('<details').length - 1).toBe(6);
-    expect(html.split('<summary').length - 1).toBe(6);
+    // Counted against each other rather than against a number somebody has to
+    // remember to update: the invariant is one summary per details, not eight.
+    const details = html.split('<details').length - 1;
+
+    expect(details).toBeGreaterThan(5);
+    expect(html.split('<summary').length - 1).toBe(details);
+  });
+
+  it('puts a way to reach a person above everything else on the page', () => {
+    // A student who opens Help because something is wrong should not have to
+    // read about streaks first.
+    expect(html).toContain('If you need to talk to a person');
+    expect(html.indexOf('If you need to talk to a person')).toBeLessThan(
+      html.indexOf('How it works'),
+    );
+    expect(html).toContain('tel:14416');
+    expect(html).toContain('tel:1098');
+  });
+
+  it('no longer tells a student there are no accounts', () => {
+    // There are: signing in is what carries progress to another phone. A help
+    // page that describes a version of the app that no longer exists is worse
+    // than no help page.
+    expect(html).not.toContain('There are no accounts yet');
   });
 
   it('points the student at Settings to change anything', () => {

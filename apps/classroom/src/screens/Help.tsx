@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { HELPLINES } from '@ai-tutor/safety';
 import { BRAND } from '../brand';
 import { Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -32,7 +33,15 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Where is my progress saved?',
-    a: `On this device, in this browser. There are no accounts yet, so clearing your browser data — or opening ${BRAND.name} on a different phone — starts you with an empty progress screen.`,
+    a: `On this device first, so it works with no signal. Sign in with your email and it also goes to your account, which is what lets you carry on from a different phone. Without signing in, clearing your browser data starts you with an empty progress screen.`,
+  },
+  {
+    q: 'Can I tell you if she says something wrong?',
+    a: 'Yes, and please do. There is a Report button in the class, next to Leave. Pick what happened, add anything you want to say, and it is saved on your phone so you can show a parent or a teacher. Nothing is sent anywhere without you pressing send.',
+  },
+  {
+    q: 'What does she do with what I tell her?',
+    a: `Your words go to the model that answers you, and nothing else. Phone numbers, addresses and email addresses are taken out before they are sent — so if you type one by accident, it does not travel. ${BRAND.name} keeps no recording of your voice and no copy of what you said.`,
   },
 ];
 
@@ -41,6 +50,47 @@ export function Help() {
 
   return (
     <Screen title="Help" subtitle="How the class works" onBack={() => navigate('/settings')}>
+      {/*
+        FIRST ON THE PAGE, ABOVE "how it works".
+        A student who opens Help because something is wrong should not have to
+        read about streaks first. Free, Indian, and answered by people.
+      */}
+      <section className="ring-tint-blue rounded-[24px] p-card-padding mb-stack-md">
+        <h2 className="font-headline-md text-[20px] leading-7 text-on-surface mb-stack-sm">
+          If you need to talk to a person
+        </h2>
+        <p className="font-body-md text-body-md text-on-surface-variant mb-3">
+          I am a tutor, and some things need a person. These are free, they answer in many
+          languages, and you can ring them at any hour.
+        </p>
+        <ul className="grid gap-2">
+          <li>
+            <a
+              href={`tel:${HELPLINES.telemanas}`}
+              className="flex items-center gap-3 bg-surface-container-lowest rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface"
+            >
+              <Icon name="forum" className="text-on-surface-variant" />
+              <span className="flex-1">
+                <strong>Tele-MANAS {HELPLINES.telemanas}</strong> — if you are struggling, low, or
+                just want someone to listen
+              </span>
+            </a>
+          </li>
+          <li>
+            <a
+              href={`tel:${HELPLINES.childline}`}
+              className="flex items-center gap-3 bg-surface-container-lowest rounded-xl px-4 py-3 font-body-md text-body-md text-on-surface"
+            >
+              <Icon name="front_hand" className="text-on-surface-variant" />
+              <span className="flex-1">
+                <strong>Childline {HELPLINES.childline}</strong> — if someone is hurting you or you
+                do not feel safe
+              </span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
       <section className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-soft-indigo mb-stack-md">
         <h2 className="font-headline-md text-[20px] leading-7 text-on-surface mb-stack-sm">
           How it works

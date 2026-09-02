@@ -27,6 +27,8 @@ import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
+import { fromStudent } from '../lib/safety';
+import { ReportSheet } from '../ui/ReportSheet';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
@@ -271,6 +273,10 @@ export function ClassRoom({
   // exactly as Meet's do. The board never moves when they go — they only fade —
   // so the camera is not re-framing every 3.5 seconds.
   const [controlsShown, setControlsShown] = useState(true);
+  // A student must always have a way to say "this was wrong". It lives in the
+  // room rather than in Settings, because the moment they want it is the
+  // moment it happened.
+  const [reporting, setReporting] = useState(false);
   // Typed-doubt input on a phone, where there is no side panel to type into.
   const [typing, setTyping] = useState(false);
   const [draft, setDraft] = useState('');
@@ -464,6 +470,10 @@ export function ClassRoom({
         setEar('off');
         await tts.speak(judged.say);
         if (cancelled) return;
+        // The student said something that needs a person. She has just said so;
+        // reopening the mic and asking the question again would be the app
+        // talking straight over them.
+        if (judged.halt) return;
         if (judged.verdict === 'right') {
           // Her line just ended on the cross-question; the next listen takes
           // their reasoning, and the probe branch above always resolves.
@@ -629,9 +639,24 @@ export function ClassRoom({
     setEntryPhase('inClass');
   };
 
+  /**
+   * A typed doubt, screened on the way out.
+   *
+   * The student sees their own words on screen either way — deleting what
+   * somebody typed under them is worse than anything it might contain — but
+   * what LEAVES the device is the cleaned version, and a sentence that needs a
+   * person gets her answer instead of a model's.
+   */
   const sendText = (text: string) => {
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
-    handoff.sendUserText(text);
+    const screened = fromStudent(text, lesson.id);
+    if (screened.text === null) {
+      const say = screened.say ?? '';
+      setTextLines((prev) => [...prev, { role: 'tutor', text: say, final: true }]);
+      void tts.speak(say);
+      return;
+    }
+    handoff.sendUserText(screened.text);
   };
 
   const endDoubt = () => handoff.endDoubt();
@@ -915,6 +940,11 @@ export function ClassRoom({
               tone={preferences.captions ? 'lit' : 'plain'}
               onClick={() => setPreference('captions', !preferences.captions)}
             />
+            <ToolButton
+              icon="error"
+              label="Report something in this class"
+              onClick={() => setReporting(true)}
+            />
             <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} />
           </>
         ) : (
@@ -954,10 +984,17 @@ export function ClassRoom({
               tone={preferences.captions ? 'lit' : 'plain'}
               onClick={() => setPreference('captions', !preferences.captions)}
             />
+            <ToolButton
+              icon="error"
+              label="Report something in this class"
+              onClick={() => setReporting(true)}
+            />
             <ToolButton icon="call_end" label="Leave the class" tone="red" onClick={onExit} disabled />
           </>
         )}
       </nav>
+
+      {reporting && <ReportSheet lessonId={lesson.id} onClose={() => setReporting(false)} />}
     </div>
   );
 }

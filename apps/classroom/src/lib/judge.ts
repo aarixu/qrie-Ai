@@ -1,4 +1,6 @@
 import { TUTOR } from '@ai-tutor/persona';
+import { quoteForPrompt } from '@ai-tutor/safety';
+import { fromStudent } from './safety';
 import { createBrowserLlm } from './browserLlm';
 
 /**
@@ -33,6 +35,15 @@ export interface SpokenVerdict {
   verdict: 'right' | 'wrong' | 'unclear';
   /** What she says out loud next - the why, the leading question, or "say it again". */
   say: string;
+  /**
+   * Stop, and do not ask again.
+   *
+   * Set only by the safety screen, when a student has said something that
+   * needs a person rather than a tutor. `say` is then her response to THEM,
+   * not to the question — and the class must not reopen the mic and carry on
+   * as if nothing had been said, which is what every other outcome does.
+   */
+  halt?: true;
 }
 
 /** Same family the doubt tutor runs on, through the same relay. */
@@ -84,9 +95,31 @@ const describe = (ask: SpokenAsk): string => {
   return lines.join('\n');
 };
 
+/**
+ * WHAT THE STUDENT SAID, AS EVIDENCE RATHER THAN AS INSTRUCTION.
+ *
+ * Their words go into the prompt inside quotes. Unescaped, a quote mark ends
+ * the block and everything after it reads as a new turn — so an answer box was
+ * a second system prompt, and a transcriber that ran away with background
+ * noise was a thousand words of one. `fromStudent` screens, cleans, caps and
+ * quotes in a single pass, and it is the same call every path uses.
+ *
+ * When it hands back words to say instead of words to send, the model is not
+ * asked at all: the student has said something that needs a person, and the
+ * verdict carries `halt` so the class stops rather than asking again.
+ */
 export async function judgeSpokenAnswer(ask: SpokenAsk, heard: string): Promise<SpokenVerdict> {
+  const screened = fromStudent(heard);
+  if (screened.text === null) {
+    // 'unclear' on purpose: this is not evidence that the student got the
+    // question wrong, and the outcome map must not record it as if it were.
+    return { verdict: 'unclear', say: screened.say ?? '', halt: true };
+  }
   const llm = createBrowserLlm(JUDGE_MODEL, { json: true });
-  const reply = await llm.complete(system(), `${describe(ask)}\n\nThe student said: "${heard}"`);
+  const reply = await llm.complete(
+    system(),
+    `${describe(ask)}\n\nThe student said: "${screened.text}"`,
+  );
   return parseVerdict(reply);
 }
 
@@ -121,11 +154,16 @@ export async function resolveCrossQuestion(
     `- If it wobbles, or they said nothing, give the why yourself, warmly - no scolding, never the word "wrong".`,
     `- NEVER say "correct" or congratulate. The reason is the lesson.`,
   ].join(String.fromCharCode(10));
+  const screened = fromStudent(reasoning);
+  // Same rule as the judge: their reasoning is never an instruction, and if it
+  // turns out to be a disclosure the close is her response to that instead.
+  if (screened.text === null) return screened.say ?? '';
+
   const user = `${describe(ask)}
 
-They answered: "${answered}"
+They answered: "${quoteForPrompt(answered)}"
 You then asked: "${probe}"
-They reasoned: "${reasoning}"`;
+They reasoned: "${screened.text}"`;
   const llm = createBrowserLlm(JUDGE_MODEL, { json: true });
   return parseFollowUp(await llm.complete(sys, user));
 }

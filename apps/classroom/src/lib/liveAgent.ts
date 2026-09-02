@@ -155,6 +155,8 @@ export interface SetupFrame {
       speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: string } } };
       temperature: number;
     };
+    /** The provider's own harm categories, set rather than defaulted. */
+    safetySettings: { category: string; threshold: string }[];
     systemInstruction: { parts: { text: string }[] };
     tools: [{ functionDeclarations: FunctionDeclaration[] }];
     inputAudioTranscription: Record<string, never>;
@@ -195,6 +197,30 @@ export function buildSetupFrame(
         speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE_NAME } } },
         temperature: 0.8,
       },
+      /**
+       * THE PROVIDER'S OWN HARM FILTERS, TURNED ON.
+       *
+       * This block was simply absent, so every category sat at whatever the
+       * default happened to be — unstated, unobserved, and different from what
+       * the same conversation would get on the text path. On the live path
+       * there is nowhere else to put a check: the model's voice arrives as PCM
+       * and is queued for the speaker before the transcript of it exists, so
+       * there is no text checkpoint to screen. This is the check.
+       *
+       * BLOCK_ONLY_HIGH rather than the strictest setting, deliberately. Our
+       * students are studying reproduction, the nervous system, the effects of
+       * alcohol, and the history of two world wars; a filter tuned to protect
+       * a general audience from every mention of harm refuses a Class 10
+       * Biology chapter, and a tutor who will not teach the syllabus is not
+       * safer, only useless. The narrow, serious cases are what this catches,
+       * and the persona and the local screen carry the rest.
+       */
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+      ],
       systemInstruction: { parts: [{ text: buildLiveSystemInstruction(ctx, student) }] },
       tools: [
         {

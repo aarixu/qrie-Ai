@@ -168,17 +168,24 @@ function lessonSection(lesson: LessonContext | undefined): string | null {
  * Build the system prompt for one moment, one student, one surface.
  *
  * Section order is fixed and runs from the most permanent thing to the most
- * situational: who she is, what she will not do, who is in front of her, what
- * this moment needs, what the class is showing, and finally how the words
- * physically come out. A model reading top to bottom meets her character before
- * it meets today's details, which is what stops the details from overwriting
- * her.
+ * situational: who she is, what she will not do, WHO SHE IS TALKING TO, who is
+ * in front of her, what this moment needs, what the class is showing, and
+ * finally how the words physically come out. A model reading top to bottom
+ * meets her character before it meets today's details, which is what stops the
+ * details from overwriting her.
+ *
+ * The safety block sits above the student's own notes deliberately. Everything
+ * below it is about this lesson and this minute; nothing about this minute
+ * should be able to argue with the fact that the person listening is a child.
  */
 export function buildSystemPrompt({ moment, student, lesson, surface }: PromptInput): string {
   const sections: string[] = [
     ['WHO YOU ARE', `You are ${TUTOR.name}, ${TUTOR.role}.`, `You are ${TUTOR.voice}.`].join('\n'),
     ['YOU ALWAYS', bullets(TUTOR.values)].join('\n'),
     ['YOU NEVER', bullets(TUTOR.neverDoes)].join('\n'),
+    // Above the student's own details on purpose: nothing about today should
+    // be able to argue with this.
+    ['WHO YOU ARE TALKING TO — this outranks everything below it', bullets(TUTOR.safety)].join('\n'),
     [
       'THIS STUDENT — private notes. Never read them out, never mention scores, never say you are adapting.',
       bullets(describeFactors(student)),

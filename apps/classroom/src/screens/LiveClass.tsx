@@ -14,6 +14,7 @@ import { createOutcomeLookup } from '../lib/outcomeLookup';
 import { studentLinesForPlanner } from '../lib/student';
 import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
+import { fromStudent } from '../lib/safety';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -35,6 +36,14 @@ import { ClassRoom } from './ClassRoom';
  * voice and its artwork, and has no idea whether they were made a minute ago
  * or a month ago.
  */
+
+/** Not a class at all — what she says instead. */
+interface Refused {
+  refused: string;
+}
+
+const isRefused = (ask: Ask | Refused | null): ask is Refused =>
+  ask !== null && 'refused' in ask;
 
 /** What the class is about, gathered before anything is prepared. */
 interface Ask {
@@ -87,7 +96,7 @@ export function LiveClassRoute() {
   const topicRef = params['*'] || undefined;
   const freeText = new URLSearchParams(search).get('topic') ?? undefined;
 
-  const ask = useMemo((): Ask | null => {
+  const asked = useMemo((): Ask | Refused | null => {
     if (topicRef) {
       const found = findTopic(topicRef);
       if (!found) return null;
@@ -102,10 +111,30 @@ export function LiveClassRoute() {
       };
     }
     if (freeText) {
-      return { topic: freeText, klass: settings.klass ?? 9, minutes: 2, subject: 'Science' };
+      // A child types this and it becomes the instruction a planner writes a
+      // whole class from — the widest unguarded input in the app. Screened
+      // like any other thing a student says.
+      const screened = fromStudent(freeText);
+      if (screened.text === null) return { refused: screened.say ?? '' };
+      return {
+        topic: screened.text,
+        klass: settings.klass ?? 9,
+        minutes: 2,
+        subject: 'Science',
+      };
     }
     return null;
   }, [topicRef, freeText, settings.klass]);
+
+  /**
+   * She declined, and that is a complete answer rather than a failure.
+   *
+   * Kept apart from `ask` so every path below it still sees an ordinary Ask
+   * or nothing at all — and apart from `error`, because a refusal is not
+   * something to offer a Try again for.
+   */
+  const refused = isRefused(asked) ? asked.refused : null;
+  const ask: Ask | null = refused === null ? (asked as Ask | null) : null;
 
   const [prep, setPrep] = useState<LivePrep | null>(null);
   const [progress, setProgress] = useState<PrepProgress | null>(null);
@@ -120,6 +149,7 @@ export function LiveClassRoute() {
   const tts = useLessonVoice(null, prep?.lesson ?? null, { enabled: preferences.voice });
 
   useEffect(() => {
+    if (refused !== null) return;
     if (!ask) {
       setError('There is no such topic.');
       return;
@@ -167,7 +197,28 @@ export function LiveClassRoute() {
     return () => {
       cancelled = true;
     };
-  }, [ask, navigate, attempt]);
+  }, [ask, refused, navigate, attempt]);
+
+  if (refused !== null) {
+    return (
+      <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
+        <div className="text-center flex flex-col items-center gap-4 max-w-[46ch]">
+          {/* Her face, not an error icon: this is the tutor answering, and
+              dressing it as a fault would tell a student they broke something. */}
+          <div className="w-16 h-16 rounded-full bg-primary-container grid place-items-center">
+            <Icon name="school" className="text-3xl text-on-primary-container" />
+          </div>
+          <p className="font-body-md text-body-md text-on-surface leading-7">{refused}</p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+          >
+            Pick a subject
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     // "There is no such topic" is the one failure another go cannot fix.
