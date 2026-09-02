@@ -1,5 +1,5 @@
 import type { Element, Lesson } from '@ai-tutor/lesson-format';
-import type { PrepReport } from './types';
+import type { PrepReport } from './types.ts';
 
 /**
  * THE FIRST LIVE CLASS ON A TOPIC, KEPT.

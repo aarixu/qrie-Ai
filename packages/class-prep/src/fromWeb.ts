@@ -6,7 +6,7 @@ import {
   type PictureBrief,
   type PictureResult,
   type VisionAdapter,
-} from './picture';
+} from './picture.ts';
 
 /**
  * TAKING A PICTURE INSTEAD OF MAKING ONE.

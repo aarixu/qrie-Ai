@@ -1,4 +1,4 @@
-import type { LlmAdapter } from './prepare';
+import type { LlmAdapter } from './prepare.ts';
 
 /**
  * CHOOSING THE RIGHT PICTURE, NOT THE FIRST ONE.

@@ -1,6 +1,6 @@
 import { CANVAS_H, CANVAS_W } from '@ai-tutor/lesson-format';
-import { unsafeMarkup } from './safety';
-import type { VisualBrief } from './types';
+import { unsafeMarkup } from './safety.ts';
+import type { VisualBrief } from './types.ts';
 
 /**
  * Is this SVG safe and correct enough to put on a child's board?

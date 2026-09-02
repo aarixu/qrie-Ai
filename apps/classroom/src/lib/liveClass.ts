@@ -1,6 +1,6 @@
 import type { Lesson } from "@ai-tutor/lesson-format";
 import { relayFetch } from './relay';
-import type { TopicOutcome, WebImageAdapter } from '@ai-tutor/class-prep';
+import { createCommonsSearch, type TopicOutcome, type WebImageAdapter } from '@ai-tutor/class-prep';
 import {
   drawMissingIcons,
   pickIcons,
@@ -167,6 +167,30 @@ export interface LivePrep {
  * what this path promises. A noun with no picture is a gap; a thrown error
  * here would be a class nobody gets to attend.
  */
+/**
+ * WHERE A PICTURE IS LOOKED FOR BEFORE ONE IS PAID FOR.
+ *
+ * Built once: it holds no state, and it needs no API key.
+ *
+ * Measured over sixteen real briefs before it was switched on. Six got a
+ * picture off Wikimedia Commons, which is a ₹5.75 generation saved better than
+ * a third of the time; the other ten cost two or three vision calls and a
+ * couple of seconds, then generated anyway.
+ *
+ * The refusals are what made it worth turning on. Nineteen of twenty-five were
+ * the verifier catching a picture of the WRONG THING — a urinary-system chart
+ * asked for a kidney, a dowsing pendulum asked for a physics one, an ovarian
+ * teratoma asked for a neuron. Six more were textbook plates with the labels
+ * already printed on them, which is exactly what the tutor writes herself. Not
+ * one wrong picture reached a board.
+ *
+ * Photographs pass and diagrams do not: minerals, apparatus, places and
+ * specimens are found; anatomy and microscopy on Commons are labelled plates
+ * and get refused. That is the right shape — a diagram was never this rung's
+ * job, it is the one the artist draws.
+ */
+const PICTURE_SEARCH = createCommonsSearch();
+
 export async function prepareLiveClass(
   ask: {
     topic: string;
@@ -197,7 +221,7 @@ export async function prepareLiveClass(
      * because a capability that reaches no call site is a capability the
      * shipped app does not have, however many tests the package has.
      */
-    web?: WebImageAdapter;
+    web?: WebImageAdapter | null;
   },
   onProgress: (progress: PrepProgress) => void,
   /**
@@ -224,7 +248,12 @@ export async function prepareLiveClass(
     artist: createBrowserLlm(ARTIST_MODEL),
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),
     eyes: createBrowserVision(VISION_MODEL),
-    ...(ask.web ? { web: ask.web } : {}),
+    // ON by default. The whole rung reaches no student unless something
+    // passes an adapter, and a default the caller must remember to supply is a
+    // feature that quietly stops existing the first time a call site is
+    // rewritten — which is exactly what a review found here. `web: null`
+    // turns it off deliberately, which is a different thing from forgetting.
+    ...(ask.web === null ? {} : { web: ask.web ?? PICTURE_SEARCH }),
     onProgress,
     ...(warm ? { onDraft: warm.onDraft, onAsset: () => warm.onArt() } : {}),
   });

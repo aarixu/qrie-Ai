@@ -1,4 +1,4 @@
-import type { WebCandidate, WebImageAdapter } from './fromWeb';
+import type { WebCandidate, WebImageAdapter } from './fromWeb.ts';
 
 /**
  * WIKIMEDIA COMMONS AS THE PLACE TO LOOK.

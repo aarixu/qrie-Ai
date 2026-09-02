@@ -1,5 +1,5 @@
 import { TUTOR } from '@ai-tutor/persona';
-import type { VisualBrief } from './types';
+import type { VisualBrief } from './types.ts';
 
 /**
  * The planner's system prompt.

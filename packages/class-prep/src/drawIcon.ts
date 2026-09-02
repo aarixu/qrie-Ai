@@ -1,5 +1,5 @@
-import type { LlmAdapter } from './prepare';
-import { unsafeMarkup } from './safety';
+import type { LlmAdapter } from './prepare.ts';
+import { unsafeMarkup } from './safety.ts';
 
 /**
  * DRAWING THE NOUN NOBODY HAS.

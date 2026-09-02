@@ -1,6 +1,6 @@
 import { layoutBeat, offsetElement, PAGE_STRIDE, type Instruction } from '@ai-tutor/board-layout';
-import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture';
-import { findOnTheWeb, type WebImageAdapter } from './fromWeb';
+import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture.ts';
+import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
   PART_SEPARATOR,
   validateLesson,
@@ -18,9 +18,9 @@ import {
   repairPlanUser,
   repairUser,
   type TopicOutcome,
-} from './prompts';
-import { verifySvg } from './verify';
-import { classMustAsk, saidButNotWritten } from './saidNotWritten';
+} from './prompts.ts';
+import { verifySvg } from './verify.ts';
+import { classMustAsk, saidButNotWritten } from './saidNotWritten.ts';
 import type {
   Blueprint,
   PrepProgress,
@@ -28,7 +28,7 @@ import type {
   PrepResult,
   VisualBrief,
   VisualOutcome,
-} from './types';
+} from './types.ts';
 
 /** The diagram arm of the element union, so `parts` is reachable without a cast. */
 type DiagramElement = Extract<Element, { kind: 'diagram' }>;
