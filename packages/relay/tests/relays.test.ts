@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CAP_MAX_TOKENS,
+  DEFAULT_SPEECH_VOICE,
   capMaxTokens,
   checkSavedClass,
   hearRelay,
@@ -68,10 +69,20 @@ describe('the speech relay', () => {
     expect(res.body.from.fallbackContentType).toBe('audio/mpeg');
   });
 
-  it('sends no voice at all rather than an empty one', () => {
+  it('always names a voice, because the provider now insists on one', () => {
+    // Measured against the live relay: OpenRouter answers aura-2 with no voice
+    // as 400, "An explicit voice is required for this TTS provider". The app
+    // always passes one, which is why nothing here ever showed it — the first
+    // caller to rely on the default would have found a 400 with no reason.
     const res = speechRelay(req({ url: '/api/speech?text=hi' }), KEY);
     if (res.body.kind !== 'stream') throw new Error('expected a stream');
-    expect(JSON.parse(res.body.from.body!)).not.toHaveProperty('voice');
+
+    expect(JSON.parse(res.body.from.body!).voice).toBe(DEFAULT_SPEECH_VOICE);
+  });
+
+  it('uses the same voice the classroom does', () => {
+    // The default and the app must be the same person, not two.
+    expect(DEFAULT_SPEECH_VOICE).toBe('aura-2-thalia-en');
   });
 });
 

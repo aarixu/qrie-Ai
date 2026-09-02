@@ -12,6 +12,7 @@ export {
   CAP_MAX_TOKENS,
   DEFAULT_HEAR_MODEL,
   DEFAULT_SPEECH_MODEL,
+  DEFAULT_SPEECH_VOICE,
   capMaxTokens,
   checkSavedClass,
   fail,

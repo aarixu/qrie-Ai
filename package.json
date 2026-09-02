@@ -22,7 +22,8 @@
     "relay:login": "supabase login",
     "relay:link": "supabase link --project-ref ueemqirxyrltdmqgnidy",
     "relay:secrets": "node tools/bin/relay-secrets.mjs",
-    "relay:deploy": "npm run relay:secrets && supabase db push && supabase functions deploy relay --no-verify-jwt"
+    "relay:deploy": "npm run relay:secrets && supabase db push && supabase functions deploy relay --no-verify-jwt",
+    "relay:verify": "node tools/bin/verify-deploy.mjs && node tools/bin/live-test.mjs"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.522",

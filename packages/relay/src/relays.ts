@@ -104,6 +104,19 @@ export function llmRelay(req: RelayRequest, key: string): RelayResponse {
 export const DEFAULT_SPEECH_MODEL = 'deepgram/aura-2';
 
 /**
+ * A DEFAULT MODEL NEEDS A DEFAULT VOICE.
+ *
+ * OpenRouter refuses aura-2 without one — "An explicit voice is required for
+ * this TTS provider" — so the relay's own default could not speak a word. The
+ * app always passes a voice, which is why nothing showed it; the first caller
+ * to rely on the default would have found a 400 and no reason for it.
+ *
+ * Thalia is the voice the classroom already uses, so the default and the app
+ * are the same person rather than two.
+ */
+export const DEFAULT_SPEECH_VOICE = 'aura-2-thalia-en';
+
+/**
  * Her voice. A GET so an <audio> element can point straight at it and start
  * playing on the first chunk — the whole reason a class does not pause
  * between sentences.
@@ -114,7 +127,9 @@ export function speechRelay(req: RelayRequest, key: string): RelayResponse {
   const text = asked.searchParams.get('text')?.trim();
   if (!text) return fail(400, 'nothing to say');
 
-  const voice = asked.searchParams.get('voice');
+  // Named, and never absent: an unnamed voice picks a new speaker per call —
+  // and this provider now refuses the request outright rather than choosing.
+  const voice = asked.searchParams.get('voice') ?? DEFAULT_SPEECH_VOICE;
   return {
     status: 200,
     headers: {},
@@ -127,9 +142,7 @@ export function speechRelay(req: RelayRequest, key: string): RelayResponse {
         body: JSON.stringify({
           model: asked.searchParams.get('model') ?? DEFAULT_SPEECH_MODEL,
           input: text,
-          // Named, and the same every line: an unnamed voice picks a new
-          // speaker per call, and every line of a class is its own call.
-          ...(voice ? { voice } : {}),
+          voice,
           // mp3, because an audio element plays it straight from the wire at
           // a tenth of the bytes of raw PCM.
           response_format: 'mp3',
