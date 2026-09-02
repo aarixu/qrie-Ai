@@ -333,6 +333,20 @@ export function assemble(
       canvas: { w: Math.max(1000, (page - 1) * PAGE_STRIDE + 1000), h: 620 },
       elements,
       beats,
+      /**
+       * The personal half, carried through but never merged in.
+       *
+       * A line whose beat did not survive layout is dropped rather than kept
+       * pointing at nothing: validation rejects that, and a greeting for a
+       * beat nobody will reach is a greeting nobody will hear.
+       */
+      ...(blueprint.fill && blueprint.fill.length > 0
+        ? {
+            fill: blueprint.fill.filter((line) =>
+              beats.some((b) => b.id === line.beatId),
+            ),
+          }
+        : {}),
     },
     dropped,
     /** A later copy's element id, to the artwork it shares. */

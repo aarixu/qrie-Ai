@@ -5,6 +5,7 @@ export type {
   ElementKind,
   ImagePart,
   Beat,
+  Fill,
   Lesson,
 } from './types';
 export { CANVAS_W, CANVAS_H, PAGE_STRIDE } from './types';

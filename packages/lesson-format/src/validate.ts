@@ -357,6 +357,33 @@ export function validateLesson(json: unknown): ValidationResult {
     });
   }
 
+  /**
+   * The live fill, if there is one.
+   *
+   * Optional, and absent is the ordinary case: a cached class replayed by
+   * somebody it was not made for has none, which is correct. What is NOT
+   * allowed is a line pointing at a beat that does not exist — that is a
+   * personal greeting that would never be spoken, and silently.
+   */
+  if (json.fill !== undefined) {
+    if (!Array.isArray(json.fill)) {
+      errors.push('fill must be an array of { beatId, say }');
+    } else {
+      json.fill.forEach((line, i) => {
+        const path = `fill[${i}]`;
+        if (!isObj(line)) {
+          errors.push(`${path}: must be an object`);
+          return;
+        }
+        if (!isStr(line.beatId)) errors.push(`${path}: needs a beatId`);
+        else if (!beatIds.has(line.beatId)) {
+          errors.push(`${path}: no beat "${line.beatId}" to open`);
+        }
+        if (!isStr(line.say)) errors.push(`${path}: needs something to say`);
+      });
+    }
+  }
+
   if (errors.length > 0) return { ok: false, errors };
   return { ok: true, lesson: json as unknown as Lesson };
 }

@@ -65,7 +65,13 @@ export function usePlayer(lesson: Lesson, tts: TtsAdapter): UsePlayerResult {
     state,
     beatIndex,
     beat,
-    caption: beat?.narration ?? '',
+    // The caption shows what she is actually saying, fill included: a student
+    // reading along must not see the sentence after the one they can hear.
+    caption: beat
+      ? [lesson.fill?.find((line) => line.beatId === beat.id)?.say, beat.narration]
+          .filter(Boolean)
+          .join(' ')
+      : '',
     pendingAsk,
     answer: (i: number) => controller.answer(i),
     play: () => controller.play(),

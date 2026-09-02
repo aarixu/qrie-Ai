@@ -48,6 +48,14 @@ export interface SaveMeta {
   klass: number;
   subject: string;
   subtitle?: string;
+  /**
+   * Names the planner was told about, so a class that used one is not kept.
+   *
+   * The caller knows these because it is the caller who wrote the student
+   * notes. Empty means an anonymous class, which is the shape most classes
+   * have and is always safe to keep.
+   */
+  studentNames?: readonly string[];
 }
 
 /** Every element that cannot be drawn without artwork handed in. */
@@ -78,12 +86,61 @@ const DATA_URL = /^data:image\/([a-z]+);base64,(.+)$/;
 /** `.jpg`, because that is what the file is called everywhere else. */
 const extensionFor = (subtype: string): string => (subtype === 'jpeg' ? 'jpg' : subtype);
 
+/**
+ * A NAME IN THE SPINE IS A NAME EVERY LATER STUDENT HEARS.
+ *
+ * The planner is told, in so many words, to "use the name naturally — a
+ * greeting, a question addressed to them". That is right for the student it
+ * is planning for and wrong for the class that gets kept: this file used to
+ * write the result straight to disk, so a lesson made for Aarav opened with
+ * "Good morning Aarav" for everybody who came after.
+ *
+ * The prompt already carries a rule about this and a rule is not a mechanism.
+ * This is the mechanism, and it is deliberately a REFUSAL rather than a
+ * rewrite: editing somebody's teaching to take a word out produces a sentence
+ * nobody wrote, and the honest answer to "this class is personal" is that it
+ * is not the one to keep.
+ *
+ * Matched on word boundaries and case-insensitively, so "Aarav" catches
+ * "aarav," and "Aarav's" and misses "Aaravian" — and a name that is also an
+ * ordinary word ("Riya" is not, "Sky" might be) is the reason this only ever
+ * looks at names the caller actually knows.
+ */
+export function namesInSpine(lesson: Lesson, names: readonly string[]): string[] {
+  const spine = [
+    lesson.title,
+    lesson.subtitle ?? '',
+    ...lesson.beats.map((b) => `${b.narration} ${b.topic}`),
+    ...lesson.elements.map((el) => JSON.stringify(el)),
+  ].join(' ');
+
+  const found: string[] = [];
+  for (const name of names) {
+    const clean = name.trim();
+    if (clean.length < 2) continue;
+    const pattern = new RegExp(`\\b${clean.replace(/[.*+?^${}()|[\]\\]/g, '\\export function saveable(')}\\b`, 'i');
+    if (pattern.test(spine)) found.push(clean);
+  }
+  return found;
+}
+
 export function saveable(
   prep: { lesson: Lesson; assets: Record<string, string>; report: PrepReport },
   meta: SaveMeta,
 ): SavedClass | null {
   const { topicRef } = meta;
   if (!topicRef) return null;
+
+  /**
+   * A class planned FOR somebody is not a class to keep.
+   *
+   * The caller passes the names it put in front of the planner. If any of
+   * them survived into the teaching, this class belongs to that student and
+   * to nobody else — and the next one deserves their own opening rather than
+   * an inherited greeting.
+   */
+  const personal = namesInSpine(prep.lesson, meta.studentNames ?? []);
+  if (personal.length > 0) return null;
   // A picture that never drew was already reported. Its beat may have been
   // dropped, but the class is one demonstration short of the one that was
   // planned, and that is not the one to keep forever.
@@ -110,6 +167,10 @@ export function saveable(
   // never heard of. The content lint checks this on every saved class.
   doc.id = id;
   doc.topicRef = topicRef;
+  // THE FILL IS NEVER KEPT. It is one student's lines — a greeting by name, a
+  // callback to what they got wrong on Tuesday — and the next student gets
+  // their own or none at all, never these.
+  delete (doc as { fill?: unknown }).fill;
 
   for (const el of doc.elements) {
     const asset = prep.assets[el.id];

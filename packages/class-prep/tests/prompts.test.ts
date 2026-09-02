@@ -199,7 +199,18 @@ describe('the planner is told who is sitting in the class', () => {
   it('says how to use them: teach to it, never recite it', () => {
     const p = plannerUser('The Human Heart', 9, 3, ['Her name is Ananya.']);
     expect(p).toMatch(/never (recite|read) (this|the) (list|dossier)/i);
-    expect(p).toMatch(/name naturally|use the name/i);
+  });
+
+  it('sends the name to the fill and keeps it out of the narration', () => {
+    // The split decided 2026-08-29. The narration is a SPINE — written once,
+    // replayed for everyone — so a name in it is a name every later student
+    // hears. Choosing what to TEACH from the notes leaves no trace of the
+    // student in the words; saying their name does.
+    const p = plannerUser('The Human Heart', 9, 3, ['Her name is Ananya.']);
+
+    expect(p).toMatch(/go in "fill"/i);
+    expect(p).toMatch(/never in a beat's narration/i);
+    expect(p).toMatch(/kept and replayed/i);
   });
 
   it('adds not a word about students when nothing is known', () => {

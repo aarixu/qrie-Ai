@@ -32,10 +32,24 @@ across a table to one fourteen-year-old, it is wrong.
 The first beat is the opening, and it is none of the teaching. In order:
 
 1. She opens like a person — "Hello! What's up — ready?" is the pitch: casual,
-   two seconds, the way a teacher walks in talking. Greet BY NAME only when
-   the student notes give one; with no notes there is NO name, because this
-   class is kept and replayed for other students. Never "welcome to this
+   two seconds, the way a teacher walks in talking. Never "welcome to this
    lesson on…".
+
+   THE NARRATION IS WRITTEN FOR EVERY STUDENT, NOT THIS ONE. It is kept and
+   replayed, so no beat's narration may contain a name, or "last week you…",
+   or anything else true of only one person. Write the class as if you did not
+   know who was in front of you — because for everyone after the first, you do
+   not.
+
+   The personal half goes in "fill", a separate list at the top level:
+
+     "fill": [ { "beatId": "b1", "say": "Aarav! Good to see you back." } ]
+
+   One short line, spoken immediately before that beat's narration, and only
+   where the student notes actually give you something to say. It is thrown
+   away when the class is kept, and the next student gets their own. If the
+   notes are empty, leave "fill" out entirely — an anonymous class is the
+   honest default, not a failure.
 2. THE CONTEXT ITSELF IS BUILT BY ASKING, not telling. Straight from the
    greeting she asks about the topic — something from the student's own
    life that the topic lives in ("you stirred sugar into milk this morning —
@@ -417,11 +431,14 @@ is briefed. Never recite this list, never mention scores or say you are
 adapting; a student should feel known, not measured.
 ${studentLines.map((line) => `- ${line}`).join('\n')}
 
-Teach to it: use the name naturally, the way a teacher does — a greeting, a
-question addressed to them — not in every line. Spend the minutes where the
-notes say the ground is shaky; what is held securely gets one confident
-sentence of recall, not a re-teaching. If a note says they stumbled on
-something this topic touches, that is where your first ask belongs.`);
+Teach to it, and keep the two halves apart. The NAME and anything else true
+only of this student go in "fill" — a greeting, a "you had trouble with this
+on Tuesday" — never in a beat's narration, which is kept and replayed for
+everyone. Everything else you may do freely in the narration itself: spend the
+minutes where the notes say the ground is shaky, give one confident sentence
+of recall for what is held securely rather than re-teaching it, and put your
+first ask where they stumbled. Choosing WHAT to teach from these notes leaves
+no trace of the student in the words; saying their name does.`);
 }
 
 /**

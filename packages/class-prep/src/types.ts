@@ -42,6 +42,18 @@ export interface VisualBrief {
  * What the planner produces: a lesson with the pictures described rather than
  * drawn. The artwork is generated from `visuals` afterwards, in parallel.
  */
+/**
+ * One line for the one student this class is being planned for.
+ *
+ * Kept apart from the beats on purpose — see Lesson.fill. The narration is a
+ * SPINE, written once and replayed for everyone; this is the half that is
+ * thrown away when the class is kept.
+ */
+export interface PlannedFill {
+  beatId: string;
+  say: string;
+}
+
 export interface Blueprint {
   id: string;
   title: string;
@@ -56,6 +68,8 @@ export interface Blueprint {
    * merely invalid.
    */
   beats: ScriptBeat[];
+  /** Personal lines, if the planner was given anything about a student. */
+  fill?: PlannedFill[];
   visuals: VisualBrief[];
 }
 

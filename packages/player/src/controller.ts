@@ -151,7 +151,25 @@ export class PlayerController {
       }
       gate();
     };
-    this.tts.speak(beat.narration).then(onSpeechDone, onSpeechDone);
+    /**
+     * HER LINE FOR THIS STUDENT, THEN THE LESSON'S OWN.
+     *
+     * A recording is a SPINE: the narration is written once and replayed for
+     * everyone. What belongs to ONE student — the greeting by name, the
+     * callback to the thing they got wrong on Tuesday — lives in `fill` and
+     * is spoken in front of it. A cached class replayed by somebody else
+     * simply has none, and starts on the narration, which is the honest shape:
+     * a class that has not met you yet rather than one wearing somebody else's
+     * greeting.
+     *
+     * Spoken as one utterance rather than two calls: two would put the voice's
+     * time-to-first-byte between the greeting and the first sentence, which is
+     * a tutor pausing for no reason in the middle of saying hello.
+     */
+    const mine = this.lesson.fill?.find((line) => line.beatId === beat.id)?.say?.trim();
+    this.tts
+      .speak(mine ? `${mine} ${beat.narration}` : beat.narration)
+      .then(onSpeechDone, onSpeechDone);
 
     /**
      * And the line after it, started now.

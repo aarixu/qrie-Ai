@@ -64,12 +64,16 @@ interface Ask {
  * Whether a later student gets this class for free is a bonus on top of that,
  * not a condition of it.
  */
-async function keep(made: LivePrep, ask: Ask): Promise<void> {
+async function keep(made: LivePrep, ask: Ask, names: readonly string[]): Promise<void> {
   const saved = saveable(made, {
     topicRef: ask.topicRef,
     klass: ask.klass,
     subject: ask.subject,
     ...(ask.subtitle ? { subtitle: ask.subtitle } : {}),
+    // What the planner was told, so a class that used it is not kept for
+    // somebody else. The name is the one that actually leaks; the rest of the
+    // notes are outcomes and scores, which the planner is forbidden to recite.
+    studentNames: names,
   });
   if (!saved) return;
   try {
@@ -239,7 +243,11 @@ export function LiveClassRoute() {
         },
       );
       if (cancelled) return;
-      void keep(made, ask);
+      // The one thing in the notes that can leak into a kept class. Read from
+      // the profile rather than parsed back out of the lines, because a name
+      // is a fact the app holds and the lines are prose.
+      const named = profileStore.get().name;
+      void keep(made, ask, named ? [named] : []);
     })().catch((e: unknown) => {
       if (!cancelled) setError(e instanceof Error ? e.message : String(e));
     });

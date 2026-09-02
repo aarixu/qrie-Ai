@@ -339,6 +339,18 @@ export interface Beat {
   frame?: string[];
 }
 
+/**
+ * ONE LINE THAT BELONGS TO ONE STUDENT.
+ *
+ * Spoken before its beat's narration, and never written down. See `Lesson.fill`.
+ */
+export interface Fill {
+  /** The beat it opens. */
+  beatId: string;
+  /** What she says. Already in her voice, ready to speak. */
+  say: string;
+}
+
 export interface Lesson {
   formatVersion: 1;
   id: string;
@@ -351,7 +363,33 @@ export interface Lesson {
   /** Fixed canvas coordinate space. Always 1000x620 in format v1. */
   canvas: { w: number; h: number };
   elements: Element[];
+  /**
+   * THE SPINE. What every student gets, and the only part that is kept.
+   *
+   * Nothing in here may name a student, refer to what one of them answered
+   * last week, or greet anybody. A beat's narration is written once and
+   * replayed for everyone, so a sentence about Aarav is a sentence Priya
+   * hears — which is both wrong and a privacy leak, and it is exactly what
+   * was happening: the planner is told to "use the name naturally" and
+   * saveable() kept the result verbatim.
+   */
   beats: Beat[];
+  /**
+   * THE LIVE FILL. What THIS student gets, and the part that is never kept.
+   *
+   * Decided 2026-08-29: the recording is a SPINE, not a session. Narration and
+   * canvas actions are cached; the personal parts are made per student and
+   * layered on top. The greeting by name, the callback to the thing they got
+   * wrong on Tuesday, the "you said last time that…" — all of it lives here,
+   * keyed by the beat it opens.
+   *
+   * saveable() strips this field and refuses any lesson whose SPINE still
+   * carries a student's name. A cached class replayed by somebody else has no
+   * fill at all until one is made for them, which is the honest shape: the
+   * absence of a personal line is a class that has not met you yet, not a
+   * class wearing somebody else's greeting.
+   */
+  fill?: Fill[];
 }
 
 export const CANVAS_W = 1000;
