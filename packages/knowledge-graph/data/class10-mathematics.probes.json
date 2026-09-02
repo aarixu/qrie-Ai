@@ -1,0 +1,1733 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class10-mathematics-real-numbers-classify-rational-form",
+      "nodeId": "class10-mathematics-real-numbers-classify-rational-form",
+      "question": "Which of the following numbers can be written in the form p/q, where p and q are integers and q ≠ 0?",
+      "options": [
+        "0.35",
+        "√7",
+        "π",
+        "√11"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks square roots of primes can be written as simple fractions",
+        "thinks pi is an exact fraction like 22/7",
+        "confuses non-perfect square roots with rational numbers"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-define-irrational-numbers",
+      "nodeId": "class10-mathematics-real-numbers-define-irrational-numbers",
+      "question": "What is the mathematical definition of an irrational number?",
+      "options": [
+        "A number that has only two factors, 1 and itself",
+        "A number that can be expressed as a ratio of two integers where the denominator is not zero",
+        "Any negative number that cannot be simplified to a whole number",
+        "A real number that cannot be written in the form p/q, where p and q are integers and q ≠ 0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses irrational numbers with prime numbers",
+        "confuses irrational numbers with rational numbers",
+        "thinks irrationality is a property of negative numbers",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-classify-terminating-decimal",
+      "nodeId": "class10-mathematics-real-numbers-classify-terminating-decimal",
+      "question": "How is the decimal expansion 0.375 classified?",
+      "options": [
+        "Non-terminating repeating decimal",
+        "Terminating decimal",
+        "Non-terminating non-repeating decimal",
+        "Recurring decimal"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks all fraction-derived decimals repeat endlessly",
+        "",
+        "confuses finite decimals with irrational non-repeating decimals",
+        "confuses terminating decimals with recurring decimals"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-classify-non-terminating-repeating",
+      "nodeId": "class10-mathematics-real-numbers-classify-non-terminating-repeating",
+      "question": "Which term correctly describes the decimal expansion 0.454545...?",
+      "options": [
+        "Terminating decimal",
+        "Non-terminating repeating decimal",
+        "Non-terminating non-repeating decimal",
+        "Terminating non-repeating decimal"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the decimal ends because it has a repeating two-digit pattern",
+        "",
+        "misses the repeating periodic pattern and thinks it is non-repeating",
+        "creates a contradictory category mixing terminating with non-repeating"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-relate-decimal-to-rationality",
+      "nodeId": "class10-mathematics-real-numbers-relate-decimal-to-rationality",
+      "question": "What type of number has a decimal expansion that is non-terminating and non-repeating?",
+      "options": [
+        "Irrational number",
+        "Rational number",
+        "Integer",
+        "Natural number"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks all decimals represent rational numbers",
+        "confuses real decimal expansions with integers",
+        "confuses infinite decimals with counting numbers"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prime-vs-composite",
+      "nodeId": "class10-mathematics-real-numbers-prime-vs-composite",
+      "question": "Why is 17 classified as a prime number while 21 is classified as a composite number?",
+      "options": [
+        "17 is an odd number, whereas 21 is an even number",
+        "17 cannot be divided by 2, whereas 21 can be divided by 2",
+        "17 has exactly two distinct factors (1 and 17), whereas 21 has more than two factors",
+        "17 is less than 20, whereas 21 is greater than 20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses prime/composite with odd/even classification",
+        "thinks primality means indivisibility by 2",
+        "",
+        "judges prime status based on the size of the number"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-factor-tree-method",
+      "nodeId": "class10-mathematics-real-numbers-factor-tree-method",
+      "question": "In a factor tree for 60, the top node splits into 2 and 30. If 30 splits into 2 and x, and x splits into 3 and 5, what is the value of x?",
+      "options": [
+        "8",
+        "10",
+        "6",
+        "15"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds 3 and 5 instead of multiplying them to find parent node x",
+        "thinks 30 divided by 2 is 10 or adds the factors 2, 3, and 5",
+        "multiplies 2 and 3 instead of taking the other branch of 30",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-express-prime-factorisation",
+      "nodeId": "class10-mathematics-real-numbers-express-prime-factorisation",
+      "question": "What is the prime factorisation of 72 written in exponential form?",
+      "options": [
+        "2^3 × 3^2",
+        "8 × 9",
+        "2^4 × 3^1",
+        "2^2 × 3^3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "leaves base numbers as composite instead of breaking into primes",
+        "makes an arithmetic error in counting the powers of 2 (16 × 3 = 48)",
+        "swaps the exponents of 2 and 3"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-state-fta",
+      "nodeId": "class10-mathematics-real-numbers-state-fta",
+      "question": "According to the Fundamental Theorem of Arithmetic, every composite number can be factored into primes:",
+      "options": [
+        "in infinitely many different ways using different prime numbers",
+        "only if the composite number is an even integer",
+        "in only one way, apart from the order in which the prime factors occur",
+        "such that all the prime factors must be distinct"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes a number can have different sets of prime factors",
+        "thinks the theorem applies only to even composite numbers",
+        "",
+        "thinks composite numbers cannot have repeated prime factors"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-end-in-zero-condition",
+      "nodeId": "class10-mathematics-real-numbers-end-in-zero-condition",
+      "question": "Why can the number 6^n never end with the digit 0 for any natural number n?",
+      "options": [
+        "Because 6 is not a multiple of 10",
+        "Because 6 is an even number",
+        "Because the prime factorisation of 6^n contains 2 and 3, but not the prime factor 5",
+        "Because 6^n is always an odd number"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "gives a circular restatement rather than identifying the missing prime factor 5",
+        "thinks even numbers cannot end in 0",
+        "",
+        "incorrectly believes powers of 6 produce odd values"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-composite-explanation",
+      "nodeId": "class10-mathematics-real-numbers-composite-explanation",
+      "question": "Why is the expression (7 × 11 × 13 + 13) a composite number?",
+      "options": [
+        "It ends in the odd digit 3",
+        "It contains only prime numbers in its expression",
+        "It is the sum of three consecutive prime numbers",
+        "It can be rewritten as 13 × (7 × 11 + 1), showing it has 13 as a factor other than 1 and itself"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "focuses on the last digit rather than factorisation",
+        "believes that any combination of prime numbers automatically makes a composite number",
+        "confuses a product and sum expression with a simple sequence of primes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+      "nodeId": "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+      "question": "If A = 2^3 × 3^2 × 5 and B = 2^2 × 3^3 × 7, what is the HCF of A and B?",
+      "options": [
+        "2^3 × 3^3 × 5 × 7",
+        "2^3 × 3^3",
+        "2^2 × 3^2",
+        "2 × 3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "computes the LCM instead of the HCF by taking the highest powers of all factors",
+        "takes the greatest powers of common factors instead of the smallest powers",
+        "",
+        "takes only the base prime factors without considering the powers"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-calculate-lcm-prime-factors",
+      "nodeId": "class10-mathematics-real-numbers-calculate-lcm-prime-factors",
+      "question": "If p = 2^3 × 3^2 and q = 2^2 × 3^1 × 5, what is the LCM of p and q?",
+      "options": [
+        "2^3 × 3^2 × 5",
+        "2^3 × 3^2",
+        "2^5 × 3^3 × 5",
+        "2^2 × 3^1"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "omits the factor 5 because it is not common to both numbers",
+        "adds the exponents of common bases instead of taking the maximum power",
+        "calculates the HCF instead of the LCM"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-hcf-lcm-three-numbers",
+      "nodeId": "class10-mathematics-real-numbers-hcf-lcm-three-numbers",
+      "question": "What are the HCF and LCM of 12, 15, and 21?",
+      "options": [
+        "HCF = 6, LCM = 210",
+        "HCF = 1, LCM = 420",
+        "HCF = 3, LCM = 3780",
+        "HCF = 3, LCM = 420"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "chooses an incorrect common divisor not dividing 15 or 21",
+        "thinks the three numbers have no common factor because 12 and 21 share 3 while 15 is separate",
+        "calculates LCM by directly multiplying 12 × 15 × 21 without removing common factors",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-verify-hcf-lcm-product-relation",
+      "nodeId": "class10-mathematics-real-numbers-verify-hcf-lcm-product-relation",
+      "question": "For two positive integers a and b, which equation correctly expresses the relationship between their HCF and LCM?",
+      "options": [
+        "HCF(a, b) × LCM(a, b) = a × b",
+        "HCF(a, b) + LCM(a, b) = a + b",
+        "HCF(a, b) / LCM(a, b) = a / b",
+        "HCF(a, b) × a = LCM(a, b) × b"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes additive relationships apply identically to multiplicative properties",
+        "assumes a direct ratio equality between HCF/LCM and the numbers",
+        "cross-matches one number with HCF and the other with LCM"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-solve-for-unknown-using-relation",
+      "nodeId": "class10-mathematics-real-numbers-solve-for-unknown-using-relation",
+      "question": "The HCF of two numbers is 9 and their LCM is 360. If one number is 45, what is the other number?",
+      "options": [
+        "40",
+        "80",
+        "72",
+        "18"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "divides LCM by 9 instead of multiplying HCF and LCM before dividing by 45",
+        "divides 360 by 45 and multiplies by 10 instead of 9",
+        "",
+        "subtracts 45 from (9 + 360) or makes an arithmetic error in division"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-word-problems-hcf-lcm",
+      "nodeId": "class10-mathematics-real-numbers-word-problems-hcf-lcm",
+      "question": "Two runners start running around a circular track at the same time. Runner A completes a lap in 12 minutes, and Runner B in 18 minutes. After how many minutes will they first meet again at the starting point?",
+      "options": [
+        "6 minutes",
+        "30 minutes",
+        "216 minutes",
+        "36 minutes"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates the HCF instead of the LCM for repeating cycle problems",
+        "adds the two lap times together",
+        "multiplies the two numbers directly without computing their lowest common multiple",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prime-divides-square-theorem",
+      "nodeId": "class10-mathematics-real-numbers-prime-divides-square-theorem",
+      "question": "Let p be a prime number and a be a positive integer. If p divides a^2, which of the following statements must be true?",
+      "options": [
+        "p must be equal to a",
+        "a must divide p",
+        "p divides a",
+        "p^2 divides a"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes a prime dividing a square must equal the base number",
+        "reverses the direction of divisibility",
+        "",
+        "assumes p^2 divides a when only p divides a"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-define-coprime",
+      "nodeId": "class10-mathematics-real-numbers-define-coprime",
+      "question": "Which of the following pairs of numbers is co-prime?",
+      "options": [
+        "(14, 21)",
+        "(8, 15)",
+        "(9, 27)",
+        "(12, 18)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "fails to see common factor 7 in 14 and 21",
+        "",
+        "confuses co-prime with multiples sharing common factor 9",
+        "overlooks common factors 2, 3, and 6"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prove-root2-irrational",
+      "nodeId": "class10-mathematics-real-numbers-prove-root2-irrational",
+      "question": "In the standard proof that √2 is irrational, we assume √2 = a/b where a and b are co-prime integers. What contradiction arises during this proof?",
+      "options": [
+        "The fraction a/b becomes equal to 0",
+        "Both a and b turn out to have 2 as a common factor",
+        "The number a becomes odd while b becomes even",
+        "The denominator b is proved to be 0"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the contradiction is reaching a value of zero",
+        "",
+        "thinks the contradiction lies in parity mismatch rather than violating co-primality",
+        "thinks division by zero occurs in the proof steps"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prove-root3-root5-irrational",
+      "nodeId": "class10-mathematics-real-numbers-prove-root3-root5-irrational",
+      "question": "When proving that √5 is irrational by contradiction assuming √5 = a/b (where a and b are co-prime), which relation leads to 5 dividing a?",
+      "options": [
+        "5b = a",
+        "a^2 = 5b^2",
+        "a^2 = 25b^2",
+        "a + b = 5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets to square both sides of the equation",
+        "",
+        "squares the factor 5 twice incorrectly",
+        "confuses algebraic squaring with linear addition"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prove-linear-irrational-combination",
+      "nodeId": "class10-mathematics-real-numbers-prove-linear-irrational-combination",
+      "question": "To prove that 3 + 2√5 is irrational (given that √5 is irrational), we assume 3 + 2√5 = r, where r is rational. Rearranging gives √5 = (r - 3)/2. Why does this create a contradiction?",
+      "options": [
+        "(r - 3)/2 is irrational, contradicting that √5 is irrational",
+        "The expression r - 3 must be equal to zero",
+        "The denominator 2 is an even number",
+        "(r - 3)/2 is rational, which contradicts the known fact that √5 is irrational"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses which side of the rearranged equation is known to be rational",
+        "assumes r must equal 3 in this contradiction argument",
+        "thinks an even denominator causes a mathematical impossibility",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-prove-product-quotient-irrational",
+      "nodeId": "class10-mathematics-real-numbers-prove-product-quotient-irrational",
+      "question": "Given that √3 is irrational, how do we show that 5√3 is irrational?",
+      "options": [
+        "Assume 5√3 = p/q is rational; then √3 = p/(5q), which makes an irrational equal to a rational",
+        "Multiply 5√3 by √3 to get 15, which is rational",
+        "Show that 5 and 3 are both prime numbers",
+        "Show that the decimal expansion of 5 terminates"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks multiplying by √3 proves the original expression is irrational",
+        "believes prime factors alone constitute a proof of irrationality for products",
+        "focuses on the decimal form of the rational multiplier 5 instead of the contradiction"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-real-numbers-classify-combined-real-expressions",
+      "nodeId": "class10-mathematics-real-numbers-classify-combined-real-expressions",
+      "question": "Which of the following expressions evaluates to a rational number?",
+      "options": [
+        "3 + √2",
+        "(2 + √3) + (2 - √3)",
+        "4 × √7",
+        "√5 - 2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks adding a rational to an irrational results in a rational number",
+        "",
+        "thinks multiplying a rational by an irrational results in a rational number",
+        "thinks subtracting a rational from an irrational removes irrationality"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-identify-polynomial-expression",
+      "nodeId": "class10-mathematics-polynomials-identify-polynomial-expression",
+      "question": "Which of the following expressions is a polynomial?",
+      "options": [
+        "3x^2 + 2/x + 5",
+        "4x^3 - 5√x + 1",
+        "2x^3 - 3x + √7",
+        "x^2 + x^(-1) - 4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks variable in the denominator is allowed because the exponent in the numerator looks like an integer",
+        "confuses fractional exponents on the variable with square roots on constants",
+        "",
+        "believes negative exponents are permitted in polynomial expressions"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-determine-degree",
+      "nodeId": "class10-mathematics-polynomials-determine-degree",
+      "question": "What is the degree of the polynomial p(x) = 4 - 3x^2 + 7x^5 - 2x^3?",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "takes the exponent of the first term with a variable instead of the highest exponent",
+        "assumes the terms are ordered and picks the last exponent",
+        "",
+        "confuses the coefficient of the leading term with the degree"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-classify-by-degree",
+      "nodeId": "class10-mathematics-polynomials-classify-by-degree",
+      "question": "How is the polynomial p(x) = 5 - 2x^3 classified based on its degree?",
+      "options": [
+        "Linear polynomial",
+        "Quadratic polynomial",
+        "Cubic polynomial",
+        "Constant polynomial"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses degree with the number of terms and thinks 2 terms means linear",
+        "confuses degree 3 with degree 2",
+        "",
+        "looks only at the leading constant term 5 and ignores the variable term"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-identify-standard-form-coefficients",
+      "nodeId": "class10-mathematics-polynomials-identify-standard-form-coefficients",
+      "question": "What are the values of a, b, and c for the quadratic polynomial 5 - 3x - 2x^2 in standard form ax^2 + bx + c?",
+      "options": [
+        "a = -2, b = -3, c = 5",
+        "a = 5, b = -3, c = -2",
+        "a = 2, b = 3, c = 5",
+        "a = -2, b = 3, c = -5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reads coefficients in the written order from left to right instead of by powers of x",
+        "ignores negative signs attached to coefficients",
+        "flips the signs of b and c arbitrarily"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-evaluate-at-given-value",
+      "nodeId": "class10-mathematics-polynomials-evaluate-at-given-value",
+      "question": "If p(x) = 2x^2 - 3x + 4, what is the value of p(-2)?",
+      "options": [
+        "18",
+        "10",
+        "6",
+        "-10"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "treats -3(-2) as -6 instead of +6, getting 8 - 6 + 4 = 6, or miscalculates 8 - 6 + 4",
+        "computes (-2)^2 as -4, giving 2(-4) - 3(-2) + 4 = -8 + 6 + 4 = 2 or similar sign error",
+        "makes sign errors across all terms resulting in negative output"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-define-zero-of-polynomial",
+      "nodeId": "class10-mathematics-polynomials-define-zero-of-polynomial",
+      "question": "What does it mean if a real number k is a zero of a polynomial p(x)?",
+      "options": [
+        "The value of p(0) is equal to k.",
+        "The value of p(k) is equal to 0.",
+        "The degree of p(x) is equal to 0.",
+        "The constant term of p(x) is equal to k."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses evaluating at 0 with the output being 0 (swaps input and output)",
+        "",
+        "confuses a zero of a polynomial with a zero-degree polynomial",
+        "thinks the zero corresponds to the y-intercept or constant term"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-verify-zero-algebraically",
+      "nodeId": "class10-mathematics-polynomials-verify-zero-algebraically",
+      "question": "Which of the following numbers is a zero of the polynomial p(x) = x^2 - 2x - 8?",
+      "options": [
+        "2",
+        "-2",
+        "4",
+        "-4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "substitutes 2 and makes a sign error: 4 - 4 - 8 = -8 but miscalculates it as 0",
+        "",
+        "identifies 4 as a zero but fails to see both -2 and 4 are zeroes, or picks the sign of the factors (x-4)(x+2) inverted",
+        "reverses the sign of the true positive root 4 and thinks -4 is a zero"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-relate-linear-zero-to-x-intercept",
+      "nodeId": "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept",
+      "question": "The graph of the linear equation y = 2x - 6 intersects the x-axis at (3, 0). What is the zero of the polynomial 2x - 6?",
+      "options": [
+        "3",
+        "0",
+        "-6",
+        "-3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "picks the y-coordinate of the x-intercept instead of the x-coordinate",
+        "confuses the zero of the polynomial with the y-intercept",
+        "inverts the sign of the x-intercept"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-identify-parabola-shape",
+      "nodeId": "class10-mathematics-polynomials-identify-parabola-shape",
+      "question": "Does the graph of y = -3x^2 + 4x - 1 open upwards or downwards, and why?",
+      "options": [
+        "Downwards, because the coefficient of x^2 is negative.",
+        "Upwards, because the constant term is negative.",
+        "Downwards, because the linear coefficient is positive.",
+        "Upwards, because the coefficient of x^2 is negative."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "determines graph orientation from the sign of the constant term",
+        "determines graph orientation from the sign of the linear coefficient",
+        "thinks negative leading coefficient causes the parabola to open upwards"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-read-zeroes-from-graph",
+      "nodeId": "class10-mathematics-polynomials-read-zeroes-from-graph",
+      "question": "The graph of y = p(x) intersects the x-axis at (-2, 0) and (5, 0), and the y-axis at (0, -10). What are the zeroes of p(x)?",
+      "options": [
+        "-2 and 5",
+        "0 and -10",
+        "-10 only",
+        "2 and -5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses y-axis intersection coordinates with the zeroes of the polynomial",
+        "thinks the y-intercept is the sole zero of the polynomial",
+        "changes the signs of the x-coordinates of the intersection points"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-count-zeroes-from-graph",
+      "nodeId": "class10-mathematics-polynomials-count-zeroes-from-graph",
+      "question": "A curve y = p(x) intersects the x-axis at 3 distinct points and touches the y-axis at 1 point. How many real zeroes does p(x) have?",
+      "options": [
+        "4",
+        "3",
+        "1",
+        "2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the number of y-axis intersections to the number of x-axis intersections",
+        "",
+        "counts only the y-axis intersection point",
+        "assumes any curved graph must be a quadratic with exactly 2 zeroes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-bound-zeroes-by-degree",
+      "nodeId": "class10-mathematics-polynomials-bound-zeroes-by-degree",
+      "question": "What is the maximum number of distinct real zeroes that a polynomial of degree 4 can have?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "Infinite"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the maximum number of zeroes is degree minus 1 (n - 1)",
+        "",
+        "confuses the maximum number of terms with the maximum number of zeroes (n + 1)",
+        "believes a polynomial can have infinitely many zeroes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+      "nodeId": "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+      "question": "What are the zeroes of the quadratic polynomial p(x) = x^2 - 5x + 6?",
+      "options": [
+        "-2 and -3",
+        "1 and 6",
+        "-1 and -6",
+        "2 and 3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the signs in the factors (x - 2)(x - 3) with the zeroes themselves",
+        "uses factors 1 and 6 but fails to adjust signs for the middle term",
+        "splits the middle term incorrectly using factors of 6 that add to -7",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-state-sum-of-zeroes-formula",
+      "nodeId": "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
+      "question": "For a quadratic polynomial ax^2 + bx + c (where a ≠ 0) with zeroes α and β, what is the value of α + β?",
+      "options": [
+        "b / a",
+        "-c / a",
+        "c / a",
+        "-b / a"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets the negative sign in the sum formula",
+        "combines the product ratio with the negative sign from the sum formula",
+        "confuses the sum formula with the product formula",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-state-product-of-zeroes-formula",
+      "nodeId": "class10-mathematics-polynomials-state-product-of-zeroes-formula",
+      "question": "For a quadratic polynomial ax^2 + bx + c (where a ≠ 0) with zeroes α and β, what is the value of αβ?",
+      "options": [
+        "-b / a",
+        "-c / a",
+        "c / b",
+        "c / a"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the product of zeroes formula with the sum of zeroes formula",
+        "incorrectly includes a negative sign in the product formula",
+        "divides the constant term by the linear coefficient instead of the leading coefficient",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-verify-sum-of-zeroes",
+      "nodeId": "class10-mathematics-polynomials-verify-sum-of-zeroes",
+      "question": "The zeroes of p(x) = 2x^2 - 8x + 6 are 1 and 3. How does the sum of zeroes verify against the coefficients?",
+      "options": [
+        "1 + 3 = 4 and 6/2 = 3",
+        "1 + 3 = 4 and -8/2 = -4",
+        "1 + 3 = 4 and -(-8)/2 = 4",
+        "1 + 3 = 4 and -(6)/2 = -3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the constant term c instead of the x-coefficient b in the sum verification",
+        "forgets the leading negative sign in the formula -(coefficient of x) / (coefficient of x^2)",
+        "",
+        "uses -c/a instead of -b/a to verify the sum of zeroes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-verify-product-of-zeroes",
+      "nodeId": "class10-mathematics-polynomials-verify-product-of-zeroes",
+      "question": "The zeroes of p(x) = 3x^2 - 3x - 6 are -1 and 2. How does the product of zeroes verify against the coefficients?",
+      "options": [
+        "(-1)(2) = -2 and -(-3)/3 = 1",
+        "(-1)(2) = -2 and -(-6)/3 = 2",
+        "(-1)(2) = -2 and -6/3 = -2",
+        "(-1)(2) = -2 and 3/(-6) = -1/2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the sum formula -b/a instead of the product formula c/a",
+        "incorrectly introduces a negative sign in the product formula giving -c/a",
+        "",
+        "inverts the fraction to a/c instead of c/a"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-compute-sum-product-from-coefficients",
+      "nodeId": "class10-mathematics-polynomials-compute-sum-product-from-coefficients",
+      "question": "Without finding the zeroes, what are the sum (S) and product (P) of the zeroes of 3x^2 + 9x - 12?",
+      "options": [
+        "S = 3, P = -4",
+        "S = -3, P = -4",
+        "S = -3, P = 4",
+        "S = -9, P = -12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets the negative sign when computing the sum: computes b/a instead of -b/a",
+        "",
+        "changes the sign of the product: computes -c/a instead of c/a",
+        "forgets to divide by the leading coefficient a"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-construct-quadratic-from-sum-product",
+      "nodeId": "class10-mathematics-polynomials-construct-quadratic-from-sum-product",
+      "question": "Which quadratic polynomial has sum of zeroes S = -4 and product of zeroes P = 3?",
+      "options": [
+        "x^2 - 4x + 3",
+        "x^2 - 4x - 3",
+        "x^2 + 4x - 3",
+        "x^2 + 4x + 3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses x^2 + Sx + P, forgetting the negative sign before the sum term",
+        "changes the sign of the product term instead of the sum term",
+        "changes the sign of both the sum and the product terms",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-construct-quadratic-from-two-zeroes",
+      "nodeId": "class10-mathematics-polynomials-construct-quadratic-from-two-zeroes",
+      "question": "What is a quadratic polynomial whose zeroes are 2 and -5?",
+      "options": [
+        "x^2 + 3x - 10",
+        "x^2 - 3x - 10",
+        "x^2 - 3x + 10",
+        "x^2 + 3x + 10"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates sum as -3 and writes x^2 - 3x - 10, failing to use -(sum)x",
+        "correctly finds sum = -3 and gets +3x, but miscalculates the product as +10",
+        "fails the sign of both the middle and constant terms"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-evaluate-symmetric-sum-of-squares",
+      "nodeId": "class10-mathematics-polynomials-evaluate-symmetric-sum-of-squares",
+      "question": "If α and β are the zeroes of x^2 - 6x + 2, what is the value of α^2 + β^2?",
+      "options": [
+        "40",
+        "36",
+        "32",
+        "20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds 2αβ instead of subtracting it: (α + β)^2 + 2αβ = 36 + 4 = 40",
+        "thinks α^2 + β^2 = (α + β)^2, ignoring the - 2αβ term",
+        "",
+        "miscalculates (α + β)^2 as (-6)^2 = 36 and subtracts 8αβ or similar arithmetic blunder"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-evaluate-reciprocal-sum-zeroes",
+      "nodeId": "class10-mathematics-polynomials-evaluate-reciprocal-sum-zeroes",
+      "question": "If α and β are the zeroes of the polynomial p(x) = 2x^2 + 5x - 3, what is the value of 1/α + 1/β?",
+      "options": [
+        "-5/3",
+        "5/3",
+        "-3/5",
+        "5/2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates (α + β)/(αβ) but drops one of the negative signs in (-5/2) / (-3/2)",
+        "",
+        "inverts the quotient, computing (αβ)/(α + β) instead of (α + β)/(αβ)",
+        "evaluates only -(α + β) without dividing by αβ"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-find-unknown-coefficient-from-condition",
+      "nodeId": "class10-mathematics-polynomials-find-unknown-coefficient-from-condition",
+      "question": "If one zero of the quadratic polynomial p(x) = 4x^2 - 8kx - 9 is the negative of the other, what is the value of k?",
+      "options": [
+        "2",
+        "1",
+        "-9/4",
+        "0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "sets -8k = -4 instead of setting the sum -(-8k)/4 = 0",
+        "thinks the zeroes being opposites means k must equal 1",
+        "uses the condition for reciprocal zeroes (c/a = 1) instead of opposite zeroes (sum = 0)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-polynomials-cubic-zeroes-coefficients-relation",
+      "nodeId": "class10-mathematics-polynomials-cubic-zeroes-coefficients-relation",
+      "question": "For a cubic polynomial ax^3 + bx^2 + cx + d with zeroes α, β, and γ, which statement correctly gives the product of all three zeroes?",
+      "options": [
+        "αβγ = d / a",
+        "αβγ = c / a",
+        "αβγ = -c / a",
+        "αβγ = -d / a"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets the alternating negative sign for the constant term relation",
+        "confuses the product of three zeroes with the positive pairwise product formula c/a",
+        "confuses the product of three zeroes with the sum of pairwise products",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
+      "question": "Which of the following represents the standard form of a pair of linear equations in two variables x and y?",
+      "options": [
+        "a1*x + b1*y = c1*x*y and a2*x + b2*y = c2*x*y, where c1 and c2 are constants",
+        "a1*x^2 + b1*y + c1 = 0 and a2*x + b2*y^2 + c2 = 0, where coefficients are real",
+        "a1*x + b1*y + c1 = 0 and a2*x + b2*y + c2 = 0, where a1^2 + b1^2 != 0 and a2^2 + b2^2 != 0",
+        "a1*x + b1/y + c1 = 0 and a2/x + b2*y + c2 = 0, where x != 0 and y != 0"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses linear form with equations having cross-product terms like xy",
+        "believes a linear equation in two variables can have degree 2 terms",
+        "",
+        "believes having variables in the denominator still yields a standard linear equation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+      "question": "5 pens and 7 notebooks cost Rs 250, while 7 pens and 5 notebooks cost Rs 230. If the cost of a pen is Rs x and a notebook is Rs y, which pair of equations models this situation?",
+      "options": [
+        "5x + 7y = 230 and 7x + 5y = 250",
+        "7x + 5y = 250 and 5x + 7y = 230",
+        "5x + 7y = 250 and 7x + 5y = 230",
+        "12(x + y) = 480 and (7 - 5)(x - y) = 20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "swaps the total costs associated with the two combinations",
+        "swaps the coefficients of pens and notebooks in the first condition",
+        "",
+        "combines the two independent statements into aggregate arithmetic equations prematurely"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
+      "question": "Which pair of coordinate points (x, y) both satisfy the linear equation 2x - 3y = 6?",
+      "options": [
+        "(0, 2) and (3, 0)",
+        "(0, -2) and (3, 0)",
+        "(0, -2) and (-3, 0)",
+        "(3, 2) and (0, 6)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "drops the negative sign when calculating y for x = 0 (solves 3y = 6 instead of -3y = 6)",
+        "",
+        "makes a sign error when finding the x-intercept (calculates 2x = -6)",
+        "substitutes x for y and y for x when evaluating coordinate pairs"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph",
+      "question": "To plot the line x + 2y = 4, a student finds the intercepts. On which pair of points on the Cartesian axes should the line be drawn?",
+      "options": [
+        "(4, 0) on the x-axis and (0, 2) on the y-axis",
+        "(0, 4) on the y-axis and (2, 0) on the x-axis",
+        "(4, 0) on the x-axis and (0, 4) on the y-axis",
+        "(2, 0) on the x-axis and (0, 2) on the y-axis"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses the x and y coordinates of the plotted intercept points",
+        "assumes both intercepts equal the constant term 4 without dividing by coefficients",
+        "divides the constant term 4 by the coefficient 2 for both axes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution",
+      "question": "The graphs of two linear equations intersect at a single point in the third quadrant whose distance from the y-axis is 3 units and from the x-axis is 4 units. What is the solution (x, y) to this system?",
+      "options": [
+        "(-4, -3)",
+        "(-3, 4)",
+        "(3, 4)",
+        "(-3, -4)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses distance from the y-axis with the y-coordinate and distance from the x-axis with the x-coordinate",
+        "applies the negative sign to only one coordinate in the third quadrant",
+        "ignores the quadrant information and writes positive coordinates",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-identify-parallel-lines-graph",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-parallel-lines-graph",
+      "question": "When graphed on a coordinate plane, the lines representing a system of two linear equations never intersect. What does this indicate about the system?",
+      "options": [
+        "The system has exactly one unique solution at the origin",
+        "The system has no solution because there are no common points",
+        "The system has infinitely many solutions along the lines",
+        "The system has two solutions corresponding to their y-intercepts"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks non-intersecting lines must default to intersecting at the origin",
+        "",
+        "confuses parallel lines with coincident lines",
+        "believes each distinct line contributes its own separate solution to the pair"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-identify-coincident-lines-graph",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-coincident-lines-graph",
+      "question": "When graphing two linear equations, both equations plot as the exact same line. How many solutions does this pair of equations have?",
+      "options": [
+        "Zero solutions",
+        "Infinitely many solutions",
+        "Exactly one solution",
+        "Exactly two solutions"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses coincident lines with parallel lines that have zero solutions",
+        "",
+        "believes a single line on a graph represents only one single solution",
+        "thinks having two variables means there are exactly two solutions"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-graphical-area-of-triangle",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-graphical-area-of-triangle",
+      "question": "The lines x - y + 1 = 0 and 3x + 2y - 12 = 0 intersect at (2, 3) and cross the x-axis at (-1, 0) and (4, 0) respectively. What is the area of the triangular region bounded by these two lines and the x-axis?",
+      "options": [
+        "6 sq units",
+        "15 sq units",
+        "5 sq units",
+        "7.5 sq units"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates base as 4 - 1 = 3 by ignoring the negative sign of the left intercept",
+        "forgets to multiply by 1/2 in the triangle area formula (calculates base * height = 5 * 3)",
+        "uses the x-coordinate of the intersection point (2) instead of the y-coordinate (3) as the height",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-intersecting",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-intersecting",
+      "question": "Which condition on the coefficients guarantees that the system a1*x + b1*y + c1 = 0 and a2*x + b2*y + c2 = 0 has a unique solution?",
+      "options": [
+        "a1/a2 != b1/b2",
+        "a1/a2 = b1/b2 != c1/c2",
+        "a1/a2 = b1/b2 = c1/c2",
+        "a1/b1 = a2/b2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the unique solution condition with the parallel line condition (no solution)",
+        "confuses the unique solution condition with the coincident line condition (infinitely many solutions)",
+        "flips the inequality into equality of cross ratios within each equation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
+      "question": "For the system 2x + 3y = 7 and 6x + 9y = 21, comparing the coefficient ratios shows:",
+      "options": [
+        "a1/a2 != b1/b2, so the lines intersect at one point",
+        "a1/a2 = b1/b2 != c1/c2, so the lines are parallel",
+        "a1/a2 != c1/c2, so the system is inconsistent",
+        "a1/a2 = b1/b2 = c1/c2, so the lines are coincident with infinitely many solutions"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "miscalculates the ratios and incorrectly concludes they are not equal",
+        "believes the constant ratio 7/21 differs from the coefficient ratios 2/6 and 3/9",
+        "checks only a1/a2 vs c1/c2 and ignores the b1/b2 ratio completely",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel",
+      "question": "Which condition indicates that a system of linear equations is inconsistent (has no solution)?",
+      "options": [
+        "a1/a2 = b1/b2 != c1/c2",
+        "a1/a2 = b1/b2 = c1/c2",
+        "a1/a2 != b1/b2",
+        "a1*a2 + b1*b2 = 0"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses inconsistent systems with dependent consistent systems having infinite solutions",
+        "confuses inconsistent systems with consistent systems having a unique solution",
+        "confuses the inconsistency ratio condition with perpendicular lines condition"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-find-unknown-parameter-consistency",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-unknown-parameter-consistency",
+      "question": "For what value of k will the pair of equations 4x + 6y = 11 and 2x + ky = 7 have NO solution?",
+      "options": [
+        "k != 3",
+        "k = 3",
+        "k = 6",
+        "k = 12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the condition for no solution (a1/a2 = b1/b2) with unique solution (a1/a2 != b1/b2)",
+        "",
+        "copies the coefficient of y from the first equation without scaling by the ratio",
+        "multiplies 6 by 2 instead of dividing by the factor 4/2 = 2"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other",
+      "question": "Expressing x in terms of y from the linear equation 3x - 5y = 12 gives:",
+      "options": [
+        "x = (12 + 5y) / 3",
+        "x = (12 - 5y) / 3",
+        "x = (5y - 12) / 3",
+        "x = 12 + 5y"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "fails to change the sign of -5y when transposing it to the other side",
+        "transposes 12 to the left and -5y to the right incorrectly",
+        "transposes -5y correctly but forgets to divide the entire expression by the coefficient 3"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution",
+      "question": "Solve the system using substitution: x + y = 14 and x - y = 4. What is the solution (x, y)?",
+      "options": [
+        "(10, 4)",
+        "(5, 9)",
+        "(9, 5)",
+        "(8, 6)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "picks two numbers that subtract to 6 or add to 14 without checking both conditions simultaneously",
+        "inverts the values of x and y in the coordinate pair",
+        "",
+        "makes an arithmetic addition error when solving 2x = 18 as 2x = 16"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-verify-solution-algebraically",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-verify-solution-algebraically",
+      "question": "Is the point (3, 2) a solution to the system 2x + 3y = 12 and x - 2y = -1?",
+      "options": [
+        "No, because it satisfies neither equation",
+        "No, because it only satisfies the first equation and not the second",
+        "No, because it only satisfies the second equation and not the first",
+        "Yes, because (3, 2) satisfies both equations simultaneously"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes a point must give 0 on both right-hand sides to be a solution",
+        "makes a sign calculation error in 3 - 2(2) and incorrectly thinks it does not equal -1",
+        "makes an arithmetic error in 2(3) + 3(2) and thinks it does not equal 12",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-substitution-degenerate-cases",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-substitution-degenerate-cases",
+      "question": "While solving a system of linear equations by substitution, a student arrives at the statement 7 = 12. What does this outcome conclude about the system?",
+      "options": [
+        "The system has infinitely many solutions",
+        "The system has x = 7 and y = 12 as its unique solution",
+        "The student can choose any value for x, which uniquely determines y",
+        "The system has no solution"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses an impossible false statement (0 = k) with a true identity (0 = 0)",
+        "interprets the two unequal constants in the contradiction as values for x and y",
+        "thinks arriving at constants with no variables implies degrees of freedom",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable",
+      "question": "Given the system 3x + y = 10 and 5x - 4y = 6, which elimination strategy requires multiplying only ONE equation by a single constant?",
+      "options": [
+        "Multiply the first equation by 5 and the second equation by 3 to eliminate x",
+        "Multiply the first equation by 4 to eliminate y",
+        "Multiply the second equation by 3 to eliminate x",
+        "Multiply both equations by 2 to eliminate y"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "chooses to eliminate x, which requires scaling both equations instead of just one",
+        "",
+        "believes multiplying only one equation by 3 will match 3x and 5x",
+        "suggests an unnecessary operation that does not equate either set of coefficients"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier",
+      "question": "To eliminate y by addition from the system 2x + 3y = 7 and 3x - 2y = 4, what should the equations be multiplied by?",
+      "options": [
+        "Multiply equation (1) by 2 and leave equation (2) unchanged",
+        "Multiply equation (1) by 3 and equation (2) by 2",
+        "Multiply equation (1) by 2 and equation (2) by 3",
+        "Multiply equation (1) by -3 and equation (2) by 3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks multiplying only one equation can match coefficients 3 and 2",
+        "swaps the multipliers, which would target eliminating x by subtraction instead of y by addition",
+        "",
+        "uses arbitrary multipliers that do not match the LCM of the coefficients of y"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination",
+      "question": "Solve the system using elimination: 2x + 3y = 8 and 4x + 5y = 14. What is the value of (x, y)?",
+      "options": [
+        "(2, 1)",
+        "(1, 2)",
+        "(4, 0)",
+        "(-1, 3)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses the values of x and y in the final ordered pair",
+        "satisfies 2(4) + 3(0) = 8 but fails the second equation",
+        "makes a sign error when subtracting the scaled equations (-y = -2 yielding y = -2)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-solve-symmetric-coefficient-system",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-symmetric-coefficient-system",
+      "question": "Given the symmetric system 21x + 47y = 115 and 47x + 21y = 89, what are the two simpler equations obtained by first adding and then subtracting them?",
+      "options": [
+        "x + y = 204 and x - y = 26",
+        "x + y = 3 and -x + y = 1",
+        "x + y = 3 and x - y = -1",
+        "68x + 68y = 204 and 26x - 26y = 26"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds and subtracts the constants but forgets to divide by the common coefficient",
+        "makes a sign error when computing the subtraction equation (21 - 47 vs 47 - 21)",
+        "",
+        "stops after addition and subtraction without dividing by the common factors 68 and -26"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-age",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-age",
+      "question": "Five years ago, a father was three times as old as his son. Ten years later, he will be twice as old as his son. What are their present ages?",
+      "options": [
+        "Father is 45 years, son is 15 years",
+        "Father is 40 years, son is 20 years",
+        "Father is 50 years, son is 20 years",
+        "Father is 35 years, son is 15 years"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "applies the 3-times ratio to present age (45 = 3*15) instead of age 5 years ago",
+        "applies the 2-times ratio to present age (40 = 2*20) instead of age 10 years later",
+        "",
+        "sets up (F - 5) = 3S instead of (F - 5) = 3(S - 5), forgetting to subtract 5 from the son's age"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-fractions-and-numbers",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-fractions-and-numbers",
+      "question": "A fraction becomes 1/3 when 1 is subtracted from the numerator, and it becomes 1/4 when 8 is added to its denominator. What is the fraction?",
+      "options": [
+        "4/12",
+        "5/18",
+        "7/15",
+        "5/12"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "picks an equivalent fraction to 1/3 directly without checking the change operations",
+        "adds 8 to the numerator instead of the denominator when setting up the second condition",
+        "makes a sign error when forming the equation 3(x - 1) = y (writes 3x - y = -3 instead of 3)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-two-digit-numbers",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-two-digit-numbers",
+      "question": "The sum of the digits of a two-digit number is 9. Also, 9 times this number is twice the number obtained by reversing the order of the digits. What is the number?",
+      "options": [
+        "81",
+        "18",
+        "27",
+        "45"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds the reversed number rather than the original number",
+        "",
+        "guesses a number whose digits add up to 9 but does not satisfy 9(original) = 2(reversed)",
+        "picks a number whose digits sum to 9 without testing the algebraic relation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time",
+      "nodeId": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time",
+      "question": "A boat goes 30 km upstream and 44 km downstream in 10 hours. In 13 hours, it can go 40 km upstream and 55 km downstream. What are the speed of the boat in still water and the speed of the stream?",
+      "options": [
+        "Boat: 8 km/h, Stream: 3 km/h",
+        "Boat: 11 km/h, Stream: 5 km/h",
+        "Boat: 6 km/h, Stream: 2 km/h",
+        "Boat: 10 km/h, Stream: 2 km/h"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses downstream speed (11 km/h) and upstream speed (5 km/h) with boat and stream speeds",
+        "makes an algebraic error when solving for the reciprocal variables u and v",
+        "adds upstream and downstream speeds directly without dividing by 2 to find still water speed"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-define-standard-form",
+      "nodeId": "class10-mathematics-quadratic-equations-define-standard-form",
+      "question": "Which of the following represents the standard form of a quadratic equation in one variable x?",
+      "options": [
+        "ax + b = 0, where a ≠ 0",
+        "ax² + bx + c = 0, where a = 0",
+        "ax² + bx + c = 0, where a ≠ 0",
+        "ax³ + bx² + cx + d = 0, where a ≠ 0"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a linear equation with a quadratic equation",
+        "believes the coefficient of the squared term can be zero in a quadratic equation",
+        "",
+        "confuses a cubic equation with a quadratic equation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-identify-coefficients",
+      "nodeId": "class10-mathematics-quadratic-equations-identify-coefficients",
+      "question": "What are the values of a, b, and c for the quadratic equation 3x² - 5x + 7 = 0?",
+      "options": [
+        "a = 3, b = 5, c = 7",
+        "a = 3x², b = -5x, c = 7",
+        "a = 3, b = -5, c = 7",
+        "a = 3, b = -5, c = -7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "drops the negative sign from the middle coefficient",
+        "includes the variable x along with the numerical coefficients",
+        "",
+        "inverts the sign of the constant term"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-verify-by-simplification",
+      "nodeId": "class10-mathematics-quadratic-equations-verify-by-simplification",
+      "question": "Which of the following equations simplifies to a quadratic equation of the form ax² + bx + c = 0 (a ≠ 0)?",
+      "options": [
+        "(x - 2)² + 1 = 2x - 3 + x²",
+        "x(x + 1) + 8 = (x + 2)(x - 2)",
+        "(x + 1)² = 2(x - 3)",
+        "(x + 2)³ = x³ - 4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "fails to realize that expanding (x - 2)² produces x² which cancels with the right side",
+        "assumes multiplying linear terms always yields a quadratic equation without noticing x² cancels out on both sides",
+        "",
+        "thinks the presence of cubic terms prevents the equation from simplifying to a lower degree without expanding"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-distinguish-degree",
+      "nodeId": "class10-mathematics-quadratic-equations-distinguish-degree",
+      "question": "After expanding and collecting like terms, what type of equation is x²(x + 1) = x³ + 4x - 5?",
+      "options": [
+        "Linear equation",
+        "Cubic equation",
+        "Quadratic equation",
+        "Biquadratic equation"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks that after x³ cancels, only the linear term 4x remains",
+        "judges the degree by looking only at x³ without expanding to see that x³ cancels out",
+        "",
+        "confuses degree 2 with degree 4"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-formulate-geometric-context",
+      "nodeId": "class10-mathematics-quadratic-equations-formulate-geometric-context",
+      "question": "The length of a rectangular plot is 1 metre more than twice its breadth. If the area of the plot is 528 m² and breadth is x metres, which equation represents this situation?",
+      "options": [
+        "2x² + 2x - 528 = 0",
+        "2x² + x - 528 = 0",
+        "x² + 2x - 528 = 0",
+        "2x² - x - 528 = 0"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "interprets twice breadth plus one as 2(x + 1) instead of 2x + 1",
+        "",
+        "translates the length as x + 2 instead of 2x + 1",
+        "translates '1 more than twice' with a subtraction sign as 2x - 1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-formulate-number-relation",
+      "nodeId": "class10-mathematics-quadratic-equations-formulate-number-relation",
+      "question": "The product of two consecutive positive integers is 306. If the smaller integer is x, which quadratic equation models this condition?",
+      "options": [
+        "x² + x - 306 = 0",
+        "2x² + x - 306 = 0",
+        "x² + 2x - 306 = 0",
+        "x² - x - 306 = 0"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "multiplies 2x by x instead of x by (x + 1)",
+        "assumes consecutive integers differ by 2 instead of 1",
+        "takes the consecutive integer as x - 1 and equates product to 306 with a sign error"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-define-root",
+      "nodeId": "class10-mathematics-quadratic-equations-define-root",
+      "question": "What does it mean if a real number α is a root of the quadratic equation ax² + bx + c = 0?",
+      "options": [
+        "aα² + bα + c > 0",
+        "aα² + bα + c = 0",
+        "α must be equal to 0",
+        "α makes the discriminant zero"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses satisfying an equation with an inequality condition",
+        "",
+        "confuses the concept of a root with the number zero",
+        "confuses the definition of a root with the condition for equal roots"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-verify-given-root",
+      "nodeId": "class10-mathematics-quadratic-equations-verify-given-root",
+      "question": "Which of the following values is a root of the equation 2x² - x - 6 = 0?",
+      "options": [
+        "x = 1",
+        "x = 3",
+        "x = -2",
+        "x = 2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds coefficients directly without proper substitution: 2(1)² - 1 - 6 ≠ 0",
+        "fails to square the value correctly or makes arithmetic sign error when testing 3",
+        "makes a sign error when squaring negative numbers: calculates 2(-2)² as -8 instead of 8",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-zero-product-rule",
+      "nodeId": "class10-mathematics-quadratic-equations-zero-product-rule",
+      "question": "What are the roots of the equation (2x - 3)(x + 4) = 0?",
+      "options": [
+        "x = 3/2 and x = -4",
+        "x = -3/2 and x = 4",
+        "x = 3/2 and x = 4",
+        "x = -3/2 and x = -4"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "flips the signs of both roots when solving linear factors equal to zero",
+        "fails to switch the sign for the second factor (x + 4 = 0 giving x = 4)",
+        "fails to switch the sign for the first factor (2x - 3 = 0 giving x = -3/2)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-solve-pure-quadratic",
+      "nodeId": "class10-mathematics-quadratic-equations-solve-pure-quadratic",
+      "question": "What are all the solutions to the equation 3x² - 12x = 0?",
+      "options": [
+        "x = 4 only",
+        "x = 2 and x = -2",
+        "x = 0 and x = -4",
+        "x = 0 and x = 4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides both sides by x and loses the root x = 0",
+        "confuses 3x² - 12x = 0 with 3x² - 12 = 0",
+        "factors out 3x correctly but makes a sign error setting x - 4 = 0",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-split-middle-term-monic",
+      "nodeId": "class10-mathematics-quadratic-equations-split-middle-term-monic",
+      "question": "What are the roots of the quadratic equation x² - 5x + 6 = 0?",
+      "options": [
+        "x = -2 and x = -3",
+        "x = 2 and x = 3",
+        "x = 1 and x = 6",
+        "x = -1 and x = -6"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the factors (x - 2)(x - 3) with the solutions, giving the opposite signs",
+        "",
+        "chooses factors of 6 that add to 7 rather than 5",
+        "chooses negative factors of 6 whose sum is -7"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-split-middle-term-non-monic",
+      "nodeId": "class10-mathematics-quadratic-equations-split-middle-term-non-monic",
+      "question": "What are the roots of the quadratic equation 6x² - x - 2 = 0?",
+      "options": [
+        "x = 4 and x = -3",
+        "x = -2/3 and x = 1/2",
+        "x = 3/2 and x = -2",
+        "x = 2/3 and x = -1/2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "takes the split numbers -4 and +3 as the final roots without dividing by a",
+        "inverts the signs when finding the roots from factors (3x - 2)(2x + 1) = 0",
+        "inverts the fractions when extracting x from linear factors",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-factorise-irrational-coefficients",
+      "nodeId": "class10-mathematics-quadratic-equations-factorise-irrational-coefficients",
+      "question": "What are the roots of the equation √2 x² + 7x + 5√2 = 0?",
+      "options": [
+        "x = -√2 and x = -5/√2",
+        "x = √2 and x = 5/√2",
+        "x = -5 and x = -2",
+        "x = -√2 and x = -5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets to apply the negative sign when setting (√2 x + 5)(x + √2) = 0",
+        "takes the split values 5 and 2 directly as roots with negative signs, ignoring √2",
+        "omits the division by the leading coefficient √2 on one of the roots"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-word-problems-factorisation",
+      "nodeId": "class10-mathematics-quadratic-equations-word-problems-factorisation",
+      "question": "The hypotenuse of a right triangle is 25 cm. One leg is 5 cm longer than the other. What is the length of the shorter leg?",
+      "options": [
+        "10 cm",
+        "-20 cm",
+        "20 cm",
+        "15 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "incorrectly calculates by halving 20 cm or guessing without using Pythagoras theorem",
+        "accepts the negative mathematical root of the quadratic equation as a geometric length",
+        "finds the longer leg (20 cm) instead of the shorter leg requested by the question",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-state-quadratic-formula",
+      "nodeId": "class10-mathematics-quadratic-equations-state-quadratic-formula",
+      "question": "Which formula gives the roots of ax² + bx + c = 0 (where a ≠ 0)?",
+      "options": [
+        "x = (-b ± √(b² - 4ac)) / a",
+        "x = (b ± √(b² - 4ac)) / (2a)",
+        "x = (-b ± √(b² - 4ac)) / (2a)",
+        "x = (-b ± √(b² + 4ac)) / (2a)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets the factor of 2 in the denominator",
+        "forgets the negative sign before b in the numerator",
+        "",
+        "uses a plus sign instead of a minus sign under the square root"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-calculate-discriminant",
+      "nodeId": "class10-mathematics-quadratic-equations-calculate-discriminant",
+      "question": "What is the discriminant of the quadratic equation 2x² - 4x + 3 = 0?",
+      "options": [
+        "40",
+        "-8",
+        "8",
+        "-40"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "computes (-4)² - 4(2)(3) as 16 + 24 = 40 by adding instead of subtracting 4ac",
+        "",
+        "computes 24 - 16 = 8 instead of 16 - 24",
+        "evaluates (-4)² as -16 and subtracts 24 to get -40"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-solve-using-formula",
+      "nodeId": "class10-mathematics-quadratic-equations-solve-using-formula",
+      "question": "Using the quadratic formula, what are the roots of x² - 4x + 1 = 0?",
+      "options": [
+        "x = 2 ± √3",
+        "x = 4 ± √12",
+        "x = -2 ± √3",
+        "x = 2 ± √5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets to divide the entire numerator by 2a",
+        "uses -b as -4 instead of -(-4) = 4 before dividing by 2",
+        "computes discriminant as 16 + 4 = 20 leading to √20/2 = √5"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-relate-discriminant-positive",
+      "nodeId": "class10-mathematics-quadratic-equations-relate-discriminant-positive",
+      "question": "If the discriminant D = b² - 4ac > 0 for a quadratic equation, what is the nature of its roots?",
+      "options": [
+        "Two distinct real roots",
+        "Two equal real roots",
+        "No real roots",
+        "Infinitely many real roots"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses D > 0 with D = 0",
+        "confuses D > 0 with D < 0",
+        "thinks a positive discriminant implies infinite solutions"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-relate-discriminant-zero",
+      "nodeId": "class10-mathematics-quadratic-equations-relate-discriminant-zero",
+      "question": "What is the nature of the roots of a quadratic equation when D = b² - 4ac = 0?",
+      "options": [
+        "Two distinct real roots",
+        "No real roots",
+        "Two equal real roots",
+        "Roots must both be equal to 0"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses D = 0 with D > 0",
+        "confuses D = 0 with D < 0",
+        "",
+        "assumes D = 0 means the values of the roots themselves must be 0"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-relate-discriminant-negative",
+      "nodeId": "class10-mathematics-quadratic-equations-relate-discriminant-negative",
+      "question": "What does a negative discriminant (b² - 4ac < 0) indicate about the roots of a quadratic equation?",
+      "options": [
+        "The roots are negative numbers",
+        "The roots are equal and real",
+        "There are two distinct real roots",
+        "There are no real roots"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "interprets D < 0 as meaning the values of the roots are negative numbers",
+        "confuses D < 0 with D = 0",
+        "confuses D < 0 with D > 0",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-find-parameter-for-equal-roots",
+      "nodeId": "class10-mathematics-quadratic-equations-find-parameter-for-equal-roots",
+      "question": "For what values of k does the equation 2x² + kx + 3 = 0 have two equal real roots?",
+      "options": [
+        "k = ±6",
+        "k = ±24",
+        "k = 2√6 only",
+        "k = ±2√6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "computes 4ac as 4(2)(3) = 36 instead of 24, giving k = ±6",
+        "sets k² - 24 = 0 and forgets to take the square root of 24",
+        "forgets that the square root yields both positive and negative values",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-determine-existence-of-real-solution",
+      "nodeId": "class10-mathematics-quadratic-equations-determine-existence-of-real-solution",
+      "question": "Is it possible to design a rectangular park of perimeter 40 m and area 120 m²?",
+      "options": [
+        "Yes, because the discriminant of the resulting quadratic is positive",
+        "No, because the discriminant of the resulting quadratic is negative",
+        "Yes, because length + breadth = 40",
+        "No, because area cannot exceed perimeter"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes any perimeter and area combination has a solution without testing D",
+        "",
+        "uses perimeter = x + y instead of 2(x + y) to set up the equation",
+        "believes a general rule that area must be numerically less than perimeter"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-word-problems-speed-time",
+      "nodeId": "class10-mathematics-quadratic-equations-word-problems-speed-time",
+      "question": "An express train takes 1 hour less than a passenger train to travel 132 km. If the average speed of the express train is 11 km/h more than that of the passenger train (speed x km/h), which equation gives x?",
+      "options": [
+        "132/x - 132/(x + 11) = 1",
+        "132/(x + 11) - 132/x = 1",
+        "132/x + 132/(x + 11) = 1",
+        "x/(132) - (x + 11)/(132) = 1"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the larger time from the smaller time, ignoring that smaller speed x means larger time",
+        "adds the two times instead of equating their difference to 1 hour",
+        "inverts the speed-distance relation to speed/distance instead of distance/speed"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-quadratic-equations-word-problems-work-and-pipes",
+      "nodeId": "class10-mathematics-quadratic-equations-word-problems-work-and-pipes",
+      "question": "Two water taps together can fill a tank in 9 3/8 hours (75/8 hours). The larger tap takes 10 hours less than the smaller tap (time x hours). Which equation models this?",
+      "options": [
+        "1/x + 1/(x - 10) = 75/8",
+        "1/x + 1/(x - 10) = 8/75",
+        "1/x + 1/(x + 10) = 8/75",
+        "x + (x - 10) = 75/8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets to invert the combined time to find the combined 1-hour rate",
+        "",
+        "defines the larger tap's time as x + 10 instead of x - 10 when x is the smaller tap's time",
+        "adds times directly instead of adding rates per unit time"
+      ]
+    }
+  ]
+}

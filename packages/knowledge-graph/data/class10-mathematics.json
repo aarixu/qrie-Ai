@@ -1,0 +1,1472 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class10-mathematics-real-numbers-classify-rational-form",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Identify Rational Form p/q",
+      "outcome": "Identify whether a given number can be expressed in the form p/q where p and q are integers and q is not zero",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-define-irrational-numbers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Define Irrational Numbers",
+      "outcome": "State the definition of an irrational number as a real number that cannot be written in p/q form",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-classify-rational-form"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-classify-terminating-decimal",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Identify Terminating Decimals",
+      "outcome": "Classify a decimal expansion with finite digits after the decimal point as terminating",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-classify-non-terminating-repeating",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Identify Non-Terminating Repeating Decimals",
+      "outcome": "Classify a recurring decimal expansion as non-terminating repeating",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-relate-decimal-to-rationality",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Relate Decimals to Rationality",
+      "outcome": "Classify real numbers with non-terminating and non-repeating decimal expansions as irrational",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-define-irrational-numbers",
+        "class10-mathematics-real-numbers-classify-terminating-decimal",
+        "class10-mathematics-real-numbers-classify-non-terminating-repeating"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prime-vs-composite",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Distinguish Prime and Composite Numbers",
+      "outcome": "Distinguish between prime numbers and composite numbers based on their number of factors",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-factor-tree-method",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Construct Factor Trees",
+      "outcome": "Construct a factor tree to decompose a composite number into its prime factors",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prime-vs-composite"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-express-prime-factorisation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Express Prime Factorisation in Exponential Form",
+      "outcome": "Write the prime factorisation of a given composite number in exponential form",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-factor-tree-method"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-state-fta",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "State Fundamental Theorem of Arithmetic",
+      "outcome": "State the Fundamental Theorem of Arithmetic including the uniqueness of factorisation apart from order",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-express-prime-factorisation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-end-in-zero-condition",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Check if a Power Ends in Zero",
+      "outcome": "Explain why expressions like 6^n or 4^n cannot end with digit 0 for any natural number n using prime factorisation",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-state-fta"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-composite-explanation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Justify Composite Number Status",
+      "outcome": "Explain why expressions like 7 x 11 x 13 + 13 are composite numbers using common factors",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-state-fta"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Calculate HCF via Prime Factorisation",
+      "outcome": "Calculate the HCF of two positive integers by taking the product of the smallest power of each common prime factor",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-express-prime-factorisation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-calculate-lcm-prime-factors",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Calculate LCM via Prime Factorisation",
+      "outcome": "Calculate the LCM of two positive integers by taking the product of the greatest power of each prime factor involved",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-express-prime-factorisation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-hcf-lcm-three-numbers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Find HCF and LCM of Three Numbers",
+      "outcome": "Calculate the HCF and LCM of three given positive integers using prime factorisation",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+        "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-verify-hcf-lcm-product-relation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Verify HCF x LCM Formula",
+      "outcome": "Verify the relationship HCF(a, b) x LCM(a, b) = a x b for any two given positive integers a and b",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+        "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-solve-for-unknown-using-relation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Compute Unknown Quantity Using HCF x LCM Formula",
+      "outcome": "Calculate an unknown quantity among HCF, LCM, and two numbers given the other three values",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-verify-hcf-lcm-product-relation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-real-numbers-word-problems-hcf-lcm",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Solve Real-Life Word Problems on HCF and LCM",
+      "outcome": "Solve real-world word problems by identifying whether HCF or LCM is required",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
+        "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prime-divides-square-theorem",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Apply Prime Divisibility of Squares Theorem",
+      "outcome": "Apply the theorem that if a prime p divides a^2, then p divides a for positive integer a",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-state-fta"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-define-coprime",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Define Co-prime Numbers",
+      "outcome": "Identify pairs of integers as co-prime if their highest common factor is 1",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-calculate-hcf-prime-factors"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prove-root2-irrational",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Prove Square Root of 2 is Irrational",
+      "outcome": "Derive the proof that root 2 is irrational using proof by contradiction and co-prime assumption",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prime-divides-square-theorem",
+        "class10-mathematics-real-numbers-define-coprime"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prove-root3-root5-irrational",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Prove Square Root of 3 or 5 is Irrational",
+      "outcome": "Derive the proof that root 3 or root 5 is irrational using proof by contradiction",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prove-root2-irrational"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prove-linear-irrational-combination",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Prove Sum or Difference with Irrational is Irrational",
+      "outcome": "Prove that expressions of the form a + b*root(p) or a - b*root(p) are irrational given that root(p) is irrational",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prove-root2-irrational"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-prove-product-quotient-irrational",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Prove Product or Quotient with Irrational is Irrational",
+      "outcome": "Prove that expressions of the form a*root(p) or a/root(p) are irrational for non-zero rational a",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prove-root2-irrational"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-real-numbers-classify-combined-real-expressions",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "real-numbers",
+      "title": "Classify Arithmetic Combinations of Real Numbers",
+      "outcome": "Classify arithmetic combinations of rational and irrational numbers as rational or irrational",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prove-linear-irrational-combination",
+        "class10-mathematics-real-numbers-prove-product-quotient-irrational"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-identify-polynomial-expression",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identify Polynomial Expressions",
+      "outcome": "Identify whether an algebraic expression is a polynomial by checking if all exponents of the variable are non-negative integers",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-determine-degree",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Determine Degree of Polynomial",
+      "outcome": "Determine the degree of a given single-variable polynomial by identifying the highest power of the variable",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-polynomial-expression"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-classify-by-degree",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Classify Polynomials by Degree",
+      "outcome": "Classify a given polynomial as linear, quadratic, or cubic based on its degree",
+      "prerequisites": [
+        "class10-mathematics-polynomials-determine-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-identify-standard-form-coefficients",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identify Coefficients in Standard Form",
+      "outcome": "Identify the coefficients a, b, and c in the standard quadratic form ax^2 + bx + c",
+      "prerequisites": [
+        "class10-mathematics-polynomials-classify-by-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-evaluate-at-given-value",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Evaluate Polynomial Value",
+      "outcome": "Calculate the numerical value of a polynomial p(x) at a given real value x = k",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-polynomial-expression"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-define-zero-of-polynomial",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Define Zero of Polynomial",
+      "outcome": "State the definition of a zero of a polynomial as a real number k such that p(k) = 0",
+      "prerequisites": [
+        "class10-mathematics-polynomials-evaluate-at-given-value"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-verify-zero-algebraically",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Verify Zero of Polynomial",
+      "outcome": "Verify whether a given real number is a zero of a polynomial by evaluating p(k)",
+      "prerequisites": [
+        "class10-mathematics-polynomials-define-zero-of-polynomial"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Linear Polynomial Graphical Zero",
+      "outcome": "Identify the x-coordinate of the point where the line y = ax + b intersects the x-axis as its zero",
+      "prerequisites": [
+        "class10-mathematics-polynomials-define-zero-of-polynomial"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-identify-parabola-shape",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Identify Parabola Orientation",
+      "outcome": "Predict whether the parabolic graph of y = ax^2 + bx + c opens upwards or downwards based on the sign of a",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-read-zeroes-from-graph",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Read Zeroes from Graph",
+      "outcome": "Determine the zeroes of a polynomial y = p(x) by reading the x-coordinates of the points where its graph intersects the x-axis",
+      "prerequisites": [
+        "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-count-zeroes-from-graph",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Count Zeroes from Graph",
+      "outcome": "Count the number of real zeroes of a polynomial y = p(x) by counting the number of intersection points with the x-axis",
+      "prerequisites": [
+        "class10-mathematics-polynomials-read-zeroes-from-graph"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-bound-zeroes-by-degree",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Relate Degree and Max Zeroes",
+      "outcome": "State that a polynomial of degree n can have at most n distinct real zeroes",
+      "prerequisites": [
+        "class10-mathematics-polynomials-count-zeroes-from-graph",
+        "class10-mathematics-polynomials-determine-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Find Zeroes by Factorisation",
+      "outcome": "Calculate the zeroes of a quadratic polynomial ax^2 + bx + c by splitting the middle term",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients",
+        "class10-mathematics-polynomials-define-zero-of-polynomial"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "State Sum of Zeroes Formula",
+      "outcome": "State the formula for the sum of zeroes of a quadratic polynomial: alpha + beta = -b / a",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-state-product-of-zeroes-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "State Product of Zeroes Formula",
+      "outcome": "State the formula for the product of zeroes of a quadratic polynomial: alpha * beta = c / a",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-polynomials-verify-sum-of-zeroes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Verify Sum of Zeroes Relation",
+      "outcome": "Verify that the sum of the explicitly calculated zeroes of a quadratic polynomial equals -(coefficient of x) / (coefficient of x^2)",
+      "prerequisites": [
+        "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+        "class10-mathematics-polynomials-state-sum-of-zeroes-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-verify-product-of-zeroes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Verify Product of Zeroes Relation",
+      "outcome": "Verify that the product of the explicitly calculated zeroes of a quadratic polynomial equals (constant term) / (coefficient of x^2)",
+      "prerequisites": [
+        "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+        "class10-mathematics-polynomials-state-product-of-zeroes-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-compute-sum-product-from-coefficients",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Compute Sum and Product Directly",
+      "outcome": "Calculate the sum and product of the zeroes of a quadratic polynomial directly from its coefficients without finding the individual zeroes",
+      "prerequisites": [
+        "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
+        "class10-mathematics-polynomials-state-product-of-zeroes-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-construct-quadratic-from-sum-product",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Construct Quadratic from Sum and Product",
+      "outcome": "Construct a quadratic polynomial using the formula k[x^2 - (S)x + P] given the sum S and product P of its zeroes",
+      "prerequisites": [
+        "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-construct-quadratic-from-two-zeroes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Construct Quadratic from Two Zeroes",
+      "outcome": "Construct a quadratic polynomial given its two individual zeroes alpha and beta by first finding their sum and product",
+      "prerequisites": [
+        "class10-mathematics-polynomials-construct-quadratic-from-sum-product"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-polynomials-evaluate-symmetric-sum-of-squares",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Evaluate Sum of Squares of Zeroes",
+      "outcome": "Calculate the value of alpha^2 + beta^2 for a quadratic polynomial using the identity (alpha + beta)^2 - 2*alpha*beta",
+      "prerequisites": [
+        "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-polynomials-evaluate-reciprocal-sum-zeroes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Evaluate Sum of Reciprocals of Zeroes",
+      "outcome": "Calculate the value of (1/alpha + 1/beta) by expressing it in terms of alpha + beta and alpha * beta",
+      "prerequisites": [
+        "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-polynomials-find-unknown-coefficient-from-condition",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "Find Unknown Coefficient from Zero Condition",
+      "outcome": "Calculate an unknown coefficient k in a quadratic polynomial given a specific condition relating its zeroes (such as one zero being the reciprocal or negative of the other)",
+      "prerequisites": [
+        "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-polynomials-cubic-zeroes-coefficients-relation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "polynomials",
+      "title": "State Cubic Zero-Coefficient Relations",
+      "outcome": "State and verify the relations between the zeroes and coefficients of a cubic polynomial: alpha+beta+gamma = -b/a, alpha*beta+beta*gamma+gamma*alpha = c/a, and alpha*beta*gamma = -d/a",
+      "prerequisites": [
+        "class10-mathematics-polynomials-classify-by-degree",
+        "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
+        "class10-mathematics-polynomials-state-product-of-zeroes-formula"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Identify General Form of Linear Equations",
+      "outcome": "Identify the standard algebraic form of a pair of linear equations in two variables as a1x + b1y + c1 = 0 and a2x + b2y + c2 = 0",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Translate Word Problem into Linear Equations",
+      "outcome": "Translate a given real-world context into a system of two linear equations in two variables",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Find Coordinate Pairs for Linear Equation",
+      "outcome": "Calculate coordinate pairs (x, y) satisfying a single linear equation to create a table of values",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Plot Pair of Lines on Coordinate Grid",
+      "outcome": "Plot two linear equations on a Cartesian plane using their calculated coordinate pairs",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
+        "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Read Unique Solution from Graph",
+      "outcome": "Read the coordinates of the intersection point of two lines to determine the unique solution of the system",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-parallel-lines-graph",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Identify Inconsistent System from Graph",
+      "outcome": "Identify that parallel lines on a graph indicate no common point of intersection and thus no solution",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-coincident-lines-graph",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Identify Dependent System from Graph",
+      "outcome": "Identify that coincident lines on a graph indicate infinitely many common points and infinitely many solutions",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-graphical-area-of-triangle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Calculate Area Formed by Lines and Axes",
+      "outcome": "Calculate the area of the triangular region bounded by two graphed linear equations and a coordinate axis",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-intersecting",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Test Unique Solution Condition Using Ratios",
+      "outcome": "Apply the condition a1/a2 != b1/b2 to test whether a pair of linear equations has a unique solution and is consistent",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Test Infinite Solutions Condition Using Ratios",
+      "outcome": "Apply the condition a1/a2 = b1/b2 = c1/c2 to test whether a pair of linear equations has infinitely many solutions and is dependent/consistent",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Test No Solution Condition Using Ratios",
+      "outcome": "Apply the condition a1/a2 = b1/b2 != c1/c2 to test whether a pair of linear equations has no solution and is inconsistent",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-unknown-parameter-consistency",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Determine Parameter for Consistency Condition",
+      "outcome": "Calculate the value of an unknown parameter k that gives a system unique, infinitely many, or no solutions",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-intersecting",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Express Variable in Terms of Another",
+      "outcome": "Rearrange a linear equation in two variables to express one variable explicitly in terms of the other",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Linear System by Substitution",
+      "outcome": "Calculate the solution (x, y) of a system of linear equations by substituting an expression for one variable into the second equation",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-verify-solution-algebraically",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Verify Solution in Original Equations",
+      "outcome": "Verify whether a candidate pair (x, y) satisfies both original equations simultaneously by direct substitution",
+      "prerequisites": [
+        "class10-mathematics-polynomials-evaluate-at-given-value",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-substitution-degenerate-cases",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Interpret Degenerate Algebraic Statements",
+      "outcome": "Conclude whether a system has no solution or infinitely many solutions when substitution produces a false statement (e.g., 0 = 5) or an identity (e.g., 0 = 0)",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Choose Optimal Variable to Eliminate",
+      "outcome": "Select the variable whose elimination requires the simplest scaling multiplier based on LCM of coefficients",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
+        "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Scale Linear Equations to Equate Coefficients",
+      "outcome": "Multiply one or both linear equations by non-zero constants to equate the absolute values of the coefficients of one variable",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Linear System by Elimination",
+      "outcome": "Calculate the solution pair (x, y) by adding or subtracting scaled equations to eliminate one variable",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-symmetric-coefficient-system",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Systems with Interchanged Coefficients",
+      "outcome": "Solve large-coefficient systems of the form ax + by = c and bx + ay = d by sequentially adding and subtracting the equations",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-age",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Age-Related Word Problems",
+      "outcome": "Formulate and solve a system of linear equations derived from age-relation conditions",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-fractions-and-numbers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Number and Fraction Word Problems",
+      "outcome": "Formulate and solve a pair of linear equations for unknown numbers or numerator-denominator fraction problems",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-two-digit-numbers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Two-Digit Reversal Word Problems",
+      "outcome": "Formulate and solve a linear system representing a two-digit number (10x + y) and its reversed digit value (10y + x)",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "pair-of-linear-equations-in-two-variables",
+      "title": "Solve Fixed and Variable Cost or Speed Problems",
+      "outcome": "Formulate and solve a pair of linear equations representing fixed/variable charges or speed-distance-time relations",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-define-standard-form",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "State standard form of quadratic equation",
+      "outcome": "State the standard form of a quadratic equation in one variable as ax² + bx + c = 0 with a ≠ 0.",
+      "prerequisites": [
+        "class10-mathematics-polynomials-identify-standard-form-coefficients",
+        "class10-mathematics-polynomials-classify-by-degree"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-identify-coefficients",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Identify coefficients a, b, and c",
+      "outcome": "Identify the values of coefficients a, b, and constant c from a quadratic equation written in standard form.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-standard-form"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-verify-by-simplification",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Verify equation is quadratic by simplifying",
+      "outcome": "Simplify algebraic expressions involving brackets or powers to verify whether a given equation reduces to ax² + bx + c = 0 with a ≠ 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-distinguish-degree",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Distinguish quadratic from linear and cubic",
+      "outcome": "Distinguish quadratic equations from linear and cubic equations after expanding and collecting like terms.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-verify-by-simplification"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-formulate-geometric-context",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Formulate quadratic equation from geometry",
+      "outcome": "Formulate a quadratic equation to represent geometric situations involving area or perimeter of rectangular shapes.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-formulate-number-relation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Formulate quadratic equation from number problems",
+      "outcome": "Formulate a quadratic equation from statements relating consecutive integers, squares, or reciprocals of numbers.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-standard-form"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-define-root",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Define root of a quadratic equation",
+      "outcome": "Define a root of a quadratic equation ax² + bx + c = 0 as a value of x that satisfies the equation.",
+      "prerequisites": [
+        "class10-mathematics-polynomials-define-zero-of-polynomial",
+        "class10-mathematics-quadratic-equations-define-standard-form"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-verify-given-root",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Verify whether a value is a root",
+      "outcome": "Substitute a given numerical value into ax² + bx + c = 0 to verify whether it is a root.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-root",
+        "class10-mathematics-polynomials-verify-zero-algebraically"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-zero-product-rule",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Apply zero product property to linear factors",
+      "outcome": "Apply the zero product property to set each linear factor equal to zero and extract individual roots.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-define-root"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-solve-pure-quadratic",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve incomplete quadratic equations",
+      "outcome": "Solve incomplete quadratic equations of forms ax² + c = 0 or ax² + bx = 0 by taking square roots or factoring out x.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-zero-product-rule"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-split-middle-term-monic",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve monic quadratic by splitting middle term",
+      "outcome": "Solve quadratic equations of the form x² + bx + c = 0 by splitting the middle term into two factors whose sum is b and product is c.",
+      "prerequisites": [
+        "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
+        "class10-mathematics-quadratic-equations-zero-product-rule"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-split-middle-term-non-monic",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve non-monic quadratic by factorisation",
+      "outcome": "Solve quadratic equations ax² + bx + c = 0 with a ≠ 1 by splitting the middle term using factors of ac.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-split-middle-term-monic"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-factorise-irrational-coefficients",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve quadratic with radical coefficients by factorisation",
+      "outcome": "Factorise and solve quadratic equations containing square root terms in the coefficients.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-split-middle-term-non-monic"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-word-problems-factorisation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve real-world problems using factorisation",
+      "outcome": "Formulate and solve real-world word problems using the method of factorisation, rejecting inadmissible roots.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-formulate-geometric-context",
+        "class10-mathematics-quadratic-equations-formulate-number-relation",
+        "class10-mathematics-quadratic-equations-split-middle-term-non-monic"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-state-quadratic-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "State quadratic formula",
+      "outcome": "State the quadratic formula x = (-b ± √(b² - 4ac)) / (2a) for solving ax² + bx + c = 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-identify-coefficients"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-calculate-discriminant",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Calculate the discriminant D",
+      "outcome": "Calculate the discriminant D = b² - 4ac given the coefficients of a quadratic equation.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-identify-coefficients"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-solve-using-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve quadratic equations using quadratic formula",
+      "outcome": "Apply the quadratic formula to compute real roots of quadratic equations when D ≥ 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-state-quadratic-formula",
+        "class10-mathematics-quadratic-equations-calculate-discriminant"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-relate-discriminant-positive",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Identify distinct real roots when D > 0",
+      "outcome": "Conclude that a quadratic equation has two distinct real roots when the discriminant D > 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-calculate-discriminant"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-relate-discriminant-zero",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Identify equal real roots when D = 0",
+      "outcome": "Conclude that a quadratic equation has two equal real roots (coincident roots) when the discriminant D = 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-calculate-discriminant"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-relate-discriminant-negative",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Identify no real roots when D < 0",
+      "outcome": "Conclude that a quadratic equation has no real roots when the discriminant D < 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-calculate-discriminant"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-find-parameter-for-equal-roots",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Find unknown coefficient for equal roots",
+      "outcome": "Set the discriminant b² - 4ac = 0 to calculate the value of an unknown parameter k that yields equal real roots.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-relate-discriminant-zero"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-determine-existence-of-real-solution",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Determine feasibility of word problem scenarios",
+      "outcome": "Determine whether a given real-world situation is mathematically possible by checking if the resulting discriminant satisfies D ≥ 0.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-relate-discriminant-positive",
+        "class10-mathematics-quadratic-equations-relate-discriminant-negative",
+        "class10-mathematics-quadratic-equations-formulate-geometric-context"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-word-problems-speed-time",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve speed, distance, and time problems",
+      "outcome": "Formulate and solve quadratic equations arising from uniform motion, upstream/downstream, and train speed word problems.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-solve-using-formula",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-quadratic-equations-word-problems-work-and-pipes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "quadratic-equations",
+      "title": "Solve work and pipe flow problems",
+      "outcome": "Formulate and solve quadratic equations representing combined rates of work or water taps filling a tank together.",
+      "prerequisites": [
+        "class10-mathematics-quadratic-equations-solve-using-formula"
+      ],
+      "difficulty": 5
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-define-sequence-pattern",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Identify Patterns in Number Lists",
+      "outcome": "Identify the rule or pattern connecting consecutive terms in a given list of numbers",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-define-ap",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Define Arithmetic Progression",
+      "outcome": "State the definition of an Arithmetic Progression as a sequence where each term after the first is obtained by adding a fixed number",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-define-sequence-pattern"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Identify First Term and Common Difference",
+      "outcome": "Identify the first term 'a' and calculate the common difference 'd' from a given list of numbers",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-define-ap"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Verify if Sequence is an AP",
+      "outcome": "Determine whether a given sequence forms an AP by checking if the difference between consecutive terms is constant",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-distinguish-finite-infinite-ap",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Distinguish Finite and Infinite APs",
+      "outcome": "Classify a given AP as finite or infinite based on whether it has a last term",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-define-ap"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Write Next Terms Given a and d",
+      "outcome": "Calculate the first few terms of an AP given its initial term 'a' and common difference 'd'",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-derive-nth-term-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Derive General nth Term Formula",
+      "outcome": "Derive the general term formula a_n = a + (n - 1)d by observing the pattern of consecutive terms",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-calculate-nth-term",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Calculate Specific nth Term",
+      "outcome": "Calculate a specified term a_n of an AP given its first term 'a', common difference 'd', and index 'n'",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-derive-nth-term-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-find-number-of-terms",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Find Number of Terms in Finite AP",
+      "outcome": "Calculate the total number of terms 'n' in a finite AP given its first term, common difference, and last term",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-nth-term"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-determine-term-membership",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Check if a Number is a Term of an AP",
+      "outcome": "Determine whether a given number is a term of an AP by testing if the computed value of 'n' is a positive integer",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-nth-term"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-find-nth-term-from-end",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Calculate nth Term from the End",
+      "outcome": "Calculate the nth term from the end of a finite AP using the formula l - (n - 1)d or by reversing the AP",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-nth-term"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-determine-ap-from-two-terms",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Determine AP from Two Given Terms",
+      "outcome": "Find the first term and common difference of an AP by solving a pair of linear equations formed from two known terms",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-nth-term",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-condition-for-three-terms-in-ap",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Apply Arithmetic Mean Condition for Three Terms",
+      "outcome": "Apply the condition 2b = a + c for three consecutive terms a, b, c to find an unknown variable",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-derive-sum-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Derive Sum of First n Terms Formula",
+      "outcome": "Derive the formula S_n = (n/2)[2a + (n - 1)d] using the method of pairing terms from opposite ends",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-derive-nth-term-formula"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Calculate Sum Given First Term, Difference, and n",
+      "outcome": "Calculate the sum of the first n terms of an AP using S_n = (n/2)[2a + (n - 1)d]",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-derive-sum-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Calculate Sum Given First and Last Term",
+      "outcome": "Calculate the sum of a finite AP using the formula S_n = (n/2)(a + l)",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-derive-sum-formula"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-sum-of-first-n-natural-numbers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Calculate Sum of First n Natural Numbers",
+      "outcome": "Apply the formula S_n = n(n + 1)/2 to compute the sum of the first n positive integers",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-find-n-given-sum",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Find Number of Terms Given the Sum",
+      "outcome": "Calculate the number of terms 'n' required to get a specified sum by formulating and solving a quadratic equation",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
+        "class10-mathematics-quadratic-equations-split-middle-term-monic"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-interpret-double-answer-for-n",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Explain Double Answers in Sum Problems",
+      "outcome": "Explain why two different values of n yield the same sum in an AP with positive and negative terms",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-find-n-given-sum"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-relate-nth-term-to-sum",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Find nth Term from Sum Formula S_n",
+      "outcome": "Calculate the nth term and common difference of an AP given its sum expression S_n using the relation a_n = S_n - S_{n-1}",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-sum-of-multiples-in-range",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Sum Multiples or Divisible Numbers in an Interval",
+      "outcome": "Compute the sum of all integers divisible by a given number between two limits by framing them as an AP",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-find-number-of-terms",
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-word-problems-nth-term",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Solve Real-World Word Problems Using nth Term",
+      "outcome": "Formulate and solve real-world problems involving salary increments, production targets, or seating rows using the nth term formula",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-nth-term",
+        "class10-mathematics-arithmetic-progressions-find-number-of-terms"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-word-problems-sum",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Solve Real-World Word Problems Using Sum of AP",
+      "outcome": "Solve applied contextual problems (such as total savings, prize distributions, spiral lengths, or log stacking) using summation formulas",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
+        "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
+      ],
+      "difficulty": 4
+    },
+    {
+      "id": "class10-mathematics-arithmetic-progressions-select-symmetric-terms",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "arithmetic-progressions",
+      "title": "Select Symmetric AP Terms to Solve Unknowns",
+      "outcome": "Set up symmetric algebraic representations for 3 or 4 terms in AP (such as a-d, a, a+d) to solve problems involving both term sums and products",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
+        "class10-mathematics-quadratic-equations-solve-pure-quadratic"
+      ],
+      "difficulty": 4
+    }
+  ]
+}
