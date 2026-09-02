@@ -48,7 +48,7 @@ export function buildPlan(
   return {
     mastery: session.mastery,
     gaps,
-    plan: orderPlan(gaps, index, maxSteps),
+    plan: stepsFrom(gaps, index, maxSteps),
     answers: session.answers,
   };
 }
@@ -57,8 +57,13 @@ export function buildPlan(
  * Take the worst gaps, then re-sort them so nothing is taught before what it
  * rests on. The scoring picks WHICH nodes make the plan; the topological order
  * decides the sequence.
+ *
+ * Exported because the adaptive loop needs the SAME ordering: a foundation
+ * found by a failed topic test must be taught before the thing that rests on
+ * it, exactly as one found by the placement test is. Two orderings would be
+ * two answers to the same question.
  */
-function orderPlan(gaps: Gap[], index: GraphIndex, maxSteps: number): PlanStep[] {
+export function stepsFrom(gaps: readonly Gap[], index: GraphIndex, maxSteps: number): PlanStep[] {
   const gapIds = new Set(gaps.map((g) => g.nodeId));
 
   // Walk the worst gaps in score order, but pull in any gap they depend on

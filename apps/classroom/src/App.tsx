@@ -21,6 +21,7 @@ import { hrefFor } from './lib/destination';
 import { reportCrash, track } from './lib/telemetry';
 import { isNative } from './lib/platform';
 import type { QuizOutcome } from './lib/quiz';
+import type { PlanChange } from './lib/adaptPlan';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
 
 /**
@@ -150,6 +151,9 @@ function QuizRoute() {
   const { lessonRef } = useParams<{ lessonRef: string }>();
   const navigate = useNavigate();
   const [outcome, setOutcome] = useState<QuizOutcome | null>(null);
+  // What the test changed about the plan, held beside the score because they
+  // are two halves of one moment: what you did, and what it did.
+  const [change, setChange] = useState<PlanChange | null>(null);
   // Retry remounts rather than resets: the quiz keeps per-question timing in
   // refs, and only a fresh mount makes the clock honest on the second attempt.
   const [attempt, setAttempt] = useState(0);
@@ -186,12 +190,15 @@ function QuizRoute() {
     return (
       <QuizResult
         outcome={outcome}
+        adapted={change}
         onContinue={leave}
         onRetry={() => {
           setOutcome(null);
+          setChange(null);
           setAttempt((n) => n + 1);
         }}
         onReview={() => navigate(`/lesson/${lessonRef}`)}
+        onOpenPlan={() => navigate('/plan')}
       />
     );
   }
@@ -201,7 +208,10 @@ function QuizRoute() {
       key={attempt}
       lessonRef={lessonRef}
       topicRef={entry?.topicRef}
-      onComplete={setOutcome}
+      onComplete={(result, planChange) => {
+        setOutcome(result);
+        setChange(planChange);
+      }}
       onExit={leave}
     />
   );

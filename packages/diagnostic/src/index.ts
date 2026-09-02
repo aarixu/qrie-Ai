@@ -12,4 +12,11 @@ export {
 
 export { selectNextProbe, availableProbeCount, type SelectOptions } from './select';
 
-export { buildPlan, type PlanOptions } from './plan';
+export { buildPlan, stepsFrom, type PlanOptions } from './plan';
+
+export {
+  learnFromQuiz,
+  MAX_NEW_STEPS,
+  type Adapted,
+  type AdaptOptions,
+} from './adapt';

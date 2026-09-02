@@ -7,6 +7,7 @@ import {
   type QuizQuestion,
 } from '../lib/quiz';
 import { recordAttempt } from '../stores/quizHistory';
+import { adaptToQuiz, type PlanChange } from '../lib/adaptPlan';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
 
@@ -52,8 +53,11 @@ export function PracticeQuiz({
    * rendering it rather than by driving a router.
    */
   topicRef?: string;
-  /** Called once, with the graded attempt, when the last question is checked. */
-  onComplete: (outcome: QuizOutcome) => void;
+  /**
+   * Called once, with the graded attempt and whatever it changed about the
+   * student's plan, when the last question is checked.
+   */
+  onComplete: (outcome: QuizOutcome, change: PlanChange | null) => void;
   /** Called when the student closes the quiz, or when this lesson has no quiz. */
   onExit: () => void;
   /** Hands the current question to the live doubt tutor. */
@@ -133,7 +137,25 @@ export function PracticeQuiz({
     // Recorded here rather than left to the caller: history is the retention
     // signal, and it must not depend on every future integrator remembering.
     recordAttempt(outcome.lessonRef, outcome.score, outcome.total);
-    onComplete(outcome);
+    /**
+     * AND THE MAP HEARS ABOUT IT.
+     *
+     * For the same reason, and it matters more: this test is the only moment
+     * the app finds out whether a class landed. Without it the score went into
+     * a history nothing reads, and a student who got every question wrong was
+     * sent on to the next chapter regardless. Every question here is a probe
+     * with a node id, so the evidence is exact.
+     *
+     * Never allowed to cost the student their result — a map that cannot be
+     * updated is a worse day, not a lost quiz.
+     */
+    let change: PlanChange | null = null;
+    try {
+      change = adaptToQuiz(outcome);
+    } catch (e) {
+      console.error('[adapt] the plan could not be updated:', e);
+    }
+    onComplete(outcome, change);
   };
 
   const cardClass = (i: number): string => {

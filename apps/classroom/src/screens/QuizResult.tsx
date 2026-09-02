@@ -1,3 +1,4 @@
+import type { PlanChange } from '../lib/adaptPlan';
 import { formatDuration, type QuizOutcome, type QuizResultRow } from '../lib/quiz';
 import { Icon } from '../ui/Icon';
 
@@ -33,19 +34,34 @@ const verdictFor = (score: number, total: number) => {
 
 export function QuizResult({
   outcome,
+  adapted,
   onContinue,
   onRetry,
   onReview,
+  onOpenPlan,
 }: {
   outcome: QuizOutcome;
+  /**
+   * What this test changed about the student's plan, if anything.
+   *
+   * Shown because a plan that silently grew is a student wondering where a
+   * class came from — and because the whole point of a topic test is that
+   * something happens afterwards. Null when there is no plan to change: a
+   * student who never sat the placement test still gets a score.
+   */
+  adapted?: PlanChange | null;
   /** The single forward action; the header's close does the same thing. */
   onContinue: () => void;
   /** Rebuilds the same quiz — it is deterministic, so a retry is a real retest. */
   onRetry: () => void;
   /** Takes the student back to what the missed question was about. */
   onReview?: (row: QuizResultRow) => void;
+  /** Opens the study plan, where the added classes are. */
+  onOpenPlan?: () => void;
 }) {
   const { score, total, elapsedMs, bestStreak, rows } = outcome;
+  const added = adapted?.added ?? [];
+  const dropped = adapted?.dropped ?? [];
   const wrong = rows.filter((row) => !row.correct);
   const perfect = wrong.length === 0 && total > 0;
   const verdict = verdictFor(score, total);
@@ -130,6 +146,48 @@ export function QuizResult({
               </div>
             </div>
           </section>
+
+          {/*
+            WHAT THE TEST CHANGED.
+            The reason to sit one at all. A score is a fact about the past; a
+            class added to the plan is the app doing something about it — and a
+            step dropped is it noticing they have fixed something, which is
+            worth as much and is easier to forget to say.
+          */}
+          {added.length > 0 && (
+            <section className="px-margin-mobile mb-stack-md">
+              <button
+                onClick={onOpenPlan}
+                className="w-full text-left bg-primary-container text-on-primary-container rounded-[20px] p-4 flex items-start gap-3 transition-transform active:scale-[0.99]"
+              >
+                <Icon name="auto_awesome" filled className="text-[22px] mt-0.5 shrink-0" />
+                <span className="min-w-0">
+                  <span className="block font-headline-md text-[17px] leading-6">
+                    {added.length === 1
+                      ? 'I have added a class to your plan'
+                      : `I have added ${added.length} classes to your plan`}
+                  </span>
+                  <span className="block font-body-md text-body-md opacity-80">
+                    {added.map((step) => step.title).join(', ')}
+                  </span>
+                </span>
+                {onOpenPlan && <Icon name="chevron_right" className="shrink-0 mt-1" />}
+              </button>
+            </section>
+          )}
+
+          {dropped.length > 0 && (
+            <section className="px-margin-mobile mb-stack-md">
+              <div className="w-full ring-tint-green ink-green rounded-[20px] p-4 flex items-start gap-3">
+                <Icon name="check_circle" filled className="text-[22px] mt-0.5 shrink-0" />
+                <span className="font-body-md text-body-md">
+                  {dropped.length === 1
+                    ? `You have got ${dropped[0].title} — it is off your plan.`
+                    : `${dropped.length} things came off your plan.`}
+                </span>
+              </div>
+            </section>
+          )}
 
           {perfect ? (
             /* A heading over an empty list reads as a bug and steals the win, so

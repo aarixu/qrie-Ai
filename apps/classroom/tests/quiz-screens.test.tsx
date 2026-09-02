@@ -181,3 +181,52 @@ describe('QuizResult', () => {
     expect(html).toContain(`Streak ${quiz.length} correct`);
   });
 });
+
+describe('QuizResult: what the test changed', () => {
+  const outcome = gradeQuiz(quiz, answersWithCorrect([0, 2]));
+
+  const render = (adapted: { added: { nodeId: string; title: string }[]; dropped: { nodeId: string; title: string }[] } | null) =>
+    decode(renderToString(<QuizResult outcome={outcome} adapted={adapted} onContinue={noop} onRetry={noop} />));
+
+  it('says a class was added, and names it', () => {
+    // The reason to sit a topic test at all. A score is a fact about the past;
+    // a class in the plan is the app doing something about it — and a plan
+    // that silently grew is a student wondering where a class came from.
+    const html = render({ added: [{ nodeId: 'x', title: 'Multiplying fractions' }], dropped: [] });
+
+    expect(html).toContain('I have added a class to your plan');
+    expect(html).toContain('Multiplying fractions');
+  });
+
+  it('counts them when there is more than one', () => {
+    const html = render({
+      added: [
+        { nodeId: 'x', title: 'Multiplying fractions' },
+        { nodeId: 'y', title: 'What a fraction is' },
+      ],
+      dropped: [],
+    });
+
+    expect(html).toContain('I have added 2 classes to your plan');
+  });
+
+  it('says when something came OFF the plan', () => {
+    // The half that is easy to forget. A plan that only ever grows is a list
+    // of failures; taking something off is the app noticing they fixed it.
+    const html = render({ added: [], dropped: [{ nodeId: 'x', title: 'What a fraction is' }] });
+
+    expect(html).toContain('What a fraction is');
+    expect(html).toContain('off your plan');
+  });
+
+  it('says nothing at all when nothing changed', () => {
+    const html = render({ added: [], dropped: [] });
+
+    expect(html).not.toContain('your plan');
+  });
+
+  it('renders exactly as before for a student with no plan', () => {
+    // Somebody who never sat the placement test still gets their score.
+    expect(render(null)).not.toContain('your plan');
+  });
+});
