@@ -21,8 +21,19 @@
 // handleRelay.
 //
 // Secrets it needs (supabase secrets set ...):
-//   OPENROUTER_API_KEY   the one key the browser must never see
+//   OPENROUTER_API_KEY   still needed: the tutor's VOICE is Deepgram aura-2
+//                        through OpenRouter, and Google's voices are a
+//                        different person. Also transcription.
 //   RELAY_TICKET_SECRET  any long random string; signs speech tickets
+//   GOOGLE_SERVICE_ACCOUNT_JSON
+//                        the whole service account key file, as one string.
+//                        Present: the planner, the artist, the vision calls
+//                        and image generation all go to Vertex on Google
+//                        Cloud credits. Absent: OpenRouter serves them, as
+//                        before. Set it with
+//                          supabase secrets set --env-file <(printf 'GOOGLE_SERVICE_ACCOUNT_JSON=%s' "$(cat key.json)")
+//                        rather than on a command line, where the private key
+//                        would land in shell history.
 // Supabase supplies SUPABASE_URL, SUPABASE_ANON_KEY and
 // SUPABASE_SERVICE_ROLE_KEY by itself.
 
@@ -33,6 +44,7 @@ import {
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
 import { handleRelay, type HandlerDeps } from '../../../packages/relay/src/handler.ts';
 import { keepClass } from '../../../packages/relay/src/classStore.ts';
+import { createTokenSource, readServiceAccount } from '../../../packages/relay/src/googleAuth.ts';
 import { toRelayRequest, toResponse, transcribeViaFormData } from '../../../packages/relay/src/web.ts';
 
 const env = (name: string): string => Deno.env.get(name) ?? '';
@@ -42,6 +54,28 @@ const ANON_KEY = env('SUPABASE_ANON_KEY');
 const SERVICE_ROLE_KEY = env('SUPABASE_SERVICE_ROLE_KEY');
 const OPENROUTER_API_KEY = env('OPENROUTER_API_KEY');
 const TICKET_SECRET = env('RELAY_TICKET_SECRET');
+const SERVICE_ACCOUNT_JSON = env('GOOGLE_SERVICE_ACCOUNT_JSON');
+
+/**
+ * GOOGLE CLOUD, WHEN THERE IS A KEY FOR IT.
+ *
+ * Built ONCE, at module scope, because the token it mints is cached inside it:
+ * rebuilding per request would sign a fresh RSA assertion and make a round
+ * trip to Google on every single model call.
+ *
+ * A bad key must not take the whole function down. Speech, transcription and
+ * class-keeping have nothing to do with Google, and a truncated paste into a
+ * secret should cost the models rather than the lesson — so it is caught,
+ * logged with the reason, and the relay falls back to OpenRouter.
+ */
+let vertex: { tokens: ReturnType<typeof createTokenSource> } | undefined;
+if (SERVICE_ACCOUNT_JSON) {
+  try {
+    vertex = { tokens: createTokenSource(readServiceAccount(SERVICE_ACCOUNT_JSON)) };
+  } catch (e) {
+    console.error('GOOGLE_SERVICE_ACCOUNT_JSON is set but unusable:', (e as Error).message);
+  }
+}
 
 /**
  * The browser calls this from its own origin in production and from
@@ -74,6 +108,7 @@ const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
  */
 const deps: HandlerDeps = {
   key: OPENROUTER_API_KEY,
+  ...(vertex ? { vertex } : {}),
   gate: {
     verify,
     ledger,

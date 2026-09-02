@@ -16,7 +16,11 @@ assets/build/
 .DS_Store
 Thumbs.db
 .claude/settings.local.json
-tools/bin/
+# A downloaded Blender install, not our code. This line used to read
+# `tools/bin/` and swept up every script beside it — including
+# check-bundle-secrets.mjs, which is in the project's own verification
+# routine and was therefore missing from every clone of this repo.
+tools/bin/blender/
 # livekit-server, downloaded on demand by tools/livekit. Never committed.
 tools/livekit/bin/
 

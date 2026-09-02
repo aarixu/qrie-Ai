@@ -18,6 +18,8 @@ import {
   cacheVerifier,
   createMemoryLedger,
   createSupabaseVerifier,
+  createTokenSource,
+  readServiceAccount,
   handleRelay,
   sendRelayResponse,
   toRelayRequest,
@@ -51,12 +53,45 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
     ledger: createMemoryLedger(),
     ticketSecret: 'dev-only-ticket-secret',
   };
+  /**
+   * The same Google credential the deployed relay uses, when there is one.
+   *
+   * Read from a FILE here rather than an env var, because that is the shape it
+   * arrives in and pasting a PEM through a shell is how its newlines get lost.
+   * Absent: the dev relays talk to OpenRouter exactly as they always have, so
+   * nobody needs a Google account to run the app.
+   */
+  const accountPath =
+    process.env.GOOGLE_SERVICE_ACCOUNT_FILE ?? '.secrets/vertex-service-account.json';
+  // Relative to THIS file, not to the working directory. `npm run dev` from
+  // the repo root and `npx vite` from apps/classroom have different cwds, and
+  // the second one is how this was first tested.
+  const accountFile = path.resolve(fileURLToPath(new URL('../..', import.meta.url)), accountPath);
+
+  let vertex: { tokens: TokenSource } | undefined;
+  if (fs.existsSync(accountFile)) {
+    try {
+      vertex = { tokens: createTokenSource(readServiceAccount(fs.readFileSync(accountFile, 'utf8'))) };
+    } catch (e) {
+      // Said out loud. A silent catch here cost a debugging round already:
+      // the file was there, the path was right, and two missing imports made
+      // it look exactly like a missing service account.
+      console.error(`  relays: ${accountFile} is unusable — ${(e as Error).message}`);
+    }
+  }
+
   const deps = {
     key,
     gate,
+    ...(vertex ? { vertex } : {}),
     transcribe: (model: string, contentType: string, audio: Uint8Array) =>
       transcribeViaFormData(key, model, contentType, audio),
   };
+  console.log(
+    vertex
+      ? '  relays: models on Vertex, speech on OpenRouter'
+      : '  relays: everything on OpenRouter (no service account file found)',
+  );
 
   return {
     name: 'curie-openrouter-relays',

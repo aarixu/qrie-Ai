@@ -10,6 +10,7 @@ import {
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
+import { completeOnVertex, type VertexOptions } from './vertex.ts';
 
 /**
  * ONE ROUTER, RUN BY BOTH SIDES.
@@ -25,9 +26,30 @@ import { readSavedClass } from './classStore.ts';
  */
 
 export interface HandlerDeps {
-  /** The OpenRouter key. Never leaves the server. */
+  /**
+   * The OpenRouter key. Never leaves the server.
+   *
+   * Still needed for SPEECH even when Vertex serves the models: the tutor's
+   * voice is Deepgram aura-2 through OpenRouter, and Google's own voices are
+   * a different person. Speech is on its way to being on-device anyway, so
+   * moving it now would be work spent on something being replaced.
+   */
   key: string;
   gate: Gate;
+  /**
+   * Google Cloud, for everything that thinks or draws.
+   *
+   * Present: /api/llm goes to Vertex — planner, artist, vision and image
+   * generation, all on credits attached to a project rather than a prepaid
+   * balance. Absent: OpenRouter serves it exactly as before, which is what
+   * the dev server does when nobody has set a service account.
+   *
+   * The app is not told which. It posts OpenAI chat completions either way and
+   * the translation lives in vertex.ts, because a browser that knows which
+   * provider is behind it is a browser that will one day be asked to hold the
+   * credential too.
+   */
+  vertex?: VertexOptions;
   /**
    * Hand raw audio to a transcriber. Left to the host because it is the one
    * place a platform's FormData shows through; `transcribeViaFormData` in
@@ -127,7 +149,24 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
 
-  if (relay === 'llm') return llmRelay(req, deps.key);
+  if (relay === 'llm') {
+    if (deps.vertex) {
+      if (req.method !== 'POST') return fail(405, 'POST only');
+      let chat: unknown;
+      try {
+        chat = JSON.parse(new TextDecoder().decode(req.body));
+      } catch {
+        return fail(400, 'the request body was not JSON');
+      }
+      const answer = await completeOnVertex(chat as Parameters<typeof completeOnVertex>[0], deps.vertex);
+      return {
+        status: answer.status,
+        headers: { 'content-type': 'application/json' },
+        body: { kind: 'json', value: answer.body },
+      };
+    }
+    return llmRelay(req, deps.key);
+  }
   if (relay === 'speech') return speechRelay(req, deps.key);
 
   if (relay === 'class') {

@@ -61,3 +61,5 @@ export {
   toResponse,
   transcribeViaFormData,
 } from './web.ts';
+export * from './googleAuth.ts';
+export * from './vertex.ts';
