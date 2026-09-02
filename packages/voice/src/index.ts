@@ -93,3 +93,9 @@ export {
 } from './utterance';
 
 export { createStreamingTts, type StreamingTtsOptions, type SpeechElement } from './streamingTts';
+export { encodeWav, wavUrl } from './wav';
+export {
+  createOnDeviceTts,
+  type OnDeviceTtsOptions,
+  type Synthesiser,
+} from './onDeviceTts';

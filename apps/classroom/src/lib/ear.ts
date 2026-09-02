@@ -1,5 +1,6 @@
 import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE } from '@ai-tutor/voice';
 import { relayFetch } from './relay';
+import { hearOnDevice } from './onDeviceSpeech';
 
 /**
  * THE EAR - the mic that turns itself on when she asks.
@@ -169,6 +170,28 @@ export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Pr
   for (const c of all) {
     pcm.set(c, at);
     at += c.length;
+  }
+
+  /**
+   * HEARD ON THE PHONE FIRST.
+   *
+   * Whisper tiny, 43 MB, about a second for five seconds of speech. The
+   * student's voice does not leave the device at all — which is the whole
+   * reason to do it here rather than the forty milliseconds it saves.
+   *
+   * The relay is still behind it. On-device is an improvement on sending the
+   * audio away, not a requirement for being heard: a phone that cannot load
+   * the model, or a line it makes nothing of, still gets an answer rather than
+   * a shrug. A student who spoke and was not heard is the one outcome this
+   * whole path exists to prevent.
+   */
+  try {
+    const samples = new Float32Array(pcm.length);
+    for (let i = 0; i < pcm.length; i += 1) samples[i] = pcm[i] / 32768;
+    const local = await hearOnDevice(samples);
+    if (local) return { text: local, reason: 'heard' };
+  } catch {
+    // Fall through to the relay, which is exactly what it is for.
   }
 
   try {

@@ -3,10 +3,12 @@ import { currentSpeechTicket, relayUrl, speechTicket } from './relay';
 import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
 import {
   MANIFEST_FILE,
+  createOnDeviceTts,
   createStreamingTts,
   createRecordedTts,
   parseManifest,
 } from '@ai-tutor/voice';
+import { onDeviceSynth } from './onDeviceSpeech';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import { lessonAudioUrl, type CatalogEntry } from './content';
 import { announceLine, avatarAudio } from '../avatar/avatarBus';
@@ -121,12 +123,30 @@ export function useLessonVoice(
             .catch(() => null)
         : null;
 
+      /**
+       * HER OWN VOICE, ON THE PHONE, ABOVE THE CLOUD ONE.
+       *
+       * Free, private, and it works with no network at all — which for a
+       * student in India is most of the ways a class gets taken. The cloud
+       * voice stays UNDER it rather than beside it: three hundred megabytes
+       * arrive once, and the first class on a cold install must not open with
+       * a minute of silence while they do.
+       *
+       * The avatar's own audio factory, so the mouth still moves to the clock
+       * the student hears rather than to ours.
+       */
+      const onDevice = createOnDeviceTts({
+        synth: onDeviceSynth(),
+        audio: avatarAudio,
+        fallback: live,
+      });
+
       if (cancelled) return;
       setTts(
         withFace(
           manifest && audioUrl
-            ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live })
-            : live,
+            ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: onDevice })
+            : onDevice,
         ),
       );
     })().catch(() => {
