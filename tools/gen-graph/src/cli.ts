@@ -57,7 +57,16 @@ Env (read from .env.local at the repo root, or the shell):
   OPENROUTER_API_KEY        https://openrouter.ai/keys
   OPENROUTER_MODEL          default "stealth/ox-alpha" (free)
   OPENROUTER_REASONING_EFFORT  low (default) | high | max
-  GOOGLE_API_KEY | GEMINI_API_KEY | ANTHROPIC_API_KEY`);
+  GOOGLE_API_KEY | GEMINI_API_KEY | ANTHROPIC_API_KEY
+  GEMINI_MODEL              default "gemini-3.8-flash". NOT 3.7-flash: it is
+                            in the model list and never answers.
+  GEMINI_ENDPOINT           "studio" (default) | "vertex". Same key, same
+                            header — Vertex express mode needs no service
+                            account. Use "vertex" when the key belongs to a
+                            Google Cloud project holding credits; unpaid AI
+                            Studio is capped at 20 requests A DAY per model.
+  GEMINI_BASE_URL           override both, e.g. a regional Vertex host
+  GEMINI_THINKING           thinking budget, default 1024`);
   process.exit(2);
 }
 

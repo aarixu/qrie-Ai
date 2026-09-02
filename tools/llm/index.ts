@@ -60,19 +60,52 @@ export async function withRetries(call: () => Promise<Response>): Promise<Respon
   return last!;
 }
 
+/**
+ * WHICH GOOGLE ENDPOINT THE KEY IS FOR.
+ *
+ * Two doors onto the same models, and one API key opens either — Vertex's
+ * express mode takes the same `x-goog-api-key` header, with no service
+ * account, no OAuth token and no hourly refresh. That was worth checking
+ * before building any of it: the difference is one base URL.
+ *
+ * Which door to use is a billing question, not a technical one. A key made in
+ * a project that holds Google Cloud credits spends those credits through
+ * Vertex; the same call through generativelanguage.googleapis.com is billed as
+ * AI Studio and, unpaid, is capped at TWENTY REQUESTS A DAY per model —
+ * measured, from the quota error itself, not guessed. Seven hundred and eighty
+ * chapters at twenty a day is thirty-nine years.
+ */
+const DOORS = {
+  studio: 'https://generativelanguage.googleapis.com/v1beta/models',
+  vertex: 'https://aiplatform.googleapis.com/v1/publishers/google/models',
+} as const;
+
 export class GeminiAdapter implements LlmAdapter {
   private readonly key: string;
   private readonly model: string;
+  private readonly base: string;
 
   constructor(env: NodeJS.ProcessEnv = process.env) {
     const key = env.GOOGLE_API_KEY ?? env.GEMINI_API_KEY;
     if (!key) throw new Error('GeminiAdapter: set GOOGLE_API_KEY or GEMINI_API_KEY');
     this.key = key;
-    this.model = env.GEMINI_MODEL ?? 'gemini-3.7-flash';
+    /**
+     * MEASURED, not chosen from the version number.
+     *
+     * The default here was gemini-3.7-flash, which is in the model list and
+     * NEVER ANSWERS: calls with a one-pixel image aborted at 30 and 45
+     * seconds, three times, and so did gemini-3-flash-preview and
+     * gemini-flash-latest. gemini-2.5-flash is retired for new keys and
+     * 3.6-flash rejects this request shape. 3.8-flash replies in about four
+     * seconds. Nobody had run it, so nobody had found out.
+     */
+    this.model = env.GEMINI_MODEL ?? 'gemini-3.8-flash';
+    const door = env.GEMINI_ENDPOINT === 'vertex' ? 'vertex' : 'studio';
+    this.base = env.GEMINI_BASE_URL ?? DOORS[door];
   }
 
   async complete(system: string, user: string): Promise<string> {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`;
+    const url = `${this.base}/${this.model}:generateContent`;
     const res = await withRetries(() =>
       fetch(url, {
         method: 'POST',
@@ -82,7 +115,17 @@ export class GeminiAdapter implements LlmAdapter {
           contents: [{ role: 'user', parts: [{ text: user }] }],
           // The tools only ever want JSON; asking the API to enforce the mime
           // type cuts down on fenced or chatty replies before they happen.
-          generationConfig: { responseMimeType: 'application/json' },
+          generationConfig: {
+            responseMimeType: 'application/json',
+            /**
+             * The 3.x flash models think before answering by default and can
+             * spend minutes doing it. Generating a chapter of outcome nodes is
+             * a long WRITING task, not a puzzle — so a budget rather than
+             * zero: enough to plan the structure, not enough to deliberate.
+             * Override with GEMINI_THINKING when a task really wants more.
+             */
+            thinkingConfig: { thinkingBudget: Number(process.env.GEMINI_THINKING ?? 1024) },
+          },
         }),
       }),
     );

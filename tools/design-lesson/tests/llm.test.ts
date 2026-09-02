@@ -103,10 +103,18 @@ describe('GeminiAdapter', () => {
     expect(body.contents[0].parts[0].text).toBe('USER');
   });
 
-  it('defaults the model to gemini-3.7-flash', async () => {
+  it('defaults to a model that answers', async () => {
+    /**
+     * This used to pin gemini-3.7-flash, and pinning it is how a broken
+     * default survived: the model IS in Google's list, so nothing looked
+     * wrong, and it NEVER REPLIES — three calls with a one-pixel image aborted
+     * at 30 and 45 seconds. A green test asserting the name was the only
+     * evidence anyone had, and it was evidence of nothing.
+     */
     const calls = stubFetch({ candidates: [{ content: { parts: [{ text: '{}' }] } }] });
     await new GeminiAdapter({ GEMINI_API_KEY: 'gk' } as NodeJS.ProcessEnv).complete('s', 'u');
-    expect(calls[0].url).toContain('/models/gemini-3.7-flash:');
+    expect(calls[0].url).toContain('/models/gemini-3.8-flash:');
+    expect(calls[0].url).not.toContain('3.7-flash');
   });
 
   it('throws with the HTTP status on a failed request', async () => {
