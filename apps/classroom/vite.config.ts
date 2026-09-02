@@ -271,6 +271,22 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    /**
+     * ONE ENVIRONMENT FILE, AT THE REPO ROOT.
+     *
+     * Vite defaults this to the project root — apps/classroom — while the
+     * line above already reads the REPO root for OPENROUTER_API_KEY. Two
+     * files, and the app silently read only one of them: VITE_SUPABASE_URL
+     * and VITE_SUPABASE_ANON_KEY live at the root, so `supabase()` returned
+     * null and the cloud was quietly switched off. Harmless while that only
+     * meant no sync; fatal the moment every relay call started needing a
+     * session token, because a null client cannot mint one and every class
+     * fails with a 401.
+     *
+     * One file. The tools and the app read the same keys from the same place,
+     * and there is no second file for a value to hide in.
+     */
+    envDir: fileURLToPath(new URL('../..', import.meta.url)),
     // Lessons are data, served as static files: /index.json, /<lesson>/lesson.json
     publicDir: fileURLToPath(new URL('../../content', import.meta.url)),
     resolve: {
