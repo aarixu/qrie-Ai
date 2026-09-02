@@ -27,7 +27,7 @@ import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
-import { fromStudent } from '../lib/safety';
+import { fromStudent, toStudent } from '../lib/safety';
 import { ReportSheet } from '../ui/ReportSheet';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
@@ -419,6 +419,23 @@ export function ClassRoom({
   const inDoubt = handoffState !== 'PLAYING';
 
   /**
+   * ANYTHING SHE IS ABOUT TO SAY, LOOKED AT FIRST.
+   *
+   * The outbound half of the safety screen had no caller: every line the judge
+   * and the doubt tutor produced went straight to the speaker. It matters most
+   * exactly where a model is most likely to go wrong — repeating a child's
+   * disclosure back at them as if it were teaching — so this is on the path
+   * from a MODEL's words to the student's ears, and nowhere else. The lesson's
+   * own narration is not screened here: it came through prep, which screens
+   * what it plans, and re-checking it every beat would be a filter running
+   * against a fixed recording forever.
+   */
+  const speakSafely = async (text: string): Promise<void> => {
+    const screened = toStudent(text, lesson.id);
+    await tts.speak(screened.say ?? screened.text ?? text);
+  };
+
+  /**
    * THE EAR. When she asks, the mic opens on its own, waits for the spoken
    * answer, and closes when it lands — the raise-hand button stays for the
    * doubts the STUDENT starts. The chips stay tappable underneath as the
@@ -461,8 +478,11 @@ export function ClassRoom({
           ).catch(() => null);
           setEar('off');
           if (cancelled) return;
-          if (close) await tts.speak(close);
+          if (close) await speakSafely(close.say);
           if (cancelled) return;
+          // She has just told them to talk to somebody. Resolving the question
+          // and moving the class on would be the app talking over that.
+          if (close?.halt) return;
           const options = ask.options ?? [];
           playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
           return;
@@ -479,7 +499,7 @@ export function ClassRoom({
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
         }
         setEar('off');
-        await tts.speak(judged.say);
+        await speakSafely(judged.say);
         if (cancelled) return;
         // The student said something that needs a person. She has just said so;
         // reopening the mic and asking the question again would be the app

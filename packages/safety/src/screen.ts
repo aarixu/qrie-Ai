@@ -176,14 +176,29 @@ const INSTRUCTION: RegExp[] = [
  * Written digit-by-digit rather than as fixed 3-3-4 groups because nobody
  * agrees on the grouping: "9876543210", "+91 98765 43210" and "098765-43210"
  * are the same number typed three ways, and only the first matched a fixed
- * pattern. The leading [6-9] is what keeps maths out of it — 3.14159, 1947 and
- * 6.022 x 10^23 all fail on the very next character.
+ * pattern.
+ *
+ * The first FOUR digits must be together, which is what stops it eating a
+ * maths answer: "the answer is 6 7 8 9 1 2 3 4 5 0" is ten digits with a
+ * space after every one, and nobody writes a phone number like that. The
+ * leading [6-9] does the rest — 3.14159, 1947 and 6.022 x 10^23 all fail on
+ * the very next character.
  */
-const PHONE = /(?:\+?91[\s-]?)?(?:0[\s-]?)?[6-9](?:[\s-]?\d){9}\b/g;
+const PHONE = /(?:\+?91[\s-]?)?(?:0[\s-]?)?[6-9]\d{3}(?:[\s-]?\d){6}\b/g;
 const EMAIL = /\b[\w.+-]+@[\w-]+\.[\w.-]{2,}\b/g;
-/** A house number and a street word — enough to find somebody. */
+/**
+ * A house number and a street word — enough to find somebody.
+ *
+ * "plot" was in this list and ate "plot 2 points on the graph and join them",
+ * which is a Class 9 Coordinate Geometry instruction and left the model with
+ * an empty message. An address in a tutoring app is written the way a courier
+ * would need it: a flat or house number, and then something after it. So the
+ * word must be one that has no other job in a classroom, the number must be
+ * introduced the way an address introduces one, and there has to be more
+ * afterwards — a bare "house 4" is a word problem.
+ */
 const ADDRESS =
-  /\b(?:flat|house|h\.?\s?no\.?|plot|door\s?no\.?)\s*[.:#-]?\s*\d+[\w/-]*(?:[,\s]+[\w.\s-]{0,40})?/gi;
+  /\b(?:flat|house\s*no\.?|h\.?\s?no\.?|door\s?no\.?|address)\s*[.:#-]?\s*\d+[\w/-]*[,\s]+[\w.\s-]{3,40}/gi;
 
 const MASK = '[removed]';
 
@@ -241,7 +256,13 @@ export function screen(
   let cleaned = tidied;
 
   if (direction === 'from-student' && matches(INSTRUCTION, cleaned)) {
-    for (const pattern of INSTRUCTION) cleaned = cleaned.replace(pattern, MASK);
+    // Every occurrence, not the first: "ignore your instructions. also ignore
+    // your instructions" left the second one standing in the prompt. The
+    // patterns are written without /g so that .test() has no lastIndex to
+    // carry between calls, so the flag is added here instead.
+    for (const pattern of INSTRUCTION) {
+      cleaned = cleaned.replace(new RegExp(pattern.source, `${pattern.flags}g`), MASK);
+    }
     removed.push('instruction');
   }
 

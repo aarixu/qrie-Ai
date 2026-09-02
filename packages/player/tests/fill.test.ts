@@ -70,6 +70,24 @@ describe('the live fill', () => {
     expect(tts.said[0]).toBe('Right — what pushes blood around?');
   });
 
+
+  it('primes the NEXT line exactly as it will be spoken', async () => {
+    // streamingTts matches its prefetched audio element by exact text, so
+    // priming the bare narration threw the fetch away on precisely the beats
+    // that carry a personal line — an audible gap, and a synthesis paid for
+    // twice. It also defeats the recorded-audio manifest lookup.
+    const tts = listeningTts();
+    const player = new PlayerController(
+      lesson([{ beatId: 'b2', say: 'One more, Aarav.' }]),
+      { tts },
+    );
+
+    player.play();
+    await Promise.resolve();
+
+    expect(tts.primed[0]).toBe('One more, Aarav. The left side does the long trip.');
+  });
+
   it('leaves a class with no fill exactly as it was', async () => {
     // A cached class replayed by somebody else. Starting on the narration is
     // the honest shape: a class that has not met you yet, rather than one

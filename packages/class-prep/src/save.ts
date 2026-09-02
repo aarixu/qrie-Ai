@@ -106,20 +106,46 @@ const extensionFor = (subtype: string): string => (subtype === 'jpeg' ? 'jpg' : 
  * ordinary word ("Riya" is not, "Sky" might be) is the reason this only ever
  * looks at names the caller actually knows.
  */
+const escapeForRegex = (text: string): string => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/**
+ * Every part of a name is a name.
+ *
+ * "Aarav Sharma" is what the profile holds and "Aarav" is what a tutor says.
+ * Testing the whole string found neither, which meant the check passed on
+ * exactly the class it exists to catch. Each part is checked on its own, and
+ * anything under three letters is dropped: an initial matches half a board.
+ */
+const partsOf = (name: string): string[] =>
+  name
+    .split(/[\s.]+/)
+    .map((part) => part.trim())
+    .filter((part) => part.length >= 3);
+
 export function namesInSpine(lesson: Lesson, names: readonly string[]): string[] {
+  /**
+   * EVERYTHING A LATER STUDENT WOULD HEAR OR READ.
+   *
+   * Not just the narration: a held question is asked out loud, its hint is
+   * read back on a wrong answer, and an option's "why" is spoken as the
+   * reason. A name in any of them is a name every later student gets. The
+   * beats are stringified whole rather than picked apart field by field,
+   * because the next field added to a Beat would otherwise be a hole nobody
+   * notices.
+   */
   const spine = [
     lesson.title,
     lesson.subtitle ?? '',
-    ...lesson.beats.map((b) => `${b.narration} ${b.topic}`),
+    ...lesson.beats.map((b) => JSON.stringify(b)),
     ...lesson.elements.map((el) => JSON.stringify(el)),
   ].join(' ');
 
   const found: string[] = [];
   for (const name of names) {
-    const clean = name.trim();
-    if (clean.length < 2) continue;
-    const pattern = new RegExp(`\\b${clean.replace(/[.*+?^${}()|[\]\\]/g, '\\export function saveable(')}\\b`, 'i');
-    if (pattern.test(spine)) found.push(clean);
+    for (const part of partsOf(name)) {
+      const pattern = new RegExp(`\\b${escapeForRegex(part)}\\b`, 'i');
+      if (pattern.test(spine) && !found.includes(part)) found.push(part);
+    }
   }
   return found;
 }

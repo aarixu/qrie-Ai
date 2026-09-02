@@ -140,12 +140,26 @@ export function parseFollowUp(raw: string): string {
   return say;
 }
 
+/**
+ * What the close came back with, and whether the class may carry on.
+ *
+ * It always had words; it never had a way to say "do not move". A student who
+ * says something serious while reasoning out loud got her support line and
+ * then the class advanced over the top of them, because the caller's next
+ * statement is unconditional.
+ */
+export interface CrossQuestionClose {
+  say: string;
+  /** Stop here. Set only by the safety screen. */
+  halt?: true;
+}
+
 export async function resolveCrossQuestion(
   ask: SpokenAsk,
   answered: string,
   probe: string,
   reasoning: string,
-): Promise<string> {
+): Promise<CrossQuestionClose> {
   const sys = [
     `You are ${TUTOR.name}, an Indian tutor teaching a live class. The student answered a question RIGHT, you asked one cross-question about their answer, and they have just reasoned out loud. Close the loop.`,
     `Reply with ONE JSON object, nothing else: {"say":"..."}`,
@@ -156,8 +170,9 @@ export async function resolveCrossQuestion(
   ].join(String.fromCharCode(10));
   const screened = fromStudent(reasoning);
   // Same rule as the judge: their reasoning is never an instruction, and if it
-  // turns out to be a disclosure the close is her response to that instead.
-  if (screened.text === null) return screened.say ?? '';
+  // turns out to be a disclosure the close is her response to that instead —
+  // and the class stops there rather than resolving the question over them.
+  if (screened.text === null) return { say: screened.say ?? '', halt: true };
 
   const user = `${describe(ask)}
 
@@ -165,5 +180,5 @@ They answered: "${quoteForPrompt(answered)}"
 You then asked: "${probe}"
 They reasoned: "${screened.text}"`;
   const llm = createBrowserLlm(JUDGE_MODEL, { json: true });
-  return parseFollowUp(await llm.complete(sys, user));
+  return { say: parseFollowUp(await llm.complete(sys, user)) };
 }

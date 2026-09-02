@@ -15,7 +15,8 @@ import { createOutcomeLookup } from '../lib/outcomeLookup';
 import { studentLinesForPlanner } from '../lib/student';
 import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
-import { fromStudent } from '../lib/safety';
+import { quoteForPrompt, screen } from '@ai-tutor/safety';
+import { recordFlag } from '../stores/flags';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -41,6 +42,8 @@ import { ClassRoom } from './ClassRoom';
 /** Not a class at all — what she says instead. */
 interface Refused {
   refused: string;
+  /** Recorded once, in an effect, rather than while deciding. */
+  flag: 'redirect' | 'support';
 }
 
 const isRefused = (ask: Ask | Refused | null): ask is Refused =>
@@ -119,10 +122,18 @@ export function LiveClassRoute() {
       // A child types this and it becomes the instruction a planner writes a
       // whole class from — the widest unguarded input in the app. Screened
       // like any other thing a student says.
-      const screened = fromStudent(freeText);
-      if (screened.text === null) return { refused: screened.say ?? '' };
+      //
+      // `screen` rather than `fromStudent`: this runs inside a useMemo, and
+      // useMemo runs twice under StrictMode. fromStudent WRITES — it records
+      // a flag — so it would log every refusal twice, and a doubled entry can
+      // push a real distress flag out of a log that keeps fifty. The pure
+      // decision belongs here; the recording happens once, in the effect.
+      const verdict = screen(freeText, 'from-student');
+      if (verdict.kind === 'redirect' || verdict.kind === 'support') {
+        return { refused: verdict.say, flag: verdict.kind };
+      }
       return {
-        topic: screened.text,
+        topic: quoteForPrompt(verdict.text),
         klass: settings.klass ?? 9,
         minutes: 2,
         subject: 'Science',
@@ -138,8 +149,19 @@ export function LiveClassRoute() {
    * or nothing at all — and apart from `error`, because a refusal is not
    * something to offer a Try again for.
    */
-  const refused = isRefused(asked) ? asked.refused : null;
-  const ask: Ask | null = refused === null ? (asked as Ask | null) : null;
+  const refusal = isRefused(asked) ? asked : null;
+  const refused = refusal?.refused ?? null;
+  const ask: Ask | null = refusal === null ? (asked as Ask | null) : null;
+
+  // Once, and only when it actually happened. A flag is a fact about a
+  // student's session, not a fact about how many times React rendered.
+  useEffect(() => {
+    if (!refusal) return;
+    recordFlag({
+      kind: refusal.flag === 'support' ? 'distress' : 'redirect',
+      at: new Date().toISOString(),
+    });
+  }, [refusal]);
 
   /**
    * WHAT THE ROOM IS BUILT ON, THE MOMENT THERE IS ONE.
@@ -245,7 +267,9 @@ export function LiveClassRoute() {
       if (cancelled) return;
       // The one thing in the notes that can leak into a kept class. Read from
       // the profile rather than parsed back out of the lines, because a name
-      // is a fact the app holds and the lines are prose.
+      // is a fact the app holds and the lines are prose. namesInSpine splits
+      // it into parts, because "Aarav Sharma" is what a profile holds and
+      // "Aarav" is what a tutor says.
       const named = profileStore.get().name;
       void keep(made, ask, named ? [named] : []);
     })().catch((e: unknown) => {

@@ -75,6 +75,52 @@ describe('namesInSpine', () => {
     expect(namesInSpine(onBoard, ['Priya'])).toEqual(['Priya']);
   });
 
+
+  it('does not throw on a name carrying regex punctuation', () => {
+    // "Md. Arif" made new RegExp throw Unterminated group, and because the
+    // caller fires this without awaiting it, the class was silently never
+    // saved. A name is user input; every one of these is a real name.
+    for (const name of ['Md. Arif', 'D+Souza', 'A(nita)', 'Ka[vya]', 'R^ahul']) {
+      expect(() => namesInSpine(lessonWith('Ready?'), [name]), name).not.toThrow();
+    }
+  });
+
+  it('finds the first name inside a full name', () => {
+    // The profile holds "Aarav Sharma"; a tutor says "Aarav". Testing the
+    // whole string matched neither, so the check passed on exactly the class
+    // it exists to catch.
+    expect(namesInSpine(lessonWith('Aarav! Good to see you.'), ['Aarav Sharma'])).toEqual([
+      'Aarav',
+    ]);
+  });
+
+  it('ignores the parts of a name too short to mean anything', () => {
+    // "K." in "K. Priya" would otherwise match every K on a board.
+    expect(namesInSpine(lessonWith('Point K is the midpoint.'), ['K. Priya'])).toEqual([]);
+  });
+
+  it('reads a held question, not only the narration', () => {
+    // A held question is asked out loud, its hint is read back on a wrong
+    // answer, and an option's why is spoken as the reason.
+    const asked = lessonWith('Right, here we go.', {
+      beats: [
+        {
+          id: 'b1',
+          topic: 'open',
+          narration: 'Right, here we go.',
+          show: ['t'],
+          ask: {
+            question: 'Aarav, what pushes the blood around?',
+            expect: 'the heart',
+            hint: 'Think about your chest.',
+          },
+        },
+      ],
+    });
+
+    expect(namesInSpine(asked, ['Aarav'])).toEqual(['Aarav']);
+  });
+
   it('has nothing to say about an anonymous class', () => {
     expect(namesInSpine(lessonWith('Ready? Let us start.'), ['Aarav'])).toEqual([]);
   });

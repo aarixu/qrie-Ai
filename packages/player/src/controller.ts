@@ -166,10 +166,7 @@ export class PlayerController {
      * time-to-first-byte between the greeting and the first sentence, which is
      * a tutor pausing for no reason in the middle of saying hello.
      */
-    const mine = this.lesson.fill?.find((line) => line.beatId === beat.id)?.say?.trim();
-    this.tts
-      .speak(mine ? `${mine} ${beat.narration}` : beat.narration)
-      .then(onSpeechDone, onSpeechDone);
+    this.tts.speak(this.lineFor(beat)).then(onSpeechDone, onSpeechDone);
 
     /**
      * And the line after it, started now.
@@ -184,7 +181,32 @@ export class PlayerController {
      * knows what comes next.
      */
     const next = this.lesson.beats[index + 1];
-    if (next) this.tts.prime?.(next.narration);
+    // The SAME string speak will ask for. streamingTts matches its prefetched
+    // element by exact text, so priming the bare narration threw the fetch
+    // away on precisely the beats that carry a personal line — an audible gap
+    // and a synthesis paid for twice.
+    if (next) this.tts.prime?.(this.lineFor(next));
+  }
+
+  /**
+   * WHAT SHE ACTUALLY SAYS FOR THIS BEAT.
+   *
+   * Her line for this student, then the lesson's own. A recording is a SPINE:
+   * the narration is written once and replayed for everyone, and what belongs
+   * to ONE student — the greeting by name, the callback to Tuesday — lives in
+   * `fill` and is spoken in front of it. A cached class replayed by somebody
+   * else has none, and starts on the narration.
+   *
+   * One utterance rather than two calls: two would put the voice's
+   * time-to-first-byte between the greeting and the first sentence, which is
+   * a tutor pausing for no reason in the middle of saying hello.
+   *
+   * It is a method rather than an expression because BOTH speak and prime
+   * must ask for the same string, or the prefetch is discarded.
+   */
+  private lineFor(beat: Lesson['beats'][number]): string {
+    const mine = this.lesson.fill?.find((line) => line.beatId === beat.id)?.say?.trim();
+    return mine ? `${mine} ${beat.narration}` : beat.narration;
   }
 
   private advance(): void {
