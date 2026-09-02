@@ -100,6 +100,9 @@ export const REUSABLE_LICENCES: readonly string[] = [
   'cc-by',
   'cc by-sa',
   'cc-by-sa',
+  // Commons states some files exactly this way, and it means free. Measured:
+  // it was the only usable candidate for one of the twelve briefs tried.
+  'no restrictions',
 ];
 
 /**
@@ -133,15 +136,43 @@ export function mayReuse(license: string | undefined): boolean {
 }
 
 /**
- * What to search for.
+ * Words a filename search can match. NOT the brief.
  *
- * The brief and not the alt text: `brief` says what the picture must SHOW and
- * is written for an artist, which is close to what an image search wants. The
- * no-text hint is worth adding even though search engines largely ignore it —
- * on the occasions it lands it saves a download and a vision call.
+ * Measured against Wikimedia Commons, which is a keyword search over file
+ * titles and descriptions rather than anything semantic. The whole artist
+ * brief returned ZERO openly licensed candidates for eleven of twelve real
+ * briefs; the subject alone returns a dozen for most of them.
+ *
+ * The stop words are PARTICIPLES, not prepositions. "showing", "with" and
+ * "used" begin the artist's staging notes; "in" and "at" are usually part of
+ * the subject's own name — "leaf in cross section" finds nine and "leaf"
+ * finds a hedge, "Moon at full phase" finds eleven and "Moon" finds a lot of
+ * things that are not it.
+ *
+ * Everything after a stop word is the artist being told how the thing is
+ * posed, cut or arranged, and a filename search has no idea what to do with
+ * it: "simple pendulum hanging from a stand" finds nothing usable and "simple
+ * pendulum" finds six; "an ammeter used in a school laboratory" nothing and
+ * "ammeter" plenty. Those details are what the VERIFIER is for.
+ *
+ * And no "unlabelled photograph" hint. It reads like an instruction and lands
+ * as two more required keywords, which is the opposite of what it was for.
  */
+const STOPS =
+  /,|;|\b(?:showing|displaying|with|seen|used|hanging|standing|held|placed|viewed|drawn|labelled|labeled|so that|such that|next to|beside)\b/i;
+const LEADING_ARTICLE = /^(?:an?|the)\s+/i;
+
+export const MAX_QUERY_WORDS = 5;
+
 export function searchQuery(brief: PictureBrief): string {
-  return `${brief.brief.replace(/\s+/g, ' ').trim()} unlabelled photograph`;
+  const head = brief.brief.replace(/\s+/g, ' ').trim().split(STOPS)[0] ?? '';
+  return head
+    .replace(LEADING_ARTICLE, '')
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, MAX_QUERY_WORDS)
+    .join(' ');
 }
 
 export const VERIFIER_SYSTEM = `You look at one picture and say whether it is

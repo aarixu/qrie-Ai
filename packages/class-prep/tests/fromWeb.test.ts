@@ -4,6 +4,7 @@ import {
   findOnTheWeb,
   mayReuse,
   parseVerdict,
+  MAX_QUERY_WORDS,
   refusalFor,
   searchQuery,
   type WebCandidate,
@@ -62,7 +63,7 @@ const eyesSaying = (...replies: string[]) => {
 
 describe('what may be reused', () => {
   it('takes the licences that permit building on the work', () => {
-    for (const ok of ['CC0 1.0', 'Public Domain', 'CC BY 4.0', 'CC BY-SA 3.0']) {
+    for (const ok of ['CC0 1.0', 'Public Domain', 'CC BY 4.0', 'CC BY-SA 3.0', 'No restrictions']) {
       expect(mayReuse(ok)).toBe(true);
     }
   });
@@ -138,14 +139,56 @@ describe('reading a verdict', () => {
 });
 
 describe('the query', () => {
-  it('searches for what the picture must show', () => {
-    expect(searchQuery(brief)).toContain('kidney cut lengthwise');
+  /**
+   * MEASURED, not guessed. Wikimedia Commons is a keyword search over file
+   * titles: the whole artist brief returned ZERO results for eleven of twelve
+   * real briefs, and the head clause alone returned six openly licensed hits
+   * for the first one tried.
+   */
+  it('is the head of the brief, not the brief', () => {
+    expect(searchQuery(brief)).toBe('kidney cut lengthwise');
+  });
+
+  it('stops where the brief starts listing what must be visible', () => {
+    // Those details are what the verifier is for. In a keyword search they
+    // only narrow the match to nothing.
+    expect(searchQuery({ ...brief, brief: 'a leaf in cross section showing the epidermis' })).toBe(
+      'leaf in cross section',
+    );
+    expect(searchQuery({ ...brief, brief: 'a bar magnet with iron filings around it' })).toBe(
+      'bar magnet',
+    );
+  });
+
+  it('does not cut a word that merely contains a stop word', () => {
+    expect(searchQuery({ ...brief, brief: 'a beaker without a lid' })).toBe('beaker without a lid');
+    expect(searchQuery({ ...brief, brief: 'a within-cell diagram' })).toBe('within-cell diagram');
+  });
+
+  it('drops the leading article, which matches nothing and costs a word', () => {
+    expect(searchQuery({ ...brief, brief: 'the Moon at full phase' })).toBe('Moon at full phase');
+    // "in" and "at" stay: they are usually part of the subject's own name, and
+    // "leaf" alone finds a hedge where "leaf in cross section" finds nine.
+    expect(searchQuery({ ...brief, brief: 'a leaf in cross section' })).toBe(
+      'leaf in cross section',
+    );
   });
 
   it('collapses the whitespace a multi-line brief arrives with', () => {
-    expect(searchQuery({ ...brief, brief: 'a leaf\n  in  cross   section' })).toContain(
-      'a leaf in cross section',
+    expect(searchQuery({ ...brief, brief: 'a leaf\n  in  cross   section' })).toBe(
+      'leaf in cross section',
     );
+  });
+
+  it('never hands a keyword search a sentence', () => {
+    const long = 'a really quite extraordinarily detailed anatomical rendering of something';
+    expect(searchQuery({ ...brief, brief: long }).split(' ')).toHaveLength(MAX_QUERY_WORDS);
+  });
+
+  it('carries no "unlabelled photograph" hint', () => {
+    // It reads like an instruction and lands as two more required keywords,
+    // which is the opposite of what it was for.
+    expect(searchQuery(brief)).not.toMatch(/unlabelled|photograph/);
   });
 });
 
