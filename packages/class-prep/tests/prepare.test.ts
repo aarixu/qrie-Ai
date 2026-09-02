@@ -129,7 +129,67 @@ describe('prepareClass', () => {
     expect(result.assets).toEqual({});
     expect(result.report.visuals[0].ok).toBe(false);
     expect(result.report.issues.join(' ')).toContain('Dropped the picture "d_graph"');
-    expect(result.lesson.beats.map((b) => b.id)).toEqual(['b1', 'b2']);
+  });
+
+  it('keeps the beat whose picture failed, as a described frame', () => {
+    // It used to trim the beat out. That was safe when nothing could see the
+    // lesson until it was finished, and it is not safe now: the class is
+    // handed over as soon as the plan holds, so a picture failing thirty
+    // seconds later would pull a beat out from under a student mid-lesson.
+    // Scene draws a dashed frame with the picture's own alt text instead, and
+    // saveable() still refuses to keep a class with a failed visual — so
+    // nobody after the first student inherits the gap.
+    return prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner: fakePlanner(blueprint),
+      artist: fakeArtist(['I cannot draw that.']),
+    }).then((result) => {
+      expect(result.lesson.beats.map((b) => b.id)).toEqual(['b1', 'b2', 'b3']);
+    });
+  });
+
+  it('hands the class over before it draws anything', async () => {
+    // The whole of warm entry: the teaching is settled after the plan, so the
+    // room can open on it while the artwork is still being made.
+    const drafts: string[][] = [];
+    const landed: string[] = [];
+
+    const result = await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner: fakePlanner(blueprint),
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+      onDraft: ({ lesson, assets }) => {
+        drafts.push(lesson.beats.map((b) => b.id));
+        // Nothing is drawn yet, and that is the point.
+        expect(Object.keys(assets)).toEqual([]);
+      },
+      onAsset: (id) => landed.push(id),
+    });
+
+    expect(drafts).toHaveLength(1);
+    expect(drafts[0]).toEqual(result.lesson.beats.map((b) => b.id));
+    expect(landed).toContain('d_graph');
+  });
+
+  it('fills the same assets object the draft was handed', async () => {
+    // The caller keeps that object and shows each picture as it appears; a
+    // copy would leave the board empty for the whole class.
+    let handed: Record<string, string> | null = null;
+
+    const result = await prepareClass({
+      topic: 'Speed',
+      klass: 9,
+      planner: fakePlanner(blueprint),
+      artist: fakeArtist([svg(['axes', 'line_fast'])]),
+      onDraft: ({ assets }) => {
+        handed = assets;
+      },
+    });
+
+    expect(handed).not.toBeNull();
+    expect(handed).toBe(result.assets);
   });
 
   it('survives an artist that throws, and counts it as a failed attempt', async () => {

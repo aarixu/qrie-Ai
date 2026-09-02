@@ -203,6 +203,7 @@ export function ClassRoom({
   diagrams,
   clone,
   onExit,
+  warm = false,
 }: {
   lesson: Lesson;
   /**
@@ -216,6 +217,16 @@ export function ClassRoom({
   /** SVG markup for the lesson's `diagram` elements, keyed by element id. */
   diagrams: Record<string, string>;
   onExit(): void;
+  /**
+   * The student has ALREADY been through a getting-ready screen.
+   *
+   * A live class hands the room over the moment the teaching holds, having
+   * shown the student a full minute of "Meera is preparing your class". Making
+   * them sit through this room's own five-second version too is the same wait
+   * twice, with near-identical copy and the same animation — and warm entry
+   * exists precisely to make the wait shorter, not to move it.
+   */
+  warm?: boolean;
 }) {
   const navigate = useNavigate();
   const player = usePlayer(lesson, tts);
@@ -613,6 +624,8 @@ export function ClassRoom({
    * student gets a Join button — which is what Meet shows at a door anyway.
    */
   const [entryPhase, setEntryPhase] = useState<'preparing' | 'join' | 'inClass'>('preparing');
+  // A warm class skips the room's own wait; the student has already had one.
+  const readyAfter = warm ? 0 : PREPARE_MS;
   const entryPhaseRef = useRef(entryPhase);
   entryPhaseRef.current = entryPhase;
   const startClassRef = useRef(startClass);
@@ -630,8 +643,9 @@ export function ClassRoom({
       } else {
         setEntryPhase('join');
       }
-    }, PREPARE_MS);
+    }, readyAfter);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const joinClass = () => {

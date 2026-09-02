@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { saveable, type PrepProgress } from '@ai-tutor/class-prep';
+import type { Lesson } from '@ai-tutor/lesson-format';
 import { prepareLiveClass, type LivePrep } from '../lib/liveClass';
 import { fetchCatalog, findTopic, forgetCatalog } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
@@ -136,7 +137,31 @@ export function LiveClassRoute() {
   const refused = isRefused(asked) ? asked.refused : null;
   const ask: Ask | null = refused === null ? (asked as Ask | null) : null;
 
-  const [prep, setPrep] = useState<LivePrep | null>(null);
+  /**
+   * WHAT THE ROOM IS BUILT ON, THE MOMENT THERE IS ONE.
+   *
+   * Not the finished prep — the DRAFT, handed over about fourteen seconds in,
+   * as soon as the teaching holds and before a single picture has been drawn.
+   * The student is in the class while the artwork arrives behind them, which
+   * is the whole of warm entry: the wait becomes the lesson.
+   *
+   * The finished prep still lands later, and is used for one thing only —
+   * deciding what gets KEPT. Rendering it would swap the lesson under a class
+   * that has already started and restart it from the top.
+   */
+  const [draft, setDraft] = useState<{ lesson: Lesson; assets: Record<string, string> } | null>(
+    null,
+  );
+  /**
+   * Bumped when a picture lands.
+   *
+   * The assets object is filled IN PLACE by the prep — the room is holding
+   * that same object — so React has nothing to compare and would never draw
+   * again. This is the "something changed" signal, and it is a number rather
+   * than a copy because copying the record on every picture would rebuild the
+   * whole board mid-sentence.
+   */
+  const [artLanded, setArtLanded] = useState(0);
   const [progress, setProgress] = useState<PrepProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
   // Bumped by Try again. Preparing a class is the single likeliest thing in
@@ -146,7 +171,22 @@ export function LiveClassRoute() {
   const [attempt, setAttempt] = useState(0);
   const online = useOnline();
 
-  const tts = useLessonVoice(null, prep?.lesson ?? null, { enabled: preferences.voice });
+  const tts = useLessonVoice(null, draft?.lesson ?? null, { enabled: preferences.voice });
+
+  /**
+   * The board's copy of the artwork.
+   *
+   * The prep fills its assets record IN PLACE, so React sees the same object
+   * every render and would never draw again. `artLanded` counts the pictures
+   * that have arrived, and this rebuilds on exactly those — not on every
+   * keystroke of an unrelated render, which would rebuild the whole board
+   * mid-sentence.
+   */
+  const artwork = useMemo(
+    () => ({ ...(draft?.assets ?? {}) }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [draft, artLanded],
+  );
 
   useEffect(() => {
     if (refused !== null) return;
@@ -184,11 +224,21 @@ export function LiveClassRoute() {
         outcomes: outcomeStore.get(),
         statement: (id) => lookup.statement(id),
       });
-      const made = await prepareLiveClass({ ...ask, studentLines }, (p) => {
-        if (!cancelled) setProgress(p);
-      });
+      const made = await prepareLiveClass(
+        { ...ask, studentLines },
+        (p) => {
+          if (!cancelled) setProgress(p);
+        },
+        {
+          onDraft: (d) => {
+            if (!cancelled) setDraft(d);
+          },
+          onArt: () => {
+            if (!cancelled) setArtLanded((n) => n + 1);
+          },
+        },
+      );
       if (cancelled) return;
-      setPrep(made);
       void keep(made, ask);
     })().catch((e: unknown) => {
       if (!cancelled) setError(e instanceof Error ? e.message : String(e));
@@ -257,12 +307,19 @@ export function LiveClassRoute() {
     );
   }
 
-  if (!prep || !tts) {
+  if (!draft || !tts) {
     return <GettingReady topic={ask?.topic ?? ''} progress={progress} />;
   }
 
   return (
-    <ClassRoom lesson={prep.lesson} tts={tts} diagrams={prep.assets} onExit={() => navigate('/')} />
+    <ClassRoom
+      lesson={draft.lesson}
+      tts={tts}
+      diagrams={artwork}
+      // The student has already watched her set up. One wait, not two.
+      warm
+      onExit={() => navigate('/')}
+    />
   );
 }
 
@@ -301,7 +358,7 @@ function GettingReady({ topic, progress }: { topic: string; progress: PrepProgre
           />
         </div>
         <p className="font-label-md text-label-md text-white/50">
-          Nobody has studied this topic yet, so she is making it now.
+          She is setting up the board.
         </p>
       </div>
     </div>

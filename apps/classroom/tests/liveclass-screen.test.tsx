@@ -45,8 +45,14 @@ describe('the wait, spent inside the room', () => {
     expect(at(`/class/${COLD}`)).toContain('Plasma Membrane or Cell Membrane');
   });
 
-  it('says why it is taking a moment', () => {
-    expect(at(`/class/${COLD}`)).toContain('Nobody has studied this topic yet');
+  it('says what is happening without saying which kind of class this is', () => {
+    const html = at(`/class/${COLD}`);
+
+    expect(html).toContain('She is setting up the board');
+    // This file's own doctrine: a recording is a CACHE of the first live
+    // class, not a different product, and "nobody has studied this topic yet"
+    // was the one line in the app that told the student which one they got.
+    expect(html).not.toContain('Nobody has studied this topic yet');
   });
 
   it('shows the dark stage the class is about to happen on', () => {

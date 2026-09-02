@@ -63,6 +63,22 @@ export interface PrepOptions {
   /** The model that looks at a generated picture to find its named parts. */
   eyes?: VisionAdapter;
   onProgress?: (p: PrepProgress) => void;
+  /**
+   * THE CLASS, AS SOON AS THE TEACHING HOLDS — before a picture exists.
+   *
+   * Fired once, after the plan has been assembled and checked and therefore
+   * cannot change again, and before any drawing starts. A caller that takes it
+   * can open the room in about fourteen seconds instead of fifty and let the
+   * artwork arrive behind the student; one that ignores it gets exactly the
+   * behaviour it had before, at the end.
+   *
+   * The lesson handed here is the SAME object that comes back in PrepResult,
+   * and the assets record is the same one too — it fills in place, so a caller
+   * holding it sees each picture appear.
+   */
+  onDraft?: (draft: { lesson: Lesson; assets: Record<string, string> }) => void;
+  /** One picture, the moment it lands. Called once per element id. */
+  onAsset?: (id: string, svg: string) => void;
   /** How many times one picture may be redrawn before the class goes on without it. */
   maxArtAttempts?: number;
 }
@@ -416,14 +432,140 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
   const planMs = Date.now() - t0;
 
+  /**
+   * Where a generated picture's named parts are, and how it is shaped.
+   *
+   * Filled during drawing, read by `assemble` — which now runs BEFORE the
+   * drawing does. Empty at that point is the honest answer and the right one:
+   * the board lays a picture out from its brief, and a part it learns about
+   * later only decides where a spotlight falls, not where the picture sits.
+   */
+  const pictureParts = new Map<string, readonly ImagePart[]>();
+  const pictureShapes = new Map<string, number>();
+
+  /**
+   * THE CLASS IS DECIDED BEFORE ANY OF IT IS DRAWN.
+   *
+   * This used to run the other way round: draw everything, then assemble,
+   * then check, then hand the whole thing over at the end. Which meant a
+   * student sat on a progress bar for the full fifty seconds before a single
+   * word was spoken, even though the teaching itself — every line she says
+   * and every stroke she puts on the board — was settled after the first
+   * fourteen.
+   *
+   * So the lesson is assembled OPTIMISTICALLY, as if every picture had
+   * already landed, and checked in that shape. Once it holds, the beats are
+   * final and nothing that happens during drawing can change them. That is
+   * what makes it safe to hand the student a room and start the class while
+   * the artwork is still arriving: the board draws a dashed frame with the
+   * picture's own alt text until the markup turns up (Scene.renderDiagram),
+   * so a beat that arrives early keeps its layout instead of collapsing.
+   *
+   * Two consequences worth stating:
+   *   - the repair round now happens BEFORE any artwork is paid for, so a
+   *     plan that cannot be fixed costs one model call instead of six;
+   *   - a picture that fails to draw stays as its placeholder rather than
+   *     having its beats trimmed out from under a class already playing.
+   *     saveable() already refuses to keep a class with a failed visual, so
+   *     nobody inherits the gap.
+   */
+  const promised = new Set(blueprint.visuals.map((v) => v.id));
+  const assets: Record<string, string> = {};
+
+  say('checking', 'Checking the class holds together…', 0.15);
+  let { lesson: candidate, aliases } = assemble(blueprint, promised, pictureParts, pictureShapes);
+
+  let validated = validateLesson(candidate);
+
+  /**
+   * Said but never written — the deterministic check behind the prompt rule.
+   *
+   * "The board shows what you are saying" holds four beats in five; this
+   * catches the fifth (the spoken question nobody wrote, the landing line
+   * said over a silent board) and names it to the model beside whatever else
+   * validation found, so the one repair round fixes both. It can send a plan
+   * to repair on its own — but unlike a structural failure it is never fatal:
+   * a class with one unwritten question is a worse class, not no class.
+   */
+  let unwritten = [...saidButNotWritten(blueprint.beats), ...classMustAsk(blueprint.beats)];
+
+  // One repair round. The model fixes what the validator NAMED, keeping the
+  // teaching it already worked out; a regenerated plan would be a different
+  // lesson that might break elsewhere.
+  if (!validated.ok || unwritten.length > 0) {
+    const named = [...(validated.ok ? [] : validated.errors), ...unwritten];
+    issues.push(`The first plan failed validation: ${named[0]}`);
+    say('checking', 'Fixing the plan…', 0.2);
+    try {
+      const reply = await planner.complete(
+        PLANNER_SYSTEM,
+        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10)),
+      );
+      // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
+      // recovering JSON from prose is the whole reason parsePlan exists.
+      const fixed = parsePlan(reply);
+      if (!fixed) throw new Error('the repaired plan was unreadable');
+      fixed.beats ??= [];
+      // The briefs are pinned: the draft's element ids come from them, and a
+      // repair that renamed a picture would leave every beat pointing at art
+      // that is never going to arrive.
+      fixed.visuals = blueprint.visuals;
+      fixed.id ||= blueprint.id;
+
+      const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
+      const revalidated = validateLesson(rebuilt.lesson);
+      if (revalidated.ok) {
+        validated = revalidated;
+        aliases = rebuilt.aliases;
+        blueprint = fixed;
+        unwritten = [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)];
+        issues.push('The plan was repaired and passed.');
+      }
+    } catch (e) {
+      issues.push(`Repair failed: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  // Whatever is still unwritten after the one repair is reported, not fatal:
+  // the class runs, and the report says what she said without writing.
+  for (const miss of unwritten) issues.push(`Still unwritten after repair: ${miss}`);
+
+  if (!validated.ok) {
+    say('failed', 'The plan did not hold together.', 1);
+    throw new Error(`The planned lesson is not valid:\n${validated.errors.slice(0, 8).join('\n')}`);
+  }
+
+  const lesson = validated.lesson as Lesson;
+
+  /**
+   * THE ROOM CAN OPEN NOW.
+   *
+   * Everything after this is artwork. A caller that takes this hands the
+   * student a class in about fourteen seconds instead of fifty, and keeps
+   * receiving pictures through onAsset as they land; a caller that ignores it
+   * gets exactly the behaviour it had before, at the end.
+   */
+  opts.onDraft?.({ lesson, assets });
+
   const t1 = Date.now();
   const total = blueprint.visuals.length;
   say('drawing', total === 0 ? 'No pictures needed.' : `Drawing ${total} picture${total === 1 ? '' : 's'}…`, 0.3);
 
   let finished = 0;
-  const pictureParts = new Map<string, readonly ImagePart[]>();
-  /** And how each one is shaped, so the board places it as it will be drawn. */
-  const pictureShapes = new Map<string, number>();
+
+  /** One picture has landed: keep it, tell the caller, count it. */
+  const landed = (id: string, svg: string): void => {
+    assets[id] = svg;
+    // Both ids point at the one drawing: a later beat showing the same
+    // picture gets its own copy, and it needs the markup too.
+    for (const [copy, original] of Object.entries(aliases) as [string, string][]) {
+      if (original === id) {
+        assets[copy] = svg;
+        opts.onAsset?.(copy, svg);
+      }
+    }
+    opts.onAsset?.(id, svg);
+  };
 
   // Diagrams and pictures are made side by side. A picture is a different
   // medium, not a different stage: both are just artwork the class is waiting
@@ -440,9 +582,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           eyes ?? { look: async () => '{}' },
         );
         finished += 1;
-        say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.55 * finished) / Math.max(1, total));
+        say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
         if (made?.aspect != null) pictureShapes.set(brief.id, made.aspect);
+        if (made?.src) landed(brief.id, made.src);
         return {
           brief,
           svg: made?.src ?? null,
@@ -465,91 +608,58 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
       const r = await drawOne(brief, artist, maxArtAttempts);
       finished += 1;
-      say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.55 * finished) / Math.max(1, total));
+      say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
+      if (r.svg) landed(brief.id, r.svg);
       return { brief, ...r };
     }),
   );
   const visualsMs = Date.now() - t1;
 
-  const assets: Record<string, string> = {};
   const visuals: VisualOutcome[] = [];
   for (const r of results) {
     visuals.push(r.outcome);
-    if (r.svg) assets[r.brief.id] = r.svg;
-    else issues.push(`Dropped the picture "${r.brief.id}" after ${r.outcome.attempts} attempts.`);
-  }
-
-  say('checking', 'Checking the class holds together…', 0.9);
-  const {
-    lesson: candidate,
-    dropped,
-    aliases,
-  } = assemble(blueprint, new Set(Object.keys(assets)), pictureParts, pictureShapes);
-  // Both ids point at the one drawing.
-  for (const [copy, original] of Object.entries(aliases) as [string, string][]) {
-    if (assets[original]) assets[copy] = assets[original];
-  }
-  for (const id of dropped) issues.push(`Beats referring to "${id}" were trimmed.`);
-
-  let validated = validateLesson(candidate);
-
-  /**
-   * Said but never written — the deterministic check behind the prompt rule.
-   *
-   * "The board shows what you are saying" holds four beats in five; this
-   * catches the fifth (the spoken question nobody wrote, the landing line
-   * said over a silent board) and names it to the model beside whatever else
-   * validation found, so the one repair round fixes both. It can send a plan
-   * to repair on its own — but unlike a structural failure it is never fatal:
-   * a class with one unwritten question is a worse class, not no class.
-   */
-  let unwritten = [...saidButNotWritten(blueprint.beats), ...classMustAsk(blueprint.beats)];
-
-  // One repair round.
-  //
-  // The pictures are already drawn and paid for, so a plan that fails
-  // validation is worth fixing rather than abandoning — and the model fixes
-  // what the validator NAMED, keeping the teaching it already worked out. A
-  // regenerated plan would be a different lesson that might break elsewhere.
-  if (!validated.ok || unwritten.length > 0) {
-    const named = [...(validated.ok ? [] : validated.errors), ...unwritten];
-    issues.push(`The first plan failed validation: ${named[0]}`);
-    say('checking', 'Fixing the plan…', 0.93);
-    try {
-      const reply = await planner.complete(
-        PLANNER_SYSTEM,
-        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10)),
-      );
-      // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
-      // recovering JSON from prose is the whole reason parsePlan exists. The
-      // strict parse threw away plans that were sitting right there.
-      const fixed = parsePlan(reply);
-      if (!fixed) throw new Error('the repaired plan was unreadable');
-      fixed.beats ??= [];
-      // The artwork is already drawn; its briefs are not the model's to change.
-      fixed.visuals = blueprint.visuals;
-      fixed.id ||= blueprint.id;
-
-      const revalidated = validateLesson(
-        assemble(fixed, new Set(Object.keys(assets)), pictureParts, pictureShapes).lesson,
-      );
-      if (revalidated.ok) {
-        validated = revalidated;
-        unwritten = [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)];
-        issues.push('The plan was repaired and passed.');
-      }
-    } catch (e) {
-      issues.push(`Repair failed: ${e instanceof Error ? e.message : String(e)}`);
+    if (!r.svg) {
+      // Left as its placeholder rather than trimmed: the class may already be
+      // playing, and pulling a beat out from under a student mid-lesson is
+      // worse than a dashed frame with the picture's own description in it.
+      issues.push(`Dropped the picture "${r.brief.id}" after ${r.outcome.attempts} attempts.`);
     }
   }
 
-  // Whatever is still unwritten after the one repair is reported, not fatal:
-  // the class runs, and the report says what she said without writing.
-  for (const miss of unwritten) issues.push(`Still unwritten after repair: ${miss}`);
-
-  if (!validated.ok) {
-    say('failed', 'The plan did not hold together.', 1);
-    throw new Error(`The planned lesson is not valid:\n${validated.errors.slice(0, 8).join('\n')}`);
+  /**
+   * THE SAME CLASS, LAID OUT NOW THAT THE PICTURES CAN BE MEASURED.
+   *
+   * The draft was assembled before a picture existed, so its boxes are the
+   * layout's own rectangles rather than each picture's true shape, and a label
+   * pointing INSIDE a generated picture has no part box to point at yet. The
+   * student in the room is not hurt by either — an image letterboxes into
+   * whatever box it is given (Scene: preserveAspectRatio "meet"), so it looks
+   * right with a little more air around it, and a name without a line is still
+   * the name.
+   *
+   * But this is also the copy that gets KEPT, and every student after the
+   * first should get the tight version. So it is laid out again here, with the
+   * measured shapes and part boxes, and THAT is what comes back. The draft
+   * carries on playing untouched: swapping the lesson under a class that has
+   * already started would restart it from the top.
+   */
+  const beats = blueprint.beats;
+  let final = lesson;
+  if (pictureShapes.size > 0 || pictureParts.size > 0) {
+    const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes);
+    const revalidated = validateLesson(refitted.lesson);
+    if (revalidated.ok) {
+      final = revalidated.lesson as Lesson;
+      // A copy of a picture needs the markup under its own id, and the copy
+      // ids are decided by this second layout rather than the first.
+      for (const [copy, original] of Object.entries(refitted.aliases) as [string, string][]) {
+        if (assets[original]) assets[copy] = assets[original];
+      }
+    } else {
+      // Cannot happen — the same beats validated a moment ago — but a class
+      // already playing is not the place to find out. Keep the draft.
+      issues.push('The re-fitted layout did not validate; kept the first one.');
+    }
   }
 
   const report: PrepReport = {
@@ -561,5 +671,5 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     visuals,
   };
   say('done', 'Ready.', 1);
-  return { lesson: validated.lesson as Lesson, assets, report };
+  return { lesson: final, assets, report };
 }

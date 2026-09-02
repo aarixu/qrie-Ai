@@ -179,6 +179,18 @@ export async function prepareLiveClass(
     teacherStyle?: string;
   },
   onProgress: (progress: PrepProgress) => void,
+  /**
+   * THE CLASS, AS SOON AS THE TEACHING HOLDS.
+   *
+   * Called once, about fourteen seconds in, with the lesson and the assets
+   * record it will fill. Whoever takes it can open the room there and let the
+   * pictures arrive behind the student. `onArt` fires each time one lands, so
+   * a caller holding that same record knows to draw again.
+   */
+  warm?: {
+    onDraft: (draft: { lesson: Lesson; assets: Record<string, string> }) => void;
+    onArt: () => void;
+  },
 ): Promise<LivePrep> {
   const result = await prepareClass({
     topic: ask.topic,
@@ -191,7 +203,18 @@ export async function prepareLiveClass(
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),
     eyes: createBrowserVision(VISION_MODEL),
     onProgress,
+    ...(warm ? { onDraft: warm.onDraft, onAsset: () => warm.onArt() } : {}),
   });
+
+  /**
+   * The nouns, dressed.
+   *
+   * This used to run with the progress bar sitting at "Ready." — prepareClass
+   * says done before this starts, so a lesson with several unlibraried nouns
+   * spent a silent multi-second tail there. It now reports for itself, and
+   * with warm entry the student is already in the room while it happens.
+   */
+  onProgress({ phase: 'drawing', message: 'Finding the pictures for each word…', done: 0.97 });
 
   let graphics: Record<string, string> = {};
   try {
@@ -205,5 +228,12 @@ export async function prepareLiveClass(
     // The board shows what it has.
   }
 
-  return { lesson: result.lesson, assets: { ...result.assets, ...graphics }, report: result.report };
+  // Into the same record the draft was handed, not a copy: the room is holding
+  // that object, and a copy would leave every noun undressed for the student
+  // who is already watching.
+  Object.assign(result.assets, graphics);
+  warm?.onArt();
+  onProgress({ phase: 'done', message: 'Ready.', done: 1 });
+
+  return { lesson: result.lesson, assets: result.assets, report: result.report };
 }
