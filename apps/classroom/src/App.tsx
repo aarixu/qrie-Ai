@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import {
   BrowserRouter,
+  HashRouter,
   Navigate,
   Route,
   Routes,
@@ -18,6 +19,7 @@ import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
 import { hrefFor } from './lib/destination';
 import { reportCrash, track } from './lib/telemetry';
+import { isNative } from './lib/platform';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
 
@@ -301,10 +303,27 @@ function Boundaried({ children }: { children: React.ReactNode }) {
   );
 }
 
+/**
+ * THE ROUTER, PICKED FOR WHERE IT IS RUNNING.
+ *
+ * On the web, real paths: /lesson/class10-blood is a URL a student can send to
+ * a friend, and Vercel rewrites it back to index.html.
+ *
+ * Inside the native shell there is nothing to do that rewriting. The WebView
+ * serves files off the app itself, so a reload while the student is at
+ * /lesson/class10-blood asks the shell for a file that was never written —
+ * and a blank screen on a phone is an uninstall, not a bug report. A hash
+ * carries the path inside a URL the shell always resolves.
+ *
+ * One line of platform adaptation, not a second implementation: everything
+ * below this is identical.
+ */
+const Router = isNative() ? HashRouter : BrowserRouter;
+
 export default function App() {
   useAppearance();
   return (
-    <BrowserRouter>
+    <Router>
       <Boundaried>
         <Suspense fallback={<Splash />}>
         <Gate>
@@ -347,6 +366,6 @@ export default function App() {
         </Gate>
         </Suspense>
       </Boundaried>
-    </BrowserRouter>
+    </Router>
   );
 }

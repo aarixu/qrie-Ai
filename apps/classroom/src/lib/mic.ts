@@ -40,7 +40,45 @@ export async function requestMic(): Promise<MicStatus> {
   return cached;
 }
 
+/**
+ * HAVE WE EXPLAINED OURSELVES YET?
+ *
+ * Remembered across launches, not just for the session, because the cost of
+ * getting this wrong is permanent: Android stops showing the system prompt
+ * after two refusals and iOS after one, and the only way back is a Settings
+ * screen nobody finds. So the app explains once, in its own words, and after
+ * that never asks again — a student who said "not now" has answered, and
+ * asking every lesson would be nagging.
+ *
+ * Storage failing is not a reason to skip the explanation: an extra warm
+ * screen costs a tap, and a system prompt out of nowhere costs the microphone
+ * for good.
+ */
+const EXPLAINED_KEY = 'mic:explained';
+
+export function micExplained(): boolean {
+  try {
+    return localStorage.getItem(EXPLAINED_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+export function rememberMicExplained(): void {
+  try {
+    localStorage.setItem(EXPLAINED_KEY, '1');
+  } catch {
+    // Private mode. The screen shows again next launch, which is the harmless
+    // direction to be wrong in.
+  }
+}
+
 /** Test seam: reset the memoised status. */
 export function resetMicStatusForTest(): void {
   cached = 'unknown';
+  try {
+    localStorage.removeItem(EXPLAINED_KEY);
+  } catch {
+    // nothing stored, nothing to clear
+  }
 }

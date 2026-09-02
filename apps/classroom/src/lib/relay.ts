@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { isNative } from './platform';
 
 /**
  * HOW THE APP TALKS TO ITS OWN BACKEND.
@@ -26,7 +27,26 @@ import { supabase } from './supabase';
  * answers them. Set to the deployed function's base in production. Both are
  * public — it is a URL, not a secret.
  */
-const BASE = ((import.meta.env.VITE_RELAY_URL as string | undefined) ?? '').replace(/\/+$/, '');
+const BASE = ((import.meta.env.VITE_RELAY_URL as string | undefined) || '').replace(/\/+$/, '');
+
+/**
+ * INSIDE THE SHELL THIS IS NOT OPTIONAL.
+ *
+ * On the web an empty base leaves the paths relative and the dev server — or
+ * the deployed origin — answers them. In the native app there is no origin to
+ * fall back to: "/api/llm" resolves against the shell's own scheme, where
+ * nothing is listening, and every class fails with something that looks like a
+ * bug in the app rather than a missing setting.
+ *
+ * So a native build without VITE_RELAY_URL is a build that cannot teach, and
+ * it says so once, loudly, at startup rather than silently per request.
+ */
+if (isNative() && BASE === '') {
+  console.error(
+    '[relay] VITE_RELAY_URL is not set. Inside the app every relay call will fail — ' +
+      'set it to the deployed Edge Function base before building.',
+  );
+}
 
 export const relayUrl = (path: string): string => `${BASE}${path}`;
 

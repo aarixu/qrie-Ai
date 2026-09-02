@@ -15,7 +15,13 @@ import { useLessonAssets } from '../lib/diagrams';
 import { buildStudentContext } from '../lib/student';
 import { createGeminiAgent } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
-import { requestMic } from '../lib/mic';
+import {
+  micExplained,
+  micStatus,
+  rememberMicExplained,
+  requestMic,
+  type MicStatus,
+} from '../lib/mic';
 import { listenOnce } from '../lib/ear';
 import { judgeSpokenAnswer, resolveCrossQuestion } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
@@ -30,6 +36,7 @@ import { Skeleton } from '../ui/States';
 import { fromStudent, toStudent } from '../lib/safety';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
+import { MicRationale } from '../ui/MicRationale';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
@@ -289,6 +296,35 @@ export function ClassRoom({
   // room rather than in Settings, because the moment they want it is the
   // moment it happened.
   const [reporting, setReporting] = useState(false);
+
+  /**
+   * THE WARM ASK, IN FRONT OF THE SYSTEM ONE.
+   *
+   * Held as the resolver of a promise rather than a boolean, because the ear
+   * is in the middle of an async sequence when it needs an answer: it asks,
+   * waits for the student, and carries on with whatever they said. A flag
+   * would need the whole sequence rewritten around a re-render.
+   */
+  const [micAsk, setMicAsk] = useState<((allowed: boolean) => void) | null>(null);
+
+  /**
+   * Ask for the mic, explaining first if we never have.
+   *
+   * On the web a refused prompt costs little — it comes back next time. On a
+   * phone it does not: two refusals on Android and one on iOS and the prompt
+   * never appears again. So the student meets a sentence they understand
+   * before they meet a system dialog, and "not now" is a real answer that
+   * costs nothing — the chips under her question still work.
+   */
+  const askForMic = async (): Promise<MicStatus> => {
+    if (micStatus() === 'granted') return 'granted';
+    if (micExplained()) return requestMic();
+
+    const allowed = await new Promise<boolean>((resolve) => setMicAsk(() => resolve));
+    rememberMicExplained();
+    setMicAsk(null);
+    return allowed ? requestMic() : 'denied';
+  };
   // Typed-doubt input on a phone, where there is no side panel to type into.
   const [typing, setTyping] = useState(false);
   const [draft, setDraft] = useState('');
@@ -456,7 +492,7 @@ export function ClassRoom({
     if (!heldAskBeat) return;
     let cancelled = false;
     (async () => {
-      if ((await requestMic()) !== 'granted') return;
+      if ((await askForMic()) !== 'granted') return;
       /**
        * The exchange, Aarav's shape: a wrong answer gets a hint and another
        * try; a RIGHT answer is not the exit either — she asks one why/how/
@@ -620,7 +656,7 @@ export function ClassRoom({
     if (student !== null) {
       // A mic is no use without a live voice session to carry it, and that
       // exists in dev only until the server can mint a token for one.
-      const status = liveVoiceKey ? await requestMic() : 'denied';
+      const status = liveVoiceKey ? await askForMic() : 'denied';
       const useVoice = status === 'granted';
       setVoiceMode(useVoice);
       if (useVoice) {
@@ -1046,6 +1082,8 @@ export function ClassRoom({
           </>
         )}
       </nav>
+
+      {micAsk && <MicRationale onAllow={() => micAsk(true)} onSkip={() => micAsk(false)} />}
 
       {reporting && <ReportSheet lessonId={lesson.id} onClose={() => setReporting(false)} />}
     </div>

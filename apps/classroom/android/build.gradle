@@ -1,0 +1,50 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.0'
+        classpath 'com.google.gms:google-services:4.4.4'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply from: "variables.gradle"
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    /**
+     * EVERY MODULE COMPILES ON JAVA 21, WHOEVER IS BUILDING.
+     *
+     * Capacitor 8's own modules declare source/target 21. Gradle otherwise
+     * compiles them with whatever JVM it is itself running on — 17 on this
+     * laptop — and the build dies on "invalid source release: 21".
+     *
+     * Declaring the toolchain here rather than telling one developer to
+     * install a JDK means settings.gradle's resolver fetches the right one on
+     * first build and caches it. The same ./gradlew assembleDebug then works
+     * on a fresh clone and on a cloud runner with nothing provisioned, which
+     * is the whole reason iOS will be built in CI later.
+     */
+    plugins.withId('java-base') {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

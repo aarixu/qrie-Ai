@@ -15,7 +15,10 @@
     "agent:worker": "npm run worker --workspace @ai-tutor/agent",
     "agent:token": "npm run token --workspace @ai-tutor/agent",
     "livekit:server": "node tools/livekit/src/cli.ts",
-    "style-card": "node tools/teacher-clone/src/style-card.ts"
+    "style-card": "node tools/teacher-clone/src/style-card.ts",
+    "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",
+    "app:android": "npm run app:sync && npm run --workspace @ai-tutor/classroom cap:android",
+    "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.522",

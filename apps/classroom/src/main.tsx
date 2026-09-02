@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { initTelemetry } from './lib/telemetry';
+import { isNative } from './lib/platform';
 import { createRoot } from 'react-dom/client';
 import './fonts';
 import './index.css';
@@ -24,7 +25,16 @@ initTelemetry();
 
 // Offline shell + installability — production only, so dev never fights a
 // stale cache.
-if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+/**
+ * The service worker is a WEB thing, and only a web thing.
+ *
+ * Inside the native shell every asset is already on the phone — the build
+ * output is copied into the app at `cap sync`, so there is nothing for a
+ * cache to make faster. What it CAN still do is serve a stale copy of the app
+ * after an update, which is the exact failure this file was rewritten to
+ * prevent (a0314a2). So it does not run there at all.
+ */
+if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
   /**
    * A NEW VERSION IS NEVER TAKEN MID-CLASS.
    *

@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cap:sync": "cap sync android",
+    "cap:android": "cap run android",
+    "cap:assets": "capacitor-assets generate --android"
   },
   "dependencies": {
     "@ai-tutor/action-player": "*",
@@ -22,6 +25,8 @@
     "@ai-tutor/syllabus": "*",
     "@ai-tutor/teacher-clone": "*",
     "@ai-tutor/voice": "*",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/local-notifications": "^8.3.1",
     "@fontsource-variable/caveat": "^5.3.0",
     "@fontsource-variable/lexend": "^5.3.0",
     "@fontsource-variable/quicksand": "^5.3.0",
@@ -36,10 +41,14 @@
     "three": "^0.185.1"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.1",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.5.4",
     "postcss": "^8.5.26",
+    "sharp": "^0.35.3",
     "tailwindcss": "^3.4.19",
     "vite": "^8.2.0"
   }

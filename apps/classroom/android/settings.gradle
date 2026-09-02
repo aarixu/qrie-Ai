@@ -1,0 +1,24 @@
+/**
+ * LET GRADLE FETCH THE JDK IT NEEDS.
+ *
+ * Capacitor 8's Android plugins compile against Java 21. This machine — and
+ * any CI runner we have not hand-provisioned — has 17, and the build failed
+ * with "Cannot find a Java installation matching languageVersion=21".
+ *
+ * Installing a second JDK by hand fixes it on one computer. This fixes it
+ * everywhere: the toolchain resolver downloads the right JDK on first build
+ * and caches it, so the same `./gradlew assembleDebug` works on this laptop,
+ * on a fresh clone, and on a cloud runner without anybody setting JAVA_HOME.
+ *
+ * Applied in settings.gradle rather than build.gradle because a toolchain
+ * repository has to be declared before any project is evaluated.
+ */
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+include ':app'
+include ':capacitor-cordova-android-plugins'
+project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
+
+apply from: 'capacitor.settings.gradle'
