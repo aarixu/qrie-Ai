@@ -22,6 +22,11 @@ import { spawnSync } from 'node:child_process';
  * SUPABASE_SERVICE_ROLE_KEY to a function itself. Setting those by hand is
  * both unnecessary and refused.
  *
+ * The Google service account is read from .secrets/ and pushed as
+ * GOOGLE_SERVICE_ACCOUNT_JSON. That is the credential that lets the relay
+ * spend Cloud credits, so it goes the same way as the rest: out of a file,
+ * through a temp env file, deleted afterwards, and never onto a command line.
+ *
  * Run: node tools/bin/relay-secrets.mjs
  */
 
@@ -30,6 +35,20 @@ const ENV_FILE = path.join(ROOT, '.env.local');
 
 /** What the deployed relay needs that Supabase does not already give it. */
 const WANTED = ['OPENROUTER_API_KEY', 'RELAY_TICKET_SECRET'];
+
+/**
+ * The Google service account, which lives in a FILE rather than in .env.local.
+ *
+ * It is a key file and it arrives as one; flattening it into an env line by
+ * hand is how a PEM loses its newlines. So it is read whole and passed as a
+ * single value, with the newlines escaped exactly the way JSON.stringify
+ * escapes them — which is the form readServiceAccount already handles, and the
+ * form a Supabase secret can hold.
+ *
+ * Optional. Without it the relay runs every model through OpenRouter, which is
+ * what it did before Vertex existed.
+ */
+const ACCOUNT_FILE = process.env.GOOGLE_SERVICE_ACCOUNT_FILE ?? '.secrets/vertex-service-account.json';
 
 function readEnv(file) {
   if (!fs.existsSync(file)) return {};
@@ -71,10 +90,30 @@ if (!env.RELAY_TICKET_SECRET) {
   console.log(`Made a RELAY_TICKET_SECRET and saved it in ${path.relative(ROOT, ENV_FILE)}.`);
 }
 
+const lines = WANTED.map((k) => `${k}=${env[k]}`);
+
+const accountPath = path.resolve(ROOT, ACCOUNT_FILE);
+if (fs.existsSync(accountPath)) {
+  const raw = fs.readFileSync(accountPath, 'utf8');
+  try {
+    // Re-serialised rather than passed through: it proves the file parses
+    // before a broken one is pushed, and collapses it onto the single line an
+    // env file can carry.
+    const compact = JSON.stringify(JSON.parse(raw));
+    lines.push(`GOOGLE_SERVICE_ACCOUNT_JSON=${compact}`);
+    WANTED.push('GOOGLE_SERVICE_ACCOUNT_JSON');
+  } catch (e) {
+    console.error(`${ACCOUNT_FILE} is not valid JSON — not pushing it. ${e.message}`);
+    process.exit(1);
+  }
+} else {
+  console.log(`No ${ACCOUNT_FILE}; the relay will run every model through OpenRouter.`);
+}
+
 // A temp file rather than command-line arguments: an argument is visible to
 // every other process on the machine while it runs, and lands in shell history.
 const temp = path.join(ROOT, `.relay-secrets.${process.pid}.env`);
-fs.writeFileSync(temp, WANTED.map((k) => `${k}=${env[k]}`).join('\n') + '\n');
+fs.writeFileSync(temp, lines.join('\n') + '\n');
 
 try {
   console.log(`Pushing ${WANTED.join(', ')} to the linked Supabase project…`);
