@@ -1,5 +1,6 @@
 import { layoutBeat, offsetElement, PAGE_STRIDE, type Instruction } from '@ai-tutor/board-layout';
 import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture';
+import { findOnTheWeb, type WebImageAdapter } from './fromWeb';
 import {
   PART_SEPARATOR,
   validateLesson,
@@ -61,6 +62,18 @@ export interface PrepOptions {
    * gets no photographic artwork, which is a poorer class, not a broken one.
    */
   imageArtist?: ImageAdapter;
+  /**
+   * Where to LOOK for a picture before paying to make one.
+   *
+   * Generating an image is the most expensive step in this pipeline and the
+   * only one that can return a confident, beautiful picture of the wrong
+   * organ. The web already has a photograph of a kidney, and one vision call
+   * decides whether what was found is what was asked for.
+   *
+   * Absent: every picture is generated, exactly as before. The rung is
+   * skipped, not faked — there is no half-search.
+   */
+  web?: WebImageAdapter;
   /** The model that looks at a generated picture to find its named parts. */
   eyes?: VisionAdapter;
   /**
@@ -414,6 +427,7 @@ async function drawOne(
 export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
     opts;
+  const web = opts.web;
   const say = (phase: PrepProgress['phase'], message: string, done: number) =>
     opts.onProgress?.({ phase, message, done });
 
@@ -523,6 +537,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const promised = new Set(blueprint.visuals.map((v) => v.id));
   const assets: Record<string, string> = {};
+  /**
+   * The page each found picture came from, by visual id.
+   *
+   * Carried out in the report rather than written onto the board: a credit
+   * line under a picture is a distraction mid-class, and the obligation is to
+   * record it, not to show it in eleven-point type to a child. The class store
+   * keeps the report beside the lesson.
+   */
+  const sources = new Map<string, string>();
 
   say('checking', 'Checking the class holds together…', 0.15);
   let { lesson: candidate, aliases } = assemble(blueprint, promised, pictureParts, pictureShapes);
@@ -628,11 +651,31 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       const started = Date.now();
 
       if (wantsPicture) {
-        const made = await drawPicture(
-          { id: brief.id, alt: brief.alt, brief: brief.brief, parts: brief.parts },
-          imageArtist,
-          eyes ?? { look: async () => '{}' },
-        );
+        const want = { id: brief.id, alt: brief.alt, brief: brief.brief, parts: brief.parts };
+        const looking = eyes ?? { look: async () => '{}' };
+
+        /**
+         * FIND IT BEFORE MAKING IT.
+         *
+         * Only when there are eyes to check with. A web image nobody looked at
+         * is the one thing worse than a generated one: the search does not
+         * know what the lesson means, and "tank" is two things.
+         *
+         * Everything it turned down is kept for the prep report. A picture
+         * that was generated because all three candidates had labels on them
+         * is a different fact from one generated because nothing was searched,
+         * and only one of them is worth changing the query over.
+         */
+        let found: Awaited<ReturnType<typeof findOnTheWeb>>['found'] = null;
+        const turnedDown: string[] = [];
+        if (web && eyes) {
+          const search = await findOnTheWeb(want, web, eyes);
+          found = search.found;
+          turnedDown.push(...search.refusals);
+        }
+
+        const made = found ?? (await drawPicture(want, imageArtist, looking));
+        if (found?.source) sources.set(brief.id, found.source);
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
@@ -646,12 +689,17 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
             ok: made !== null,
             attempts: made?.attempts ?? 1,
             ms: Date.now() - started,
+            from: found ? ('web' as const) : ('generated' as const),
             problems: made
               ? [
                   ...(brief.parts.length > 0 && made.parts.length === 0
                     ? ['none of its named parts could be found in the picture']
                     : []),
                   ...made.faults.map((f) => `it still has ${f}`),
+                  // Only when the search lost. A picture found on the third
+                  // try is a success, and listing the two before it as
+                  // problems would read as one.
+                  ...(found ? [] : turnedDown.map((r) => `the web had one but ${r}`)),
                 ]
               : ['the picture could not be generated'],
           },
@@ -721,6 +769,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     visualsMs,
     issues,
     visuals,
+    ...(sources.size > 0 ? { credits: Object.fromEntries(sources) } : {}),
   };
   say('done', 'Ready.', 1);
   return { lesson: final, assets, report };

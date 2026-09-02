@@ -75,6 +75,15 @@ export interface Blueprint {
 
 /** What happened to one picture on the way to the board. */
 export interface VisualOutcome {
+  /**
+   * Which rung of the artwork ladder answered.
+   *
+   * Absent for a diagram, which is drawn and has no ladder. For a picture it
+   * is the number worth watching: if "web" never wins, the search is not
+   * earning the two calls it costs and should be turned off rather than
+   * quietly paid for.
+   */
+  from?: 'web' | 'generated';
   id: string;
   ok: boolean;
   attempts: number;
@@ -98,6 +107,16 @@ export interface PrepReport {
   /** Non-fatal things the prep decided to live with. */
   issues: string[];
   visuals: VisualOutcome[];
+  /**
+   * The page each found picture came from, by visual id. Empty when every
+   * picture was drawn or generated.
+   *
+   * Recorded rather than shown. A CC BY photograph carries an obligation to
+   * credit its author, and the obligation is to record it somewhere findable —
+   * not to print a credit line in eleven-point type under a diagram a
+   * thirteen-year-old is being taught from. This travels with the saved class.
+   */
+  credits?: Record<string, string>;
 }
 
 export interface PrepResult {
