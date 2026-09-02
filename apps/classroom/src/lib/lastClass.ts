@@ -32,6 +32,15 @@ export interface LastClass {
  * `exceptLessonId` skips the class about to be taught, so a student replaying
  * something is not greeted with "last time we did the very thing we are about
  * to do".
+ *
+ * NOTHING PASSES IT TODAY, and that is correct rather than an oversight.
+ * LiveClass is the only caller, and it reaches this line only for a class
+ * that does not exist yet: a topic with a saved recording is redirected to
+ * /lesson/<id> several lines earlier and never plans anything. The
+ * parameter is here for the caller that will need it — the live doubt agent
+ * inside a saved lesson, which by definition IS the class being sat — and
+ * its test is a test of this function, not a claim that a student can reach
+ * it today.
  */
 export async function lastClassBefore(
   exceptLessonId?: string,

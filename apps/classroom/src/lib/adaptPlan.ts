@@ -1,5 +1,6 @@
 import { learnFromQuiz } from '@ai-tutor/diagnostic';
 import type { Answer, GraphIndex } from '@ai-tutor/knowledge-graph';
+import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
 import { loadDiagnosticDataFor } from './diagnosticData';
 import { settingsStore } from '../stores/settings';
@@ -38,6 +39,9 @@ export function answersFrom(outcome: QuizOutcome): Answer[] {
     nodeId: row.nodeId,
     chosenIndex: row.chosenIndex,
     correct: row.correct,
+    // How long it took. applyEvidence discounts a correct answer that was
+    // laboured, and without this every quiz answer looked instant to it.
+    ms: row.ms,
   }));
 }
 
@@ -64,7 +68,12 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
   if (!data) return null;
 
   const index = data.index as GraphIndex;
-  const adapted = learnFromQuiz(before, answersFrom(outcome), index);
+  // The same trained slip/guess and edge trust the placement test uses. A
+  // topic test is the more frequent evidence source of the two; ignoring the
+  // calibration here meant ignoring it almost everywhere.
+  const adapted = learnFromQuiz(before, answersFrom(outcome), index, {
+    params: modelStore.get(),
+  });
 
   /**
    * A step the map no longer has still gets a readable line, the same way the

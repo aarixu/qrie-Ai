@@ -100,8 +100,6 @@ export const REUSABLE_LICENCES: readonly string[] = [
   'cc-by',
   'cc by-sa',
   'cc-by-sa',
-  'attribution',
-  'attribution-sharealike',
 ];
 
 /**
@@ -111,10 +109,26 @@ export const REUSABLE_LICENCES: readonly string[] = [
  * ND/NC check comes FIRST: "CC BY-NC-ND 4.0" contains "cc by" and would
  * otherwise pass the very test that exists to stop it.
  */
+/**
+ * Anything that restricts the use, however it is spelled.
+ *
+ * Checked BEFORE the allow-list, and that ordering is the whole point: "CC
+ * BY-NC-ND 4.0" contains "cc by" and would otherwise pass the very test that
+ * exists to stop it.
+ *
+ * A bare "Attribution" used to be on the allow-list and is not any more, for
+ * the same reason: "Attribution required — editorial use only" contains it,
+ * carries neither an NC nor an ND token, and is not a licence this may build
+ * on. A licence that does not name Creative Commons or the public domain is
+ * one the search did not really identify.
+ */
+const RESTRICTED =
+  /\bnc\b|noncommercial|non-commercial|\bnd\b|noderiv|editorial|rights reserved|royalty|watermark|personal use/;
+
 export function mayReuse(license: string | undefined): boolean {
   if (!license) return false;
   const l = license.toLowerCase();
-  if (/\bnc\b|noncommercial|non-commercial|\bnd\b|noderiv/.test(l)) return false;
+  if (RESTRICTED.test(l)) return false;
   return REUSABLE_LICENCES.some((ok) => l.includes(ok));
 }
 

@@ -168,22 +168,48 @@ export function namesInSpine(lesson: Lesson, names: readonly string[]): string[]
  * few ways to write one.
  */
 const REMEMBERS_A_SESSION: RegExp[] = [
-  // "last time" needs a "we" or a "you" near it to be about the pair.
-  // Without that clause this rejected "Last week the moon was full", which is
-  // a lunar cycle lesson and exactly the kind of teaching a spine is for.
-  /last (?:time|class|lesson)[^.!?]{0,40}\b(?:we|you|your)\b/i,
+  /**
+   * "we" and "you" are not the same word here.
+   *
+   * "Last time WE did the nucleus" claims a session the two of them had.
+   * "The last time YOU saw a rainbow, you were looking at refraction" is a
+   * teacher reaching for something the student has lived, which is the best
+   * opening there is and belongs in every copy of the class. So "last time"
+   * needs a "we"; only "last class" and "last lesson" — which name the thing
+   * itself — may be triggered by a "you".
+   *
+   * And the earlier version, with no clause at all, rejected "Last week the
+   * moon was full": a lunar cycle lesson, and exactly the kind of teaching a
+   * spine is for.
+   */
+  /last time[^.!?]{0,40}\bwe\b/i,
+  /last (?:class|lesson)[^.!?]{0,40}\b(?:we|you|your)\b/i,
   /(?:when|what|remember what) we (?:did|looked at|covered|talked about)/i,
   /yesterday we /i,
-  /welcome back/i,
+  /**
+   * "Welcome back to the world of numbers" is a flourish, not a memory.
+   *
+   * The greeting only claims a shared past when it greets the PERSON — back
+   * to a room, a class, a lesson, or nothing at all.
+   */
+  /welcome back(?:\s*[,.!]|\s+to (?:class|the class|our|the lesson|the board)|\s*$)/i,
   /picking up (?:from )?where (?:we|you) (?:left|stopped)/i,
 ];
 
 /** The phrases in a spine that claim a shared past, if any. */
 export function remembersASession(lesson: Lesson): string[] {
+  /**
+   * The elements too, for the reason namesInSpine already gives: a Beat's
+   * board is a list of element IDS, and every word actually written on the
+   * board lives in `elements`. A note reading "Welcome back — last time we
+   * did the nucleus" is not in any beat, and without this line it was kept
+   * and shown to every later student.
+   */
   const spine = [
     lesson.title,
     lesson.subtitle ?? '',
     ...lesson.beats.map((b) => JSON.stringify(b)),
+    ...lesson.elements.map((el) => JSON.stringify(el)),
   ].join(' ');
 
   return REMEMBERS_A_SESSION.filter((pattern) => pattern.test(spine)).map((p) => p.source);

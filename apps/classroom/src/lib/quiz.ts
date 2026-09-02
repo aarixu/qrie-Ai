@@ -4,6 +4,10 @@ import type { KnowledgeGraph, LearningNode, Probe, ProbeBank } from '@ai-tutor/k
 // be bundled, and a quiz has to be in hand the instant the lesson ends.
 import class10ScienceGraph from '../../../../packages/knowledge-graph/data/class10-science.json';
 import class10ScienceProbes from '../../../../packages/knowledge-graph/data/class10-science.probes.json';
+import class9ScienceGraph from '../../../../packages/knowledge-graph/data/class9-science.json';
+import class9ScienceProbes from '../../../../packages/knowledge-graph/data/class9-science.probes.json';
+import class9MathsGraph from '../../../../packages/knowledge-graph/data/class9-mathematics.json';
+import class9MathsProbes from '../../../../packages/knowledge-graph/data/class9-mathematics.probes.json';
 
 /**
  * The practice quiz: pure logic, no React, no clock, no randomness.
@@ -48,6 +52,17 @@ export interface QuizResultRow {
   chosenIndex: number | null;
   correctIndex: number;
   correct: boolean;
+  /**
+   * How long this one answer took.
+   *
+   * Carried because the outcome map discounts a laboured correct answer — a
+   * student who spent ninety seconds reconstructing something has not shown
+   * the same thing as one who answered in four. The quiz screen has always
+   * measured it and the row dropped it, so every piece of quiz evidence
+   * reached applyEvidence with `ms` undefined and SLOW_ANSWER_FACTOR never
+   * applied to any of it.
+   */
+  ms: number;
   /**
    * The named misconception behind THIS wrong answer, or null when the answer
    * was right, was skipped, or the bank does not name one for that option.
@@ -97,10 +112,31 @@ export const DEFAULT_LENGTH = 8;
  * becomes `number` — and the shapes themselves are checked by the
  * knowledge-graph package's own tests against these very files.
  */
+/**
+ * EVERY MAP THERE IS, NOT JUST THE FIRST ONE WRITTEN.
+ *
+ * This held class10-science alone, which was invisible for as long as a quiz
+ * ended in a number. The moment the quiz started feeding the outcome map it
+ * became a silent no-op for most of the product: a Class 9 student's index
+ * covers classes 7 to 9, every probe here carried a class10 node id, every
+ * answer was dropped as "a node the map no longer has", and adaptToQuiz
+ * returned no change. Nothing threw and nothing was logged.
+ *
+ * Grows with the data directory. A map that exists and is not listed here is a
+ * class whose students get a score and no adaptation.
+ */
 const SOURCES: { graph: KnowledgeGraph; bank: ProbeBank }[] = [
   {
     graph: class10ScienceGraph as unknown as KnowledgeGraph,
     bank: class10ScienceProbes as ProbeBank,
+  },
+  {
+    graph: class9ScienceGraph as unknown as KnowledgeGraph,
+    bank: class9ScienceProbes as ProbeBank,
+  },
+  {
+    graph: class9MathsGraph as unknown as KnowledgeGraph,
+    bank: class9MathsProbes as ProbeBank,
   },
 ];
 
@@ -223,6 +259,7 @@ export function gradeQuiz(questions: QuizQuestion[], answers: QuizAnswer[]): Qui
       chosenIndex: answer.chosenIndex,
       correctIndex: question.correctIndex,
       correct,
+      ms: answer.ms,
       misconception: named === '' ? null : named,
     };
   });

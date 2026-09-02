@@ -142,3 +142,42 @@ describe('an outcome the map does not have is not an outcome', () => {
     expect(result.report.issues).toEqual([]);
   });
 });
+
+// ============================================================ the repair ===
+
+describe('the repair round is checked too', () => {
+  /**
+   * The path nobody looks at. A repair replaces the WHOLE blueprint with fresh
+   * planner output, and for one commit that output went into the saved lesson
+   * unfiltered — the exact silent failure this feature exists to prevent,
+   * reached by the back door.
+   */
+  const broken = planOf([beat({ narration: '' })]);
+  const repairedButInventing = planOf([
+    beat({ teaches: ['sci9.matter.states', 'invented.by.the.repair'] }),
+  ]);
+
+  it('drops an id the REPAIRED plan invented', async () => {
+    let call = 0;
+    const planner: LlmAdapter = {
+      complete: async () => {
+        call += 1;
+        return JSON.stringify(call === 1 ? broken : repairedButInventing);
+      },
+    };
+
+    const result = await prepareClass({
+      topic: 'Matter',
+      klass: 9,
+      planner,
+      artist: fakeArtist(),
+      outcomes,
+    });
+
+    expect(call).toBe(2);
+    expect(result.report.issues.join(' ')).toContain('repaired and passed');
+    expect(result.lesson.beats[0].teaches).toEqual(['sci9.matter.states']);
+    expect(result.report.issues.join(' ')).toMatch(/the repaired plan invented/);
+  });
+});
+

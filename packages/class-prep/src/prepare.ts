@@ -424,6 +424,49 @@ async function drawOne(
  * Nothing here throws for a bad picture. A class with one drawing instead of
  * two is still a class; a class that failed to start is not.
  */
+/**
+ * AN OUTCOME THE MAP DOES NOT HAVE IS NOT AN OUTCOME.
+ *
+ * The prompt lists what may be claimed, and a good model obeys it. This is
+ * what happens when one does not: the id is dropped rather than written,
+ * because a class that reports teaching "photosynthesis-basics" to a map that
+ * has never heard of it is measured as having taught nothing at all —
+ * silently, and forever.
+ *
+ * Dropped rather than rejected: an invented id is one bad field, not a bad
+ * class, and a repair round for it would cost a student thirteen seconds of
+ * blank board.
+ *
+ * A FUNCTION, and not a step in the flow, because there are two places a
+ * blueprint can come from. The repair round replaces the whole blueprint with
+ * fresh planner output, and for one commit that output went into the saved
+ * lesson unfiltered — which is the exact silent failure this exists to stop,
+ * reached by the path nobody looks at.
+ *
+ * With no outcomes it does nothing, which is not the same as "everything is
+ * invented": the prompt never asked for ids, and throwing away what a model
+ * volunteered anyway would discard the only measurement available.
+ */
+export function dropInventedOutcomes(
+  beats: readonly { teaches?: string[]; checks?: string[] }[],
+  outcomes: readonly TopicOutcome[] | undefined,
+): number {
+  if (!outcomes || outcomes.length === 0) return 0;
+  const real = new Set(outcomes.map((o) => o.id));
+  let invented = 0;
+  for (const beat of beats) {
+    for (const field of ['teaches', 'checks'] as const) {
+      const claimed = beat[field];
+      if (!Array.isArray(claimed)) continue;
+      const kept = claimed.filter((id) => real.has(id));
+      invented += claimed.length - kept.length;
+      if (kept.length > 0) beat[field] = kept;
+      else delete beat[field];
+    }
+  }
+  return invented;
+}
+
 export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
     opts;
@@ -479,21 +522,8 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * bad class, and a repair round costs a student thirteen seconds of blank
    * board to fix a word.
    */
-  if (opts.outcomes && opts.outcomes.length > 0) {
-    const real = new Set(opts.outcomes.map((o) => o.id));
-    let invented = 0;
-    for (const beat of blueprint.beats) {
-      for (const field of ['teaches', 'checks'] as const) {
-        const claimed = beat[field];
-        if (!Array.isArray(claimed)) continue;
-        const kept = claimed.filter((id) => real.has(id));
-        invented += claimed.length - kept.length;
-        if (kept.length > 0) beat[field] = kept;
-        else delete beat[field];
-      }
-    }
-    if (invented > 0) issues.push(`Dropped ${invented} outcome id(s) the map does not have.`);
-  }
+  const invented = dropInventedOutcomes(blueprint.beats, opts.outcomes);
+  if (invented > 0) issues.push(`Dropped ${invented} outcome id(s) the map does not have.`);
 
 
   const planMs = Date.now() - t0;
@@ -587,6 +617,17 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       fixed.visuals = blueprint.visuals;
       fixed.id ||= blueprint.id;
 
+      /**
+       * The repaired plan is fresh planner output, and it gets the same check
+       * the first one did — BEFORE assemble, because assemble is what copies a
+       * beat's fields into the lesson. Filtering after it left the invented id
+       * in the document that was actually kept.
+       */
+      const stillInvented = dropInventedOutcomes(fixed.beats, opts.outcomes);
+      if (stillInvented > 0) {
+        issues.push(`Dropped ${stillInvented} outcome id(s) the repaired plan invented.`);
+      }
+
       const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
       const revalidated = validateLesson(rebuilt.lesson);
       if (revalidated.ok) {
@@ -647,7 +688,17 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   // on, and waiting on them one after the other would double the wait.
   const results = await Promise.all(
     blueprint.visuals.map(async (brief) => {
-      const wantsPicture = brief.medium === 'picture' && imageArtist !== undefined;
+      /**
+       * A picture can be FOUND without anything that can make one.
+       *
+       * This used to require an image generator, which put rung three of the
+       * ladder behind rung four's adapter: with a search and no generator,
+       * every "picture" brief fell through to the SVG artist and it was asked
+       * to hand-draw a kidney cross-section — the outcome picture.ts opens by
+       * saying is impossible.
+       */
+      const canFind = web !== undefined && eyes !== undefined;
+      const wantsPicture = brief.medium === 'picture' && (imageArtist !== undefined || canFind);
       const started = Date.now();
 
       if (wantsPicture) {
@@ -674,8 +725,16 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           turnedDown.push(...search.refusals);
         }
 
-        const made = found ?? (await drawPicture(want, imageArtist, looking));
-        if (found?.source) sources.set(brief.id, found.source);
+        // Nothing found and nothing to make one with: the brief goes unmet,
+        // which is the same honest outcome as a generator that refused.
+        const made = found ?? (imageArtist ? await drawPicture(want, imageArtist, looking) : null);
+        if (found?.source) {
+          // The licence goes in the same string as the page. Two fields would
+          // be tidier and neither survives a JSON round trip nobody wrote — a
+          // credit is one line of text whose whole job is to be readable by a
+          // person who has to answer a takedown.
+          sources.set(brief.id, found.license ? `${found.source} (${found.license})` : found.source);
+        }
         finished += 1;
         say('drawing', `Drew ${finished} of ${total}…`, 0.3 + (0.65 * finished) / Math.max(1, total));
         if (made) pictureParts.set(brief.id, made.parts);
@@ -701,7 +760,12 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
                   // problems would read as one.
                   ...(found ? [] : turnedDown.map((r) => `the web had one but ${r}`)),
                 ]
-              : ['the picture could not be generated'],
+              : [
+                  imageArtist
+                    ? 'the picture could not be generated'
+                    : 'no picture could be found, and there is nothing configured to make one',
+                  ...turnedDown.map((r) => `the web had one but ${r}`),
+                ],
           },
         };
       }

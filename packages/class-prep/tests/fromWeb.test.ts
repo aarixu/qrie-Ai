@@ -75,6 +75,14 @@ describe('what may be reused', () => {
     }
   });
 
+  it('refuses a bare "attribution" that carries a restriction with it', () => {
+    // No NC token and no ND token, and it used to pass on the substring
+    // 'attribution' alone.
+    expect(mayReuse('Attribution required — editorial use only')).toBe(false);
+    expect(mayReuse('Attribution, personal use')).toBe(false);
+    expect(mayReuse('Royalty-free with attribution')).toBe(false);
+  });
+
   it('refuses a licence the search did not report', () => {
     // Silence is not permission. A search that does not say is a search that
     // does not know, and guessing costs more than a generated picture does.
@@ -287,7 +295,11 @@ describe('the ladder inside prepareClass', () => {
 
     expect(generator.draw).not.toHaveBeenCalled();
     expect(result.report.visuals[0]).toMatchObject({ id: 'kidney', ok: true, from: 'web' });
-    expect(result.report.credits).toEqual({ kidney: 'https://commons.example.org/kidney' });
+    // Page AND licence in one string: a credit's whole job is to be readable
+    // by a person who has to answer a takedown.
+    expect(result.report.credits).toEqual({
+      kidney: 'https://commons.example.org/kidney (CC BY-SA 4.0)',
+    });
   });
 
   it('generates when the web has nothing it may use, and says what it refused', async () => {
@@ -321,6 +333,40 @@ describe('the ladder inside prepareClass', () => {
 
     expect(generator.draw).toHaveBeenCalled();
     expect(result.report.visuals[0].from).toBe('generated');
+  });
+
+  it('finds a picture with no generator configured at all', async () => {
+    /**
+     * Rung three used to be gated on rung four's adapter. With a search and no
+     * generator every "picture" brief fell through to the SVG artist, which
+     * was then asked to hand-draw a kidney cross-section — the outcome
+     * picture.ts opens by saying is impossible.
+     */
+    const result = await prepareClass({
+      topic: 'The Kidney',
+      klass: 10,
+      planner,
+      artist,
+      eyes: eyesSaying(yes, JSON.stringify({ cortex: { x: 0.1, y: 0.1, w: 0.2, h: 0.2 } })),
+      web: webOf([openly()]),
+    });
+
+    expect(result.report.visuals[0]).toMatchObject({ ok: true, from: 'web' });
+  });
+
+  it('says so honestly when there is nothing to find and nothing to make one', async () => {
+    const result = await prepareClass({
+      topic: 'The Kidney',
+      klass: 10,
+      planner,
+      artist,
+      eyes: eyesSaying(JSON.stringify({ right: false, saw: 'an army tank' })),
+      web: webOf([openly()]),
+    });
+
+    expect(result.report.visuals[0].ok).toBe(false);
+    expect(result.report.visuals[0].problems.join(' ')).toMatch(/nothing configured to make one/);
+    expect(result.report.visuals[0].problems.join(' ')).toMatch(/an army tank/);
   });
 
   it('never takes a web picture nobody looked at', async () => {

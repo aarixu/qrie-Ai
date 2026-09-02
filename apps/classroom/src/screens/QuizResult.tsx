@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { PlanChange } from '../lib/adaptPlan';
 import { formatDuration, type QuizOutcome, type QuizResultRow } from '../lib/quiz';
 import { Icon } from '../ui/Icon';
@@ -31,6 +32,30 @@ const verdictFor = (score: number, total: number) => {
   // Last match wins, so a new band only needs adding in order above.
   return VERDICTS.reduce((best, v) => (fraction >= v.atLeast ? v : best), VERDICTS[0]);
 };
+
+/**
+ * The "I have added a class" card, which is a control only when it leads
+ * somewhere. Two elements rather than a button with a disabled state: a
+ * disabled button still announces itself to a screen reader as a thing that
+ * could be pressed, and this one is a statement.
+ */
+function AddedCard({
+  onOpenPlan,
+  children,
+}: {
+  onOpenPlan?: () => void;
+  children: ReactNode;
+}) {
+  const skin =
+    'w-full text-left bg-primary-container text-on-primary-container rounded-[20px] p-4 flex items-start gap-3';
+  return onOpenPlan ? (
+    <button onClick={onOpenPlan} className={`${skin} transition-transform active:scale-[0.99]`}>
+      {children}
+    </button>
+  ) : (
+    <div className={skin}>{children}</div>
+  );
+}
 
 export function QuizResult({
   outcome,
@@ -156,10 +181,12 @@ export function QuizResult({
           */}
           {added.length > 0 && (
             <section className="px-margin-mobile mb-stack-md">
-              <button
-                onClick={onOpenPlan}
-                className="w-full text-left bg-primary-container text-on-primary-container rounded-[20px] p-4 flex items-start gap-3 transition-transform active:scale-[0.99]"
-              >
+              {/*
+                A button only when it goes somewhere. Without onOpenPlan this
+                was still a <button>: focusable, animating under a thumb, and
+                doing nothing — a dead control on a celebration screen.
+              */}
+              <AddedCard onOpenPlan={onOpenPlan}>
                 <Icon name="auto_awesome" filled className="text-[22px] mt-0.5 shrink-0" />
                 <span className="min-w-0">
                   <span className="block font-headline-md text-[17px] leading-6">
@@ -172,7 +199,7 @@ export function QuizResult({
                   </span>
                 </span>
                 {onOpenPlan && <Icon name="chevron_right" className="shrink-0 mt-1" />}
-              </button>
+              </AddedCard>
             </section>
           )}
 

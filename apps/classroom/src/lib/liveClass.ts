@@ -1,6 +1,6 @@
 import type { Lesson } from "@ai-tutor/lesson-format";
 import { relayFetch } from './relay';
-import type { TopicOutcome } from '@ai-tutor/class-prep';
+import type { TopicOutcome, WebImageAdapter } from '@ai-tutor/class-prep';
 import {
   drawMissingIcons,
   pickIcons,
@@ -185,6 +185,19 @@ export async function prepareLiveClass(
      * ordinary class - Curie own tutor has a persona of her own.
      */
     teacherStyle?: string;
+    /**
+     * WHERE TO LOOK FOR A PICTURE BEFORE PAYING TO GENERATE ONE.
+     *
+     * Undefined until there is a search behind it, and then every picture is
+     * generated exactly as it is today. The rung is skipped rather than faked:
+     * a half-search would be a web image nobody verified, which is the one
+     * outcome worse than a generated one.
+     *
+     * Threaded through HERE rather than left for the day the search exists,
+     * because a capability that reaches no call site is a capability the
+     * shipped app does not have, however many tests the package has.
+     */
+    web?: WebImageAdapter;
   },
   onProgress: (progress: PrepProgress) => void,
   /**
@@ -211,6 +224,7 @@ export async function prepareLiveClass(
     artist: createBrowserLlm(ARTIST_MODEL),
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),
     eyes: createBrowserVision(VISION_MODEL),
+    ...(ask.web ? { web: ask.web } : {}),
     onProgress,
     ...(warm ? { onDraft: warm.onDraft, onAsset: () => warm.onArt() } : {}),
   });

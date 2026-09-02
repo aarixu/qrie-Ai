@@ -17,6 +17,7 @@ export { buildPlan, stepsFrom, type PlanOptions } from './plan';
 export {
   learnFromQuiz,
   MAX_NEW_STEPS,
+  MAX_PLAN_STEPS,
   type Adapted,
   type AdaptOptions,
 } from './adapt';
