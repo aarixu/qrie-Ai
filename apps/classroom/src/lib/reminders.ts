@@ -2,6 +2,8 @@ import { computeStreak, progressStore } from '../stores/progress';
 import { profileStore } from '../stores/profile';
 import { scheduleStore } from '../stores/schedule';
 import { isDueNow, reminderText } from './studySchedule';
+import { askForNativeNotifications, syncNativeReminders } from './nativeReminders';
+import { isNative } from './platform';
 import { subjectNeedingAttention, subjectProgress } from './subjectProgress';
 import { fetchCatalog, subjectsAvailable } from './content';
 
@@ -48,8 +50,16 @@ const markFired = (now: Date): void => {
   }
 };
 
-/** Asked at the moment a reminder is set, never on startup. */
+/**
+ * Asked at the moment a reminder is set, never on startup.
+ *
+ * Two mechanisms behind one question. In a browser it is the Notification
+ * API, which can only reach somebody with the tab open — the one person who
+ * does not need reminding. On a phone it is the OS, which fires with the app
+ * closed and no network, and that is the whole point of Phase 2 being here.
+ */
 export async function askForNotifications(): Promise<boolean> {
+  if (isNative()) return askForNativeNotifications();
   if (typeof Notification === 'undefined') return false;
   if (Notification.permission === 'granted') return true;
   if (Notification.permission === 'denied') return false;
@@ -60,6 +70,23 @@ export const notificationsAllowed = (): boolean =>
   typeof Notification !== 'undefined' && Notification.permission === 'granted';
 
 /**
+ * Keep the phone's own schedule in step with the student's.
+ *
+ * Subscribed rather than called from each setter, so a reminder set in
+ * onboarding, changed in settings, or arriving from another device through
+ * sync all reach the phone by the same path. Fired once at startup too,
+ * because a student who signed in on a new phone has a schedule the phone has
+ * never been told about.
+ */
+export function watchScheduleForNative(): () => void {
+  if (!isNative()) return () => undefined;
+  void syncNativeReminders(scheduleStore.get());
+  return scheduleStore.subscribe(() => {
+    void syncNativeReminders(scheduleStore.get());
+  });
+}
+
+/**
  * Nudge if this is the moment. Returns what was shown, for the in-app banner
  * to use when a notification could not be.
  */
@@ -67,6 +94,11 @@ export async function nudgeIfDue(now: Date = new Date()): Promise<{
   title: string;
   body: string;
 } | null> {
+  // On a phone the OS already holds this schedule and will fire whether the
+  // app is open or not. Running the in-app nudge too would be the same
+  // reminder twice, and the second one arrives in the app they are already in.
+  if (isNative()) return null;
+
   const schedule = scheduleStore.get();
   const progress = progressStore.get();
 

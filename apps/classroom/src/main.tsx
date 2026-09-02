@@ -6,7 +6,7 @@ import './fonts';
 import './index.css';
 import App from './App';
 import { startAccountSync } from './lib/account';
-import { nudgeIfDue } from './lib/reminders';
+import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
 
 // Body owns no colour: the page ground is `html { background }` in index.css,
 // which reads --c-background and so follows the theme. An inline background
@@ -101,6 +101,15 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
 // configured this is a no-op and the app stays exactly the local-only app it
 // has always been - nothing is gated behind signing in.
 startAccountSync();
+
+/**
+ * Put the student's own study schedule on the phone.
+ *
+ * A no-op in a browser. On a phone it is what actually brings anybody back:
+ * the OS fires it with the app closed and no connection, which is the whole
+ * retention design working for the first time.
+ */
+watchScheduleForNative();
 
 /**
  * The nudge, checked once when the app opens.
