@@ -81,6 +81,12 @@ const DOORS = {
 } as const;
 
 export class GeminiAdapter implements LlmAdapter {
+  /**
+   * The running total for a whole tool run, so one chapter can be priced and
+   * the answer multiplied. Only filled when GEMINI_USAGE is set.
+   */
+  static readonly spent = { calls: 0, input: 0, output: 0, thoughts: 0 };
+
   private readonly key: string;
   private readonly model: string;
   private readonly base: string;
@@ -132,7 +138,38 @@ export class GeminiAdapter implements LlmAdapter {
     if (!res.ok) throw new Error(`Gemini API ${res.status}: ${(await res.text()).slice(0, 300)}`);
     const data = (await res.json()) as {
       candidates?: { content?: { parts?: { text?: string }[] } }[];
+      usageMetadata?: {
+        promptTokenCount?: number;
+        candidatesTokenCount?: number;
+        thoughtsTokenCount?: number;
+        totalTokenCount?: number;
+      };
     };
+
+    /**
+     * WHAT THE CALL ACTUALLY COST, when asked for.
+     *
+     * Seven hundred and eighty chapters is a number somebody has to price
+     * before starting, and the only honest way to price it is to generate one
+     * and read the meter. The API returns this on every reply and it was being
+     * thrown away, so the question could not be answered at all.
+     *
+     * `thoughts` is counted separately by the API and billed as output — a
+     * thinking budget is not free, and a total that omits it under-reads the
+     * bill by most of it on a reasoning model.
+     */
+    if (process.env.GEMINI_USAGE) {
+      const u = data.usageMetadata ?? {};
+      GeminiAdapter.spent.calls += 1;
+      GeminiAdapter.spent.input += u.promptTokenCount ?? 0;
+      GeminiAdapter.spent.output += u.candidatesTokenCount ?? 0;
+      GeminiAdapter.spent.thoughts += u.thoughtsTokenCount ?? 0;
+      console.error(
+        `    · ${this.model}: ${u.promptTokenCount ?? 0} in, ${u.candidatesTokenCount ?? 0} out` +
+          (u.thoughtsTokenCount ? `, ${u.thoughtsTokenCount} thinking` : ''),
+      );
+    }
+
     const text = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
     if (!text) throw new Error('Gemini API: reply contained no candidate text');
     return stripJsonFences(text);

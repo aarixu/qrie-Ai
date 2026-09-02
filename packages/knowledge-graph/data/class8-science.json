@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class8-science-crop-crop-definition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Define agricultural crops",
+      "outcome": "Define a crop as a plant of the same kind cultivated on a large scale for food or other products.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-science/crop-production-and-management/agricultural-practices"
+    },
+    {
+      "id": "class8-science-crop-seasons",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Classify Kharif and Rabi",
+      "outcome": "Classify crops into Kharif and Rabi categories based on the specific seasons of sowing.",
+      "prerequisites": [
+        "class8-science-crop-crop-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/agricultural-practices"
+    },
+    {
+      "id": "class8-science-crop-practices-sequence",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "List agricultural practices",
+      "outcome": "List the seven basic agricultural practices in their chronological order of execution.",
+      "prerequisites": [
+        "class8-science-crop-seasons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-science/crop-production-and-management/agricultural-practices"
+    },
+    {
+      "id": "class8-science-crop-season-constraints",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Explain crop seasonality",
+      "outcome": "Explain why certain crops cannot be grown in winter due to specific climatic requirements.",
+      "prerequisites": [
+        "class8-science-crop-seasons"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/basic-practices-of-crop-production"
+    },
+    {
+      "id": "class8-science-crop-soil-loosening",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Explain soil loosening benefits",
+      "outcome": "Explain why loosening soil is necessary for root respiration, water absorption, and earthworm survival.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-science/crop-production-and-management/preparation-of-soil"
+    },
+    {
+      "id": "class8-science-crop-implements",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Identify soil implements",
+      "outcome": "Identify diagrams of a plough, hoe, and tractor-driven cultivator used in soil preparation.",
+      "prerequisites": [
+        "class8-science-crop-soil-loosening"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/preparation-of-soil"
+    },
+    {
+      "id": "class8-science-crop-seed-test",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Perform seed flotation test",
+      "outcome": "Explain the water flotation method to distinguish healthy seeds from damaged ones.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/sowing"
+    },
+    {
+      "id": "class8-science-crop-sowing-tools",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Compare sowing methods",
+      "outcome": "Compare the traditional funnel tool with the modern seed drill regarding spacing, depth, and bird protection.",
+      "prerequisites": [
+        "class8-science-crop-seed-test"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-science/crop-production-and-management/sowing"
+    },
+    {
+      "id": "class8-science-crop-manure-fertilizer-diff",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Differentiate manure and fertilizer",
+      "outcome": "Define manure and fertilizers and list three differences between them.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-science/crop-production-and-management/adding-manure-and-fertilizers"
+    },
+    {
+      "id": "class8-science-crop-crop-rotation",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Explain crop rotation",
+      "outcome": "Explain the process of crop rotation and how it naturally replenishes soil nitrogen levels.",
+      "prerequisites": [
+        "class8-science-crop-manure-fertilizer-diff"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-science/crop-production-and-management/adding-manure-and-fertilizers"
+    },
+    {
+      "id": "class8-science-crop-irrigation-necessity",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Define irrigation",
+      "outcome": "Define irrigation and explain the necessity of a continuous water supply for crop survival.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-science/crop-production-and-management/irrigation"
+    },
+    {
+      "id": "class8-science-crop-irrigation-modern",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Describe modern irrigation",
+      "outcome": "Describe the operating mechanisms of modern water-saving sprinkler and drip irrigation systems.",
+      "prerequisites": [
+        "class8-science-crop-irrigation-necessity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-science/crop-production-and-management/irrigation"
+    },
+    {
+      "id": "class8-science-crop-weed-competition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Explain weed impact",
+      "outcome": "Explain why weeds compete with crop plants for light, space, and soil nutrients.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/protection-from-weeds"
+    },
+    {
+      "id": "class8-science-crop-weed-control",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "List weeding methods",
+      "outcome": "List methods of weeding including manual removal, tilling, and the application of chemical weedicides.",
+      "prerequisites": [
+        "class8-science-crop-weed-competition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/protection-from-weeds"
+    },
+    {
+      "id": "class8-science-crop-harvesting-defs",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Define harvest processes",
+      "outcome": "Define harvesting, threshing, and winnowing in the context of cereal grain preparation.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-science/crop-production-and-management/harvesting"
+    },
+    {
+      "id": "class8-science-crop-combine-machine",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Describe combine harvester",
+      "outcome": "Identify the dual role of a 'Combine' machine in simultaneously performing harvesting and threshing.",
+      "prerequisites": [
+        "class8-science-crop-harvesting-defs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/harvesting"
+    },
+    {
+      "id": "class8-science-crop-storage-prep",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "State storage precautions",
+      "outcome": "State the preventive measures required before storing grains to protect them from moisture, insects, and microorganisms.",
+      "prerequisites": [
+        "class8-science-crop-harvesting-defs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/storage"
+    },
+    {
+      "id": "class8-science-crop-storage-methods",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Contrast storage methods",
+      "outcome": "Differentiate between domestic storage practices and large-scale storage in silos and granaries.",
+      "prerequisites": [
+        "class8-science-crop-storage-prep"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/storage"
+    },
+    {
+      "id": "class8-science-crop-animal-husbandry",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "Define animal husbandry",
+      "outcome": "Define animal husbandry as the agricultural practice of breeding and raising livestock.",
+      "prerequisites": [
+        "class8-science-crop-practices-sequence"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-science/crop-production-and-management/food-from-animals"
+    },
+    {
+      "id": "class8-science-crop-animal-nutrition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "crop-production-and-management",
+      "title": "List animal food products",
+      "outcome": "List food products obtained from animals and identify their primary nutritional benefits.",
+      "prerequisites": [
+        "class8-science-crop-animal-husbandry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-science/crop-production-and-management/food-from-animals"
+    }
+  ]
+}

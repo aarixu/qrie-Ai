@@ -1,0 +1,365 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class8-science-crop-crop-definition",
+      "nodeId": "class8-science-crop-crop-definition",
+      "question": "Which of the following best describes a 'crop'?",
+      "options": [
+        "Plants of the same kind grown on a large scale for food or products",
+        "A variety of different plants grown together in a small garden",
+        "Any plant that grows naturally in a field without human intervention",
+        "Only the vegetables that are harvested for daily cooking"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks any collection of plants is a crop",
+        "confuses crops with wild vegetation",
+        "thinks crops are only vegetables used in daily cooking"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-seasons",
+      "nodeId": "class8-science-crop-seasons",
+      "question": "Which crops are typically sown during the rainy season?",
+      "options": [
+        "Zaid crops",
+        "Rabi crops",
+        "Kharif crops",
+        "Summer crops"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks all seasonal crops are Zaid",
+        "confuses winter sowing with rainy season sowing",
+        "",
+        "thinks summer crops are the same as rainy season crops"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-practices-sequence",
+      "nodeId": "class8-science-crop-practices-sequence",
+      "question": "What is the correct sequence of basic agricultural practices?",
+      "options": [
+        "Preparation of soil, sowing, adding manure, irrigation, harvesting",
+        "Sowing, preparation of soil, irrigation, adding manure, harvesting",
+        "Preparation of soil, irrigation, sowing, harvesting, adding manure",
+        "Adding manure, preparation of soil, sowing, irrigation, harvesting"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks sowing can happen before preparing the soil",
+        "thinks irrigation happens before sowing",
+        "thinks manure is added before the soil is prepared"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-season-constraints",
+      "nodeId": "class8-science-crop-season-constraints",
+      "question": "Why can some crops not be grown during the winter season?",
+      "options": [
+        "The soil in winter lacks the necessary nutrients for those specific plants",
+        "They grow too slowly in cold weather to be considered crops",
+        "They require specific temperature and moisture conditions not present in winter",
+        "They are biologically programmed to die if they experience cold temperatures"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks winter soil is naturally nutrient-deficient",
+        "thinks growth speed is the only factor for seasonal suitability",
+        "",
+        "believes plants have internal biological timers that ignore environmental factors"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-soil-loosening",
+      "nodeId": "class8-science-crop-soil-loosening",
+      "question": "Why is it necessary to loosen the soil before planting?",
+      "options": [
+        "It makes the soil look better for the farmer to work with",
+        "It allows roots to breathe easily and penetrate deep into the soil",
+        "It ensures the soil does not hold any water at all",
+        "It prevents earthworms from living in the soil"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes farming practices are based on aesthetics",
+        "",
+        "thinks farmers want to remove water from soil",
+        "misunderstands that earthworms are beneficial to soil health"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-implements",
+      "nodeId": "class8-science-crop-implements",
+      "question": "Which tool is primarily used for removing weeds and loosening the soil?",
+      "options": [
+        "Seed drill",
+        "Plough",
+        "Scythe",
+        "Hoe"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the planting function of a seed drill with soil maintenance",
+        "confuses the tilling purpose of a plough with the weeding purpose of a hoe",
+        "thinks a cutting tool like a scythe is for soil preparation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-seed-test",
+      "nodeId": "class8-science-crop-seed-test",
+      "question": "In the water flotation method, why do damaged seeds float?",
+      "options": [
+        "They are hollow and lighter than healthy seeds",
+        "They are coated in chemicals that make them float",
+        "They absorb water and become too light",
+        "They have a different shape that traps air bubbles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks chemical coating is a standard part of seed processing",
+        "thinks absorbing water makes things lighter",
+        "thinks shape determines buoyancy rather than density"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-sowing-tools",
+      "nodeId": "class8-science-crop-sowing-tools",
+      "question": "What is the primary advantage of using a modern seed drill over the traditional funnel method?",
+      "options": [
+        "It allows the farmer to sow seeds by hand more easily",
+        "It ensures seeds are sown at uniform distances and depths",
+        "It is only used to plant seeds in very small areas",
+        "It prevents the seeds from ever being eaten by birds"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks modern tools are for manual labor efficiency",
+        "",
+        "thinks seed drills are for small-scale gardening",
+        "believes technology makes seeds completely immune to birds"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-manure-fertilizer-diff",
+      "nodeId": "class8-science-crop-manure-fertilizer-diff",
+      "question": "Which of the following is true about fertilizers compared to manure?",
+      "options": [
+        "Fertilizers are prepared in fields by farmers",
+        "Fertilizers are natural substances obtained by decomposition",
+        "Fertilizers provide a lot of humus to the soil",
+        "Fertilizers are inorganic salts produced in factories"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks fertilizers are homemade in field settings",
+        "confuses factory-made chemicals with organic manure",
+        "thinks fertilizers provide humus which is a trait of manure",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-crop-rotation",
+      "nodeId": "class8-science-crop-crop-rotation",
+      "question": "How does crop rotation help in replenishing the soil?",
+      "options": [
+        "By ensuring the same type of crop is planted to keep the soil consistent",
+        "By allowing the soil to rest without any plants for years",
+        "By adding more chemical fertilizers to the soil each year",
+        "By alternating crops that fix nitrogen with those that use it"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks rotation involves planting the same thing repeatedly",
+        "thinks rotation means leaving the field empty",
+        "thinks rotation relies on adding more chemicals",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-irrigation-necessity",
+      "nodeId": "class8-science-crop-irrigation-necessity",
+      "question": "Why is irrigation necessary for crops?",
+      "options": [
+        "Plants only need water to survive during the very last stage of growth",
+        "Water is essential for the germination of seeds and transport of nutrients",
+        "Irrigation is only used to cool down the fields in hot weather",
+        "Water prevents the plants from growing too tall"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks water is only needed at maturity",
+        "",
+        "thinks irrigation is for temperature control rather than nutrition",
+        "thinks water acts as a growth suppressant"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-irrigation-modern",
+      "nodeId": "class8-science-crop-irrigation-modern",
+      "question": "How does the drip irrigation system save water?",
+      "options": [
+        "It uses a channel system that floods the field only at night",
+        "It sprays water over the entire field at high pressure",
+        "It delivers water drop by drop directly at the roots",
+        "It recycles rainwater by storing it in large underground tanks"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses flooding irrigation with drip irrigation",
+        "confuses sprinkler methods with drip methods",
+        "",
+        "thinks water conservation is purely about storage rather than application method"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-weed-competition",
+      "nodeId": "class8-science-crop-weed-competition",
+      "question": "Why are weeds considered harmful to main crop plants?",
+      "options": [
+        "They release poisonous gases into the soil that kill crop roots.",
+        "They act as parasites that eat the actual crop leaves.",
+        "They share limited resources like light, nutrients, and space with crops.",
+        "They grow faster and physically push the crop plants out of the field."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks weeds possess chemical defense mechanisms similar to toxic plants",
+        "thinks weeds physically consume crop tissues like insects do",
+        "",
+        "assumes weeds have a physical strength advantage that uproots neighboring crops"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-weed-control",
+      "nodeId": "class8-science-crop-weed-control",
+      "question": "Which set of methods is commonly used to remove weeds from a field?",
+      "options": [
+        "Irrigation, weeding, and seed selection",
+        "Manual removal, chemical fertilizers, and soil testing",
+        "Fertilization, harvesting, and sowing",
+        "Manual removal, tilling, and chemical weedicides"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses general agricultural tasks with specific weed removal methods",
+        "incorrectly believes fertilizers are used for weed removal",
+        "mistakes general farming steps for weed control actions",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-harvesting-defs",
+      "nodeId": "class8-science-crop-harvesting-defs",
+      "question": "What is the primary difference between threshing and winnowing?",
+      "options": [
+        "Threshing gathers the crop into bundles, while winnowing cuts the crop from the field.",
+        "Threshing cleans the grains with water, while winnowing dries them in the sun.",
+        "Threshing separates grains from the soil, while winnowing removes insects from grains.",
+        "Threshing removes grains from stalks, while winnowing separates grains from chaff."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "mixes up the definition of harvesting or gathering with the cleaning process",
+        "thinks threshing is a washing process and winnowing is a drying process",
+        "confuses grain cleaning with soil removal and pest control",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-combine-machine",
+      "nodeId": "class8-science-crop-combine-machine",
+      "question": "A combine machine is highly efficient in large farms because it performs which two tasks?",
+      "options": [
+        "Plowing the land and sowing the seeds",
+        "Harvesting the crop and threshing the grains",
+        "Winnowing the grains and packing them into sacks",
+        "Spraying chemicals and irrigation of the fields"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "mistakes a tractor for a combine",
+        "",
+        "confuses the final separation step with the harvesting process",
+        "assumes a combine is a multi-purpose sprayer for farm maintenance"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-storage-prep",
+      "nodeId": "class8-science-crop-storage-prep",
+      "question": "What is the most important step taken before storing harvested grains to ensure they stay preserved?",
+      "options": [
+        "Drying the grains thoroughly to remove moisture",
+        "Grinding the grains into flour immediately after harvest",
+        "Mixing the grains with fresh soil to keep them cool",
+        "Adding large amounts of chemical fertilizers to the storage bags"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks storing requires immediate processing into flour",
+        "believes soil keeps the grain fresh, likely confusing it with bulb protection",
+        "assumes fertilizers act as preservatives against rot"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-storage-methods",
+      "nodeId": "class8-science-crop-storage-methods",
+      "question": "How does large-scale storage in silos differ from domestic grain storage?",
+      "options": [
+        "Silos use high-pressure steam to kill pests, unlike domestic jars.",
+        "Silos are used only for short-term storage, while domestic methods are used for years.",
+        "Silos are large, vertical containers for huge quantities, while domestic methods use small bags or bins.",
+        "Silos are made of wood to allow ventilation, while domestic storage uses airtight plastic."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "invents a mechanism of action for silos that does not exist",
+        "reverses the logic of storage duration for large-scale versus small-scale",
+        "",
+        "incorrectly guesses the construction material of industrial silos"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-animal-husbandry",
+      "nodeId": "class8-science-crop-animal-husbandry",
+      "question": "Which of the following best describes animal husbandry?",
+      "options": [
+        "The agricultural practice of breeding and raising livestock",
+        "The process of making fertilizers using animal waste",
+        "The method of using animals to perform heavy farm labor",
+        "The study of wildlife protection and habitat conservation"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the use of manure with the practice of raising animals",
+        "equates husbandry only with the labor utility of animals",
+        "confuses agricultural husbandry with environmental conservation studies"
+      ]
+    },
+    {
+      "id": "probe-class8-science-crop-animal-nutrition",
+      "nodeId": "class8-science-crop-animal-nutrition",
+      "question": "Why are milk and eggs considered valuable components of the human diet?",
+      "options": [
+        "They act as primary sources of fiber to help in quick digestion.",
+        "They provide proteins and essential vitamins for body growth and maintenance.",
+        "They are the only sources of carbohydrates needed for energy.",
+        "They provide minerals that allow the human body to perform photosynthesis."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes animal products are fiber-rich, likely confusing them with vegetables",
+        "",
+        "thinks animal products are the exclusive source of energy-providing carbohydrates",
+        "thinks humans can photosynthesize like plants if they get enough minerals"
+      ]
+    }
+  ]
+}
