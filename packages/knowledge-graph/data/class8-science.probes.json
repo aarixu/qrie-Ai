@@ -360,6 +360,438 @@
         "thinks animal products are the exclusive source of energy-providing carbohydrates",
         "thinks humans can photosynthesize like plants if they get enough minerals"
       ]
+    },
+    {
+      "id": "probe-class8-science-micro-definition",
+      "nodeId": "class8-science-micro-definition",
+      "question": "What is the main characteristic that defines a microorganism?",
+      "options": [
+        "It can only survive in water or moist soil.",
+        "It is always harmful and causes dangerous diseases.",
+        "It is so small that it cannot be seen without a microscope.",
+        "It lacks a cell nucleus and proper cell walls."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks microorganisms are restricted only to aquatic or moist environments",
+        "thinks all microorganisms are pathogenic germs",
+        "",
+        "confuses the general definition of a microorganism with prokaryotic cell structure"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-major-groups",
+      "nodeId": "class8-science-micro-major-groups",
+      "question": "Which set contains only the four major groups of microorganisms?",
+      "options": [
+        "Fungi, plants, animals, and bacteria",
+        "Bacteria, viruses, fungi, and insects",
+        "Algae, protozoa, viruses, and worms",
+        "Bacteria, fungi, protozoa, and algae"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses broad biological kingdoms with the specific major groups of microorganisms",
+        "includes macro-organisms like insects in the primary microbial categories",
+        "considers parasitic worms as one of the four main microbial groups",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-virus-characteristics",
+      "nodeId": "class8-science-micro-virus-characteristics",
+      "question": "Why are viruses considered different from other microorganisms like bacteria and fungi?",
+      "options": [
+        "They can only reproduce inside the living cells of a host.",
+        "They can prepare their own food using sunlight.",
+        "They do not contain any genetic material at all.",
+        "They can grow and multiply rapidly on plain nutrient agar."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses viruses with photosynthetic autotrophs like algae",
+        "thinks viruses are completely devoid of genetic instructions",
+        "believes viruses can replicate independently outside of living host cells"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-habitats",
+      "nodeId": "class8-science-micro-habitats",
+      "question": "Where can microorganisms be found living in nature?",
+      "options": [
+        "In all environments, from ice-cold waters to hot springs and deserts",
+        "Only in clean freshwater lakes and rivers",
+        "Only in warm and moist organic matter",
+        "Exclusively inside the digestive systems of animals"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes microorganisms cannot survive in harsh or saline conditions",
+        "thinks microorganisms require moderate warm and moist conditions to survive",
+        "thinks microorganisms only exist as internal parasites or gut flora"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-cellularity-organization",
+      "nodeId": "class8-science-micro-cellularity-organization",
+      "question": "Which of these microorganisms lives as an independent single cell rather than in large colonies?",
+      "options": [
+        "Bread mould",
+        "Penicillium",
+        "Mushroom",
+        "Amoeba"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses colonial/multicellular fungal mould with a solitary single-celled organism",
+        "confuses colonial filamentous fungi with solitary unicellular protozoans",
+        "thinks macroscopic fungi are single solitary cells",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-lactobacillus-curd",
+      "nodeId": "class8-science-micro-lactobacillus-curd",
+      "question": "How does the addition of a small amount of curd turn warm milk into curd?",
+      "options": [
+        "Lactobacillus bacteria multiply in the milk and convert it into curd.",
+        "Lactobacillus produces heat that boils and thickens the milk.",
+        "Lactobacillus acts as a chemical catalyst without reproducing.",
+        "Lactobacillus absorbs all the water present in the milk."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the setting of curd is caused by bacterial heat production",
+        "thinks curdling is an inorganic chemical reaction where bacteria do not reproduce",
+        "believes curdling happens through the physical removal of water by bacteria"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-yeast-baking",
+      "nodeId": "class8-science-micro-yeast-baking",
+      "question": "What causes bread dough to rise when yeast is mixed into it?",
+      "options": [
+        "Yeast releases oxygen gas as it makes its own food.",
+        "Yeast produces carbon dioxide gas during respiration.",
+        "Yeast absorbs moisture and expands to ten times its size.",
+        "Yeast breaks down the flour into light, airy foam without gases."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks yeast performs photosynthesis and releases oxygen",
+        "",
+        "believes dough rises because individual yeast cells physically swell up",
+        "thinks the volume increase is due to mechanical foaming rather than gas production"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-fermentation-alcohol",
+      "nodeId": "class8-science-micro-fermentation-alcohol",
+      "question": "What is the process of converting sugar into alcohol by microorganisms called?",
+      "options": [
+        "Pasteurization",
+        "Fermentation",
+        "Sterilization",
+        "Nitrogen fixation"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses heat treatment of liquids with alcohol production",
+        "",
+        "confuses general microbial destruction with metabolic conversion of sugar",
+        "confuses soil nutrient cycling processes with sugar-to-alcohol conversion"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-antibiotics-definition",
+      "nodeId": "class8-science-micro-antibiotics-definition",
+      "question": "What are antibiotics?",
+      "options": [
+        "Chemical sprays used solely to kill insect pests on crops",
+        "Proteins made by human blood cells to fight future infections",
+        "Medicines made from microorganisms that kill or stop harmful microbes",
+        "Vitamins extracted from plants that boost the immune system"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses therapeutic antibiotics with agricultural pesticides",
+        "confuses medicinal antibiotics with internally produced antibodies",
+        "",
+        "thinks antibiotics are plant-derived dietary supplements"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-antibiotics-precautions",
+      "nodeId": "class8-science-micro-antibiotics-precautions",
+      "question": "Why should a person complete the full course of antibiotics prescribed by a doctor?",
+      "options": [
+        "To prevent bacteria from surviving and becoming less effective against the drug later",
+        "To avoid developing an immediate physical allergy to the tablet",
+        "To make sure the body becomes permanently immune to all viruses",
+        "To allow the antibiotic to change into a permanent vaccine inside the blood"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks stopping early triggers an acute allergic reaction",
+        "believes antibiotics work against viruses and grant permanent immunity",
+        "believes antibiotics transform into vaccines over time"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-vaccination-mechanism",
+      "nodeId": "class8-science-micro-vaccination-mechanism",
+      "question": "How does a vaccine protect a person from future infections?",
+      "options": [
+        "It provides active medicine that stays continuously active for decades.",
+        "It acts as a strong chemical shield that coats and protects the outer skin.",
+        "It directly destroys all living bacteria and viruses currently in the body.",
+        "It introduces dead or weakened microbes so the body learns to produce antibodies."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the injected substance itself persists forever as an active medicine",
+        "imagines a physical or chemical barrier on the body surface",
+        "confuses preventative vaccination with an immediate broad-spectrum curative drug",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-pathogens-definition",
+      "nodeId": "class8-science-micro-pathogens-definition",
+      "question": "What are disease-causing microorganisms called, and how do communicable diseases spread?",
+      "options": [
+        "Antigens; they spread only through hereditary genes passed to offspring.",
+        "Antibiotics; they spread through the consumption of expired medicines.",
+        "Pathogens; they spread from an infected person to a healthy person via air, water, or contact.",
+        "Vectors; they spread solely through direct skin-to-skin touch."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses communicable pathogens with inherited genetic traits",
+        "confuses the curative agent with the disease-causing agent",
+        "",
+        "confuses the pathogen with its vector and restricts transmission to touch alone"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-disease-carriers",
+      "nodeId": "class8-science-micro-disease-carriers",
+      "question": "Which insect acts as the carrier of the malaria-causing parasite?",
+      "options": [
+        "Female Aedes mosquito",
+        "Female Anopheles mosquito",
+        "Housefly",
+        "Male Anopheles mosquito"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the dengue vector (Aedes) with the malaria vector",
+        "",
+        "identifies the housefly as the carrier of blood-borne Plasmodium parasites",
+        "does not realize only female mosquitoes feed on blood and transmit malaria"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-human-diseases-table",
+      "nodeId": "class8-science-micro-human-diseases-table",
+      "question": "Which pair correctly matches a human disease with its causative microorganism and mode of transmission?",
+      "options": [
+        "Measles — Bacteria — Water",
+        "Cholera — Virus — Air",
+        "Tuberculosis — Bacteria — Air",
+        "Hepatitis A — Protozoa — Mosquito"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses airborne viral measles with waterborne bacterial infections",
+        "thinks cholera is viral and airborne instead of bacterial and waterborne",
+        "",
+        "believes hepatitis A is a protozoan disease spread by mosquitoes"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-plant-diseases",
+      "nodeId": "class8-science-micro-plant-diseases",
+      "question": "What causes the plant disease 'Rust of wheat' and how does it mainly spread?",
+      "options": [
+        "Fungi; spread through air and infected seeds",
+        "Virus; spread through contaminated water",
+        "Bacteria; spread through insects",
+        "Protozoa; spread through cattle contact"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks rust of wheat is caused by a virus in water",
+        "confuses fungal rust with bacterial citrus canker and insect transmission",
+        "attributes crop rust to protozoa carried by farm animals"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-animal-diseases",
+      "nodeId": "class8-science-micro-animal-diseases",
+      "question": "Which statement correctly identifies the causes of Anthrax and Foot-and-mouth disease?",
+      "options": [
+        "Anthrax is caused by a virus, while foot-and-mouth disease is caused by a bacterium.",
+        "Anthrax is caused by a bacterium, while foot-and-mouth disease is caused by a virus.",
+        "Both Anthrax and foot-and-mouth disease are caused by protozoa.",
+        "Both Anthrax and foot-and-mouth disease are caused by fungi."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the causative agents between anthrax and foot-and-mouth disease",
+        "",
+        "thinks both major livestock diseases are protozoan",
+        "attributes both cattle diseases to fungal infections"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-food-poisoning",
+      "nodeId": "class8-science-micro-food-poisoning",
+      "question": "What is the direct cause of food poisoning when eating spoiled food?",
+      "options": [
+        "The food reacts chemically with oxygen to produce metal rust.",
+        "The food loses all its vitamins and causes instant nutrient deficiency.",
+        "The natural moisture in the food turns into pure acid.",
+        "Microorganisms produce toxic substances in the spoiled food."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses food spoilage with metallic chemical oxidation",
+        "thinks acute food poisoning is caused by sudden vitamin depletion",
+        "believes water spontaneously acidifies without microbial action",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-chemical-preservatives",
+      "nodeId": "class8-science-micro-chemical-preservatives",
+      "question": "Which chemical substances are commonly added to jams and squashes to prevent microbial growth?",
+      "options": [
+        "Calcium carbonate and iron oxide",
+        "Copper sulphate and ammonium nitrate",
+        "Sodium hydroxide and hydrochloric acid",
+        "Sodium benzoate and sodium metabisulphite"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "picks insoluble mineral salts used in construction and pigments",
+        "confuses agricultural fertilizers/fungicides with food preservatives",
+        "names strong laboratory acids and bases instead of safe food preservatives",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-preservation-methods",
+      "nodeId": "class8-science-micro-preservation-methods",
+      "question": "How does adding high amounts of sugar or salt preserve foods like jams and pickles?",
+      "options": [
+        "It freezes the bacterial cells so they cannot move.",
+        "It removes moisture from bacterial cells, preventing them from growing.",
+        "It completely destroys the oxygen molecules inside the food jar.",
+        "It converts the food into a solid rock that microbes cannot chew."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses chemical preservation with physical cold storage",
+        "",
+        "thinks salt and sugar chemically eliminate elemental oxygen",
+        "believes preservation works merely by making food physically too hard to consume"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-pasteurization",
+      "nodeId": "class8-science-micro-pasteurization",
+      "question": "How is milk pasteurized to make it safe for drinking without boiling?",
+      "options": [
+        "It is boiled at 100°C for two hours and left to cool at room temperature.",
+        "It is frozen solid at -20°C for three days and then thawed quickly.",
+        "It is treated with chlorine gas at low temperatures.",
+        "It is heated to about 70°C for 15 to 30 seconds and then suddenly chilled."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses pasteurization with standard prolonged domestic boiling",
+        "thinks deep freezing alone defines the pasteurization process",
+        "confuses milk pasteurization with chemical water chlorination",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-rhizobium-symbiosis",
+      "nodeId": "class8-science-micro-rhizobium-symbiosis",
+      "question": "Where does the bacterium Rhizobium live, and what useful role does it perform?",
+      "options": [
+        "In plant leaves, where it produces extra oxygen for photosynthesis",
+        "In the root nodules of leguminous plants, where it fixes atmospheric nitrogen",
+        "In the soil around cereal roots, where it converts nitrogen into ammonia gas in air",
+        "Inside plant stems, where it protects against insect attacks"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "places Rhizobium in leaves and confuses its role with photosynthesis",
+        "",
+        "thinks Rhizobium releases nitrogen gas back into the air around cereals",
+        "confuses nitrogen-fixing symbionts with pest-deterring endophytic bacteria"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-lightning-fixation",
+      "nodeId": "class8-science-micro-lightning-fixation",
+      "question": "How does the physical action of lightning help in the nitrogen cycle?",
+      "options": [
+        "It causes atmospheric nitrogen and oxygen to combine into compounds that enter the soil.",
+        "It burns away excess harmful nitrogen gas from the atmosphere.",
+        "It directly splits soil water into hydrogen to enrich plants.",
+        "It destroys all denitrifying bacteria in the soil so nitrogen cannot escape."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "views atmospheric nitrogen as a harmful gas that must be destroyed",
+        "thinks lightning's primary role in soil fertility is splitting water molecules",
+        "believes lightning acts as an underground sterilizer of bacteria"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-nitrogen-cycle-trace",
+      "nodeId": "class8-science-micro-nitrogen-cycle-trace",
+      "question": "How do animals obtain the nitrogen they need to build proteins?",
+      "options": [
+        "By absorbing atmospheric nitrogen gas through their lungs during breathing",
+        "By absorbing dissolved nitrates directly through their skin when drinking water",
+        "By eating plants or other animals that have consumed plants",
+        "By relying on skin bacteria to fix nitrogen directly into muscle tissue"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes animals can directly utilize inhaled atmospheric nitrogen gas",
+        "thinks animals absorb their required nitrogen compounds through skin absorption",
+        "",
+        "thinks surface skin bacteria synthesize body proteins directly for animals"
+      ]
+    },
+    {
+      "id": "probe-class8-science-micro-denitrification-balance",
+      "nodeId": "class8-science-micro-denitrification-balance",
+      "question": "Why does the percentage of nitrogen gas in the atmosphere remain roughly constant over time?",
+      "options": [
+        "Plants release nitrogen gas into the air during respiration at night.",
+        "Lightning continuously produces new nitrogen atoms out of oxygen.",
+        "Certain soil bacteria convert nitrogen compounds back into nitrogen gas.",
+        "Rainwater continuously evaporates into pure nitrogen gas."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks plants exhale nitrogen gas during nocturnal respiration",
+        "believes lightning creates new nitrogen atoms from oxygen",
+        "",
+        "confuses water vapor evaporation with nitrogen gas release"
+      ]
     }
   ]
 }

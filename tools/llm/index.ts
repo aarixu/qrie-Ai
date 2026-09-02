@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { createTokenSource, readServiceAccount, type TokenSource } from '../../packages/relay/src/googleAuth.ts';
+import { vertexUrl } from '../../packages/relay/src/vertex.ts';
 /**
  * THE PROVIDER BOUNDARY, for every authoring-time tool.
  *
@@ -287,12 +290,79 @@ export class OpenRouterAdapter implements LlmAdapter {
  * OpenRouter leads because it is the one that works from this machine on a
  * free key; the other two stay because the boundary is the whole point.
  */
+/**
+ * VERTEX WITH A SERVICE ACCOUNT, for the authoring tools.
+ *
+ * The same credential the relay uses and the same file it reads — there is one
+ * key for this project and one place it lives. Reusing packages/relay's minter
+ * rather than writing a second one means the token cache, the refresh margin
+ * and the concurrent-mint guard are the ones already under test.
+ *
+ * Why the tools need it at all: generating the 6-12 curriculum is roughly
+ * 3,900 calls, and the free AI Studio tier is twenty requests A DAY per model.
+ * Credits attached to a project are the only way that finishes this decade.
+ */
+export class VertexAdapter implements LlmAdapter {
+  private readonly model: string;
+  private readonly thinking: number;
+  private readonly tokens: TokenSource;
+
+  constructor(env: NodeJS.ProcessEnv = process.env) {
+    const file = env.GOOGLE_SERVICE_ACCOUNT_FILE ?? '.secrets/vertex-service-account.json';
+    if (!existsSync(file)) {
+      throw new Error(`VertexAdapter: no service account at ${file}`);
+    }
+    this.tokens = createTokenSource(readServiceAccount(readFileSync(file, 'utf8')));
+    this.model = env.GEMINI_MODEL ?? 'gemini-3.7-flash';
+    this.thinking = Number(env.GEMINI_THINKING ?? 2048);
+  }
+
+  async complete(system: string, user: string): Promise<string> {
+    const res = await withRetries(async () => {
+      const token = await this.tokens.token();
+      return fetch(vertexUrl(this.tokens.projectId, this.model), {
+        method: 'POST',
+        headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: system }] },
+          contents: [{ role: 'user', parts: [{ text: user }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            thinkingConfig: { thinkingBudget: this.thinking },
+          },
+        }),
+      });
+    });
+    if (!res.ok) throw new Error(`Vertex ${res.status}: ${(await res.text()).slice(0, 300)}`);
+
+    const data = (await res.json()) as {
+      candidates?: { content?: { parts?: { text?: string }[] } }[];
+      usageMetadata?: Record<string, number>;
+    };
+    if (process.env.GEMINI_USAGE) {
+      const u = data.usageMetadata ?? {};
+      GeminiAdapter.spent.calls += 1;
+      GeminiAdapter.spent.input += u.promptTokenCount ?? 0;
+      GeminiAdapter.spent.output += u.candidatesTokenCount ?? 0;
+      GeminiAdapter.spent.thoughts += u.thoughtsTokenCount ?? 0;
+      console.error(
+        `    · ${this.model}: ${u.promptTokenCount ?? 0} in, ${u.candidatesTokenCount ?? 0} out` +
+          (u.thoughtsTokenCount ? `, ${u.thoughtsTokenCount} thinking` : ''),
+      );
+    }
+    const text = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? '').join('');
+    if (!text) throw new Error('Vertex: reply contained no candidate text');
+    return stripJsonFences(text);
+  }
+}
+
 export function createAdapterFromEnv(env: NodeJS.ProcessEnv = process.env): LlmAdapter {
   const provider = env.LLM_PROVIDER ?? 'openrouter';
   if (provider === 'openrouter') return new OpenRouterAdapter(env);
+  if (provider === 'vertex') return new VertexAdapter(env);
   if (provider === 'gemini') return new GeminiAdapter(env);
   if (provider === 'anthropic') return new AnthropicAdapter(env);
   throw new Error(
-    `LLM_PROVIDER must be "openrouter", "gemini" or "anthropic", got "${provider}"`,
+    `LLM_PROVIDER must be "openrouter", "vertex", "gemini" or "anthropic", got "${provider}"`,
   );
 }

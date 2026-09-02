@@ -258,6 +258,295 @@
       ],
       "difficulty": 2,
       "topicRef": "class8-science/crop-production-and-management/food-from-animals"
+    },
+    {
+      "id": "class8-science-micro-definition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Define Microorganisms",
+      "outcome": "Define microorganisms as tiny organisms that cannot be seen with the unaided eye and require a microscope for observation",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class8-science-micro-major-groups",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Classify Major Groups of Microbes",
+      "outcome": "Classify microorganisms into the four major groups: bacteria, fungi, protozoa, and algae",
+      "prerequisites": [
+        "class8-science-micro-definition"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class8-science-micro-virus-characteristics",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Describe Characteristics of Viruses",
+      "outcome": "Describe viruses as microscopic entities that reproduce only inside the host organism's cells",
+      "prerequisites": [
+        "class8-science-micro-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-habitats",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Microbial Habitats",
+      "outcome": "Identify diverse habitats of microorganisms ranging from ice-cold climates and hot springs to deserts and marshy lands",
+      "prerequisites": [
+        "class8-science-micro-definition"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class8-science-micro-cellularity-organization",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Compare Solitary vs Colonial Living",
+      "outcome": "Distinguish between microorganisms that live as solitary single cells (like Amoeba) and those that live in colonies (like fungi and bacteria)",
+      "prerequisites": [
+        "class8-science-micro-major-groups",
+        "class8-science-micro-habitats"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-lactobacillus-curd",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain Curd Formation by Lactobacillus",
+      "outcome": "Explain how the bacterium Lactobacillus promotes the conversion of milk into curd by multiplying in milk",
+      "prerequisites": [
+        "class8-science-micro-major-groups"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-yeast-baking",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Describe Yeast in Baking",
+      "outcome": "Describe how yeast reproduces rapidly and produces carbon dioxide gas during respiration, making dough rise and porous",
+      "prerequisites": [
+        "class8-science-micro-major-groups"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-fermentation-alcohol",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain Fermentation Process",
+      "outcome": "Define fermentation as the process of conversion of sugar into alcohol by yeast",
+      "prerequisites": [
+        "class8-science-micro-yeast-baking"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-antibiotics-definition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Define Antibiotics",
+      "outcome": "Define antibiotics as medicines produced from microorganisms that kill or stop the growth of disease-causing microbes",
+      "prerequisites": [
+        "class8-science-micro-major-groups"
+      ],
+      "difficulty": 1
+    },
+    {
+      "id": "class8-science-micro-antibiotics-precautions",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "State Precautions for Antibiotic Use",
+      "outcome": "State the necessary precautions when taking antibiotics, including completing the prescribed course and avoiding unnecessary use",
+      "prerequisites": [
+        "class8-science-micro-antibiotics-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-vaccination-mechanism",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain Mechanism of Vaccination",
+      "outcome": "Explain how introducing dead or weakened microbes into a healthy body triggers antibody production to provide immunity against specific diseases",
+      "prerequisites": [
+        "class8-science-micro-major-groups"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class8-science-micro-pathogens-definition",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Define Pathogens and Communicable Diseases",
+      "outcome": "Define pathogens and explain how communicable diseases spread from an infected person to a healthy person through air, water, food, or physical contact",
+      "prerequisites": [
+        "class8-science-micro-major-groups"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-disease-carriers",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Disease Carriers",
+      "outcome": "Identify common insect and animal carriers of disease, specifically the housefly for pathogens and the female Anopheles mosquito for malaria parasites",
+      "prerequisites": [
+        "class8-science-micro-pathogens-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-human-diseases-table",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Match Human Diseases to Microbes",
+      "outcome": "Match common human diseases (tuberculosis, measles, cholera, typhoid, polio, hepatitis A) to their causative microorganisms and modes of transmission",
+      "prerequisites": [
+        "class8-science-micro-pathogens-definition",
+        "class8-science-micro-virus-characteristics"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-plant-diseases",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Common Plant Diseases",
+      "outcome": "Identify the causative micro-organism and mode of transmission for Citrus canker (bacteria, air), Rust of wheat (fungi, air/seeds), and Yellow vein mosaic of bhindi (virus, insect)",
+      "prerequisites": [
+        "class8-science-micro-pathogens-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-animal-diseases",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Anthrax and Foot-and-Mouth Disease",
+      "outcome": "Identify Anthrax as a bacterial disease affecting humans and cattle and Foot-and-mouth disease as a viral disease of cattle",
+      "prerequisites": [
+        "class8-science-micro-pathogens-definition",
+        "class8-science-crop-animal-husbandry"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-food-poisoning",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain Food Poisoning Cause",
+      "outcome": "Explain that food poisoning is caused by the consumption of food spoiled by microorganisms producing toxic substances",
+      "prerequisites": [
+        "class8-science-micro-pathogens-definition"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-chemical-preservatives",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Chemical Food Preservatives",
+      "outcome": "Identify common chemical preservatives like sodium benzoate and sodium metabisulphite used to check microbial growth in jams and squashes",
+      "prerequisites": [
+        "class8-science-micro-food-poisoning"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-preservation-methods",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Describe Salt, Sugar, Oil, and Vinegar Preservation",
+      "outcome": "Describe how common salt, sugar, and oil/vinegar preserve food by dehydrating cells or creating an environment uninhabitable for bacteria",
+      "prerequisites": [
+        "class8-science-micro-food-poisoning"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class8-science-micro-pasteurization",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain the Pasteurization Process",
+      "outcome": "Explain the pasteurization of milk by heating it to about 70°C for 15 to 30 seconds and then suddenly chilling it to prevent microbial growth",
+      "prerequisites": [
+        "class8-science-micro-food-poisoning"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-rhizobium-symbiosis",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Identify Rhizobium Symbiosis",
+      "outcome": "Identify the symbiotic relationship between Rhizobium bacteria living in root nodules of leguminous plants and their role in fixing atmospheric nitrogen",
+      "prerequisites": [
+        "class8-science-micro-major-groups",
+        "class8-science-crop-crop-rotation"
+      ],
+      "difficulty": 2
+    },
+    {
+      "id": "class8-science-micro-lightning-fixation",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "State Lightning Nitrogen Fixation",
+      "outcome": "State that the physical action of lightning fixes atmospheric nitrogen into compounds of nitrogen in the soil",
+      "prerequisites": [],
+      "difficulty": 1
+    },
+    {
+      "id": "class8-science-micro-nitrogen-cycle-trace",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Trace the Nitrogen Cycle Steps",
+      "outcome": "Trace the path of nitrogen from atmospheric gas to nitrogenous compounds in soil, absorption by plants, consumption by animals, and breakdown of excreta",
+      "prerequisites": [
+        "class8-science-micro-rhizobium-symbiosis",
+        "class8-science-micro-lightning-fixation"
+      ],
+      "difficulty": 3
+    },
+    {
+      "id": "class8-science-micro-denitrification-balance",
+      "klass": 8,
+      "subject": "Science",
+      "chapter": "microorganisms-friend-and-foe",
+      "title": "Explain Role of Denitrification",
+      "outcome": "Explain how denitrifying bacteria convert nitrogen compounds in soil back into nitrogen gas, maintaining a constant percentage of nitrogen in the atmosphere",
+      "prerequisites": [
+        "class8-science-micro-nitrogen-cycle-trace"
+      ],
+      "difficulty": 3
     }
   ]
 }
