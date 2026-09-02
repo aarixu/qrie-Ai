@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { saveable, type PrepProgress } from '@ai-tutor/class-prep';
 import type { Lesson } from '@ai-tutor/lesson-format';
@@ -59,6 +59,8 @@ interface Ask {
   subtitle?: string;
   /** Absent for a free-text class, which is why one is never saved. */
   topicRef?: string;
+  /** Something was taken out of what the student typed. Recorded, not shown. */
+  cleaned?: boolean;
 }
 
 /**
@@ -138,6 +140,10 @@ export function LiveClassRoute() {
         klass: settings.klass ?? 9,
         minutes: 2,
         subject: 'Science',
+        // A masked phone number or address still happened, and the safety log
+        // is the only record that it did. Carried out of the pure decision so
+        // the effect below can record it exactly once.
+        ...(verdict.kind === 'clean' ? { cleaned: true } : {}),
       };
     }
     return null;
@@ -154,15 +160,31 @@ export function LiveClassRoute() {
   const refused = refusal?.refused ?? null;
   const ask: Ask | null = refusal === null ? (asked as Ask | null) : null;
 
-  // Once, and only when it actually happened. A flag is a fact about a
-  // student's session, not a fact about how many times React rendered.
+  /**
+   * Once, and only when it actually happened.
+   *
+   * A flag is a fact about a student's session, not a fact about how many
+   * times React rendered — and there are two ways it can become the second.
+   * The memo above recomputes whenever settings.klass is written, handing back
+   * a NEW object for the same refusal, so an effect keyed on that object fired
+   * again; and StrictMode double-invokes effects in development regardless.
+   * So the key is the WORDS, which are stable, and a ref remembers what has
+   * already been written.
+   */
+  const flagged = useRef<string | null>(null);
   useEffect(() => {
-    if (!refusal) return;
-    recordFlag({
-      kind: refusal.flag === 'support' ? 'distress' : 'redirect',
-      at: new Date().toISOString(),
-    });
-  }, [refusal]);
+    const what = refusal ? `${refusal.flag}:${refusal.refused}` : freeText ? 'clean' : null;
+    if (what === null || flagged.current === what) return;
+    flagged.current = what;
+    if (refusal) {
+      recordFlag({
+        kind: refusal.flag === 'support' ? 'distress' : 'redirect',
+        at: new Date().toISOString(),
+      });
+    } else if (asked !== null && !isRefused(asked) && asked.cleaned) {
+      recordFlag({ kind: 'cleaned', at: new Date().toISOString() });
+    }
+  }, [refusal, asked, freeText]);
 
   /**
    * WHAT THE ROOM IS BUILT ON, THE MOMENT THERE IS ONE.

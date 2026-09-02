@@ -196,9 +196,13 @@ const EMAIL = /\b[\w.+-]+@[\w-]+\.[\w.-]{2,}\b/g;
  * word must be one that has no other job in a classroom, the number must be
  * introduced the way an address introduces one, and there has to be more
  * afterwards — a bare "house 4" is a word problem.
+ *
+ * "address" on its own went the same way "plot" did: "address 3 questions from
+ * the exercise tonight" is homework. Only "my address is" survives, which
+ * nobody writes about an exercise.
  */
 const ADDRESS =
-  /\b(?:flat|house\s*no\.?|h\.?\s?no\.?|door\s?no\.?|address)\s*[.:#-]?\s*\d+[\w/-]*[,\s]+[\w.\s-]{3,40}/gi;
+  /\b(?:flat|house\s*no\.?|h\.?\s?no\.?|door\s?no\.?|my\s+address\s+is)\s*[.:#-]?\s*\d+[\w/-]*[,\s]+[\w.\s-]{3,40}/gi;
 
 const MASK = '[removed]';
 

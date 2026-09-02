@@ -431,9 +431,14 @@ export function ClassRoom({
    * what it plans, and re-checking it every beat would be a filter running
    * against a fixed recording forever.
    */
-  const speakSafely = async (text: string): Promise<void> => {
+  const speakSafely = async (text: string): Promise<{ halted: boolean }> => {
     const screened = toStudent(text, lesson.id);
+    const swapped = screened.say !== null;
     await tts.speak(screened.say ?? screened.text ?? text);
+    // She has just told a student to talk to somebody. Whoever called this has
+    // a next line — resolve the question, reopen the mic — and every one of
+    // them would be the app talking over that.
+    return { halted: swapped };
   };
 
   /**
@@ -479,11 +484,13 @@ export function ClassRoom({
           ).catch(() => null);
           setEar('off');
           if (cancelled) return;
-          if (close) await speakSafely(close.say);
+          const spoken = close ? await speakSafely(close.say) : null;
           if (cancelled) return;
           // She has just told them to talk to somebody. Resolving the question
-          // and moving the class on would be the app talking over that.
-          if (close?.halt) return;
+          // and moving the class on would be the app talking over that —
+          // whether the halt came from the student's words (close.halt) or
+          // from her own reply being swapped for the support line.
+          if (close?.halt || spoken?.halted) return;
           const options = ask.options ?? [];
           playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
           return;
@@ -500,12 +507,12 @@ export function ClassRoom({
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
         }
         setEar('off');
-        await speakSafely(judged.say);
+        const spoken = await speakSafely(judged.say);
         if (cancelled) return;
         // The student said something that needs a person. She has just said so;
         // reopening the mic and asking the question again would be the app
         // talking straight over them.
-        if (judged.halt) return;
+        if (judged.halt || spoken.halted) return;
         if (judged.verdict === 'right') {
           // Her line just ended on the cross-question; the next listen takes
           // their reasoning, and the probe branch above always resolves.
@@ -696,7 +703,7 @@ export function ClassRoom({
     if (screened.text === null) {
       const say = screened.say ?? '';
       setTextLines((prev) => [...prev, { role: 'tutor', text: say, final: true }]);
-      void tts.speak(say);
+      void speakSafely(say);
       return;
     }
     // Its length, never its words. clean() would drop the text anyway; not

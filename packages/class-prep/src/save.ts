@@ -113,14 +113,18 @@ const escapeForRegex = (text: string): string => text.replace(/[.*+?^${}()|[\]\\
  *
  * "Aarav Sharma" is what the profile holds and "Aarav" is what a tutor says.
  * Testing the whole string found neither, which meant the check passed on
- * exactly the class it exists to catch. Each part is checked on its own, and
- * anything under three letters is dropped: an initial matches half a board.
+ * exactly the class it exists to catch. Each part is checked on its own.
+ *
+ * TWO letters, not three. Om, Vi and Jo are names people actually have, and a
+ * floor of three meant a class greeting one of them by name was saved and
+ * replayed to everybody — the precise failure this function exists to prevent.
+ * One letter is still dropped, because an initial matches half a board.
  */
 const partsOf = (name: string): string[] =>
   name
     .split(/[\s.]+/)
     .map((part) => part.trim())
-    .filter((part) => part.length >= 3);
+    .filter((part) => part.length >= 2);
 
 export function namesInSpine(lesson: Lesson, names: readonly string[]): string[] {
   /**

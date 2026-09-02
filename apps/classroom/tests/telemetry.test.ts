@@ -113,11 +113,23 @@ describe('framesFrom', () => {
     expect(frames.at(-1)).toMatchObject({ function: 'inner', lineno: 10, colno: 5 });
   });
 
-  it('reads a Firefox stack too', () => {
-    const frames = framesFrom(['boom', 'inner@https://app/x.js:10:5'].join('\n'));
+  it('reads a Firefox stack, which has no header line', () => {
+    // Chrome opens with "Error: message"; Firefox and Safari open with the
+    // innermost frame. Dropping line zero regardless threw away the frame that
+    // says where it actually broke, on two engines out of three — and the test
+    // meant to catch that had faked a header line into its own fixture.
+    const frames = framesFrom(
+      ['inner@https://app/x.js:10:5', 'outer@https://app/x.js:20:1'].join('\n'),
+    );
+
+    expect(frames).toHaveLength(2);
+    expect(frames.at(-1)).toMatchObject({ function: 'inner', lineno: 10 });
+  });
+
+  it('drops a Chrome header line without counting it as a frame', () => {
+    const frames = framesFrom(['Error: boom', '    at only (https://app/x.js:1:1)'].join('\n'));
 
     expect(frames).toHaveLength(1);
-    expect(frames[0]).toMatchObject({ function: 'inner', filename: 'https://app/x.js' });
   });
 
   it('has nothing to say about a stack it cannot read, rather than throwing', () => {
@@ -165,5 +177,24 @@ describe('buildEnvelope', () => {
     const event = JSON.parse(envelope(new Error('boom'), { path: '/lesson/x', said: 'y'.repeat(200) })[2]);
 
     expect(event.extra).toEqual({ path: '/lesson/x' });
+  });
+});
+
+describe('a blank environment variable is the empty string, not undefined', () => {
+  it('never posts an event to the app’s own origin', () => {
+    // .env.example ships VITE_POSTHOG_HOST blank, and `??` keeps '' — which
+    // sent every event to "/capture/" on our own host, where nothing is
+    // listening, and lost all of them silently.
+    track('lesson_started', { lessonId: 'x' });
+
+    for (const call of posted) expect(call.url.startsWith('http')).toBe(true);
+  });
+
+  it('stamps a release even with the variable blank', () => {
+    const event = JSON.parse(
+      buildEnvelope('abc', new Error('boom'), {}, '2026-09-02T00:00:00.000Z').split('\n')[2],
+    );
+
+    expect(event.release).toBe('dev');
   });
 });

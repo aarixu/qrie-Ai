@@ -33,12 +33,20 @@
 
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN as string | undefined;
 const POSTHOG_KEY = import.meta.env.VITE_POSTHOG_KEY as string | undefined;
+/**
+ * `||`, not `??`.
+ *
+ * .env.example ships these blank, and Vite inlines a blank var as the EMPTY
+ * STRING rather than undefined — which `??` keeps. That sent every event to
+ * "/capture/" on the app's own origin, where nothing is listening, and lost
+ * all of them silently.
+ */
 const POSTHOG_HOST = (
-  (import.meta.env.VITE_POSTHOG_HOST as string | undefined) ?? 'https://eu.i.posthog.com'
+  (import.meta.env.VITE_POSTHOG_HOST as string | undefined) || 'https://eu.i.posthog.com'
 ).replace(/\/+$/, '');
 
 /** Stamped on every report, so a crash can be traced to a build. */
-const RELEASE = (import.meta.env.VITE_RELEASE as string | undefined) ?? 'dev';
+const RELEASE = (import.meta.env.VITE_RELEASE as string | undefined) || 'dev';
 
 // ---------------------------------------------------------------------------
 // Who, anonymously
@@ -116,7 +124,11 @@ interface Frame {
 export function framesFrom(stack: string | undefined): Frame[] {
   if (!stack) return [];
   const frames: Frame[] = [];
-  for (const line of stack.split('\n').slice(1, 31)) {
+  // Not slice(1): Chrome opens with "Error: message" and Firefox and Safari
+  // open with the innermost frame. Dropping line zero regardless threw away
+  // the frame that says where it actually broke, on two engines out of three.
+  // A header line simply parses as nothing and falls out on its own.
+  for (const line of stack.split('\n').slice(0, 31)) {
     const at = /at\s+(?:(.+?)\s+\()?(.+?):(\d+):(\d+)\)?\s*$/.exec(line.trim());
     if (at) {
       frames.push({
