@@ -1,4 +1,5 @@
 import type { LlmAdapter } from '@ai-tutor/class-prep';
+import { relayError, relayFetch } from './relay';
 
 /**
  * The browser's side of the LLM boundary.
@@ -14,7 +15,7 @@ import type { LlmAdapter } from '@ai-tutor/class-prep';
 export function createBrowserLlm(model: string, opts: { json?: boolean } = {}): LlmAdapter {
   return {
     async complete(system: string, user: string): Promise<string> {
-      const res = await fetch('/api/llm', {
+      const res = await relayFetch('/api/llm', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -31,7 +32,7 @@ export function createBrowserLlm(model: string, opts: { json?: boolean } = {}): 
         choices?: { message?: { content?: string } }[];
         error?: { message?: string };
       };
-      if (!res.ok) throw new Error(`LLM ${res.status}: ${data.error?.message ?? res.statusText}`);
+      if (!res.ok) throw relayError(res.status, data);
       // OpenRouter reports upstream failures as a 200 with an error body.
       if (data.error) throw new Error(data.error.message ?? 'unknown LLM error');
 

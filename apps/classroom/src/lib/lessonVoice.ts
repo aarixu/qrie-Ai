@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { currentSpeechTicket, relayUrl, speechTicket } from './relay';
 import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
 import {
   MANIFEST_FILE,
@@ -83,8 +84,16 @@ export function useLessonVoice(
        * browser's robot voice. `createGeminiTts` is still in @ai-tutor/voice
        * for whenever that access comes back.
        */
+      // Minted before the first line rather than during it: asking for a pass
+      // mid-sentence would put a round trip in front of her voice, which is
+      // the one thing the streaming relay exists to avoid. Read per line after
+      // that, because a class outlives a ten-minute ticket and the holder
+      // renews it in the background a minute early.
+      await speechTicket();
+
       live = createStreamingTts({
-        endpoint: '/api/speech',
+        endpoint: relayUrl('/api/speech'),
+        ticket: currentSpeechTicket,
         ...TUTOR_VOICE,
         // Her face listens in: the avatar builds the audio elements, taps
         // their loudness, and lipsyncs to the same clock the student hears.

@@ -1,0 +1,116 @@
+import {
+  fail,
+  hearRelay,
+  llmRelay,
+  speechRelay,
+  type RelayRequest,
+  type RelayResponse,
+} from './relays';
+import { admit, type Gate, type RelayName } from './gate';
+import { mintTicket, TICKET_TTL_MS } from './ticket';
+
+/**
+ * ONE ROUTER, RUN BY BOTH SIDES.
+ *
+ * The dev server and the deployed Edge Function are not two implementations of
+ * the relays — they are this function, called from two adapters. That was
+ * already the rule for the relays themselves; it has to hold for the lock and
+ * the meter too, or the thing that gets tested every day is not the thing that
+ * faces the internet.
+ *
+ * What is left to a host: turning its own request type into a RelayRequest,
+ * carrying out a RelayResponse, and one platform call for multipart upload.
+ */
+
+export interface HandlerDeps {
+  /** The OpenRouter key. Never leaves the server. */
+  key: string;
+  gate: Gate;
+  /**
+   * Hand raw audio to a transcriber. Left to the host because it is the one
+   * place a platform's FormData shows through; `transcribeViaFormData` in
+   * web.ts is the implementation both hosts use.
+   */
+  transcribe(model: string, contentType: string, audio: Uint8Array): Promise<RelayResponse>;
+  now?: () => number;
+}
+
+/** The relay a path names, or null. */
+export function relayFor(url: string): RelayName | null {
+  const path = new URL(url, 'http://relay.local').pathname;
+  // Matched on the LAST segment so the same code serves /api/llm in dev and
+  // /relay/llm behind a function's own name in production.
+  const last = path.split('/').filter(Boolean).pop();
+  switch (last) {
+    case 'llm':
+      return 'llm';
+    case 'speech':
+      return 'speech';
+    case 'hear':
+      return 'hear';
+    case 'class':
+      return 'class';
+    case 'icons':
+      return 'icons';
+    default:
+      return null;
+  }
+}
+
+/**
+ * A pass for the one request that cannot carry a header.
+ *
+ * Minted only for a caller who has just proved who they are with a real
+ * Authorization header, and it says nothing except that user id and a
+ * deadline — see ticket.ts for why it is not simply the session token.
+ */
+export async function handleTicket(req: RelayRequest, gate: Gate): Promise<RelayResponse> {
+  if (!gate.ticketSecret) {
+    return fail(503, 'The server has no ticket secret configured.');
+  }
+  const verified = await gate.verify(req.headers['authorization'] ?? req.headers['Authorization']);
+  if (!verified.ok) return fail(verified.status, verified.why);
+
+  const now = (gate.now ?? Date.now)();
+  const expiresAt = now + TICKET_TTL_MS;
+  const ticket = await mintTicket(verified.user.userId, gate.ticketSecret, expiresAt);
+  return {
+    status: 200,
+    headers: { 'content-type': 'application/json' },
+    body: { kind: 'json', value: { ticket, expiresAt } },
+  };
+}
+
+/**
+ * Route, admit, then relay.
+ *
+ * The order matters and is the whole point of the file: NOTHING reaches
+ * OpenRouter before `admit` has said who is asking and that they are within
+ * their limits. A relay that spends first and checks after is a relay with no
+ * limit at all.
+ */
+export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise<RelayResponse> {
+  const path = new URL(req.url, 'http://relay.local').pathname;
+  if (path.split('/').filter(Boolean).pop() === 'ticket') {
+    return handleTicket(req, deps.gate);
+  }
+
+  const relay = relayFor(req.url);
+  if (relay === null) return fail(404, 'no such relay');
+
+  // Neither of these is served here yet, and saying so is better than a 404
+  // that reads as a deploy problem. See the Edge Function's own notes.
+  if (relay === 'icons' || relay === 'class') {
+    return fail(501, `the ${relay} relay is not hosted here yet`);
+  }
+
+  const admitted = await admit(req, relay, deps.gate);
+  if (!admitted.ok) return admitted.response;
+
+  if (relay === 'llm') return llmRelay(req, deps.key);
+  if (relay === 'speech') return speechRelay(req, deps.key);
+
+  const heard = hearRelay(req, deps.key);
+  if (!heard.ok) return heard.response;
+  return deps.transcribe(heard.model, heard.contentType, heard.audio);
+}

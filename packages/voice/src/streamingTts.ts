@@ -50,6 +50,20 @@ export interface StreamingTtsOptions {
    * relay that is down costs the class its voice and not its lesson.
    */
   fallback?: TtsAdapter;
+  /**
+   * A short-lived pass for the speech relay, added to the query string.
+   *
+   * The relay demands a caller, and this is the one request in the app that
+   * cannot carry an Authorization header: it is fetched by assigning a URL to
+   * an audio element, which is exactly what lets a line start on its first
+   * chunk off the wire. The pass is speech-only and minute-scale — see
+   * @ai-tutor/relay's ticket.ts for why it is not the session token.
+   *
+   * Returns null when there is none, and the URL is then built without one:
+   * the relay refuses, and the class falls back to the browser's own voice
+   * rather than falling silent.
+   */
+  ticket?: () => string | null;
 }
 
 const realAudio = (src: string): SpeechElement => new Audio(src) as unknown as SpeechElement;
@@ -66,6 +80,10 @@ export function createStreamingTts(opts: StreamingTtsOptions): TtsAdapter {
     const query = new URLSearchParams({ text: words });
     if (opts.model) query.set('model', opts.model);
     if (opts.voice) query.set('voice', opts.voice);
+    // Read per line rather than captured once: a class outlives a ticket, and
+    // the holder re-mints before the old one lapses.
+    const pass = opts.ticket?.();
+    if (pass) query.set('ticket', pass);
     return `${opts.endpoint}?${query}`;
   };
   /** Resolves the line in flight, whatever ends it. */

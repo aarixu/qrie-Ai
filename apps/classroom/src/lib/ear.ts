@@ -1,4 +1,5 @@
 import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE } from '@ai-tutor/voice';
+import { relayFetch } from './relay';
 
 /**
  * THE EAR - the mic that turns itself on when she asks.
@@ -171,7 +172,7 @@ export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Pr
   }
 
   try {
-    const res = await fetch('/api/hear', {
+    const res = await relayFetch('/api/hear', {
       method: 'POST',
       headers: { 'content-type': 'audio/wav' },
       body: wavOf(pcm, MIC_SAMPLE_RATE),

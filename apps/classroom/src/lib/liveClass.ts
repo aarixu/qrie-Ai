@@ -1,4 +1,5 @@
 import type { Lesson } from "@ai-tutor/lesson-format";
+import { relayFetch } from './relay';
 import {
   drawMissingIcons,
   pickIcons,
@@ -77,7 +78,7 @@ async function fetchGraphics(
   // torn in half and quietly lost both its lookup and its fallback.
   const query = new URLSearchParams();
   for (const noun of nouns) query.append('noun', noun);
-  const res = await fetch(`/api/icons?${query}`);
+  const res = await relayFetch(`/api/icons?${query}`);
   if (!res.ok) return {};
 
   type Glyph = { body: string; width: number; height: number };

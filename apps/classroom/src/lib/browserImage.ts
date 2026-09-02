@@ -1,4 +1,5 @@
 import type { ImageAdapter, VisionAdapter } from '@ai-tutor/class-prep';
+import { relayError, relayFetch } from './relay';
 
 /**
  * The browser's side of the two picture calls: drawing one, and looking at it.
@@ -16,13 +17,13 @@ interface Reply {
 }
 
 async function ask(body: unknown): Promise<Reply> {
-  const res = await fetch('/api/llm', {
+  const res = await relayFetch('/api/llm', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
   });
   const data = (await res.json().catch(() => ({}))) as Reply;
-  if (!res.ok) throw new Error(`LLM ${res.status}: ${data.error?.message ?? res.statusText}`);
+  if (!res.ok) throw relayError(res.status, data);
   // OpenRouter reports upstream failures as a 200 with an error body.
   if (data.error) throw new Error(data.error.message ?? 'unknown LLM error');
   return data;

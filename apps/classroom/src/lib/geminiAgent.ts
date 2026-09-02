@@ -7,6 +7,7 @@ import {
   type DoubtContext,
 } from '@ai-tutor/doubt-session';
 import type { StudentContext } from '@ai-tutor/persona';
+import { relayFetch } from './relay';
 import { createOutcomeLookup } from './outcomeLookup';
 
 /**
@@ -84,7 +85,7 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
    */
   if (provider === 'relay') {
     return async (system, turns, signal) => {
-      const res = await fetch('/api/llm', {
+      const res = await relayFetch('/api/llm', {
         method: 'POST',
         signal,
         headers: { 'content-type': 'application/json' },

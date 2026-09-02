@@ -13,6 +13,7 @@ import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
 import { studentLinesForPlanner } from '../lib/student';
 import { useOnline } from '../lib/online';
+import { relayFetch } from '../lib/relay';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -62,7 +63,7 @@ async function keep(made: LivePrep, ask: Ask): Promise<void> {
   });
   if (!saved) return;
   try {
-    const res = await fetch('/api/class', {
+    const res = await relayFetch('/api/class', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(saved),

@@ -15,11 +15,14 @@ import react from '@vitejs/plugin-react';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import { fileURLToPath } from 'node:url';
 import {
-  hearRelay,
-  llmRelay,
+  cacheVerifier,
+  createMemoryLedger,
+  createSupabaseVerifier,
+  handleRelay,
   sendRelayResponse,
-  speechRelay,
   toRelayRequest,
+  transcribeViaFormData,
+  type Gate,
 } from '../../packages/relay/src/index.ts';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
@@ -29,57 +32,47 @@ const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src`, import.meta.url));
 
 /**
- * The three OpenRouter relays, in dev.
+ * The three OpenRouter relays, in dev — the SAME code the Edge Function runs.
  *
- * The DECISIONS live in @ai-tutor/relay so that the deployed backend and this
- * dev server are one implementation rather than two that drift apart. What is
- * left here is mounting them on vite middleware.
+ * Not "the same logic": literally `handleRelay`, with a Node adapter around
+ * it. That includes the lock and the meter, which is the part that matters —
+ * a gate only exercised in production is a gate nobody has tried. A developer
+ * who is not signed in gets the same 401 a stranger would, which is the honest
+ * answer and takes one tap to fix.
+ *
+ * The two differences from production are both stated out loud:
+ *   - the meter counts in a Map, because there is no Postgres on a laptop;
+ *   - the ticket secret is a fixed dev string, so a restart does not invalidate
+ *     a ticket the open page is still using.
  */
-function openRouterRelays(key: string): Plugin {
+function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Plugin {
+  const gate: Gate = {
+    verify: cacheVerifier(createSupabaseVerifier(supabaseUrl, anonKey)),
+    ledger: createMemoryLedger(),
+    ticketSecret: 'dev-only-ticket-secret',
+  };
+  const deps = {
+    key,
+    gate,
+    transcribe: (model: string, contentType: string, audio: Uint8Array) =>
+      transcribeViaFormData(key, model, contentType, audio),
+  };
+
   return {
     name: 'curie-openrouter-relays',
     apply: 'serve',
     configureServer(server) {
-      server.middlewares.use('/api/llm', (req, res) => {
-        void (async () => {
-          await sendRelayResponse(res, llmRelay(await toRelayRequest(req), key));
-        })();
-      });
-
-      server.middlewares.use('/api/speech', (req, res) => {
-        void (async () => {
-          await sendRelayResponse(res, speechRelay(await toRelayRequest(req), key));
-        })();
-      });
-
-      server.middlewares.use('/api/hear', (req, res) => {
-        void (async () => {
-          const heard = hearRelay(await toRelayRequest(req), key);
-          if (!heard.ok) {
-            await sendRelayResponse(res, heard.response);
-            return;
-          }
-          // Multipart assembly belongs to the adapter: FormData is a platform
-          // thing, and the relay package deliberately depends on none.
-          const form = new FormData();
-          form.append('model', heard.model);
-          form.append('file', new Blob([heard.audio], { type: heard.contentType }), 'answer.wav');
-          try {
-            const upstream = await fetch('https://openrouter.ai/api/v1/audio/transcriptions', {
-              method: 'POST',
-              headers: { authorization: `Bearer ${key}` },
-              body: form,
-            });
-            res.statusCode = upstream.status;
-            res.setHeader('content-type', 'application/json');
-            res.end(await upstream.text());
-          } catch (e: unknown) {
-            res.statusCode = 502;
-            res.setHeader('content-type', 'application/json');
-            res.end(JSON.stringify({ error: { message: String(e) } }));
-          }
-        })();
-      });
+      for (const route of ['/api/llm', '/api/speech', '/api/hear', '/api/ticket']) {
+        server.middlewares.use(route, (req, res) => {
+          void (async () => {
+            const relayRequest = await toRelayRequest(req);
+            // Vite strips the mounted prefix from req.url, so the path the
+            // relay sees would be "/" and match nothing. Put it back.
+            const url = `${route}${relayRequest.url === '/' ? '' : relayRequest.url}`;
+            await sendRelayResponse(res, await handleRelay({ ...relayRequest, url }, deps));
+          })();
+        });
+      }
     },
   };
 }
@@ -229,7 +222,11 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react(),
-      openRouterRelays(env.OPENROUTER_API_KEY ?? ''),
+      openRouterRelays(
+        env.OPENROUTER_API_KEY ?? '',
+        env.VITE_SUPABASE_URL ?? '',
+        env.VITE_SUPABASE_ANON_KEY ?? '',
+      ),
       iconRelay(),
       classWriter(),
       ...(env.HTTPS === '1' ? [basicSsl()] : []),

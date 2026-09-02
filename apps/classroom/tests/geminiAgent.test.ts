@@ -81,23 +81,42 @@ describe('createTransport', () => {
   afterEach(() => vi.unstubAllGlobals());
 
   /**
+   * The relay call, whichever call it turned out to be.
+   *
+   * Relay calls go through lib/relay, which first makes sure the device has an
+   * identity — every relay demands a verified caller now, because behind each
+   * one is somebody's money. So the LLM request is no longer necessarily the
+   * first fetch, and a test that assumed it was would be asserting the order of
+   * an implementation detail rather than the thing that matters.
+   */
+  const llmCall = (calls: { url: string; init: RequestInit }[]) => {
+    const found = calls.find((c) => c.url.includes('/api/llm'));
+    if (!found) throw new Error(`no /api/llm call among: ${calls.map((c) => c.url).join(', ')}`);
+    return found;
+  };
+
+  /**
    * The transport that actually ships. The two below it are dev-only now:
    * Vite inlines every VITE_ variable, so a key read in the browser is a key
    * printed into the bundle for anyone who unzips the APK.
    */
-  it('relay: sends no key anywhere, because it has none', async () => {
+  it('relay: carries no provider key, because it has none', async () => {
     const calls = stub({ choices: [{ message: { content: 'hi' } }] });
     const send = createTransport({ student, provider: 'relay' });
     expect(await send('SYS', turns, new AbortController().signal)).toBe('hi');
-    expect(calls[0].url).toBe('/api/llm');
-    expect(JSON.stringify(calls[0].init.headers ?? {}).toLowerCase()).not.toContain('authorization');
-    expect(String(calls[0].init.body)).not.toMatch(/api[-_]?key/i);
+
+    const call = llmCall(calls);
+    // The Authorization header it MAY now carry is the student's own Supabase
+    // session, which is theirs and is the point. What must never appear is a
+    // provider key, in any header or anywhere in the body.
+    expect(JSON.stringify(call.init.headers ?? {})).not.toMatch(/sk-or-|AIza/);
+    expect(String(call.init.body)).not.toMatch(/api[-_]?key/i);
   });
 
   it('relay: is what you get when nobody names a provider', async () => {
     const calls = stub({ choices: [{ message: { content: 'hi' } }] });
     await createTransport({ student })('SYS', turns, new AbortController().signal);
-    expect(calls[0].url).toBe('/api/llm');
+    expect(llmCall(calls).url).toContain('/api/llm');
   });
 
   it('relay: surfaces a 200 carrying an error body, the way upstream sends them', async () => {
