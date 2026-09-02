@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { track } from '../lib/telemetry';
 import { useNavigate } from 'react-router-dom';
 import { settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
@@ -64,6 +65,12 @@ export function Onboarding() {
     // settingsStore still drives screens that predate the profile store; both
     // are written so neither can go stale.
     settingsStore.update((s) => ({ ...s, klass }));
+    // The number of subjects, not which — and never the name they just typed.
+    track('onboarding_completed', {
+      klass,
+      subjects: subjects.length,
+      tookPlacement: toDiagnostic,
+    });
     navigate(toDiagnostic ? '/diagnostic' : '/', { replace: true });
   };
 

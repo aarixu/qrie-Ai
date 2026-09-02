@@ -17,6 +17,7 @@ import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
 import { hrefFor } from './lib/destination';
+import { reportCrash, track } from './lib/telemetry';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
 
@@ -269,7 +270,35 @@ function useAppearance(): void {
  */
 function Boundaried({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  return <ErrorBoundary resetKey={location.pathname}>{children}</ErrorBoundary>;
+
+  /**
+   * Every screen the student reaches, by PATH.
+   *
+   * Nineteen of the twenty-four routes are lazy, so there is no screen
+   * component that all of them pass through — the router is the only place
+   * this can live. The path is our own vocabulary and carries no student data,
+   * except in one case: /class?topic=<what they typed>. The query string is
+   * dropped for exactly that reason.
+   */
+  useEffect(() => {
+    track('screen_viewed', { path: location.pathname.replace(/\/[^/]{40,}/g, '/…') });
+  }, [location.pathname]);
+
+  return (
+    <ErrorBoundary
+      resetKey={location.pathname}
+      /**
+       * The seam was already here and already tested; this is the one prop
+       * that turns a white screen somebody silently uninstalled over into a
+       * thing we find out about.
+       */
+      onError={(error, info) =>
+        reportCrash(error, { path: location.pathname, componentStack: info.componentStack ? 1 : 0 })
+      }
+    >
+      {children}
+    </ErrorBoundary>
+  );
 }
 
 export default function App() {

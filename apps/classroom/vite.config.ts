@@ -231,6 +231,46 @@ export default defineConfig(({ mode }) => {
       classWriter(),
       ...(env.HTTPS === '1' ? [basicSsl()] : []),
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          /**
+           * THE OUTCOME MAPS ARE DATA, AND DATA GETS ITS OWN FILE.
+           *
+           * packages/knowledge-graph/data is 406 kB of JSON — three maps and
+           * their probe banks — imported with a glob that has to be eager,
+           * because a placement test cannot choose its first question from a
+           * map that is still arriving.
+           *
+           * Rollup had been splitting it out on its own, and that was luck
+           * rather than design: it was shared between an eager screen and two
+           * lazy ones, so the heuristic gave it a chunk. Adding one small
+           * module that the entry and a lazy route both import was enough to
+           * change its mind, and the entry went from 129 kB gzipped to 200 —
+           * a 70 kB regression on the ₹10,000 Android this product is for,
+           * caused by a file with nothing to do with lessons.
+           *
+           * Naming it is what stops that happening again. Two things it buys
+           * and one it does not:
+           *
+           *   - the entry stays the app's own code, so a Rollup heuristic can
+           *     no longer decide otherwise;
+           *   - the curriculum caches on its own, so shipping a bug fix does
+           *     not make every student re-download 78 kB of maps that did not
+           *     change.
+           *
+           * What it does NOT buy is deferral. lib/outcomeLookup is imported by
+           * the classroom, which is eager, so this chunk is still modulepreloaded
+           * on first load. Making it genuinely lazy means outcomeLookup becoming
+           * async, which is a change to the classroom and not to a build config.
+           */
+          manualChunks(id) {
+            if (id.includes('knowledge-graph') && id.endsWith('.json')) return 'outcome-maps';
+            return undefined;
+          },
+        },
+      },
+    },
     // Lessons are data, served as static files: /index.json, /<lesson>/lesson.json
     publicDir: fileURLToPath(new URL('../../content', import.meta.url)),
     resolve: {

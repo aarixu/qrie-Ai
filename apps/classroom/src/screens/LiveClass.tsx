@@ -17,6 +17,7 @@ import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
 import { quoteForPrompt, screen } from '@ai-tutor/safety';
 import { recordFlag } from '../stores/flags';
+import { track } from '../lib/telemetry';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -221,6 +222,7 @@ export function LiveClassRoute() {
       return;
     }
     setError(null);
+    const startedAt = performance.now();
     let cancelled = false;
 
     (async () => {
@@ -257,7 +259,15 @@ export function LiveClassRoute() {
         },
         {
           onDraft: (d) => {
-            if (!cancelled) setDraft(d);
+            if (cancelled) return;
+            // The number warm entry exists to move: how long a student waits
+            // before the room opens, measured on their own phone rather than
+            // on mine.
+            track('class_room_opened', {
+              waitedMs: Math.round(performance.now() - startedAt),
+              beats: d.lesson.beats.length,
+            });
+            setDraft(d);
           },
           onArt: () => {
             if (!cancelled) setArtLanded((n) => n + 1);

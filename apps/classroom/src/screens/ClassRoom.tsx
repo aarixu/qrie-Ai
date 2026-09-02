@@ -28,6 +28,7 @@ import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
 import { fromStudent, toStudent } from '../lib/safety';
+import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
@@ -590,6 +591,7 @@ export function ClassRoom({
   useEffect(() => {
     if (player.state !== 'ended') return;
     markCompleted(lesson.id);
+    track('lesson_completed', { lessonId: lesson.id, beats: lesson.beats.length });
     // The map hears about it too: a finished class is evidence about the
     // outcomes its beats declared, not just a tick on a lesson id.
     recordLessonTaught(lesson);
@@ -623,6 +625,12 @@ export function ClassRoom({
       setTimeout(() => handoffRef.current.raiseHand(ctx), 0);
       return;
     }
+    track('doubt_raised', {
+      lessonId: lesson.id,
+      beatId: ctx.beatId,
+      beatIndex: player.beatIndex,
+      mode: voiceMode ? 'voice' : 'text',
+    });
     handoff.raiseHand(ctx);
   };
 
@@ -631,6 +639,7 @@ export function ClassRoom({
   const canResume =
     player.state === 'idle' && savedBeat > 0 && !isCompleted(progressStore.get(), lesson.id);
   const startClass = () => {
+    track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
   };
@@ -690,6 +699,9 @@ export function ClassRoom({
       void tts.speak(say);
       return;
     }
+    // Its length, never its words. clean() would drop the text anyway; not
+    // writing it is the clearer statement.
+    track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
     handoff.sendUserText(screened.text);
   };
 

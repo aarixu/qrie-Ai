@@ -1,4 +1,5 @@
 import { StrictMode } from 'react';
+import { initTelemetry } from './lib/telemetry';
 import { createRoot } from 'react-dom/client';
 import './fonts';
 import './index.css';
@@ -12,6 +13,14 @@ import { nudgeIfDue } from './lib/reminders';
 // exactly what it used to be, and what a dark-theme student saw when the page
 // overscrolled.
 document.body.style.margin = '0';
+
+/**
+ * Before anything else that can fail.
+ *
+ * Above the service-worker registration and the two async kickoffs below it,
+ * so a throw in any of them is seen. A complete no-op until a DSN exists.
+ */
+initTelemetry();
 
 // Offline shell + installability — production only, so dev never fights a
 // stale cache.
