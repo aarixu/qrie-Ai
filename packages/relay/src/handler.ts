@@ -116,6 +116,14 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return fail(501, 'the icons relay is not hosted here yet');
   }
 
+  // Refusals that cost nothing come BEFORE the meter. A request this host was
+  // never going to serve should not spend a student's daily budget on being
+  // told so — five units is a fortieth of a prepared class.
+  if (relay === 'class') {
+    if (req.method !== 'POST') return fail(405, 'POST only');
+    if (!deps.keep) return fail(501, 'this host cannot keep a class');
+  }
+
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
 
@@ -123,11 +131,9 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   if (relay === 'speech') return speechRelay(req, deps.key);
 
   if (relay === 'class') {
-    if (req.method !== 'POST') return fail(405, 'POST only');
-    if (!deps.keep) return fail(501, 'this host cannot keep a class');
     const saved = readSavedClass(req.body);
     if (!saved.ok) return saved.response;
-    return deps.keep(saved.value);
+    return deps.keep!(saved.value);
   }
 
   const heard = hearRelay(req, deps.key);

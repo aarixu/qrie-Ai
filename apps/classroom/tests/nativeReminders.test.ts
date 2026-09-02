@@ -12,6 +12,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const scheduled: unknown[] = [];
 const cancelled: unknown[] = [];
+/** Every call in order, so a test can see two runs interleaving. */
+const ops: string[] = [];
 let permission = 'granted';
 
 vi.mock('@capacitor/local-notifications', () => ({
@@ -19,9 +21,11 @@ vi.mock('@capacitor/local-notifications', () => ({
     checkPermissions: async () => ({ display: permission }),
     requestPermissions: async () => ({ display: permission }),
     schedule: async (opts: { notifications: unknown[] }) => {
+      ops.push('schedule');
       scheduled.push(...opts.notifications);
     },
     cancel: async (opts: { notifications: unknown[] }) => {
+      ops.push('cancel');
       cancelled.push(...opts.notifications);
     },
   },
@@ -40,6 +44,7 @@ const { syncNativeReminders, clearNativeReminders, askForNativeNotifications } =
 beforeEach(() => {
   scheduled.length = 0;
   cancelled.length = 0;
+  ops.length = 0;
   permission = 'granted';
   native = true;
 });
@@ -153,6 +158,32 @@ describe('when there is nothing to schedule', () => {
     await syncNativeReminders({ ...schedule, days: [1] });
 
     expect(scheduled).toEqual([]);
+  });
+
+  it('NEVER prompts — it only acts on an answer already given', async () => {
+    // main.tsx runs this at startup and DEFAULT_SCHEDULE is enabled on
+    // weekdays, so prompting here put a permission dialog over onboarding —
+    // the fastest way to be denied forever, and on iOS painful to undo. The
+    // ask belongs to the moment the student sets a reminder.
+    permission = 'prompt';
+
+    await syncNativeReminders({ ...schedule, days: [1] });
+
+    expect(scheduled).toEqual([]);
+  });
+
+  it('applies overlapping changes one at a time, in order', async () => {
+    // Cancel-then-schedule with an await in the middle. Two runs interleaving
+    // would go cancel, cancel, schedule, schedule — and the phone would be
+    // left holding the union of the old day set and the new one.
+    await Promise.all([
+      syncNativeReminders({ ...schedule, days: [1, 2, 3] }),
+      syncNativeReminders({ ...schedule, days: [6] }),
+    ]);
+
+    expect(ops).toEqual(['cancel', 'schedule', 'cancel', 'schedule']);
+    // And the last word is the last call's.
+    expect((scheduled.at(-1) as { id: number }).id).toBe(4206);
   });
 
   it('does nothing at all in a browser', async () => {

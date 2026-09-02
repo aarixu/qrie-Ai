@@ -47,6 +47,16 @@ const TEXT = {
   body: 'Your class is ready when you are — even ten minutes counts.',
 };
 
+/** Has the student already said yes? Never prompts. */
+export async function notificationsGranted(): Promise<boolean> {
+  if (!isNative()) return false;
+  try {
+    return (await LocalNotifications.checkPermissions()).display === 'granted';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Ask, at the moment the student sets a reminder.
  *
@@ -66,6 +76,8 @@ export async function askForNativeNotifications(): Promise<boolean> {
   }
 }
 
+let syncing: Promise<void> = Promise.resolve();
+
 /**
  * Put the schedule on the phone, replacing whatever was there.
  *
@@ -75,7 +87,22 @@ export async function askForNativeNotifications(): Promise<boolean> {
  * Silent about failure on purpose. A reminder that could not be set is a
  * missed nudge; an exception here would be a crash on a settings screen.
  */
-export async function syncNativeReminders(schedule: StudySchedule): Promise<void> {
+
+export function syncNativeReminders(schedule: StudySchedule): Promise<void> {
+  /**
+   * One at a time.
+   *
+   * This is cancel-then-schedule with an await in the middle, so two runs
+   * overlapping — a student editing their days while startup's own sync is
+   * still in flight — could interleave into the union of the old set and the
+   * new one. Queued rather than debounced: every call must still be applied,
+   * and the last one to be applied is the one that wins.
+   */
+  syncing = syncing.then(() => applyReminders(schedule)).catch(() => undefined);
+  return syncing;
+}
+
+async function applyReminders(schedule: StudySchedule): Promise<void> {
   if (!isNative()) return;
 
   try {
@@ -85,7 +112,19 @@ export async function syncNativeReminders(schedule: StudySchedule): Promise<void
   }
 
   if (!schedule.enabled || schedule.days.length === 0) return;
-  if (!(await askForNativeNotifications())) return;
+
+  /**
+   * CHECKED, NEVER ASKED, from here.
+   *
+   * This runs at startup, and the default schedule is enabled on weekdays — so
+   * asking here put a permission dialog over onboarding, which is the exact
+   * thing the comment on askForNativeNotifications forbids and the fastest way
+   * to be denied for good.
+   *
+   * The ASK belongs to the moment the student sets a reminder, where it has a
+   * reason attached. This only ever acts on an answer already given.
+   */
+  if (!(await notificationsGranted())) return;
 
   const hour = Math.floor(schedule.minute / 60);
   const minute = schedule.minute % 60;

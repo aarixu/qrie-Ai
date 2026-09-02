@@ -130,6 +130,49 @@ describe('what a browser is allowed to write', () => {
     expect(checkSavedClass({ ...good, entry: { ...good.entry, ...over } }).ok).toBe(false);
   });
 
+  it('refuses a topicRef with an empty segment', () => {
+    // "a//c" splits into three too. A topicRef nothing can join on becomes a
+    // row under a unique key, and ignore-duplicates then swallows the correct
+    // save for that topic forever.
+    for (const topicRef of ['//', 'a//c', '/b/c', 'a/b/']) {
+      expect(
+        checkSavedClass({ ...good, entry: { ...good.entry, topicRef } }).ok,
+        topicRef,
+      ).toBe(false);
+    }
+  });
+
+  it('refuses more files than any class this app makes', () => {
+    // Anonymous sign-in means an identity costs nothing and the daily budget
+    // allows six hundred of these. Without a ceiling that is unmetered storage.
+    const many = Array.from({ length: 30 }, (_, i) => ({
+      path: `generated/${i}.png`,
+      body: 'x',
+      encoding: 'utf8' as const,
+    }));
+
+    expect(checkSavedClass({ ...good, files: many }).ok).toBe(false);
+  });
+
+  it('refuses a class larger than any class this app makes', () => {
+    const huge = [{ path: 'lesson.json', body: 'x'.repeat(13 * 1024 * 1024), encoding: 'utf8' as const }];
+
+    expect(checkSavedClass({ ...good, files: huge }).ok).toBe(false);
+  });
+
+  it('takes a class the size of a real one', () => {
+    const real = [
+      { path: 'lesson.json', body: '{}', encoding: 'utf8' as const },
+      ...Array.from({ length: 6 }, (_, i) => ({
+        path: `generated/${i}.png`,
+        body: 'x'.repeat(400_000),
+        encoding: 'base64' as const,
+      })),
+    ];
+
+    expect(checkSavedClass({ ...good, files: real }).ok).toBe(true);
+  });
+
   it('takes an optional subtitle when it is text', () => {
     expect(
       checkSavedClass({ ...good, entry: { ...good.entry, subtitle: 'Class 9 · Tissues' } }).ok,

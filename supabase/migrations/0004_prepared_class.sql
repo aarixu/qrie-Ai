@@ -54,9 +54,12 @@ create policy "anyone may read prepared classes" on public.prepared_class
 -- The bucket the files live in.
 -- ---------------------------------------------------------------------------
 
-insert into storage.buckets (id, name, public)
-values ('classes', 'classes', true)
-on conflict (id) do nothing;
+-- The relay caps a whole class at 12 MB and 24 files. This is the second
+-- fence, on the object rather than the request: a bug on our side that lets a
+-- larger upload through still cannot fill a bucket one file at a time.
+insert into storage.buckets (id, name, public, file_size_limit)
+values ('classes', 'classes', true, 12582912)
+on conflict (id) do update set file_size_limit = excluded.file_size_limit;
 
 -- Public READ, because a lesson is meant to be fetched by a browser with no
 -- session — the same way content/ is served today. Writes are service_role

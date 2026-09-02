@@ -31,7 +31,7 @@ import {
   createSupabaseVerifier,
 } from '../../../packages/relay/src/auth.ts';
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
-import { handleRelay } from '../../../packages/relay/src/handler.ts';
+import { handleRelay, type HandlerDeps } from '../../../packages/relay/src/handler.ts';
 import { keepClass } from '../../../packages/relay/src/classStore.ts';
 import { toRelayRequest, toResponse, transcribeViaFormData } from '../../../packages/relay/src/web.ts';
 
@@ -64,7 +64,15 @@ const CORS = {
 const verify = cacheVerifier(createSupabaseVerifier(SUPABASE_URL, ANON_KEY));
 const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-const deps = {
+/**
+ * Typed against HandlerDeps deliberately.
+ *
+ * This file is outside tsconfig's include — it is Deno, not the app's project
+ * — so nothing here is checked on `npm run typecheck`. The annotation is what
+ * makes the Supabase CLI's own type check catch a drift between this adapter
+ * and the router it feeds, instead of a 500 in production.
+ */
+const deps: HandlerDeps = {
   key: OPENROUTER_API_KEY,
   gate: {
     verify,
@@ -82,7 +90,8 @@ const deps = {
    * student's browser must not be able to add a row pointing every later
    * student at a lesson file of its choosing.
    */
-  keep: (saved) => keepClass(saved, { supabaseUrl: SUPABASE_URL, serviceRoleKey: SERVICE_ROLE_KEY }),
+  keep: (saved) =>
+    keepClass(saved, { supabaseUrl: SUPABASE_URL, serviceRoleKey: SERVICE_ROLE_KEY }),
 };
 
 Deno.serve(async (request: Request) => {

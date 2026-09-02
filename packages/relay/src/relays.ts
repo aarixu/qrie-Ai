@@ -198,6 +198,18 @@ export interface SavedClass {
  * The dev plugin checks the same things; this is that check, made portable
  * and testable.
  */
+/** A lesson, its assets, and its pictures. Ten is already generous. */
+export const MAX_CLASS_FILES = 24;
+
+/**
+ * 12 MB of base64, which is about 9 MB of actual picture.
+ *
+ * The largest class in the repo today is 3.3 MB of artwork; the whole of
+ * content/ is 15 MB. A single class four times the size of the biggest one
+ * ever made is the right place for a ceiling.
+ */
+export const MAX_CLASS_BYTES = 12 * 1024 * 1024;
+
 export function checkSavedClass(saved: unknown): { ok: true; value: SavedClass } | { ok: false; why: string } {
   if (typeof saved !== 'object' || saved === null) return { ok: false, why: 'not an object' };
   const c = saved as Partial<SavedClass>;
@@ -223,10 +235,30 @@ export function checkSavedClass(saved: unknown): { ok: true; value: SavedClass }
   }
   // Three segments, the same shape every other topicRef in the product has.
   // A row whose topic nothing can ask for is a lesson nobody will ever reach.
-  if (typeof entry.topicRef !== 'string' || entry.topicRef.split('/').length !== 3) {
+  // Three NON-EMPTY segments. "a//c" also splits into three, and a topicRef
+  // nothing can join on becomes a row under a unique key that then blocks the
+  // correct save for that topic for good — ignore-duplicates would swallow it.
+  const segments = typeof entry.topicRef === 'string' ? entry.topicRef.split('/') : [];
+  if (segments.length !== 3 || segments.some((part) => part === '')) {
     return { ok: false, why: 'entry needs a "<syllabus>/<chapter>/<topic>" topicRef' };
   }
   if (!Array.isArray(c.files) || c.files.length === 0) return { ok: false, why: 'no files' };
+  /**
+   * A CEILING, because this writes to storage on somebody else's word.
+   *
+   * Anonymous sign-in means an identity costs nothing, and the daily budget
+   * allows six hundred of these — so without a bound, a throwaway account is
+   * unmetered storage. A real prepared class is a lesson.json, an assets.json
+   * and a handful of pictures: well inside both numbers, and a class that
+   * exceeds them is not one this app made.
+   */
+  if (c.files.length > MAX_CLASS_FILES) {
+    return { ok: false, why: `a class may hold at most ${MAX_CLASS_FILES} files` };
+  }
+  const bytes = c.files.reduce((n, f) => n + (typeof f?.body === 'string' ? f.body.length : 0), 0);
+  if (bytes > MAX_CLASS_BYTES) {
+    return { ok: false, why: 'that class is larger than any class this app makes' };
+  }
   for (const file of c.files) {
     if (typeof file?.path !== 'string' || file.path === '') return { ok: false, why: 'bad file path' };
     // Anything that could climb out of the class folder, in any spelling.

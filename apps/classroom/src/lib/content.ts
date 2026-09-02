@@ -1,6 +1,7 @@
 import { validateLesson, type Lesson } from '@ai-tutor/lesson-format';
 import { loadSyllabus, getTopic, type SubjectSyllabus, type Topic } from '@ai-tutor/syllabus';
 import { supabase } from './supabase';
+import { profileStore } from '../stores/profile';
 
 /** Where a public bucket's files are served from, for the project we are on. */
 const supabaseStorageBase = (): string =>
@@ -72,12 +73,40 @@ let catalogCache: CatalogEntry[] | null = null;
  * prepared again. A worse day, not a broken app. So this never throws for the
  * second half.
  */
+/**
+ * Long enough for a slow phone, short enough not to be a hang.
+ *
+ * A REJECTED request already degrades gracefully; a STALLED one does not, and
+ * this sits in front of the home screen and in front of LiveClass's decision
+ * about whether a topic is warm. Waiting forever there is a student looking at
+ * a spinner because a socket never closed.
+ */
+const KEPT_TIMEOUT_MS = 4000;
+
+/**
+ * How far back the catalogue reaches.
+ *
+ * The placement test looks two classes behind the student's own, so a Class 9
+ * student can be sent to a Class 7 lesson. Anything outside that window is
+ * rows nobody on this device will open — and the whole table on every
+ * catalogue read is a query that grows with the curriculum forever.
+ */
+const LOOK_BACK_CLASSES = 2;
+
 async function fetchKeptClasses(): Promise<CatalogEntry[]> {
   const db = supabase();
   if (!db) return [];
-  const { data, error } = await db
-    .from('prepared_class')
-    .select('id, topic_ref, title, subtitle, klass, subject');
+
+  const mine = profileStore.get().klass;
+  let query = db.from('prepared_class').select('id, topic_ref, title, subtitle, klass, subject');
+  if (mine !== null) query = query.lte('klass', mine).gte('klass', mine - LOOK_BACK_CLASSES);
+
+  const answered = await Promise.race([
+    query,
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), KEPT_TIMEOUT_MS)),
+  ]);
+  if (!answered) return [];
+  const { data, error } = answered;
   if (error || !data) return [];
 
   return (data as {
@@ -132,6 +161,36 @@ const isAbsolute = (path: string): boolean => /^https?:\/\//.test(path);
 export const lessonUrl = (entry: CatalogEntry): string =>
   isAbsolute(entry.path) ? entry.path : `/${entry.path}`;
 
+/**
+ * THE PICTURES INSIDE A CLASS THAT LIVES SOMEWHERE ELSE.
+ *
+ * saveable() writes each generated picture's src as "/<id>/generated/<el>.png"
+ * — absolute from the static root, which is right for a class in content/ and
+ * wrong for one served out of Storage. The lesson, the audio and the inlined
+ * markup all learned to handle a whole URL; the lesson's own `src` values did
+ * not, so on a cloud-served class every picture asked this origin for a file
+ * it does not have and got the SPA fallback's index.html back.
+ *
+ * Rewritten on the way in rather than at each of the places that draw one:
+ * Scene takes an element and has no idea where its lesson came from, and it
+ * should not have to.
+ */
+function pointAtItsOwnFolder(lesson: Lesson, entry: CatalogEntry): Lesson {
+  if (!isAbsolute(entry.path)) return lesson;
+  const folder = entry.path.replace(/\/[^/]+$/, '');
+
+  return {
+    ...lesson,
+    elements: lesson.elements.map((el) => {
+      if (!('src' in el) || typeof el.src !== 'string' || !el.src.startsWith('/')) return el;
+      // "/<id>/generated/x.png" -> "<storage folder>/generated/x.png". The id
+      // segment is dropped because the folder already ends with it.
+      const withoutId = el.src.replace(/^\/[^/]+\//, '');
+      return { ...el, src: `${folder}/${withoutId}` };
+    }),
+  };
+}
+
 export async function fetchLesson(entry: CatalogEntry): Promise<Lesson> {
   const raw = await (await fetch(lessonUrl(entry))).json();
   const result = validateLesson(raw);
@@ -141,7 +200,7 @@ export async function fetchLesson(entry: CatalogEntry): Promise<Lesson> {
     console.error(`[content] "${entry.id}" failed validation:`, result.errors);
     throw new Error(`Lesson "${entry.title}" is not available right now.`);
   }
-  return result.lesson;
+  return pointAtItsOwnFolder(result.lesson, entry);
 }
 
 export async function findEntry(lessonId: string): Promise<CatalogEntry | null> {
