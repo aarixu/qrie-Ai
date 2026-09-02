@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from '../lib/content';
+import { useAsync, dataOr } from '../lib/async';
+import { OfflineNotice } from '../ui/States';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { profileStore } from '../stores/profile';
 import { BRAND } from '../brand';
@@ -35,17 +37,36 @@ export function Home() {
   const navigate = useNavigate();
   const progress = useStore(progressStore);
   const profile = useStore(profileStore);
-  const [catalog, setCatalog] = useState<CatalogEntry[] | null>(null);
+  const { state: catalogState } = useAsync(fetchCatalog, []);
+  const catalog = dataOr<CatalogEntry[] | null>(catalogState, null);
   const [resumeEntry, setResumeEntry] = useState<CatalogEntry | null>(null);
-
-  useEffect(() => {
-    fetchCatalog().then(setCatalog).catch(() => setCatalog([]));
-  }, []);
 
   useEffect(() => {
     if (!progress.lastLessonId) return;
     findEntry(progress.lastLessonId).then(setResumeEntry).catch(() => setResumeEntry(null));
   }, [progress.lastLessonId]);
+
+  /**
+   * The one button on the home screen must always do something.
+   *
+   * It used to read `catalog?.[0]` and, if that was undefined — still loading,
+   * or the catalogue could not be reached — quietly did nothing at all. A
+   * student tapping the biggest button in the app and getting no response has
+   * no way to tell that from a broken app. The syllabus is bundled, so there
+   * is always a topic to open even with no network: a class prepared on the
+   * spot is a better answer than a button that ignores them.
+   */
+  const firstTopic = useMemo(() => {
+    const klass = profile.klass;
+    const mine = SYLLABI.filter((s) => klass === null || s.klass === klass);
+    for (const syllabus of mine.length > 0 ? mine : SYLLABI) {
+      for (const chapter of syllabus.chapters) {
+        const topic = chapter.topics[0];
+        if (topic) return `/class/${syllabus.id}/${chapter.id}/${topic.id}`;
+      }
+    }
+    return '/syllabus';
+  }, [profile.klass]);
 
   const streak = computeStreak(progress);
 
@@ -88,6 +109,10 @@ export function Home() {
       </header>
 
       <main className="px-margin-mobile max-w-[1120px] mx-auto grid grid-cols-4 md:grid-cols-12 gap-gutter mt-4 pb-20">
+        {/* Said once, here, rather than on every screen a tap might lead to.
+            It disappears by itself when the connection comes back. */}
+        <OfflineNotice className="col-span-4 md:col-span-12" />
+
         {/* Hero: continue where you left off */}
         <section className="col-span-4 md:col-span-12 mb-stack-lg">
           <div className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-[0px_4px_20px_rgba(99,102,241,0.08)] hover:shadow-[0px_8px_30px_rgba(99,102,241,0.12)] transition-shadow relative overflow-hidden">
@@ -128,11 +153,9 @@ export function Home() {
 
               <button
                 onClick={() => {
-                  if (hero) navigate(`/lesson/${hero.id}`);
-                  else {
-                    const first = catalog?.[0];
-                    if (first) navigate(`/lesson/${first.id}`);
-                  }
+                  if (hero) return navigate(`/lesson/${hero.id}`);
+                  const first = catalog?.[0];
+                  navigate(first ? `/lesson/${first.id}` : firstTopic);
                 }}
                 className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-on-primary-fixed-variant hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
               >

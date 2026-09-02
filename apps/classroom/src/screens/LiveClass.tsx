@@ -12,6 +12,7 @@ import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
 import { studentLinesForPlanner } from '../lib/student';
+import { useOnline } from '../lib/online';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -108,6 +109,12 @@ export function LiveClassRoute() {
   const [prep, setPrep] = useState<LivePrep | null>(null);
   const [progress, setProgress] = useState<PrepProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Bumped by Try again. Preparing a class is the single likeliest thing in
+  // this app to fail — it is several model calls over whatever connection a
+  // student has — and "Back home" as the only way out of that made a bad
+  // minute into a lost lesson.
+  const [attempt, setAttempt] = useState(0);
+  const online = useOnline();
 
   const tts = useLessonVoice(null, prep?.lesson ?? null, { enabled: preferences.voice });
 
@@ -116,6 +123,7 @@ export function LiveClassRoute() {
       setError('There is no such topic.');
       return;
     }
+    setError(null);
     let cancelled = false;
 
     (async () => {
@@ -158,20 +166,40 @@ export function LiveClassRoute() {
     return () => {
       cancelled = true;
     };
-  }, [ask, navigate]);
+  }, [ask, navigate, attempt]);
 
   if (error) {
+    // "There is no such topic" is the one failure another go cannot fix.
+    const canRetry = ask !== null;
+
     return (
       <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
         <div className="text-center flex flex-col items-center gap-4">
-          <Icon name="error" className="text-4xl text-on-surface-variant" />
-          <p className="font-headline-md text-[18px] leading-6 text-on-surface">{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-stage-primary text-on-stage-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
-          >
-            Back home
-          </button>
+          <Icon name={online ? 'error' : 'wifi_off'} className="text-4xl text-on-surface-variant" />
+          <p className="font-headline-md text-[18px] leading-6 text-on-surface">
+            {online ? error : 'You are offline'}
+          </p>
+          <p className="font-body-md text-body-md text-on-surface-variant max-w-[42ch]">
+            {online
+              ? 'Preparing a class takes a few steps and one of them did not finish.'
+              : 'This class has to be made for you, and that needs a connection. Classes you have already opened still play.'}
+          </p>
+          <div className="flex items-center gap-3">
+            {canRetry && (
+              <button
+                onClick={() => setAttempt((n) => n + 1)}
+                className="bg-stage-primary text-on-stage-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
+              >
+                Try again
+              </button>
+            )}
+            <button
+              onClick={() => navigate('/')}
+              className="text-on-surface-variant font-label-md text-label-md px-5 py-3 rounded-full hover:bg-surface-container-high transition-colors"
+            >
+              Back home
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SYLLABI, topicsOf, type TopicRow } from '../lib/content';
+import { useAsync } from '../lib/async';
 import { progressStore, isCompleted } from '../stores/progress';
 import { useStore } from '../stores/localStore';
 import { Screen, EmptyState } from '../ui/Screen';
+import { AsyncSection, SkeletonList } from '../ui/States';
 import { Icon } from '../ui/Icon';
 
 /**
@@ -15,15 +16,16 @@ export function Chapter() {
   const { syllabusId, chapterId } = useParams<{ syllabusId: string; chapterId: string }>();
   const navigate = useNavigate();
   const progress = useStore(progressStore);
-  const [rows, setRows] = useState<TopicRow[] | null>(null);
-
   const syllabus = SYLLABI.find((s) => s.id === syllabusId) ?? null;
   const chapter = syllabus?.chapters.find((c) => c.id === chapterId) ?? null;
 
-  useEffect(() => {
-    if (!syllabus || !chapterId) return;
-    topicsOf(syllabus, chapterId).then(setRows).catch(() => setRows([]));
-  }, [syllabusId, chapterId]); // eslint-disable-line react-hooks/exhaustive-deps
+  // A failure here used to become setRows([]), so a chapter that could not be
+  // reached looked exactly like a chapter with no topics — and the student was
+  // shown a blank page with nothing to press.
+  const { state, retry } = useAsync<TopicRow[]>(
+    () => (syllabus && chapterId ? topicsOf(syllabus, chapterId) : Promise.resolve([])),
+    [syllabusId, chapterId],
+  );
 
   if (!syllabus || !chapter) {
     return (
@@ -39,8 +41,23 @@ export function Chapter() {
       subtitle={`Class ${syllabus.klass} · ${syllabus.subject}`}
       onBack={() => navigate('/')}
     >
+      <AsyncSection
+        state={state}
+        onRetry={retry}
+        loading={<SkeletonList rows={4} label={`Loading ${chapter.title}`} />}
+        errorTitle="We could not load this chapter"
+        isEmpty={(rows) => rows.length === 0}
+        empty={
+          <EmptyState
+            icon="menu_book"
+            title="No topics here yet"
+            body="This chapter has not been written up. Try another one from the syllabus."
+          />
+        }
+      >
+        {(rows) => (
       <div className="grid gap-3">
-        {(rows ?? []).map(({ path, topic, lessons }, i) => {
+        {rows.map(({ path, topic, lessons }, i) => {
           // A topic is done only when every lesson under it is — half a topic
           // is not a finished topic.
           const available = lessons.length > 0;
@@ -92,6 +109,8 @@ export function Chapter() {
           );
         })}
       </div>
+        )}
+      </AsyncSection>
     </Screen>
   );
 }

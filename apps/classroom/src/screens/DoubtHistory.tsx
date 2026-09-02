@@ -14,6 +14,7 @@ import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
 import { EmptyState, Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
+import { InlineError } from '../ui/States';
 
 /**
  * Every hand the student has raised, newest first.
@@ -28,6 +29,10 @@ export function DoubtHistory() {
   const navigate = useNavigate();
   const doubts = useStore(doubtLogStore);
   const [book, setBook] = useState<LabelBook>({});
+  // Rows stay readable without it — they fall back to their raw ids — but the
+  // student should be told that is what they are looking at.
+  const [labelsFailed, setLabelsFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   // The label lookup only has to be rebuilt when a NEW lesson appears in the
   // log, not on every doubt — hence a key over the distinct ids.
@@ -39,6 +44,7 @@ export function DoubtHistory() {
   useEffect(() => {
     if (lessonIds === '') return;
     let live = true;
+    setLabelsFailed(false);
 
     fetchCatalog()
       .then(async (catalog) => {
@@ -56,13 +62,15 @@ export function DoubtHistory() {
         }
       })
       .catch(() => {
-        // Offline, or no catalog: every row shows its raw id, which is honest.
+        // The rows still show their raw ids, which is honest; labelsFailed is
+        // what turns that from a mystery into a sentence.
+        if (live) setLabelsFailed(true);
       });
 
     return () => {
       live = false;
     };
-  }, [lessonIds]);
+  }, [lessonIds, attempt]);
 
   if (doubts.length === 0) {
     return (
@@ -90,6 +98,14 @@ export function DoubtHistory() {
 
   return (
     <Screen title="Your questions" onBack={() => navigate(-1)}>
+      {labelsFailed && (
+        <InlineError
+          message="We could not load which class each question came from."
+          onRetry={() => setAttempt((n) => n + 1)}
+          className="mb-stack-md"
+        />
+      )}
+
       {/* The summary: how much you asked, and what you kept asking about. */}
       <div className="flex items-center gap-4 bg-surface-container-lowest rounded-[24px] p-card-padding shadow-sm mb-stack-md">
         <div className="w-14 h-14 rounded-full bg-primary-fixed grid place-items-center shrink-0">

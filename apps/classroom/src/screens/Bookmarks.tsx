@@ -1,6 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatalog, type CatalogEntry } from '../lib/content';
+import { useAsync, dataOr } from '../lib/async';
+import { InlineError } from '../ui/States';
 import { bookmarksStore, toggleBookmark } from '../stores/bookmarks';
 import { isCompleted, progressStore } from '../stores/progress';
 import { useStore } from '../stores/localStore';
@@ -23,23 +25,11 @@ export function Bookmarks() {
   const navigate = useNavigate();
   const saved = useStore(bookmarksStore);
   const progress = useStore(progressStore);
-  const [catalog, setCatalog] = useState<CatalogEntry[]>([]);
-
-  useEffect(() => {
-    let live = true;
-
-    fetchCatalog()
-      .then((entries) => {
-        if (live) setCatalog(entries);
-      })
-      .catch(() => {
-        // Offline, or no catalog: every row shows its raw id, which is honest.
-      });
-
-    return () => {
-      live = false;
-    };
-  }, []);
+  // Offline, or no catalogue: every row shows its raw id and cannot be opened,
+  // which is honest — and now says why, instead of leaving a student to guess
+  // why the lesson they saved has turned into a slug they cannot tap.
+  const { state: catalogState, retry } = useAsync(fetchCatalog, []);
+  const catalog = dataOr<CatalogEntry[]>(catalogState, []);
 
   const rows = useMemo(
     () => [...saved].sort((a, b) => b.at.localeCompare(a.at)),
@@ -72,6 +62,14 @@ export function Bookmarks() {
       subtitle={`${rows.length} ${rows.length === 1 ? 'lesson' : 'lessons'}`}
       onBack={() => navigate(-1)}
     >
+      {catalogState.status === 'failed' && (
+        <InlineError
+          message="We could not load your lesson titles, so these show their ids and cannot be opened."
+          onRetry={retry}
+          className="mb-stack-md"
+        />
+      )}
+
       <div className="grid gap-2">
         {rows.map((mark) => {
           const entry = catalog.find((e) => e.id === mark.lessonId);

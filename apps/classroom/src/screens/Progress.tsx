@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, type CatalogEntry, subjectsAvailable } from '../lib/content';
+import { useAsync, dataOr } from '../lib/async';
+import { OfflineNotice, SkeletonList } from '../ui/States';
 import { progressStore, isCompleted, computeStreak } from '../stores/progress';
 import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
@@ -29,11 +30,12 @@ export function Progress() {
   const navigate = useNavigate();
   const progress = useStore(progressStore);
   const doubts = useStore(doubtLogStore);
-  const [catalog, setCatalog] = useState<CatalogEntry[]>([]);
-
-  useEffect(() => {
-    fetchCatalog().then(setCatalog).catch(() => setCatalog([]));
-  }, []);
+  // Per-subject progress is a percentage OF the catalogue, so an unreachable
+  // catalogue would silently report every subject at 0% — a student's year of
+  // work erased by a train tunnel. Loading and failed both hold the bars back
+  // rather than drawing a wrong number.
+  const { state: catalogState } = useAsync(fetchCatalog, []);
+  const catalog = dataOr<CatalogEntry[]>(catalogState, []);
 
   const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
   const streak = computeStreak(progress);
@@ -78,6 +80,8 @@ export function Progress() {
 
   return (
     <Screen title="Your progress">
+      <OfflineNotice className="mb-stack-md" />
+
       <div className="flex gap-3 mb-stack-md">
         {stat('check_circle', String(completed), 'lessons done', 'tile-green', 'ink-green')}
         {stat('local_fire_department', String(streak), 'day streak', 'tile-orange', 'ink-orange', '/streak')}
@@ -89,7 +93,11 @@ export function Progress() {
           The two numbers above are true and neither answers the question a
           student with more than one subject actually has, which is which one
           they are behind in. */}
-      {subjects.length > 0 && (
+      {catalogState.status === 'loading' ? (
+        <SkeletonList rows={3} label="Working out where you stand" className="h-[64px]" />
+      ) : null}
+
+      {catalogState.status === 'ready' && subjects.length > 0 && (
         <section className="mb-stack-md">
           <h2 className="font-label-sm text-label-sm uppercase tracking-wider text-outline mb-stack-sm">
             By subject

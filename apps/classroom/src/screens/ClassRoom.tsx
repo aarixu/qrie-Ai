@@ -26,6 +26,7 @@ import { settingsStore } from '../stores/settings';
 import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
+import { Skeleton } from '../ui/States';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
@@ -52,6 +53,9 @@ export function LessonRoute() {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // A lesson that would not load left "Back home" as the only way out, which
+  // turns one failed request into a class the student does not get to have.
+  const [attempt, setAttempt] = useState(0);
   const preferences = useStore(preferencesStore);
 
   // Resolved HERE rather than inside the classroom because usePlayer rebuilds
@@ -64,6 +68,7 @@ export function LessonRoute() {
 
   useEffect(() => {
     let cancelled = false;
+    setError(null);
     (async () => {
       const found = lessonId ? await findEntry(lessonId) : null;
       if (!found) throw new Error('This lesson does not exist.');
@@ -78,7 +83,7 @@ export function LessonRoute() {
     return () => {
       cancelled = true;
     };
-  }, [lessonId]);
+  }, [lessonId, attempt]);
 
   if (error) {
     return (
@@ -86,20 +91,46 @@ export function LessonRoute() {
         <div className="text-center flex flex-col items-center gap-4">
           <Icon name="error" className="text-4xl text-on-surface-variant" />
           <p className="font-headline-md text-[18px] leading-6 text-on-surface">{error}</p>
-          <button
-            onClick={() => navigate('/')}
-            className="bg-stage-primary text-on-stage-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
-          >
-            Back home
-          </button>
+          <div className="flex items-center gap-3">
+            {/* A lesson that does not exist is the one failure another go
+                cannot fix; anything else is worth pressing once more. */}
+            {error !== 'This lesson does not exist.' && (
+              <button
+                onClick={() => setAttempt((n) => n + 1)}
+                className="bg-stage-primary text-on-stage-primary rounded-full px-6 py-3 font-label-md text-label-md font-semibold border-b-4 border-stage-primary-edge active:border-b-0 active:translate-y-1 transition-all"
+              >
+                Try again
+              </button>
+            )}
+            <button
+              onClick={() => navigate('/')}
+              className="text-on-surface-variant font-label-md text-label-md px-5 py-3 rounded-full hover:bg-surface-container-high transition-colors"
+            >
+              Back home
+            </button>
+          </div>
         </div>
       </div>
     );
   }
   if (!lesson || !tts) {
     return (
-      <div className="bg-background min-h-screen grid place-items-center font-body-md">
-        <p className="font-body-md text-body-md text-on-surface-variant">Loading…</p>
+      <div
+        role="status"
+        aria-busy="true"
+        className="bg-background min-h-screen grid place-items-center font-body-md px-margin-mobile"
+      >
+        <div className="w-full max-w-[560px] flex flex-col items-center gap-4">
+          <span className="sr-only">Opening your class</span>
+          {/* The shape of the room, not a spinner: the board, then the strip of
+              controls under it. Nothing moves when the real thing arrives. */}
+          <Skeleton className="w-full aspect-video rounded-[24px]" />
+          <div className="flex items-center gap-3">
+            <Skeleton className="w-12 h-12 rounded-full" />
+            <Skeleton className="w-12 h-12 rounded-full" />
+            <Skeleton className="w-12 h-12 rounded-full" />
+          </div>
+        </div>
       </div>
     );
   }

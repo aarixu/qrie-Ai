@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, type CatalogEntry } from '../lib/content';
+import { useAsync, dataOr } from '../lib/async';
 import { Screen, EmptyState } from '../ui/Screen';
+import { ErrorState, SkeletonList } from '../ui/States';
 import { Icon } from '../ui/Icon';
 
 interface Hit {
@@ -19,11 +21,8 @@ interface Hit {
 export function Search() {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const [catalog, setCatalog] = useState<CatalogEntry[]>([]);
-
-  useEffect(() => {
-    fetchCatalog().then(setCatalog).catch(() => setCatalog([]));
-  }, []);
+  const { state, retry } = useAsync(fetchCatalog, []);
+  const catalog = dataOr<CatalogEntry[]>(state, []);
 
   const hits = useMemo<Hit[]>(() => {
     const q = query.trim().toLowerCase();
@@ -78,6 +77,17 @@ export function Search() {
 
       {query.trim().length < 2 ? (
         <EmptyState icon="search" title="What are you looking for?" body="Search by topic, chapter or subject." />
+      ) : state.status === 'loading' ? (
+        <SkeletonList rows={3} label="Searching" className="h-[76px]" />
+      ) : state.status === 'failed' && hits.length === 0 ? (
+        // The syllabus is bundled, so topics are still searchable with no
+        // network at all. Nothing matching AND no catalogue is the one case
+        // where "Nothing found" would be a lie: we did not finish looking.
+        <ErrorState
+          title="We could not search your lessons"
+          body="The topics below are still searchable, but the lesson list did not load."
+          onRetry={retry}
+        />
       ) : hits.length === 0 ? (
         <EmptyState icon="search_off" title="Nothing found" body={`No lessons or topics match "${query.trim()}".`} />
       ) : (

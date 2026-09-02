@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { SubjectSyllabus } from '@ai-tutor/syllabus';
 import { SYLLABI, fetchCatalog, type CatalogEntry } from '../lib/content';
+import { useAsync, dataOr } from '../lib/async';
+import { InlineError } from '../ui/States';
 import { progressStore, isCompleted } from '../stores/progress';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
@@ -49,13 +51,14 @@ export function Syllabus() {
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
   const progress = useStore(progressStore);
-  const [catalog, setCatalog] = useState<CatalogEntry[] | null>(null);
-
-  useEffect(() => {
-    fetchCatalog()
-      .then(setCatalog)
-      .catch(() => setCatalog([]));
-  }, []);
+  /**
+   * The syllabus itself is bundled, so this screen is fully readable with no
+   * network — the catalogue only decides how many chapters show a "done"
+   * count. A failure therefore degrades rather than blocks, and says so in a
+   * line instead of quietly reporting every chapter as untaught.
+   */
+  const { state: catalogState, retry } = useAsync(fetchCatalog, []);
+  const catalog = dataOr<CatalogEntry[] | null>(catalogState, null);
 
   // Settings holds the class every path has ever written; the profile copy is
   // the newer one and can lag. Same precedence as the Settings screen.
@@ -114,6 +117,14 @@ export function Syllabus() {
 
   return (
     <Screen title="Syllabus" subtitle={`Class ${klass} · your full course`}>
+      {catalogState.status === 'failed' && (
+        <InlineError
+          message="We could not load which classes are recorded, so the counts below may read low."
+          onRetry={retry}
+          className="mb-stack-md"
+        />
+      )}
+
       {mine.length === 0 ? (
         <EmptyState
           icon="menu_book"

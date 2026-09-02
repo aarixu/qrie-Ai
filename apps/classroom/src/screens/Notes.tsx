@@ -7,6 +7,7 @@ import { editNote, notesStore, removeNote, type Note } from '../stores/notes';
 import { useStore } from '../stores/localStore';
 import { EmptyState, Screen } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
+import { InlineError } from '../ui/States';
 
 /**
  * Everything the student wrote down, gathered under the class it came from.
@@ -44,6 +45,10 @@ export function Notes() {
   const navigate = useNavigate();
   const notes = useStore(notesStore);
   const [book, setBook] = useState<LabelBook>({});
+  // Rows stay readable without it — they fall back to their raw ids — but the
+  // student should be told that is what they are looking at.
+  const [labelsFailed, setLabelsFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   /** The note being rewritten, held by its stamp, and the text as it stands. */
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
@@ -58,6 +63,7 @@ export function Notes() {
   useEffect(() => {
     if (lessonIds === '') return;
     let live = true;
+    setLabelsFailed(false);
 
     fetchCatalog()
       .then(async (catalog) => {
@@ -75,13 +81,15 @@ export function Notes() {
         }
       })
       .catch(() => {
-        // Offline, or no catalog: every note shows its raw ids, which is honest.
+        // The rows still show their raw ids, which is honest; labelsFailed is
+        // what turns that from a mystery into a sentence.
+        if (live) setLabelsFailed(true);
       });
 
     return () => {
       live = false;
     };
-  }, [lessonIds]);
+  }, [lessonIds, attempt]);
 
   const groups = useMemo(() => groupByLesson(notes), [notes]);
 
@@ -113,6 +121,14 @@ export function Notes() {
       subtitle={`${notes.length} ${notes.length === 1 ? 'note' : 'notes'}`}
       onBack={() => navigate(-1)}
     >
+      {labelsFailed && (
+        <InlineError
+          message="We could not load which class each note came from."
+          onRetry={() => setAttempt((n) => n + 1)}
+          className="mb-stack-md"
+        />
+      )}
+
       {groups.map((group) => {
         const labels = book[group.lessonId];
         // Only offer the way back into a lesson that still exists.
