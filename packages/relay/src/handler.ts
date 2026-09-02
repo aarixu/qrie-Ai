@@ -5,9 +5,9 @@ import {
   speechRelay,
   type RelayRequest,
   type RelayResponse,
-} from './relays';
-import { admit, type Gate, type RelayName } from './gate';
-import { mintTicket, TICKET_TTL_MS } from './ticket';
+} from './relays.ts';
+import { admit, type Gate, type RelayName } from './gate.ts';
+import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 
 /**
  * ONE ROUTER, RUN BY BOTH SIDES.

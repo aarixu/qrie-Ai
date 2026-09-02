@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { Readable } from 'node:stream';
-import type { RelayRequest, RelayResponse } from './relays';
+import type { RelayRequest, RelayResponse } from './relays.ts';
 
 /**
  * THE NODE ADAPTER — the only part that knows what a server looks like.

@@ -1,4 +1,4 @@
-import type { RelayRequest, RelayResponse } from './relays';
+import type { RelayRequest, RelayResponse } from './relays.ts';
 
 /**
  * THE WEB-STANDARD ADAPTER — Deno, Workers, and anything else that speaks

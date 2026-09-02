@@ -22,7 +22,7 @@ export {
   type RelayResponse,
   type SavedClass,
   type UpstreamCall,
-} from './relays';
+} from './relays.ts';
 
 export {
   bearerFrom,
@@ -31,7 +31,7 @@ export {
   type Verified,
   type Verifier,
   type VerifyResult,
-} from './auth';
+} from './auth.ts';
 
 export {
   REQUESTS_PER_MINUTE,
@@ -45,16 +45,16 @@ export {
   type Gate,
   type Ledger,
   type RelayName,
-} from './gate';
+} from './gate.ts';
 
-export { TICKET_TTL_MS, mintTicket, readTicket, type Ticket } from './ticket';
+export { TICKET_TTL_MS, mintTicket, readTicket, type Ticket } from './ticket.ts';
 
-export { handleRelay, handleTicket, relayFor, type HandlerDeps } from './handler';
+export { handleRelay, handleTicket, relayFor, type HandlerDeps } from './handler.ts';
 
-export { readBody, sendRelayResponse, toRelayRequest } from './node';
+export { readBody, sendRelayResponse, toRelayRequest } from './node.ts';
 
 export {
   toRelayRequest as toRelayRequestFromWeb,
   toResponse,
   transcribeViaFormData,
-} from './web';
+} from './web.ts';

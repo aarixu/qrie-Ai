@@ -1,6 +1,6 @@
-import { fail, type RelayRequest, type RelayResponse } from './relays';
-import type { Verifier } from './auth';
-import { readTicket } from './ticket';
+import { fail, type RelayRequest, type RelayResponse } from './relays.ts';
+import type { Verifier } from './auth.ts';
+import { readTicket } from './ticket.ts';
 
 /**
  * THE LOCK AND THE METER.

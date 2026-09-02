@@ -29,3 +29,6 @@ clone-source/
 
 # Throwaway patch scripts and one-off repairs.
 .scratch/
+
+# The .env file relay-secrets.mjs writes and deletes. Never committed.
+.relay-secrets.*.env

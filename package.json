@@ -18,7 +18,11 @@
     "style-card": "node tools/teacher-clone/src/style-card.ts",
     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",
     "app:android": "npm run app:sync && npm run --workspace @ai-tutor/classroom cap:android",
-    "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets"
+    "app:icons": "node tools/bin/make-app-icons.mjs && npm run --workspace @ai-tutor/classroom cap:assets",
+    "relay:login": "supabase login",
+    "relay:link": "supabase link --project-ref ueemqirxyrltdmqgnidy",
+    "relay:secrets": "node tools/bin/relay-secrets.mjs",
+    "relay:deploy": "npm run relay:secrets && supabase db push && supabase functions deploy relay --no-verify-jwt"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.522",
@@ -28,6 +32,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.185.4",
     "jsdom": "^26.1.0",
+    "supabase": "^2.116.0",
     "typescript": "~6.0.2",
     "vitest": "^4.1.11"
   }
