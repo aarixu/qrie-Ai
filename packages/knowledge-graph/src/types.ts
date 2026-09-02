@@ -28,7 +28,28 @@ export interface LearningNode {
   prerequisites: string[];
   /** 1 (foundational) .. 5 (advanced). Orders study plans and probe choice. */
   difficulty: number;
-  /** The lesson that teaches this node, when one exists. */
+  /**
+   * The syllabus topic this outcome belongs to: "<syllabusId>/<chapterId>/<topicId>".
+   *
+   * THE join key of the product — the lesson catalogue, the chapter screen and
+   * the live classroom all address content by it. A node that carries one can
+   * always be taught: the topic's recorded lesson if there is one, and a class
+   * prepared on the spot if there is not.
+   *
+   * It is NOT optional by design, only by history: maps generated before this
+   * field existed have nodes without it, and those degrade to their chapter.
+   */
+  topicRef?: string;
+  /**
+   * An exact lesson id from content/index.json, when the map names one.
+   *
+   * Only ever a real catalogue id. It used to be free-form — the generator's
+   * prompt called it "optional lesson id that teaches this" and the model
+   * invented topic-ish slugs — and 175 of 681 committed nodes ended up with a
+   * "Start" button that navigated to a lesson that has never existed. Prefer
+   * topicRef; reach for this only to name one lesson among several under the
+   * same topic.
+   */
   lessonRef?: string;
 }
 
@@ -113,6 +134,8 @@ export interface PlanStep {
   nodeId: string;
   /** Plain-language reason shown to the student. */
   reason: string;
+  /** Copied from the node, so a stored plan survives without the map. */
+  topicRef?: string;
   lessonRef?: string;
 }
 

@@ -7,6 +7,7 @@ import type { ClassLinks } from '../../../packages/knowledge-graph/src/types.ts'
 import { createAdapterFromEnv, loadEnvFiles, type LlmAdapter } from './llm.ts';
 import { generateNodes, generateProbes, mergeIntoGraph } from './generate.ts';
 import { foundationOf, generateLinks } from './link.ts';
+import { assignTopics } from './topics.ts';
 
 /**
  * Grow the Learning Outcome Map.
@@ -17,6 +18,9 @@ import { foundationOf, generateLinks } from './link.ts';
  *
  * The whole curriculum — every syllabus, every chapter, probes included:
  *   node tools/gen-graph/src/cli.ts --syllabus all --chapter all --probes
+ *
+ * File every node under the topic that teaches it (do this after generating):
+ *   node tools/gen-graph/src/cli.ts --syllabus all --map-topics
  *
  * Generation EXTENDS its out-file rather than replacing it, and in all-mode a
  * chapter that already holds nodes is SKIPPED — so the run is resumable: kill
@@ -43,6 +47,9 @@ Usage:
   --probes     also write <out-basename>.probes.json
   --probes-only  skip node generation; write probes for nodes in --out that lack one
   --link-classes  connect each syllabus to the class below it; writes <out-basename>.links.json
+  --map-topics file every node under the syllabus topic that teaches it, so a
+               study plan step has somewhere to go; also drops lessonRefs that
+               name no lesson in content/index.json
   --dry-run    print the prompts and write nothing
 
 Env (read from .env.local at the repo root, or the shell):
@@ -240,6 +247,150 @@ async function linkSyllabus(
   return tally;
 }
 
+/**
+ * THE TOPIC PASS — give every node a topicRef, and take away every lessonRef
+ * that names nothing.
+ *
+ * Both halves repair the same defect. `lessonRef` was documented to the
+ * generator as "optional lesson id that teaches this" and it invented slugs;
+ * the study plan then sent students to /lesson/<slug>, which is an error
+ * screen. A topicRef cannot be invented — it is checked against the syllabus
+ * here and again in the committed-data tests.
+ *
+ * Resumable at chapter granularity like every other pass: a chapter whose
+ * nodes all carry a valid topicRef is skipped, and each chapter lands on disk
+ * as it finishes.
+ */
+async function mapTopics(
+  syllabus: SubjectSyllabus,
+  adapter: LlmAdapter,
+  opts: Pick<RunOptions, 'out' | 'dryRun' | 'chapterArg'>,
+): Promise<RunTally> {
+  const tally: RunTally = { added: 0, probesAdded: 0, failed: 0 };
+  const graph = readGraph(opts.out);
+  if (graph.nodes.length === 0) {
+    console.log('  no nodes yet — generate the map before filing it.');
+    return tally;
+  }
+
+  // The catalogue is the only authority on what a lesson id is. A map that
+  // cannot see it is exactly how 175 dangling refs got committed.
+  const catalogFile = path.resolve(process.cwd(), 'content/index.json');
+  const catalog = fs.existsSync(catalogFile)
+    ? (JSON.parse(fs.readFileSync(catalogFile, 'utf8')) as {
+        lessons: { id: string; topicRef?: string }[];
+      }).lessons
+    : [];
+  const known = new Set(catalog.map((l) => l.id));
+  const lessonTopic = new Map(catalog.filter((l) => l.topicRef).map((l) => [l.id, l.topicRef!]));
+
+  const validRef = (node: (typeof graph.nodes)[number]): boolean => {
+    if (!node.topicRef) return false;
+    const [syllabusId, chapterId, topicId] = node.topicRef.split('/');
+    if (syllabusId !== syllabus.id) return false;
+    const chapter = syllabus.chapters.find((c) => c.id === chapterId);
+    return Boolean(chapter?.topics.some((t) => t.id === topicId));
+  };
+
+  // The GRAPH's chapters, in the order the file holds them: a map may carry a
+  // hand-authored chapter the syllabus has not caught up with, and that node
+  // still deserves to be told it has nowhere to go.
+  const chapterIds = [...new Set(graph.nodes.map((n) => n.chapter))].filter(
+    (id) => opts.chapterArg === 'all' || opts.chapterArg === undefined || id === opts.chapterArg,
+  );
+
+  let dropped = 0;
+  for (const node of graph.nodes) {
+    if (node.lessonRef && !known.has(node.lessonRef)) {
+      delete node.lessonRef;
+      dropped += 1;
+    }
+  }
+  if (dropped > 0) console.log(`  dropped ${dropped} lessonRef(s) naming no lesson in the catalogue.`);
+
+  for (const chapterId of chapterIds) {
+    const nodes = graph.nodes.filter((n) => n.chapter === chapterId);
+    const todo = nodes.filter((n) => !validRef(n));
+    if (todo.length === 0) {
+      console.log(`─── ${chapterId} — all ${nodes.length} filed, skipped`);
+      continue;
+    }
+
+    const chapter = syllabus.chapters.find((c) => c.id === chapterId);
+    if (!chapter) {
+      tally.failed += 1;
+      console.error(
+        `  ✗ ${chapterId}: ${todo.length} node(s) sit in a chapter the syllabus does not have — fix the map's chapter id or write the chapter.`,
+      );
+      continue;
+    }
+
+    console.log(`─── ${chapterId} (${todo.length} of ${nodes.length} to file) ───`);
+    if (opts.dryRun) continue;
+
+    let result;
+    try {
+      result = await assignTopics(todo, chapter, adapter, {
+        syllabusId: syllabus.id,
+        klass: syllabus.klass,
+        subject: syllabus.subject,
+      });
+    } catch (error) {
+      tally.failed += 1;
+      console.error(`  ✗ ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
+    if (!result.ok) {
+      tally.failed += 1;
+      for (const e of result.errors.slice(0, 5)) console.error(`  ✗ ${e}`);
+      continue;
+    }
+
+    for (const node of todo) {
+      const ref = result.value.get(node.id);
+      if (ref) node.topicRef = ref;
+    }
+    tally.added += result.value.size;
+
+    // Per chapter, not per run: a quota death must not cost what is already done.
+    fs.writeFileSync(opts.out, `${JSON.stringify(graph, null, 2)}\n`);
+    console.log(`  ✓ ${result.value.size} filed`);
+  }
+
+  /**
+   * A lessonRef that teaches a DIFFERENT topic than the node is filed under.
+   *
+   * Naming one lesson among several under the SAME topic is the only honest
+   * use of the field. Naming one from elsewhere sends the student to the wrong
+   * class, and it is a mistake nothing could see before nodes had a topic:
+   * five nodes about tracing human digestion pointed at the lesson on
+   * AUTOTROPHIC nutrition, which is photosynthesis. The topic is the checked
+   * value and the lessonRef is the guess, so the guess goes.
+   */
+  let disagreed = 0;
+  for (const node of graph.nodes) {
+    if (!node.lessonRef || !node.topicRef) continue;
+    const taught = lessonTopic.get(node.lessonRef);
+    if (taught && taught !== node.topicRef) {
+      delete node.lessonRef;
+      disagreed += 1;
+    }
+  }
+  if (disagreed > 0) {
+    console.log(`  dropped ${disagreed} lessonRef(s) naming a lesson for a different topic.`);
+  }
+
+  if ((dropped > 0 || disagreed > 0) && !opts.dryRun) {
+    fs.writeFileSync(opts.out, `${JSON.stringify(graph, null, 2)}\n`);
+  }
+
+  const unfiled = graph.nodes.filter((n) => !validRef(n)).length;
+  console.log(
+    `  ${path.relative(process.cwd(), opts.out)}: ${graph.nodes.length - unfiled}/${graph.nodes.length} nodes filed under a topic.`,
+  );
+  return tally;
+}
+
 async function runSyllabus(
   syllabus: SubjectSyllabus,
   adapter: LlmAdapter,
@@ -408,6 +559,7 @@ async function main(): Promise<void> {
   const wantProbes = argv.includes('--probes');
   const probesOnly = argv.includes('--probes-only');
   const linkClasses = argv.includes('--link-classes');
+  const wantTopics = argv.includes('--map-topics');
   const targetCount = Number(flag(argv, '--count') ?? DEFAULT_COUNT);
 
   const availableIds = fs
@@ -416,8 +568,8 @@ async function main(): Promise<void> {
     .map((f) => f.replace('.json', ''));
 
   if (!syllabusArg) usage(`Missing --syllabus. Available: ${availableIds.join(', ')}, all`);
-  if (!chapterArg && !linkClasses) usage('Missing --chapter (or "all").');
-  if (syllabusArg === 'all' && !linkClasses && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
+  if (!chapterArg && !linkClasses && !wantTopics) usage('Missing --chapter (or "all").');
+  if (syllabusArg === 'all' && !linkClasses && !wantTopics && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
   if (syllabusArg === 'all' && outArg) usage('--syllabus all derives each out-file; drop --out.');
 
   const syllabusIds = syllabusArg === 'all' ? availableIds : [syllabusArg];
@@ -434,7 +586,9 @@ async function main(): Promise<void> {
 
     console.log(`\n════ ${syllabus.subject} — Class ${syllabus.klass} (${id}) ════`);
     const out = path.resolve(process.cwd(), outArg ?? path.join(GRAPH_DIR, `${id}.json`));
-    const tally = linkClasses
+    const tally = wantTopics
+      ? await mapTopics(syllabus, adapter, { out, dryRun, chapterArg: chapterArg ?? 'all' })
+      : linkClasses
       ? await linkSyllabus(syllabus, adapter, { out, dryRun })
       : await runSyllabus(syllabus, adapter, {
           chapterArg: chapterArg!,
@@ -455,7 +609,9 @@ async function main(): Promise<void> {
   }
 
   console.log(
-    `\n${total.added} nodes added, ${total.probesAdded} probes added, ${total.failed} failure(s).`,
+    wantTopics
+      ? `\n${total.added} node(s) filed under a topic, ${total.failed} failure(s).`
+      : `\n${total.added} nodes added, ${total.probesAdded} probes added, ${total.failed} failure(s).`,
   );
   if (total.failed > 0) process.exitCode = 1;
 }

@@ -43,7 +43,13 @@ export function LessonComplete() {
   }, [lessonId]);
 
   const streak = computeStreak(progress);
-  const hasQuiz = useMemo(() => (lessonId ? buildQuiz(lessonId) !== null : false), [lessonId]);
+  // entry?.topicRef arrives with the catalogue, so this can flip from false to
+  // true a beat after the screen paints. That is the honest order: a practice
+  // button that appears is better than one that promises an empty quiz.
+  const hasQuiz = useMemo(
+    () => (lessonId ? buildQuiz(lessonId, { topicRef: entry?.topicRef }) !== null : false),
+    [lessonId, entry?.topicRef],
+  );
   const best = lessonId ? bestScore(quizHistory, lessonId) : null;
   const practiceLeads = hasQuiz && best === null;
   const autoplaying = preferences.autoplayNext && next !== null && !stayHere;

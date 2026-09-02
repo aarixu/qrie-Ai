@@ -56,6 +56,18 @@ export function loadGraph(json: unknown): KnowledgeGraph {
     if (!Array.isArray(raw.prerequisites) || !raw.prerequisites.every(isStr)) {
       fail(where, 'prerequisites must be an array of node ids');
     }
+    // Shape only. Whether the topic actually EXISTS is checked against the
+    // syllabus in the data tests, which are the only place both files are in
+    // hand — but a ref of the wrong shape can never resolve anywhere, and
+    // catching that here means the map, not the classroom, reports it.
+    if (raw.topicRef !== undefined) {
+      if (!isStr(raw.topicRef) || raw.topicRef.split('/').length !== 3) {
+        fail(where, 'topicRef must be "<syllabusId>/<chapterId>/<topicId>"');
+      }
+    }
+    if (raw.lessonRef !== undefined && !isStr(raw.lessonRef)) {
+      fail(where, 'lessonRef must be a non-empty lesson id');
+    }
     byId.set(raw.id, raw as unknown as LearningNode);
   });
 

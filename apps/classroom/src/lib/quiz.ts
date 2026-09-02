@@ -70,6 +70,15 @@ export interface QuizOptions {
   limit?: number;
   /** Below this many available questions there is no quiz at all. */
   minimum?: number;
+  /**
+   * The syllabus topic this lesson teaches, from the catalogue entry.
+   *
+   * Without it a lesson can only be quizzed on nodes the map names it in, and
+   * the map names a lesson for barely a third of its nodes — so a class
+   * prepared live, which the map has never heard of, would end with no practice
+   * at all. With it, the topic supplies the questions.
+   */
+  topicRef?: string;
 }
 
 /**
@@ -126,15 +135,31 @@ function load(): Catalogue {
  * There is no Math.random in this file, deliberately.
  */
 export function buildQuiz(lessonRef: string, options: QuizOptions = {}): QuizQuestion[] | null {
-  const { limit = DEFAULT_LENGTH, minimum = MIN_QUESTIONS } = options;
+  const { limit = DEFAULT_LENGTH, minimum = MIN_QUESTIONS, topicRef } = options;
   const { node, probes } = load();
+
+  /**
+   * Does this lesson teach that node?
+   *
+   * Two ways, and the precise one wins. The map may name THIS lesson on a
+   * node — that is the only way two lessons under one topic stay apart, and
+   * NCERT's "Transportation in Human Beings" really is taught here as the
+   * heart and the blood separately. Failing that, the node belongs to this
+   * lesson's topic AND no other lesson has claimed it: a sibling's questions
+   * are questions about a class this student has not had.
+   */
+  const teaches = (learningNode: LearningNode): boolean => {
+    if (learningNode.lessonRef === lessonRef) return true;
+    if (learningNode.lessonRef !== undefined) return false;
+    return topicRef !== undefined && learningNode.topicRef === topicRef;
+  };
 
   const available: QuizQuestion[] = [];
   for (const probe of probes) {
     const learningNode = node(probe.nodeId);
     // A probe whose node this lesson does not teach is a question about
     // something the student was never shown.
-    if (!learningNode || learningNode.lessonRef !== lessonRef) continue;
+    if (!learningNode || !teaches(learningNode)) continue;
     available.push({
       id: probe.id,
       nodeId: probe.nodeId,

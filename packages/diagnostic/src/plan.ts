@@ -143,6 +143,11 @@ function toSteps(chosen: string[], index: GraphIndex, inPlan: ReadonlySet<string
     return {
       nodeId: id,
       reason: reasonFor(id, index, inPlan),
+      // Both carried, because a plan is STORED: a student's saved result has to
+      // stay resolvable after the map is regenerated under it, and the topic is
+      // what survives — an outcome moves between nodes far more often than a
+      // chapter of the syllabus moves.
+      topicRef: node?.topicRef,
       lessonRef: node?.lessonRef,
     };
   });

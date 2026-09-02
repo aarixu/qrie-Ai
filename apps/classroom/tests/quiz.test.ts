@@ -49,6 +49,8 @@ const answersWithCorrect = (quiz: QuizQuestion[], correctAt: number[]): QuizAnsw
 
 describe('buildQuiz', () => {
   it('asks only about nodes the lesson teaches', () => {
+    // LESSON is one the map names on its nodes, so this exercises the precise
+    // join. The topic fallback is covered separately below.
     const quiz = quizFor(LESSON);
 
     expect(quiz.length).toBeGreaterThanOrEqual(MIN_QUESTIONS);
@@ -84,11 +86,57 @@ describe('buildQuiz', () => {
     }
   });
 
-  it('caps a long lesson at the default length', () => {
-    const available = [...NODES.values()].filter((n) => n.lessonRef === LESSON).length;
+  it('never asks more than the default length', () => {
+    expect(quizFor(LESSON).length).toBeLessThanOrEqual(DEFAULT_LENGTH);
+  });
 
-    expect(available).toBeGreaterThan(DEFAULT_LENGTH);
-    expect(quizFor(LESSON)).toHaveLength(DEFAULT_LENGTH);
+  it('caps at the limit it is given, keeping the easiest questions', () => {
+    const full = quizFor(LESSON);
+    const capped = buildQuiz(LESSON, { limit: 3 });
+
+    expect(full.length).toBeGreaterThan(3);
+    expect(capped?.map((q) => q.id)).toEqual(full.slice(0, 3).map((q) => q.id));
+  });
+
+  it('falls back to the lesson topic when the map names no lesson on a node', () => {
+    // Nutrition in Human Beings is taught by no recorded lesson, so none of its
+    // five nodes carries a lessonRef. A class prepared live for that topic must
+    // still end with practice — the map has never heard of it by name.
+    const topicRef = 'class10-science/life-processes/nutrition-in-human-beings';
+    const byTopic = [...NODES.values()].filter((n) => n.topicRef === topicRef);
+
+    expect(byTopic.length).toBeGreaterThanOrEqual(MIN_QUESTIONS);
+    expect(byTopic.every((n) => n.lessonRef === undefined)).toBe(true);
+
+    const quiz = buildQuiz('a-class-made-just-now', { topicRef });
+
+    expect(quiz).not.toBeNull();
+    for (const question of quiz!) expect(NODES.get(question.nodeId)?.topicRef).toBe(topicRef);
+  });
+
+  it('never borrows questions another lesson under the same topic has claimed', () => {
+    // NCERT's single "Transportation in Human Beings" is taught here as two
+    // lessons, the heart and the blood, and every node under it is claimed by
+    // one of them. A third lesson arriving on that topic inherits none of it.
+    const topicRef = 'class10-science/life-processes/transportation-in-human-beings';
+    const claimed = [...NODES.values()].filter((n) => n.topicRef === topicRef);
+
+    expect(claimed.length).toBeGreaterThan(0);
+    expect(claimed.every((n) => n.lessonRef !== undefined)).toBe(true);
+    expect(buildQuiz('some-third-lesson', { topicRef })).toBeNull();
+  });
+
+  it('keeps two lessons under one topic apart', () => {
+    const topicRef = 'class10-science/life-processes/transportation-in-human-beings';
+    const blood = buildQuiz('class10-blood', { topicRef })!;
+    const heart = buildQuiz('class10-science-life-processes-transportation-in-human-beings', {
+      topicRef,
+    })!;
+
+    expect(blood.length).toBeGreaterThan(0);
+    expect(heart.length).toBeGreaterThan(0);
+    const shared = blood.filter((q) => heart.some((h) => h.id === q.id));
+    expect(shared).toEqual([]);
   });
 
   it('returns null for a lesson with no probes at all', () => {

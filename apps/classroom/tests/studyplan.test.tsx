@@ -1,3 +1,5 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import {
@@ -9,6 +11,8 @@ import {
 } from '@ai-tutor/diagnostic';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticData } from '../src/lib/diagnosticData';
+import { destinationFor, type Destination } from '../src/lib/destination';
+import { SYLLABI, type CatalogEntry } from '../src/lib/content';
 import { StudyPlan } from '../src/screens/StudyPlan';
 
 /**
@@ -61,8 +65,37 @@ const titleOf = (nodeId: string): string => {
 
 const noop = () => {};
 
-const render = (result: DiagnosticResult): string =>
-  renderToString(<StudyPlan result={result} index={index} onStartLesson={noop} onHome={noop} />);
+/**
+ * The real catalogue, read the same way the app reads it.
+ *
+ * The point of this screen is now that every step leads somewhere, and "where"
+ * is a join across the map, the syllabus and what has actually been recorded.
+ * A stubbed catalogue would only prove that a stub renders.
+ */
+const CATALOG: CatalogEntry[] = JSON.parse(
+  fs.readFileSync(path.resolve(process.cwd(), 'content/index.json'), 'utf8'),
+).lessons;
+
+const render = (result: DiagnosticResult, catalog: readonly CatalogEntry[] | null = CATALOG): string =>
+  renderToString(
+    <StudyPlan result={result} index={index} catalog={catalog} onOpen={noop} onHome={noop} />,
+  );
+
+/** Where a step leads, resolved exactly as the screen resolves it. */
+const destinationOf = (step: { nodeId: string }): Destination => {
+  const node = index.node(step.nodeId);
+  return destinationFor(
+    {
+      topicRef: node?.topicRef,
+      lessonRef: node?.lessonRef,
+      klass: node?.klass,
+      subject: node?.subject,
+      chapter: node?.chapter,
+    },
+    CATALOG,
+    SYLLABI,
+  );
+};
 
 /** React escapes on the way out; assertions read better against the source copy. */
 const decode = (html: string): string =>
@@ -75,10 +108,22 @@ const decode = (html: string): string =>
 const countOf = (html: string, needle: string): number => html.split(needle).length - 1;
 
 describe('the engine gives this screen something worth testing', () => {
-  it('produces a plan holding both a startable step and one with no lesson yet', () => {
+  it('produces a plan holding both a recorded step and one taught live', () => {
     expect(mixed.plan.length).toBeGreaterThan(1);
-    expect(mixed.plan.some((s) => s.lessonRef !== undefined)).toBe(true);
-    expect(mixed.plan.some((s) => s.lessonRef === undefined)).toBe(true);
+    const kinds = new Set(mixed.plan.map((s) => destinationOf(s).kind));
+    expect(kinds.has('lesson')).toBe(true);
+    expect(kinds.size).toBeGreaterThan(1);
+  });
+
+  it('carries the topic on every step, which is what makes one teachable', () => {
+    // The regression that started all this: the plan carried a lessonRef the
+    // catalogue had never heard of, and nothing carried the topic at all.
+    for (const step of mixed.plan) expect(step.topicRef ?? '').not.toBe('');
+  });
+
+  it('leads every step somewhere', () => {
+    const nowhere = mixed.plan.filter((s) => destinationOf(s).kind === 'none');
+    expect(nowhere.map((s) => s.nodeId)).toEqual([]);
   });
 
   it('gives a student who answers everything correctly no plan at all', () => {
@@ -115,8 +160,11 @@ describe('StudyPlan: the plan', () => {
     for (const step of mixed.plan) expect(html).toContain(step.reason);
   });
 
-  it('offers Start on exactly the steps that have a lesson', () => {
-    const startable = mixed.plan.filter((s) => s.lessonRef !== undefined);
+  it('offers Start on every step that leads to a class', () => {
+    const startable = mixed.plan.filter((s) => {
+      const kind = destinationOf(s).kind;
+      return kind === 'lesson' || kind === 'live';
+    });
 
     expect(startable.length).toBeGreaterThan(0);
     expect(countOf(html, '>Start</button>')).toBe(startable.length);
@@ -125,13 +173,19 @@ describe('StudyPlan: the plan', () => {
     }
   });
 
-  it('marks the steps with no lesson as coming soon, rather than hiding them', () => {
-    const pending = mixed.plan.filter((s) => s.lessonRef === undefined);
+  it('says Start whether the class is recorded or made on the spot', () => {
+    // The recording is a cache of the first live class, not a lesser product.
+    // The moment that difference reaches a button it stops being one.
+    const live = mixed.plan.filter((s) => destinationOf(s).kind === 'live');
 
-    expect(pending.length).toBeGreaterThan(0);
-    expect(countOf(html, 'Coming soon')).toBe(pending.length);
-    // The gap is real even without a lesson, so it keeps its place in the list.
-    for (const step of pending) expect(html).toContain(titleOf(step.nodeId));
+    expect(live.length).toBeGreaterThan(0);
+    for (const step of live) {
+      expect(html).toContain(`aria-label="Start ${titleOf(step.nodeId)}"`);
+    }
+  });
+
+  it('shows nothing as coming soon, because every step now leads somewhere', () => {
+    expect(html).not.toContain('Coming soon');
   });
 
   it('ends with the way back home', () => {
@@ -177,7 +231,52 @@ describe('StudyPlan: a step whose node has left the map', () => {
     expect(html.toLowerCase()).not.toContain('undefined');
   });
 
-  it('treats a step with no lesson as coming soon even when the node is gone', () => {
+  it('says coming soon when nothing about the step resolves any more', () => {
     expect(decode(render(stale))).toContain('Coming soon');
+  });
+
+  it('still leads somewhere when the vanished step kept its topic', () => {
+    // A stored plan outlives the map it was built from. Its own copy of the
+    // topic is the fallback for exactly that, and it is why the plan carries
+    // one at all.
+    const remembered: DiagnosticResult = {
+      ...mixed,
+      plan: [
+        {
+          nodeId: 'sci10-chem-balance-equation-removed',
+          reason: 'Worth a look.',
+          topicRef: 'class10-science/life-processes/respiration',
+        },
+      ],
+    };
+
+    const html = decode(render(remembered));
+
+    expect(html).toContain('>Start</button>');
+    expect(html).not.toContain('Coming soon');
+  });
+});
+
+describe('StudyPlan: before the catalogue arrives', () => {
+  const html = decode(render(mixed, null));
+
+  it('shows the plan itself, which needs nothing fetched', () => {
+    for (const step of mixed.plan) expect(html).toContain(titleOf(step.nodeId));
+  });
+
+  it('commits to no answer it does not have yet', () => {
+    expect(html).not.toContain('>Start</button>');
+    expect(html).not.toContain('Coming soon');
+  });
+});
+
+describe('StudyPlan: a student with no catalogue at all', () => {
+  // Offline, or the catalogue failed to load. Every topic is then cold, which
+  // is the truth: the live classroom is where they find out.
+  const html = decode(render(mixed, []));
+
+  it('still offers a way into every step', () => {
+    expect(countOf(html, '>Start</button>')).toBe(mixed.plan.length);
+    expect(html).not.toContain('Coming soon');
   });
 });

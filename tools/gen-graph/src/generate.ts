@@ -81,7 +81,16 @@ function validateNodes(
       errors.push(`${where}: prerequisites must be an array of node ids`);
       return;
     }
-    batch.set(node.id, node as unknown as LearningNode);
+    // The generator does not get to say what teaches a node. It has never
+    // been shown the lesson catalogue, and when the prompt used to invite a
+    // "lessonRef" it invented slugs that named nothing — 175 committed nodes
+    // ended up with a Start button that landed on an error screen, and 46 more
+    // with an empty string. topicRef is filed by --map-topics, against the
+    // syllabus; lessonRef is only ever a real catalogue id. Both are stripped
+    // here rather than rejected: a whole chapter is not worth losing over a
+    // field the model was told not to write.
+    const { lessonRef: _lessonRef, topicRef: _topicRef, ...clean } = node;
+    batch.set(node.id, clean as unknown as LearningNode);
   });
 
   // Edges resolve against the batch plus what is already committed.

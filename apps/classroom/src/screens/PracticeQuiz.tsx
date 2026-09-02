@@ -35,12 +35,23 @@ const CARD_BASE =
 
 export function PracticeQuiz({
   lessonRef,
+  topicRef,
   onComplete,
   onExit,
   onAskTutor,
 }: {
   /** The lesson just finished; its nodes decide the questions. */
   lessonRef: string;
+  /**
+   * The syllabus topic that lesson teaches, from the catalogue.
+   *
+   * The map names a lesson on barely a third of its nodes, and never on a class
+   * prepared live — so without the topic most lessons would end with no
+   * practice at all. Resolved by the route, not here: this screen is a pure
+   * function of what it is handed, which is what lets it be tested by
+   * rendering it rather than by driving a router.
+   */
+  topicRef?: string;
   /** Called once, with the graded attempt, when the last question is checked. */
   onComplete: (outcome: QuizOutcome) => void;
   /** Called when the student closes the quiz, or when this lesson has no quiz. */
@@ -48,7 +59,7 @@ export function PracticeQuiz({
   /** Hands the current question to the live doubt tutor. */
   onAskTutor?: (question: QuizQuestion) => void;
 }) {
-  const quiz = useMemo(() => buildQuiz(lessonRef), [lessonRef]);
+  const quiz = useMemo(() => buildQuiz(lessonRef, { topicRef }), [lessonRef, topicRef]);
 
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);

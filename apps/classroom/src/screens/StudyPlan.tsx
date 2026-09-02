@@ -1,4 +1,6 @@
 import type { DiagnosticResult, GraphIndex, PlanStep } from '@ai-tutor/knowledge-graph';
+import { destinationFor, type Destination } from '../lib/destination';
+import { SYLLABI, type CatalogEntry } from '../lib/content';
 import { Icon } from '../ui/Icon';
 
 /**
@@ -13,6 +15,13 @@ import { Icon } from '../ui/Icon';
  * The plan carries node ids, not titles, so every title is a lookup that can
  * miss: a result saved before the map was regenerated names nodes that no
  * longer exist. That must degrade to a readable row, never to "undefined".
+ *
+ * EVERY STEP LEADS SOMEWHERE. This screen used to show "Start" only where the
+ * map named a lesson and "Coming soon" everywhere else — and the names it
+ * carried were invented, so most of those Start buttons landed on "This lesson
+ * does not exist." A step now resolves through lib/destination: the topic's
+ * recording if a student has already had that class, the topic taught live if
+ * nobody has, its chapter if the map never got filed, and only then nothing.
  */
 
 /**
@@ -34,16 +43,43 @@ const HOME_BUTTON =
 export function StudyPlan({
   result,
   index,
-  onStartLesson,
+  catalog,
+  onOpen,
   onHome,
 }: {
   result: DiagnosticResult;
   index: GraphIndex;
-  /** Called with the step's lessonRef — only steps that have one offer "Start". */
-  onStartLesson: (lessonRef: string) => void;
+  /** Every recorded lesson, or null while the catalogue is still arriving. */
+  catalog: readonly CatalogEntry[] | null;
+  /** Called with where the step leads. Never called for a step that leads nowhere. */
+  onOpen: (destination: Destination) => void;
   onHome: () => void;
 }) {
   const steps = result.plan;
+
+  /**
+   * Where a step leads.
+   *
+   * The NODE wins over the stored step: a plan is saved in the profile and
+   * outlives the map it was built from, so its copy of the refs is a snapshot
+   * and the map's is current. The step's copy is the fallback for exactly the
+   * case the map cannot answer — the node has since been removed.
+   */
+  const destinationOf = (step: PlanStep): Destination | null => {
+    if (!catalog) return null;
+    const node = index.node(step.nodeId);
+    return destinationFor(
+      {
+        topicRef: node?.topicRef ?? step.topicRef,
+        lessonRef: node?.lessonRef ?? step.lessonRef,
+        klass: node?.klass,
+        subject: node?.subject,
+        chapter: node?.chapter,
+      },
+      catalog,
+      SYLLABI,
+    );
+  };
 
   return (
     <div className="bg-background text-on-background min-h-screen font-body-md relative overflow-hidden">
@@ -69,7 +105,8 @@ export function StudyPlan({
                 step={step}
                 number={i + 1}
                 title={index.node(step.nodeId)?.title ?? humanise(step.nodeId)}
-                onStartLesson={onStartLesson}
+                destination={destinationOf(step)}
+                onOpen={onOpen}
               />
             ))}
           </ol>
@@ -124,18 +161,37 @@ function AllClear() {
   );
 }
 
+/**
+ * What the action on a step says.
+ *
+ * A recorded class and one prepared on the spot are both "Start" on purpose:
+ * the recording is a CACHE of the first live class, not a lesser product, and
+ * the moment the difference reaches a button it stops being one.
+ */
+const ACTION: Record<Destination['kind'], string | null> = {
+  lesson: 'Start',
+  live: 'Start',
+  // The map knows the chapter but was never filed under a topic. Saying so is
+  // better than a Start that opens a list the student then has to search.
+  chapter: 'Open chapter',
+  none: null,
+};
+
 function StepCard({
   step,
   number,
   title,
-  onStartLesson,
+  destination,
+  onOpen,
 }: {
   step: PlanStep;
   number: number;
   title: string;
-  onStartLesson: (lessonRef: string) => void;
+  /** Null while the catalogue is still arriving. */
+  destination: Destination | null;
+  onOpen: (destination: Destination) => void;
 }) {
-  const lessonRef = step.lessonRef;
+  const action = destination ? ACTION[destination.kind] : null;
 
   return (
     <li className="bg-surface-container-lowest rounded-[24px] p-card-padding shadow-soft-indigo border border-surface-variant/50 flex items-start gap-gutter">
@@ -157,20 +213,27 @@ function StepCard({
           <p className="font-body-md text-label-md text-on-surface-variant">{step.reason}</p>
         </div>
 
-        {lessonRef !== undefined ? (
+        {destination && action ? (
           <button
-            onClick={() => onStartLesson(lessonRef)}
-            aria-label={`Start ${title}`}
+            onClick={() => onOpen(destination)}
+            aria-label={`${action} ${title}`}
             className="shrink-0 self-start sm:self-auto bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
           >
-            Start
+            {action}
           </button>
-        ) : (
-          // A step with no lesson yet still belongs in the plan — it is a real
-          // gap, and hiding it would leave a hole in the numbering.
+        ) : destination ? (
+          // Nowhere to send them. The gap is real all the same, so the step
+          // keeps its place — hiding it would leave a hole in the numbering.
           <span className="shrink-0 self-start sm:self-auto bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-4 py-2 rounded-full border border-outline-variant">
             Coming soon
           </span>
+        ) : (
+          // The catalogue has not arrived, so we do not yet know. An inert
+          // placeholder holds the space rather than flashing the wrong answer.
+          <span
+            aria-hidden
+            className="shrink-0 self-start sm:self-auto w-[104px] h-[46px] rounded-xl bg-surface-container-high animate-pulse"
+          />
         )}
       </div>
     </li>

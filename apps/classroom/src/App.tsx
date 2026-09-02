@@ -15,7 +15,8 @@ import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
-import { SYLLABI } from './lib/content';
+import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
+import { hrefFor } from './lib/destination';
 import type { QuizOutcome } from './lib/quiz';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
 
@@ -94,6 +95,25 @@ function StudyPlanRoute() {
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
 
+  // A step leads to a recorded lesson or to a class prepared on the spot, and
+  // only the catalogue knows which. It is fetched here rather than inside the
+  // screen so the screen stays a pure function of what it is given.
+  const [catalog, setCatalog] = useState<readonly CatalogEntry[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    // An unreachable catalogue is an offline student, not a broken plan: every
+    // topic is then cold, which resolves to the live classroom and tells them
+    // the truth there. An empty list says exactly that.
+    fetchCatalog()
+      .catch(() => [] as CatalogEntry[])
+      .then((entries) => {
+        if (!cancelled) setCatalog(entries);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // The stored plan may hold steps from earlier classes (the placement looks
   // back), so the index that renders it must be the same merged one.
   const data =
@@ -104,7 +124,11 @@ function StudyPlanRoute() {
     <StudyPlan
       result={profile.diagnostic!}
       index={data.index as GraphIndex}
-      onStartLesson={(lessonRef) => navigate(`/lesson/${lessonRef}`)}
+      catalog={catalog}
+      onOpen={(destination) => {
+        const href = hrefFor(destination);
+        if (href) navigate(href);
+      }}
       onHome={() => navigate('/')}
     />
   );
@@ -127,7 +151,32 @@ function QuizRoute() {
   // refs, and only a fresh mount makes the clock honest on the second attempt.
   const [attempt, setAttempt] = useState(0);
 
+  /**
+   * The lesson's topic, which is most of what decides the questions.
+   *
+   * Resolved BEFORE the quiz is mounted, not inside it. A quiz built without
+   * the topic and then rebuilt with it would grow under a student who had
+   * already started answering, and the honest alternative — telling them there
+   * is no practice and taking it back a beat later — is worse.
+   */
+  const [entry, setEntry] = useState<CatalogEntry | null | undefined>(undefined);
+  useEffect(() => {
+    let cancelled = false;
+    if (!lessonRef) return;
+    findEntry(lessonRef)
+      .catch(() => null)
+      .then((found) => {
+        if (!cancelled) setEntry(found);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [lessonRef]);
+
   if (!lessonRef) return <Navigate to="/" replace />;
+  // undefined means the catalogue has not answered yet; null means it has, and
+  // this lesson is not in it (a live class), which still gets the lessonRef join.
+  if (entry === undefined) return <Splash />;
   const leave = () => navigate(`/complete/${lessonRef}`, { replace: true });
 
   if (outcome) {
@@ -145,7 +194,13 @@ function QuizRoute() {
   }
 
   return (
-    <PracticeQuiz key={attempt} lessonRef={lessonRef} onComplete={setOutcome} onExit={leave} />
+    <PracticeQuiz
+      key={attempt}
+      lessonRef={lessonRef}
+      topicRef={entry?.topicRef}
+      onComplete={setOutcome}
+      onExit={leave}
+    />
   );
 }
 

@@ -72,12 +72,16 @@ const FIELDS = `EACH NODE IS EXACTLY THIS SHAPE:
   "title": "<a short human label, 2-6 words>",
   "outcome": "<the observable outcome sentence>",
   "prerequisites": ["<id>", ...],
-  "difficulty": <1..5>,
-  "lessonRef": "<optional lesson id that teaches this>"
+  "difficulty": <1..5>
 }
 
 difficulty: 1 recall, 2 straightforward application, 3 multi-step,
-4 synthesis across ideas, 5 the hardest thing in the chapter.`;
+4 synthesis across ideas, 5 the hardest thing in the chapter.
+
+Do NOT emit any other field. In particular do not name a lesson or a topic:
+you cannot know what has been recorded, and a reference you invent becomes a
+Start button that lands on "this lesson does not exist". Filing nodes under
+topics is a separate pass that is shown the syllabus and validated against it.`;
 
 export function buildNodesPrompt(
   chapter: Chapter,

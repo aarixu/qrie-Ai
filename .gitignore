@@ -26,3 +26,6 @@ clone-source/
 
 # RunPod MCP config carries the API key. Same rule as .env.local.
 .mcp.json
+
+# Throwaway patch scripts and one-off repairs.
+.scratch/
