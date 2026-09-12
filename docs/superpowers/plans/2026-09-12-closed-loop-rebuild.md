@@ -154,33 +154,36 @@ being a sentence in a prompt.**
   this repo has a remote.
 - **0.5 ✅ the two verify-script defects.**
 
-### Phase 1 — The interaction ledger `CODE COMPLETE, NOT LIVE`
+### Phase 1 — The interaction ledger `DONE`
 
-**Built and tested:** `packages/ledger` (pure), the outbox store, the drain,
-`classLedger` / `quizLedger` / `diagnosticLedger` and their wiring into the
-class, the quiz and the placement test, migrations 0005–0007 *written*,
-durable identity at start-up, the `flags` privacy defect closed, and the
-**replay test** — one class driven down both the old counters and the new
-ledger, asserted to match exactly.
+**The record exists and a student's answer reaches it.** Migrations 0005–0007
+are deployed; `tools/bin/ledger-live-test.mjs` proves the five properties the
+design rests on against the live project, as a real anonymous student — each of
+them a decision that would fail SILENTLY if it were wrong:
 
-**TWO THINGS LEFT, and until they are done none of this records anything:**
+```
+OK  Postgres provisioned an org and a membership before any app code ran
+OK  an answer reaches the database                      HTTP 201
+OK  re-sending the same event is a no-op, not a duplicate
+OK  a student cannot rewrite what they answered         still true
+OK  and cannot delete it either                         1 row remains
+OK  a second student cannot read the first one's rows   0 rows visible
+OK  time on task is recorded by closing the session     active_ms=92000
+```
 
-- **The migrations are not deployed.** Checked against the live project:
-  `organization`, `membership`, `learning_session`, `ledger_event`,
-  `close_learning_session` and `purge_old_ledger` all answer **404**. So a
-  student can use the app today and every event queues in localStorage, drains
-  into nothing, and starts dropping the oldest at 5,000. The code is right and
-  the record is empty — which is the same outcome as not having built it.
-  `npm run relay:deploy` is the whole job; it touches the live backend, so it
-  is Aarav's call to run.
-- **Auth is still email OTP.** Decision 6 is ordinary email and password.
-  `SignIn.tsx` still calls `sendEmailOtp`/`verifyEmailOtp`, and
-  `signInWithPassword` / `signUp` appear nowhere. The anonymous identity is
-  durable within an install; without an account it still dies with a reinstall,
-  which is the gap this phase was supposed to close.
+The append-only pair is the one worth keeping: PATCH and DELETE both return
+**204 and change nothing**, because RLS filters the rows away rather than
+refusing loudly. A check that only read the status code would have passed on a
+table anybody could rewrite.
 
-The learner model reading from the ledger is **Phase 3**, not this phase — an
-earlier draft of this line put it here and it was wrong.
+Also shipped: `packages/ledger` (pure, replay-tested), the outbox, the drain,
+`classLedger` / `quizLedger` / `diagnosticLedger` wired into the class, the quiz
+and the placement test, the tenancy skeleton, 90-day retention, the `flags`
+privacy defect closed, identity established at start-up, and **email + password
+auth whose sign-up UPGRADES the anonymous identity in place** rather than
+minting a second user and orphaning a term's work.
+
+The learner model reading from the ledger is **Phase 3**.
 
 ### Phase 2 — Cost, credits and ads
 Measure cost per class and per student-hour **first**, price second. Two cost
