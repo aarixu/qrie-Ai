@@ -1,0 +1,3190 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class6-mathematics-patterns-identify-repeating-shapes",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Repeating Shape Patterns",
+      "outcome": "Identify the core repeating unit in a sequence of alternating shapes or symbols",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-introduction"
+    },
+    {
+      "id": "class6-mathematics-patterns-predict-next-shape",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Predict Next Shape in Pattern",
+      "outcome": "Predict the next element in a repeating sequence of visual figures by extending the identified core rule",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-repeating-shapes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-introduction"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-rotational-patterns",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Rotational Visual Patterns",
+      "outcome": "Trace the step-by-step rotational turns (e.g., quarter-turn, half-turn) of a shape across a sequence",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-repeating-shapes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-introduction"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-growing-visual",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Growing Visual Patterns",
+      "outcome": "Identify the incremental change in consecutive stages of a growing shape pattern",
+      "prerequisites": [
+        "class6-mathematics-patterns-predict-next-shape"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-introduction"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-even-odd",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Even and Odd Patterns",
+      "outcome": "State the alternating rule governing sequences of consecutive even and odd numbers",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-addition-step",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Constant Addition Step",
+      "outcome": "Calculate the constant common difference added between consecutive terms in an increasing number sequence",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-subtraction-step",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Constant Subtraction Step",
+      "outcome": "Calculate the constant common difference subtracted between consecutive terms in a decreasing number sequence",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-identify-multiplicative-step",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Multiplicative Step",
+      "outcome": "Identify the constant multiplier between consecutive terms in a geometric number sequence",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-find-missing-term-linear",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Find Missing Term in Arithmetic Sequence",
+      "outcome": "Calculate missing intermediate and subsequent terms in an arithmetic number sequence",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-addition-step",
+        "class6-mathematics-patterns-identify-subtraction-step"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-describe-rule-in-words",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Describe Pattern Rule in Words",
+      "outcome": "State the relationship between consecutive terms of a sequence in clear verbal terms (e.g., 'start with 3 and add 4 each time')",
+      "prerequisites": [
+        "class6-mathematics-patterns-find-missing-term-linear"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/rules-from-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-matchstick-relation-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Tabulate Matchstick Pattern Counts",
+      "outcome": "Construct a two-column table relating the figure number to the count of matchsticks required for each stage",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-growing-visual"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/rules-from-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-write-expression-with-variable",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Write General Rule Using Variable n",
+      "outcome": "Formulate an algebraic rule of the form 'an + b' for the nth term of a growing pattern using the variable 'n'",
+      "prerequisites": [
+        "class6-mathematics-patterns-describe-rule-in-words",
+        "class6-mathematics-patterns-matchstick-relation-table"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/rules-from-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-evaluate-nth-term",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Calculate nth Term from Formula",
+      "outcome": "Calculate the value of a distant term (e.g., 50th term) by substituting the term index into a general algebraic rule",
+      "prerequisites": [
+        "class6-mathematics-patterns-write-expression-with-variable"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/rules-from-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-dot-arrays-rectangular",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Represent Numbers as Rectangular Dot Arrays",
+      "outcome": "Draw a composite number as a rectangular grid of dots with equal rows and columns",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-square-numbers-visual",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Draw Square Number Dot Patterns",
+      "outcome": "Draw square dot arrays representing numbers formed by multiplying an integer by itself (1, 4, 9, 16, ...)",
+      "prerequisites": [
+        "class6-mathematics-patterns-dot-arrays-rectangular"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-square-numbers-sequence",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "List Sequence of Square Numbers",
+      "outcome": "Calculate successive square numbers by evaluating n × n for natural numbers n",
+      "prerequisites": [
+        "class6-mathematics-patterns-square-numbers-visual"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-triangular-numbers-visual",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Draw Triangular Number Dot Patterns",
+      "outcome": "Draw triangular dot arrangements representing the sequence 1, 3, 6, 10, ...",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-growing-visual"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-triangular-numbers-sum-formula",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Calculate Triangular Numbers as Consecutive Sums",
+      "outcome": "Calculate the nth triangular number by summing consecutive natural numbers from 1 to n",
+      "prerequisites": [
+        "class6-mathematics-patterns-triangular-numbers-visual"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-two-triangles-make-square",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Relate Triangular Numbers to Square Numbers",
+      "outcome": "Demonstrate that the sum of two consecutive triangular numbers equals a square number using dot diagrams",
+      "prerequisites": [
+        "class6-mathematics-patterns-square-numbers-visual",
+        "class6-mathematics-patterns-triangular-numbers-sum-formula"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-sum-of-odd-numbers-square",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Sum of Consecutive Odds as Square",
+      "outcome": "Explain why the sum of the first n consecutive odd natural numbers equals n² using L-shaped dot borders (gnomons)",
+      "prerequisites": [
+        "class6-mathematics-patterns-square-numbers-visual",
+        "class6-mathematics-patterns-identify-even-odd"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-differences-of-squares",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Pattern in Consecutive Squares Difference",
+      "outcome": "Calculate the difference between consecutive square numbers and identify the resulting sequence of odd numbers",
+      "prerequisites": [
+        "class6-mathematics-patterns-square-numbers-sequence"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/visualizing-patterns"
+    },
+    {
+      "id": "class6-mathematics-patterns-number-tower-patterns",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Solve Number Pyramid Addition Patterns",
+      "outcome": "Calculate missing values in an addition number pyramid where each upper block is the sum of two adjacent lower blocks",
+      "prerequisites": [
+        "class6-mathematics-patterns-find-missing-term-linear"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-palindromic-multiplication",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Identify Symmetrical Multiplication Patterns",
+      "outcome": "Predict product values for repetitive-digit multiplications (such as 1 × 1, 11 × 11, 111 × 111) without full calculation",
+      "prerequisites": [
+        "class6-mathematics-patterns-describe-rule-in-words"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-patterns-magic-squares-check",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "patterns-in-mathematics",
+      "title": "Verify Magic Square Property",
+      "outcome": "Verify whether a 3x3 grid forms a magic square by calculating and comparing the sums of each row, column, and diagonal",
+      "prerequisites": [],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/patterns-in-mathematics/patterns-in-numbers"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-identify-point-environment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify Points in Surroundings",
+      "outcome": "Identify physical examples of a point in the immediate environment, such as the tip of a pencil or a dot on paper",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/lines-and-angles-introduction"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-identify-lines-edges-environment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify Edges and Lines in Surroundings",
+      "outcome": "Identify straight edges in physical objects like a ruler edge, table boundary, or blackboard frame as models of lines or segments",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/lines-and-angles-introduction"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-identify-intersections-environment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify Intersecting Lines in Surroundings",
+      "outcome": "Identify intersecting lines or crossing boundaries in physical surroundings such as a window grill or crossroads",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-identify-lines-edges-environment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/lines-and-angles-introduction"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-identify-angles-environment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify Angles in Surroundings",
+      "outcome": "Identify corners and angles formed by meeting edges in everyday objects like an open door, a book, or hands of a clock",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-identify-intersections-environment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/lines-and-angles-introduction"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-point-notation",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define and Label a Point",
+      "outcome": "State that a point determines a precise location with no length, width, or thickness and label it with a single capital letter",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-identify-point-environment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-line-segment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define a Line Segment",
+      "outcome": "Define a line segment as the shortest path between two fixed endpoints having a definite measurable length",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-point-notation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-label-line-segment",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Label Line Segments Using Notation",
+      "outcome": "Label a line segment using its two endpoints with the bar symbol above, such as segment AB or segment BA",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line-segment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define a Line",
+      "outcome": "Define a line as extending infinitely in both directions without endpoints and having no measurable length",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line-segment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-label-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Label Lines Using Notation",
+      "outcome": "Label a line using two points on it with a double-headed arrow symbol above, or using a single lowercase letter such as line l",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-compare-line-segment-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Compare Point, Line Segment, and Line",
+      "outcome": "Compare a point, a line segment, and a line based on the number of endpoints, extent, and measurability",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-label-line-segment",
+        "class6-mathematics-lines-and-angles-label-line"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-intersecting-parallel-lines",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Distinguish Intersecting and Parallel Lines",
+      "outcome": "Distinguish between intersecting lines that meet at one point and parallel lines in the same plane that never meet",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/points-lines-segments"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-ray",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define a Ray",
+      "outcome": "Define a ray as a part of a line starting at one initial point and extending endlessly in one direction",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/rays-and-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-label-ray",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Label Rays Using Notation",
+      "outcome": "Label a ray starting from its initial endpoint followed by another point along its path with a single-headed arrow above, such as ray AB",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-ray"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/rays-and-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-define-angle-and-arms",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define Angle, Vertex, and Arms",
+      "outcome": "Define an angle as the figure formed by two rays sharing a common initial point, identifying the rays as arms and the point as the vertex",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-ray"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/rays-and-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-label-angle-three-letters",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Name Angles Using Three Letters",
+      "outcome": "Name an angle using three letters with the angle symbol where the vertex letter is written strictly in the middle, such as angle ABC",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-angle-and-arms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/rays-and-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-identify-interior-exterior-angle",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify Interior and Exterior of an Angle",
+      "outcome": "Identify whether a given point lies in the interior, in the exterior, or on the boundary of an angle",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-angle-and-arms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/rays-and-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-understand-degree-unit",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "State the Degree as a Unit of Angle Measure",
+      "outcome": "State that angle measure represents rotation and is measured in degrees, where one complete rotation equals 360 degrees",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-angle-and-arms"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/measuring-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-align-protractor",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Align Protractor with an Angle",
+      "outcome": "Align the center mark of a protractor with the vertex of an angle and its baseline with one arm of the angle",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-understand-degree-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/measuring-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-read-protractor-inner-outer",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Read Protractor Inner and Outer Scales",
+      "outcome": "Read the degree measure of an angle correctly by choosing the protractor scale that starts at 0 degrees on the baseline arm",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-align-protractor"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/lines-and-angles/measuring-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-classify-right-straight-complete",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Classify Right, Straight, and Complete Angles",
+      "outcome": "Classify an angle of measure exactly 90 degrees as a right angle, 180 degrees as a straight angle, and 360 degrees as a complete angle",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-understand-degree-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/lines-and-angles/classification-of-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Classify Acute, Obtuse, and Reflex Angles",
+      "outcome": "Classify an angle measuring between 0 and 90 degrees as acute, between 90 and 180 degrees as obtuse, and between 180 and 360 degrees as reflex",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-classify-right-straight-complete"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/classification-of-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-estimate-angle-type-visually",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Estimate and Classify Angles Visually",
+      "outcome": "Estimate visually whether a given angle is acute, right, obtuse, straight, or reflex by comparing it to a quarter or half turn",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/lines-and-angles/classification-of-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-draw-given-angle-measure",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Draw an Angle of Specified Measure",
+      "outcome": "Draw an angle of a given degree measure using a ruler and protractor",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-read-protractor-inner-outer",
+        "class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/lines-and-angles/classification-of-angles"
+    },
+    {
+      "id": "class6-mathematics-lines-and-angles-measure-and-classify-drawn-angles",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Measure and Classify Any Given Angle",
+      "outcome": "Measure an unlabelled given angle with a protractor, record its degree measure, and state its classification",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-read-protractor-inner-outer",
+        "class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/lines-and-angles/classification-of-angles"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-natural-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Natural Numbers",
+      "outcome": "State the definition of natural numbers as counting numbers starting from 1",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/number-play-introduction"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-whole-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Whole Numbers",
+      "outcome": "Differentiate whole numbers from natural numbers by identifying zero as the starting whole number",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-natural-numbers"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/number-play-introduction"
+    },
+    {
+      "id": "class6-mathematics-number-play-compare-multi-digit-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Compare Multi-Digit Numbers",
+      "outcome": "Compare two multi-digit whole numbers using place value to determine which is greater",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-whole-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/number-play-introduction"
+    },
+    {
+      "id": "class6-mathematics-number-play-order-multi-digit-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Order Multi-Digit Numbers",
+      "outcome": "Arrange a given set of four or more multi-digit whole numbers in ascending or descending order",
+      "prerequisites": [
+        "class6-mathematics-number-play-compare-multi-digit-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/number-play-introduction"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-factors",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Factors",
+      "outcome": "Define a factor as an exact divisor of a given number",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-natural-numbers"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/factors-and-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-find-factor-pairs",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Find Factor Pairs",
+      "outcome": "List multiplication pairs that multiply together to give a specified product up to 100",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/factors-and-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-list-all-factors-under-100",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "List All Factors up to 100",
+      "outcome": "List all positive factors of any given whole number up to 100 without omissions",
+      "prerequisites": [
+        "class6-mathematics-number-play-find-factor-pairs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/factors-and-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-multiples",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Multiples",
+      "outcome": "Define a multiple of a number as the product of that number and any natural number",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-natural-numbers"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/factors-and-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-list-multiples-single-digit",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "List First N Multiples",
+      "outcome": "Calculate and write down the first five multiples of a given single-digit number",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-multiples"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/factors-and-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-identify-common-factors",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Identify Common Factors",
+      "outcome": "Identify all common factors shared between two given numbers up to 100",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-all-factors-under-100"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/common-factors-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-find-hcf",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Find Highest Common Factor",
+      "outcome": "Determine the highest common factor (HCF) of two given numbers by inspecting their common factors",
+      "prerequisites": [
+        "class6-mathematics-number-play-identify-common-factors"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/number-play/common-factors-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-identify-common-multiples",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Identify Common Multiples",
+      "outcome": "Identify the first three common multiples of two given single-digit numbers",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-multiples-single-digit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/common-factors-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-find-lcm",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Find Lowest Common Multiple",
+      "outcome": "Determine the lowest common multiple (LCM) of two given numbers from their common multiples",
+      "prerequisites": [
+        "class6-mathematics-number-play-identify-common-multiples"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/number-play/common-factors-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-prime-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Prime Numbers",
+      "outcome": "Define a prime number as a natural number greater than 1 having exactly two distinct factors",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-all-factors-under-100"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/prime-composite-numbers"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-composite-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Composite Numbers",
+      "outcome": "Define a composite number as a natural number having more than two factors",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-all-factors-under-100"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/prime-composite-numbers"
+    },
+    {
+      "id": "class6-mathematics-number-play-explain-one-neither-prime-nor-composite",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Explain Status of Number 1",
+      "outcome": "Explain why the number 1 is neither prime nor composite based on its factor count",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-prime-numbers",
+        "class6-mathematics-number-play-define-composite-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/prime-composite-numbers"
+    },
+    {
+      "id": "class6-mathematics-number-play-classify-prime-composite-under-100",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Classify Primes and Composites up to 100",
+      "outcome": "Classify any given integer from 2 to 100 as either prime or composite",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-prime-numbers",
+        "class6-mathematics-number-play-define-composite-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/number-play/prime-composite-numbers"
+    },
+    {
+      "id": "class6-mathematics-number-play-define-coprime-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Define Co-prime Numbers",
+      "outcome": "Determine whether two given numbers are co-prime by verifying if their only common factor is 1",
+      "prerequisites": [
+        "class6-mathematics-number-play-identify-common-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/common-factors-multiples"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-10-5",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 5 and 10",
+      "outcome": "Apply divisibility tests for 5 and 10 by examining the units digit of a given number",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-multiples-single-digit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-2",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 2",
+      "outcome": "Test if a given multi-digit number is divisible by 2 by checking if its units digit is even",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-even-odd"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-3-9",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 3 and 9",
+      "outcome": "Test if a given number is divisible by 3 or 9 by calculating the sum of its digits",
+      "prerequisites": [
+        "class6-mathematics-number-play-list-multiples-single-digit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-4-8",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 4 and 8",
+      "outcome": "Test if a multi-digit number is divisible by 4 or 8 by inspecting its last two or three digits",
+      "prerequisites": [
+        "class6-mathematics-number-play-divisibility-rule-2"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-6",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 6",
+      "outcome": "Test divisibility of a number by 6 by verifying simultaneous divisibility by both 2 and 3",
+      "prerequisites": [
+        "class6-mathematics-number-play-divisibility-rule-2",
+        "class6-mathematics-number-play-divisibility-rule-3-9",
+        "class6-mathematics-number-play-define-coprime-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-number-play-divisibility-rule-11",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "number-play",
+      "title": "Test Divisibility by 11",
+      "outcome": "Test if a number is divisible by 11 by calculating the difference between sums of digits at odd and even positions",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-whole-numbers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/number-play/divisibility-rules"
+    },
+    {
+      "id": "class6-mathematics-data-handling-define-data",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Define Data",
+      "outcome": "Define data as a collection of numbers gathered to give some information",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/data-handling-introduction"
+    },
+    {
+      "id": "class6-mathematics-data-handling-identify-data-examples",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Data in Daily Life",
+      "outcome": "Identify examples of data collection from daily life contexts such as marks, attendance, and temperatures",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-data"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/data-handling-introduction"
+    },
+    {
+      "id": "class6-mathematics-data-handling-raw-vs-organized-data",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Distinguish Raw from Organized Data",
+      "outcome": "Differentiate between an unorganized list of raw observations and organized data",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/data-handling-introduction"
+    },
+    {
+      "id": "class6-mathematics-data-handling-explain-need-for-organization",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Explain Need for Organization",
+      "outcome": "Explain why organizing raw data into tables is necessary to extract meaningful conclusions",
+      "prerequisites": [
+        "class6-mathematics-data-handling-raw-vs-organized-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/data-handling-introduction"
+    },
+    {
+      "id": "class6-mathematics-data-handling-represent-numbers-tally-marks",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Represent Numbers Using Tally Marks",
+      "outcome": "Represent given integers as groups of vertical tally marks with a fifth diagonal cross stroke",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-data"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/collecting-recording-data"
+    },
+    {
+      "id": "class6-mathematics-data-handling-construct-tally-table-raw-data",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Construct Tally Table from Raw Data",
+      "outcome": "Record raw observations one by one into a tally marks table to find the frequency of each category",
+      "prerequisites": [
+        "class6-mathematics-data-handling-raw-vs-organized-data",
+        "class6-mathematics-data-handling-represent-numbers-tally-marks"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/collecting-recording-data"
+    },
+    {
+      "id": "class6-mathematics-data-handling-calculate-total-frequency-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Total from Frequency Table",
+      "outcome": "Sum the numerical frequencies across all rows of a tally table to find the total number of observations",
+      "prerequisites": [
+        "class6-mathematics-data-handling-construct-tally-table-raw-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/collecting-recording-data"
+    },
+    {
+      "id": "class6-mathematics-data-handling-identify-extremes-tally-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Most and Least Frequent Items",
+      "outcome": "Identify the most frequent and least frequent categories by comparing counts in a frequency table",
+      "prerequisites": [
+        "class6-mathematics-data-handling-construct-tally-table-raw-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/collecting-recording-data"
+    },
+    {
+      "id": "class6-mathematics-data-handling-define-pictograph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Define Pictograph",
+      "outcome": "State that a pictograph represents data through pictures or symbols of objects",
+      "prerequisites": [
+        "class6-mathematics-data-handling-explain-need-for-organization"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-read-pictograph-one-to-one",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Read Unit-Scale Pictograph",
+      "outcome": "Read data from a pictograph where one symbol represents exactly one unit",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-pictograph"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-interpret-pictograph-scale-key",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Pictograph Scale Key",
+      "outcome": "Determine the value represented by whole symbols using a scale key where one symbol represents multiple units",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-pictograph",
+        "class6-mathematics-number-play-define-multiples"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-interpret-partial-symbols-pictograph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Partial Symbols in Pictograph",
+      "outcome": "Calculate the value represented by incomplete or fractional symbols in a scaled pictograph",
+      "prerequisites": [
+        "class6-mathematics-data-handling-interpret-pictograph-scale-key"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-answer-questions-pictograph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Answer Analytical Questions from Pictograph",
+      "outcome": "Calculate totals and differences between categories by interpreting values shown in a pictograph",
+      "prerequisites": [
+        "class6-mathematics-data-handling-interpret-pictograph-scale-key"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-choose-scale-pictograph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Choose Scale for Pictograph",
+      "outcome": "Select a suitable symbol value (scale) to draw a pictograph based on common factors of given numbers",
+      "prerequisites": [
+        "class6-mathematics-data-handling-define-pictograph",
+        "class6-mathematics-number-play-identify-common-factors"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-draw-pictograph-from-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Draw Pictograph from Frequency Table",
+      "outcome": "Construct a complete pictograph from a given table using an appropriate symbol, label, and scale key",
+      "prerequisites": [
+        "class6-mathematics-data-handling-choose-scale-pictograph",
+        "class6-mathematics-data-handling-construct-tally-table-raw-data"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/data-handling/pictographs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-identify-axes-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Axes and Labels of a Bar Graph",
+      "outcome": "Identify the horizontal axis, vertical axis, titles, and category labels of a bar graph",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line-segment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-read-scale-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Read Scale on Bar Graph",
+      "outcome": "Determine the quantity represented by each unit length mark on the numerical axis of a bar graph",
+      "prerequisites": [
+        "class6-mathematics-data-handling-identify-axes-bar-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-read-bar-heights",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Read Values from Bar Heights",
+      "outcome": "Read the exact numerical value of each category from the height or length of its bar along the scale",
+      "prerequisites": [
+        "class6-mathematics-data-handling-read-scale-bar-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-compare-categories-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Compare Categories from Bar Graph",
+      "outcome": "Compare bar lengths to determine maximum, minimum, and order of categories in a bar graph",
+      "prerequisites": [
+        "class6-mathematics-data-handling-read-bar-heights"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-solve-multi-step-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Answer Multi-Step Questions from Bar Graph",
+      "outcome": "Compute sum, difference, and combined totals for specific subsets of categories shown on a bar graph",
+      "prerequisites": [
+        "class6-mathematics-data-handling-read-bar-heights"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-choose-scale-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Choose Scale for Bar Graph",
+      "outcome": "Select an appropriate unit length scale along the numerical axis based on the range of given values",
+      "prerequisites": [
+        "class6-mathematics-data-handling-read-scale-bar-graph",
+        "class6-mathematics-number-play-list-multiples-single-digit"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-draw-vertical-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Draw Vertical Bar Graph",
+      "outcome": "Draw a vertical bar graph with uniform bar widths, equal spacing between bars, and accurate heights for given data",
+      "prerequisites": [
+        "class6-mathematics-data-handling-choose-scale-bar-graph"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-draw-horizontal-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Draw Horizontal Bar Graph",
+      "outcome": "Draw a horizontal bar graph placing categories on the vertical axis and numerical scale on the horizontal axis",
+      "prerequisites": [
+        "class6-mathematics-data-handling-draw-vertical-bar-graph"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-data-handling-compare-pictograph-and-bar-graph",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Compare Pictographs and Bar Graphs",
+      "outcome": "Compare pictographs and bar graphs in terms of ease of construction, precision, and representation of large numbers",
+      "prerequisites": [
+        "class6-mathematics-data-handling-draw-pictograph-from-table",
+        "class6-mathematics-data-handling-draw-vertical-bar-graph"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/data-handling/bar-graphs"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-link-factors-to-equal-sharing",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Link Factors to Equal Sharing",
+      "outcome": "Explain the factors of a number as the possible group sizes when dividing a collection of objects equally without remainder",
+      "prerequisites": [
+        "class6-mathematics-number-play-define-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-fractions-introduction"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Fraction as Part of a Whole Shape",
+      "outcome": "Identify the fraction represented by a shaded region of a geometric shape divided into equal parts",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-fractions-introduction"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-collection",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Fraction as Part of a Collection",
+      "outcome": "Calculate the fraction representing a selected subset of items from a discrete collection of objects",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-fractions-introduction"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Identify Numerator and Denominator",
+      "outcome": "State the numerator and denominator of a fraction and explain the physical meaning of each",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-fractions-introduction"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-factor-tree-method",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Build a Factor Tree",
+      "outcome": "Construct a factor tree to break down a composite number into its prime factors",
+      "prerequisites": [
+        "class6-mathematics-number-play-find-factor-pairs",
+        "class6-mathematics-number-play-define-prime-numbers",
+        "class6-mathematics-number-play-define-composite-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-factorisation"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-continuous-division-prime-factors",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Continuous Division for Prime Factors",
+      "outcome": "Find the prime factors of a composite number using the repeated division method with prime divisors",
+      "prerequisites": [
+        "class6-mathematics-number-play-divisibility-rule-2",
+        "class6-mathematics-number-play-divisibility-rule-3-9",
+        "class6-mathematics-number-play-divisibility-rule-10-5"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-factorisation"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-write-prime-factorisation-product",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Express Prime Factorisation as Product",
+      "outcome": "Write down the prime factorisation of a number as a product of prime factors and in exponent notation",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-factor-tree-method"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/prime-factorisation"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "HCF of Two Numbers by Prime Factorisation",
+      "outcome": "Calculate the Highest Common Factor (HCF) of two numbers by taking the product of common prime factors with the lowest power",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-write-prime-factorisation-product",
+        "class6-mathematics-number-play-find-hcf"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/highest-common-factor"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-hcf-three-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "HCF of Three Numbers",
+      "outcome": "Calculate the Highest Common Factor (HCF) of three given numbers using prime factorisation or division method",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/highest-common-factor"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-solve-hcf-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Solve HCF Word Problems",
+      "outcome": "Solve real-world word problems requiring the partitioning of quantities into the maximum possible equal sizes using HCF",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/highest-common-factor"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-lcm-by-prime-factorisation-two-numbers",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "LCM of Two Numbers by Prime Factorisation",
+      "outcome": "Calculate the Lowest Common Multiple (LCM) of two numbers using their prime factorisations by taking the highest power of each prime factor",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-write-prime-factorisation-product",
+        "class6-mathematics-number-play-find-lcm"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/lowest-common-multiple"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-lcm-common-division-method",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "LCM by Common Division Method",
+      "outcome": "Compute the LCM of two or three numbers simultaneously using the common division method",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-lcm-by-prime-factorisation-two-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/lowest-common-multiple"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-solve-lcm-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Solve LCM Word Problems",
+      "outcome": "Solve real-world word problems involving periodic events occurring together at the earliest common time using LCM",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-lcm-common-division-method"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/lowest-common-multiple"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-relationship-hcf-lcm-product",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Relationship Between HCF and LCM",
+      "outcome": "Apply the property that the product of two numbers equals the product of their HCF and LCM to find an unknown quantity",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers",
+        "class6-mathematics-prime-numbers-and-fractions-lcm-by-prime-factorisation-two-numbers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/lowest-common-multiple"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-identify-proper-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Identify Proper Fractions",
+      "outcome": "Define a proper fraction as a fraction where the numerator is strictly less than the denominator, representing a value less than 1",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/introduction-to-fractions"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-identify-improper-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Identify Improper Fractions",
+      "outcome": "Define an improper fraction as a fraction where the numerator is greater than or equal to the denominator, representing a value greater than or equal to 1",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/introduction-to-fractions"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Identify Mixed Fractions",
+      "outcome": "Identify a mixed fraction as a combination of a non-zero whole number and a proper fraction",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-proper-fractions"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/introduction-to-fractions"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-convert-improper-to-mixed",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Convert Improper Fraction to Mixed Fraction",
+      "outcome": "Convert an improper fraction into a mixed fraction by dividing the numerator by the denominator to find the quotient and remainder",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-improper-fractions",
+        "class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/introduction-to-fractions"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Convert Mixed Fraction to Improper Fraction",
+      "outcome": "Convert a mixed fraction into an improper fraction by multiplying the whole number by the denominator and adding the numerator",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/introduction-to-fractions"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-subdivide-unit-interval-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Subdivide Unit Interval on Number Line",
+      "outcome": "Divide the unit interval [0, 1] on a number line into equal segments matching the denominator of a fraction",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/fractions-on-number-line"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-plot-proper-fraction-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Plot Proper Fractions on Number Line",
+      "outcome": "Plot and locate a given proper fraction on the number line between 0 and 1",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-subdivide-unit-interval-number-line",
+        "class6-mathematics-prime-numbers-and-fractions-identify-proper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/fractions-on-number-line"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-locate-mixed-fraction-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Locate Mixed Fractions on Number Line",
+      "outcome": "Identify the two consecutive whole numbers between which a mixed fraction lies and plot it accurately on the number line",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-plot-proper-fraction-number-line",
+        "class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/fractions-on-number-line"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-plot-improper-fraction-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Plot Improper Fractions on Number Line",
+      "outcome": "Plot an improper fraction on a number line either by counting fractional unit steps from 0 or by converting to a mixed fraction",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-convert-improper-to-mixed",
+        "class6-mathematics-prime-numbers-and-fractions-locate-mixed-fraction-number-line"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/fractions-on-number-line"
+    },
+    {
+      "id": "class6-mathematics-prime-numbers-and-fractions-read-fraction-from-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "prime-numbers-and-fractions",
+      "title": "Read Fraction from Point on Number Line",
+      "outcome": "State the fraction or mixed fraction corresponding to a marked point on a given subdivided number line",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-plot-proper-fraction-number-line",
+        "class6-mathematics-prime-numbers-and-fractions-locate-mixed-fraction-number-line"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/prime-numbers-and-fractions/fractions-on-number-line"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Generate equivalent fractions by multiplying",
+      "outcome": "Generate equivalent fractions by multiplying both numerator and denominator by the same non-zero whole number",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-generate-equivalent-division",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Generate equivalent fractions by dividing",
+      "outcome": "Generate equivalent fractions by dividing both numerator and denominator by a common factor",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator",
+        "class6-mathematics-number-play-identify-common-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-test-equivalent-cross-product",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Check equivalence using cross multiplication",
+      "outcome": "Determine whether two fractions are equivalent by comparing their cross-products",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-find-missing-numerator-denominator",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Find missing term in equivalent fractions",
+      "outcome": "Calculate the missing numerator or denominator that makes two fractions equivalent",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+        "class6-mathematics-operations-on-fractions-generate-equivalent-division"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-simplify-fraction-hcf",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Simplify fraction to lowest terms using HCF",
+      "outcome": "Reduce a given fraction to its simplest form (lowest terms) by dividing numerator and denominator by their HCF",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-generate-equivalent-division",
+        "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-compare-like-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Compare and order like fractions",
+      "outcome": "Compare and order fractions having the same denominator by comparing their numerators",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-convert-unlike-to-like",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Convert unlike fractions to like fractions using LCM",
+      "outcome": "Convert a pair or set of unlike fractions into equivalent fractions with a common denominator using the LCM of their denominators",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+        "class6-mathematics-prime-numbers-and-fractions-lcm-common-division-method"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-compare-unlike-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Compare and order unlike fractions",
+      "outcome": "Compare and order unlike fractions by converting them to equivalent fractions with a common denominator",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-compare-like-fractions",
+        "class6-mathematics-operations-on-fractions-convert-unlike-to-like"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/equivalent-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-add-like-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Add fractions with like denominators",
+      "outcome": "Calculate the sum of two or more fractions with identical denominators",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-subtract-like-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Subtract fractions with like denominators",
+      "outcome": "Calculate the difference between two fractions with identical denominators",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-add-unlike-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Add fractions with unlike denominators",
+      "outcome": "Calculate the sum of fractions with different denominators by finding a common denominator using LCM",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-add-like-fractions",
+        "class6-mathematics-operations-on-fractions-convert-unlike-to-like"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-subtract-unlike-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Subtract fractions with unlike denominators",
+      "outcome": "Calculate the difference of fractions with different denominators by finding a common denominator using LCM",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-subtract-like-fractions",
+        "class6-mathematics-operations-on-fractions-convert-unlike-to-like"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-add-subtract-mixed-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Add and subtract mixed fractions",
+      "outcome": "Calculate the sum or difference of mixed fractions by converting them to improper fractions or operating on whole and fractional parts separately",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+        "class6-mathematics-prime-numbers-and-fractions-convert-improper-to-mixed",
+        "class6-mathematics-operations-on-fractions-add-unlike-fractions",
+        "class6-mathematics-operations-on-fractions-subtract-unlike-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-solve-addition-subtraction-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Solve word problems on fraction addition and subtraction",
+      "outcome": "Solve real-world word problems involving addition and subtraction of like, unlike, and mixed fractions",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-add-subtract-mixed-fractions",
+        "class6-mathematics-operations-on-fractions-simplify-fraction-hcf"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/operations-on-fractions/addition-subtraction-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-multiply-fraction-whole-number",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Multiply a fraction by a whole number",
+      "outcome": "Calculate the product of a fraction and a whole number and interpret it as repeated addition or as an 'of' operator",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/multiplication-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-fraction-as-operator-of",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Evaluate fraction of a collection or quantity",
+      "outcome": "Evaluate expressions of the form 'fraction of a quantity' (e.g., 3/4 of 20 kg) using multiplication",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-multiply-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/multiplication-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Multiply two fractions",
+      "outcome": "Calculate the product of two fractions by multiplying their numerators together and their denominators together",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-multiply-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/multiplication-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-multiply-mixed-fractions",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Multiply mixed fractions",
+      "outcome": "Calculate the product of two mixed fractions by converting them to improper fractions before multiplying",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+        "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/multiplication-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-simplify-before-multiplying",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Cross-cancel common factors when multiplying fractions",
+      "outcome": "Simplify fractional products efficiently by canceling common factors across numerators and denominators before multiplying",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions",
+        "class6-mathematics-operations-on-fractions-simplify-fraction-hcf"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/multiplication-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Find the reciprocal of a fraction and whole number",
+      "outcome": "Identify and calculate the reciprocal (multiplicative inverse) of a proper fraction, improper fraction, mixed fraction, or whole number",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+        "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/division-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-divide-fraction-by-whole-number",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Divide a fraction by a whole number",
+      "outcome": "Calculate the quotient of a fraction divided by a whole number by multiplying the fraction by the reciprocal of the whole number",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+        "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/division-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-divide-whole-number-by-fraction",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Divide a whole number by a fraction",
+      "outcome": "Calculate the quotient of a whole number divided by a fraction by multiplying the whole number by the reciprocal of the fraction",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+        "class6-mathematics-operations-on-fractions-multiply-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/operations-on-fractions/division-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-divide-fraction-by-fraction",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Divide a fraction by another fraction",
+      "outcome": "Calculate the quotient of two fractions or mixed fractions by multiplying the dividend by the reciprocal of the divisor",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+        "class6-mathematics-operations-on-fractions-multiply-mixed-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/operations-on-fractions/division-fractions"
+    },
+    {
+      "id": "class6-mathematics-operations-on-fractions-solve-multiplication-division-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "operations-on-fractions",
+      "title": "Solve word problems on fraction multiplication and division",
+      "outcome": "Solve multi-step real-world word problems requiring multiplication or division of fractions and mixed fractions",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-divide-fraction-by-fraction",
+        "class6-mathematics-operations-on-fractions-simplify-before-multiplying",
+        "class6-mathematics-operations-on-fractions-fraction-as-operator-of"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/operations-on-fractions/division-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-define-tenths",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Define tenths as fractional parts",
+      "outcome": "Define a tenth as one part out of ten equal parts of a whole unit (1/10 or 0.1)",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-represent-tenths-visually",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Represent tenths visually",
+      "outcome": "Shade or identify tenths on a 10-part strip or grid model",
+      "prerequisites": [
+        "class6-mathematics-decimals-define-tenths"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-define-hundredths",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Define hundredths as fractional parts",
+      "outcome": "Define a hundredth as one part out of a hundred equal parts of a whole unit (1/100 or 0.01)",
+      "prerequisites": [
+        "class6-mathematics-decimals-define-tenths"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-define-thousandths",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Define thousandths as fractional parts",
+      "outcome": "Define a thousandth as one part out of a thousand equal parts of a whole unit (1/1000 or 0.001)",
+      "prerequisites": [
+        "class6-mathematics-decimals-define-hundredths"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-place-value-chart-read",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Read place value chart with decimals",
+      "outcome": "Identify the place value of individual digits in a decimal number using a place value chart",
+      "prerequisites": [
+        "class6-mathematics-decimals-define-thousandths"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-write-number-from-place-value-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Write decimal from place value chart",
+      "outcome": "Write a decimal number given its digit entries in a place value chart",
+      "prerequisites": [
+        "class6-mathematics-decimals-place-value-chart-read"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-write-expanded-form",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Write decimal in expanded form",
+      "outcome": "Express a decimal number in expanded form using fractions or place values",
+      "prerequisites": [
+        "class6-mathematics-decimals-place-value-chart-read"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-plot-on-number-line",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Plot decimals on a number line",
+      "outcome": "Locate and plot a given decimal with tenths or hundredths on a calibrated number line",
+      "prerequisites": [
+        "class6-mathematics-prime-numbers-and-fractions-subdivide-unit-interval-number-line",
+        "class6-mathematics-decimals-define-tenths"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/decimals-introduction"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-fraction-powers-of-ten",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Convert base-10 fractions to decimals",
+      "outcome": "Convert fractions with denominators 10, 100, or 1000 into decimal notation",
+      "prerequisites": [
+        "class6-mathematics-decimals-place-value-chart-read"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-any-fraction-to-decimal",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Convert fractions to decimals via equivalent forms",
+      "outcome": "Convert fractions with denominators that are factors of 10, 100, or 1000 into decimals by finding equivalent fractions",
+      "prerequisites": [
+        "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+        "class6-mathematics-decimals-convert-fraction-powers-of-ten"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-decimal-to-fraction-unsimplified",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Convert decimal to unsimplified fraction",
+      "outcome": "Write a decimal number as a fraction with a denominator of 10, 100, or 1000",
+      "prerequisites": [
+        "class6-mathematics-decimals-place-value-chart-read"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-decimal-to-simplest-fraction",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Convert decimal to simplified fraction",
+      "outcome": "Convert a decimal into a fraction and reduce it to its lowest terms",
+      "prerequisites": [
+        "class6-mathematics-decimals-convert-decimal-to-fraction-unsimplified",
+        "class6-mathematics-operations-on-fractions-simplify-fraction-hcf"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-understand-equivalent-decimals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Identify equivalent decimals",
+      "outcome": "Show that appending trailing zeros to the right of the decimal part does not change the value of the number",
+      "prerequisites": [
+        "class6-mathematics-decimals-place-value-chart-read"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/comparing-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-compare-two-decimals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Compare two decimal numbers",
+      "outcome": "Compare two decimals by evaluating corresponding place values from left to right",
+      "prerequisites": [
+        "class6-mathematics-decimals-understand-equivalent-decimals",
+        "class6-mathematics-number-play-compare-multi-digit-numbers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/comparing-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-order-decimals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Order a set of decimals",
+      "outcome": "Arrange a set of three or more decimal numbers in ascending or descending order",
+      "prerequisites": [
+        "class6-mathematics-decimals-compare-two-decimals"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/comparing-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-money-units",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Express paise in rupees using decimals",
+      "outcome": "Express money given in paise or rupees-and-paise as a decimal number in rupees",
+      "prerequisites": [
+        "class6-mathematics-decimals-convert-fraction-powers-of-ten"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-length-units",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Express length units using decimals",
+      "outcome": "Express smaller units of length (mm, cm, m) as decimals in larger units (cm, m, km)",
+      "prerequisites": [
+        "class6-mathematics-decimals-convert-fraction-powers-of-ten"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-convert-weight-units",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Express weight units using decimals",
+      "outcome": "Express grams as decimals of kilograms",
+      "prerequisites": [
+        "class6-mathematics-decimals-convert-fraction-powers-of-ten"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/decimals-as-fractions"
+    },
+    {
+      "id": "class6-mathematics-decimals-align-vertically",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Align decimals vertically by decimal point",
+      "outcome": "Align decimal numbers in vertical columns such that decimal points and identical place values line up",
+      "prerequisites": [
+        "class6-mathematics-decimals-understand-equivalent-decimals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-add-decimals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Add decimal numbers",
+      "outcome": "Calculate the sum of two or more decimal numbers with regrouping",
+      "prerequisites": [
+        "class6-mathematics-decimals-align-vertically"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-subtract-decimals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Subtract decimal numbers",
+      "outcome": "Calculate the difference between two decimal numbers with regrouping across place values",
+      "prerequisites": [
+        "class6-mathematics-decimals-align-vertically"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-solve-money-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Solve money word problems with decimals",
+      "outcome": "Solve word problems involving total cost, balance, and purchases expressed in rupees and paise",
+      "prerequisites": [
+        "class6-mathematics-decimals-add-decimals",
+        "class6-mathematics-decimals-subtract-decimals",
+        "class6-mathematics-decimals-convert-money-units"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-solve-measurement-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Solve length and weight word problems",
+      "outcome": "Solve real-world word problems involving addition and subtraction of lengths and weights in decimal notation",
+      "prerequisites": [
+        "class6-mathematics-decimals-add-decimals",
+        "class6-mathematics-decimals-subtract-decimals",
+        "class6-mathematics-decimals-convert-length-units",
+        "class6-mathematics-decimals-convert-weight-units"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-decimals-solve-multi-step-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "decimals",
+      "title": "Solve multi-step decimal word problems",
+      "outcome": "Solve multi-step word problems requiring combined addition and subtraction of decimals across mixed units",
+      "prerequisites": [
+        "class6-mathematics-decimals-solve-money-word-problems",
+        "class6-mathematics-decimals-solve-measurement-word-problems"
+      ],
+      "difficulty": 5,
+      "topicRef": "class6-mathematics/decimals/addition-subtraction-decimals"
+    },
+    {
+      "id": "class6-mathematics-symmetry-identify-symmetric-objects-nature-art",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Identify Symmetric Objects in Environment",
+      "outcome": "Identify symmetric objects and designs in nature, architecture, and artwork",
+      "prerequisites": [
+        "class6-mathematics-patterns-identify-repeating-shapes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/symmetry/symmetry-introduction"
+    },
+    {
+      "id": "class6-mathematics-symmetry-describe-symmetry-balanced-proportion",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Describe Symmetry Conceptually",
+      "outcome": "Describe symmetry in words as balanced proportion where one half matches the other half",
+      "prerequisites": [
+        "class6-mathematics-symmetry-identify-symmetric-objects-nature-art"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/symmetry/symmetry-introduction"
+    },
+    {
+      "id": "class6-mathematics-symmetry-define-line-of-symmetry",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Define Line of Symmetry",
+      "outcome": "Define the line of symmetry (axis of symmetry) as the fold line dividing a figure into two identical halves",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line",
+        "class6-mathematics-symmetry-describe-symmetry-balanced-proportion"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-test-symmetry-paper-folding",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Test Line Symmetry by Folding",
+      "outcome": "Test whether a given 2D shape possesses line symmetry by folding along a proposed line to check for exact overlap",
+      "prerequisites": [
+        "class6-mathematics-symmetry-define-line-of-symmetry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-identify-horizontal-vertical-lines-symmetry",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Identify Vertical and Horizontal Symmetry",
+      "outcome": "Classify lines of symmetry in simple shapes or letters as vertical, horizontal, or slanting",
+      "prerequisites": [
+        "class6-mathematics-symmetry-test-symmetry-paper-folding"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-identify-symmetry-english-alphabet",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Identify Symmetry in English Letters",
+      "outcome": "Determine the line(s) of symmetry for English alphabet capital letters",
+      "prerequisites": [
+        "class6-mathematics-symmetry-identify-horizontal-vertical-lines-symmetry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-mirror-reflection-concept",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Relate Line Symmetry to Reflection",
+      "outcome": "Explain line symmetry using mirror reflection across the line of symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-define-line-of-symmetry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-complete-figure-squared-paper-vertical-horizontal",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Complete Symmetric Figure on Grid",
+      "outcome": "Complete a partially drawn symmetric figure on squared/grid paper given a vertical or horizontal line of symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-mirror-reflection-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-complete-figure-diagonal-axis",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Complete Figure with Diagonal Line of Symmetry",
+      "outcome": "Complete a partially drawn figure on squared paper given a diagonal or slanting line of symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-complete-figure-squared-paper-vertical-horizontal"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/line-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-find-lines-symmetry-triangles",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Lines of Symmetry in Triangles",
+      "outcome": "Determine the number of lines of symmetry in scalene, isosceles, and equilateral triangles",
+      "prerequisites": [
+        "class6-mathematics-symmetry-test-symmetry-paper-folding"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-find-lines-symmetry-quadrilaterals",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Lines of Symmetry in Quadrilaterals",
+      "outcome": "Determine the number and positions of lines of symmetry in rectangles, squares, rhombuses, and parallelograms",
+      "prerequisites": [
+        "class6-mathematics-symmetry-test-symmetry-paper-folding"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-lines-of-symmetry-regular-polygons",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Count Lines of Symmetry in Regular Polygons",
+      "outcome": "Calculate and construct all lines of symmetry for regular polygons with n sides",
+      "prerequisites": [
+        "class6-mathematics-symmetry-find-lines-symmetry-triangles",
+        "class6-mathematics-symmetry-find-lines-symmetry-quadrilaterals"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-identify-infinite-symmetry-circle",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Lines of Symmetry in a Circle",
+      "outcome": "Identify that a circle has infinitely many lines of symmetry passing through its centre",
+      "prerequisites": [
+        "class6-mathematics-symmetry-define-line-of-symmetry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-compare-shapes-by-line-count",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Compare Shapes by Number of Symmetry Lines",
+      "outcome": "Compare and rank geometric shapes based on their total count of lines of symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-lines-of-symmetry-regular-polygons",
+        "class6-mathematics-symmetry-identify-infinite-symmetry-circle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-draw-figure-with-given-number-of-lines",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Construct Figures with Given Line Symmetry Count",
+      "outcome": "Draw an example of a figure possessing a specified count of lines of symmetry (e.g., exactly 0, 1, 2, or 3 lines)",
+      "prerequisites": [
+        "class6-mathematics-symmetry-compare-shapes-by-line-count"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/multiple-lines-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-understand-rotation-about-a-point",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Understand Rotation About a Centre",
+      "outcome": "Describe rotation of a 2D shape about a fixed centre point through a given fraction of a turn or angle",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-classify-right-straight-complete",
+        "class6-mathematics-patterns-identify-rotational-patterns"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-identify-rotational-symmetry-visual",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Identify Rotational Symmetry",
+      "outcome": "Identify whether a shape looks identical to its original position after a rotation of less than 360 degrees",
+      "prerequisites": [
+        "class6-mathematics-symmetry-understand-rotation-about-a-point"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-define-centre-and-angle-of-rotation",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Define Centre and Angle of Rotation",
+      "outcome": "State the centre of rotation and angle of rotation for a given shape exhibiting rotational symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-identify-rotational-symmetry-visual"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-determine-order-of-rotational-symmetry",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Determine Order of Rotational Symmetry",
+      "outcome": "Calculate the order of rotational symmetry of a figure by counting matching positions in one complete 360-degree turn",
+      "prerequisites": [
+        "class6-mathematics-symmetry-define-centre-and-angle-of-rotation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-order-of-rotation-common-polygons",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Rotational Symmetry Order in Polygons",
+      "outcome": "State the order of rotational symmetry of standard geometric shapes including equilateral triangles, squares, rectangles, and regular polygons",
+      "prerequisites": [
+        "class6-mathematics-symmetry-determine-order-of-rotational-symmetry"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-rotational-symmetry-english-letters",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Rotational Symmetry in English Letters",
+      "outcome": "Identify English alphabet capital letters that possess rotational symmetry of order 2 or more (e.g., H, I, N, O, S, X, Z)",
+      "prerequisites": [
+        "class6-mathematics-symmetry-determine-order-of-rotational-symmetry"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-relate-line-and-rotational-symmetry",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Synthesize Line and Rotational Symmetry",
+      "outcome": "Classify shapes into categories based on having line symmetry only, rotational symmetry only, both, or neither",
+      "prerequisites": [
+        "class6-mathematics-symmetry-compare-shapes-by-line-count",
+        "class6-mathematics-symmetry-order-of-rotation-common-polygons",
+        "class6-mathematics-symmetry-rotational-symmetry-english-letters"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-relationship-sides-order-regular-polygons",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Generalize Symmetry in Regular Polygons",
+      "outcome": "State and apply the general rule that a regular polygon of n sides has n lines of symmetry and rotational symmetry of order n",
+      "prerequisites": [
+        "class6-mathematics-symmetry-lines-of-symmetry-regular-polygons",
+        "class6-mathematics-symmetry-order-of-rotation-common-polygons"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-symmetry-create-symmetric-rangoli-patterns",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "symmetry",
+      "title": "Design Symmetric Patterns and Rangoli",
+      "outcome": "Construct a symmetric tile, border, or rangoli pattern possessing both multiple lines of symmetry and rotational symmetry",
+      "prerequisites": [
+        "class6-mathematics-symmetry-relate-line-and-rotational-symmetry",
+        "class6-mathematics-symmetry-complete-figure-diagonal-axis"
+      ],
+      "difficulty": 5,
+      "topicRef": "class6-mathematics/symmetry/rotational-symmetry"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-define-perimeter-boundary",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Define Perimeter as Boundary Length",
+      "outcome": "Define perimeter as the total distance around the outer boundary of a closed planar figure.",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-define-line-segment"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter-area-introduction"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-define-area-surface-region",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Define Area as Surface Region",
+      "outcome": "Define area as the amount of surface enclosed inside the boundary of a closed two-dimensional shape.",
+      "prerequisites": [
+        "class6-mathematics-lines-and-angles-identify-interior-exterior-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter-area-introduction"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-distinguish-perimeter-and-area",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Distinguish Perimeter and Area",
+      "outcome": "Distinguish between perimeter and area in real-world contexts such as fencing a field versus tiling a floor.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-define-perimeter-boundary",
+        "class6-mathematics-perimeter-and-area-define-area-surface-region"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter-area-introduction"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-identify-units-perimeter-vs-area",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Identify Units of Perimeter and Area",
+      "outcome": "Identify linear units (such as cm, m) for perimeter and square units (such as sq cm, sq m) for area.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-distinguish-perimeter-and-area",
+        "class6-mathematics-decimals-convert-length-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter-area-introduction"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Perimeter of Irregular Polygons",
+      "outcome": "Calculate the perimeter of an irregular polygon by summing the lengths of all its consecutive sides.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-define-perimeter-boundary"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-find-missing-side-given-perimeter",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Find Missing Side from Perimeter",
+      "outcome": "Calculate the length of an unknown side of a polygon given its perimeter and all remaining side lengths.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-derive-perimeter-rectangle-formula",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Derive Rectangle Perimeter Formula",
+      "outcome": "Derive the perimeter formula of a rectangle as 2 * (length + breadth) by combining opposite equal sides.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon",
+        "class6-mathematics-symmetry-find-lines-symmetry-quadrilaterals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-perimeter-rectangle",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Calculate Perimeter of Rectangle",
+      "outcome": "Calculate the perimeter of a rectangle using the formula Perimeter = 2 * (l + b).",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-derive-perimeter-rectangle-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-perimeter-square",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Calculate Perimeter of Square",
+      "outcome": "Calculate the perimeter of a square using the formula Perimeter = 4 * side.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-perimeter-equilateral-triangle",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Perimeter of Equilateral Triangle",
+      "outcome": "Calculate the perimeter of an equilateral triangle using the formula Perimeter = 3 * side.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon",
+        "class6-mathematics-symmetry-find-lines-symmetry-triangles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-perimeter-regular-polygon",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Perimeter of Regular Polygons",
+      "outcome": "Calculate the perimeter of any regular polygon by multiplying the number of sides by the side length.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-square",
+        "class6-mathematics-symmetry-lines-of-symmetry-regular-polygons"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-find-side-from-regular-perimeter",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Find Side of Regular Polygon",
+      "outcome": "Calculate the side length of a square or regular polygon given its perimeter.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-regular-polygon"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-solve-fencing-cost-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Solve Perimeter Cost Problems",
+      "outcome": "Calculate the total cost of fencing or bordering a field given the rate per linear unit and side lengths.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-rectangle",
+        "class6-mathematics-decimals-solve-money-word-problems"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/perimeter-and-area/perimeter"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-explain-grid-square-unit",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Explain Standard Grid Unit of Area",
+      "outcome": "Explain why a unit square (1 cm by 1 cm) is used as the standard base unit for measuring area.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-identify-units-perimeter-vs-area"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/perimeter-and-area/area"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-count-fully-enclosed-squares",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Area by Counting Full Squares",
+      "outcome": "Calculate the area of a simple shape drawn on squared grid paper by counting the number of fully covered unit squares.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-explain-grid-square-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/area"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-estimate-area-grid-rules",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Estimate Area on Grid Paper",
+      "outcome": "Estimate the area of an irregular shape on grid paper using the conventions: count full squares as 1, more than half as 1, exactly half as 1/2, and ignore less than half.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-count-fully-enclosed-squares",
+        "class6-mathematics-operations-on-fractions-add-like-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/perimeter-and-area/area"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-derive-area-rectangle-grid",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Derive Rectangle Area Formula",
+      "outcome": "Derive the area formula of a rectangle (length * breadth) by arranging unit squares into rows and columns.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-count-fully-enclosed-squares",
+        "class6-mathematics-patterns-dot-arrays-rectangular"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Calculate Area of Rectangle",
+      "outcome": "Calculate the area of a rectangle given its length and breadth.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-derive-area-rectangle-grid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-calculate-area-square",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Calculate Area of Square",
+      "outcome": "Calculate the area of a square using the formula Area = side * side.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+        "class6-mathematics-patterns-square-numbers-visual"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-find-missing-dimension-from-area",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Find Missing Dimension from Area",
+      "outcome": "Calculate the missing side length of a rectangle given its area and one known side length.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-area-rectangle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-solve-tiling-paving-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Solve Tiling and Paving Problems",
+      "outcome": "Calculate the number of tiles needed to cover a rectangular floor by dividing the floor area by the tile area.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+        "class6-mathematics-perimeter-and-area-calculate-area-square"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-area-combined-rectangles-splitting",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Area of Combined Rectilinear Shapes",
+      "outcome": "Calculate the area of a rectilinear compound shape by splitting it into non-overlapping rectangles and squares.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+        "class6-mathematics-perimeter-and-area-find-missing-side-given-perimeter"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-compare-shapes-same-perimeter-different-area",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Compare Shapes of Equal Perimeter",
+      "outcome": "Compare the areas of different rectangles having the same perimeter to determine which encloses maximum area.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-rectangle",
+        "class6-mathematics-perimeter-and-area-calculate-area-rectangle"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-perimeter-and-area-solve-multi-step-cost-and-dimension-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "perimeter-and-area",
+      "title": "Multi-Step Perimeter and Area Word Problems",
+      "outcome": "Solve multi-step word problems involving conversions between units, tiling costs, and perimeter fencing of complex plots.",
+      "prerequisites": [
+        "class6-mathematics-perimeter-and-area-solve-fencing-cost-problems",
+        "class6-mathematics-perimeter-and-area-solve-tiling-paving-problems",
+        "class6-mathematics-perimeter-and-area-area-combined-rectangles-splitting"
+      ],
+      "difficulty": 5,
+      "topicRef": "class6-mathematics/perimeter-and-area/area-rectangle-square"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-identify-constants-arithmetic",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Identify Constants in Arithmetic",
+      "outcome": "Identify fixed numerical values (constants) in pure arithmetic expressions",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/algebraic-thinking-introduction"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-identify-unknowns-word-problems",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Identify Unknown Quantities",
+      "outcome": "Identify the unknown quantity in a simple everyday mathematical situation",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-identify-constants-arithmetic"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/algebraic-thinking-introduction"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-differentiate-arithmetic-algebraic",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Distinguish Arithmetic and Algebraic Expressions",
+      "outcome": "Differentiate between an arithmetic expression containing only numbers and an algebraic expression containing variables",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-identify-constants-arithmetic",
+        "class6-mathematics-algebraic-thinking-identify-unknowns-word-problems"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/algebraic-thinking-introduction"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-define-variable-letter-symbol",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Define Variable as a Symbol",
+      "outcome": "State that a variable is an alphabet or symbol that can take different numerical values",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-identify-unknowns-word-problems"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-state-rules-geometry-variables",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "State Geometric Rules Using Variables",
+      "outcome": "Express perimeter and area formulas for common polygons (e.g., $P = 4s$, $P = 2(l+b)$) using variables",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-variable-letter-symbol",
+        "class6-mathematics-perimeter-and-area-derive-perimeter-rectangle-formula",
+        "class6-mathematics-perimeter-and-area-calculate-perimeter-square"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-state-arithmetic-properties-variables",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "State Arithmetic Properties Using Variables",
+      "outcome": "State general arithmetic properties such as commutativity ($a + b = b + a$) and distributivity ($a(b+c) = ab + ac$) using variables",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-variable-letter-symbol"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-translate-addition-subtraction-phrases",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Translate Addition and Subtraction Phrases",
+      "outcome": "Translate verbal phrases involving addition and subtraction (e.g., '5 more than $x$', '$y$ decreased by 7') into algebraic expressions",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-variable-letter-symbol"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-translate-multiplication-division-phrases",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Translate Multiplication and Division Phrases",
+      "outcome": "Translate verbal phrases involving multiplication and division (e.g., 'product of 4 and $x$', 'one-third of $p$') into algebraic expressions",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-variable-letter-symbol"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-translate-multi-operation-phrases",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Translate Multi-Operation Verbal Phrases",
+      "outcome": "Formulate algebraic expressions involving two or more operations (e.g., '3 added to twice of $n$', '7 subtracted from product of 5 and $x$')",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-translate-addition-subtraction-phrases",
+        "class6-mathematics-algebraic-thinking-translate-multiplication-division-phrases"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-convert-expression-to-words",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Describe Expressions in Words",
+      "outcome": "Describe a given algebraic expression in ordinary verbal language",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-translate-multi-operation-phrases"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-substitute-single-variable-single-operation",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Evaluate One-Step Expressions",
+      "outcome": "Calculate the numerical value of a one-operation algebraic expression by substituting a given integer for the variable",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-variable-letter-symbol"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-substitute-single-variable-multi-operation",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Evaluate Multi-Step Expressions",
+      "outcome": "Calculate the numerical value of a multi-operation algebraic expression (e.g., $3x + 5$, $2(n - 4)$) by substituting a given value for the variable",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-substitute-single-variable-single-operation",
+        "class6-mathematics-algebraic-thinking-translate-multi-operation-phrases"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-evaluate-expression-table-of-values",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Construct Value Table for Expression",
+      "outcome": "Construct a table of values showing the outputs of an algebraic expression for sequential inputs of the variable",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-substitute-single-variable-multi-operation",
+        "class6-mathematics-patterns-matchstick-relation-table"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/expressions-with-variables"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-define-equation-equal-sign",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Define an Equation",
+      "outcome": "Explain that an equation is a condition stating that two mathematical expressions separated by an equals sign ($=$) have the same value",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-differentiate-arithmetic-algebraic"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-identify-lhs-rhs",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Identify LHS and RHS of Equation",
+      "outcome": "Identify the Left Hand Side (LHS) and Right Hand Side (RHS) of any given algebraic equation",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-equation-equal-sign"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-distinguish-equation-from-expression",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Distinguish Equation from Expression",
+      "outcome": "Classify given mathematical statements as either expressions or equations based on the presence of an equality sign",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-define-equation-equal-sign"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-translate-verbal-statement-to-equation",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Form Equation from Statement",
+      "outcome": "Translate a verbal equality condition (e.g., 'sum of $x$ and 4 is 11') into an algebraic equation",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-translate-multi-operation-phrases",
+        "class6-mathematics-algebraic-thinking-define-equation-equal-sign"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-check-solution-by-substitution",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Verify Equation Solution by Substitution",
+      "outcome": "Verify whether a given numerical value satisfies an equation by checking if $\\text{LHS} = \\text{RHS}$",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-identify-lhs-rhs",
+        "class6-mathematics-algebraic-thinking-substitute-single-variable-multi-operation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-solve-by-trial-and-error-table",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Solve Equation by Trial and Error Table",
+      "outcome": "Solve a linear equation using a systematic trial-and-error table to find the value where $\\text{LHS} = \\text{RHS}$",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-evaluate-expression-table-of-values",
+        "class6-mathematics-algebraic-thinking-check-solution-by-substitution"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-solve-one-step-addition-subtraction-inspection",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Solve Addition-Subtraction Equations by Inspection",
+      "outcome": "Solve simple equations involving one addition or subtraction step (e.g., $x + 5 = 12$, $y - 3 = 7$) by inspection",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-check-solution-by-substitution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-solve-one-step-multiplication-division-inspection",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Solve Multiplication-Division Equations by Inspection",
+      "outcome": "Solve simple equations involving one multiplication or division step (e.g., $3x = 15$, $m/4 = 2$) by inspection",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-check-solution-by-substitution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-solve-two-step-equation-inspection",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Solve Two-Step Equations by Inspection",
+      "outcome": "Solve two-step linear equations (e.g., $2x + 3 = 11$, $3n - 1 = 14$) by inspection or systematic substitution",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-solve-one-step-addition-subtraction-inspection",
+        "class6-mathematics-algebraic-thinking-solve-one-step-multiplication-division-inspection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-set-up-equation-word-problem",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Set Up Equation for Word Problem",
+      "outcome": "Formulate an algebraic equation from a real-life contextual word problem involving an unknown quantity",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-translate-verbal-statement-to-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    },
+    {
+      "id": "class6-mathematics-algebraic-thinking-solve-word-problem-by-trial",
+      "klass": 6,
+      "subject": "Mathematics",
+      "chapter": "algebraic-thinking",
+      "title": "Solve Word Problems with Equations",
+      "outcome": "Solve a real-world word problem by setting up a simple equation and finding the unknown value by inspection or trial",
+      "prerequisites": [
+        "class6-mathematics-algebraic-thinking-set-up-equation-word-problem",
+        "class6-mathematics-algebraic-thinking-solve-two-step-equation-inspection"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-mathematics/algebraic-thinking/equations"
+    }
+  ]
+}

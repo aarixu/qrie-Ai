@@ -1,0 +1,3875 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class11-chemistry-redox-reactions-classical-ox-red-def",
+      "nodeId": "class11-chemistry-redox-reactions-classical-ox-red-def",
+      "question": "According to the classical concept, which process represents oxidation?",
+      "options": [
+        "Addition of hydrogen to a compound",
+        "Removal of oxygen from a compound",
+        "Addition of an electronegative element to a substance",
+        "Addition of an electropositive element to a substance"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses oxidation with reduction regarding hydrogen transfer",
+        "confuses oxidation with reduction regarding oxygen removal",
+        "",
+        "confuses electropositive and electronegative element addition"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-classical-agents",
+      "nodeId": "class11-chemistry-redox-reactions-classical-agents",
+      "question": "In the reaction CuO + H2 -> Cu + H2O, which substance acts as the oxidizing agent according to classical concepts?",
+      "options": [
+        "Cu, because it is reduced to elemental state",
+        "H2, because it removes oxygen from CuO",
+        "CuO, because it supplies oxygen to hydrogen",
+        "H2O, because it contains oxygen"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies the reduced product instead of the reactant that supplies oxygen",
+        "confuses the reducing agent with the oxidizing agent",
+        "",
+        "identifies the product formed rather than the reactant supplying oxygen"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-electron-transfer-def",
+      "nodeId": "class11-chemistry-redox-reactions-electron-transfer-def",
+      "question": "In terms of electron transfer, how are oxidation and reduction defined?",
+      "options": [
+        "Oxidation is the gain of electrons, and reduction is the loss of electrons",
+        "Oxidation is the sharing of electrons, and reduction is the transfer of electrons",
+        "Both oxidation and reduction involve the loss of electrons",
+        "Oxidation is the loss of electrons, and reduction is the gain of electrons"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "inverts the definitions of oxidation and reduction in the electronic concept",
+        "confuses covalent bonding concepts with redox electron transfer definitions",
+        "thinks all redox processes involve only electron loss",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-electron-transfer-agents",
+      "nodeId": "class11-chemistry-redox-reactions-electron-transfer-agents",
+      "question": "In the reaction 2Fe3+ + Sn2+ -> 2Fe2+ + Sn4+, which species is the reducing agent?",
+      "options": [
+        "Fe3+, because it gains electrons",
+        "Sn2+, because it donates electrons",
+        "Fe2+, because it has lower positive charge",
+        "Sn4+, because it has higher positive charge"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the electron acceptor with the reducing agent",
+        "",
+        "identifies the reduced product rather than the reactant acting as reducing agent",
+        "identifies the oxidized product rather than the reactant acting as reducing agent"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-competitive-metal-reactivity",
+      "nodeId": "class11-chemistry-redox-reactions-competitive-metal-reactivity",
+      "question": "Zinc metal displaces copper from CuSO4 solution, and copper metal displaces silver from AgNO3 solution. What is the correct order of tendency to lose electrons?",
+      "options": [
+        "Ag > Cu > Zn",
+        "Zn > Cu > Ag",
+        "Cu > Zn > Ag",
+        "Zn > Ag > Cu"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the reactivity order by mistaking least reactive metal for the most reactive",
+        "",
+        "places copper as more electropositive than zinc",
+        "incorrectly places silver ahead of copper in electron-losing tendency"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-oxidation-number-rules",
+      "nodeId": "class11-chemistry-redox-reactions-oxidation-number-rules",
+      "question": "What is the oxidation number of oxygen in potassium superoxide (KO2)?",
+      "options": [
+        "-1/2",
+        "-1",
+        "-2",
+        "+2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses superoxide with peroxide, assigning an oxidation state of -1",
+        "applies the usual oxide state (-2) without recognizing the superoxide ion",
+        "confuses potassium superoxide with oxygen difluoride where oxygen is positive"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-calc-ox-num-simple",
+      "nodeId": "class11-chemistry-redox-reactions-calc-ox-num-simple",
+      "question": "What is the oxidation number of chromium in the dichromate ion, Cr2O7^2-?",
+      "options": [
+        "+7",
+        "+6",
+        "+5",
+        "+12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes the oxidation number equals the number of oxygen atoms",
+        "",
+        "makes an arithmetic error during the algebraic summation of oxidation numbers",
+        "forgets to divide the total oxidation charge by the number of chromium atoms"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-fractional-ox-num-structures",
+      "nodeId": "class11-chemistry-redox-reactions-fractional-ox-num-structures",
+      "question": "Carbon suboxide (C3O2) has a linear structure O=C=C=C=O. What are the individual oxidation states of the three carbon atoms from left to right?",
+      "options": [
+        "+2, +2, 0",
+        "+4/3, +4/3, +4/3",
+        "+2, 0, +2",
+        "+1, +2, +1"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "misassigns the central carbon atom an oxidation state belonging to a terminal carbon",
+        "assumes all carbon atoms have the average fractional oxidation number instead of individual structural states",
+        "",
+        "incorrectly calculates individual bonds assuming each C=O bond gives +1 to carbon"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-redox-definition-ox-num",
+      "nodeId": "class11-chemistry-redox-reactions-redox-definition-ox-num",
+      "question": "Which of the following is a redox reaction?",
+      "options": [
+        "AgNO3 + NaCl -> AgCl + NaNO3",
+        "CaCO3 -> CaO + CO2",
+        "NaOH + HCl -> NaCl + H2O",
+        "2Na + Cl2 -> 2NaCl"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks double displacement reactions involve changes in oxidation states",
+        "confuses thermal decomposition without electron transfer with a redox reaction",
+        "mistakes acid-base neutralization for a redox process",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-combination-redox",
+      "nodeId": "class11-chemistry-redox-reactions-combination-redox",
+      "question": "Why is the reaction C(s) + O2(g) -> CO2(g) classified as a combination redox reaction?",
+      "options": [
+        "It involves the displacement of oxygen by carbon at elevated temperature",
+        "Two compounds combine into a single product without any change in oxidation states",
+        "Carbon is oxidized to +2 while oxygen remains in the 0 oxidation state",
+        "Two elements combine into one compound with changes in oxidation numbers from 0 to +4 and -2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses combination reactions with displacement reactions",
+        "thinks combination reactions occur without changes in oxidation numbers",
+        "incorrectly computes the final oxidation state of carbon in carbon dioxide",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-decomposition-redox",
+      "nodeId": "class11-chemistry-redox-reactions-decomposition-redox",
+      "question": "Which of the following decomposition reactions is NOT a redox reaction?",
+      "options": [
+        "2KClO3 -> 2KCl + 3O2",
+        "2H2O -> 2H2 + O2",
+        "CaCO3 -> CaO + CO2",
+        "2NaH -> 2Na + H2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "fails to recognize that KClO3 decomposition involves changes in Cl and O oxidation states",
+        "thinks electrolysis of water involves no change in oxidation state",
+        "",
+        "thinks hydride decomposition does not involve electron transfer"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-displacement-redox",
+      "nodeId": "class11-chemistry-redox-reactions-displacement-redox",
+      "question": "Which reaction represents a non-metal displacement redox reaction?",
+      "options": [
+        "Zn(s) + CuSO4(aq) -> ZnSO4(aq) + Cu(s)",
+        "2Na(s) + 2H2O(l) -> 2NaOH(aq) + H2(g)",
+        "Cr2O3(s) + 2Al(s) -> Al2O3(s) + 2Cr(s)",
+        "TiCl4(l) + 2Mg(s) -> Ti(s) + 2MgCl2(s)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "selects a metal displacement reaction instead of a non-metal displacement",
+        "",
+        "selects thermite metal-metal displacement reaction",
+        "identifies reduction of a metal chloride by another metal as non-metal displacement"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-disproportionation-redox",
+      "nodeId": "class11-chemistry-redox-reactions-disproportionation-redox",
+      "question": "Why is the reaction 2H2O2 -> 2H2O + O2 classified as a disproportionation reaction?",
+      "options": [
+        "Hydrogen is both oxidized and reduced simultaneously",
+        "Water decomposes into elements having zero oxidation states",
+        "Oxygen is reduced to -2 while hydrogen is oxidized to +1",
+        "Oxygen is oxidized from -1 to 0 and reduced from -1 to -2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies hydrogen as the disproportionating element instead of oxygen",
+        "thinks all products formed in disproportionation must be elemental",
+        "fails to see that a single element changes to two different oxidation states",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-balance-ox-num-acidic",
+      "nodeId": "class11-chemistry-redox-reactions-balance-ox-num-acidic",
+      "question": "When balancing the skeletal reaction Fe2+ + Cr2O7^2- -> Fe3+ + Cr3+ in acidic medium using the oxidation number method, what is the stoichiometric ratio of Fe2+ to Cr2O7^2-?",
+      "options": [
+        "1 : 1",
+        "3 : 1",
+        "2 : 1",
+        "6 : 1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "equates the stoichiometric coefficients directly without balancing total change in oxidation numbers",
+        "considers oxidation state change per chromium atom instead of per Cr2O7^2- unit",
+        "confuses the number of chromium atoms with the required ratio of reducing agent",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-balance-ox-num-basic",
+      "nodeId": "class11-chemistry-redox-reactions-balance-ox-num-basic",
+      "question": "When balancing the reaction MnO4^- + I^- -> MnO2 + I2 in basic medium, how many OH^- ions must be added to balance the net ionic charge?",
+      "options": [
+        "8 OH^- on the product side",
+        "4 OH^- on the reactant side",
+        "4 OH^- on the product side",
+        "2 OH^- on the reactant side"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates charge balance incorrectly by ignoring the balanced stoichiometric coefficients of permanganate and iodide",
+        "under-calculates the required number of hydroxide ions needed for the balanced full equation",
+        "places OH^- on the wrong side of the equation to balance ionic charge"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-split-half-reactions",
+      "nodeId": "class11-chemistry-redox-reactions-split-half-reactions",
+      "question": "What is the correct oxidation half-reaction for the reaction Zn(s) + 2Ag+(aq) -> Zn2+(aq) + 2Ag(s)?",
+      "options": [
+        "Ag+(aq) + e^- -> Ag(s)",
+        "Zn(s) + 2e^- -> Zn2+(aq)",
+        "Zn(s) -> Zn2+(aq) + 2e^-",
+        "2Ag+(aq) -> 2Ag(s) + 2e^-"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "selects the reduction half-reaction instead of the oxidation half-reaction",
+        "adds electrons to the reactant side in an oxidation half-reaction",
+        "",
+        "treats silver reduction as an oxidation half-reaction by misplacing electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-balance-half-reaction-acidic",
+      "nodeId": "class11-chemistry-redox-reactions-balance-half-reaction-acidic",
+      "question": "In the balanced reduction half-reaction for dichromate in acidic medium, Cr2O7^2- -> Cr3+, how many H+ ions and electrons (e^-) are required on the reactant side?",
+      "options": [
+        "14 H+ and 3 e^-",
+        "7 H+ and 6 e^-",
+        "14 H+ and 6 e^-",
+        "7 H+ and 3 e^-"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the oxidation state change per chromium atom (+3) rather than for both atoms (+6)",
+        "forgets that each of the 7 H2O molecules contains two hydrogen atoms",
+        "",
+        "halves both the number of protons and total electrons needed"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-balance-half-reaction-basic",
+      "nodeId": "class11-chemistry-redox-reactions-balance-half-reaction-basic",
+      "question": "When converting an equation balanced with H+ ions into basic medium, what step is performed?",
+      "options": [
+        "Replace every H+ directly with an equal number of OH^- on the same side",
+        "Add an equal number of OH^- ions as H+ to both sides of the equation and combine H+ and OH^- to form H2O",
+        "Subtract H2O molecules from the side containing H+ ions and add OH^- to the other side",
+        "Add OH^- only to the side containing H+ ions to eliminate charge"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks H+ can simply be substituted by OH^- without adding OH^- to both sides",
+        "",
+        "confuses water balancing with the neutralization method for basic media",
+        "adds OH^- to only one side, violating mass and charge balance"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-permanganate-titration",
+      "nodeId": "class11-chemistry-redox-reactions-permanganate-titration",
+      "question": "Why does acidic potassium permanganate (KMnO4) titration not require an external indicator?",
+      "options": [
+        "The first slight excess of MnO4^- imparts a permanent faint pink color to the colorless solution",
+        "Mn2+ ions formed during the reaction impart a deep purple color at the endpoint",
+        "The reaction mixture turns dark blue when all reducing agent is consumed",
+        "MnO4^- reacts with atmospheric oxygen to produce a yellow color at the endpoint"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks Mn2+ is intensely colored rather than virtually colorless",
+        "confuses permanganate titration endpoint with iodometric starch endpoint",
+        "thinks atmospheric oxidation causes the color change at the endpoint"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-dichromate-titration-indicator",
+      "nodeId": "class11-chemistry-redox-reactions-dichromate-titration-indicator",
+      "question": "Which substance is commonly used as an internal indicator in potassium dichromate titrations?",
+      "options": [
+        "Diphenylamine",
+        "Starch solution",
+        "Phenolphthalein",
+        "Methyl orange"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses dichromate titrations with iodometric titrations using starch",
+        "confuses redox titrations with acid-base titrations using phenolphthalein",
+        "confuses redox indicators with acid-base indicators like methyl orange"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-iodometric-titration-starch",
+      "nodeId": "class11-chemistry-redox-reactions-iodometric-titration-starch",
+      "question": "What indicates the endpoint in the titration of liberated iodine with sodium thiosulphate using starch indicator?",
+      "options": [
+        "Appearance of a persistent pink color",
+        "Appearance of a permanent yellow color",
+        "Formation of a white precipitate",
+        "Disappearance of the deep blue color"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the starch-iodine endpoint with the KMnO4 titration endpoint",
+        "confuses the endpoint with the straw-yellow color of free iodine prior to starch addition",
+        "mistakes a color disappearance for precipitation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-daniell-cell-construction",
+      "nodeId": "class11-chemistry-redox-reactions-daniell-cell-construction",
+      "question": "In a standard Daniell cell operating under spontaneous conditions, what are the anode and cathode, and in which direction do electrons flow in the external circuit?",
+      "options": [
+        "Anode is Cu, Cathode is Zn, electrons flow from Cu to Zn",
+        "Anode is Zn, Cathode is Cu, electrons flow from Zn to Cu",
+        "Anode is Zn, Cathode is Cu, electrons flow from Cu to Zn",
+        "Anode is Cu, Cathode is Zn, electrons flow from Zn to Cu"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the roles of zinc and copper and the electron flow direction",
+        "",
+        "correctly identifies electrodes but reverses external electron flow direction",
+        "assigns copper as anode and zinc as cathode"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-electrode-potential-def",
+      "nodeId": "class11-chemistry-redox-reactions-electrode-potential-def",
+      "question": "According to IUPAC convention, what does the term 'standard electrode potential' without qualification always refer to?",
+      "options": [
+        "Standard reduction potential",
+        "Standard oxidation potential",
+        "Sum of oxidation and reduction potentials",
+        "Cell potential under non-standard conditions"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks standard electrode potential defaults to oxidation potential",
+        "confuses single electrode potential with overall cell potential",
+        "confuses standard potential with non-standard potential"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-redox-reactions-standard-electrode-potential-she",
+      "nodeId": "class11-chemistry-redox-reactions-standard-electrode-potential-she",
+      "question": "What is the assigned potential of the Standard Hydrogen Electrode (SHE) at all temperatures?",
+      "options": [
+        "0.00 V",
+        "-1.00 V",
+        "+1.00 V",
+        "+0.76 V"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks SHE is assigned a negative potential",
+        "thinks the reference SHE is assigned a unit positive value of +1.00 V",
+        "confuses SHE potential with standard oxidation potential of zinc (+0.76 V)"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation",
+      "question": "What is the hybridisation of each carbon atom in propadiene, CH2=C=CH2, numbered from left to right as C1, C2, and C3?",
+      "options": [
+        "C1: sp2, C2: sp2, C3: sp2",
+        "C1: sp, C2: sp2, C3: sp",
+        "C1: sp3, C2: sp, C3: sp3",
+        "C1: sp2, C2: sp, C3: sp2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks any carbon involved in double bonds must be sp2 regardless of having two double bonds",
+        "swaps the hybridisation of terminal and central carbons",
+        "confuses terminal CH2 groups in alkenes with saturated sp3 alkyl groups",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations",
+      "question": "Which of the following is the correct condensed formula for the compound represented by the bond-line formula of 2-methylbutane?",
+      "options": [
+        "(CH3)3CCH3",
+        "CH3CH2CH(CH3)2CH3",
+        "(CH3)2CHCH2CH3",
+        "CH3CH(CH3)CH2CH2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses 2-methylbutane with 2,2-dimethylpropane (neopentane)",
+        "adds an extra methyl group creating an impossible pentavalent carbon",
+        "",
+        "omits terminal hydrogen atoms from the end of the alkyl chain"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-wedge-dash-projection",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-wedge-dash-projection",
+      "question": "In a 3D wedge-and-dash representation of methane, what does a dashed wedge bond signify?",
+      "options": [
+        "The bond lies flat in the plane of the paper",
+        "The bond projects out of the paper towards the observer",
+        "The bond is undergoing rapid rotation and vibration",
+        "The bond projects away from the observer behind the plane"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses dashed lines with solid normal lines that represent in-plane bonds",
+        "swaps the meaning of a solid wedge and a dashed wedge",
+        "thinks dashed lines indicate dynamic molecular vibrations rather than spatial depth",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification",
+      "question": "Which functional group is present in the compound CH3-CO-NH-CH3?",
+      "options": [
+        "Ketone and primary amine",
+        "Ester and amine",
+        "Secondary amide",
+        "Imine"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "treats the carbonyl and amino nitrogen as isolated ketone and amine groups",
+        "confuses nitrogen with oxygen leading to mistaking an amide for an ester",
+        "",
+        "confuses a substituted amide group with a carbon-nitrogen double bonded imine"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-alkanes",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-alkanes",
+      "question": "What is the correct IUPAC name for (CH3)2CH-CH(CH3)-CH2-CH3?",
+      "options": [
+        "3,4-dimethylpentane",
+        "2,3-dimethylpentane",
+        "2-isopropylbutane",
+        "1,1,2-trimethylbutane"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "numbers the parent carbon chain from the wrong end giving higher locants",
+        "",
+        "fails to identify the longest continuous carbon chain and treats the isopropyl group as a substituent",
+        "includes a substituent carbon in the numbering of the main chain at position 1"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-polyfunctional",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-polyfunctional",
+      "question": "What is the correct systematic IUPAC name for CH3-CH(OH)-CH2-COOH?",
+      "options": [
+        "2-hydroxybutanoic acid",
+        "3-hydroxybutanoic acid",
+        "4-hydroxybutan-2-one",
+        "3-carboxypropan-2-ol"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "starts numbering from the alcohol carbon rather than giving priority locant 1 to carboxylic acid",
+        "",
+        "confuses the carboxylic acid group with a ketone and an alcohol",
+        "treats the alcohol as the principal functional group and the carboxylic acid as a substituent"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-benzene-derivatives",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-benzene-derivatives",
+      "question": "What is the correct IUPAC name for a benzene ring carrying a methyl group at position 1 and a nitro group at position 3?",
+      "options": [
+        "4-nitrotoluene",
+        "3-methyl-1-nitrobenzene",
+        "1-methyl-3-nitrobenzene",
+        "2-nitrotoluene"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the meta relationship (1,3) with para substitution (1,4)",
+        "assigns locant 1 to the nitro substituent alphabetically rather than prioritising the alkyl group for base parent naming",
+        "",
+        "confuses the meta relationship (1,3) with ortho substitution (1,2)"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-isomerism",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-isomerism",
+      "question": "What type of isomerism is shown by diethyl ether (CH3CH2-O-CH2CH3) and methyl propyl ether (CH3-O-CH2CH2CH3)?",
+      "options": [
+        "Chain isomerism",
+        "Position isomerism",
+        "Functional isomerism",
+        "Metamerism"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "views differences in alkyl chains around a heteroatom as chain isomerism",
+        "treats the moving position of a bridging heteroatom as position isomerism of a substituent",
+        "thinks ethers with different alkyl groups belong to different functional group classes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-stereoisomerism-basics",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-stereoisomerism-basics",
+      "question": "Which of the following compounds exhibits geometrical (cis-trans) isomerism?",
+      "options": [
+        "Propene",
+        "But-2-ene",
+        "2-Methylpropene",
+        "But-1-ene"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks any alkene with a double bond can exhibit cis-trans isomerism regardless of identical groups on one carbon",
+        "",
+        "fails to realize that having two identical methyl groups on one double-bonded carbon prevents cis-trans isomerism",
+        "overlooks that the terminal CH2 carbon has two identical hydrogen atoms"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates",
+      "question": "What reaction intermediates are produced when a covalent C-C bond undergoes homolytic cleavage?",
+      "options": [
+        "Two free radicals",
+        "One carbocation and one carbanion",
+        "Two carbocations",
+        "Two carbanions"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses homolytic fission with heterolytic fission which produces ionic species",
+        "thinks homolysis strips both shared electrons away from both carbon atoms",
+        "thinks homolysis gives extra electrons to both carbon atoms"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles",
+      "question": "Which of the following species acts as an electrophile?",
+      "options": [
+        "NH3",
+        "BF3",
+        "OH-",
+        "H2O"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks neutral molecules with lone pairs are electrophiles",
+        "",
+        "confuses negatively charged nucleophiles with electrophiles",
+        "assumes water acts as an electron acceptor because it is neutral"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation",
+      "question": "What does a single-barbed (fish-hook) curved arrow signify in an organic reaction mechanism?",
+      "options": [
+        "Movement of an electron pair",
+        "Migration of a proton (H+)",
+        "Movement of a single electron",
+        "Shift of a positive charge"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a single-barbed arrow with a standard double-barbed arrow representing an electron pair",
+        "thinks curved arrows trace the physical trajectory of nuclei or protons",
+        "",
+        "believes arrows point in the direction that positive charge moves"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-inductive-effect",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-inductive-effect",
+      "question": "Which of the following groups exhibits an electron-donating (+I) inductive effect relative to hydrogen?",
+      "options": [
+        "-NO2",
+        "-COOH",
+        "-Cl",
+        "-CH3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses strongly electron-withdrawing (-I) nitro group with an electron-donating group",
+        "thinks carboxylic acid groups release electrons via inductive effect",
+        "thinks halogens donate electrons through the inductive effect",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-resonance-structures",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-resonance-structures",
+      "question": "Which resonance structure among valid canonical forms contributes MOST to the resonance hybrid?",
+      "options": [
+        "A structure where all atoms have complete octets and minimal charge separation",
+        "A structure with fewer covalent bonds and separated charges",
+        "A structure placing a negative charge on a less electronegative atom",
+        "A structure placing like charges on adjacent atoms"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks charge-separated dipolar structures are more stable than neutral full-octet structures",
+        "fails to realize negative charge is more stable on the more electronegative atom",
+        "believes having adjacent like charges stabilizes a canonical contributor"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mesomeric-effect",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mesomeric-effect",
+      "question": "Which of the following substituents shows a +R (+M) resonance effect when attached to a benzene ring?",
+      "options": [
+        "-OH",
+        "-NO2",
+        "-CN",
+        "-CHO"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the strongly electron-withdrawing -NO2 group with a +R group",
+        "thinks the triple-bonded cyano group donates pi electrons into the ring",
+        "confuses electron-withdrawing carbonyl groups with resonance-donating groups"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-electromeric-effect",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-electromeric-effect",
+      "question": "When an alkene reacts with a proton (H+), the pi-electron pair shifts to the carbon that bonds with the attacking reagent. What is this effect called?",
+      "options": [
+        "+E effect",
+        "-E effect",
+        "+I effect",
+        "-R effect"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses +E with -E where electrons transfer away from the site of attacking reagent attachment",
+        "confuses temporary polarisability (electromeric) with permanent sigma-bond inductive effect",
+        "confuses electromeric effect with permanent resonance/mesomeric effect"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-hyperconjugation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-hyperconjugation",
+      "question": "What is the correct order of carbocation stability based on hyperconjugation?",
+      "options": [
+        "(CH3)2CH+ > (CH3)3C+ > CH3CH2+ > CH3+",
+        "CH3+ > CH3CH2+ > (CH3)2CH+ > (CH3)3C+",
+        "(CH3)3C+ > (CH3)2CH+ > CH3CH2+ > CH3+",
+        "CH3CH2+ > (CH3)2CH+ > (CH3)3C+ > CH3+"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks secondary carbocations have more hyperconjugative structures than tertiary carbocations",
+        "inverts the stability order believing fewer substituents make a carbocation less crowded and more stable",
+        "",
+        "believes primary carbocations are more stable than secondary and tertiary carbocations"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-organic-reaction-types",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-organic-reaction-types",
+      "question": "How is the reaction CH3-CH2-Br + KOH(aq) -> CH3-CH2-OH + KBr classified?",
+      "options": [
+        "Substitution reaction",
+        "Elimination reaction",
+        "Addition reaction",
+        "Rearrangement reaction"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses nucleophilic substitution in aqueous KOH with elimination that occurs in alcoholic KOH",
+        "confuses replacement of a functional group with addition across a multiple bond",
+        "confuses substitution of a group with an internal skeletal rearrangement"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-distillation-methods",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-distillation-methods",
+      "question": "Which distillation method is best suited to purify glycerol, which decomposes at its normal boiling point (290 °C)?",
+      "options": [
+        "Simple distillation",
+        "Fractional distillation",
+        "Steam distillation",
+        "Distillation under reduced pressure"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks heating at atmospheric pressure will distill the substance without thermal decomposition",
+        "believes fractional distillation prevents thermal decomposition of high-boiling liquids",
+        "thinks steam distillation is used for water-soluble non-volatile liquids like glycerol",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-chromatography-rf",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-chromatography-rf",
+      "question": "In a TLC experiment, the solvent front moves 5.0 cm from the baseline and a compound spot moves 3.0 cm. What is the Rf value of this compound?",
+      "options": [
+        "1.67",
+        "0.60",
+        "0.40",
+        "0.15"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the Rf formula by dividing solvent distance by solute distance (5.0 / 3.0)",
+        "",
+        "calculates Rf using the remaining distance to the solvent front divided by solvent front ( (5.0 - 3.0) / 5.0 )",
+        "multiplies the distances or computes (3.0 / 5.0) incorrectly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-lassaigne-test-detection",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-lassaigne-test-detection",
+      "question": "In Lassaigne's test for nitrogen detection, what compound is responsible for the characteristic Prussian blue colour?",
+      "options": [
+        "Na4[Fe(CN)6]",
+        "Fe(SCN)3",
+        "Fe4[Fe(CN)6]3",
+        "Fe(OH)3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the intermediate sodium ferrocyanide with the final Prussian blue precipitate",
+        "confuses the blood-red thiocyanate complex for nitrogen and sulphur with Prussian blue",
+        "",
+        "thinks the precipitate formed is plain iron(III) hydroxide"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation",
+      "question": "In Liebig's combustion method, 0.20 g of an organic compound gives 0.44 g of CO2. What is the percentage of carbon in the compound?",
+      "options": [
+        "44%",
+        "60%",
+        "27.3%",
+        "12%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "directly takes the mass of CO2 (0.44 g) as the mass percentage without stoichiometric conversion",
+        "",
+        "calculates the percentage of carbon in CO2 (27.3%) instead of percentage in the organic sample",
+        "uses only the atomic mass of carbon without accounting for the mass of CO2 formed"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-dumas-kjeldahl-nitrogen",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-dumas-kjeldahl-nitrogen",
+      "question": "In Kjeldahl's method, the ammonia evolved from 0.50 g of an organic compound neutralises 10 mL of 1 M H2SO4. What is the percentage of nitrogen in the compound?",
+      "options": [
+        "28%",
+        "7%",
+        "14%",
+        "56%"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets that H2SO4 is dibasic and treats 1 M H2SO4 as equivalent to 1 N H2SO4",
+        "divides by the compound mass incorrectly or doubles the denominator",
+        "uses atomic mass of nitrogen as 7 instead of 14 during calculation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-halogens-sulphur",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-halogens-sulphur",
+      "question": "In a Carius estimation of halogen, 0.40 g of an organic compound gives 0.376 g of AgBr (molar mass = 188 g/mol; atomic mass of Br = 80 g/mol). What is the percentage of bromine?",
+      "options": [
+        "40%",
+        "20%",
+        "80%",
+        "47%"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets to divide by the mass of the compound and only computes the mass of bromine as 0.16 g",
+        "mistakes the percentage of Br in the compound for its atomic weight",
+        "calculates the percentage of Ag in AgBr instead of Br in the organic compound"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-classification",
+      "nodeId": "class11-chemistry-hydrocarbons-classification",
+      "question": "Which of the following compounds is classified as an alicyclic hydrocarbon?",
+      "options": [
+        "Benzene",
+        "Toluene",
+        "n-Hexane",
+        "Cyclohexane"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks any cyclic hydrocarbon is an aromatic compound",
+        "confuses aromatic hydrocarbons containing a ring with alicyclic hydrocarbons",
+        "confuses open-chain acyclic alkanes with cyclic aliphatic hydrocarbons",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-structure-formula",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-structure-formula",
+      "question": "How many tertiary (3°) carbon atoms are present in 2,3-dimethylbutane?",
+      "options": [
+        "0",
+        "2",
+        "1",
+        "4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks that methyl substituents make the central carbons quaternary",
+        "",
+        "identifies only one branched carbon and overlooks the symmetrical second branched carbon",
+        "counts the primary methyl carbons instead of the tertiary carbons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-physical-trends",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-physical-trends",
+      "question": "Why does n-pentane have a higher boiling point than neopentane (2,2-dimethylpropane)?",
+      "options": [
+        "n-Pentane has a greater molecular mass than neopentane.",
+        "Neopentane contains weaker covalent C–C bonds than n-pentane.",
+        "n-Pentane has a larger surface area, resulting in stronger van der Waals forces.",
+        "Neopentane has stronger intermolecular forces due to its spherical shape."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes structural isomers have different molecular masses",
+        "confuses boiling point trends with the strength of intramolecular covalent bonds",
+        "",
+        "thinks spherical molecules have stronger surface contact and higher intermolecular forces"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-preparation-methods",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-preparation-methods",
+      "question": "What organic product is formed when sodium propanoate is heated with soda lime (NaOH and CaO)?",
+      "options": [
+        "Ethane",
+        "Propane",
+        "Methane",
+        "Butane"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets that decarboxylation removes one carbon atom from the parent carboxylate chain",
+        "thinks soda lime decarboxylation always reduces carboxylates down to single-carbon methane",
+        "confuses soda lime decarboxylation with the Wurtz reaction which doubles the alkyl chain"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-kolbe-electrolysis",
+      "nodeId": "class11-chemistry-hydrocarbons-kolbe-electrolysis",
+      "question": "During Kolbe's electrolytic decarboxylation of an aqueous solution of sodium acetate, which species is liberated at the anode?",
+      "options": [
+        "Hydrogen gas only",
+        "Methane and oxygen",
+        "Ethane and carbon dioxide",
+        "Sodium metal"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses cathode reduction (liberating H2) with anode oxidation",
+        "thinks acetate decarboxylation during electrolysis yields a single-carbon alkane and oxygen",
+        "",
+        "thinks sodium ions are discharged at the anode rather than acetate ions"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-free-radical-halogenation",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-free-radical-halogenation",
+      "question": "Which of the following represents a propagation step in the free radical chlorination of methane?",
+      "options": [
+        "Cl₂ → 2 Cl•",
+        "Cl• + CH₄ → •CH₃ + HCl",
+        "•CH₃ + Cl• → CH₃Cl",
+        "•CH₃ + •CH₃ → C₂H₆"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the chain initiation step with a chain propagation step",
+        "",
+        "confuses a chain termination step with a propagation step",
+        "identifies radical combination (termination) as propagation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-chemical-conversions",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-chemical-conversions",
+      "question": "What is the major organic product formed when n-hexane is heated to 773 K at 10–20 atm in the presence of Cr₂O₃/Al₂O₃ catalyst?",
+      "options": [
+        "Cyclohexane",
+        "2-Methylpentane",
+        "Hex-1-ene",
+        "Benzene"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "stops at the cyclisation step and forgets that dehydrogenation to aromatic benzene occurs",
+        "confuses aromatisation with catalytic isomerisation by anhydrous AlCl3/HCl",
+        "confuses catalytic aromatisation with simple non-cyclic catalytic dehydrogenation to an alkene",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-ethane-conformations",
+      "nodeId": "class11-chemistry-hydrocarbons-ethane-conformations",
+      "question": "Why is the staggered conformation of ethane more stable than the eclipsed conformation?",
+      "options": [
+        "The staggered conformation has maximum steric repulsion between carbon atoms.",
+        "The C–C bond length is shorter in the staggered conformation than in the eclipsed conformation.",
+        "The staggered conformation has a non-zero net dipole moment that stabilises it.",
+        "The eclipsed conformation is destabilised by torsional strain between adjacent C–H electron pairs."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks higher steric hindrance stabilizes the staggered form",
+        "thinks carbon-carbon bond lengths vary significantly between rotational conformers",
+        "believes conformational stability is driven by permanent dipole moments in symmetrical ethane",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-structure-and-bonding",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-structure-and-bonding",
+      "question": "How is the pi (π) bond in an ethene molecule formed?",
+      "options": [
+        "By sideways overlap of unhybridised 2p orbitals on adjacent carbon atoms",
+        "By end-to-end overlap of two sp² hybridised orbitals",
+        "By end-to-end overlap of unhybridised 2s orbitals",
+        "By sideways overlap of sp² hybridised orbitals with 1s orbitals of hydrogen"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses pi bond formation with axial sigma bond formation between hybrid orbitals",
+        "thinks s orbitals can form pi bonds via axial overlap",
+        "believes hybrid orbitals participate in lateral overlap with hydrogen s orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-geometrical-isomerism",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-geometrical-isomerism",
+      "question": "Which statement correctly compares cis-but-2-ene and trans-but-2-ene?",
+      "options": [
+        "cis-But-2-ene has zero dipole moment because its bond polarities cancel completely.",
+        "trans-But-2-ene has a higher dipole moment and a higher boiling point than cis-but-2-ene.",
+        "cis-But-2-ene has a higher dipole moment and a higher boiling point than trans-but-2-ene.",
+        "trans-But-2-ene has a lower melting point than cis-but-2-ene due to poorer crystal packing."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the symmetry of the trans isomer (dipole = 0) with the polar cis isomer",
+        "thinks the trans isomer has a larger dipole moment due to its extended geometry",
+        "",
+        "thinks trans isomers pack less efficiently and have lower melting points than cis isomers"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-preparation-saytzeff",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-preparation-saytzeff",
+      "question": "What is the major product when 2-bromobutane is heated with alcoholic KOH?",
+      "options": [
+        "But-1-ene",
+        "Butan-2-ol",
+        "But-2-ene",
+        "Butane"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "fails to apply Saytzeff's rule and removes hydrogen from the less substituted carbon atom",
+        "confuses alcoholic KOH (elimination) with aqueous KOH (nucleophilic substitution)",
+        "",
+        "thinks alcoholic KOH acts as a reducing agent converting alkyl halides to alkanes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-markovnikov-addition",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-markovnikov-addition",
+      "question": "What is the major product formed when propene reacts with hydrogen bromide (HBr) in the absence of peroxides?",
+      "options": [
+        "1-Bromopropane",
+        "2-Bromopropane",
+        "1,2-Dibromopropane",
+        "Cyclopropane"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts Markovnikov's rule and attaches the electrophilic proton to the less hydrogenated carbon",
+        "",
+        "confuses electrophilic addition of HX with halogenation across the double bond using X2",
+        "thinks adding HBr causes ring closure to form a cycloalkane"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-peroxide-effect",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-peroxide-effect",
+      "question": "Why does the addition of HBr to propene in the presence of benzoyl peroxide yield 1-bromopropane as the major product?",
+      "options": [
+        "A Br• radical adds first to generate the more stable secondary carbon radical.",
+        "An H• radical adds first to generate the more stable secondary carbocation.",
+        "The peroxide oxidises propene into a primary allylic carbocation intermediate.",
+        "Peroxide causes heterolytic cleavage of HBr to generate a free bromide ion."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the hydrogen radical adds first instead of the bromine radical",
+        "confuses the radical addition pathway with direct alkene oxidation forming carbocations",
+        "believes peroxides promote heterolytic (ionic) rather than homolytic radical cleavage"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-ozonolysis-oxidation",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-ozonolysis-oxidation",
+      "question": "An alkene on reductive ozonolysis (O₃ followed by Zn/H₂O) gives equimolar amounts of propanone and ethanal. What is the identity of this alkene?",
+      "options": [
+        "2-Methylbut-2-ene",
+        "2-Methylbut-1-ene",
+        "Pent-2-ene",
+        "3-Methylbut-1-ene"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks 2-methylbut-1-ene gives propanone and ethanal instead of propanone and methanal",
+        "ignores the methyl branching needed to form propanone, choosing unbranched pent-2-ene",
+        "confuses 3-methylbut-1-ene cleavage products (3-methylbutanal and methanal) with the given ketones/aldehydes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-structure-acidity",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-structure-acidity",
+      "question": "Why is ethyne more acidic than ethene and ethane?",
+      "options": [
+        "The sp-hybridised carbon of ethyne has 50% s-character, making it highly electronegative.",
+        "The carbon atoms in ethyne are sp³ hybridised with greater p-character.",
+        "Ethyne readily donates a hydride ion (H⁻) due to resonance stabilisation.",
+        "The triple bond makes the C–H bond length longer and weaker than in alkanes."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses sp hybridisation with sp3 hybridisation and misattributes high p-character to acidity",
+        "confuses Bronsted-Lowry proton (H+) release with hydride (H-) release",
+        "believes triple bonds increase adjacent C-H bond lengths rather than making them shorter and stronger"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-preparation-reactions",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-preparation-reactions",
+      "question": "What is the primary organic product obtained when ethyne undergoes hydration with dilute H₂SO₄ in the presence of HgSO₄ at 333 K?",
+      "options": [
+        "Ethanal",
+        "Ethanol",
+        "Ethanoic acid",
+        "Ethene"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks hydration of alkynes yields a saturated primary alcohol without tautomerisation",
+        "confuses oxymercuration-hydration with complete oxidative cleavage to a carboxylic acid",
+        "confuses alkyne hydration with catalytic hydrogenation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-polymerisation",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-polymerisation",
+      "question": "What compound is formed when ethyne gas is passed through a red-hot iron tube at 873 K?",
+      "options": [
+        "Cyclooctatetraene",
+        "Benzene",
+        "Polyacetylene",
+        "Hexane"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses cyclic trimerisation to benzene with tetramerisation of ethyne",
+        "",
+        "confuses high-temperature cyclic trimerisation with linear polymerisation to polyacetylene",
+        "thinks passing ethyne through a hot tube hydrogenates it to an open-chain alkane"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-benzene-resonance-structure",
+      "nodeId": "class11-chemistry-hydrocarbons-benzene-resonance-structure",
+      "question": "Why are all six carbon-carbon bond lengths identical (139 pm) in benzene?",
+      "options": [
+        "Rapid tautomeric switching occurs between fixed single (154 pm) and double (134 pm) bonds.",
+        "The six carbon atoms are sp³ hybridised, making all bonds tetrahedral and equal.",
+        "Complete delocalisation of six pi electrons occurs uniformly over the entire planar ring.",
+        "Benzene continuously oscillates between chair and boat conformations."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks benzene consists of rapidly oscillating separate single and double bonds rather than a resonance hybrid",
+        "confuses sp2 hybridisation in planar benzene with sp3 tetrahedral hybridisation",
+        "",
+        "confuses benzene with the non-planar ring conformations of cyclohexane"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-huckel-aromaticity-rule",
+      "nodeId": "class11-chemistry-hydrocarbons-huckel-aromaticity-rule",
+      "question": "According to Hückel's rule, which of the following planar, fully conjugated monocyclic species is aromatic?",
+      "options": [
+        "Cyclobutadiene (4 π electrons)",
+        "Cyclooctatetraene (8 π electrons)",
+        "Cycloheptatrienyl anion (8 π electrons)",
+        "Cyclopentadienyl anion (6 π electrons)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses 4n anti-aromatic systems with (4n + 2) aromatic systems",
+        "treats an 8 π-electron system as fulfilling Hückel's aromaticity rule",
+        "thinks the 7-membered ring anion has 6 π electrons rather than 8 π electrons",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-benzene-preparation",
+      "nodeId": "class11-chemistry-hydrocarbons-benzene-preparation",
+      "question": "What product is formed along with ZnO when phenol vapours are passed over heated zinc dust?",
+      "options": [
+        "Cyclohexanol",
+        "Toluene",
+        "Benzoic acid",
+        "Benzene"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks zinc dust causes ring hydrogenation rather than reduction of the phenolic -OH group",
+        "thinks reduction of phenol introduces a methyl substituent",
+        "confuses reduction using zinc with oxidation to a carboxylic acid",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-electrophilic-aromatic-substitution-mechanism",
+      "nodeId": "class11-chemistry-hydrocarbons-electrophilic-aromatic-substitution-mechanism",
+      "question": "What happens during the formation of the arenium ion (sigma complex) intermediate in electrophilic aromatic substitution of benzene?",
+      "options": [
+        "A nucleophile attacks the ring, preserving full aromatic resonance stabilisation.",
+        "An electrophile attacks the ring, converting one sp² carbon into an sp³ carbon and disrupting aromaticity.",
+        "A proton is directly abstracted from the benzene ring before the electrophile binds.",
+        "The electrophile donates an electron pair into the benzene pi cloud without changing hybridization."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses electrophilic attack with nucleophilic attack and fails to recognize temporary loss of aromaticity",
+        "",
+        "believes deprotonation occurs before electrophilic attack (like an elimination-addition mechanism)",
+        "thinks electrophiles donate electrons rather than accepting electron density from the aromatic pi system"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-benzene-electrophilic-reactions",
+      "nodeId": "class11-chemistry-hydrocarbons-benzene-electrophilic-reactions",
+      "question": "Which set of reagents is required to carry out the Friedel-Crafts acylation of benzene?",
+      "options": [
+        "CH₃Cl and anhydrous AlCl₃",
+        "CH₃COCl and aqueous NaOH",
+        "Conc. HNO₃ and conc. H₂SO₄",
+        "CH₃COCl and anhydrous AlCl₃"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses Friedel-Crafts alkylation (using alkyl halide) with acylation (using acyl halide)",
+        "confuses Lewis acid catalysis (anhydrous AlCl3) with base-catalysed Schotten-Baumann conditions",
+        "confuses acylation reagents with nitration mixture",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-directive-influence",
+      "nodeId": "class11-chemistry-hydrocarbons-directive-influence",
+      "question": "Why is the nitro group (–NO₂) meta-directing and deactivating towards electrophilic aromatic substitution?",
+      "options": [
+        "It releases electron density by resonance (+R effect), increasing electron density at the meta position.",
+        "It withdraws electron density by resonance (–R effect), making ortho and para positions comparatively more electron-deficient.",
+        "It donates electrons via hyperconjugation to stabilise the incoming electrophile at the meta position.",
+        "It withdraws electrons purely by induction without affecting the pi electron cloud of the ring."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the nitro group is electron-donating by resonance",
+        "",
+        "confuses the directing mechanism of alkyl groups (hyperconjugation) with that of strong -R groups",
+        "ignores the resonance (-R) effect of the nitro group and attributes its effect solely to induction"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-carcinogenicity-toxicity",
+      "nodeId": "class11-chemistry-hydrocarbons-carcinogenicity-toxicity",
+      "question": "Polynuclear aromatic hydrocarbons such as 1,2-benzanthracene and 3,4-benzpyrene are hazardous pollutants primarily because they:",
+      "options": [
+        "deplete the stratospheric ozone layer via radical chain reactions.",
+        "rapidly hydrolyse in water to produce highly acidic solutions.",
+        "cause cancer by binding to and damaging human DNA after metabolic activation.",
+        "act as non-toxic biodegradable substitutes for industrial solvents."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses polycyclic aromatic hydrocarbons (PAHs) with chlorofluorocarbons (CFCs)",
+        "thinks aromatic hydrocarbons are unstable in water and undergo rapid hydrolysis",
+        "",
+        "underestimates the toxicity and assumes complex aromatic rings are easily biodegradable and safe"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-applications-agriculture-pharma",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-applications-agriculture-pharma",
+      "question": "Which of the following correctly pairs a life-saving drug with its primary medical application?",
+      "options": [
+        "AZT (Azidothymidine) is used for helping AIDS patients",
+        "Cisplatin is used primarily as a broad-spectrum antibiotic",
+        "Taxol is used as a synthetic fertilizer additive",
+        "AZT (Azidothymidine) is used exclusively for cancer chemotherapy"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses cisplatin, a cancer chemotherapy drug, with an antibiotic",
+        "confuses the anti-cancer drug taxol with an agricultural chemical",
+        "confuses AZT's specific antiviral role in AIDS therapy with cancer chemotherapy"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-green-chemistry-environment",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-green-chemistry-environment",
+      "question": "From the perspective of green chemistry, why are hydrofluorocarbons (HFCs) preferred over traditional chlorofluorocarbons (CFCs) in refrigeration?",
+      "options": [
+        "HFCs do not contain chlorine atoms that catalytically deplete stratospheric ozone",
+        "HFCs are completely non-flammable under all industrial conditions",
+        "HFCs permanently trap greenhouse gases directly from the atmosphere",
+        "HFCs completely degrade into harmless water vapor within minutes of release"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the primary green chemistry driver for replacing CFCs is flammability reduction rather than ozone depletion",
+        "believes refrigerants act as carbon-capture agents rather than safer chemical substitutes",
+        "assumes safer alternatives must instantly degrade into pure water in the atmosphere"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-classify-matter-bulk",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-classify-matter-bulk",
+      "question": "Which of the following substances is correctly classified as a homogeneous mixture?",
+      "options": [
+        "Distilled water",
+        "Brass",
+        "Iron filings mixed with sulfur powder",
+        "Pure sodium chloride"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a pure chemical compound with a homogeneous mixture",
+        "",
+        "confuses a heterogeneous mixture with a homogeneous mixture",
+        "confuses a compound having uniform composition with a homogeneous mixture"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-si-base-units",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-si-base-units",
+      "question": "Which entry correctly pairs the SI base physical quantity with its standard SI base unit name and symbol?",
+      "options": [
+        "Thermodynamic temperature — kelvin (K)",
+        "Luminous intensity — lumen (lm)",
+        "Amount of substance — gram (g)",
+        "Electric current — volt (V)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the base unit candela (cd) with the derived photometric unit lumen (lm)",
+        "confuses the SI base unit of amount of substance (mole, mol) with mass in grams",
+        "confuses the base unit of current (ampere, A) with the unit of electric potential (volt, V)"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-temperature-conversions",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-temperature-conversions",
+      "question": "A clinical thermometer records a body temperature of 104 °F. What is this temperature in degrees Celsius?",
+      "options": [
+        "57.8 °C",
+        "72.0 °C",
+        "40.0 °C",
+        "25.8 °C"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "applies (9/5)C + 32 inversely by computing (9/5)*(104 - 32) instead of (5/9)*(104 - 32)",
+        "subtracts 32 from 104 but forgets to multiply by the factor 5/9",
+        "",
+        "inverts the operation order by computing (5/9)*104 - 32"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-scientific-notation",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-scientific-notation",
+      "question": "What is the correct result of dividing (8.0 × 10^-3) by (2.0 × 10^-5) in standard scientific notation?",
+      "options": [
+        "4.0 × 10^-8",
+        "1.6 × 10^3",
+        "4.0 × 10^-2",
+        "4.0 × 10^2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the negative exponents during division instead of subtracting them: -3 + (-5) = -8",
+        "multiplies coefficients instead of dividing them",
+        "subtracts exponents in the wrong order: -5 - (-3) = -2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-rules",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-rules",
+      "question": "How many significant figures are present in the measured quantity 0.005020 kg?",
+      "options": [
+        "6",
+        "3",
+        "4",
+        "7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "counts leading zeros as significant figures",
+        "ignores the trailing zero after the decimal point",
+        "",
+        "counts all digits including the zero before the decimal point"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-calculations",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-calculations",
+      "question": "A student adds three mass measurements: 12.11 g, 18.0 g, and 1.012 g. What is the sum reported to the correct number of significant figures?",
+      "options": [
+        "31.122 g",
+        "31.12 g",
+        "31 g",
+        "31.1 g"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "retains all decimal places without applying significant figure rules for addition",
+        "rounds to two decimal places instead of matching the term with the fewest decimal places (one decimal place in 18.0)",
+        "rounds to total number of significant figures rather than fewest decimal places",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-dimensional-analysis",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-dimensional-analysis",
+      "question": "Using the conversion factors (1 inch = 2.54 cm) and (1 m = 100 cm), what is the length of a 20.0-inch rod in meters?",
+      "options": [
+        "5.08 m",
+        "0.508 m",
+        "0.787 m",
+        "7.87 m"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides by 10 instead of 100 when converting cm to m",
+        "",
+        "divides by 2.54 instead of multiplying when converting inches to cm",
+        "inverts both conversion factors simultaneously"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-laws-mass-definite-proportions",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-laws-mass-definite-proportions",
+      "question": "Pure water obtained from a natural spring contains hydrogen and oxygen in a 1:8 mass ratio. According to the Law of Definite Proportions, what is the mass of oxygen present in 36.0 g of pure synthetic water prepared in a laboratory?",
+      "options": [
+        "4.0 g",
+        "28.0 g",
+        "32.0 g",
+        "18.0 g"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the mass of hydrogen instead of oxygen: (1/9) * 36.0 g = 4.0 g",
+        "treats the ratio 1:8 as 8 parts out of 10",
+        "",
+        "assumes the ratio of elements must be 1:1 by mass in water"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-law-multiple-proportions",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-law-multiple-proportions",
+      "question": "Carbon forms two oxides. Oxide A contains 42.9% carbon and 57.1% oxygen by mass. Oxide B contains 27.3% carbon and 72.7% oxygen by mass. For a fixed mass of 1.00 g of carbon, what is the ratio of the masses of oxygen in Oxide A to Oxide B?",
+      "options": [
+        "1 : 2",
+        "2 : 1",
+        "3 : 4",
+        "1 : 3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "inverts the ratio by putting Oxide B over Oxide A",
+        "compares the raw percentage values without normalizing to a fixed mass of carbon",
+        "confuses mass ratios with molar quantities from other compounds"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-gay-lussac-avogadro-laws",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-gay-lussac-avogadro-laws",
+      "question": "According to Gay Lussac's law, what volume of oxygen gas at STP is required to react completely with 60 mL of hydrogen gas to form water vapor?",
+      "options": [
+        "60 mL",
+        "120 mL",
+        "30 mL",
+        "15 mL"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes equal volumes of reacting gases regardless of stoichiometry",
+        "doubles the volume of hydrogen instead of halving it based on the 2:1 mole/volume ratio",
+        "",
+        "divides by 4 thinking oxygen is four times heavier per molecule than hydrogen"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-daltons-atomic-theory",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-daltons-atomic-theory",
+      "question": "Which postulate of Dalton's atomic theory directly accounts for the Law of Conservation of Mass?",
+      "options": [
+        "Atoms are neither created nor destroyed in a chemical reaction; they are merely rearranged",
+        "Atoms of a given element are identical in mass and chemical properties",
+        "All matter is composed of tiny, indivisible particles called atoms",
+        "Atoms of different elements combine in fixed, simple whole-number ratios to form compounds"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the postulate about identical properties of an element with mass conservation",
+        "confuses the general definition of an atom with the principle of mass conservation",
+        "confuses the postulate explaining the Law of Definite Proportions with conservation of mass"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition",
+      "question": "How is one unified atomic mass unit (1 u) standardly defined?",
+      "options": [
+        "Exactly 1/16th of the mass of one oxygen-16 atom",
+        "Exactly the mass of one hydrogen-1 atom",
+        "Exactly 1/12th of the mass of one carbon-12 atom",
+        "Exactly the mass of one isolated proton"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the older oxygen-16 standard scale",
+        "uses the historical hydrogen scale rather than the modern carbon-12 standard",
+        "",
+        "confuses the mass of a free proton with the definition of 1 u"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-average-atomic-mass",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-average-atomic-mass",
+      "question": "Chlorine occurs in nature as two isotopes: 35Cl (atomic mass = 35 u, abundance = 75%) and 37Cl (atomic mass = 37 u, abundance = 25%). What is the average atomic mass of chlorine?",
+      "options": [
+        "36.0 u",
+        "35.25 u",
+        "35.5 u",
+        "36.5 u"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "takes a simple unweighted arithmetic average of the two mass numbers: (35 + 37)/2",
+        "multiplies 35 by 0.25 and 37 by 0.75, inverting the abundances of the isotopes",
+        "",
+        "adds the mass numbers directly and scales improperly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-molecular-formula-mass",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-molecular-formula-mass",
+      "question": "What is the formula mass of calcium chloride, CaCl2? (Atomic masses: Ca = 40.0 u, Cl = 35.5 u)",
+      "options": [
+        "75.5 u",
+        "115.5 u",
+        "151.0 u",
+        "111.0 u"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds only one chlorine atom mass to calcium: 40.0 + 35.5 = 75.5 u",
+        "computes 40.0 + (35.5 + 40.0) or miscalculates basic arithmetic",
+        "multiplies the calcium mass by 2 as well: 2*40.0 + 2*35.5 = 151.0 u",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-mole-concept-particles",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-mole-concept-particles",
+      "question": "How many total molecules are present in 0.50 moles of carbon dioxide (CO2) gas?",
+      "options": [
+        "1.2044 × 10^24 molecules",
+        "3.011 × 10^23 molecules",
+        "6.022 × 10^23 molecules",
+        "9.033 × 10^23 molecules"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "doubles Avogadro's number instead of multiplying by 0.50",
+        "",
+        "thinks 0.50 moles contains a full Avogadro's number of molecules",
+        "multiplies by 3 to count total atoms instead of reporting total molecules"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions",
+      "question": "How many oxygen atoms are present in 49.0 g of pure sulfuric acid (H2SO4)? (Molar mass of H2SO4 = 98.0 g/mol, NA = 6.022 × 10^23)",
+      "options": [
+        "3.011 × 10^23 atoms",
+        "6.022 × 10^23 atoms",
+        "2.4088 × 10^24 atoms",
+        "1.2044 × 10^24 atoms"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates the number of H2SO4 molecules (0.50 * NA) but forgets to multiply by 4 oxygen atoms per molecule",
+        "multiplies 0.50 moles by 2 instead of 4",
+        "multiplies total mass directly by NA without converting to moles first",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-composition",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-composition",
+      "question": "What is the mass percent of carbon in ethanol, C2H5OH? (Atomic masses: C = 12.0 u, H = 1.0 u, O = 16.0 u)",
+      "options": [
+        "52.2%",
+        "34.8%",
+        "26.1%",
+        "24.0%"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the mass percent of oxygen instead of carbon: (16/46) * 100",
+        "calculates the mass percent using only one carbon atom: (12/46) * 100",
+        "reports the total mass of carbon (24 g) directly as the percentage"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-empirical-molecular-formula",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-empirical-molecular-formula",
+      "question": "A compound has an empirical formula of CH2O and a molar mass of 180.0 g/mol. What is its molecular formula? (Atomic masses: C = 12.0 u, H = 1.0 u, O = 16.0 u)",
+      "options": [
+        "C3H6O3",
+        "C6H12O6",
+        "C5H10O5",
+        "C12H24O12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides molar mass by 60 instead of the empirical formula mass (30 g/mol), yielding n = 3",
+        "",
+        "guesses n = 5 by incorrect arithmetic",
+        "doubles the molecular formula to C12H24O12 by confusing molar mass ratio n = 6 with n = 12"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-stoichiometric-mole-mass-calculations",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-stoichiometric-mole-mass-calculations",
+      "question": "Consider the balanced equation: CH4 + 2 O2 -> CO2 + 2 H2O. How many grams of water are formed by the complete combustion of 32.0 g of methane (CH4)? (Molar masses: CH4 = 16.0 g/mol, H2O = 18.0 g/mol)",
+      "options": [
+        "36.0 g",
+        "64.0 g",
+        "18.0 g",
+        "72.0 g"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates water produced from 1 mole of CH4 instead of 2 moles (forgets 32 g is 2 moles of CH4)",
+        "assumes mass of water formed equals twice the mass of methane reacted: 2 * 32.0 g = 64.0 g",
+        "assumes a 1:1 mole ratio between CH4 and H2O yielding only 18.0 g",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-limiting-reagent",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-limiting-reagent",
+      "question": "Nitrogen and hydrogen react according to: N2(g) + 3 H2(g) -> 2 NH3(g). If 2.0 moles of N2 and 3.0 moles of H2 are mixed, which is the limiting reagent and what is the maximum amount of NH3 produced?",
+      "options": [
+        "N2 is limiting; 4.0 moles of NH3 produced",
+        "H2 is limiting; 2.0 moles of NH3 produced",
+        "H2 is limiting; 3.0 moles of NH3 produced",
+        "N2 is limiting; 2.0 moles of NH3 produced"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "picks N2 because 2.0 < 3.0 without considering the 1:3 stoichiometric requirement",
+        "",
+        "correctly identifies H2 as limiting but sets NH3 moles equal to initial H2 moles (1:1 ratio)",
+        "correctly calculates 2.0 moles of NH3 but misidentifies N2 as the limiting reagent"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-mole-fraction",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-mole-fraction",
+      "question": "A solution is prepared by dissolving 40.0 g of NaOH in 180.0 g of water. What is the mole fraction of NaOH in this solution? (Molar masses: NaOH = 40.0 g/mol, H2O = 18.0 g/mol)",
+      "options": [
+        "0.182",
+        "0.222",
+        "0.100",
+        "0.091"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates mass fraction (40 / 220) instead of mole fraction",
+        "inverts the fraction or miscalculates moles of water as 180 / 40",
+        "computes ratio of solute moles to solvent moles (1 / 10 = 0.100) instead of total moles (1 / 11)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-some-basic-concepts-of-chemistry-molarity-molality",
+      "nodeId": "class11-chemistry-some-basic-concepts-of-chemistry-molarity-molality",
+      "question": "What volume of water must be added to 200 mL of a 1.5 M HCl solution to dilute its concentration to 0.5 M?",
+      "options": [
+        "600 mL",
+        "400 mL",
+        "300 mL",
+        "100 mL"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the final total volume (V2 = 600 mL) but forgets to subtract the initial volume (200 mL)",
+        "",
+        "computes 200 * (1.5 / 1.0) instead of using M1V1 = M2V2",
+        "subtracts molarities and scales volume incorrectly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-cathode-ray-properties",
+      "nodeId": "class11-chemistry-structure-of-atom-cathode-ray-properties",
+      "question": "Which observation in cathode ray discharge tube experiments proves that electrons are universal constituents of all matter?",
+      "options": [
+        "Cathode rays cast sharp shadows of solid objects placed in their path.",
+        "The charge-to-mass ratio of cathode ray particles is independent of the gas and cathode material used.",
+        "Cathode rays produce fluorescence when striking zinc sulfide screens.",
+        "Cathode rays deflect toward the positive plate in an electric field."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses rectilinear propagation with the universal nature of constituent particles",
+        "",
+        "confuses energy-carrying capability with evidence for universal composition",
+        "confuses negative charge nature with evidence for universality across all substances"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-electron-charge-mass-ratio",
+      "nodeId": "class11-chemistry-structure-of-atom-electron-charge-mass-ratio",
+      "question": "If Thomson determined e/m = 1.76 × 10^11 C/kg and Millikan measured e = 1.60 × 10^-19 C, what is the calculated mass of an electron?",
+      "options": [
+        "9.09 × 10^-31 kg",
+        "1.10 × 10^-30 kg",
+        "2.82 × 10^-8 kg",
+        "9.09 × 10^-28 kg"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "inverts the ratio calculation by computing (e/m) / e instead of e / (e/m)",
+        "multiplies charge by charge-to-mass ratio instead of dividing charge by the ratio",
+        "forgets unit conversion and leaves mass in grams while labeling it kilograms"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-proton-neutron-discovery",
+      "nodeId": "class11-chemistry-structure-of-atom-proton-neutron-discovery",
+      "question": "How did James Chadwick discover the neutron in 1932?",
+      "options": [
+        "By observing positively charged canal rays passing through a perforated cathode in a discharge tube.",
+        "By measuring the deflection of canal rays in varying magnetic and electric fields.",
+        "By observing the scattering pattern of alpha particles directed at a thin gold foil.",
+        "By bombarding a thin sheet of beryllium with alpha particles and detecting penetrating neutral radiation."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the discovery of neutrons with Goldstein's canal ray experiment that led to protons",
+        "confuses neutron discovery with Thomson and Wien's characterization of positive ions",
+        "confuses the discovery of neutrons with Rutherford's alpha particle scattering experiment",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-subatomic-particles-properties",
+      "nodeId": "class11-chemistry-structure-of-atom-subatomic-particles-properties",
+      "question": "Which statement correctly compares the masses of subatomic particles?",
+      "options": [
+        "A proton and a neutron have exactly identical masses, both being 1836 times heavier than an electron.",
+        "An electron and a proton have equal masses but opposite electrical charges.",
+        "A neutron is slightly heavier than a proton, and both are roughly 1837 times heavier than an electron.",
+        "A proton is slightly heavier than a neutron, while an electron has zero absolute mass."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes protons and neutrons have exactly identical rest masses",
+        "confuses magnitude of electric charge with particle mass",
+        "",
+        "thinks protons are heavier than neutrons and takes electron rest mass as strictly zero"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-thomson-model",
+      "nodeId": "class11-chemistry-structure-of-atom-thomson-model",
+      "question": "What was the major failure of J.J. Thomson's plum pudding atomic model?",
+      "options": [
+        "It could not account for the electrical neutrality of isolated atoms.",
+        "It assumed that electrons orbit in discrete, quantized energy levels.",
+        "It could not explain the large-angle scattering of alpha particles observed by Rutherford.",
+        "It failed to predict that electrons carry negative electric charge."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks Thomson's model lacked a mechanism for overall electrical neutrality",
+        "attributes Bohr's quantized orbit postulate to Thomson's model",
+        "",
+        "believes Thomson's model did not incorporate negative electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-rutherford-scattering-experiment",
+      "nodeId": "class11-chemistry-structure-of-atom-rutherford-scattering-experiment",
+      "question": "In Rutherford's alpha-particle scattering experiment, what crucial deduction was drawn from the fact that about 1 in 20,000 alpha particles deflected by nearly 180°?",
+      "options": [
+        "Most of the space inside an atom is completely empty.",
+        "Positive charge and nearly all atomic mass are concentrated in an extremely small central volume.",
+        "Electrons revolve in circular orbits of fixed radius.",
+        "Electrons occupy distinct energy shells surrounding the nucleus."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "associates the rare large-angle deflection with empty space rather than the dense central core",
+        "",
+        "attributes orbital motion deductions directly to the 180° deflection observation",
+        "confuses Rutherford's scattering deduction with Bohr's energy shell concept"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-rutherford-nuclear-model",
+      "nodeId": "class11-chemistry-structure-of-atom-rutherford-nuclear-model",
+      "question": "According to classical electromagnetic theory, what primary limitation made Rutherford's nuclear model unstable?",
+      "options": [
+        "Neutrons in the nucleus would undergo spontaneous beta decay, destabilizing the core.",
+        "The strong nuclear force would repel the positively charged orbiting electrons.",
+        "Accelerating orbiting electrons should continuously radiate energy and spiral into the nucleus.",
+        "Electrostatic repulsion between orbital electrons would cause the outer atom to explode."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "invokes modern radioactive decay mechanisms as the classical stability limitation",
+        "thinks electrons are positively charged and subject to strong nuclear force repulsion",
+        "",
+        "attributes model instability to electron-electron repulsion rather than electromagnetic radiation of accelerating charges"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-atomic-mass-number-calculations",
+      "nodeId": "class11-chemistry-structure-of-atom-atomic-mass-number-calculations",
+      "question": "How many protons, neutrons, and electrons are present in the phosphide ion, 31_15 P^3-?",
+      "options": [
+        "15 protons, 16 neutrons, 18 electrons",
+        "15 protons, 31 neutrons, 18 electrons",
+        "15 protons, 16 neutrons, 12 electrons",
+        "18 protons, 16 neutrons, 15 electrons"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "takes the mass number directly as the number of neutrons without subtracting atomic number",
+        "subtracts 3 electrons for a 3- charge instead of adding 3 electrons",
+        "confuses proton count with electron count for an anion"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-isotopes-isobars-isodiaphers",
+      "nodeId": "class11-chemistry-structure-of-atom-isotopes-isobars-isodiaphers",
+      "question": "The pair of nuclides 14_6 C and 14_7 N are best classified as which of the following?",
+      "options": [
+        "Isotopes",
+        "Isodiaphers",
+        "Isotones",
+        "Isobars"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses isobars with isotopes, thinking same mass number means isotopes",
+        "assumes any pair with different atomic numbers but related masses are isodiaphers",
+        "confuses isobars with isotones, assuming they have an equal neutron count",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-emr-wave-parameters",
+      "nodeId": "class11-chemistry-structure-of-atom-emr-wave-parameters",
+      "question": "What is the wavenumber of electromagnetic radiation having a frequency of 6.0 × 10^14 Hz? (Take c = 3.0 × 10^8 m/s)",
+      "options": [
+        "2.0 × 10^4 m^-1",
+        "5.0 × 10^-7 m^-1",
+        "1.8 × 10^23 m^-1",
+        "2.0 × 10^6 m^-1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "makes a powers-of-ten arithmetic error during exponent division",
+        "calculates wavelength instead of wavenumber (inverse of wavelength)",
+        "multiplies frequency by the speed of light instead of dividing frequency by speed of light",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-plancks-quantum-theory",
+      "nodeId": "class11-chemistry-structure-of-atom-plancks-quantum-theory",
+      "question": "What is the energy of one mole of photons of radiation whose frequency is 5.0 × 10^14 Hz? (h = 6.626 × 10^-34 J·s, N_A = 6.022 × 10^23 mol^-1)",
+      "options": [
+        "3.31 × 10^-19 J/mol",
+        "1.20 × 10^5 J/mol",
+        "5.50 × 10^-48 J/mol",
+        "199.5 kJ/mol"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates the energy of a single photon and forgets to multiply by Avogadro's number",
+        "uses speed of light instead of Avogadro's constant when scaling to one mole",
+        "divides Planck's constant by Avogadro's number and frequency instead of multiplying",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-photoelectric-effect",
+      "nodeId": "class11-chemistry-structure-of-atom-photoelectric-effect",
+      "question": "A metal with a work function of 2.0 eV is illuminated by light of photon energy 3.5 eV. What is the maximum kinetic energy of the ejected photoelectrons?",
+      "options": [
+        "1.5 eV",
+        "5.5 eV",
+        "0.7 eV",
+        "1.75 eV"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds photon energy to work function instead of subtracting work function from photon energy",
+        "divides work function by incident photon energy",
+        "averages incident energy and work function"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-continuous-line-spectra",
+      "nodeId": "class11-chemistry-structure-of-atom-continuous-line-spectra",
+      "question": "Why is the emission spectrum of atomic hydrogen a line spectrum rather than a continuous spectrum?",
+      "options": [
+        "Hydrogen gas absorbs all visible wavelengths except a few specific colors.",
+        "Emitted light is diffracted only at specific fixed angles through a glass prism.",
+        "Collisions between hydrogen atoms produce electromagnetic waves of a single continuous band.",
+        "Electron transitions occur only between specific quantized energy states within the atom."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses emission line spectra with selective absorption filters",
+        "attributes discrete spectral lines to instrumental diffraction artifacts rather than atomic structure",
+        "believes thermal collisions create continuous spectra in low-pressure atomic gases",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-bohr-model-postulates",
+      "nodeId": "class11-chemistry-structure-of-atom-bohr-model-postulates",
+      "question": "According to Bohr's model of the hydrogen atom, what is the condition for an electron moving in a stable, non-radiating orbit?",
+      "options": [
+        "Its linear momentum must be an integral multiple of h / (2*pi).",
+        "Its orbital velocity must be equal to the speed of light divided by n.",
+        "Its kinetic energy must exactly equal its potential energy.",
+        "Its orbital angular momentum must be an integral multiple of h / (2*pi)."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses orbital angular momentum with linear momentum",
+        "assumes electron velocity is directly quantized as fractions of light speed",
+        "misapplies the virial theorem as the primary quantization condition",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-bohr-radii-energy-calculations",
+      "nodeId": "class11-chemistry-structure-of-atom-bohr-radii-energy-calculations",
+      "question": "What is the energy of an electron in the second stationary orbit (n = 2) of a Li^2+ ion in its ground-state reference (E_1(H) = -13.6 eV)?",
+      "options": [
+        "-61.2 eV",
+        "-10.2 eV",
+        "-30.6 eV",
+        "-3.4 eV"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets to divide by n^2 and only calculates -13.6 * Z^2 / n",
+        "multiplies hydrogen base energy by (Z/n) instead of (Z^2/n^2)",
+        "",
+        "calculates energy for hydrogen at n = 2 and completely ignores Z = 3 for lithium"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-hydrogen-spectral-lines",
+      "nodeId": "class11-chemistry-structure-of-atom-hydrogen-spectral-lines",
+      "question": "Which spectral series of atomic hydrogen falls in the visible region of the electromagnetic spectrum?",
+      "options": [
+        "Lyman series",
+        "Balmer series",
+        "Paschen series",
+        "Brackett series"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks Lyman series is visible because it involves transitions to the ground state n=1",
+        "",
+        "confuses Paschen series (infrared) with visible transitions",
+        "confuses Brackett series (infrared) with visible transitions"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-rydberg-formula-transitions",
+      "nodeId": "class11-chemistry-structure-of-atom-rydberg-formula-transitions",
+      "question": "What is the wavenumber of the first line (lowest energy line) of the Lyman series for atomic hydrogen in terms of Rydberg constant R_H?",
+      "options": [
+        "(1/4) R_H",
+        "(3/4) R_H",
+        "(5/36) R_H",
+        "R_H"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates 1 - (1/2) instead of squaring the principal quantum numbers (1 - 1/4)",
+        "",
+        "calculates the first line of the Balmer series (n1=2 to n2=3) instead of Lyman series",
+        "calculates the series limit (n2 = infinity) instead of the first line"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-bohr-model-limitations",
+      "nodeId": "class11-chemistry-structure-of-atom-bohr-model-limitations",
+      "question": "What is the splitting of spectral lines under the influence of an external magnetic field called, which Bohr's model failed to explain?",
+      "options": [
+        "Zeeman effect",
+        "Stark effect",
+        "Photoelectric effect",
+        "Compton effect"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses magnetic field splitting (Zeeman) with electric field splitting (Stark)",
+        "confuses spectral line splitting with electron ejection by incident light",
+        "confuses spectral line splitting with photon scattering by free electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-de-broglie-wavelength",
+      "nodeId": "class11-chemistry-structure-of-atom-de-broglie-wavelength",
+      "question": "If a particle's velocity is doubled while its mass remains constant, what happens to its de Broglie wavelength?",
+      "options": [
+        "It is halved.",
+        "It is quadrupled.",
+        "It is doubled.",
+        "It remains unchanged."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes de Broglie wavelength depends on kinetic energy as v^2 directly",
+        "believes wavelength is directly proportional to velocity rather than inversely proportional",
+        "believes wavelength of matter waves is an intrinsic constant independent of speed"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-heisenberg-uncertainty",
+      "nodeId": "class11-chemistry-structure-of-atom-heisenberg-uncertainty",
+      "question": "If the uncertainty in position (Delta_x) of a moving particle is reduced to zero, what is the theoretical uncertainty in its momentum (Delta_p)?",
+      "options": [
+        "Zero",
+        "Infinite",
+        "Equal to h / (4*pi)",
+        "Equal to Planck's constant h"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes high precision in position guarantees equal high precision in momentum",
+        "",
+        "assumes minimum uncertainty product value becomes the individual uncertainty",
+        "thinks the uncertainty in momentum simply caps at h"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-quantum-numbers",
+      "nodeId": "class11-chemistry-structure-of-atom-quantum-numbers",
+      "question": "Which of the following sets of quantum numbers (n, l, m_l, m_s) is permissible for an electron in an atom?",
+      "options": [
+        "n = 3, l = 3, m_l = 0, m_s = +1/2",
+        "n = 2, l = 1, m_l = -2, m_s = -1/2",
+        "n = 3, l = 2, m_l = -1, m_s = +1/2",
+        "n = 4, l = 0, m_l = +1, m_s = -1/2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "allows azimuthal quantum number l to equal principal quantum number n",
+        "allows magnetic quantum number |m_l| to exceed azimuthal quantum number l",
+        "",
+        "allows magnetic quantum number m_l = 1 for an s-orbital where l = 0"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-orbital-shapes-nodes",
+      "nodeId": "class11-chemistry-structure-of-atom-orbital-shapes-nodes",
+      "question": "How many radial nodes and angular nodes, respectively, are present in a 4p orbital?",
+      "options": [
+        "2 radial nodes and 1 angular node",
+        "1 radial node and 2 angular nodes",
+        "3 radial nodes and 1 angular node",
+        "2 radial nodes and 2 angular nodes"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps the formulas for radial nodes (n - l - 1) and angular nodes (l)",
+        "calculates total nodes (n - 1) as radial nodes",
+        "assumes the number of radial nodes equals the number of angular nodes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules",
+      "nodeId": "class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules",
+      "question": "According to the Aufbau (n + l) rule, which orbital is filled with electrons FIRST among 4d, 5p, 5s, and 4f?",
+      "options": [
+        "4d",
+        "5s",
+        "5p",
+        "4f"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "selects 4d thinking lower principal quantum number n always fills first regardless of (n+l)",
+        "",
+        "fails to compare (n+l) values properly between 5s (5) and 5p (6)",
+        "picks 4f purely because 4 is lower than 5, ignoring l = 3 which gives (n+l) = 7"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-structure-of-atom-electronic-configurations",
+      "nodeId": "class11-chemistry-structure-of-atom-electronic-configurations",
+      "question": "What is the ground-state electronic configuration of a neutral Chromium atom (Z = 24)?",
+      "options": [
+        "[Ar] 3d^4 4s^2",
+        "[Ar] 3d^6 4s^0",
+        "[Ar] 3d^5 4s^1",
+        "[Ar] 3d^3 4s^2 4p^1"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "follows standard (n+l) rule strictly without accounting for extra stability of half-filled d-subshells",
+        "moves both 4s electrons into 3d to maximize d-count rather than half-filling both 3d and 4s",
+        "",
+        "promotes electrons into the higher 4p subshell unnecessarily"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-need-for-classification",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-need-for-classification",
+      "question": "What is the primary reason for classifying elements into groups in the periodic table?",
+      "options": [
+        "To separate naturally occurring elements entirely from all artificially made elements",
+        "To ensure that every element has an identical number of total electrons as its neighbors",
+        "To make sure that all elements within the same period have identical chemical reactivities",
+        "To correlate and predict properties of many elements by studying a few representative elements"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the primary classification criterion is natural versus synthetic origin",
+        "thinks classification matches total electron count rather than valence patterns",
+        "confuses group similarity with period-wise identical chemical behavior",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-dobereiner-triads",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-dobereiner-triads",
+      "question": "In a Dobereiner's triad containing Lithium (atomic mass = 7) and Potassium (atomic mass = 39), what is the expected atomic mass of Sodium?",
+      "options": [
+        "46",
+        "16",
+        "32",
+        "23"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the atomic masses directly without dividing by two",
+        "takes the average difference rather than the arithmetic mean of the masses",
+        "subtracts the first mass from the third mass instead of finding their arithmetic mean",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-newlands-octaves",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-newlands-octaves",
+      "question": "Up to which element was Newlands' Law of Octaves found to be applicable?",
+      "options": [
+        "Calcium",
+        "Magnesium",
+        "Potassium",
+        "Iron"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the law breaks down earlier at the end of the second period",
+        "thinks the law holds up to the first alkali metal of the 4th period",
+        "confuses the total range of elements known at the time with the validity limit"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-mendeleev-periodic-law",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-periodic-law",
+      "question": "According to Mendeleev's Periodic Law, the physical and chemical properties of elements are periodic functions of their:",
+      "options": [
+        "Atomic numbers",
+        "Atomic volumes",
+        "Atomic masses",
+        "Number of valence electrons"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses Mendeleev's Periodic Law with the Modern Periodic Law",
+        "confuses Mendeleev's law with Lothar Meyer's atomic volume curves",
+        "",
+        "confuses the underlying modern cause with Mendeleev's empirical basis"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-mendeleev-merits-anomalies",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-merits-anomalies",
+      "question": "Which of the following was an anomaly in Mendeleev's periodic table?",
+      "options": [
+        "Placement of Eka-aluminium before its discovery",
+        "Placing Cobalt (mass 58.9) before Nickel (mass 58.7)",
+        "Leaving vacant gaps for undiscovered elements",
+        "Grouping elements with similar formula of hydrides and oxides"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a major merit (prediction of elements) with an anomaly",
+        "",
+        "considers leaving gaps as a defect rather than a successful predictive feature",
+        "confuses the primary classification framework based on oxide/hydride formulas with an anomaly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-modern-periodic-law",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-modern-periodic-law",
+      "question": "Henry Moseley established atomic number as the fundamental property of elements by plotting:",
+      "options": [
+        "Square root of X-ray frequency (sqrt(nu)) against atomic number (Z)",
+        "Square root of X-ray frequency (sqrt(nu)) against atomic mass",
+        "X-ray wavelength directly against mass number (A)",
+        "Ionization energy against atomic volume"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks Moseley plotted frequency against atomic mass",
+        "thinks the linear relationship was obtained directly from wavelength versus mass number",
+        "confuses Moseley's experiment with Lothar Meyer's periodic curve"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-iupac-nomenclature-above-100",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-iupac-nomenclature-above-100",
+      "question": "What is the systematic IUPAC name and symbol for the element with atomic number 119?",
+      "options": [
+        "Ununennium (Uue)",
+        "Unnilennium (Une)",
+        "Unununium (Uuu)",
+        "Unbiunium (Ubu)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses root 'nil' for the middle digit 1 instead of 'un'",
+        "uses numerical root 'un' for the digit 9 instead of 'enn'",
+        "uses root 'bi' for the middle digit 1 instead of 'un'"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-period-group-identification",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification",
+      "question": "An element has the ground-state electronic configuration [Ar] 3d^5 4s^1. What are its period and group in the modern periodic table?",
+      "options": [
+        "Period 4, Group 6",
+        "Period 4, Group 1",
+        "Period 3, Group 6",
+        "Period 4, Group 5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "counts only the valence s electron to assign the group number in a d-block element",
+        "takes the principal quantum number of the d subshell (n=3) as the period number instead of the maximum n (4)",
+        "counts only the d electrons to determine the group number"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-s-block-characteristics",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-s-block-characteristics",
+      "question": "Which of the following is a characteristic feature of s-block elements?",
+      "options": [
+        "They exhibit multiple stable positive and negative oxidation states",
+        "They are predominantly non-metals with high ionization enthalpies",
+        "They have a general valence shell configuration of ns^1 or ns^2 and are highly electropositive metals",
+        "They form colored complex ions due to d-d electronic transitions"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "attributes variable oxidation states typical of d-block elements to s-block elements",
+        "confuses s-block metals with p-block non-metals",
+        "",
+        "confuses s-block properties with transition metal coordination and color characteristics"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-p-block-characteristics",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-p-block-characteristics",
+      "question": "Which statement correctly describes the p-block of the periodic table?",
+      "options": [
+        "It contains metals, non-metals, and metalloids with a general valence configuration ns^2 np^1-6",
+        "It has the general valence electronic configuration (n-1)d^1-10 ns^2",
+        "It contains exclusively non-metals and noble gases",
+        "It consists only of elements that form basic oxides"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the p-block valence configuration with the d-block configuration",
+        "believes p-block elements are strictly non-metals, overlooking heavy metals like Pb and Bi",
+        "thinks all p-block oxides are basic, ignoring acidic and amphoteric oxides"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-d-block-characteristics",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-d-block-characteristics",
+      "question": "Why do d-block transition elements typically exhibit variable oxidation states?",
+      "options": [
+        "Because their outermost p orbitals participate readily in bond formation",
+        "Because their nuclear charge remains constant across the entire series",
+        "Because they easily lose all inner core electrons down to the nucleus",
+        "Because the energy difference between (n-1)d and ns electrons is very small, allowing both to participate in bonding"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes variable oxidation states arise from valence p orbitals rather than (n-1)d orbitals",
+        "thinks effective nuclear charge does not change across a d-series",
+        "thinks core inert-gas-shell electrons are lost to give variable oxidation states",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-f-block-characteristics",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-f-block-characteristics",
+      "question": "How do actinoids differ fundamentally from lanthanoids in terms of orbital filling and chemical behavior?",
+      "options": [
+        "Actinoids fill 5f orbitals and exhibit a wider range of oxidation states than lanthanoids",
+        "Actinoids fill 4f orbitals and show only a +3 oxidation state",
+        "Actinoids fill 5d orbitals while lanthanoids fill 4d orbitals",
+        "Actinoids are all non-radioactive while all lanthanoids are radioactive"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses 4f and 5f principal quantum numbers between lanthanoids and actinoids",
+        "mistakes inner transition f-block filling for outer d-orbital filling",
+        "reverses the radioactivity characteristics of actinoids and lanthanoids"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-metals-nonmetals-metalloids",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-metals-nonmetals-metalloids",
+      "question": "Which of the following elements lies along the zigzag line in the periodic table and behaves as a metalloid?",
+      "options": [
+        "Aluminum (Al)",
+        "Sulfur (S)",
+        "Sodium (Na)",
+        "Silicon (Si)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks aluminum is a metalloid due to its amphoteric oxide, rather than a post-transition metal",
+        "classifies a typical non-metal as a metalloid",
+        "confuses an active alkali metal with a metalloid",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-screening-effective-nuclear-charge",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-screening-effective-nuclear-charge",
+      "question": "Across a period from left to right, what happens to the effective nuclear charge (Zeff) experienced by valence electrons?",
+      "options": [
+        "It decreases because the screening effect of inner electrons increases drastically",
+        "It increases because the nuclear charge increases while inner-shell screening remains nearly constant",
+        "It remains constant because protons and electrons are added in equal numbers",
+        "It drops to zero at the end of each period due to complete shell shielding"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks adding electrons to the same shell increases screening enough to decrease Zeff",
+        "",
+        "assumes equal addition of protons and electrons perfectly cancels out any increase in nuclear pull",
+        "believes a filled valence octet completely eliminates nuclear attraction on valence electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-atomic-radii-trends",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-atomic-radii-trends",
+      "question": "Why does atomic radius decrease as you move from left to right across a period?",
+      "options": [
+        "The principal quantum number n decreases across the period",
+        "Electrons are added to inner d orbitals which repel the outer shell",
+        "The number of electron shells increases across the period",
+        "Effective nuclear charge increases, pulling the valence shell closer to the nucleus"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks principal quantum number changes across a period rather than down a group",
+        "attributes main-group atomic radius contraction to d-electron repulsion",
+        "confuses across-period progression with down-group shell addition",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-ionic-radii-trends",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-ionic-radii-trends",
+      "question": "Which statement correctly compares the radius of an ion with its parent neutral atom?",
+      "options": [
+        "Both cations and anions are always smaller than their parent neutral atoms",
+        "A cation is larger than its parent atom, while an anion is smaller than its parent atom",
+        "Both cations and anions are always larger than their parent neutral atoms",
+        "A cation is smaller than its parent atom, while an anion is larger than its parent atom"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks forming an ion always contracts the electron cloud regardless of charge sign",
+        "inverts the effect of electron loss and electron gain on electron-electron repulsion and Zeff",
+        "thinks any charge addition (positive or negative) expands the electron cloud",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-isoelectronic-species-radii",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-isoelectronic-species-radii",
+      "question": "Which of the following represents the correct order of decreasing ionic radii for the isoelectronic species N^3-, O^2-, F^-, and Na^+?",
+      "options": [
+        "Na^+ > F^- > O^2- > N^3-",
+        "F^- > O^2- > N^3- > Na^+",
+        "N^3- > O^2- > F^- > Na^+",
+        "N^3- > Na^+ > O^2- > F^-"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "orders by increasing atomic number instead of decreasing radius (higher nuclear charge pulls more)",
+        "inverts the anion size trend based on magnitude of negative charge",
+        "",
+        "places cation randomly within anions without considering nuclear charge consistently"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends",
+      "question": "For a given multi-electron atom, why is the second ionization enthalpy (IE2) always higher than the first ionization enthalpy (IE1)?",
+      "options": [
+        "Because electron-electron repulsion increases after removing the first electron",
+        "Because the second electron is always removed from an inner principal energy shell",
+        "Because an electron is removed from a positively charged ion where effective nuclear charge is greater",
+        "Because the nuclear charge (number of protons) increases upon removing an electron"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks electron-electron repulsion increases rather than decreases when an electron is removed",
+        "assumes every successive electron comes from a new inner shell",
+        "",
+        "believes removing an orbital electron adds a proton to the nucleus"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-anomalies",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-anomalies",
+      "question": "Why is the first ionization enthalpy of Nitrogen higher than that of Oxygen?",
+      "options": [
+        "Nitrogen has a larger nuclear charge than Oxygen",
+        "Nitrogen has extra stability due to a half-filled 2p subshell (2p^3)",
+        "Nitrogen has a smaller atomic radius than Oxygen",
+        "Oxygen has a completely filled 2p subshell which is easy to break"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "incorrectly thinks nitrogen has more protons than oxygen",
+        "",
+        "thinks atomic size decreases from oxygen to nitrogen",
+        "incorrectly identifies oxygen's configuration as completely filled 2p"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends",
+      "question": "Why do noble gases have large positive values of electron gain enthalpy?",
+      "options": [
+        "Because their nuclear charge is too weak to attract any additional electrons",
+        "Because they have very small atomic radii that repel all incoming negative charges",
+        "Because the incoming electron must enter the next higher principal quantum shell",
+        "Because they already have partially filled d-orbitals that resist electron pairing"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks noble gas nuclei have low effective nuclear charge",
+        "thinks noble gas sizes are abnormally small and create pure electrostatic repulsion",
+        "",
+        "incorrectly attributes noble gas configuration to partially filled d orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-anomalies",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-anomalies",
+      "question": "Why does Fluorine have a less negative electron gain enthalpy than Chlorine?",
+      "options": [
+        "Fluorine has a lower electronegativity than Chlorine",
+        "The incoming electron in Fluorine experiences strong interelectronic repulsions in the compact 2p subshell",
+        "Fluorine has a smaller nuclear charge than Chlorine",
+        "Fluorine's valence 2p subshell is completely filled, whereas Chlorine's 3p subshell is half-filled"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses electron gain enthalpy with electronegativity and assumes Fluorine has lower electronegativity",
+        "",
+        "attributes the anomaly simply to lower Z rather than compact shell electron-electron repulsion",
+        "misidentifies the ground-state valence configurations of halogens"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+      "question": "How does electronegativity fundamentally differ from electron gain enthalpy?",
+      "options": [
+        "Electronegativity is an energetic property of an isolated gaseous atom, while electron gain enthalpy applies to bonded atoms",
+        "Electronegativity increases down a group, whereas electron gain enthalpy always becomes more negative down a group",
+        "Electronegativity is the tendency of an atom in a chemical compound to attract a shared pair of electrons, not an absolute energy value",
+        "Electronegativity can only be measured experimentally in kJ/mol, whereas electron gain enthalpy is dimensionless"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "inverts the definitions of electronegativity (bonded state) and electron gain enthalpy (isolated gaseous state)",
+        "misstates the periodic trend of electronegativity down a group",
+        "",
+        "confuses the dimensionless nature of Pauling electronegativity with the energetic units of electron gain enthalpy"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-anomalous-second-period-diagonal-relationship",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-anomalous-second-period-diagonal-relationship",
+      "question": "What is the primary cause of the diagonal relationship observed between Lithium and Magnesium?",
+      "options": [
+        "They have identical ground-state electronic configurations",
+        "They have nearly similar polarizing power (charge-to-radius ratio)",
+        "They belong to the exact same group in the modern periodic table",
+        "They both possess vacant low-energy d-orbitals in their valence shell"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks diagonally related elements have the same electron configuration",
+        "",
+        "confuses diagonal relationship with group relationship",
+        "thinks second-period elements like Lithium possess available valence d-orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-classification-of-elements-and-periodicity-periodic-trends-chemical-reactivity-oxides",
+      "nodeId": "class11-chemistry-classification-of-elements-and-periodicity-periodic-trends-chemical-reactivity-oxides",
+      "question": "How does the acid-base nature of normal oxides change as you move from left to right across Period 3 (Na2O to Cl2O7)?",
+      "options": [
+        "From strongly acidic, through amphoteric, to strongly basic",
+        "From strongly basic, through amphoteric, to strongly acidic",
+        "From neutral, through basic, to amphoteric",
+        "All Period 3 oxides remain purely basic across the entire period"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the trend by thinking metallic oxides on the left are acidic",
+        "",
+        "thinks alkali metal oxides on the extreme left are neutral",
+        "fails to recognize the transition from metallic basic oxides to non-metallic acidic oxides"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-lewis-dot-symbols",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-lewis-dot-symbols",
+      "question": "What is the correct Lewis dot symbol for a sulfide ion (S²⁻)?",
+      "options": [
+        "[:S:]²⁻ with 6 valence dots",
+        "[:S:]²⁻ with 4 valence dots",
+        "[S]²⁻ with no dots shown",
+        "[:S:]²⁻ with 8 valence dots"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "counts only the original valence electrons of sulfur without adding the two gained electrons",
+        "confuses group number or subtracts electrons instead of adding them for an anion",
+        "thinks the negative charge replaces the need to show dots for valence electrons entirely",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures",
+      "question": "In the valid Lewis structure for the carbonate ion (CO₃²⁻) satisfying the octet rule, how many total lone pairs of electrons are present?",
+      "options": [
+        "6 lone pairs",
+        "7 lone pairs",
+        "9 lone pairs",
+        "8 lone pairs"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assigns exactly two lone pairs to every oxygen atom regardless of bond order",
+        "forgets the two extra electrons from the 2- charge when distributing lone pairs",
+        "treats all three carbon-oxygen bonds as single bonds and gives each oxygen three lone pairs without completing carbon's octet",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-formal-charge-calculation",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-formal-charge-calculation",
+      "question": "In the Lewis structure of ozone (O₃), where the central oxygen atom is bonded to one oxygen via a double bond and to the other via a single bond, what is the formal charge on the central oxygen atom?",
+      "options": [
+        "0",
+        "+1",
+        "-1",
+        "+2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes neutral molecules cannot have atoms with non-zero formal charges",
+        "",
+        "confuses the central atom with the single-bonded terminal oxygen",
+        "counts the three shared bonds as full electrons belonging entirely to oxygen"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-limitations",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-limitations",
+      "question": "Which of the following molecules is an example of an odd-electron molecule that violates the octet rule?",
+      "options": [
+        "BeCl₂",
+        "SF₆",
+        "BF₃",
+        "NO₂"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses an incomplete octet with having an odd number of total valence electrons",
+        "confuses an expanded octet with having an odd number of total valence electrons",
+        "thinks any molecule with an incomplete octet must contain an odd electron",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-ionic-bond-formation-factors",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-ionic-bond-formation-factors",
+      "question": "Which combination of energetic factors most strongly favors the formation of a stable ionic compound?",
+      "options": [
+        "Low ionization enthalpy of metal, positive electron gain enthalpy of non-metal, low lattice enthalpy",
+        "High ionization enthalpy of metal, high negative electron gain enthalpy of non-metal, low lattice enthalpy",
+        "Low ionization enthalpy of metal, high negative electron gain enthalpy of non-metal, high lattice enthalpy",
+        "High ionization enthalpy of metal, low negative electron gain enthalpy of non-metal, high lattice enthalpy"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes positive electron gain enthalpy is favorable for forming anions",
+        "thinks high ionization enthalpy makes a metal more reactive and ready to form bonds",
+        "",
+        "thinks strong ionic bonding requires high ionization energy to remove electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-lattice-enthalpy-born-haber",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-lattice-enthalpy-born-haber",
+      "question": "Under what condition is an ionic solid most likely to dissolve readily in water?",
+      "options": [
+        "When the lattice enthalpy is significantly greater than the hydration enthalpy",
+        "When both hydration enthalpy and lattice enthalpy are equal to zero",
+        "When the hydration enthalpy is greater than the lattice enthalpy",
+        "When the lattice enthalpy is extremely high regardless of hydration enthalpy"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes a large lattice enthalpy drives dissolution rather than opposing it",
+        "thinks ionic dissolution occurs only when no energy changes take place",
+        "",
+        "confuses solid stability with solubility in water"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters",
+      "question": "As the bond order between two given atoms increases, how do the bond length and bond enthalpy change?",
+      "options": [
+        "Bond length increases and bond enthalpy increases",
+        "Bond length decreases and bond enthalpy decreases",
+        "Bond length decreases and bond enthalpy increases",
+        "Bond length increases and bond enthalpy decreases"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks more shared electron pairs make the bond longer as well as stronger",
+        "thinks shorter bonds have less energy stored in them and therefore lower enthalpy",
+        "",
+        "inverts both relationships by assuming higher bond order weakens the bond"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-resonance-structures",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-resonance-structures",
+      "question": "Which statement correctly describes the true nature of the carbon-oxygen bonds in the carbonate ion (CO₃²⁻)?",
+      "options": [
+        "All three carbon-oxygen bonds are identical in length and intermediate between single and double bonds",
+        "The molecule rapidly oscillates between two single bonds and one double bond",
+        "Two bonds are permanently single and one bond is permanently double",
+        "The bonds have different lengths because resonance structures exist as distinct real molecules in equilibrium"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks resonance is a rapid physical oscillation between individual contributing structures",
+        "takes a single canonical Lewis structure as the literal physical reality",
+        "believes resonance structures are distinct chemical species existing in dynamic equilibrium"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-dipole-moment-molecular-polarity",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-dipole-moment-molecular-polarity",
+      "question": "Why does carbon dioxide (CO₂) have a zero dipole moment while sulfur dioxide (SO₂) has a net dipole moment?",
+      "options": [
+        "The C-O bond is purely nonpolar, whereas the S-O bond is strongly polar",
+        "CO₂ is linear so its bond dipoles cancel, whereas SO₂ is bent so its bond dipoles do not cancel",
+        "Sulfur is more electronegative than carbon, which creates an asymmetric charge distribution",
+        "CO₂ has only single bonds while SO₂ has double bonds"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes individual C-O bonds have no polarity because the overall molecule is nonpolar",
+        "",
+        "explains molecular polarity solely by central atom electronegativity without considering geometry",
+        "incorrectly attributes polarity differences to bond order rather than molecular shape"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-ideal-geometries",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-ideal-geometries",
+      "question": "What is the expected molecular geometry of phosphorus pentachloride (PCl₅) according to VSEPR theory?",
+      "options": [
+        "Trigonal bipyramidal",
+        "Pentagonal planar",
+        "Square pyramidal",
+        "Octahedral"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes five bonding pairs arrange in a flat two-dimensional pentagon to minimize repulsion",
+        "confuses five electron pairs with a square pyramid geometry",
+        "confuses 5 electron pairs with 6 electron pairs"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-lone-pair-repulsions",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-lone-pair-repulsions",
+      "question": "Why is the H-O-H bond angle in water (104.5°) smaller than the H-N-H bond angle in ammonia (107°)?",
+      "options": [
+        "Oxygen is larger in atomic radius than nitrogen, which pushes the hydrogen atoms closer together",
+        "Water has two lone pairs on the central atom causing greater repulsion than the single lone pair in ammonia",
+        "The N-H bonds are double bonds, which require larger bond angles to minimize repulsion",
+        "Bond pair-bond pair repulsion is stronger in water than in ammonia"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "attributes bond angle contraction to atomic size rather than electron pair repulsion",
+        "",
+        "incorrectly assumes ammonia has multiple bonds that expand its bond angles",
+        "reverses the VSEPR repulsion hierarchy by claiming bond pair-bond pair repulsion dominates"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-valence-bond-orbital-overlap",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-valence-bond-orbital-overlap",
+      "question": "According to Valence Bond Theory, at what point on the potential energy curve is a stable covalent bond formed between two approaching hydrogen atoms?",
+      "options": [
+        "When potential energy reaches zero as the nuclei come into direct contact",
+        "When potential energy is at its minimum and attractive forces balance repulsive forces",
+        "When repulsive forces completely overcome attractive forces at infinite distance",
+        "When potential energy is at its maximum positive value"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks zero potential energy represents the bonded state rather than separate atoms at infinity",
+        "",
+        "confuses the infinite separation reference state with the bond equilibrium state",
+        "thinks chemical bond formation requires energy to reach a maximum peak"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-sigma-pi-bonds",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-sigma-pi-bonds",
+      "question": "Why is a sigma (σ) bond generally stronger than a pi (π) bond formed between the same two atoms?",
+      "options": [
+        "Sigma bonds are formed by head-on axial overlap, resulting in a greater extent of orbital overlap",
+        "Sigma bonds involve sideways overlap which covers a greater surface area",
+        "Pi bonds involve s orbitals which have spherical symmetry and weak directional overlap",
+        "Pi bonds contain four shared electrons whereas sigma bonds contain only two"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the geometry of sigma overlap with pi overlap",
+        "incorrectly believes pi bonds are formed from s orbitals",
+        "confuses a double bond containing two bonds with the electron count of a single pi bond"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-sp-sp2-sp3",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-sp-sp2-sp3",
+      "question": "What are the shapes and directional angles of the hybrid orbitals produced by sp² hybridisation?",
+      "options": [
+        "Linear with 180° bond angles",
+        "Trigonal pyramidal with 107° bond angles",
+        "Tetrahedral with 109.5° bond angles",
+        "Trigonal planar with 120° bond angles"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses sp² hybridisation with sp hybridisation",
+        "confuses hybrid orbital geometry with molecular geometry containing lone pairs",
+        "confuses sp² hybridisation with sp³ hybridisation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-organic-molecules",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-organic-molecules",
+      "question": "What is the hybridisation state of each carbon atom in ethyne (H-C≡C-H)?",
+      "options": [
+        "sp",
+        "sp²",
+        "sp³",
+        "sp³d"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "associates multiple bonds generally with sp² rather than counting the two pi bonds of a triple bond",
+        "assumes all carbon atoms in organic molecules are always sp³ hybridised",
+        "thinks carbon uses d-orbitals when forming triple bonds"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-d-orbitals",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-d-orbitals",
+      "question": "In the sp³d hybridisation of PCl₅, why are the two axial P-Cl bonds longer and weaker than the three equatorial P-Cl bonds?",
+      "options": [
+        "Axial bonds are formed by unhybridised pure d-orbitals while equatorial bonds use hybrid orbitals",
+        "Axial bonds suffer greater repulsion from equatorial electron pairs at 90° angles",
+        "Equatorial chlorine atoms are more electronegative than axial chlorine atoms",
+        "Axial bonds experience repulsive forces only from each other at 180°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks axial and equatorial bonds arise from completely separate sets of unmixed orbitals",
+        "",
+        "believes atoms of the same element have different electronegativities based on position",
+        "ignores the critical 90° repulsions between axial and equatorial pairs"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-mot-lcao-principles",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-lcao-principles",
+      "question": "According to the LCAO method, what happens to the electron density between two nuclei when an antibonding molecular orbital (σ*) is formed?",
+      "options": [
+        "Electron density increases between the nuclei due to constructive interference",
+        "Electron density decreases to zero at a nodal plane between the nuclei due to destructive interference",
+        "Electron density remains exactly the same as in isolated non-interacting atomic orbitals",
+        "Electron density concentrates entirely inside the nucleus of the more electronegative atom"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses antibonding orbital formation with bonding orbital formation",
+        "",
+        "thinks forming an antibonding orbital means orbitals do not interact at all",
+        "confuses destructive wave interference with complete electron transfer to a nucleus"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-light-diatomics",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-light-diatomics",
+      "question": "For the N₂ molecule (14 electrons), which molecular orbital is lower in energy due to 2s-2p orbital mixing?",
+      "options": [
+        "σ2p_z is lower in energy than π2p_x and π2p_y",
+        "π*2p_x and π*2p_y are lower in energy than σ2p_z",
+        "σ*2s is higher in energy than σ2p_z",
+        "π2p_x and π2p_y are lower in energy than σ2p_z"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "applies the heavy diatomic (O₂/F₂) energy ordering to light diatomics like N₂",
+        "confuses antibonding pi orbitals with bonding pi orbitals",
+        "thinks 2s-2p mixing raises σ*2s above the valence bonding orbitals",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-heavy-diatomics",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-heavy-diatomics",
+      "question": "In the molecular orbital diagram of O₂ (16 electrons), what is the correct energy ordering of the orbitals formed from the 2p subshells?",
+      "options": [
+        "σ2p_z < π2p_x = π2p_y < π*2p_x = π*2p_y < σ*2p_z",
+        "π2p_x = π2p_y < σ2p_z < π*2p_x = π*2p_y < σ*2p_z",
+        "σ2p_z < π*2p_x = π*2p_y < π2p_x = π2p_y < σ*2p_z",
+        "π2p_x = π2p_y < π*2p_x = π*2p_y < σ2p_z < σ*2p_z"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "applies the orbital ordering of light diatomics (with s-p mixing) to oxygen",
+        "places antibonding pi orbitals lower in energy than bonding pi orbitals",
+        "places bonding sigma above antibonding pi orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-mot-bond-order-stability",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-bond-order-stability",
+      "question": "Using Molecular Orbital Theory, calculate the bond order of the peroxide ion (O₂²⁻) with 18 electrons.",
+      "options": [
+        "0.5",
+        "1.5",
+        "1.0",
+        "2.0"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "miscounts antibonding electrons when applying the formula (Nb - Na)/2",
+        "confuses the superoxide ion (O₂⁻) with the peroxide ion (O₂²⁻)",
+        "",
+        "uses the bond order of neutral oxygen (O₂) instead of the dianion"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-mot-magnetic-properties",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-magnetic-properties",
+      "question": "According to Molecular Orbital Theory, why is the oxygen molecule (O₂) paramagnetic?",
+      "options": [
+        "It has a total of 16 electrons which is an even number",
+        "It has two unpaired electrons occupying degenerate π2p bonding orbitals",
+        "It has two unpaired electrons occupying degenerate π*2p antibonding orbitals",
+        "It has an unpaired electron in the σ*2p_z orbital"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes an even number of electrons automatically makes a molecule diamagnetic",
+        "places the unpaired valence electrons in bonding pi orbitals instead of antibonding pi orbitals",
+        "",
+        "fills the highest energy σ*2p_z orbital before completely filling degenerate π* orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-cause-conditions",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-cause-conditions",
+      "question": "Which set of properties in an atom is necessary to form a strong hydrogen bond with hydrogen?",
+      "options": [
+        "High electronegativity and small atomic size",
+        "Low electronegativity and large atomic size",
+        "High electronegativity and large atomic size",
+        "Low ionization energy and small atomic size"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses the electronegativity and atomic size requirements",
+        "fails to recognize that large size diffuses charge density (e.g., why chlorine forms negligible H-bonds)",
+        "confuses metallic character and low ionization energy with hydrogen bonding requirements"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-types-effects",
+      "nodeId": "class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-types-effects",
+      "question": "Why does o-nitrophenol have a lower boiling point and higher steam volatility than p-nitrophenol?",
+      "options": [
+        "o-Nitrophenol forms intermolecular hydrogen bonds while p-nitrophenol forms intramolecular hydrogen bonds",
+        "p-Nitrophenol has a lower molecular mass than o-nitrophenol",
+        "o-Nitrophenol forms intramolecular hydrogen bonds, preventing association with other molecules",
+        "o-Nitrophenol cannot form any hydrogen bonds due to steric hindrance"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "inverts the roles of intermolecular and intramolecular hydrogen bonding for the two isomers",
+        "thinks structural isomers have different molecular masses",
+        "",
+        "believes ortho substitution completely prevents any hydrogen bonding from taking place"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-system-surroundings-types",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-system-surroundings-types",
+      "question": "A tightly sealed stainless steel flask completely filled with hot water sits on a table. Heat flows through the metal wall into the room. How is this system classified?",
+      "options": [
+        "Closed system",
+        "Open system",
+        "Isolated system",
+        "Adiabatic system"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the system is open because energy escapes to the surroundings",
+        "confuses closed with isolated, thinking sealing matter also prevents heat transfer",
+        "thinks any rigid metallic boundary acts as an adiabatic wall"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-extensive-intensive-properties",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-extensive-intensive-properties",
+      "question": "Which of the following is an intensive property of a sample?",
+      "options": [
+        "Enthalpy",
+        "Heat capacity",
+        "Internal energy",
+        "Molar heat capacity"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks total enthalpy is independent of sample size",
+        "confuses heat capacity (extensive) with specific or molar heat capacity (intensive)",
+        "thinks internal energy is an intrinsic quality that does not scale with mass",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-state-and-path-functions",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-state-and-path-functions",
+      "question": "Which pair contains ONLY state functions?",
+      "options": [
+        "Work and Heat",
+        "Enthalpy and Work",
+        "Internal energy and Enthalpy",
+        "Heat and Internal energy"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks work and heat are properties of the initial and final states",
+        "believes work is a state function like enthalpy",
+        "",
+        "believes heat is a state function like internal energy"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-first-law-internal-energy",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-first-law-internal-energy",
+      "question": "A system absorbs 300 J of heat from the surroundings while doing 100 J of work on the surroundings. What is the change in internal energy (ΔU)?",
+      "options": [
+        "+400 J",
+        "-200 J",
+        "+200 J",
+        "-400 J"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds work as positive even though work is done BY the system on surroundings",
+        "reverses the signs of both heat absorbed and work done",
+        "",
+        "treats heat absorbed as negative and work done by the system as negative"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-work-irreversible-expansion",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-work-irreversible-expansion",
+      "question": "An ideal gas expands irreversibly from 2.0 L to 6.0 L against a constant external pressure of 3.0 atm. What is the work done (w) by standard IUPAC sign convention? (1 L·atm = 101.3 J)",
+      "options": [
+        "-1215.6 J",
+        "+1215.6 J",
+        "-1823.4 J",
+        "+1823.4 J"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "omits the negative sign in the expansion work equation w = -P_ext ΔV",
+        "uses the final volume V2 instead of ΔV in the calculation: w = -P_ext * V2",
+        "uses w = +P_ext * V2 without finding the change in volume or applying the negative sign"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-work-reversible-isothermal",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-work-reversible-isothermal",
+      "question": "One mole of an ideal gas expands reversibly and isothermally from 10 L to 100 L at 300 K. What is the work done (w)? (Given: R = 8.314 J K⁻¹ mol⁻¹, log 10 = 1)",
+      "options": [
+        "+5744.1 J",
+        "-5744.1 J",
+        "-2494.2 J",
+        "+2494.2 J"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets the negative sign in w = -2.303 nRT log(V2/V1) for expansion",
+        "",
+        "uses natural log formula without multiplying by 2.303 or uses wrong log value",
+        "forgets the negative sign and drops the 2.303 conversion factor"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation",
+      "question": "For the reaction N2(g) + 3H2(g) -> 2NH3(g) at 298 K, how is ΔH related to ΔU?",
+      "options": [
+        "ΔH = ΔU - 2RT",
+        "ΔH = ΔU + 2RT",
+        "ΔH = ΔU - 4RT",
+        "ΔH = ΔU + RT"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates Δn_g as (4 - 2) = +2 instead of (2 - 4) = -2",
+        "calculates Δn_g by adding all stoichiometric coefficients (2 + 3 + 1 = 6) or subtracting products from zero",
+        "ignores reactant stoichiometric coefficients and takes Δn_g = +1"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-heat-capacity-relations",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-heat-capacity-relations",
+      "question": "Why is the molar heat capacity at constant pressure (Cp) greater than at constant volume (Cv) for an ideal gas by the amount R?",
+      "options": [
+        "Because gas molecules move faster at constant pressure than at constant volume",
+        "Because intermolecular forces must be overcome during heating at constant pressure",
+        "Because pressure does work on the system when heated at constant volume",
+        "Because at constant pressure, heat supplied increases internal energy and does expansion work"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes kinetic energy increases more rapidly per kelvin at constant pressure",
+        "assumes ideal gas molecules have intermolecular forces that require extra energy to break",
+        "thinks work is done during constant-volume processes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-bomb-calorimetry-delta-u",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-bomb-calorimetry-delta-u",
+      "question": "A 0.50 g sample is burned in a bomb calorimeter with heat capacity 10.0 kJ K⁻¹. The temperature rises by 2.0 K. What is the heat of reaction at constant volume (qv)?",
+      "options": [
+        "+20.0 kJ",
+        "+10.0 kJ",
+        "-10.0 kJ",
+        "-20.0 kJ"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets that combustion releases heat, making q_system negative when the calorimeter absorbs heat",
+        "divides heat capacity by temperature rise and forgets the negative sign for exothermic reaction",
+        "divides heat capacity by the temperature rise instead of multiplying",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-coffee-cup-calorimetry-delta-h",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-coffee-cup-calorimetry-delta-h",
+      "question": "Why does heat measured directly in an open coffee-cup calorimeter equal the enthalpy change (ΔH) of the reaction?",
+      "options": [
+        "Because the volume of the solution remains strictly constant throughout the reaction",
+        "Because coffee-cup calorimeters only work for gas-phase reactions",
+        "Because no heat can enter or leave through the styrofoam walls",
+        "Because the reaction occurs at a constant atmospheric pressure"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses coffee-cup calorimetry (constant pressure) with bomb calorimetry (constant volume)",
+        "thinks liquid solution calorimetry is actually a gas-phase process",
+        "thinks being well-insulated alone defines ΔH rather than constant pressure (q_p = ΔH)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation",
+      "question": "Which chemical equation correctly represents the standard enthalpy of formation (ΔfH°) of liquid water?",
+      "options": [
+        "2H2(g) + O2(g) -> 2H2O(l)",
+        "H2(g) + 1/2 O2(g) -> H2O(g)",
+        "H2(g) + 1/2 O2(g) -> H2O(l)",
+        "2H(g) + O(g) -> H2O(l)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets that standard enthalpy of formation must produce exactly ONE mole of product",
+        "picks the gas phase product instead of the standard physical state of water at 298 K",
+        "",
+        "uses isolated gaseous atoms instead of standard elemental reference states"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-enthalpy-phase-transitions",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-enthalpy-phase-transitions",
+      "question": "If the enthalpy of fusion of ice is +6.0 kJ mol⁻¹ and the enthalpy of vaporisation of water is +40.7 kJ mol⁻¹, what is the enthalpy of sublimation of ice at the same temperature?",
+      "options": [
+        "+34.7 kJ mol⁻¹",
+        "+46.7 kJ mol⁻¹",
+        "-46.7 kJ mol⁻¹",
+        "-34.7 kJ mol⁻¹"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "subtracts fusion from vaporisation instead of adding them: ΔH_sub = ΔH_vap - ΔH_fus",
+        "",
+        "adds values correctly but assigns a negative sign to an endothermic phase change",
+        "subtracts fusion from vaporisation and makes the value negative"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-enthalpy-combustion-atomization",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-enthalpy-combustion-atomization",
+      "question": "Which equation defines the standard enthalpy of atomisation of methane, CH4(g)?",
+      "options": [
+        "CH4(g) -> C(graphite) + 2H2(g)",
+        "CH4(g) + 2O2(g) -> CO2(g) + 2H2O(l)",
+        "CH4(g) -> CH3(g) + H(g)",
+        "CH4(g) -> C(g) + 4H(g)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses atomisation with decomposition into standard elemental reference states",
+        "confuses atomisation enthalpy with combustion enthalpy",
+        "confuses total atomisation enthalpy with the first bond dissociation enthalpy",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-bond-dissociation-enthalpy",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-bond-dissociation-enthalpy",
+      "question": "Given bond enthalpies: H-H = 436 kJ mol⁻¹, Cl-Cl = 242 kJ mol⁻¹, and H-Cl = 431 kJ mol⁻¹. What is the enthalpy of reaction for H2(g) + Cl2(g) -> 2HCl(g)?",
+      "options": [
+        "-247 kJ mol⁻¹",
+        "+184 kJ mol⁻¹",
+        "-184 kJ mol⁻¹",
+        "+247 kJ mol⁻¹"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets the stoichiometric coefficient 2 for HCl, calculating (436 + 242) - 431",
+        "calculates products minus reactants instead of bonds broken minus bonds formed",
+        "",
+        "calculates HCl bond enthalpy minus reactants without the coefficient: 431 - (436 + 242)"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-hess-law-summation",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-hess-law-summation",
+      "question": "Given:\n(1) C(graphite) + O2(g) -> CO2(g), ΔH = -393.5 kJ\n(2) CO(g) + 1/2 O2(g) -> CO2(g), ΔH = -283.0 kJ\nWhat is ΔH for C(graphite) + 1/2 O2(g) -> CO(g)?",
+      "options": [
+        "-110.5 kJ",
+        "-676.5 kJ",
+        "+110.5 kJ",
+        "+676.5 kJ"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds both equations directly instead of subtracting equation 2",
+        "reverses the subtraction order, calculating (-283.0) - (-393.5)",
+        "adds the negative of both enthalpies together"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-born-haber-cycle-lattice-energy",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-born-haber-cycle-lattice-energy",
+      "question": "In a Born-Haber cycle for NaCl(s), which set of steps represents the formation of gaseous ions Na+(g) and Cl-(g) from Na(s) and Cl2(g)?",
+      "options": [
+        "Lattice dissociation of NaCl followed by hydration of both ions",
+        "Sublimation of Na, electron gain of Na, dissociation of Cl2, and ionization of Cl",
+        "Ionization of Na, sublimation of Cl2, and electron gain of Cl",
+        "Sublimation of Na, ionization of Na, dissociation of Cl2, and electron gain of Cl"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses Born-Haber gas-phase ionic steps with aqueous dissolution/hydration steps",
+        "confuses which element loses an electron (ionization) and which gains an electron",
+        "omits the sublimation of sodium and misapplies sublimation to chlorine gas",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-entropy-qualitative-molecular",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-entropy-qualitative-molecular",
+      "question": "For which of the following processes is ΔS negative?",
+      "options": [
+        "Sublimation of solid iodine: I2(s) -> I2(g)",
+        "Dissolution of sugar in water: C12H22O11(s) -> C12H22O11(aq)",
+        "Freezing of liquid water: H2O(l) -> H2O(s)",
+        "Decomposition of calcium carbonate: CaCO3(s) -> CaO(s) + CO2(g)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks changing from solid to gas decreases disorder",
+        "believes dissolving a crystal into solution reduces randomness",
+        "",
+        "thinks producing a gas from a solid results in a decrease in entropy"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-entropy-calculation-reversible",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-entropy-calculation-reversible",
+      "question": "What is the entropy change (ΔS_vap) when 1 mole of liquid water boils reversibly at 373 K if its enthalpy of vaporisation is 40.7 kJ mol⁻¹?",
+      "options": [
+        "-109.1 J K⁻¹ mol⁻¹",
+        "+0.109 J K⁻¹ mol⁻¹",
+        "+109.1 J K⁻¹ mol⁻¹",
+        "+15181 J K⁻¹ mol⁻¹"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assigns a negative sign to the entropy increase of vaporisation",
+        "forgets to convert kJ to J when reporting entropy in standard J K⁻¹ mol⁻¹",
+        "",
+        "multiplies enthalpy by temperature (ΔH * T) instead of dividing by T"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-second-third-laws",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-second-third-laws",
+      "question": "According to the Third Law of Thermodynamics, the entropy of which substance is zero at absolute zero (0 K)?",
+      "options": [
+        "Any pure gas at 1 bar pressure",
+        "A perfectly crystalline substance",
+        "An amorphous glass",
+        "Any liquid at its freezing point"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks ideal gases have zero entropy at 0 K regardless of physical state",
+        "",
+        "fails to realize amorphous solids retain residual disorder at 0 K",
+        "confuses absolute zero with the freezing point of a substance"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-gibbs-energy-definition",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-gibbs-energy-definition",
+      "question": "How is the change in Gibbs free energy of a system (ΔG_sys) related to the total entropy change (ΔS_total) at constant temperature and pressure?",
+      "options": [
+        "ΔG_sys = -T ΔS_total",
+        "ΔG_sys = T ΔS_total",
+        "ΔG_sys = -ΔS_total / T",
+        "ΔG_sys = ΔH_sys + T ΔS_total"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "misses the negative sign in the relation between ΔG_sys and ΔS_total",
+        "inverts the temperature dependence, dividing by T instead of multiplying",
+        "confuses the definition equation ΔG = ΔH - TΔS_sys with the total entropy relation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-spontaneity-criteria-delta-g",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-spontaneity-criteria-delta-g",
+      "question": "A reaction has positive ΔH and positive ΔS. Under what conditions is this reaction spontaneous?",
+      "options": [
+        "Spontaneous at high temperatures (T > ΔH / ΔS)",
+        "Spontaneous at low temperatures (T < ΔH / ΔS)",
+        "Spontaneous at all temperatures",
+        "Non-spontaneous at all temperatures"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks low temperature makes the positive TΔS term dominate",
+        "believes positive ΔS alone guarantees spontaneity at all temperatures",
+        "believes positive ΔH (endothermic) makes a reaction impossible regardless of temperature"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-standard-gibbs-energy-reactions",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-standard-gibbs-energy-reactions",
+      "question": "For a reaction 2A -> B + C, standard free energies of formation are: ΔfG°(A) = -50 kJ mol⁻¹, ΔfG°(B) = -120 kJ mol⁻¹, and ΔfG°(C) = +30 kJ mol⁻¹. What is ΔrG°?",
+      "options": [
+        "-40 kJ mol⁻¹",
+        "+10 kJ mol⁻¹",
+        "-10 kJ mol⁻¹",
+        "+40 kJ mol⁻¹"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets to multiply ΔfG° of reactant A by its stoichiometric coefficient 2: (-120 + 30) - (-50) = -40",
+        "",
+        "calculates reactants minus products with stoichiometric factor: 2(-50) - (-120 + 30) = -10",
+        "calculates reactants minus products without multiplying reactant A by 2: (-50) - (-120 + 30) = +40"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-gibbs-energy-equilibrium-constant",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-gibbs-energy-equilibrium-constant",
+      "question": "If a reaction has a large negative standard Gibbs energy change (ΔrG° << 0) at 298 K, what does this imply about its equilibrium constant (K)?",
+      "options": [
+        "K is much less than 1 (equilibrium favours reactants)",
+        "K is much greater than 1 (equilibrium favours products)",
+        "K is equal to 0",
+        "K is equal to 1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks negative ΔG° corresponds to a very small fraction K < 1",
+        "",
+        "confuses K having a small value with K being exactly 0",
+        "thinks standard state conditions mean equilibrium constant must be 1"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-chemical-thermodynamics-non-spontaneous-coupled-reactions",
+      "nodeId": "class11-chemistry-chemical-thermodynamics-non-spontaneous-coupled-reactions",
+      "question": "How can a non-spontaneous reaction (Reaction 1, ΔG1 > 0) be driven to proceed forward by coupling?",
+      "options": [
+        "By coupling it to an endergonic reaction with ΔG2 > ΔG1",
+        "By pairing it via a shared intermediate with an exergonic reaction where |ΔG2| > ΔG1",
+        "By adding an inert catalyst to lower the activation energy of Reaction 1",
+        "By increasing the temperature until ΔG1 naturally becomes positive"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks adding another non-spontaneous (endergonic) step can drive the reaction",
+        "",
+        "confuses lowering activation energy with altering the overall Gibbs energy change",
+        "thinks increasing positive ΔG makes a reaction proceed"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-physical-processes-dynamic-nature",
+      "nodeId": "class11-chemistry-equilibrium-physical-processes-dynamic-nature",
+      "question": "A closed vessel contains liquid water in equilibrium with water vapour at a constant temperature. What is occurring at the molecular level?",
+      "options": [
+        "Molecules evaporate and condense at equal rates, keeping both amounts constant.",
+        "Evaporation has completely stopped, so the amount of vapour remains constant.",
+        "Molecules condense faster than they evaporate because vapour is saturated.",
+        "All liquid water molecules have converted into vapour molecules at constant pressure."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes equilibrium means all molecular processes have ceased entirely (static view)",
+        "thinks saturation means condensation rate must exceed evaporation rate",
+        "confuses phase equilibrium with complete vaporization"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-henrys-law",
+      "nodeId": "class11-chemistry-equilibrium-henrys-law",
+      "question": "According to Henry's law (p = KH · x), what happens to the solubility of a gas (expressed as mole fraction x) in a liquid at constant temperature if its partial pressure above the liquid is doubled?",
+      "options": [
+        "The solubility is doubled.",
+        "The solubility remains unchanged because KH is constant.",
+        "The solubility is halved.",
+        "The solubility increases fourfold."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks gas solubility is independent of pressure since the constant KH is fixed",
+        "believes solubility is inversely proportional to partial pressure",
+        "assumes a quadratic relationship between partial pressure and mole fraction solubility"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-chemical-dynamic-nature",
+      "nodeId": "class11-chemistry-equilibrium-chemical-dynamic-nature",
+      "question": "Which statement correctly describes a reversible chemical reaction that has reached dynamic equilibrium?",
+      "options": [
+        "The forward and reverse reactions proceed at equal rates, and reactant concentrations remain constant.",
+        "The forward reaction has completely finished, leaving only product molecules in the vessel.",
+        "The concentrations of reactants and products must be strictly equal to one another.",
+        "The forward and reverse rate constants (kf and kr) have become equal."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes chemical equilibrium means the forward reaction goes to 100% completion",
+        "confuses equal reaction rates with equal concentrations of reactants and products",
+        "confuses equality of forward and reverse reaction rates with equality of rate constants"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-law-mass-action-kc",
+      "nodeId": "class11-chemistry-equilibrium-law-mass-action-kc",
+      "question": "What is the correct equilibrium constant expression (Kc) for the homogeneous gas reaction: N2(g) + 3H2(g) ⇌ 2NH3(g)?",
+      "options": [
+        "Kc = ([N2] [H2]^3) / [NH3]^2",
+        "Kc = [NH3]^2 / ([N2] [H2]^3)",
+        "Kc = (2 [NH3]) / ([N2] + 3 [H2])",
+        "Kc = [NH3] / ([N2] [H2])"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the fraction by placing reactants in the numerator and products in the denominator",
+        "",
+        "multiplies stoichiometric coefficients by concentrations instead of raising concentrations to powers",
+        "ignores stoichiometric coefficients as exponents entirely"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-kp-expression",
+      "nodeId": "class11-chemistry-equilibrium-kp-expression",
+      "question": "For the reaction 2SO2(g) + O2(g) ⇌ 2SO3(g), what is the correct equilibrium constant expression in terms of partial pressures (Kp)?",
+      "options": [
+        "Kp = (p_SO2)^2 · (p_O2) / (p_SO3)^2",
+        "Kp = (2 · p_SO3) / (2 · p_SO2 · p_O2)",
+        "Kp = (p_SO3)^2 / ((p_SO2)^2 · p_O2)",
+        "Kp = p_SO3 / (p_SO2 · p_O2)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "writes reactants in numerator and products in denominator",
+        "uses stoichiometric coefficients as multipliers instead of powers for partial pressures",
+        "",
+        "omits the powers corresponding to the stoichiometric coefficients"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-kp-kc-relation",
+      "nodeId": "class11-chemistry-equilibrium-kp-kc-relation",
+      "question": "For which of the following gaseous reactions is Kp numerically equal to Kc at all temperatures?",
+      "options": [
+        "H2(g) + I2(g) ⇌ 2HI(g)",
+        "PCl5(g) ⇌ PCl3(g) + Cl2(g)",
+        "2SO2(g) + O2(g) ⇌ 2SO3(g)",
+        "N2(g) + 3H2(g) ⇌ 2NH3(g)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks Kp = Kc when a single reactant dissociates into two products",
+        "assumes Kp = Kc whenever all reacting species are in the gas phase",
+        "believes Kp = Kc when delta_n_g = -2 because total moles of reactants is 4"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-heterogeneous-expressions",
+      "nodeId": "class11-chemistry-equilibrium-heterogeneous-expressions",
+      "question": "What is the correct expression for the equilibrium constant Kc for the reaction: CaCO3(s) ⇌ CaO(s) + CO2(g)?",
+      "options": [
+        "Kc = [CaO] [CO2] / [CaCO3]",
+        "Kc = [CaO] / [CaCO3]",
+        "Kc = 1 / [CO2]",
+        "Kc = [CO2]"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "includes pure solids in the equilibrium constant expression alongside gases",
+        "omits the gaseous component while including pure solids",
+        "places the gaseous product in the denominator",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-extent-of-reaction",
+      "nodeId": "class11-chemistry-equilibrium-extent-of-reaction",
+      "question": "A reaction has an equilibrium constant Kc = 1.0 × 10^(-15) at 298 K. What does this value indicate about the extent of the reaction at equilibrium?",
+      "options": [
+        "The reaction proceeds almost to completion, and products predominate heavily.",
+        "The reaction proceeds to a negligible extent, and reactants predominate heavily.",
+        "Reactants and products are present in approximately equal amounts.",
+        "The reaction is extremely fast and reaches equilibrium instantly."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a very small equilibrium constant with a very large one, expecting mostly products",
+        "",
+        "thinks equilibrium inherently implies equal concentrations regardless of Kc value",
+        "confuses the thermodynamic extent of reaction (equilibrium constant) with the kinetic rate of reaction"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-reaction-quotient-direction",
+      "nodeId": "class11-chemistry-equilibrium-reaction-quotient-direction",
+      "question": "For the reaction A(g) ⇌ B(g), the value of Kc is 50. At a given moment, the reaction quotient Qc is found to be 120. In which direction will the reaction proceed to reach equilibrium?",
+      "options": [
+        "The system is already at equilibrium, so no net reaction occurs.",
+        "The forward direction, converting A into B until Qc increases to Kc.",
+        "The reverse direction, converting B into A until Qc decreases to Kc.",
+        "The reverse direction because Qc must increase to equal Kc."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes any non-zero value of Qc means the system is at equilibrium",
+        "thinks when Qc > Kc the forward reaction must continue to reach equilibrium",
+        "",
+        "confuses the direction of change needed for Qc, thinking Qc must increase when it is already greater than Kc"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-equilibrium-concentrations-calc",
+      "nodeId": "class11-chemistry-equilibrium-equilibrium-concentrations-calc",
+      "question": "For the reaction A(g) ⇌ B(g) + C(g), initially 1.0 mol of A is placed in a 1.0 L container with no B or C. At equilibrium, [B] is found to be 0.40 M. What is the equilibrium concentration of A?",
+      "options": [
+        "1.00 M",
+        "0.40 M",
+        "0.20 M",
+        "0.60 M"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes reactant concentration remains unchanged from its initial value",
+        "assumes reactant equilibrium concentration must equal the product equilibrium concentration",
+        "subtracts the change in concentration twice (1.0 - 2x) instead of once (1.0 - x)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-le-chatelier-concentration-pressure",
+      "nodeId": "class11-chemistry-equilibrium-le-chatelier-concentration-pressure",
+      "question": "For the gaseous equilibrium N2(g) + 3H2(g) ⇌ 2NH3(g), what is the effect of increasing the total pressure by decreasing the volume of the reaction vessel at constant temperature?",
+      "options": [
+        "The equilibrium shifts in the forward direction towards fewer moles of gas.",
+        "The equilibrium shifts in the reverse direction to produce more moles of gas.",
+        "The equilibrium does not shift because pressure changes do not affect gas equilibria.",
+        "The equilibrium constant Kc increases to oppose the applied pressure."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes increasing pressure shifts equilibrium toward the side with more moles of gas",
+        "thinks pressure changes have no effect on systems involving gases",
+        "believes changing pressure alters the value of the equilibrium constant Kc"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-le-chatelier-temp-catalyst-inert-gas",
+      "nodeId": "class11-chemistry-equilibrium-le-chatelier-temp-catalyst-inert-gas",
+      "question": "The synthesis of ammonia, N2(g) + 3H2(g) ⇌ 2NH3(g), is an exothermic process (ΔH < 0). What happens to the equilibrium constant Kc when the temperature is increased?",
+      "options": [
+        "Kc increases because higher temperature always increases reaction constants.",
+        "Kc remains unchanged because only catalysts can change Kc.",
+        "Kc remains unchanged because temperature only alters the rate of reaching equilibrium.",
+        "Kc decreases because the reverse reaction is favoured at higher temperature."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes equilibrium constant Kc always increases with increasing temperature regardless of reaction enthalpy",
+        "confuses the effect of a catalyst with temperature, thinking catalysts change Kc",
+        "believes temperature affects only reaction rates and leaves the equilibrium constant constant",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-electrolytes-classification",
+      "nodeId": "class11-chemistry-equilibrium-electrolytes-classification",
+      "question": "Which of the following substances behaves as a weak electrolyte in dilute aqueous solution?",
+      "options": [
+        "Hydrochloric acid, HCl",
+        "Sodium chloride, NaCl",
+        "Glucose, C6H12O6",
+        "Acetic acid, CH3COOH"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses strong acid (complete ionization) with weak electrolyte",
+        "confuses strong salt electrolyte with weak electrolyte",
+        "confuses a non-electrolyte (does not ionize at all) with a weak electrolyte",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-acid-base-theories",
+      "nodeId": "class11-chemistry-equilibrium-acid-base-theories",
+      "question": "In the reaction BF3 + NH3 → F3B-NH3, BF3 acts as a Lewis acid because it:",
+      "options": [
+        "Donates a proton (H+) to NH3.",
+        "Accepts an electron pair from NH3.",
+        "Produces H+ ions in aqueous solution.",
+        "Donates an electron pair to NH3."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "applies the Brönsted-Lowry proton definition to a Lewis acid-base reaction that involves no protons",
+        "",
+        "applies the Arrhenius definition of an acid to a non-aqueous coordinate complex reaction",
+        "confuses the definition of a Lewis acid with a Lewis base by reversing electron-pair transfer"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-conjugate-acid-base-pairs",
+      "nodeId": "class11-chemistry-equilibrium-conjugate-acid-base-pairs",
+      "question": "In the Brönsted-Lowry reaction: HCO3^-(aq) + H2O(l) ⇌ CO3^(2-)(aq) + H3O^+(aq), what is the conjugate base of HCO3^-?",
+      "options": [
+        "H2CO3",
+        "H3O^+",
+        "OH^-",
+        "CO3^(2-)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies the conjugate acid of HCO3^- instead of its conjugate base",
+        "confuses the conjugate acid formed from water with the conjugate base of the bicarbonate ion",
+        "assumes the base must always be hydroxide regardless of the given equation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-ionic-product-water-kw",
+      "nodeId": "class11-chemistry-equilibrium-ionic-product-water-kw",
+      "question": "The autoionization of water, 2H2O(l) ⇌ H3O^+(aq) + OH^-(aq), is an endothermic process. When pure water is heated from 25 °C to 60 °C, what happens to Kw and the pH of pure water?",
+      "options": [
+        "Kw remains constant at 1.0 × 10^(-14) and pH remains exactly 7.0.",
+        "Kw decreases and pH increases, making the water basic.",
+        "Kw increases and pH decreases, but the water remains neutral.",
+        "Kw increases and pH decreases, making the water acidic."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes Kw is a universal constant fixed at 1.0 × 10^(-14) at all temperatures",
+        "believes Kw decreases with temperature for endothermic processes",
+        "",
+        "believes a pH < 7 automatically means the solution is acidic, ignoring that [H+] = [OH-] still holds in pure water"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-ph-poh-scale-calculations",
+      "nodeId": "class11-chemistry-equilibrium-ph-poh-scale-calculations",
+      "question": "What is the pH of a 0.001 M aqueous solution of NaOH at 25 °C?",
+      "options": [
+        "3",
+        "11",
+        "7",
+        "1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates pOH as -log(0.001) = 3 and mistakes it directly for pH",
+        "",
+        "assumes any dilute base solution becomes neutral with pH 7",
+        "uses the concentration 0.001 M directly in an incorrect formula giving 1"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-weak-acids-bases-ka-kb",
+      "nodeId": "class11-chemistry-equilibrium-weak-acids-bases-ka-kb",
+      "question": "A 0.10 M solution of a weak monoprotic acid HA has a degree of ionization α = 0.01. What is the hydronium ion concentration [H3O^+] of this solution?",
+      "options": [
+        "0.10 M",
+        "1.0 × 10^(-2) M",
+        "1.0 × 10^(-3) M",
+        "1.0 × 10^(-4) M"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes the weak acid ionizes completely so [H3O^+] equals initial concentration C",
+        "mistakes the degree of ionization α itself for [H3O^+] without multiplying by initial concentration C",
+        "",
+        "squares the degree of ionization (α^2) instead of calculating C · α"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-common-ion-effect",
+      "nodeId": "class11-chemistry-equilibrium-common-ion-effect",
+      "question": "What happens to the degree of ionization of acetic acid (CH3COOH) in water when solid sodium acetate (CH3COONa) is dissolved into the solution?",
+      "options": [
+        "The degree of ionization increases because sodium ions speed up the reaction.",
+        "The degree of ionization remains unchanged because sodium acetate is a salt.",
+        "The degree of ionization decreases because the added acetate ions shift the equilibrium to the left.",
+        "The degree of ionization increases because the total concentration of acetate ions increases."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes spectator metal cations catalyze or enhance the ionization of weak acids",
+        "thinks adding a salt has zero impact on weak acid equilibrium",
+        "",
+        "confuses the increase in total acetate concentration with an increase in the acid's degree of ionization"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-buffer-solutions",
+      "nodeId": "class11-chemistry-equilibrium-buffer-solutions",
+      "question": "An acidic buffer solution contains 0.1 M acetic acid (CH3COOH) and 1.0 M sodium acetate (CH3COONa). Given pKa of acetic acid is 4.74, what is the pH of this buffer?",
+      "options": [
+        "5.74",
+        "4.74",
+        "3.74",
+        "7.00"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes buffer pH is always equal to pKa regardless of the ratio of conjugate base to acid",
+        "subtracts log([salt]/[acid]) instead of adding it in the Henderson-Hasselbalch equation (pH = pKa - log(10))",
+        "assumes mixing a weak acid and its salt always neutralizes the solution to pH 7"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-salt-hydrolysis-nature",
+      "nodeId": "class11-chemistry-equilibrium-salt-hydrolysis-nature",
+      "question": "Which of the following salts dissolves in water to give a solution with pH < 7 at 25 °C?",
+      "options": [
+        "NaCl",
+        "CH3COONa",
+        "NH4Cl",
+        "KNO3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes a salt of strong acid and strong base produces an acidic solution",
+        "confuses basic salt (salt of weak acid and strong base) with acidic salt",
+        "",
+        "thinks all neutral salts containing nitrate ions hydrolyse to form acidic solutions"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-salt-hydrolysis-ph-calc",
+      "nodeId": "class11-chemistry-equilibrium-salt-hydrolysis-ph-calc",
+      "question": "Which formula correctly gives the pH of an aqueous solution of a salt formed from a weak acid and a strong base (such as CH3COONa) in terms of pKw, pKa, and concentration c?",
+      "options": [
+        "pH = 1/2 [pKw - pKa - log c]",
+        "pH = 1/2 [pKw + pKa + log c]",
+        "pH = 1/2 [pKw - pKb - log c]",
+        "pH = 1/2 [pKw + pKa - log c]"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses the formula for a salt of strong acid and weak base with negative signs",
+        "",
+        "uses the formula with pKb corresponding to weak base hydrolysis instead of pKa",
+        "inverts the sign of log c in the hydrolysis formula"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-solubility-product-ksp-expression",
+      "nodeId": "class11-chemistry-equilibrium-solubility-product-ksp-expression",
+      "question": "For a sparingly soluble salt of type AB2 (such as PbCl2), what is the correct relationship between its molar solubility S and its solubility product Ksp?",
+      "options": [
+        "Ksp = S^2",
+        "Ksp = 2 S^2",
+        "Ksp = 2 S^3",
+        "Ksp = 4 S^3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "treats AB2 as a 1:1 salt (AB type), obtaining Ksp = S^2",
+        "forgets to square the stoichiometry factor 2 for the B ion, writing S · (2S) = 2S^2",
+        "omits squaring the concentration term 2S when substituting into Ksp = [A][B]^2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-equilibrium-solubility-common-ion-precipitation",
+      "nodeId": "class11-chemistry-equilibrium-solubility-common-ion-precipitation",
+      "question": "When equal volumes of two solutions containing Ag^+ and Cl^- ions are mixed, under which condition will a precipitate of AgCl form?",
+      "options": [
+        "When the ionic product Qsp is less than Ksp",
+        "When the ionic product Qsp is greater than Ksp",
+        "When the ionic product Qsp is equal to Ksp",
+        "When the solubility product Ksp is greater than 1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes precipitation occurs when the solution is unsaturated (Qsp < Ksp)",
+        "",
+        "thinks precipitation starts only at exact saturation without an excess of ions",
+        "thinks precipitation depends on the absolute value of Ksp being greater than 1 rather than comparing Qsp with Ksp"
+      ]
+    }
+  ]
+}

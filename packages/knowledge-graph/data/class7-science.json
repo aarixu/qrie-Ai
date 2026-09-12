@@ -1,0 +1,3805 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class7-science-the-wonderful-world-of-science-observe-cooking-changes",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Observe Science in Cooking",
+      "outcome": "Identify cooking processes such as boiling, curdling, and dough rising as observable scientific phenomena",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-observe-rusting",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Identify Rusting of Iron",
+      "outcome": "Identify the rusting of iron objects left outdoors as a slow chemical change driven by moisture and air",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-observe-weather-changes",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Observe Daily Weather Changes",
+      "outcome": "List daily weather variations such as temperature fluctuation, rain, and wind as natural events governed by science",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-classify-daily-phenomena",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Classify Physical and Chemical Observations",
+      "outcome": "Classify daily phenomena into temporary physical changes and permanent chemical changes",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-observe-cooking-changes",
+        "class7-science-the-wonderful-world-of-science-observe-rusting"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-list-investigable-events",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "List Daily Scientific Observations",
+      "outcome": "List three everyday occurrences that can be systematically observed and measured",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-observe-cooking-changes",
+        "class7-science-the-wonderful-world-of-science-observe-weather-changes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-distinguish-observation-inference",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Distinguish Observation from Inference",
+      "outcome": "Distinguish between a direct sensory observation and an inference drawn from it",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-list-investigable-events"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/science-around-us"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-formulate-why-questions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Formulate 'Why' Questions",
+      "outcome": "Formulate 'why' questions seeking causes behind observed natural events",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-formulate-how-questions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Formulate 'How' Questions",
+      "outcome": "Formulate 'how' questions seeking the mechanism of an observed process",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-formulate-what-if-questions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Formulate 'What-If' Questions",
+      "outcome": "Formulate 'what happens if' questions that propose altering a condition in a natural event",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-formulate-why-questions",
+        "class7-science-the-wonderful-world-of-science-formulate-how-questions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-define-testable-question",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Define a Testable Question",
+      "outcome": "State that a testable question must be answerable through direct observation or experiment",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-formulate-what-if-questions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-identify-non-testable-questions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Identify Non-Testable Questions",
+      "outcome": "Identify questions based purely on opinion, belief, or unmeasurable preferences as non-testable",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-define-testable-question"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-classify-questions-testability",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Classify Questions by Testability",
+      "outcome": "Classify a given list of inquiry questions into testable and non-testable categories",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-define-testable-question",
+        "class7-science-the-wonderful-world-of-science-identify-non-testable-questions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-convert-to-testable-question",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Refine Questions into Testable Form",
+      "outcome": "Convert a vague, opinion-based inquiry into a specific, testable scientific question",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-classify-questions-testability"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/asking-questions-and-exploring"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-define-hypothesis",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Define a Hypothesis",
+      "outcome": "State that a hypothesis is a tentative, testable explanation for an observed event",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-convert-to-testable-question"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-formulate-hypothesis",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Formulate a Simple Hypothesis",
+      "outcome": "Formulate a predictive 'If-Then' hypothesis for a given testable question",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-define-hypothesis"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-identify-variables",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Identify Investigation Variables",
+      "outcome": "Identify the factor being changed and the factor being measured in a simple investigation",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-formulate-hypothesis"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-explain-fair-test",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Explain a Fair Test",
+      "outcome": "Explain why all conditions except the test variable must be kept constant to conduct a fair test",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-identify-variables"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-record-experimental-data",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Record Data Systematically",
+      "outcome": "Organize qualitative observations and quantitative measurements into a structured table",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-explain-fair-test"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-draw-conclusion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Draw an Evidence-Based Conclusion",
+      "outcome": "State whether recorded data supports or contradicts the initial hypothesis",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-record-experimental-data"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-explain-iterative-enquiry",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Explain Iterative Nature of Science",
+      "outcome": "Explain how an unexpected result leads to refining a hypothesis rather than an experimental failure",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-draw-conclusion"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-sequence-scientific-method",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Sequence Steps of Scientific Method",
+      "outcome": "Arrange the steps of scientific enquiry in order: observation, question, hypothesis, experiment, data analysis, conclusion",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-draw-conclusion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-diagram-enquiry-cycle",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Diagram the Scientific Enquiry Cycle",
+      "outcome": "Draw a flowchart illustrating the cyclical connection between hypothesis, experiment, observation, conclusion, and new questions",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-explain-iterative-enquiry",
+        "class7-science-the-wonderful-world-of-science-sequence-scientific-method"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-evaluate-investigation-flaws",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Identify Flaws in an Experiment",
+      "outcome": "Identify uncontrolled variables or missing controls in a flawed experimental setup",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-explain-fair-test",
+        "class7-science-the-wonderful-world-of-science-sequence-scientific-method"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-the-wonderful-world-of-science-design-simple-investigation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "the-wonderful-world-of-science",
+      "title": "Design a Complete Simple Investigation",
+      "outcome": "Design a step-by-step scientific enquiry plan to test a daily phenomenon, specifying the hypothesis, test variable, control variables, and data to record",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-diagram-enquiry-cycle",
+        "class7-science-the-wonderful-world-of-science-evaluate-investigation-flaws"
+      ],
+      "difficulty": 5,
+      "topicRef": "class7-science/the-wonderful-world-of-science/scientific-methods-of-enquiry"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-plant-organs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify main parts of a plant",
+      "outcome": "Label the root, stem, leaf, flower, and fruit on a diagram of a typical plant",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-distinguish-root-systems",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Distinguish taproot and fibrous root",
+      "outcome": "Differentiate between a taproot system and a fibrous root system based on visual structure",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-herbs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify characteristics of herbs",
+      "outcome": "Identify herbs by their green, tender stems and short height",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-shrubs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify characteristics of shrubs",
+      "outcome": "Identify shrubs by their hard, medium-height woody stems branching near the base",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-trees",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify characteristics of trees",
+      "outcome": "Identify trees by their tall height and thick, hard brown trunk branching higher up",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-distinguish-climbers-creepers",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Distinguish climbers from creepers",
+      "outcome": "Distinguish between climbers that climb up using support and creepers that spread across the ground",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-classify-plants-by-habit",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Classify plants by growth habit",
+      "outcome": "Classify a given list of familiar plants into herbs, shrubs, trees, climbers, and creepers",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-herbs",
+        "class7-science-diversity-in-the-living-world-identify-shrubs",
+        "class7-science-diversity-in-the-living-world-identify-trees",
+        "class7-science-diversity-in-the-living-world-distinguish-climbers-creepers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/diversity-in-the-living-world/plants-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-define-habitat",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Define habitat",
+      "outcome": "State the definition of a habitat as the physical surroundings where an organism lives and thrives",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-terrestrial-animals",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify terrestrial animals",
+      "outcome": "Identify terrestrial animals as those living predominantly on land",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-define-habitat"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-aquatic-animals",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify aquatic animals",
+      "outcome": "Identify aquatic animals as those living in freshwater or marine water bodies",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-define-habitat"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-aerial-animals",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify aerial animals",
+      "outcome": "Identify aerial animals as organisms capable of spending substantial time flying in the air",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-define-habitat"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-arboreal-animals",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify arboreal animals",
+      "outcome": "Identify arboreal animals as creatures adapted primarily to living in trees",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-define-habitat"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-classify-animals-by-habitat",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Classify animals by habitat",
+      "outcome": "Classify a given set of animals into terrestrial, aquatic, aerial, and arboreal groups",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-terrestrial-animals",
+        "class7-science-diversity-in-the-living-world-identify-aquatic-animals",
+        "class7-science-diversity-in-the-living-world-identify-aerial-animals",
+        "class7-science-diversity-in-the-living-world-identify-arboreal-animals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-terrestrial-locomotion-organs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify organs of land movement",
+      "outcome": "Identify limbs, paws, and muscular foot used by terrestrial animals for walking, running, or crawling",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-terrestrial-animals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-aquatic-locomotion-organs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify organs of swimming",
+      "outcome": "Identify fins, tails, and webbed feet as external structures assisting movement in water",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-aquatic-animals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-identify-flight-locomotion-organs",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Identify organs of flight",
+      "outcome": "Identify wings and modified forelimbs as structures that enable aerial movement",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-aerial-animals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-match-locomotion-to-habitat",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Match movement structures to habitat",
+      "outcome": "Match specific locomotive body structures of animals to their corresponding habitat requirements",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-terrestrial-locomotion-organs",
+        "class7-science-diversity-in-the-living-world-identify-aquatic-locomotion-organs",
+        "class7-science-diversity-in-the-living-world-identify-flight-locomotion-organs"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/diversity-in-the-living-world/animals-around-us"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-compare-plant-animal-nutrition",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Compare plant and animal nutrition",
+      "outcome": "Contrast plants as autotrophs making their own food with animals as heterotrophs consuming other organisms",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/grouping-plants-and-animals"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-compare-plant-animal-mobility",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Compare plant and animal mobility",
+      "outcome": "Compare the fixed, anchored nature of plants with the active locomotion of animals",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/grouping-plants-and-animals"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-group-by-physical-traits",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Group organisms by shared traits",
+      "outcome": "Sort a mixed collection of organisms into groups based on chosen observable physical traits",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-classify-daily-phenomena",
+        "class7-science-diversity-in-the-living-world-compare-plant-animal-mobility"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/diversity-in-the-living-world/grouping-plants-and-animals"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-explain-need-for-classification",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Explain necessity of classification",
+      "outcome": "Explain why grouping organisms into categories makes the study of vast biological diversity systematic and manageable",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-group-by-physical-traits"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/diversity-in-the-living-world/why-classify"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-organize-new-discoveries",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Place new organisms in classification schemes",
+      "outcome": "Predict the group of a newly discovered organism based on its physical characteristics and existing classification rules",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-explain-need-for-classification"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/diversity-in-the-living-world/why-classify"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-explain-standardized-naming",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Explain need for standard naming",
+      "outcome": "Explain why standardized naming avoids confusion caused by regional common names across different languages",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-explain-need-for-classification"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/diversity-in-the-living-world/why-classify"
+    },
+    {
+      "id": "class7-science-diversity-in-the-living-world-construct-classification-key",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "diversity-in-the-living-world",
+      "title": "Construct a simple classification chart",
+      "outcome": "Design a two-step branched chart to classify an unfamiliar set of four organisms using yes/no physical features",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-classify-plants-by-habit",
+        "class7-science-diversity-in-the-living-world-classify-animals-by-habitat",
+        "class7-science-diversity-in-the-living-world-group-by-physical-traits"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/diversity-in-the-living-world/why-classify"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-list-regional-dishes",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Regional Indian Dishes",
+      "outcome": "List staple food items consumed across different states and regions of India",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/what-is-in-our-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-dish-ingredients",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Raw Food Ingredients",
+      "outcome": "Identify the raw ingredients and their sources required to prepare a given cooked dish",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-list-regional-dishes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/what-is-in-our-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-name-major-nutrients",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Five Main Nutrient Classes",
+      "outcome": "Name the five major classes of nutrients present in food: carbohydrates, proteins, fats, vitamins, and minerals",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-dish-ingredients"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-roughage-and-water",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Role of Roughage and Water",
+      "outcome": "Identify dietary fibre (roughage) and water as essential non-nutrient dietary components that aid digestion and bowel movement",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-name-major-nutrients"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-classify-energy-giving-foods",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Energy-Giving Nutrients",
+      "outcome": "Classify carbohydrates and fats as energy-giving nutrients and list common food sources for each",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-name-major-nutrients"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-compare-carbs-and-fats-energy",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Carbohydrates vs Fats Energy Yield",
+      "outcome": "Compare the energy yield of fats to carbohydrates, identifying that fats provide more energy per unit mass",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-classify-energy-giving-foods"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-body-building-foods",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Body-Building Nutrients",
+      "outcome": "Identify proteins as body-building nutrients required for growth, repair, and maintenance of tissues",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-name-major-nutrients"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-protective-foods",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Protective Nutrients",
+      "outcome": "Identify vitamins and minerals as protective nutrients needed in small quantities to prevent diseases and maintain good health",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-name-major-nutrients"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/nutrients-in-food"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-describe-starch-test-procedure",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Iodine Test Procedure",
+      "outcome": "Describe the stepwise procedure of applying dilute iodine solution to a food sample to test for starch",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-classify-energy-giving-foods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/testing-for-nutrients"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-interpret-starch-test-result",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Interpret Starch Test Result",
+      "outcome": "Infer the presence of starch in a food sample from the appearance of a blue-black colour with iodine solution",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-describe-starch-test-procedure",
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/testing-for-nutrients"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-describe-protein-test-procedure",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Biuret Reagents Procedure",
+      "outcome": "Describe the procedure of adding copper sulphate and caustic soda (sodium hydroxide) solutions to a food paste/suspension",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-body-building-foods"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/testing-for-nutrients"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-interpret-protein-test-result",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Interpret Protein Test Result",
+      "outcome": "Infer the presence of protein in a food sample when a violet or purple colour develops with copper sulphate and caustic soda",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-describe-protein-test-procedure",
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/testing-for-nutrients"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-perform-fat-paper-test",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Translucent Spot Test for Fats",
+      "outcome": "Determine the presence of fats in a food sample by observing a persistent oily, translucent patch on filter paper",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-classify-energy-giving-foods",
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/testing-for-nutrients"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-define-balanced-diet",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Definition of Balanced Diet",
+      "outcome": "Define a balanced diet as one containing all essential nutrients, roughage, and water in appropriate proportions for the body's needs",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-roughage-and-water",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-classify-energy-giving-foods",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-body-building-foods",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-protective-foods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-design-balanced-diet-chart",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Design Balanced Meal Plan",
+      "outcome": "Design a low-cost, balanced meal chart using locally accessible food items such as pulses, cereals, seasonal vegetables, and milk",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-balanced-diet"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-explain-nutrient-loss-in-cooking",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Cooking Practices and Nutrient Retention",
+      "outcome": "Explain how repeated washing of rice/dal, excessive boiling, or peeling vegetables removes vitamins and minerals",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-identify-protective-foods",
+        "class7-science-the-wonderful-world-of-science-observe-cooking-changes"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Concept of Deficiency Disease",
+      "outcome": "Define a deficiency disease as a health disorder caused by the prolonged lack of a specific nutrient in the diet",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-balanced-diet"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-a-deficiency",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Vitamin A Deficiency Symptoms",
+      "outcome": "Match Vitamin A deficiency with night blindness and poor vision in dim light",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-b1-deficiency",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Vitamin B1 Deficiency Symptoms",
+      "outcome": "Match Vitamin B1 deficiency with beriberi, characterised by weak muscles and very little energy to work",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-c-deficiency",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Vitamin C Deficiency Symptoms",
+      "outcome": "Match Vitamin C deficiency with scurvy, presenting as bleeding gums and prolonged wound healing",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-d-deficiency",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Vitamin D Deficiency Symptoms",
+      "outcome": "Match Vitamin D deficiency with rickets, leading to soft, bent, and easily fractured bones",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-link-mineral-deficiencies",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Mineral Deficiency Diseases",
+      "outcome": "Match calcium, iodine, and iron deficiencies with bone/tooth decay, goitre (swollen neck gland), and anaemia (weakness) respectively",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-deficiency-disease"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-explain-obesity-causes",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Overeating and Obesity",
+      "outcome": "Explain the cause of obesity as an imbalance resulting from excessive intake of fat-rich and junk foods without adequate physical activity",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-compare-carbs-and-fats-energy",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-define-balanced-diet"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-mindful-eating-a-path-to-a-healthy-body-prescribe-remedies-for-deficiencies",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "mindful-eating-a-path-to-a-healthy-body",
+      "title": "Dietary Corrections for Deficiencies",
+      "outcome": "Recommend specific whole food sources (such as citrus fruits, green leafy vegetables, or iodised salt) to reverse given deficiency symptoms",
+      "prerequisites": [
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-a-deficiency",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-b1-deficiency",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-c-deficiency",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-link-vitamin-d-deficiency",
+        "class7-science-mindful-eating-a-path-to-a-healthy-body-link-mineral-deficiencies"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/mindful-eating-a-path-to-a-healthy-body/balanced-diet-and-deficiencies"
+    },
+    {
+      "id": "class7-science-exploring-magnets-define-magnet",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Define Magnet",
+      "outcome": "State that a magnet is an object that attracts materials made of iron and certain other metals",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-identify-common-magnets",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Identify Magnet Shapes",
+      "outcome": "Identify common shapes of artificial magnets including bar magnets, horseshoe magnets, cylindrical magnets, and ball-ended magnets",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnet"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-define-magnetic-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Define Magnetic Materials",
+      "outcome": "Define magnetic materials as substances that get attracted towards a magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnet"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-define-non-magnetic-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Define Non-magnetic Materials",
+      "outcome": "Define non-magnetic materials as substances that are not attracted towards a magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnet"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-list-magnetic-metals",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "List Magnetic Metals",
+      "outcome": "List iron, nickel, and cobalt as primary examples of magnetic materials",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnetic-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-test-material-magnetism",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Test Material for Magnetism",
+      "outcome": "Demonstrate whether an unknown object is magnetic or non-magnetic by observing its interaction with a bar magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnetic-materials",
+        "class7-science-exploring-magnets-define-non-magnetic-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-classify-daily-objects-by-magnetism",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Classify Objects by Magnetism",
+      "outcome": "Classify common household items like plastic rulers, iron nails, wooden pencils, and aluminium foil into magnetic and non-magnetic categories",
+      "prerequisites": [
+        "class7-science-exploring-magnets-test-material-magnetism",
+        "class7-science-exploring-magnets-list-magnetic-metals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-observe-filings-accumulation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Observe Iron Filings Pattern",
+      "outcome": "Describe the accumulation pattern of iron filings when spread over a bar magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnetic-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/poles-of-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-locate-poles",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Locate Magnetic Poles",
+      "outcome": "Locate the regions of maximum magnetic attraction at the two ends (poles) of a magnet using iron filings",
+      "prerequisites": [
+        "class7-science-exploring-magnets-observe-filings-accumulation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/poles-of-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-name-magnetic-poles",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Name Magnetic Poles",
+      "outcome": "Name the two poles of every magnet as the North Pole and the South Pole",
+      "prerequisites": [
+        "class7-science-exploring-magnets-locate-poles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/poles-of-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-state-pole-pairing-rule",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "State Pole Pairing Rule",
+      "outcome": "State that magnetic poles always exist in pairs and an isolated magnetic pole does not exist",
+      "prerequisites": [
+        "class7-science-exploring-magnets-name-magnetic-poles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/poles-of-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-predict-broken-magnet-poles",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Predict Broken Magnet Poles",
+      "outcome": "Predict the formation of a new north and south pole on each piece when a bar magnet is cut or broken into two",
+      "prerequisites": [
+        "class7-science-exploring-magnets-state-pole-pairing-rule"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/exploring-magnets/poles-of-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-align-suspended-magnet",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Align Suspended Magnet",
+      "outcome": "Explain why a freely suspended bar magnet always comes to rest in the geographic North-South direction",
+      "prerequisites": [
+        "class7-science-exploring-magnets-name-magnetic-poles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/finding-directions-with-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-identify-north-seeking-pole",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Identify North-Seeking Pole",
+      "outcome": "Identify the end of a freely suspended magnet that points toward the geographic North as its North-seeking or North pole",
+      "prerequisites": [
+        "class7-science-exploring-magnets-align-suspended-magnet"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/finding-directions-with-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-identify-south-seeking-pole",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Identify South-Seeking Pole",
+      "outcome": "Identify the end of a freely suspended magnet that points toward the geographic South as its South-seeking or South pole",
+      "prerequisites": [
+        "class7-science-exploring-magnets-align-suspended-magnet"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/finding-directions-with-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-describe-magnetic-compass-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Describe Compass Components",
+      "outcome": "Describe the main components of a magnetic compass, including the pivoted magnetized needle, circular dial with directions, and glass cover",
+      "prerequisites": [
+        "class7-science-exploring-magnets-identify-north-seeking-pole"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/finding-directions-with-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-find-direction-using-compass",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Use Magnetic Compass",
+      "outcome": "Demonstrate the step-by-step procedure of rotating a compass until the needle aligns with the North-South markings to determine geographic directions",
+      "prerequisites": [
+        "class7-science-exploring-magnets-describe-magnetic-compass-components"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/exploring-magnets/finding-directions-with-a-magnet"
+    },
+    {
+      "id": "class7-science-exploring-magnets-make-own-magnet",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Make a Simple Magnet",
+      "outcome": "Describe the single-touch stroke method of magnetizing an iron strip using one pole of a bar magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-test-material-magnetism",
+        "class7-science-exploring-magnets-name-magnetic-poles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/exploring-magnets/magnetic-and-non-magnetic-materials"
+    },
+    {
+      "id": "class7-science-exploring-magnets-state-attraction-repulsion-rule",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "State Law of Magnetic Poles",
+      "outcome": "State the fundamental law that like magnetic poles repel each other while unlike magnetic poles attract each other",
+      "prerequisites": [
+        "class7-science-exploring-magnets-name-magnetic-poles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-exploring-magnets-predict-pole-interactions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Predict Pole Interactions",
+      "outcome": "Predict whether attraction or repulsion will occur when two specific magnetic poles (N-N, S-S, or N-S) are brought near each other",
+      "prerequisites": [
+        "class7-science-exploring-magnets-state-attraction-repulsion-rule"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-exploring-magnets-predict-toy-car-movements",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Predict Magnet Car Motion",
+      "outcome": "Predict the direction of motion (attract towards or push away) of two toy cars mounted with bar magnets when placed facing each other in different orientations",
+      "prerequisites": [
+        "class7-science-exploring-magnets-predict-pole-interactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-exploring-magnets-repulsion-as-sure-test",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Repulsion as Sure Test",
+      "outcome": "Explain why repulsion, and not attraction, is the sure test to confirm if a given object is a magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-predict-pole-interactions",
+        "class7-science-exploring-magnets-test-material-magnetism"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-exploring-magnets-identify-demagnetization-causes",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Identify Demagnetization Causes",
+      "outcome": "List heating, hammering, and dropping from a height as actions that cause magnets to lose their magnetic properties",
+      "prerequisites": [
+        "class7-science-exploring-magnets-define-magnet"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-exploring-magnets-describe-proper-magnet-storage",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "exploring-magnets",
+      "title": "Describe Magnet Storage",
+      "outcome": "Describe the correct method for storing bar magnets and horseshoe magnets using magnetic keepers and wooden spacers to prevent loss of magnetism",
+      "prerequisites": [
+        "class7-science-exploring-magnets-identify-demagnetization-causes",
+        "class7-science-exploring-magnets-state-attraction-repulsion-rule"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/exploring-magnets/magnetic-attraction-and-repulsion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-nonstandard-length-units",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Non-Standard Units",
+      "outcome": "Identify handspan, cubit, footstep, and arm length as traditional non-standard units of length",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-explain-variation-in-nonstandard-units",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Explain Non-Standard Unit Variations",
+      "outcome": "Explain why non-standard units of measurement vary among different individuals",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-nonstandard-length-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-explain-need-for-standard-units",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Explain Need for Standard Units",
+      "outcome": "Explain why standard units are necessary for uniform and accurate measurement across different people",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-explain-variation-in-nonstandard-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-estimate-length-using-reference-objects",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Estimate Lengths with Everyday Objects",
+      "outcome": "Estimate the length of a given object using familiar everyday reference objects before measurement",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-nonstandard-length-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-state-si-unit-of-length",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "State SI Unit of Length",
+      "outcome": "State meter as the International System of Units (SI) unit of length and its symbol as m",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-explain-need-for-standard-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-state-si-unit-of-mass",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "State SI Unit of Mass",
+      "outcome": "State kilogram as the SI unit of mass and its symbol as kg",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-explain-need-for-standard-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-state-si-unit-of-time",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "State SI Unit of Time",
+      "outcome": "State second as the SI unit of time and its symbol as s",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-explain-need-for-standard-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-state-metric-length-relationships",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "State Metric Length Relationships",
+      "outcome": "State the conversion factors between kilometer, meter, centimeter, and millimeter",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-state-si-unit-of-length"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-convert-m-to-cm-and-mm",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Convert Meters to Centimeters and Millimeters",
+      "outcome": "Calculate the equivalent length in centimeters and millimeters for a given value in meters",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-state-metric-length-relationships"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-convert-km-to-m",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Convert Kilometers to Meters",
+      "outcome": "Calculate the equivalent distance in meters for a given value in kilometers and vice versa",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-state-metric-length-relationships"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/standard-units-of-measurement"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-correct-scale-placement",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Correct Scale Placement",
+      "outcome": "Identify the proper alignment of a meter scale along the length of an object being measured",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-state-si-unit-of-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-avoid-parallax-error",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Correct Eye Position for Reading Scales",
+      "outcome": "Identify the correct eye position directly in front of the scale mark to avoid parallax error",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-correct-scale-placement"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-measure-with-broken-edge-scale",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Measure with a Broken-Edge Scale",
+      "outcome": "Calculate the true length of an object by subtracting the initial non-zero mark when measuring with a broken scale",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-correct-scale-placement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-measure-curved-line-length",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Measure Length of Curved Lines",
+      "outcome": "Describe the procedure to measure the length of a curved line using a thread and a meter scale",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-correct-scale-placement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/measuring-distances"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-define-motion-and-rest",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Define Motion and Rest",
+      "outcome": "Define motion as a change in the position of an object with time relative to a stationary reference point",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-define-rectilinear-motion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Define Rectilinear Motion",
+      "outcome": "Define rectilinear motion as the motion of an object along a straight line",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-motion-and-rest"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-rectilinear-motion-examples",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Rectilinear Motion Examples",
+      "outcome": "Identify everyday examples of rectilinear motion such as a falling stone, a vehicle on a straight road, or march-past of soldiers",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-rectilinear-motion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-define-circular-motion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Define Circular Motion",
+      "outcome": "Define circular motion as the motion of an object along a circular path where its distance from a central fixed point remains constant",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-motion-and-rest"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-circular-motion-examples",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Circular Motion Examples",
+      "outcome": "Identify examples of circular motion including the tip of a clock's hand, blades of an electric fan, and a stone tied to a thread swung in a circle",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-circular-motion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-define-rotational-motion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Define Rotational Motion",
+      "outcome": "Define rotational motion as the spinning of an object around its own internal axis",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-circular-motion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-define-periodic-motion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Define Periodic Motion",
+      "outcome": "Define periodic motion as motion that repeats itself at regular intervals of time",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-motion-and-rest"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-periodic-motion-examples",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Periodic Motion Examples",
+      "outcome": "Identify examples of periodic motion such as a swinging pendulum, the branch of a tree moving to and fro, and a child on a swing",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-periodic-motion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-classify-movements-by-motion-type",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Classify Motion Types",
+      "outcome": "Classify the movement of various objects into rectilinear, circular, rotational, or periodic motion",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-rectilinear-motion-examples",
+        "class7-science-measurement-of-distance-and-motion-identify-circular-motion-examples",
+        "class7-science-measurement-of-distance-and-motion-define-rotational-motion",
+        "class7-science-measurement-of-distance-and-motion-identify-periodic-motion-examples"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-measurement-of-distance-and-motion-identify-combined-types-of-motion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "measurement-of-distance-and-motion",
+      "title": "Identify Combined Types of Motion",
+      "outcome": "Identify cases where an object exhibits multiple types of motion simultaneously, such as a rolling ball or a moving bicycle",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-classify-movements-by-motion-type"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/measurement-of-distance-and-motion/types-of-motion"
+    },
+    {
+      "id": "class7-science-materials-around-us-distinguish-object-and-material",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Distinguish Objects and Materials",
+      "outcome": "Distinguish between an object and the material from which it is made",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/identifying-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-identify-constituent-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Identify Constituent Materials",
+      "outcome": "Identify the primary materials used in common everyday objects like a tumbler, chair, or pencil",
+      "prerequisites": [
+        "class7-science-materials-around-us-distinguish-object-and-material"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/identifying-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-identify-multi-material-objects",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Identify Multi-Material Objects",
+      "outcome": "Identify objects that are composed of two or more different materials",
+      "prerequisites": [
+        "class7-science-materials-around-us-identify-constituent-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/identifying-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-list-objects-from-single-material",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "List Objects from Single Material",
+      "outcome": "List multiple distinct objects that can be manufactured from a single given material",
+      "prerequisites": [
+        "class7-science-materials-around-us-distinguish-object-and-material"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/identifying-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-explain-need-for-grouping",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Explain Need for Grouping",
+      "outcome": "Explain the advantages of sorting and grouping materials based on shared properties",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-explain-need-for-classification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-identify-lustrous-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Identify Lustrous Materials",
+      "outcome": "Identify freshly cut or polished materials that exhibit shine or lustre",
+      "prerequisites": [
+        "class7-science-materials-around-us-distinguish-object-and-material"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-by-lustre",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify Materials by Lustre",
+      "outcome": "Classify a given set of materials into lustrous and non-lustrous categories",
+      "prerequisites": [
+        "class7-science-materials-around-us-identify-lustrous-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-distinguish-hard-and-soft-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Distinguish Hard and Soft Materials",
+      "outcome": "Distinguish between hard and soft materials using scratch and compression tests",
+      "prerequisites": [
+        "class7-science-materials-around-us-distinguish-object-and-material"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-by-hardness",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify Materials by Hardness",
+      "outcome": "Classify materials as hard or soft based on whether they can be easily scratched or compressed",
+      "prerequisites": [
+        "class7-science-materials-around-us-distinguish-hard-and-soft-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-define-solubility-in-water",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Define Solubility in Water",
+      "outcome": "Define soluble and insoluble substances in the context of dissolving in water",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-test-solid-solubility",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Test Solid Solubility",
+      "outcome": "Demonstrate experimentally whether common solids like salt, sugar, chalk powder, and sand dissolve in water",
+      "prerequisites": [
+        "class7-science-materials-around-us-define-solubility-in-water",
+        "class7-science-the-wonderful-world-of-science-record-experimental-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-solids-by-solubility",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify Solids by Solubility",
+      "outcome": "Classify solid substances into soluble and insoluble based on experimental observation",
+      "prerequisites": [
+        "class7-science-materials-around-us-test-solid-solubility"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-test-liquid-miscibility",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Test Liquid Miscibility",
+      "outcome": "Observe whether liquids like vinegar, lemon juice, mustard oil, and kerosene mix completely with water",
+      "prerequisites": [
+        "class7-science-materials-around-us-define-solubility-in-water",
+        "class7-science-the-wonderful-world-of-science-record-experimental-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-liquids-in-water",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify Liquids in Water",
+      "outcome": "Classify liquids as miscible or immiscible based on their behavior when mixed with water",
+      "prerequisites": [
+        "class7-science-materials-around-us-test-liquid-miscibility"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-identify-gas-solubility-in-water",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Identify Gas Solubility in Water",
+      "outcome": "Identify that gases like oxygen dissolve in water and are vital for aquatic organisms",
+      "prerequisites": [
+        "class7-science-materials-around-us-define-solubility-in-water",
+        "class7-science-diversity-in-the-living-world-identify-aquatic-animals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-test-floating-and-sinking",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Test Floating and Sinking",
+      "outcome": "Determine experimentally whether various insoluble objects float on water or sink to the bottom",
+      "prerequisites": [
+        "class7-science-materials-around-us-classify-solids-by-solubility"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-by-flotation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify by Flotation",
+      "outcome": "Classify materials into those that float and those that sink in water",
+      "prerequisites": [
+        "class7-science-materials-around-us-test-floating-and-sinking"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-define-transparent-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Define Transparent Materials",
+      "outcome": "Define transparent materials as substances through which things can be seen clearly",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-define-opaque-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Define Opaque Materials",
+      "outcome": "Define opaque materials as substances through which things cannot be seen at all",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-define-translucent-materials",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Define Translucent Materials",
+      "outcome": "Define translucent materials as substances through which objects can be seen, but not clearly",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-classify-by-transparency",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Classify by Transparency",
+      "outcome": "Classify a given set of objects into transparent, translucent, and opaque categories based on light transmission",
+      "prerequisites": [
+        "class7-science-materials-around-us-define-transparent-materials",
+        "class7-science-materials-around-us-define-opaque-materials",
+        "class7-science-materials-around-us-define-translucent-materials"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/materials-around-us/classification-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-match-material-to-function",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Match Material to Function",
+      "outcome": "Match specific properties of materials to the practical functional requirements of everyday objects",
+      "prerequisites": [
+        "class7-science-materials-around-us-classify-by-lustre",
+        "class7-science-materials-around-us-classify-by-hardness",
+        "class7-science-materials-around-us-classify-by-transparency"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-explain-material-selection-failures",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Explain Material Selection Failures",
+      "outcome": "Explain why certain inappropriate materials (like making a tumbler from cloth) fail to perform the required function",
+      "prerequisites": [
+        "class7-science-materials-around-us-match-material-to-function"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-materials-around-us-design-object-material-selection",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "materials-around-us",
+      "title": "Design Object Material Selection",
+      "outcome": "Select and justify the best material for a newly designed object by evaluating trade-offs among multiple physical properties",
+      "prerequisites": [
+        "class7-science-materials-around-us-explain-material-selection-failures"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/materials-around-us/properties-of-materials"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-describe-hot-and-cold-sensations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Describe Hot and Cold Sensations",
+      "outcome": "Describe everyday sensations of hotness and coldness using qualitative observations",
+      "prerequisites": [
+        "class7-science-the-wonderful-world-of-science-distinguish-observation-inference"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/concept-of-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-explain-touch-unreliability",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Explain Unreliability of Touch",
+      "outcome": "Explain why relying on the sense of touch is unreliable for comparing hotness or coldness using a three-bowl water experiment",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-describe-hot-and-cold-sensations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/concept-of-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-define-temperature",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Define Temperature",
+      "outcome": "Define temperature as the reliable measure of the degree of hotness or coldness of an object",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-explain-touch-unreliability"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/concept-of-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-identify-thermometer-as-device",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Identify Thermometer Purpose",
+      "outcome": "Identify a thermometer as the standard instrument used to measure temperature",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-define-temperature"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-state-celsius-scale",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "State Celsius Scale Unit",
+      "outcome": "State degree Celsius (°C) as a standard unit of temperature measurement",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-define-temperature",
+        "class7-science-measurement-of-distance-and-motion-explain-need-for-standard-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-state-fahrenheit-scale",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "State Fahrenheit Scale Unit",
+      "outcome": "State degree Fahrenheit (°F) as an alternative unit of temperature measurement",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-state-celsius-scale"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-identify-thermometer-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Identify Thermometer Parts",
+      "outcome": "Identify the basic parts of a liquid-in-glass thermometer including the bulb, capillary tube, stem, and thermometric liquid",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-thermometer-as-device"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-calculate-scale-least-count",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Calculate Smallest Division Value",
+      "outcome": "Calculate the value of one small division on a thermometer scale by dividing the difference between two main marks by the number of subdivisions",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-state-celsius-scale"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-read-meniscus-level",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Read Thermometer Meniscus",
+      "outcome": "Read the temperature value accurately by aligning the eye level directly with the top of the mercury meniscus to avoid parallax error",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-calculate-scale-least-count",
+        "class7-science-measurement-of-distance-and-motion-avoid-parallax-error"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-define-clinical-thermometer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Define Clinical Thermometer",
+      "outcome": "Define a clinical thermometer as a specialized device used exclusively for measuring human body temperature",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-thermometer-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-state-clinical-range",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "State Clinical Thermometer Range",
+      "outcome": "State the standard temperature range of a clinical thermometer as 35°C to 42°C (or 94°F to 108°F)",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-define-clinical-thermometer",
+        "class7-science-temperature-and-its-measurement-state-fahrenheit-scale"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-state-normal-body-temp",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "State Normal Body Temperature",
+      "outcome": "State that the average normal temperature of a healthy human body is 37°C (or 98.6°F)",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-state-clinical-range"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-explain-kink-function",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Explain Function of Kink",
+      "outcome": "Explain how the constriction (kink) near the bulb prevents the mercury column from falling back on its own when removed from the patient's mouth",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-define-clinical-thermometer"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-demonstrate-clinical-usage",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Demonstrate Clinical Thermometer Precautions",
+      "outcome": "Demonstrate the correct procedure and safety precautions for using a clinical thermometer, including washing with antiseptic, giving jerks before use, and holding by the stem",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-explain-kink-function",
+        "class7-science-temperature-and-its-measurement-read-meniscus-level"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-define-laboratory-thermometer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Define Laboratory Thermometer",
+      "outcome": "Define a laboratory thermometer as a device used to measure temperatures of non-human objects and liquids in laboratory experiments",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-thermometer-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-state-laboratory-range",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "State Laboratory Thermometer Range",
+      "outcome": "State the typical operational range of a laboratory thermometer as -10°C to 110°C",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-define-laboratory-thermometer"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-demonstrate-lab-usage-precautions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Demonstrate Laboratory Thermometer Precautions",
+      "outcome": "Demonstrate the proper handling of a laboratory thermometer: keeping it vertical, fully immersing the bulb without touching the container walls, and reading while immersed",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-read-meniscus-level",
+        "class7-science-temperature-and-its-measurement-state-laboratory-range"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-explain-reading-in-situ",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Explain In-Situ Lab Thermometer Reading",
+      "outcome": "Explain why a laboratory thermometer must be read while its bulb is still immersed in the substance due to the absence of a kink",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-explain-kink-function",
+        "class7-science-temperature-and-its-measurement-demonstrate-lab-usage-precautions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-compare-clinical-and-lab-thermometers",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Compare Clinical and Lab Thermometers",
+      "outcome": "Compare clinical and laboratory thermometers based on range, presence of kink, primary purpose, and method of reading",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-state-clinical-range",
+        "class7-science-temperature-and-its-measurement-explain-reading-in-situ"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-identify-mercury-hazards",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Identify Mercury Hazards",
+      "outcome": "Identify the toxic nature of mercury and the environmental/health hazards associated with the breakage of mercury thermometers",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-thermometer-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-describe-digital-thermometer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Describe Digital Thermometer Advantages",
+      "outcome": "Describe the operational advantages of a digital thermometer, highlighting its electronic LCD display and absence of toxic mercury",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-mercury-hazards",
+        "class7-science-temperature-and-its-measurement-define-clinical-thermometer"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-identify-maximum-minimum-thermometer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Identify Max-Min Thermometer Purpose",
+      "outcome": "Identify the maximum-minimum thermometer as the instrument used in weather forecasting to record daily extreme temperatures",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-identify-thermometer-as-device",
+        "class7-science-the-wonderful-world-of-science-observe-weather-changes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-select-appropriate-thermometer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Select Appropriate Thermometer for Context",
+      "outcome": "Select the appropriate type of thermometer (clinical, laboratory, digital, or max-min) required for a given scientific or practical scenario",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-compare-clinical-and-lab-thermometers",
+        "class7-science-temperature-and-its-measurement-describe-digital-thermometer",
+        "class7-science-temperature-and-its-measurement-identify-maximum-minimum-thermometer"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/temperature-and-its-measurement/thermometers"
+    },
+    {
+      "id": "class7-science-temperature-and-its-measurement-record-temperature-data",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "temperature-and-its-measurement",
+      "title": "Record Experimental Temperature Data",
+      "outcome": "Record and tabulate temperature measurements of hot and cooling water over time with correct numerical values and SI-compatible units",
+      "prerequisites": [
+        "class7-science-temperature-and-its-measurement-demonstrate-lab-usage-precautions",
+        "class7-science-the-wonderful-world-of-science-record-experimental-data"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/temperature-and-its-measurement/measuring-temperature"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-identify-three-states-of-water",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Three States of Water",
+      "outcome": "Identify ice, liquid water, and water vapour/steam as the three states of water.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-state-melting-freezing-point",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Melting and Freezing Point",
+      "outcome": "State 0 °C as both the melting point of ice and freezing point of water.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water",
+        "class7-science-temperature-and-its-measurement-state-celsius-scale"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-state-boiling-point",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Boiling Point of Water",
+      "outcome": "State 100 °C as the boiling point of pure water at standard atmospheric pressure.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water",
+        "class7-science-temperature-and-its-measurement-state-celsius-scale"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-ice",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Particle Arrangement in Ice",
+      "outcome": "Describe the tightly packed, fixed arrangement of particles in ice.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-liquid",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Particle Arrangement in Liquid Water",
+      "outcome": "Describe the loosely packed, sliding arrangement of particles in liquid water.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-ice"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-gas",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Particle Arrangement in Water Vapour",
+      "outcome": "Describe the widely spaced and freely moving arrangement of particles in water vapour.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-liquid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-compare-molecular-motion-across-states",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Molecular Motion in States of Water",
+      "outcome": "Compare the intermolecular space and freedom of movement across ice, water, and water vapour.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-describe-particle-arrangement-gas"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/water-in-different-states"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-evaporation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Definition of Evaporation",
+      "outcome": "Define evaporation as the process of a liquid converting into vapour at any temperature below its boiling point.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-state-boiling-point"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-distinguish-evaporation-and-boiling",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Evaporation vs Boiling",
+      "outcome": "Distinguish between evaporation (surface phenomenon at any temperature) and boiling (bulk phenomenon at a fixed temperature).",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-effect-of-temperature-on-evaporation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Temperature Effect on Evaporation",
+      "outcome": "Explain why an increase in temperature accelerates the rate of evaporation.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-effect-of-surface-area-on-evaporation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Surface Area Effect on Evaporation",
+      "outcome": "Predict the effect of increasing exposed surface area on the speed of evaporation.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-effect-of-wind-and-humidity-on-evaporation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Wind and Humidity Effects on Evaporation",
+      "outcome": "Explain how higher wind speed increases and higher humidity decreases the rate of evaporation.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-condensation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Definition of Condensation",
+      "outcome": "Define condensation as the process by which water vapour cools and changes into liquid water.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-explain-droplet-formation-cold-surface",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Droplet Formation on Cold Surfaces",
+      "outcome": "Explain the appearance of water droplets on the outer surface of a cold glass tumbler as condensation of atmospheric moisture.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-condensation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/evaporation-and-condensation"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-identify-transpiration",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Transpiration in Plants",
+      "outcome": "Identify transpiration as the release of water vapour into the atmosphere from plant leaves.",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-identify-plant-organs",
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-explain-cloud-formation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Process of Cloud Formation",
+      "outcome": "Explain how rising water vapour cools at higher altitudes to condense around dust particles into tiny droplets forming clouds.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-condensation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-precipitation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Definition of Precipitation",
+      "outcome": "Define precipitation and list its different forms including rain, snow, and hail.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-explain-cloud-formation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-trace-water-cycle-pathways",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Trace the Water Cycle",
+      "outcome": "Trace the continuous movement of water from Earth's surface to the atmosphere and back through evaporation, transpiration, condensation, and precipitation.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation",
+        "class7-science-a-journey-through-states-of-water-identify-transpiration",
+        "class7-science-a-journey-through-states-of-water-define-precipitation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-diagram-water-cycle",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Diagram the Water Cycle",
+      "outcome": "Draw and label a schematic diagram representing the major stages of the natural water cycle.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-trace-water-cycle-pathways"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-groundwater-and-water-table",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Groundwater and Water Table",
+      "outcome": "Define groundwater and the water table as the upper limit of the water-saturated underground layer.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-three-states-of-water"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-infiltration",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Definition of Infiltration",
+      "outcome": "Define infiltration as the process of water seeping through soil into the ground.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-groundwater-and-water-table"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-define-aquifer",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Definition of Aquifer",
+      "outcome": "Identify an aquifer as the underground reservoir of water stored between layers of hard rock below the water table.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-infiltration"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-describe-rainwater-harvesting",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Rainwater Harvesting Techniques",
+      "outcome": "Describe rooftop and open-ground rainwater harvesting methods used to recharge groundwater.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-infiltration"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-a-journey-through-states-of-water-evaluate-water-conservation-practices",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "a-journey-through-states-of-water",
+      "title": "Evaluate Water Conservation",
+      "outcome": "Evaluate community and domestic practices that prevent water wastage and promote sustainable groundwater replenishment.",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-describe-rainwater-harvesting"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/a-journey-through-states-of-water/the-water-cycle"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-define-mixture",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Define Mixture",
+      "outcome": "Define a mixture as a combination of two or more substances that retain their individual properties",
+      "prerequisites": [
+        "class7-science-materials-around-us-identify-constituent-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/need-for-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-classify-mixture-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Classify Mixture Components",
+      "outcome": "Classify components of a mixture into useful components, non-useful components, and harmful impurities",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-mixture"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/need-for-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-state-reasons-for-separation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "State Reasons for Separation",
+      "outcome": "List three primary purposes of separation: removing harmful impurities, separating non-useful components, and obtaining pure useful components",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-classify-mixture-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/need-for-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-match-separation-examples-to-purpose",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Match Separation Examples to Purpose",
+      "outcome": "Match daily examples like churning butter, straining tea leaves, and picking stones from rice to their specific separation purpose",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-state-reasons-for-separation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/need-for-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-describe-handpicking",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Describe Handpicking",
+      "outcome": "Describe handpicking as a method of manually picking out larger impurities from a mixture based on visible differences in size, shape, or colour",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-classify-mixture-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-identify-handpicking-conditions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Identify Handpicking Conditions",
+      "outcome": "Identify conditions where handpicking is practical: small quantity of mixture, low concentration of impurities, and noticeable difference in size/appearance",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-describe-handpicking"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-describe-threshing",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Describe Threshing",
+      "outcome": "Describe threshing as the process of beating stalks to free grain seeds using manual beating, bullocks, or machines",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-classify-mixture-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-describe-winnowing",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Describe Winnowing",
+      "outcome": "Describe winnowing as a method used to separate heavier grain seeds from lighter husk using blowing wind or air",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-describe-threshing"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-explain-winnowing-principle",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Explain Winnowing Principle",
+      "outcome": "Explain how difference in mass/weight of solid particles causes heavier particles to drop vertically and lighter particles to blow away during winnowing",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-describe-winnowing"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-describe-sieving",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Describe Sieving",
+      "outcome": "Describe sieving as a method of passing a dry mixture through a mesh where fine particles pass through holes and larger particles remain on the sieve",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-classify-mixture-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-explain-sieving-pore-size",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Explain Sieve Mesh Selection",
+      "outcome": "Explain why mesh/pore size of a sieve must be selected intermediate to the sizes of the two components being separated",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-describe-sieving"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-select-dry-separation-method",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Select Dry Separation Method",
+      "outcome": "Select the appropriate dry separation method (handpicking, threshing, winnowing, or sieving) for a given novel solid mixture based on particle properties",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-identify-handpicking-conditions",
+        "class7-science-methods-of-separation-of-substances-explain-winnowing-principle",
+        "class7-science-methods-of-separation-of-substances-explain-sieving-pore-size"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-identify-magnetic-separation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Identify Magnetic Separation",
+      "outcome": "Identify magnetic separation as a method to separate magnetic components (like iron pins or filings) from non-magnetic dry mixtures using a magnet",
+      "prerequisites": [
+        "class7-science-exploring-magnets-test-material-magnetism",
+        "class7-science-methods-of-separation-of-substances-define-mixture"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/simple-methods-of-separation"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-define-sedimentation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Define Sedimentation",
+      "outcome": "Define sedimentation as the process in which heavier insoluble solid particles in a liquid mixture settle down at the bottom when left undisturbed",
+      "prerequisites": [
+        "class7-science-materials-around-us-test-floating-and-sinking",
+        "class7-science-materials-around-us-classify-solids-by-solubility"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-define-decantation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Define Decantation",
+      "outcome": "Define decantation as the process of carefully pouring off the clear upper liquid layer without disturbing the settled sediment at the bottom",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-sedimentation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-apply-decantation-immiscible-liquids",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Apply Decantation to Immiscible Liquids",
+      "outcome": "Apply decantation to separate two immiscible liquids (such as oil and water) based on difference in layer formation",
+      "prerequisites": [
+        "class7-science-materials-around-us-classify-liquids-in-water",
+        "class7-science-methods-of-separation-of-substances-define-decantation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-define-filtration",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Define Filtration",
+      "outcome": "Define filtration as the process of passing a liquid-solid mixture through a porous medium to retain fine insoluble solid particles while allowing liquid to pass",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-decantation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-distinguish-filtrate-and-residue",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Distinguish Filtrate and Residue",
+      "outcome": "Distinguish between filtrate (the clear liquid passing through the filter) and residue (the solid trapped on the filter)",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-filtration"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-construct-filter-paper-cone",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Construct Filter Paper Cone",
+      "outcome": "Demonstrate the folding of circular filter paper in halves and quarters to form a cone and fit it securely inside a funnel",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-filtration"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-compare-decantation-and-filtration",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Compare Decantation and Filtration",
+      "outcome": "Compare decantation and filtration in terms of clarity of separated liquid and efficiency in removing ultra-fine suspended particles",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-distinguish-filtrate-and-residue"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-separate-salt-solution-by-evaporation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Separate Salt by Evaporation",
+      "outcome": "Explain how heating a homogeneous solution of soluble solid in liquid (e.g., salt in water) recovers the solid via evaporation of the solvent",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-evaporation",
+        "class7-science-materials-around-us-classify-solids-by-solubility"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-recover-liquid-by-condensation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Recover Liquid by Condensation",
+      "outcome": "Explain how cooling evaporated steam against a cold surface recovers the pure liquid component through condensation",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-condensation",
+        "class7-science-methods-of-separation-of-substances-separate-salt-solution-by-evaporation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-design-multi-step-separation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Design Multi-Step Separation",
+      "outcome": "Design and sequence a multi-step separation procedure for a complex mixture (such as sand, salt, and iron pins in water)",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-identify-magnetic-separation",
+        "class7-science-methods-of-separation-of-substances-compare-decantation-and-filtration",
+        "class7-science-methods-of-separation-of-substances-recover-liquid-by-condensation"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-define-saturated-solution",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Define Saturated Solution",
+      "outcome": "Define a saturated solution as one in which no more solute can dissolve in the given amount of solvent at a specific temperature",
+      "prerequisites": [
+        "class7-science-materials-around-us-define-solubility-in-water"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-methods-of-separation-of-substances-effect-of-temperature-on-saturation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "methods-of-separation-of-substances",
+      "title": "Effect of Temperature on Saturation",
+      "outcome": "Predict the effect of heating on a saturated solution in allowing additional solute to dissolve",
+      "prerequisites": [
+        "class7-science-methods-of-separation-of-substances-define-saturated-solution"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/methods-of-separation-of-substances/separation-using-water"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "List Characteristics of Life",
+      "outcome": "List the vital characteristics common to all living organisms including nutrition, respiration, growth, movement, response to stimuli, excretion, and reproduction",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-distinguish-respiration-and-breathing",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Distinguish Breathing and Respiration",
+      "outcome": "Distinguish breathing as gas exchange from respiration as cellular energy release from food",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-excretion-examples",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Excretion in Organisms",
+      "outcome": "Identify waste removal processes in animals and plants as excretion",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-define-stimulus-and-response",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Define Stimulus and Response",
+      "outcome": "Define stimulus as an environmental change and response as an organism's reaction to it",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-observe-plant-stimulus-response",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Plant Responses to Stimuli",
+      "outcome": "Identify examples of plant responses to stimuli such as phototropism and the touch response of Mimosa pudica",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-stimulus-and-response"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-compare-plant-animal-stimuli-response",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Compare Stimulus Responses",
+      "outcome": "Compare the speed and mechanisms of response to external stimuli between plants and animals",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-observe-plant-stimulus-response"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-define-reproduction",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Define Reproduction",
+      "outcome": "Define reproduction as the biological process by which organisms produce offspring of their own kind",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-differentiate-living-and-non-living",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Classify Living and Non-Living",
+      "outcome": "Classify objects as living, non-living, or dead by evaluating the presence of all life characteristics",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-list-vital-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/characteristics-of-life"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-define-habitat-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Define Habitat and Basic Needs",
+      "outcome": "Define a habitat as the natural dwelling place providing food, water, air, and shelter for an organism",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-define-habitat"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/habitats-of-living-beings"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-classify-biotic-abiotic-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Classify Biotic and Abiotic Factors",
+      "outcome": "Classify habitat components into biotic factors (living organisms) and abiotic factors (soil, water, air, temperature, sunlight)",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-habitat-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/habitats-of-living-beings"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-differentiate-terrestrial-aquatic-habitats",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Differentiate Habitat Types",
+      "outcome": "Differentiate between terrestrial habitats (deserts, mountains, grasslands) and aquatic habitats (ponds, lakes, rivers, oceans)",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-habitat-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/habitats-of-living-beings"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-explain-abiotic-biotic-interactions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Explain Biotic-Abiotic Interactions",
+      "outcome": "Explain how abiotic factors like sunlight, moisture, and temperature influence the survival and distribution of biotic organisms",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-classify-biotic-abiotic-components"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/habitats-of-living-beings"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-define-adaptation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Define Adaptation",
+      "outcome": "Define adaptation as specific structural, physiological, or behavioural traits that enable an organism to survive in its habitat",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-habitat-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-distinguish-adaptation-acclimatisation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Distinguish Adaptation from Acclimatisation",
+      "outcome": "Distinguish long-term evolutionary adaptations from short-term bodily adjustments (acclimatisation)",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-camel-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Camel Desert Adaptations",
+      "outcome": "Identify camel structural adaptations including long legs, concentrated urine, dry dung, lack of sweat, and wide padded feet",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-desert-plant-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Desert Plant Adaptations",
+      "outcome": "Identify xerophytic adaptations in cactus such as spine-like leaves, photosynthetic succulent stems, waxy cuticle, and deep roots",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation",
+        "class7-science-a-journey-through-states-of-water-identify-transpiration"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-fish-aquatic-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Fish Adaptations",
+      "outcome": "Identify structural adaptations of fish for underwater living including a streamlined body, gills for dissolved oxygen, fins, and slippery scales",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation",
+        "class7-science-materials-around-us-identify-gas-solubility-in-water"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-aquatic-plant-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Aquatic Plant Adaptations",
+      "outcome": "Identify adaptations of aquatic plants including flexible stems, air cavities for buoyancy, reduced root systems, and waxy coatings",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-mountain-tree-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Mountain Tree Adaptations",
+      "outcome": "Explain how conical shape, sloping branches, and needle-like leaves help mountain trees shed snow and resist wind",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-identify-mountain-animal-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Identify Mountain Animal Adaptations",
+      "outcome": "Identify adaptations in mountain animals like snow leopards, yaks, and mountain goats including thick fur, fat layers, and strong hooves",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-compare-predator-prey-grassland-adaptations",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Compare Grassland Predator and Prey Adaptations",
+      "outcome": "Compare the eyesight, camouflage, tooth structure, and speed adaptations between grassland predators (lion) and prey (deer)",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-adaptation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-predict-organism-habitat-from-features",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Predict Habitat from Anatomical Features",
+      "outcome": "Predict an organism's native habitat by analysing its morphological and physiological adaptations",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-identify-camel-adaptations",
+        "class7-science-living-creatures-exploring-their-characteristics-identify-fish-aquatic-adaptations",
+        "class7-science-living-creatures-exploring-their-characteristics-identify-mountain-tree-adaptations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-living-creatures-exploring-their-characteristics-evaluate-organism-survival-in-foreign-habitat",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "living-creatures-exploring-their-characteristics",
+      "title": "Evaluate Survival in Altered Habitats",
+      "outcome": "Evaluate why a species adapted to one habitat (such as a desert or deep ocean) cannot survive if relocated to a contrasting habitat",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-predict-organism-habitat-from-features",
+        "class7-science-living-creatures-exploring-their-characteristics-explain-abiotic-biotic-interactions"
+      ],
+      "difficulty": 5,
+      "topicRef": "class7-science/living-creatures-exploring-their-characteristics/adaptation-to-environments"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-define-natural-resource",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Define Natural Resources",
+      "outcome": "Define a natural resource as any useful material or substance obtained directly from nature",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-classify-biotic-abiotic-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-classify-renewable-nonrenewable",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Classify Renewable and Non-Renewable Resources",
+      "outcome": "Classify given natural resources into renewable (exhaustible/inexhaustible) and non-renewable categories",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-define-natural-resource"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-state-air-composition",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "State Composition of Clean Air",
+      "outcome": "State the percentage composition of major gases in clean air including nitrogen, oxygen, argon, and carbon dioxide",
+      "prerequisites": [
+        "class7-science-materials-around-us-identify-constituent-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-roles-of-air-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Roles of Air Components",
+      "outcome": "Explain the vital roles of oxygen in respiration/combustion, nitrogen in plant nutrition, and carbon dioxide in photosynthesis",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-state-air-composition",
+        "class7-science-living-creatures-exploring-their-characteristics-distinguish-respiration-and-breathing"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-describe-atmosphere-protection",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Describe Protective Role of Atmosphere",
+      "outcome": "Describe how the Earth's atmosphere acts as a protective blanket by regulating temperature and blocking harmful radiations",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-explain-roles-of-air-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-identify-freshwater-sources",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Identify Sources of Freshwater",
+      "outcome": "Identify natural freshwater sources on Earth such as rivers, lakes, glaciers, and groundwater",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-groundwater-and-water-table"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-water-scarcity",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Causes of Water Scarcity",
+      "outcome": "Explain why freshwater is scarce despite Earth being covered mostly with water",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-identify-freshwater-sources",
+        "class7-science-a-journey-through-states-of-water-trace-water-cycle-pathways"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-describe-soil-formation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Describe Soil Formation by Weathering",
+      "outcome": "Describe how soil is formed by the weathering of rocks over long periods of time under the action of wind, water, and climate",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-classify-biotic-abiotic-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-identify-soil-layers-and-topsoil",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Identify Soil Layers and Topsoil",
+      "outcome": "Identify the distinct layers of a soil profile and locate topsoil as the uppermost layer rich in humus",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-describe-soil-formation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-topsoil-agricultural-role",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Importance of Topsoil",
+      "outcome": "Explain the importance of topsoil for plant anchorage, nutrient supply, and agricultural productivity",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-identify-soil-layers-and-topsoil",
+        "class7-science-diversity-in-the-living-world-identify-plant-organs"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/air-water-and-soil"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-list-forest-products",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "List Resources from Forests",
+      "outcome": "List at least five crucial resources obtained directly from forests such as timber, medicinal plants, resins, honey, and firewood",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-define-natural-resource"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-describe-forest-canopy-layers",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Describe Forest Structural Layers",
+      "outcome": "Describe the structural layers of a forest including the emergent layer, canopy, understorey, and forest floor",
+      "prerequisites": [
+        "class7-science-diversity-in-the-living-world-classify-plants-by-habit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-describe-forest-biodiversity-support",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Describe Forest Habitat and Biodiversity Support",
+      "outcome": "Describe how forests provide diverse habitats, food, and breeding grounds for various wildlife species",
+      "prerequisites": [
+        "class7-science-living-creatures-exploring-their-characteristics-define-habitat-components",
+        "class7-science-natures-treasures-resources-around-us-describe-forest-canopy-layers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-o2-co2-balance",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Atmospheric Gas Balance by Forests",
+      "outcome": "Explain how forests maintain the balance of oxygen and carbon dioxide in the atmosphere through photosynthesis and respiration",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-explain-roles-of-air-components",
+        "class7-science-diversity-in-the-living-world-compare-plant-animal-nutrition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-forest-role-in-water-cycle",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Forest Influence on Water Cycle",
+      "outcome": "Explain how forest transpiration contributes to cloud formation and helps maintain regional rainfall patterns",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-identify-transpiration",
+        "class7-science-a-journey-through-states-of-water-trace-water-cycle-pathways"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-forest-flood-and-groundwater-role",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Forest Role in Flood Control and Infiltration",
+      "outcome": "Explain how forest floor leaf litter and root networks reduce runoff, prevent flash floods, and recharge aquifers",
+      "prerequisites": [
+        "class7-science-a-journey-through-states-of-water-define-infiltration",
+        "class7-science-diversity-in-the-living-world-distinguish-root-systems"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/forest-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-define-soil-erosion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Define Soil Erosion",
+      "outcome": "Define soil erosion as the removal and washing away of the topsoil by the agents of wind and running water",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-identify-soil-layers-and-topsoil"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-identify-causes-of-soil-erosion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Identify Causes of Soil Erosion",
+      "outcome": "Identify human and natural activities that accelerate soil erosion, including deforestation, overgrazing, and unscientific farming",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-define-soil-erosion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-list-causes-of-air-pollution",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "List Causes of Air Pollution",
+      "outcome": "List major human activities that cause air pollution, such as vehicular emissions, burning fossil fuels, and industrial exhausts",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-state-air-composition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-list-causes-of-water-pollution",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "List Causes of Water Pollution",
+      "outcome": "List major causes of water pollution including domestic sewage discharge, industrial effluent release, and agricultural runoff",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-identify-freshwater-sources"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-deforestation-impacts",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain Impacts of Deforestation",
+      "outcome": "Explain the multi-dimensional impacts of deforestation on rainfall, global temperature, biodiversity loss, and soil degradation",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-explain-o2-co2-balance",
+        "class7-science-natures-treasures-resources-around-us-identify-causes-of-soil-erosion"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-suggest-soil-conservation-methods",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Suggest Soil Conservation Methods",
+      "outcome": "Suggest actionable methods to prevent soil erosion such as afforestation, terrace farming, and planting shelter belts",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-identify-causes-of-soil-erosion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-explain-3r-principle",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Explain the 3R Principle",
+      "outcome": "Explain the principle of Reduce, Reuse, and Recycle with respect to resource management and waste minimisation",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-classify-renewable-nonrenewable"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-natures-treasures-resources-around-us-suggest-sustainable-daily-habits",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "natures-treasures-resources-around-us",
+      "title": "Suggest Sustainable Daily Habits",
+      "outcome": "Suggest specific sustainable habits in daily life to conserve water, energy, and reduce reliance on single-use materials",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-explain-3r-principle",
+        "class7-science-a-journey-through-states-of-water-evaluate-water-conservation-practices"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/natures-treasures-resources-around-us/protecting-our-resources"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-define-celestial-objects",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Define Celestial Objects",
+      "outcome": "Identify stars, planets, and moons as celestial objects visible in the sky",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-distinguish-stars-and-planets",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Distinguish Stars and Planets",
+      "outcome": "Distinguish stars from planets based on light emission and twinkling",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-celestial-objects"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-apparent-motion-of-stars",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Apparent Motion of Stars",
+      "outcome": "Explain the apparent east-to-west motion of stars caused by Earth's rotation from west to east",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-rotational-motion",
+        "class7-science-beyond-earth-our-place-in-the-universe-distinguish-stars-and-planets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-define-constellation",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Define Constellation",
+      "outcome": "Define a constellation as a group of stars forming a recognizable pattern",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-distinguish-stars-and-planets"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-identify-ursa-major",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Identify Ursa Major",
+      "outcome": "Identify the shape and seven prominent stars of Ursa Major (Saptarshi) on a sky chart",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-constellation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-locate-pole-star",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Locate the Pole Star",
+      "outcome": "Trace an imaginary straight line through the pointer stars of Ursa Major to locate the Pole Star",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-identify-ursa-major",
+        "class7-science-exploring-magnets-find-direction-using-compass"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-pole-star-fixed-position",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Fixed Position of Pole Star",
+      "outcome": "Explain why the Pole Star appears stationary directly above Earth's axis of rotation",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-locate-pole-star",
+        "class7-science-beyond-earth-our-place-in-the-universe-explain-apparent-motion-of-stars"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-identify-orion",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Identify Orion Constellation",
+      "outcome": "Identify the constellation Orion and its three belt stars on a stellar chart",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-constellation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-locate-sirius",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Locate Sirius using Orion",
+      "outcome": "Locate the star Sirius by extending a straight line eastward through the three belt stars of Orion",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-identify-orion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-identify-cassiopeia",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Identify Cassiopeia",
+      "outcome": "Identify the distorted 'W' or 'M' shape of constellation Cassiopeia in the northern sky",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-constellation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-night-sky-and-stars"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-define-solar-system-components",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Components of Solar System",
+      "outcome": "List the Sun, eight planets, moons, asteroids, comets, and meteors as components of the Solar System",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-celestial-objects"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-solar-system"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-order-planets-by-distance",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Order Planets by Distance",
+      "outcome": "Order the eight planets by increasing distance from the Sun",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-solar-system-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-solar-system"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-differentiate-inner-outer-planets",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Inner vs Outer Planets",
+      "outcome": "Differentiate between inner rocky planets and outer gaseous planets by composition and location",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-order-planets-by-distance"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-solar-system"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-identify-asteroid-belt",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Locate Asteroid Belt",
+      "outcome": "Identify the location of the asteroid belt between the orbits of Mars and Jupiter",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-differentiate-inner-outer-planets"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-solar-system"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-compare-revolution-and-distance",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Orbital Period and Distance",
+      "outcome": "Relate a planet's distance from the Sun to the duration of its period of revolution",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-periodic-motion",
+        "class7-science-beyond-earth-our-place-in-the-universe-order-planets-by-distance"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/the-solar-system"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-day-and-night",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Cause of Day and Night",
+      "outcome": "Explain the occurrence of day and night using the rotation of Earth on its axis",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-define-rotational-motion",
+        "class7-science-materials-around-us-define-opaque-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-lunar-illumination",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Moon Light Reflection",
+      "outcome": "Explain that the Moon is a non-luminous body visible only by reflected sunlight",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-distinguish-stars-and-planets"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-define-new-moon-and-full-moon",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "New Moon and Full Moon",
+      "outcome": "Define New Moon (Amavasya) and Full Moon (Purnima) based on lunar visibility from Earth",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-explain-lunar-illumination"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-lunar-phases-mechanism",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Mechanism of Moon Phases",
+      "outcome": "Explain why phases of the Moon occur due to changing relative positions of Earth, Moon, and Sun",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-new-moon-and-full-moon",
+        "class7-science-measurement-of-distance-and-motion-define-circular-motion"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-draw-lunar-phases",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Sequence Moon Phases",
+      "outcome": "Draw and sequence crescent, gibbous, half, new, and full moon phases across a lunar month",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-explain-lunar-phases-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-explain-synchronous-rotation-moon",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Single Visible Face of Moon",
+      "outcome": "Explain why only one side of the Moon faces Earth due to equal periods of rotation and revolution",
+      "prerequisites": [
+        "class7-science-measurement-of-distance-and-motion-identify-combined-types-of-motion",
+        "class7-science-beyond-earth-our-place-in-the-universe-explain-lunar-phases-mechanism"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-describe-lunar-surface-conditions",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Surface Conditions of the Moon",
+      "outcome": "Describe the Moon's surface as dusty, cratered, barren, and lacking an atmosphere and liquid water",
+      "prerequisites": [
+        "class7-science-natures-treasures-resources-around-us-describe-atmosphere-protection"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-distinguish-natural-artificial-satellites",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Natural vs Artificial Satellites",
+      "outcome": "Differentiate between natural satellites (moons) and human-made artificial satellites orbiting Earth",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-define-solar-system-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    },
+    {
+      "id": "class7-science-beyond-earth-our-place-in-the-universe-list-uses-of-artificial-satellites",
+      "klass": 7,
+      "subject": "Science",
+      "chapter": "beyond-earth-our-place-in-the-universe",
+      "title": "Applications of Satellites",
+      "outcome": "List key applications of artificial satellites including weather forecasting, telecommunication, and remote sensing",
+      "prerequisites": [
+        "class7-science-beyond-earth-our-place-in-the-universe-distinguish-natural-artificial-satellites"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-science/beyond-earth-our-place-in-the-universe/earth-and-moon"
+    }
+  ]
+}

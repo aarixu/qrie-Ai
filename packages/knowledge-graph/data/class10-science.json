@@ -613,6 +613,3521 @@
       "difficulty": 3,
       "lessonRef": "class10-excretion",
       "topicRef": "class10-science/life-processes/excretion-in-human-beings"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-indicator-colour-change",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Classify indicators and colour changes",
+      "outcome": "Identify the colour change of litmus, phenolphthalein, and methyl orange in acidic and basic solutions",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/acids-and-bases-in-the-laboratory"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-olfactory-indicators",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Identify olfactory indicators",
+      "outcome": "State the odour change of vanilla essence, onion, or clove oil when treated with acids and bases",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/acids-and-bases-in-the-laboratory"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-metal-acid-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Reaction of metals with acids",
+      "outcome": "Write a balanced chemical equation for the reaction between a metal and a dilute acid to form salt and hydrogen gas",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/how-do-acids-and-bases-react-with-metals"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-hydrogen-gas-test",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Soap bubble test for hydrogen",
+      "outcome": "Describe the pop sound test using a burning candle to confirm the presence of hydrogen gas",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-metal-acid-reaction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/how-do-acids-and-bases-react-with-metals"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-metal-carbonate-acid",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Acid reaction with metal carbonates",
+      "outcome": "Write balanced chemical equations for reactions of metal carbonates and hydrogencarbonates with acids producing salt, water, and carbon dioxide",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/how-do-metal-carbonates-and-metal-hydrogencarbonates-react-with-acids"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-limewater-test",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Limewater test for carbon dioxide",
+      "outcome": "Explain the formation of milky calcium carbonate precipitate and its disappearance with excess carbon dioxide",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-metal-carbonate-acid"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/acids-bases-and-salts/how-do-metal-carbonates-and-metal-hydrogencarbonates-react-with-acids"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-neutralization-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Define neutralization reaction",
+      "outcome": "Define a neutralization reaction and write its general word and formula equation",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/how-do-acids-and-bases-react-with-each-other"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-metal-oxide-acid",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Reaction of metallic oxides with acids",
+      "outcome": "Classify metallic oxides as basic oxides by showing that their reaction with acid yields salt and water",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-neutralization-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/reaction-of-metallic-oxides-with-acids"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-nonmetal-oxide-base",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Reaction of non-metallic oxides with bases",
+      "outcome": "Classify non-metallic oxides as acidic oxides based on their reaction with bases to yield salt and water",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-neutralization-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/reaction-of-a-non-metallic-oxide-with-base"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-ions-in-solution",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Ions produced by acids and bases",
+      "outcome": "Identify H+ (or H3O+) ions as characteristic of acids and OH- ions as characteristic of bases in aqueous solution",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/what-do-all-acids-and-all-bases-have-in-common"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-electrical-conduction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Electrical conductivity of acidic solutions",
+      "outcome": "Explain why aqueous solutions of acids conduct electricity while aqueous solutions of glucose and alcohol do not",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-ions-in-solution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/what-do-all-acids-and-all-bases-have-in-common"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-water-role-dissociation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Role of water in acid dissociation",
+      "outcome": "Explain why dry HCl gas does not change the colour of dry litmus paper whereas aqueous HCl does",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-indicator-colour-change",
+        "class10-science-acids-bases-and-salts-ions-in-solution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/what-happens-to-an-acid-or-a-base-in-a-water-solution"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-acid-dilution-safety",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Dilution of concentrated acids",
+      "outcome": "Explain why acid must always be added slowly to water with constant stirring during dilution rather than water to acid",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/what-happens-to-an-acid-or-a-base-in-a-water-solution"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-ph-scale-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Define pH scale",
+      "outcome": "Define the pH scale from 0 to 14 and relate hydrogen ion concentration to pH value",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-ions-in-solution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/how-strong-are-acid-or-base-solutions"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-ph-classification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Classify solutions by pH value",
+      "outcome": "Classify a given solution as acidic, neutral, or basic given its pH value",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-ph-scale-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/how-strong-are-acid-or-base-solutions"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-ph-everyday-life",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Importance of pH in daily life",
+      "outcome": "Explain everyday phenomena involving pH changes such as tooth decay, digestive acidity, and self-defense by bee or ant stings",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-ph-classification",
+        "sci10-lp-stomach-acid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/importance-of-ph-in-everyday-life"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-parent-acid-base",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Identify parent acid and base of a salt",
+      "outcome": "Identify the parent acid and parent base that combine to form a specific salt",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-neutralization-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/family-of-salts"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-salt-family-grouping",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Group salts into families",
+      "outcome": "Group salts into families based on sharing a common cation or anion",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-parent-acid-base"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/family-of-salts"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-predict-salt-ph",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Predict pH of salt solutions",
+      "outcome": "Predict whether an aqueous salt solution is acidic, basic, or neutral based on the relative strengths of its parent acid and base",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-ph-classification",
+        "class10-science-acids-bases-and-salts-parent-acid-base"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/acids-bases-and-salts/ph-of-salts"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-chlor-alkali-process",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Describe the chlor-alkali process",
+      "outcome": "Write the balanced chemical equation and identify products formed at the anode and cathode during electrolysis of brine",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/acids-bases-and-salts/chemicals-from-common-salt"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-bleaching-powder",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Preparation and uses of bleaching powder",
+      "outcome": "State the chemical formula, preparation from dry slaked lime, and two major uses of bleaching powder",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/chemicals-from-common-salt"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-baking-and-washing-soda",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Baking soda and washing soda chemistry",
+      "outcome": "State the chemical formulae and write equations for the preparation and heating of baking soda and recrystallization of washing soda",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/acids-bases-and-salts/chemicals-from-common-salt"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-water-of-crystallization",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Define water of crystallization",
+      "outcome": "Define water of crystallization and state the number of water molecules in hydrated copper sulphate, washing soda, and gypsum",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/acids-bases-and-salts/are-the-crystals-of-salts-really-dry"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-heating-copper-sulphate",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Effect of heat on hydrated copper sulphate",
+      "outcome": "Explain the reversible colour change from blue to white when hydrated copper sulphate is heated and re-wetted",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-water-of-crystallization"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/acids-bases-and-salts/are-the-crystals-of-salts-really-dry"
+    },
+    {
+      "id": "class10-science-acids-bases-and-salts-plaster-of-paris",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "acids-bases-and-salts",
+      "title": "Plaster of Paris preparation and setting",
+      "outcome": "Write the chemical equation for preparing Plaster of Paris from gypsum and its setting reaction on mixing with water",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-water-of-crystallization"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/acids-bases-and-salts/are-the-crystals-of-salts-really-dry"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-physical-properties-contrast",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Physical Properties of Metals vs Non-metals",
+      "outcome": "Contrast physical properties of metals and non-metals including malleability, ductility, sonority, and electrical conductivity",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/metals-and-non-metals/physical-properties"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-physical-property-exceptions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Exceptions in Physical Properties",
+      "outcome": "Identify anomalous physical properties of elements such as liquid mercury, lustrous iodine, soft alkali metals, and conducting graphite",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-physical-properties-contrast"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/physical-properties"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-metal-oxygen-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Metal Reactions with Oxygen",
+      "outcome": "Write balanced chemical equations for the reaction of metals like copper, magnesium, and aluminium with oxygen to form basic oxides",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/chemical-properties-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-amphoteric-oxides",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Amphoteric Oxides Reactions",
+      "outcome": "Write balanced chemical equations showing aluminium oxide reacting with both acids and strong bases to demonstrate its amphoteric nature",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-metal-oxide-acid",
+        "class10-science-metals-and-non-metals-metal-oxygen-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/chemical-properties-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-metal-water-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Reactions of Metals with Water",
+      "outcome": "Write balanced chemical equations for reactions of sodium, calcium, magnesium, and iron with cold water, hot water, or steam",
+      "prerequisites": [
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/what-happens-when-metals-react-with-water"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-metal-water-reactivity-order",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Ordering Metals by Water Reactivity",
+      "outcome": "Order metals by their vigour of reaction with water across physical conditions of cold water, hot water, and steam",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-metal-water-reactions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/what-happens-when-metals-react-with-water"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-metal-acid-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Reactions of Metals with Dilute Acids",
+      "outcome": "Write balanced equations for reactions of active metals with dilute hydrochloric acid and sulfuric acid",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-metal-acid-reaction",
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/what-happens-when-metals-react-with-acids"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-nitric-acid-exception",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Nitric Acid Reaction with Metals",
+      "outcome": "Explain why hydrogen gas is not evolved when most metals react with nitric acid due to its strong oxidising nature",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-metal-acid-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/what-happens-when-metals-react-with-acids"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-metal-salt-displacement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Displacement in Metal Salt Solutions",
+      "outcome": "Describe observable color changes and precipitation when a more reactive metal is immersed in an aqueous salt solution of a less reactive metal",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/how-do-metals-react-with-solutions-of-other-metal-salts"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-reactivity-series-listing",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Reactivity Series Arrangement",
+      "outcome": "List the common metals in descending order of reactivity based on their displacement and water/acid reaction trends",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-metal-water-reactivity-order",
+        "class10-science-metals-and-non-metals-metal-salt-displacement"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/the-reactivity-series"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-predict-displacement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Predicting Displacement Reactions",
+      "outcome": "Predict whether a single displacement reaction will occur between a given elemental metal and a metal salt solution using the reactivity series",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-reactivity-series-listing"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/the-reactivity-series"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-electron-dot-ions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Electron Transfer in Ionic Bond Formation",
+      "outcome": "Illustrate the transfer of valence electrons from metal atoms to non-metal atoms using electron-dot structures to form cations and anions",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/how-do-metals-and-non-metals-react"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-ionic-formation-nacl-mgcl2",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Formation of NaCl and MgCl2",
+      "outcome": "Draw electron-dot diagrams depicting the step-by-step formation of sodium chloride and magnesium chloride",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-electron-dot-ions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/how-do-metals-and-non-metals-react"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-ionic-properties-list",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Properties of Ionic Compounds",
+      "outcome": "List the general physical properties of ionic compounds including high melting/boiling points, brittleness, and solubility in polar solvents",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-ionic-formation-nacl-mgcl2"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/metals-and-non-metals/properties-of-ionic-compounds"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-ionic-conduction-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Electrical Conduction of Ionic Compounds",
+      "outcome": "Explain why ionic compounds conduct electricity in the molten or aqueous state but not in the solid state based on the mobility of ions",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-electrical-conduction",
+        "class10-science-metals-and-non-metals-ionic-properties-list"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/properties-of-ionic-compounds"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-minerals-ores-gangue",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Minerals, Ores, and Gangue Definitions",
+      "outcome": "Define minerals, ores, and gangue, distinguishing profitable mineral sources from non-viable mineral deposits",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/metals-and-non-metals/occurrence-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-extraction-by-reactivity",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Extraction Methods and Reactivity Series",
+      "outcome": "Classify extraction strategies (electrolytic reduction, carbon reduction, simple heating) based on a metal's position in the reactivity series",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-reactivity-series-listing",
+        "class10-science-metals-and-non-metals-minerals-ores-gangue"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/occurrence-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-roasting-vs-calcination",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Roasting versus Calcination",
+      "outcome": "Compare roasting and calcination by writing balanced chemical equations for sulphide and carbonate ores converting into metal oxides",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-metals-and-non-metals-extraction-by-reactivity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/extraction-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-reduction-of-oxides",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Reduction of Metal Oxides",
+      "outcome": "Write chemical equations for the reduction of metal oxides using carbon (coke) or highly reactive metals like aluminium (thermite process)",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-roasting-vs-calcination",
+        "class10-science-metals-and-non-metals-predict-displacement"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/metals-and-non-metals/extraction-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-electrolytic-reduction-active-metals",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Electrolytic Reduction of Reactive Metals",
+      "outcome": "Describe the extraction of highly reactive metals like sodium and aluminium via electrolysis of their molten chlorides or oxides",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-extraction-by-reactivity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/extraction-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-electrolytic-refining-copper",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Electrolytic Refining of Copper",
+      "outcome": "Identify the anode, cathode, electrolyte, cathode deposit, and anode mud in the electrolytic refining apparatus for impure copper",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-electrolytic-reduction-active-metals"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/metals-and-non-metals/refining-of-metals"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-corrosion-conditions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Conditions for Corrosion",
+      "outcome": "Identify air (oxygen) and moisture (water) as simultaneous essential conditions required for the rusting of iron through experimental setups",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/corrosion-prevention"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-corrosion-prevention-methods",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Corrosion Prevention Techniques",
+      "outcome": "Explain how methods like galvanisation, painting, greasing, and electroplating prevent corrosion by creating barrier layers or sacrificial protection",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-corrosion-conditions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/corrosion-prevention"
+    },
+    {
+      "id": "class10-science-metals-and-non-metals-alloys-composition-properties",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "metals-and-non-metals",
+      "title": "Alloys and Their Properties",
+      "outcome": "State the elemental constituents and enhanced properties (such as tensile strength and corrosion resistance) of brass, bronze, solder, and stainless steel",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-corrosion-prevention-methods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/metals-and-non-metals/corrosion-prevention"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-covalent-bonding-reason",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Reason for Covalent Bonding in Carbon",
+      "outcome": "Explain why carbon cannot readily form C4+ cations or C4- anions to achieve octet configuration",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-electron-dot-ions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/bonding-in-carbon-covalent-bond"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-covalent-bond-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Covalent Bond Definition",
+      "outcome": "Define a covalent bond as a chemical bond formed by the sharing of electron pairs between atoms",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-covalent-bonding-reason"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/carbon-and-its-compounds/bonding-in-carbon-covalent-bond"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-dot-structures-diatomic",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Dot Structures of Diatomic Molecules",
+      "outcome": "Draw electron dot structures for single, double, and triple covalent bonds in H2, O2, and N2",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-covalent-bond-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/bonding-in-carbon-covalent-bond"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-dot-structures-simple-molecules",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Dot Structures of H2O, NH3, and CH4",
+      "outcome": "Draw electron dot structures for simple covalent molecules including water, ammonia, and methane",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-dot-structures-diatomic"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/bonding-in-carbon-covalent-bond"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-catenation-and-tetravalency",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Catenation and Tetravalency",
+      "outcome": "Define catenation and tetravalency as the two unique properties of carbon enabling extensive compound formation",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-covalent-bonding-reason"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/carbon-and-its-compounds/versatile-nature-of-carbon"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-c-c-bond-strength",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Carbon-Carbon Bond Stability",
+      "outcome": "Explain the exceptional strength and stability of carbon-carbon bonds using the small size of the carbon atom",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-catenation-and-tetravalency"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/versatile-nature-of-carbon"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Saturated vs Unsaturated Hydrocarbons",
+      "outcome": "Classify hydrocarbons into saturated (alkanes) and unsaturated (alkenes, alkynes) based on bond multiplicity",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-catenation-and-tetravalency"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/saturated-and-unsaturated-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-dot-structures-ethane-ethene-ethyne",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Dot Structures of Ethane, Ethene, Ethyne",
+      "outcome": "Draw the electron dot and structural formulas for ethane, ethene, and ethyne",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-dot-structures-simple-molecules",
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/saturated-and-unsaturated-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-structural-isomerism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Structural Isomerism in Alkanes",
+      "outcome": "Draw and name the branched and straight-chain structural isomers of butane and pentane",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/chains-branches-and-rings"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-cyclic-hydrocarbons",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Cyclic Hydrocarbon Structures",
+      "outcome": "Draw the ring structures for saturated cyclohexane and unsaturated benzene",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/chains-branches-and-rings"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-functional-groups-identify",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Identify Functional Groups",
+      "outcome": "Identify functional groups including halo, alcohol, aldehyde, ketone, and carboxylic acid in chemical formulas",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-covalent-bond-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/nomenclature-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-homologous-series-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Homologous Series Characteristics",
+      "outcome": "Define a homologous series and state its core characteristics regarding functional groups and chemical properties",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-functional-groups-identify"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/carbon-and-its-compounds/homologous-series"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-homologous-series-trends",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Trends in Homologous Series",
+      "outcome": "Calculate the -CH2- unit formula difference and 14 u molecular mass difference between successive homologous members",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-homologous-series-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/homologous-series"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-iupac-nomenclature-rules",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Nomenclature of Functionalised Compounds",
+      "outcome": "Name organic compounds containing up to four carbons with alcohol, aldehyde, ketone, halo, or carboxylic acid groups",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-homologous-series-definition",
+        "class10-science-carbon-and-its-compounds-functional-groups-identify"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/nomenclature-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-combustion-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Combustion of Carbon Compounds",
+      "outcome": "Write balanced equations for the complete combustion of carbon and simple hydrocarbons yielding CO2, H2O, and heat",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/chemical-properties-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-oxidation-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Oxidation of Alcohols",
+      "outcome": "Write the chemical equation for the oxidation of ethanol to ethanoic acid using alkaline KMnO4 or acidified K2Cr2O7",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-carbon-and-its-compounds-iupac-nomenclature-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/chemical-properties-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-addition-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Addition Reaction and Hydrogenation",
+      "outcome": "Write the addition reaction of hydrogen to alkenes in the presence of nickel/palladium catalyst (hydrogenation of oils)",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/chemical-properties-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-substitution-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Substitution Reaction of Methane",
+      "outcome": "Write the step-by-step substitution reaction of methane with chlorine in the presence of sunlight",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-carbon-and-its-compounds-saturated-vs-unsaturated-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/chemical-properties-of-carbon-compounds"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-ethanol-properties-and-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Reactions and Effects of Ethanol",
+      "outcome": "Predict products and write balanced equations for the reaction of ethanol with sodium and with hot concentrated H2SO4",
+      "prerequisites": [
+        "class10-science-metals-and-non-metals-metal-water-reactions",
+        "class10-science-carbon-and-its-compounds-iupac-nomenclature-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/properties-of-ethanol"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-esterification-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Esterification Reaction",
+      "outcome": "Write the chemical equation for the acid-catalyzed esterification between ethanoic acid and ethanol to form ethyl ethanoate",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-ethanol-properties-and-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/properties-of-ethanoic-acid"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-saponification-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Saponification Reaction",
+      "outcome": "Write the chemical equation for the alkaline hydrolysis of an ester (saponification) to yield sodium ethanoate and ethanol",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-esterification-reaction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/properties-of-ethanoic-acid"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-ethanoic-acid-carbonate-reactions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Ethanoic Acid Reactions with Bases and Carbonates",
+      "outcome": "Write balanced chemical equations for reactions of ethanoic acid with NaOH, Na2CO3, and NaHCO3",
+      "prerequisites": [
+        "class10-science-acids-bases-and-salts-metal-carbonate-acid",
+        "class10-science-acids-bases-and-salts-neutralization-reaction",
+        "class10-science-carbon-and-its-compounds-iupac-nomenclature-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/properties-of-ethanoic-acid"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-soap-molecule-structure",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Structure of Soap Molecules",
+      "outcome": "Identify the hydrophilic ionic head and hydrophobic hydrocarbon tail in a soap molecule",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-saponification-reaction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/carbon-and-its-compounds/soaps-and-detergents"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-micelle-cleansing-action",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Micelle Formation and Cleansing Action",
+      "outcome": "Explain how micelle formation enables soaps to emulsify and remove oily dirt in water",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-soap-molecule-structure"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/carbon-and-its-compounds/soaps-and-detergents"
+    },
+    {
+      "id": "class10-science-carbon-and-its-compounds-soaps-vs-detergents-hard-water",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "carbon-and-its-compounds",
+      "title": "Soaps vs Detergents in Hard Water",
+      "outcome": "Compare soaps and synthetic detergents in terms of scum precipitation with Ca2+ and Mg2+ ions in hard water",
+      "prerequisites": [
+        "class10-science-carbon-and-its-compounds-micelle-cleansing-action"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/carbon-and-its-compounds/soaps-and-detergents"
+    },
+    {
+      "id": "class10-science-control-and-coordination-receptors-and-stimuli",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Receptors and Stimuli",
+      "outcome": "List major sense receptors in animals (gustatory, olfactory, photoreceptors, phonoreceptors) and their corresponding stimuli",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/control-and-coordination/animals-nervous-system"
+    },
+    {
+      "id": "class10-science-control-and-coordination-neuron-structure",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Structure of a Neuron",
+      "outcome": "Label the parts of a neuron including dendrites, cyton (cell body), axon, and nerve endings",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/control-and-coordination/animals-nervous-system"
+    },
+    {
+      "id": "class10-science-control-and-coordination-nerve-impulse-transmission",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Nerve Impulse Conduction",
+      "outcome": "Trace the path of an electrical impulse from dendrite through the cyton to the axon terminal",
+      "prerequisites": [
+        "class10-science-control-and-coordination-neuron-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/animals-nervous-system"
+    },
+    {
+      "id": "class10-science-control-and-coordination-synapse-transmission",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Synaptic Transmission",
+      "outcome": "Explain how an electrical impulse is converted into a chemical signal across a synapse to initiate a new impulse",
+      "prerequisites": [
+        "class10-science-control-and-coordination-nerve-impulse-transmission"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/animals-nervous-system"
+    },
+    {
+      "id": "class10-science-control-and-coordination-reflex-action-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Reflex Action Definition",
+      "outcome": "Define reflex action as an automatic, involuntary, and rapid response to an environmental stimulus",
+      "prerequisites": [
+        "class10-science-control-and-coordination-receptors-and-stimuli"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/control-and-coordination/reflex-actions"
+    },
+    {
+      "id": "class10-science-control-and-coordination-reflex-arc-components",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Reflex Arc Pathway",
+      "outcome": "Trace the sequence of components in a reflex arc: receptor, sensory neuron, spinal cord/relay neuron, motor neuron, and effector",
+      "prerequisites": [
+        "class10-science-control-and-coordination-synapse-transmission",
+        "class10-science-control-and-coordination-reflex-action-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/reflex-actions"
+    },
+    {
+      "id": "class10-science-control-and-coordination-reflex-arc-evolutionary-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Evolutionary Importance of Reflex Arc",
+      "outcome": "Explain why reflex arcs evolved as an efficient bypass mechanism for rapid survival responses before brain processing",
+      "prerequisites": [
+        "class10-science-control-and-coordination-reflex-arc-components"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/reflex-actions"
+    },
+    {
+      "id": "class10-science-control-and-coordination-brain-regions-identification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Human Brain Regions",
+      "outcome": "Identify the forebrain, midbrain, and hindbrain on a sagittal section diagram of the human brain",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/control-and-coordination/human-brain"
+    },
+    {
+      "id": "class10-science-control-and-coordination-forebrain-cerebrum-function",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Forebrain and Cerebrum Functions",
+      "outcome": "State the functions of the forebrain (cerebrum) in sensory interpretation, voluntary movements, memory, and thinking",
+      "prerequisites": [
+        "class10-science-control-and-coordination-brain-regions-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/human-brain"
+    },
+    {
+      "id": "class10-science-control-and-coordination-midbrain-hindbrain-function",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Midbrain and Hindbrain Functions",
+      "outcome": "State the functions of the cerebellum (posture and balance) and medulla (involuntary actions like blood pressure, salivation, vomiting)",
+      "prerequisites": [
+        "class10-science-control-and-coordination-brain-regions-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/human-brain"
+    },
+    {
+      "id": "class10-science-control-and-coordination-protection-cns",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Protection of Brain and Spinal Cord",
+      "outcome": "Describe the anatomical protection of the central nervous system provided by the cranium, vertebral column, and cerebrospinal fluid",
+      "prerequisites": [
+        "class10-science-control-and-coordination-brain-regions-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/how-are-these-tissues-protected"
+    },
+    {
+      "id": "class10-science-control-and-coordination-neuromuscular-junction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Neuromuscular Junction",
+      "outcome": "Describe the junction where motor nerve endings transfer an impulse across a cleft to a muscle fiber",
+      "prerequisites": [
+        "class10-science-control-and-coordination-synapse-transmission"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/how-does-the-nervous-tissue-cause-action"
+    },
+    {
+      "id": "class10-science-control-and-coordination-muscle-cellular-response",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Muscle Cellular Action",
+      "outcome": "Explain how muscle cells change their shape and shorten through the rearrangement of specialized muscle proteins in response to nerve signals",
+      "prerequisites": [
+        "class10-science-control-and-coordination-neuromuscular-junction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/how-does-the-nervous-tissue-cause-action"
+    },
+    {
+      "id": "class10-science-control-and-coordination-nastic-vs-tropic-movement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Plant Movement Types",
+      "outcome": "Distinguish between immediate stimulus-dependent non-directional (nastic) movements and directional growth-dependent (tropic) movements in plants",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/coordination-in-plants"
+    },
+    {
+      "id": "class10-science-control-and-coordination-thigmonasty-mimosa",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Touch Response in Sensitive Plant",
+      "outcome": "Explain how Mimosa pudica responds to touch by altering the amount of water in cells, resulting in swelling or shrinking",
+      "prerequisites": [
+        "class10-science-control-and-coordination-nastic-vs-tropic-movement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/coordination-in-plants"
+    },
+    {
+      "id": "class10-science-control-and-coordination-tropisms-classification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Classification of Plant Tropisms",
+      "outcome": "Classify plant tropic movements into phototropism, geotropism, chemotropism, and hydrotropism based on the directional stimulus",
+      "prerequisites": [
+        "class10-science-control-and-coordination-nastic-vs-tropic-movement"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/movement-due-to-growth"
+    },
+    {
+      "id": "class10-science-control-and-coordination-auxin-phototropism-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Auxin and Phototropism",
+      "outcome": "Explain how auxin diffuses to the shaded side of a shoot to stimulate faster cell elongation, causing bending towards light",
+      "prerequisites": [
+        "class10-science-control-and-coordination-tropisms-classification"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/movement-due-to-growth"
+    },
+    {
+      "id": "class10-science-control-and-coordination-plant-hormones-functions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Plant Hormones Functions",
+      "outcome": "Compare the roles of plant hormones: gibberellins (stem growth), cytokinins (cell division), and abscisic acid (growth inhibition and leaf wilting)",
+      "prerequisites": [
+        "class10-science-control-and-coordination-auxin-phototropism-mechanism"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/movement-due-to-growth"
+    },
+    {
+      "id": "class10-science-control-and-coordination-endocrine-glands-location",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Location of Endocrine Glands",
+      "outcome": "Locate major endocrine glands (pituitary, thyroid, adrenal, pancreas, testes, and ovaries) on an anatomical human diagram",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-control-and-coordination-adrenaline-stress-response",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Adrenaline and Emergency Response",
+      "outcome": "Describe the physiological effects of adrenaline secretion during fight-or-flight situations (increased heartbeat, breathing rate, and blood diverted to muscles)",
+      "prerequisites": [
+        "sci10-lp-heart-is-pump",
+        "class10-science-control-and-coordination-endocrine-glands-location"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-control-and-coordination-thyroxine-and-iodine",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Thyroxine and Iodine",
+      "outcome": "Explain the role of thyroxine in regulating carbohydrate, protein, and fat metabolism, and link iodine deficiency to goitre",
+      "prerequisites": [
+        "class10-science-control-and-coordination-endocrine-glands-location"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-control-and-coordination-growth-and-sex-hormones",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Growth Hormone and Sex Hormones",
+      "outcome": "State the roles of growth hormone (pituitary), testosterone (testes), and estrogen/progesterone (ovaries) in development and puberty changes",
+      "prerequisites": [
+        "class10-science-control-and-coordination-endocrine-glands-location"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-control-and-coordination-insulin-and-diabetes",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Insulin and Blood Sugar",
+      "outcome": "Explain the role of pancreatic insulin in lowering blood glucose levels and identify diabetes as a consequence of its deficiency",
+      "prerequisites": [
+        "class10-science-control-and-coordination-endocrine-glands-location"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-control-and-coordination-feedback-mechanism-blood-sugar",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "control-and-coordination",
+      "title": "Hormone Feedback Mechanism",
+      "outcome": "Apply the concept of negative feedback to illustrate how rising or falling blood sugar levels regulate insulin secretion by pancreatic cells",
+      "prerequisites": [
+        "class10-science-control-and-coordination-insulin-and-diabetes"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/control-and-coordination/hormones-in-animals"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-dna-copying-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "DNA Copying in Reproduction",
+      "outcome": "State that reproduction involves the replication of DNA accompanied by creation of cellular apparatus",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/exact-copies-and-variation"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-dna-inaccuracies-variation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Inaccuracies and Genetic Variation",
+      "outcome": "Explain how inaccuracies during DNA copying lead to variations among offspring",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-dna-copying-mechanism"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/exact-copies-and-variation"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-variation-niche-survival",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Importance of Variation in Survival",
+      "outcome": "Explain why variation provides a survival advantage to a species in changing environmental niches",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-dna-inaccuracies-variation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/how-do-organisms-reproduce/exact-copies-and-variation"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-binary-vs-multiple-fission",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Binary and Multiple Fission",
+      "outcome": "Compare binary fission in Amoeba/Leishmania with multiple fission in Plasmodium",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-fragmentation-spirogyra",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Fragmentation in Spirogyra",
+      "outcome": "Describe fragmentation as a mode of reproduction in multicellular organisms with simple body design like Spirogyra",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-regeneration-planaria",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Regeneration in Planaria",
+      "outcome": "Describe how specialized regenerative cells give rise to complete organisms in Planaria and Hydra",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-budding-hydra-yeast",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Budding Mechanism",
+      "outcome": "Explain the process of budding where an outgrowth detaches into a new individual in Hydra and yeast",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-vegetative-propagation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Vegetative Propagation",
+      "outcome": "Identify natural and artificial vegetative propagation methods including leaf notches in Bryophyllum and layering/grafting",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-spore-formation-rhizopus",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Spore Formation in Rhizopus",
+      "outcome": "Describe the structure of sporangia and thick-walled spores in Rhizopus bread mould",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/modes-of-reproduction-used-by-single-organisms"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-flower-parts-classification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Structure of a Flower",
+      "outcome": "Identify sepals, petals, stamens (male), and carpel/pistil (female) in unisexual and bisexual flowers",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/how-do-organisms-reproduce/sexual-reproduction-flowering-plants"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-pollination-types",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Self vs Cross Pollination",
+      "outcome": "Distinguish between self-pollination and cross-pollination and identify common transfer agents",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-flower-parts-classification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/sexual-reproduction-flowering-plants"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-pollen-tube-germination",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Pollen Germination on Stigma",
+      "outcome": "Trace the growth of a pollen tube through the style towards the female gamete in the ovule",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-pollination-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/sexual-reproduction-flowering-plants"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-seed-fruit-formation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Fertilization and Seed Formation",
+      "outcome": "Explain the transformation of the fertilized ovule into a seed and the ovary into a fruit",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-pollen-tube-germination"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/how-do-organisms-reproduce/sexual-reproduction-flowering-plants"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-puberty-changes",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Pubertal Changes in Humans",
+      "outcome": "List the common and gender-specific secondary sexual characteristics that appear during puberty in males and females",
+      "prerequisites": [
+        "class10-science-control-and-coordination-growth-and-sex-hormones"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/how-do-organisms-reproduce/reproduction-in-human-beings"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-male-system-organs",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Male Reproductive Anatomy",
+      "outcome": "Identify the testes, scrotum, vas deferens, prostate, seminal vesicles, and urethra on an anatomical diagram",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/how-do-organisms-reproduce/male-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-male-organ-functions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Functions of Male Reproductive Organs",
+      "outcome": "State the dual role of testes (sperm formation and testosterone secretion) and the temperature-regulating role of the scrotum",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-male-system-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/male-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-seminal-fluid-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Gland Secretions in Semen",
+      "outcome": "Explain the roles of prostate gland and seminal vesicle secretions in providing nutrition and a transport medium for sperm",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-male-organ-functions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/male-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-female-system-organs",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Female Reproductive Anatomy",
+      "outcome": "Identify ovaries, fallopian tubes (oviducts), uterus, cervix, and vagina on an anatomical diagram",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/how-do-organisms-reproduce/female-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-fertilization-site-implantation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Fertilization and Implantation",
+      "outcome": "State that fertilization takes place in the fallopian tube and the resulting zygote implants in the uterine wall",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-male-organ-functions",
+        "class10-science-how-do-organisms-reproduce-female-system-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/female-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-placenta-structure-function",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Placenta Structure and Function",
+      "outcome": "Describe how the placenta's villi facilitate nutrient uptake, oxygen exchange, and waste removal for the developing embryo",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-fertilization-site-implantation",
+        "sci10-lp-capillary-exchange"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/how-do-organisms-reproduce/female-reproductive-system"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-menstruation-cycle",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Menstrual Cycle Mechanism",
+      "outcome": "Explain why the uterine lining breaks down and is discharged as menstruation when the released egg is not fertilized",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-female-system-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/what-happens-when-the-egg-is-not-fertilised"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-contraceptive-methods",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Contraceptive Methods",
+      "outcome": "Categorize contraceptive methods into mechanical barriers, hormonal pills, IUCDs (e.g. Copper-T), and surgical methods (vasectomy/tubectomy)",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-male-system-organs",
+        "class10-science-how-do-organisms-reproduce-female-system-organs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/reproductive-health"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-stis-and-prevention",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Sexually Transmitted Infections",
+      "outcome": "Classify bacterial STIs (gonorrhoea, syphilis) vs viral STIs (warts, HIV-AIDS) and explain how barrier methods prevent transmission",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-contraceptive-methods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/how-do-organisms-reproduce/reproductive-health"
+    },
+    {
+      "id": "class10-science-how-do-organisms-reproduce-sexual-vs-asexual-comparison",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "how-do-organisms-reproduce",
+      "title": "Asexual vs Sexual Reproduction",
+      "outcome": "Compare asexual and sexual reproduction in terms of parent involvement, gamete fusion, and variation generation",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-variation-niche-survival",
+        "class10-science-how-do-organisms-reproduce-fertilization-site-implantation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/how-do-organisms-reproduce/reproduction-in-human-beings"
+    },
+    {
+      "id": "class10-science-heredity-asexual-variation-origin",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Variation in Asexual Reproduction",
+      "outcome": "State that small variations in asexual reproduction arise only from minor inaccuracies during DNA replication",
+      "prerequisites": [
+        "class10-science-how-do-organisms-reproduce-dna-inaccuracies-variation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/heredity/accumulation-of-variation-during-reproduction"
+    },
+    {
+      "id": "class10-science-heredity-sexual-reproduction-diversity",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Diversity in Sexual Reproduction",
+      "outcome": "Explain why sexual reproduction generates significantly greater diversity than asexual reproduction due to combining genetic material from two parents",
+      "prerequisites": [
+        "class10-science-heredity-asexual-variation-origin",
+        "class10-science-how-do-organisms-reproduce-sexual-vs-asexual-comparison"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/accumulation-of-variation-during-reproduction"
+    },
+    {
+      "id": "class10-science-heredity-variation-accumulation-generations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Accumulation of Variations Across Generations",
+      "outcome": "Trace how newly created variations are inherited alongside pre-existing variations across successive generations of reproducing organisms",
+      "prerequisites": [
+        "class10-science-heredity-sexual-reproduction-diversity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/accumulation-of-variation-during-reproduction"
+    },
+    {
+      "id": "class10-science-heredity-variation-survival-advantage",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Survival Advantage of Variations",
+      "outcome": "Predict how specific variations, such as heat resistance in bacteria, confer a survival advantage under changing environmental conditions",
+      "prerequisites": [
+        "class10-science-heredity-variation-accumulation-generations",
+        "class10-science-how-do-organisms-reproduce-variation-niche-survival"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/accumulation-of-variation-during-reproduction"
+    },
+    {
+      "id": "class10-science-heredity-inherited-vs-acquired-traits",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Inherited vs Acquired Traits",
+      "outcome": "Classify given human traits as either inherited or acquired based on whether they are genetically transmitted",
+      "prerequisites": [
+        "class10-science-heredity-variation-accumulation-generations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/inherited-traits"
+    },
+    {
+      "id": "class10-science-heredity-somatic-vs-germ-cell-changes",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Somatic and Germ Cell Alterations",
+      "outcome": "Explain why changes in somatic cells (non-reproductive tissues) cannot alter the DNA of germ cells and therefore cannot be inherited",
+      "prerequisites": [
+        "class10-science-heredity-inherited-vs-acquired-traits"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/inherited-traits"
+    },
+    {
+      "id": "class10-science-heredity-mendel-pea-plant-selection",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Selection of Garden Pea Plant",
+      "outcome": "List the reasons why Gregor Mendel chose the garden pea (Pisum sativum) for his experiments on inheritance",
+      "prerequisites": [
+        "class10-science-heredity-inherited-vs-acquired-traits"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-contrasting-pea-characters",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Contrasting Characters in Garden Pea",
+      "outcome": "Identify pairs of contrasting traits studied by Mendel in garden peas, such as tall/dwarf plants and round/wrinkled seeds",
+      "prerequisites": [
+        "class10-science-heredity-mendel-pea-plant-selection"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-dominant-and-recessive-traits",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Dominant and Recessive Traits",
+      "outcome": "Define dominant and recessive traits based on their visible expression in the F1 progeny of a monohybrid cross",
+      "prerequisites": [
+        "class10-science-heredity-contrasting-pea-characters"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-genotype-and-phenotype-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Genotype vs Phenotype",
+      "outcome": "Distinguish between genotype and phenotype using homozygous and heterozygous allelic representations",
+      "prerequisites": [
+        "class10-science-heredity-dominant-and-recessive-traits"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-monohybrid-cross-f1-generation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Monohybrid Cross F1 Generation",
+      "outcome": "Construct a genetic cross showing that the F1 progeny of pure tall (TT) and pure dwarf (tt) pea plants are all tall (Tt)",
+      "prerequisites": [
+        "class10-science-heredity-genotype-and-phenotype-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-monohybrid-cross-f2-punnett-square",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Monohybrid Cross F2 Punnett Square",
+      "outcome": "Construct a Punnett square for the self-pollination of F1 heterozygous tall pea plants (Tt x Tt) to obtain the F2 generation",
+      "prerequisites": [
+        "class10-science-heredity-monohybrid-cross-f1-generation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-monohybrid-ratios",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Monohybrid Phenotypic and Genotypic Ratios",
+      "outcome": "Calculate the phenotypic ratio (3:1) and genotypic ratio (1:2:1) of Mendel's monohybrid F2 generation",
+      "prerequisites": [
+        "class10-science-heredity-monohybrid-cross-f2-punnett-square"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-dihybrid-cross-f1-generation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Dihybrid Cross F1 Generation",
+      "outcome": "Predict the genotype and phenotype of F1 progeny resulting from a cross between pure round yellow (RRYY) and wrinkled green (rryy) pea plants",
+      "prerequisites": [
+        "class10-science-heredity-monohybrid-cross-f1-generation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-dihybrid-cross-gamete-formation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Gamete Formation in Dihybrid Cross",
+      "outcome": "Determine the four types of gametes (RY, Ry, rY, ry) produced by a dihybrid heterozygous individual (RrYy)",
+      "prerequisites": [
+        "class10-science-heredity-dihybrid-cross-f1-generation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-dihybrid-cross-punnett-square",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Dihybrid Cross F2 Punnett Square",
+      "outcome": "Construct a 16-box Punnett square to predict all genotypes resulting from the selfing of F1 dihybrids (RrYy x RrYy)",
+      "prerequisites": [
+        "class10-science-heredity-dihybrid-cross-gamete-formation"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-independent-assortment-ratio",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Dihybrid Phenotypic Ratio (9:3:3:1)",
+      "outcome": "Derive the 9:3:3:1 phenotypic ratio in the F2 generation of a dihybrid cross demonstrating the law of independent assortment",
+      "prerequisites": [
+        "class10-science-heredity-dihybrid-cross-punnett-square"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/heredity/rules-for-the-inheritance-of-traits-mendels-contributions"
+    },
+    {
+      "id": "class10-science-heredity-gene-as-dna-segment",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Gene as Information Source for Proteins",
+      "outcome": "Identify a gene as a specific segment of DNA that provides the coded information for synthesizing a particular protein",
+      "prerequisites": [
+        "class10-science-heredity-genotype-and-phenotype-definition",
+        "class10-science-how-do-organisms-reproduce-dna-copying-mechanism"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/how-do-these-traits-get-expressed"
+    },
+    {
+      "id": "class10-science-heredity-gene-to-enzyme-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Gene Expression via Enzyme Efficiency",
+      "outcome": "Explain how altered gene sequences lead to less efficient enzymes, resulting in lower hormone production and shorter plant height",
+      "prerequisites": [
+        "class10-science-heredity-gene-as-dna-segment",
+        "class10-science-control-and-coordination-plant-hormones-functions"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/heredity/how-do-these-traits-get-expressed"
+    },
+    {
+      "id": "class10-science-heredity-paired-chromosomes-concept",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Paired Chromosomes in Somatic Cells",
+      "outcome": "Explain why chromosomes occur in homologous pairs in diploid somatic cells, with each parent contributing one chromosome per pair",
+      "prerequisites": [
+        "class10-science-heredity-gene-as-dna-segment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/how-do-these-traits-get-expressed"
+    },
+    {
+      "id": "class10-science-heredity-gametes-haploid-restoration",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Chromosome Number Restoration via Fertilization",
+      "outcome": "Explain how gamete formation halves the chromosome number so that fertilization restores the diploid number in the zygote",
+      "prerequisites": [
+        "class10-science-heredity-paired-chromosomes-concept",
+        "class10-science-how-do-organisms-reproduce-fertilization-site-implantation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/how-do-these-traits-get-expressed"
+    },
+    {
+      "id": "class10-science-heredity-sex-determination-environmental-vs-genetic",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Environmental vs Genetic Sex Determination",
+      "outcome": "Compare environmental sex determination (e.g., temperature in reptiles/snails) with genetic sex determination in humans",
+      "prerequisites": [
+        "class10-science-heredity-paired-chromosomes-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/sex-determination"
+    },
+    {
+      "id": "class10-science-heredity-human-sex-chromosomes",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Autosomes and Sex Chromosomes in Humans",
+      "outcome": "Identify that humans possess 22 pairs of autosomes and 1 pair of sex chromosomes (XX in females, XY in males)",
+      "prerequisites": [
+        "class10-science-heredity-paired-chromosomes-concept"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/heredity/sex-determination"
+    },
+    {
+      "id": "class10-science-heredity-sex-determination-cross-diagram",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Human Sex Determination Cross Diagram",
+      "outcome": "Draw a cross diagram showing the inheritance of XX and XY chromosomes to demonstrate the 50% statistical probability of male or female offspring",
+      "prerequisites": [
+        "class10-science-heredity-human-sex-chromosomes",
+        "class10-science-heredity-gametes-haploid-restoration"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/heredity/sex-determination"
+    },
+    {
+      "id": "class10-science-heredity-paternal-role-in-sex-determination",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "heredity",
+      "title": "Role of Father's Gamete in Sex Determination",
+      "outcome": "Explain why the father's sperm, containing either an X or a Y chromosome, determines the biological sex of the child",
+      "prerequisites": [
+        "class10-science-heredity-sex-determination-cross-diagram"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/heredity/sex-determination"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-laws-of-reflection",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Laws of Reflection",
+      "outcome": "State the two fundamental laws of reflection of light",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/light-reflection-and-refraction/reflection-of-light"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-plane-mirror-image-properties",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Plane Mirror Image Characteristics",
+      "outcome": "List the properties of an image formed by a plane mirror including lateral inversion, size, and virtual nature",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-laws-of-reflection"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/light-reflection-and-refraction/reflection-of-light"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-spherical-mirror-terms",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Spherical Mirror Definitions",
+      "outcome": "Define pole, center of curvature, radius of curvature, principal axis, and aperture of spherical mirrors",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/light-reflection-and-refraction/spherical-mirrors"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-focus-and-focal-length",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Principal Focus and Focal Length",
+      "outcome": "Distinguish between the principal focus of concave and convex mirrors and define focal length",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-spherical-mirror-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/spherical-mirrors"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-radius-focal-length-relation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Radius and Focal Length Relation",
+      "outcome": "Apply the relationship R = 2f to calculate the radius of curvature or focal length for small-aperture spherical mirrors",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-focus-and-focal-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/spherical-mirrors"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-mirror-ray-tracing-rules",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Ray Tracing Rules for Mirrors",
+      "outcome": "Trace the path of reflected rays for incident rays parallel to the axis, through focus, through center of curvature, and oblique to the pole",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-laws-of-reflection",
+        "class10-science-light-reflection-and-refraction-focus-and-focal-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/representation-of-images-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-concave-mirror-ray-diagrams",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Concave Mirror Image Formation",
+      "outcome": "Construct ray diagrams to determine the position, nature, and size of images formed by a concave mirror for different object positions",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-mirror-ray-tracing-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/representation-of-images-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-convex-mirror-ray-diagrams",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Convex Mirror Image Formation",
+      "outcome": "Construct ray diagrams to show the formation of virtual, erect, and diminished images by a convex mirror",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-mirror-ray-tracing-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/representation-of-images-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-spherical-mirror-applications",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Applications of Spherical Mirrors",
+      "outcome": "Identify practical uses of concave mirrors (shaving, solar furnaces, torches) and convex mirrors (rear-view mirrors) based on image characteristics",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-concave-mirror-ray-diagrams",
+        "class10-science-light-reflection-and-refraction-convex-mirror-ray-diagrams"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-by-spherical-mirrors"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-mirror-sign-convention",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Cartesian Sign Convention for Mirrors",
+      "outcome": "Apply the New Cartesian Sign Convention to assign correct signs to object distance, image distance, focal length, and object/image heights for mirrors",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-focus-and-focal-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/sign-convention-for-reflection"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-mirror-formula-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Mirror Formula and Magnification",
+      "outcome": "Calculate image distance, object distance, focal length, and magnification using 1/v + 1/u = 1/f and m = -v/u = h'/h",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-mirror-sign-convention"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/light-reflection-and-refraction/mirror-formula-and-magnification"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-cause-of-refraction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Concept and Cause of Refraction",
+      "outcome": "Explain refraction as the bending of light at the boundary of two media due to a change in the speed of light",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/light-reflection-and-refraction/refraction-of-light"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-laws-of-refraction-snell",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Laws of Refraction and Snell's Law",
+      "outcome": "State the laws of refraction and express Snell's law mathematically as sin i / sin r = constant",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-cause-of-refraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/refraction-of-light"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-refraction-glass-slab",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Refraction Through a Glass Slab",
+      "outcome": "Trace the path of a ray through a parallel-sided glass slab and demonstrate that emergent ray is parallel to incident ray with lateral displacement",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-laws-of-refraction-snell"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/refraction-through-a-rectangular-glass-slab"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-refractive-index-speed",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Absolute and Relative Refractive Index",
+      "outcome": "Calculate absolute and relative refractive indices using light speed in vacuum and the respective media (n = c/v, n21 = v1/v2)",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-cause-of-refraction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/the-refractive-index"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-optical-density",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Optical Density and Ray Bending",
+      "outcome": "Predict whether a light ray bends towards or away from the normal when passing between optically rarer and denser media",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-refractive-index-speed"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/the-refractive-index"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-spherical-lens-terms",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Spherical Lens Terminology",
+      "outcome": "Define optical center, principal axis, principal focus, and focal length for convex (converging) and concave (diverging) lenses",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-optical-density"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/refraction-by-spherical-lenses"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-lens-ray-tracing-rules",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Ray Tracing Rules for Lenses",
+      "outcome": "Trace principal rays passing through a spherical lens: parallel to axis, through focus, and through optical center without deviation",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-spherical-lens-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-in-lenses-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-convex-lens-ray-diagrams",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Convex Lens Image Formation",
+      "outcome": "Construct ray diagrams to determine the position, nature, and size of images formed by a convex lens for various object positions",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-lens-ray-tracing-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-in-lenses-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-concave-lens-ray-diagrams",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Concave Lens Image Formation",
+      "outcome": "Construct ray diagrams showing that a concave lens always forms a virtual, erect, and diminished image for any finite position",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-lens-ray-tracing-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-in-lenses-using-ray-diagrams"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-lens-sign-convention",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Cartesian Sign Convention for Lenses",
+      "outcome": "Apply Cartesian Sign Convention to assign correct positive and negative signs to u, v, f, and heights in spherical lens setups",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-spherical-lens-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/sign-convention-for-spherical-lenses"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-lens-formula-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Lens Formula and Magnification",
+      "outcome": "Solve numerical problems to determine object distance, image distance, and magnification using 1/v - 1/u = 1/f and m = v/u = h'/h",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-lens-sign-convention"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/light-reflection-and-refraction/lens-formula-and-magnification"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-lens-power-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Power of a Lens and Dioptre",
+      "outcome": "Calculate the power of a lens using P = 1/f (in meters) and state its SI unit as dioptre (D)",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-spherical-lens-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/power-of-a-lens"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-combination-of-lenses",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Power of Lens Combinations",
+      "outcome": "Calculate the net power and net focal length of multiple thin lenses placed in contact using P = P1 + P2 + ...",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-lens-power-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/light-reflection-and-refraction/power-of-a-lens"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-eye-anatomy-label",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Label Human Eye Anatomy",
+      "outcome": "Identify and label cornea, iris, pupil, crystalline lens, ciliary muscles, retina, and optic nerve on a diagram of the human eye",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/the-human-eye"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-eye-parts-functions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Functions of Eye Components",
+      "outcome": "State the individual functions of the cornea, iris, pupil, crystalline lens, ciliary muscles, and retina in image formation",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-eye-anatomy-label"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/the-human-eye"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-pupil-regulation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Pupil Size Regulation",
+      "outcome": "Explain how the iris regulates the size of the pupil in response to bright and dim light conditions",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-eye-parts-functions",
+        "class10-science-control-and-coordination-reflex-action-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/the-human-eye"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-retina-signal-generation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Retinal Signal Generation",
+      "outcome": "Describe how photoreceptor cells (rods and cones) on the retina convert light stimuli into electrical impulses sent via the optic nerve",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-eye-parts-functions",
+        "class10-science-control-and-coordination-nerve-impulse-transmission"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/the-human-eye"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-accommodation-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Mechanism of Accommodation",
+      "outcome": "Explain how the contraction and relaxation of ciliary muscles alter the curvature and focal length of the crystalline lens to view near and distant objects",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-eye-parts-functions",
+        "class10-science-light-reflection-and-refraction-focus-and-focal-length"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/power-of-accommodation"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-near-and-far-points",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Near Point and Far Point",
+      "outcome": "State the values of the near point (least distance of distinct vision, 25 cm) and the far point (infinity) for a normal human eye",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-accommodation-mechanism"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/power-of-accommodation"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-myopia-causes-and-symptoms",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Causes of Myopia",
+      "outcome": "Identify the symptoms of myopia (near-sightedness) and state its two main causes: excessive curvature of the eye lens and elongation of the eyeball",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-near-and-far-points"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-myopia-ray-diagram-correction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Myopia Correction Ray Diagram",
+      "outcome": "Draw ray diagrams showing image formation in a myopic eye and its correction using a concave lens of suitable focal length",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-myopia-causes-and-symptoms",
+        "class10-science-light-reflection-and-refraction-concave-lens-ray-diagrams"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-hypermetropia-causes-and-symptoms",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Causes of Hypermetropia",
+      "outcome": "Identify the symptoms of hypermetropia (far-sightedness) and state its two main causes: focal length of eye lens being too long and eyeball becoming too small",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-near-and-far-points"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-hypermetropia-ray-diagram-correction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Hypermetropia Correction Ray Diagram",
+      "outcome": "Draw ray diagrams showing image formation in a hypermetropic eye and its correction using a convex lens of suitable focal length",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-hypermetropia-causes-and-symptoms",
+        "class10-science-light-reflection-and-refraction-convex-lens-ray-diagrams"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-defects-lens-power-calculation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Calculate Corrective Lens Power",
+      "outcome": "Calculate the required focal length and power of a corrective lens for myopic or hypermetropic vision using the lens formula",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-myopia-ray-diagram-correction",
+        "class10-science-the-human-eye-and-the-colorful-world-hypermetropia-ray-diagram-correction",
+        "class10-science-light-reflection-and-refraction-lens-formula-calculations",
+        "class10-science-light-reflection-and-refraction-lens-power-definition"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-presbyopia-and-bifocal-lenses",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Presbyopia and Bifocal Lenses",
+      "outcome": "Explain the cause of presbyopia due to aging and weakening of ciliary muscles, and describe the structure of bi-focal lenses used for its correction",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-accommodation-mechanism",
+        "class10-science-the-human-eye-and-the-colorful-world-hypermetropia-causes-and-symptoms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/defects-of-vision-and-their-correction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-prism-refraction-ray-trace",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Trace Refraction Through Prism",
+      "outcome": "Trace the path of a monochromatic light ray through a triangular glass prism, labeling angle of incidence, angle of refraction, angle of emergence, and angle of deviation",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-laws-of-refraction-snell",
+        "class10-science-light-reflection-and-refraction-refraction-glass-slab"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/refraction-of-light-through-a-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-prism-deviation-cause",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Cause of Prism Deviation",
+      "outcome": "Explain why a ray of light bends towards the base of a triangular prism at both refracting surfaces due to the non-parallel geometry of the faces",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-prism-refraction-ray-trace"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/refraction-of-light-through-a-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-dispersion-definition-order",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Dispersion of White Light",
+      "outcome": "Define dispersion of white light and list the seven spectrum colors in order of increasing deviation (VIBGYOR)",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-prism-refraction-ray-trace"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/dispersion-of-white-light-by-a-glass-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-dispersion-cause-wavelength-speed",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Physical Cause of Dispersion",
+      "outcome": "Explain dispersion by relating the differing refractive indices and bending angles of constituent colors to their different speeds and wavelengths in glass",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-dispersion-definition-order",
+        "class10-science-light-reflection-and-refraction-refractive-index-speed"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/dispersion-of-white-light-by-a-glass-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-newton-double-prism-recombination",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Newton Recombination Experiment",
+      "outcome": "Describe Newton's experiment with an inverted second prism that recombines the dispersed spectrum colors back into white light",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-dispersion-cause-wavelength-speed"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/dispersion-of-white-light-by-a-glass-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-rainbow-formation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Rainbow Formation in Atmosphere",
+      "outcome": "Trace the path of sunlight in a water droplet involving refraction, dispersion, internal reflection, and final refraction to explain rainbow formation",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-dispersion-cause-wavelength-speed"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/dispersion-of-white-light-by-a-glass-prism"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-atmospheric-refraction-concept",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Atmospheric Refraction Principle",
+      "outcome": "Explain how continuously changing optical density and refractive index of atmospheric air layers cause atmospheric refraction of light",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-optical-density"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/atmospheric-refraction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-twinkling-of-stars",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Twinkling of Stars",
+      "outcome": "Explain the twinkling of stars and their apparent higher position in the sky due to atmospheric refraction of point-source light",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-atmospheric-refraction-concept"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/atmospheric-refraction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-planets-do-not-twinkle",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Why Planets Do Not Twinkle",
+      "outcome": "Explain why planets do not twinkle by modeling them as extended sources consisting of a collection of point sources whose intensity variations average out to zero",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-twinkling-of-stars"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/atmospheric-refraction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-early-sunrise-delayed-sunset",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Advanced Sunrise and Delayed Sunset",
+      "outcome": "Explain the apparent 2-minute advance in sunrise and 2-minute delay in sunset caused by atmospheric bending of light over the horizon",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-atmospheric-refraction-concept"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/atmospheric-refraction"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-tyndall-effect",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Tyndall Effect Mechanism",
+      "outcome": "Describe the Tyndall effect and explain how colloidal particles scatter light to make the path of a light beam visible in colloidal solutions and smoke-filled rooms",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-cause-of-refraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/scattering-of-light"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-rayleigh-scattering-particle-size",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Particle Size vs Scattered Color",
+      "outcome": "State the relationship between scattering particle size and the wavelength of light scattered, distinguishing fine particles scattering blue light from large particles scattering white light",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-tyndall-effect"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/scattering-of-light"
+    },
+    {
+      "id": "class10-science-the-human-eye-and-the-colorful-world-blue-sky-red-sun",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "the-human-eye-and-the-colorful-world",
+      "title": "Blue Sky and Reddish Sun Phenomena",
+      "outcome": "Explain why the clear sky is blue and why the sun appears reddish at sunrise and sunset in terms of selective scattering over varying path lengths of atmosphere",
+      "prerequisites": [
+        "class10-science-the-human-eye-and-the-colorful-world-rayleigh-scattering-particle-size"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/the-human-eye-and-the-colorful-world/scattering-of-light"
+    },
+    {
+      "id": "class10-science-electricity-electric-charge-and-current",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Electric Current Definition and Unit",
+      "outcome": "Define electric current as the rate of flow of electric charge and state its SI unit Ampere",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/electricity/electric-current-and-circuit"
+    },
+    {
+      "id": "class10-science-electricity-charge-current-time-calculation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Calculate Current from Charge and Time",
+      "outcome": "Calculate electric current, charge, or time using the relation I = Q / t",
+      "prerequisites": [
+        "class10-science-electricity-electric-charge-and-current"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/electric-current-and-circuit"
+    },
+    {
+      "id": "class10-science-electricity-direction-of-current",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Direction of Conventional Current vs Electron Flow",
+      "outcome": "Trace the direction of conventional current relative to the flow of electrons in an electric circuit",
+      "prerequisites": [
+        "class10-science-electricity-electric-charge-and-current"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/electric-current-and-circuit"
+    },
+    {
+      "id": "class10-science-electricity-potential-difference-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Potential Difference Definition and Unit",
+      "outcome": "Define electric potential difference between two points and state its SI unit Volt",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/electricity/electric-potential-and-potential-difference"
+    },
+    {
+      "id": "class10-science-electricity-potential-work-charge-calculation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Calculate Potential Difference, Work, and Charge",
+      "outcome": "Calculate the work done in moving a charge across a potential difference using V = W / Q",
+      "prerequisites": [
+        "class10-science-electricity-potential-difference-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/electric-potential-and-potential-difference"
+    },
+    {
+      "id": "class10-science-electricity-circuit-component-symbols",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Circuit Component Schematic Symbols",
+      "outcome": "Draw and identify schematic symbols for cells, batteries, switches, resistors, rheostats, ammeters, and voltmeters",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/electricity/circuit-diagram"
+    },
+    {
+      "id": "class10-science-electricity-ammeter-voltmeter-connection",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Connect Ammeter and Voltmeter in Circuit",
+      "outcome": "Connect an ammeter in series and a voltmeter in parallel across a component in a circuit diagram",
+      "prerequisites": [
+        "class10-science-electricity-circuit-component-symbols",
+        "class10-science-electricity-electric-charge-and-current",
+        "class10-science-electricity-potential-difference-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/circuit-diagram"
+    },
+    {
+      "id": "class10-science-electricity-ohms-law-statement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "State Ohm's Law",
+      "outcome": "State Ohm's law and write its mathematical equation V = I R",
+      "prerequisites": [
+        "class10-science-electricity-electric-charge-and-current",
+        "class10-science-electricity-potential-difference-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/electricity/ohms-law"
+    },
+    {
+      "id": "class10-science-electricity-v-i-graph-resistance",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Interpret V-I Graph for Resistance",
+      "outcome": "Construct and interpret a V-I graph for an ohmic conductor to determine its resistance from the slope",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/ohms-law"
+    },
+    {
+      "id": "class10-science-electricity-resistance-factors",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Factors Affecting Resistance",
+      "outcome": "State how the resistance of a conductor depends on its length, area of cross-section, and material",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/factors-on-which-the-resistance-of-a-conductor-depends"
+    },
+    {
+      "id": "class10-science-electricity-resistivity-definition-and-unit",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Resistivity Definition and SI Unit",
+      "outcome": "Define electrical resistivity of a material and state its SI unit Ohm-metre",
+      "prerequisites": [
+        "class10-science-electricity-resistance-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/factors-on-which-the-resistance-of-a-conductor-depends"
+    },
+    {
+      "id": "class10-science-electricity-resistivity-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Calculate Resistance Using Dimensions and Resistivity",
+      "outcome": "Calculate the resistance or resistivity of a wire using the formula R = rho * l / A",
+      "prerequisites": [
+        "class10-science-electricity-resistivity-definition-and-unit"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/factors-on-which-the-resistance-of-a-conductor-depends"
+    },
+    {
+      "id": "class10-science-electricity-resistors-in-series-derivation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Derive Equivalent Resistance for Series Resistors",
+      "outcome": "Derive the formula for the equivalent resistance of resistors connected in series (Rs = R1 + R2 + ...)",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement",
+        "class10-science-electricity-ammeter-voltmeter-connection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/resistors-in-series"
+    },
+    {
+      "id": "class10-science-electricity-resistors-in-series-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Solve Series Circuit Problems",
+      "outcome": "Calculate the total resistance, overall current, and individual voltage drops across resistors in a series circuit",
+      "prerequisites": [
+        "class10-science-electricity-resistors-in-series-derivation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/resistors-in-series"
+    },
+    {
+      "id": "class10-science-electricity-resistors-in-parallel-derivation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Derive Equivalent Resistance for Parallel Resistors",
+      "outcome": "Derive the formula for the equivalent resistance of resistors connected in parallel (1/Rp = 1/R1 + 1/R2 + ...)",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement",
+        "class10-science-electricity-ammeter-voltmeter-connection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/resistors-in-parallel"
+    },
+    {
+      "id": "class10-science-electricity-resistors-in-parallel-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Solve Parallel Circuit Problems",
+      "outcome": "Calculate the total resistance, individual branch currents, and total current in a parallel circuit",
+      "prerequisites": [
+        "class10-science-electricity-resistors-in-parallel-derivation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/resistors-in-parallel"
+    },
+    {
+      "id": "class10-science-electricity-series-vs-parallel-comparison",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Compare Series and Parallel Circuits in Domestic Wiring",
+      "outcome": "Explain the advantages of parallel arrangements over series arrangements in domestic electric circuits",
+      "prerequisites": [
+        "class10-science-electricity-resistors-in-series-calculations",
+        "class10-science-electricity-resistors-in-parallel-calculations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/resistors-in-parallel"
+    },
+    {
+      "id": "class10-science-electricity-combination-circuits-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Analyze Mixed Series-Parallel Resistor Circuits",
+      "outcome": "Calculate the equivalent resistance and current distribution in circuits containing mixed series and parallel combinations",
+      "prerequisites": [
+        "class10-science-electricity-resistors-in-series-calculations",
+        "class10-science-electricity-resistors-in-parallel-calculations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/electricity/resistors-in-parallel"
+    },
+    {
+      "id": "class10-science-electricity-joules-law-derivation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Derive Joule's Law of Heating",
+      "outcome": "Derive Joule's law of heating equation H = I^2 R t from the definitions of work, potential difference, and current",
+      "prerequisites": [
+        "class10-science-electricity-potential-work-charge-calculation",
+        "class10-science-electricity-charge-current-time-calculation",
+        "class10-science-electricity-ohms-law-statement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/heating-effect-of-electric-current"
+    },
+    {
+      "id": "class10-science-electricity-heat-energy-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Calculate Heat Generated in a Resistor",
+      "outcome": "Calculate the heat produced in a resistor given current, resistance, and operating time using H = I^2 R t",
+      "prerequisites": [
+        "class10-science-electricity-joules-law-derivation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/heating-effect-of-electric-current"
+    },
+    {
+      "id": "class10-science-electricity-heating-appliances-and-alloys",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Explain Use of Alloys in Heating Appliances",
+      "outcome": "Explain why alloys with high resistivity and high melting points (like nichrome) are used in electric heating elements rather than pure metals",
+      "prerequisites": [
+        "class10-science-electricity-resistivity-definition-and-unit",
+        "class10-science-electricity-joules-law-derivation",
+        "class10-science-metals-and-non-metals-alloys-composition-properties"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/electricity/practical-applications-of-heating-effect"
+    },
+    {
+      "id": "class10-science-electricity-electric-fuse-working",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Explain Safety Function and Rating of Electric Fuse",
+      "outcome": "Describe how an electric fuse protects circuits from overloading and short-circuiting based on its current rating and melting point",
+      "prerequisites": [
+        "class10-science-electricity-joules-law-derivation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/practical-applications-of-heating-effect"
+    },
+    {
+      "id": "class10-science-electricity-electric-power-formulas",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Derive and Calculate Electric Power",
+      "outcome": "Express electric power using P = V I = I^2 R = V^2 / R and calculate the power rating of an electrical appliance",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement",
+        "class10-science-electricity-joules-law-derivation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/electric-power"
+    },
+    {
+      "id": "class10-science-electricity-commercial-unit-energy",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "electricity",
+      "title": "Convert Electrical Energy to Commercial Units (kWh)",
+      "outcome": "Calculate electrical energy consumed by domestic appliances and convert between Joules and kilowatt-hours (1 kWh = 3.6 x 10^6 J)",
+      "prerequisites": [
+        "class10-science-electricity-electric-power-formulas"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/electricity/electric-power"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-magnetic-field-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Magnetic Field Concept",
+      "outcome": "Define a magnetic field as the region around a magnet where its magnetic force can be detected",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-and-field-lines"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-field-lines-plotting",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Plotting Magnetic Field Lines",
+      "outcome": "Plot the pattern of magnetic field lines around a bar magnet using iron filings or a magnetic compass",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-magnetic-field-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-and-field-lines"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-field-lines-direction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Direction of Magnetic Field Lines",
+      "outcome": "State that magnetic field lines emerge from the North pole and merge at the South pole outside a magnet, and run South to North inside",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-field-lines-plotting"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-and-field-lines"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-field-lines-properties",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Properties of Field Lines",
+      "outcome": "Explain why two magnetic field lines never intersect each other and form continuous closed loops",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-field-lines-direction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-and-field-lines"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-field-strength-crowding",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Field Strength and Line Density",
+      "outcome": "Relate the degree of closeness of magnetic field lines to the relative strength of the magnetic field in that region",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-field-lines-properties"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-and-field-lines"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-oersted-experiment",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Oersted Experiment",
+      "outcome": "Describe Oersted's observation that an electric current in a wire deflects a nearby magnetic compass needle",
+      "prerequisites": [
+        "class10-science-electricity-electric-charge-and-current",
+        "class10-science-magnetic-effects-of-electric-current-magnetic-field-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-carrying-conductor"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-straight-conductor-pattern",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Field Pattern around Straight Wire",
+      "outcome": "Describe the pattern of magnetic field lines around a straight current-carrying conductor as concentric circles centered on the wire",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-oersted-experiment",
+        "class10-science-magnetic-effects-of-electric-current-field-lines-plotting"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-carrying-conductor"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-straight-conductor-factors",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Factors Affecting Straight Wire Field",
+      "outcome": "State how the magnetic field strength of a straight conductor varies directly with current and inversely with distance from the wire",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-straight-conductor-pattern",
+        "class10-science-magnetic-effects-of-electric-current-field-strength-crowding"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-carrying-conductor"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-right-hand-thumb-rule",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Right-Hand Thumb Rule",
+      "outcome": "Apply the Right-Hand Thumb Rule to find the direction of magnetic field lines for a given direction of electric current in a straight wire",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-straight-conductor-pattern",
+        "class10-science-electricity-direction-of-current"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-carrying-conductor"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-circular-loop-pattern",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Field Pattern of Circular Loop",
+      "outcome": "Trace the magnetic field lines produced by a circular loop carrying current, noting that lines appear nearly straight and parallel at the center",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-right-hand-thumb-rule"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-through-a-circular-loop"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-circular-loop-turn-dependence",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Field Strength vs Turns in Loop",
+      "outcome": "Explain why increasing the number of turns in a circular coil increases the magnetic field strength proportionally at its center",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-circular-loop-pattern"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-through-a-circular-loop"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-solenoid-definition-and-field",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Solenoid Field Pattern",
+      "outcome": "Describe the magnetic field inside a current-carrying solenoid as uniform and parallel, resembling the field of a bar magnet",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-circular-loop-turn-dependence",
+        "class10-science-magnetic-effects-of-electric-current-field-strength-crowding"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-in-a-solenoid"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-electromagnet-construction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Electromagnet Construction",
+      "outcome": "Explain how inserting a soft iron core inside a current-carrying solenoid produces a strong temporary magnet called an electromagnet",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-solenoid-definition-and-field"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-in-a-solenoid"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-permanent-vs-electromagnet",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Electromagnet vs Permanent Magnet",
+      "outcome": "Compare electromagnets and permanent magnets in terms of polarity reversibility, strength control, and temporary magnetization",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-electromagnet-construction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/magnetic-field-due-to-current-in-a-solenoid"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-force-on-conductor-observation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Force on Conductor in Field",
+      "outcome": "Describe the displacement of a current-carrying rod placed in a magnetic field due to the mechanical force exerted on it",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-magnetic-field-definition",
+        "class10-science-magnetic-effects-of-electric-current-straight-conductor-pattern"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/force-on-a-current-carrying-conductor-in-a-magnetic-field"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-force-dependence-factors",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Factors Affecting Magnetic Force",
+      "outcome": "Identify that the magnetic force on a conductor is maximized when the direction of current is perpendicular to the magnetic field",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-force-on-conductor-observation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/force-on-a-current-carrying-conductor-in-a-magnetic-field"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-flemings-left-hand-rule",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Fleming's Left-Hand Rule",
+      "outcome": "Apply Fleming's Left-Hand Rule to determine the direction of force acting on a current-carrying conductor in a magnetic field",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-force-dependence-factors"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/force-on-a-current-carrying-conductor-in-a-magnetic-field"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-deflection-charged-particles",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Deflection of Charged Particles",
+      "outcome": "Predict the direction of deflection of moving charged particles (such as alpha particles or electrons) entering a magnetic field using Fleming's Left-Hand Rule",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-flemings-left-hand-rule"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/force-on-a-current-carrying-conductor-in-a-magnetic-field"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-domestic-wires-color-coding",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Domestic Wiring and Color Codes",
+      "outcome": "Identify the live wire (red/brown), neutral wire (black/blue), and earth wire (green/yellow) and state their potential difference in Indian domestic supply",
+      "prerequisites": [
+        "class10-science-electricity-potential-difference-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-domestic-parallel-connection",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Parallel Arrangement in Households",
+      "outcome": "Explain why household appliances are connected in parallel across the live and neutral lines rather than in series",
+      "prerequisites": [
+        "class10-science-electricity-series-vs-parallel-comparison",
+        "class10-science-magnetic-effects-of-electric-current-domestic-wires-color-coding"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-earthing-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Safety Role of Earth Wire",
+      "outcome": "Explain how connecting the metallic casing of an appliance to the earth wire provides a low-resistance path to protect users from severe electric shocks",
+      "prerequisites": [
+        "class10-science-magnetic-effects-of-electric-current-domestic-wires-color-coding",
+        "class10-science-electricity-resistance-factors"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-short-circuiting",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Short-Circuiting Phenomenon",
+      "outcome": "Explain short-circuiting as the direct contact between live and neutral wires causing circuit resistance to drop to near zero and current to spike abruptly",
+      "prerequisites": [
+        "class10-science-electricity-ohms-law-statement",
+        "class10-science-magnetic-effects-of-electric-current-domestic-wires-color-coding"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-overloading",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Overloading in Domestic Circuits",
+      "outcome": "Explain overloading as drawing current beyond the safe carrying capacity of a circuit due to connecting too many appliances to a single socket or voltage surges",
+      "prerequisites": [
+        "class10-science-electricity-electric-power-formulas",
+        "class10-science-magnetic-effects-of-electric-current-domestic-wires-color-coding"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-magnetic-effects-of-electric-current-fuse-safety-action",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "magnetic-effects-of-electric-current",
+      "title": "Fuse Protection in Overload and Short-Circuit",
+      "outcome": "Apply Joule's heating effect to explain how an electric fuse breaks the circuit during short-circuiting or overloading to prevent electrical fires",
+      "prerequisites": [
+        "class10-science-electricity-electric-fuse-working",
+        "class10-science-magnetic-effects-of-electric-current-short-circuiting",
+        "class10-science-magnetic-effects-of-electric-current-overloading"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/magnetic-effects-of-electric-current/domestic-electric-circuits"
+    },
+    {
+      "id": "class10-science-our-environment-biodegradable-substances-define",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Biodegradable substances definition",
+      "outcome": "Define biodegradable substances as materials that can be broken down into simpler substances by biological processes",
+      "prerequisites": [
+        "sci10-lp-nutrition-two-modes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/add-waste-to-environment"
+    },
+    {
+      "id": "class10-science-our-environment-non-biodegradable-substances-define",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Non-biodegradable substances definition",
+      "outcome": "Define non-biodegradable substances as materials that are not broken down by biological processes and persist in the environment",
+      "prerequisites": [
+        "class10-science-our-environment-biodegradable-substances-define"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/add-waste-to-environment"
+    },
+    {
+      "id": "class10-science-our-environment-classify-waste-types",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Classifying waste substances",
+      "outcome": "Classify a given list of daily household wastes into biodegradable and non-biodegradable categories",
+      "prerequisites": [
+        "class10-science-our-environment-non-biodegradable-substances-define"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/add-waste-to-environment"
+    },
+    {
+      "id": "class10-science-our-environment-enzyme-specificity-waste-breakdown",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Enzymatic specificity and persistence",
+      "outcome": "Explain the environmental persistence of plastics and synthetic materials in terms of the specific catalytic nature of microbial enzymes",
+      "prerequisites": [
+        "sci10-lp-saliva-enzyme",
+        "class10-science-our-environment-non-biodegradable-substances-define"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/add-waste-to-environment"
+    },
+    {
+      "id": "class10-science-our-environment-ecosystem-definition-and-types",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Ecosystem definition and types",
+      "outcome": "Define an ecosystem and distinguish between natural ecosystems and artificial ecosystems with examples",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/ecosystem-components"
+    },
+    {
+      "id": "class10-science-our-environment-biotic-and-abiotic-components",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Biotic and abiotic components",
+      "outcome": "Distinguish between the biotic factors and abiotic physical factors operating within an ecosystem",
+      "prerequisites": [
+        "class10-science-our-environment-ecosystem-definition-and-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/ecosystem-components"
+    },
+    {
+      "id": "class10-science-our-environment-producers-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Role of producers",
+      "outcome": "Identify autotrophs and photosynthetic organisms as the producers that convert solar energy into chemical energy",
+      "prerequisites": [
+        "sci10-lp-photo-inputs",
+        "class10-science-our-environment-biotic-and-abiotic-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/ecosystem-components"
+    },
+    {
+      "id": "class10-science-our-environment-consumers-classification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Classification of consumers",
+      "outcome": "Classify consumers into herbivores, carnivores, omnivores, and parasites based on their feeding habits",
+      "prerequisites": [
+        "class10-science-our-environment-biotic-and-abiotic-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/ecosystem-components"
+    },
+    {
+      "id": "class10-science-our-environment-decomposers-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Role of decomposers",
+      "outcome": "Explain how decomposers break down complex organic remains into inorganic substances to replenish soil nutrients",
+      "prerequisites": [
+        "class10-science-our-environment-biodegradable-substances-define",
+        "class10-science-our-environment-biotic-and-abiotic-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/ecosystem-components"
+    },
+    {
+      "id": "class10-science-our-environment-food-chain-construction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Constructing food chains",
+      "outcome": "Construct a linear food chain showing the sequential transfer of matter and energy in terrestrial and aquatic habitats",
+      "prerequisites": [
+        "class10-science-our-environment-producers-role",
+        "class10-science-our-environment-consumers-classification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-trophic-levels-identification",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Identifying trophic levels",
+      "outcome": "Identify the trophic level occupied by specific organisms in a given food chain",
+      "prerequisites": [
+        "class10-science-our-environment-food-chain-construction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-solar-energy-capture-rate",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Solar energy capture by green plants",
+      "outcome": "State that green plants in a terrestrial ecosystem capture about 1 percent of the total solar energy falling on their leaves",
+      "prerequisites": [
+        "class10-science-our-environment-producers-role"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-ten-percent-law-statement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Ten percent law of energy transfer",
+      "outcome": "State the 10 percent law governing the average amount of organic matter passed to the next trophic level",
+      "prerequisites": [
+        "class10-science-our-environment-trophic-levels-identification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-energy-transfer-calculations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Calculating energy at trophic levels",
+      "outcome": "Calculate the available energy at subsequent trophic levels given the energy present at producer or primary consumer level",
+      "prerequisites": [
+        "class10-science-our-environment-solar-energy-capture-rate",
+        "class10-science-our-environment-ten-percent-law-statement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-food-chain-length-limitation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Limitation of food chain length",
+      "outcome": "Explain why food chains generally consist of only 3 to 4 trophic levels based on progressive energy loss",
+      "prerequisites": [
+        "class10-science-our-environment-ten-percent-law-statement"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-unidirectional-energy-flow",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Unidirectional energy flow",
+      "outcome": "Explain why the flow of energy in an ecosystem is unidirectional and cannot revert to previous levels",
+      "prerequisites": [
+        "class10-science-our-environment-ten-percent-law-statement"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-food-web-interpretation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Interpreting food webs",
+      "outcome": "Trace interconnected feeding relationships across branching lines in a food web diagram",
+      "prerequisites": [
+        "class10-science-our-environment-food-chain-construction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-biological-magnification-mechanism",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Biological magnification mechanism",
+      "outcome": "Explain how non-biodegradable chemicals progressively accumulate in higher concentrations at successive trophic levels",
+      "prerequisites": [
+        "class10-science-our-environment-non-biodegradable-substances-define",
+        "class10-science-our-environment-trophic-levels-identification"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-human-top-trophic-accumulation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Pesticide accumulation in humans",
+      "outcome": "Predict which organism in a given food chain carries the maximum concentration of pesticides by identifying the top consumer",
+      "prerequisites": [
+        "class10-science-our-environment-biological-magnification-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/food-chains-and-webs"
+    },
+    {
+      "id": "class10-science-our-environment-ozone-molecule-and-protective-role",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Ozone structure and UV shield role",
+      "outcome": "Describe the ozone molecule (O3) and explain its protective function in shielding Earth from harmful solar ultraviolet (UV) radiation",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-science/our-environment/ozone-layer-depletion"
+    },
+    {
+      "id": "class10-science-our-environment-ozone-formation-equations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Chemical equations of ozone formation",
+      "outcome": "Write the two-step balanced chemical reaction showing the splitting of molecular oxygen by UV rays and its combination to form ozone",
+      "prerequisites": [
+        "sci10-chem-read-equation",
+        "class10-science-our-environment-ozone-molecule-and-protective-role"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/our-environment/ozone-layer-depletion"
+    },
+    {
+      "id": "class10-science-our-environment-cfcs-and-ozone-depletion",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "CFCs and ozone layer depletion",
+      "outcome": "Explain the role of synthetic chemicals like chlorofluorocarbons (CFCs) from refrigerants and fire extinguishers in depleting stratospheric ozone",
+      "prerequisites": [
+        "class10-science-our-environment-ozone-formation-equations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/ozone-layer-depletion"
+    },
+    {
+      "id": "class10-science-our-environment-waste-management-methods",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Solid waste disposal methods",
+      "outcome": "Describe municipal waste disposal methods including sanitary landfills, composting, biogas generation, and sewage treatment plants",
+      "prerequisites": [
+        "class10-science-our-environment-classify-waste-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/managing-garbage"
+    },
+    {
+      "id": "class10-science-our-environment-lifestyle-and-three-rs",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "our-environment",
+      "title": "Reducing garbage footprint via 3Rs",
+      "outcome": "Apply the principles of Reduce, Recycle, and Reuse to evaluate the environmental impact of daily consumer choices like disposable cups",
+      "prerequisites": [
+        "class10-science-our-environment-classify-waste-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/our-environment/managing-garbage"
     }
   ]
 }

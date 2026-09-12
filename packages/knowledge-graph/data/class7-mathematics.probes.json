@@ -1,0 +1,3479 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class7-mathematics-integers-closure-addition",
+      "nodeId": "class7-mathematics-integers-closure-addition",
+      "question": "Which statement is always true when you add any two integers?",
+      "options": [
+        "The result is always a positive integer.",
+        "The result is always zero.",
+        "The result is always greater than both numbers.",
+        "The result is always an integer."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks adding any two numbers must produce a positive outcome",
+        "confuses general addition with adding additive inverses",
+        "assumes addition always increases value, forgetting negative integers reduce the sum",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-closure-subtraction",
+      "nodeId": "class7-mathematics-integers-closure-subtraction",
+      "question": "If $a$ and $b$ are integers, what can we always say about the value of $a - b$?",
+      "options": [
+        "It is always a smaller integer than $a$.",
+        "It is always an integer.",
+        "It is not always an integer because subtraction can give fractions.",
+        "It is always a positive integer."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes subtraction always makes a number smaller, overlooking subtracting negative numbers",
+        "",
+        "confuses the closure of subtraction with the non-closure of division",
+        "assumes the result of subtraction must be positive"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-commutative-addition",
+      "nodeId": "class7-mathematics-integers-commutative-addition",
+      "question": "Which equation shows that addition of integers is commutative?",
+      "options": [
+        "$(-5) + 5 = 0$",
+        "$(-5) + 0 = -5$",
+        "$(-5 + 8) + 2 = -5 + (8 + 2)$",
+        "$(-5) + 8 = 8 + (-5)$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the commutative property with the additive inverse property",
+        "confuses the commutative property with the additive identity property",
+        "confuses the commutative property with the associative property",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-non-commutative-subtraction",
+      "nodeId": "class7-mathematics-integers-non-commutative-subtraction",
+      "question": "Which pair of calculations shows that subtraction is NOT commutative for integers?",
+      "options": [
+        "$7 - 3 = 4$ and $3 - 7 = -4$",
+        "$7 - 3 = 4$ and $3 - 7 = 4$",
+        "$7 - 0 = 7$ and $0 - 7 = -7$",
+        "$7 - (-3) = 10$ and $7 + 3 = 10$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks order does not matter in subtraction and ignores the negative sign in $3 - 7$",
+        "confuses a counterexample for non-commutativity with properties of subtracting zero",
+        "confuses non-commutativity with the rule for subtracting a negative number"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-associative-addition",
+      "nodeId": "class7-mathematics-integers-associative-addition",
+      "question": "Which expression is equal to $[(-3) + 7] + (-4)$ by the associative property of addition?",
+      "options": [
+        "$7 + [(-3) + (-4)]$",
+        "$(-3) \\times [7 + (-4)]$",
+        "$(-3) + [7 + (-4)]$",
+        "$[(-3) + (-4)] + 7$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the associative property with changing the order of terms (commutative property)",
+        "confuses the associative property of addition with the distributive property",
+        "",
+        "reorders the terms entirely instead of just regrouping the brackets"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-additive-identity",
+      "nodeId": "class7-mathematics-integers-additive-identity",
+      "question": "What is the additive identity for integers?",
+      "options": [
+        "$1$",
+        "$0$",
+        "$-1$",
+        "The number itself"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the additive identity with the multiplicative identity",
+        "",
+        "thinks $-1$ is the additive identity because it changes signs",
+        "confuses the identity element with the result of adding the identity"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-additive-inverse",
+      "nodeId": "class7-mathematics-integers-additive-inverse",
+      "question": "What is the additive inverse of $-14$?",
+      "options": [
+        "$-\\frac{1}{14}$",
+        "$14$",
+        "$\\frac{1}{14}$",
+        "$0$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses additive inverse with negative reciprocal",
+        "",
+        "confuses additive inverse with reciprocal (multiplicative inverse)",
+        "confuses the additive inverse with the sum of a number and its additive inverse"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-mult-pos-neg",
+      "nodeId": "class7-mathematics-integers-mult-pos-neg",
+      "question": "What is the value of $6 \\times (-7)$?",
+      "options": [
+        "$-42$",
+        "$42$",
+        "$-1$",
+        "$-13$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "ignores the negative sign and multiplies as positive integers",
+        "adds the integers instead of multiplying them: $6 + (-7) = -1$",
+        "adds the absolute values and applies a negative sign: $-(6 + 7) = -13$"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-mult-two-negs",
+      "nodeId": "class7-mathematics-integers-mult-two-negs",
+      "question": "What is the value of $(-8) \\times (-5)$?",
+      "options": [
+        "$40$",
+        "$-13$",
+        "$-40$",
+        "$13$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the two negative numbers instead of multiplying them",
+        "believes multiplying two negative numbers must yield a negative product",
+        "adds the absolute values instead of multiplying them"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-sign-multiple-negs",
+      "nodeId": "class7-mathematics-integers-sign-multiple-negs",
+      "question": "What is the sign of the product of $5$ negative integers and $2$ positive integers?",
+      "options": [
+        "Positive, because positive integers make the whole product positive",
+        "Negative, because there are more negative integers than positive integers",
+        "Positive, because there are $7$ integers in total",
+        "Negative, because there is an odd number of negative integers"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the presence of positive integers forces the product to be positive",
+        "thinks the sign depends on which sign has a larger count rather than odd/even parity of negatives",
+        "bases the sign on the total count of numbers rather than the count of negative numbers",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-product-three-integers",
+      "nodeId": "class7-mathematics-integers-product-three-integers",
+      "question": "What is the value of $(-2) \\times 4 \\times (-5)$?",
+      "options": [
+        "$-40$",
+        "$-3$",
+        "$40$",
+        "$30$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks any presence of negative factors makes the final answer negative",
+        "adds the numbers instead of multiplying them: $(-2) + 4 + (-5) = -3$",
+        "",
+        "makes an arithmetic calculation error while determining the product"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-closure-multiplication",
+      "nodeId": "class7-mathematics-integers-closure-multiplication",
+      "question": "Which statement correctly describes the closure property of integers under multiplication?",
+      "options": [
+        "Multiplying any integer by $1$ gives the same integer.",
+        "The product of any two integers is always positive.",
+        "The order of multiplying two integers does not change the result.",
+        "The product of any two integers is always an integer."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the closure property with the multiplicative identity property",
+        "confuses closure with a rule about the sign of products",
+        "confuses the closure property with the commutative property of multiplication",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-commutative-multiplication",
+      "nodeId": "class7-mathematics-integers-commutative-multiplication",
+      "question": "Which of the following demonstrates that multiplication of integers is commutative?",
+      "options": [
+        "$-4 \\times 1 = -4$",
+        "$-4 \\times 9 = 9 \\times (-4)$",
+        "$-4 \\times (3 \\times 2) = (-4 \\times 3) \\times 2$",
+        "$-4 \\times (5 + 2) = (-4 \\times 5) + (-4 \\times 2)$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the commutative property with the multiplicative identity",
+        "",
+        "confuses the commutative property with the associative property of multiplication",
+        "confuses the commutative property with the distributive property"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-multiplication-by-zero",
+      "nodeId": "class7-mathematics-integers-multiplication-by-zero",
+      "question": "What is the value of $(-15) \\times 0$?",
+      "options": [
+        "$0$",
+        "$-15$",
+        "$15$",
+        "$1$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses multiplying by zero with adding zero (additive identity)",
+        "thinks multiplying by zero drops the negative sign and keeps the number",
+        "confuses multiplying by zero with multiplying by one or zero exponent"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-multiplicative-identity",
+      "nodeId": "class7-mathematics-integers-multiplicative-identity",
+      "question": "Which number is the multiplicative identity for integers?",
+      "options": [
+        "$0$",
+        "$-1$",
+        "$1$",
+        "Any integer $a$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the multiplicative identity with the additive identity",
+        "thinks $-1$ is the multiplicative identity because it keeps the magnitude unchanged",
+        "",
+        "confuses the identity element with the variable operand"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-associative-multiplication",
+      "nodeId": "class7-mathematics-integers-associative-multiplication",
+      "question": "Which expression shows the associative property of multiplication for integers?",
+      "options": [
+        "$(-2) \\times (3 + 5) = (-2 \\times 3) + (-2 \\times 5)$",
+        "$(-2) \\times 3 = 3 \\times (-2)$",
+        "$[(-2) \\times 3] \\times (-5) = (-2) \\times [3 \\times (-5)]$",
+        "$(-2) \\times 1 = -2$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the associative property with the distributive property",
+        "confuses the associative property with the commutative property of multiplication",
+        "",
+        "confuses the associative property with the multiplicative identity"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-distributive-over-addition",
+      "nodeId": "class7-mathematics-integers-distributive-over-addition",
+      "question": "Using the distributive property, what is $(-4) \\times (10 + 3)$ equal to?",
+      "options": [
+        "$(-4 \\times 10) + 3$",
+        "$(-4 \\times 10) + (-4 \\times 3)$",
+        "$(-4 + 10) \\times (-4 + 3)$",
+        "$(-4 \\times 10) \\times (-4 \\times 3)$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "only distributes the factor to the first term inside the parentheses",
+        "",
+        "swaps the operations of addition and multiplication when expanding",
+        "multiplies the distributed terms instead of adding them"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-distributive-over-subtraction",
+      "nodeId": "class7-mathematics-integers-distributive-over-subtraction",
+      "question": "Which of the following correctly expands $6 \\times (20 - 2)$ using the distributive property?",
+      "options": [
+        "$(6 \\times 20) - (6 \\times 2)$",
+        "$(6 \\times 20) - 2$",
+        "$(6 - 20) \\times (6 - 2)$",
+        "$(6 \\times 20) + (6 \\times 2)$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets to multiply the second term by the factor outside the parentheses",
+        "confuses the outer multiplication with subtraction",
+        "changes the subtraction sign to addition when expanding"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-simplify-using-properties",
+      "nodeId": "class7-mathematics-integers-simplify-using-properties",
+      "question": "What is the easiest way to evaluate $(-25) \\times 37 + (-25) \\times 63$ using properties of integers?",
+      "options": [
+        "Multiply $(-25) \\times 100 = -2500$",
+        "Multiply $(-25) \\times (-26) = 650$",
+        "Multiply $(-50) \\times 100 = -5000$",
+        "Multiply $(-25) \\times 26 = -650$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the terms $(37 - 63)$ instead of adding them $(37 + 63)$",
+        "adds the common factor twice: $(-25 + -25) \\times (37 + 63)$",
+        "subtracts $63 - 37$ to get $26$ instead of adding $37 + 63$"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-divide-opposite-signs",
+      "nodeId": "class7-mathematics-integers-divide-opposite-signs",
+      "question": "What is the value of $(-48) \\div 6$?",
+      "options": [
+        "$8$",
+        "$-54$",
+        "$-42$",
+        "$-8$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks dividing a negative number by a positive number gives a positive result",
+        "adds the absolute values and applies a negative sign",
+        "subtracts the numbers instead of dividing: $-48 + 6 = -42$",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-divide-same-signs",
+      "nodeId": "class7-mathematics-integers-divide-same-signs",
+      "question": "What is the value of $(-36) \\div (-4)$?",
+      "options": [
+        "$9$",
+        "$-40$",
+        "$-9$",
+        "$32$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the two negative numbers instead of dividing them",
+        "thinks dividing two negative numbers results in a negative quotient",
+        "subtracts the absolute values instead of dividing them"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-division-not-closed",
+      "nodeId": "class7-mathematics-integers-division-not-closed",
+      "question": "Which example shows that integers are NOT closed under division?",
+      "options": [
+        "$-12 \\div 3 = -4$",
+        "$0 \\div 4 = 0$",
+        "$5 \\div 2 = 2.5$",
+        "$-8 \\div (-2) = 4$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes negative integers are not integers",
+        "confuses division of zero with non-integer results",
+        "",
+        "picks an example where the result is an integer instead of a counterexample"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-division-not-commutative",
+      "nodeId": "class7-mathematics-integers-division-not-commutative",
+      "question": "Which comparison shows that division of integers is NOT commutative?",
+      "options": [
+        "$8 \\div 1 = 8$ and $1 \\div 8 = 0.125$",
+        "$8 \\div 4 = 2$ and $4 \\div 8 = 0.5$",
+        "$(-8) \\div 4 = -2$ and $8 \\div (-4) = -2$",
+        "$8 \\div (-4) = -2$ and $(-4) \\div 8 = -2$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses division by 1 which illustrates the identity property rather than general non-commutativity",
+        "",
+        "shows two expressions that evaluate to the same value, failing to prove non-commutativity",
+        "incorrectly computes $(-4) \\div 8$ as $-2$ assuming division is commutative"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-division-by-one-and-negative-one",
+      "nodeId": "class7-mathematics-integers-division-by-one-and-negative-one",
+      "question": "What are the values of $(-9) \\div 1$ and $(-9) \\div (-1)$ respectively?",
+      "options": [
+        "$-9$ and $-9$",
+        "$9$ and $-9$",
+        "$-9$ and $9$",
+        "$1$ and $-1$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks dividing by $-1$ does not change the sign of the integer",
+        "inverts the signs for both division operations",
+        "",
+        "thinks dividing any integer by itself or $\\pm 1$ gives $\\pm 1$"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-integers-division-involving-zero",
+      "nodeId": "class7-mathematics-integers-division-involving-zero",
+      "question": "What are the results of $0 \\div (-7)$ and $(-7) \\div 0$?",
+      "options": [
+        "Both are not defined",
+        "$0 \\div (-7) = -7$, and $(-7) \\div 0 = 0$",
+        "$0 \\div (-7) = 0$, and $(-7) \\div 0 = 0$",
+        "$0 \\div (-7) = 0$, and $(-7) \\div 0$ is not defined"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks zero divided by any number is also undefined",
+        "confuses $0$ in the numerator with identity and dividing by zero with zero",
+        "thinks dividing by zero always gives zero",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-fraction-whole-number",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number",
+      "question": "What is the value of 4 × 2/7?",
+      "options": [
+        "8/28",
+        "8/7",
+        "6/7",
+        "2/28"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies both numerator and denominator by the whole number",
+        "",
+        "adds the whole number to the numerator instead of multiplying",
+        "multiplies only the denominator by the whole number"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-fraction-as-operator-of",
+      "nodeId": "class7-mathematics-fractions-and-decimals-fraction-as-operator-of",
+      "question": "What is 3/5 of 40?",
+      "options": [
+        "37",
+        "120",
+        "8",
+        "24"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts 3 from 40 instead of interpreting 'of' as multiplication",
+        "multiplies 3 by 40 but forgets to divide by 5",
+        "divides 40 by 5 but forgets to multiply by 3",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-mixed-fraction-whole-number",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-mixed-fraction-whole-number",
+      "question": "What is the product of 3 and 2 1/4?",
+      "options": [
+        "6 1/4",
+        "6 3/12",
+        "7/4",
+        "27/4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies the whole number by the whole number part only and leaves the fraction untouched",
+        "multiplies whole number by the whole part, and also multiplies both numerator and denominator",
+        "adds the whole number to the numerator of the improper fraction instead of multiplying",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-visualize-fraction-multiplication",
+      "nodeId": "class7-mathematics-fractions-and-decimals-visualize-fraction-multiplication",
+      "question": "A square is split horizontally into 3 equal rows with 2 rows shaded, and vertically into 4 equal columns with 3 columns shaded. What fraction of the square is covered by the overlapping shaded region?",
+      "options": [
+        "6/12",
+        "5/7",
+        "5/12",
+        "6/7"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds numerators and adds denominators instead of multiplying",
+        "adds numerators (2+3) over the total number of parts (12)",
+        "multiplies numerators but adds denominators"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions",
+      "nodeId": "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions",
+      "question": "What is 2/3 × 5/7?",
+      "options": [
+        "10/21",
+        "14/15",
+        "7/10",
+        "10/10"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "cross-multiplies instead of multiplying straight across",
+        "adds numerators and adds denominators",
+        "multiplies numerators and adds denominators"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-multiply-mixed-fractions",
+      "nodeId": "class7-mathematics-fractions-and-decimals-multiply-mixed-fractions",
+      "question": "What is the value of 1 1/2 × 2 1/3?",
+      "options": [
+        "2 1/6",
+        "7/2",
+        "3 1/6",
+        "5/6"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies whole parts together and fractional parts together separately",
+        "",
+        "adds the whole parts and multiplies the fractional parts",
+        "forgets to convert to improper fractions and just multiplies the fractions"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-compare-fraction-product-to-factors",
+      "nodeId": "class7-mathematics-fractions-and-decimals-compare-fraction-product-to-factors",
+      "question": "How does the product of 2/5 and 3/7 compare to each of the two fractions?",
+      "options": [
+        "It is greater than both fractions.",
+        "It is equal to the average of both fractions.",
+        "It is greater than 2/5 but smaller than 3/7.",
+        "It is smaller than both fractions."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes multiplication always produces a number larger than the factors",
+        "confuses multiplication of fractions with finding their mean",
+        "thinks the product always falls strictly between the two factors",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+      "nodeId": "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+      "question": "What is the reciprocal of 3 2/5?",
+      "options": [
+        "5/17",
+        "3 5/2",
+        "17/5",
+        "5/2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "inverts only the fractional part while keeping the whole number unchanged",
+        "converts to an improper fraction but forgets to invert numerator and denominator",
+        "inverts the fractional part and discards the whole number entirely"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-whole-number-by-fraction",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-whole-number-by-fraction",
+      "question": "What is 6 ÷ 2/3?",
+      "options": [
+        "4",
+        "1/9",
+        "9",
+        "18/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the whole number by the fraction instead of dividing",
+        "inverts both the whole number and the fraction before multiplying",
+        "",
+        "multiplies the whole number only by the numerator"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-fraction-by-whole-number",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-fraction-by-whole-number",
+      "question": "What is 3/4 ÷ 5?",
+      "options": [
+        "15/4",
+        "20/3",
+        "3/20",
+        "8/4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the numerator by the whole number instead of dividing",
+        "inverts the fraction instead of the whole number divisor",
+        "",
+        "adds the whole number to the numerator"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-fraction-by-fraction",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-fraction-by-fraction",
+      "question": "What is 4/9 ÷ 2/3?",
+      "options": [
+        "8/27",
+        "6/12",
+        "2/3",
+        "3/2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the fractions straight across without inverting the divisor",
+        "adds the numerators and denominators",
+        "",
+        "inverts the dividend instead of the divisor"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-involving-mixed-fractions",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-involving-mixed-fractions",
+      "question": "What is 2 1/2 ÷ 1 1/4?",
+      "options": [
+        "1/2",
+        "25/8",
+        "2",
+        "2 1/8"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "divides the divisor by the dividend",
+        "multiplies improper fractions together instead of multiplying by the reciprocal",
+        "",
+        "divides whole parts and fractional parts separately"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-decimal-by-whole-number",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-decimal-by-whole-number",
+      "question": "What is 0.35 × 4?",
+      "options": [
+        "14.0",
+        "0.14",
+        "1.4",
+        "1.20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "ignores decimal point placement and puts it after the whole product",
+        "adds an extra decimal place unnecessarily",
+        "",
+        "multiplies only the tenths digit and ignores carrying from hundredths"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000",
+      "question": "What is 4.07 × 100?",
+      "options": [
+        "40.7",
+        "4070",
+        "0.0407",
+        "407"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "shifts the decimal point by 1 place instead of 2",
+        "appends two zeros to the end of the number without shifting the decimal correctly",
+        "shifts the decimal point to the left instead of to the right",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-count-decimal-places-for-product",
+      "nodeId": "class7-mathematics-fractions-and-decimals-count-decimal-places-for-product",
+      "question": "Without calculating the exact value, how many decimal places will be in the product of 3.452 and 1.8?",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "takes the maximum number of decimal places among the factors instead of adding them",
+        "",
+        "multiplies the number of decimal places (3 × 1 = 3 plus 2)",
+        "takes the minimum number of decimal places among the factors"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-two-decimal-numbers",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-two-decimal-numbers",
+      "question": "What is 1.2 × 0.04?",
+      "options": [
+        "0.048",
+        "0.48",
+        "0.0048",
+        "4.8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "counts only 2 decimal places instead of 3",
+        "counts 4 decimal places by miscounting zeros",
+        "ignores decimal places entirely and aligns from the right"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-mult-decimal-word-problems",
+      "nodeId": "class7-mathematics-fractions-and-decimals-mult-decimal-word-problems",
+      "question": "A rectangle has a length of 4.5 cm and a breadth of 2.4 cm. What is its area?",
+      "options": [
+        "108 sq cm",
+        "10.8 sq cm",
+        "13.8 sq cm",
+        "6.9 sq cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "forgets to place the decimal point after whole number multiplication",
+        "",
+        "adds the dimensions instead of multiplying them (perimeter-like thinking)",
+        "adds length and breadth and forgets to double or multiply correctly"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-decimal-by-10-100-1000",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-decimal-by-10-100-1000",
+      "question": "What is 23.5 ÷ 100?",
+      "options": [
+        "2.35",
+        "0.235",
+        "2350",
+        "0.0235"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "shifts the decimal point 1 place left instead of 2 places",
+        "",
+        "multiplies by 100 instead of dividing",
+        "shifts the decimal point 3 places left instead of 2"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-decimal-by-whole-number",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-decimal-by-whole-number",
+      "question": "What is 4.32 ÷ 6?",
+      "options": [
+        "7.2",
+        "0.62",
+        "0.072",
+        "0.72"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "places the decimal point after the first non-zero digit regardless of place value",
+        "makes an arithmetic division error in the tens digit",
+        "adds an unnecessary leading zero after the decimal point",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-whole-number-by-decimal",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-whole-number-by-decimal",
+      "question": "What is 15 ÷ 0.5?",
+      "options": [
+        "3",
+        "30",
+        "7.5",
+        "0.3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides 15 by 5 and ignores the decimal completely",
+        "",
+        "multiplies 15 by 0.5 instead of dividing",
+        "divides 15 by 5 and shifts decimal point the wrong direction"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-decimal-by-decimal",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-decimal-by-decimal",
+      "question": "What is 5.6 ÷ 0.08?",
+      "options": [
+        "70",
+        "7",
+        "0.7",
+        "700"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "shifts decimal by 1 place instead of 2 places to match the divisor",
+        "divides whole parts and misplaces the decimal to the left",
+        "shifts decimal 3 places unnecessarily"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-convert-units-using-decimals",
+      "nodeId": "class7-mathematics-fractions-and-decimals-convert-units-using-decimals",
+      "question": "Express 75 paise in rupees.",
+      "options": [
+        "₹ 0.75",
+        "₹ 7.5",
+        "₹ 0.075",
+        "₹ 750"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides by 10 instead of 100",
+        "divides by 1000 instead of 100",
+        "multiplies by 10 instead of dividing by 100"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-divide-decimal-word-problems",
+      "nodeId": "class7-mathematics-fractions-and-decimals-divide-decimal-word-problems",
+      "question": "A vehicle covers a distance of 43.2 km in 2.4 litres of petrol. How much distance will it cover in 1 litre of petrol?",
+      "options": [
+        "103.68 km",
+        "1.8 km",
+        "18 km",
+        "180 km"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies distance by petrol instead of dividing",
+        "shifts the decimal point one extra place to the left in division",
+        "",
+        "adds an extra zero in the quotient"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-fractions-and-decimals-multi-step-fraction-decimal-problems",
+      "nodeId": "class7-mathematics-fractions-and-decimals-multi-step-fraction-decimal-problems",
+      "question": "A ribbon of length 4.5 metres is cut into pieces such that each piece is 3/4 metres long. How many complete pieces are obtained, and what length of ribbon is left over?",
+      "options": [
+        "6 complete pieces with 0.15 metres left over",
+        "6 complete pieces with 0.75 metres left over",
+        "5 complete pieces with 0.75 metres left over",
+        "6 complete pieces with 0 metres left over"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts incorrectly after division",
+        "thinks the remainder is 1 piece (0.75 m) despite 6 × 0.75 = 4.5 exactly",
+        "calculates only 5 full pieces (3.75 m) and misidentifies remaining length",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-construct-tally-table",
+      "nodeId": "class7-mathematics-data-handling-construct-tally-table",
+      "question": "Which set of tally marks correctly represents a frequency of 8?",
+      "options": [
+        "|||| ||||",
+        "卌 卌",
+        "卌 |||",
+        "卌 ||||"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks tally marks are just individual vertical strokes without grouping by fives",
+        "confuses the bundle of five with a group of four and counts two bundles as eight",
+        "",
+        "counts the diagonal slash as an extra sixth mark in the first group"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-identify-extremes",
+      "nodeId": "class7-mathematics-data-handling-identify-extremes",
+      "question": "Look at this data set: 34, 18, 52, 12, 45, 29. What are the lowest and highest values?",
+      "options": [
+        "Lowest: 12, Highest: 45",
+        "Lowest: 34, Highest: 29",
+        "Lowest: 18, Highest: 52",
+        "Lowest: 12, Highest: 52"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "misses the true maximum value 52 and chooses the second highest 45",
+        "picks the first and last numbers in the list instead of finding actual extremes",
+        "misses the true minimum value 12 and chooses the second lowest 18",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-calculate-range",
+      "nodeId": "class7-mathematics-data-handling-calculate-range",
+      "question": "The ages of six teachers in a school are 32, 41, 28, 54, 35, and 26. What is the range of their ages?",
+      "options": [
+        "28",
+        "26",
+        "80",
+        "36"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the range is simply the lowest value in the data set",
+        "adds the lowest and highest values instead of subtracting them",
+        "calculates the mean instead of the range"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-define-mean-formula",
+      "nodeId": "class7-mathematics-data-handling-define-mean-formula",
+      "question": "Which rule gives the arithmetic mean of a data set?",
+      "options": [
+        "Highest observation minus lowest observation",
+        "The value that appears most frequently in the data",
+        "Sum of all observations divided by total number of observations",
+        "Total number of observations divided by sum of all observations"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the definition of mean with the definition of range",
+        "confuses the definition of mean with the definition of mode",
+        "",
+        "inverts the numerator and denominator in the formula for mean"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-calculate-mean-integers",
+      "nodeId": "class7-mathematics-data-handling-calculate-mean-integers",
+      "question": "A student scored 6, 8, 5, 9, and 7 marks in five short tests. What is the mean score?",
+      "options": [
+        "35",
+        "7",
+        "5",
+        "8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the observations together but forgets to divide by the number of observations",
+        "",
+        "divides the sum by 7 instead of the count 5",
+        "picks the middle value of the unsorted list or confuses mean with mode"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-calculate-mean-decimals",
+      "nodeId": "class7-mathematics-data-handling-calculate-mean-decimals",
+      "question": "Find the arithmetic mean of 2.4, 3.6, 4.2, and 1.8.",
+      "options": [
+        "12.0",
+        "3.0",
+        "2.8",
+        "4.0"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "sums the decimal numbers correctly but forgets to divide by 4",
+        "",
+        "miscalculates the sum of decimals as 11.2 and divides by 4",
+        "divides the sum 12.0 by 3 instead of 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-mean-lies-between-extremes",
+      "nodeId": "class7-mathematics-data-handling-mean-lies-between-extremes",
+      "question": "The daily temperatures in a city over a week were between 15°C (lowest) and 25°C (highest). Which statement MUST be true about the mean temperature?",
+      "options": [
+        "It must lie between 15°C and 25°C.",
+        "It must be exactly 20°C.",
+        "It can be greater than 25°C if most days are hot.",
+        "It must be equal to one of the recorded daily temperatures."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes the mean is always the exact midpoint of the minimum and maximum",
+        "thinks a high concentration of large values can push the mean beyond the maximum",
+        "believes the mean must always be an actual value present in the data set"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-find-missing-observation-from-mean",
+      "nodeId": "class7-mathematics-data-handling-find-missing-observation-from-mean",
+      "question": "The mean of five numbers is 10. Four of the numbers are 8, 12, 15, and 6. What is the fifth number?",
+      "options": [
+        "1",
+        "31",
+        "10",
+        "9"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts the sum 41 from 50 incorrectly or forgets one value in addition",
+        "adds the four known numbers and subtracts the mean 10 from 41",
+        "assumes the missing value must simply be equal to the mean itself",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-identify-mode-raw-data",
+      "nodeId": "class7-mathematics-data-handling-identify-mode-raw-data",
+      "question": "What is the mode of the numbers: 2, 4, 3, 2, 5, 2, 4, 6?",
+      "options": [
+        "4",
+        "3",
+        "6",
+        "2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses frequency with value or picks 4 because it appears twice",
+        "estimates the mean or median instead of finding the most frequent value",
+        "picks the maximum value in the set instead of the most frequent",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-identify-mode-frequency-table",
+      "nodeId": "class7-mathematics-data-handling-identify-mode-frequency-table",
+      "question": "A table shows shoe sizes and number of students: Size 4 (6 students), Size 5 (14 students), Size 6 (9 students), Size 7 (3 students). What is the mode of shoe sizes?",
+      "options": [
+        "5",
+        "14",
+        "7",
+        "6"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "gives the highest frequency number itself rather than the corresponding data value",
+        "confuses the highest shoe size with the mode",
+        "picks the middle shoe size in the table"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-identify-multimodal-data",
+      "nodeId": "class7-mathematics-data-handling-identify-multimodal-data",
+      "question": "What are the modes of the data set: 12, 15, 12, 18, 15, 14, 19?",
+      "options": [
+        "12 and 15",
+        "Only 12",
+        "Only 15",
+        "There is no mode"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks a data set can only have one mode and takes the first repeated number",
+        "thinks a data set can only have one mode and takes the larger repeated number",
+        "believes having two values with the same highest frequency means there is no mode"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-order-data-for-median",
+      "nodeId": "class7-mathematics-data-handling-order-data-for-median",
+      "question": "Which of the following shows the numbers 17, 9, 23, 14, 11 correctly arranged in ascending order?",
+      "options": [
+        "23, 17, 14, 11, 9",
+        "11, 9, 14, 17, 23",
+        "9, 14, 11, 17, 23",
+        "9, 11, 14, 17, 23"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "orders the data in descending order instead of ascending order",
+        "swaps the first two terms by failing to check the smallest value",
+        "fails to compare the smaller numbers properly, placing 14 before 11",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-find-median-odd-n",
+      "nodeId": "class7-mathematics-data-handling-find-median-odd-n",
+      "question": "Find the median of the data set: 24, 36, 18, 42, 29.",
+      "options": [
+        "29",
+        "18",
+        "24",
+        "30"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "picks the middle number of the unsorted list directly (18 is in the 3rd position)",
+        "picks the second value after partial sorting",
+        "calculates the mean instead of finding the median"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-compare-mean-median-mode",
+      "nodeId": "class7-mathematics-data-handling-compare-mean-median-mode",
+      "question": "For the data set 3, 3, 3, 3, 3, what can be said about the mean, median, and mode?",
+      "options": [
+        "Mean is 3, but median and mode are different.",
+        "They are all equal to 3.",
+        "Mode is 3, but the mean cannot be found.",
+        "Mean is 15, Median is 3, Mode is 3."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes mean, median, and mode can never all be the same value",
+        "",
+        "thinks identical numbers cannot be used to calculate a mean",
+        "calculates the sum instead of the mean for the first measure"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-choose-bar-graph-scale",
+      "nodeId": "class7-mathematics-data-handling-choose-bar-graph-scale",
+      "question": "You need to draw a bar graph where the values range from 10 to 350. Your paper fits about 10 grid units. Which scale is most appropriate?",
+      "options": [
+        "1 unit = 40 marks",
+        "1 unit = 1 mark",
+        "1 unit = 500 marks",
+        "1 unit = 5 marks"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "chooses a scale that would require 350 units of height, making the graph far too tall",
+        "chooses a scale so large that all bars would be squashed into less than 1 grid unit",
+        "chooses a scale that requires 70 units of height, which does not fit 10 grid units"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-draw-single-bar-graph",
+      "nodeId": "class7-mathematics-data-handling-draw-single-bar-graph",
+      "question": "Which of the following is an essential rule when drawing a single bar graph?",
+      "options": [
+        "Bars must touch each other with no gaps between them.",
+        "Taller bars must be drawn wider than shorter bars.",
+        "All bars must have equal width and equal spaces between them.",
+        "The gaps between bars must increase as values get larger."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a bar graph with a histogram where bars touch",
+        "thinks the width of a bar represents the value rather than just the height",
+        "",
+        "believes spacing between bars depends on the numerical value"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-read-single-bar-graph",
+      "nodeId": "class7-mathematics-data-handling-read-single-bar-graph",
+      "question": "On a bar graph, 1 cm represents 10 books. The bar for History is 4.5 cm high and the bar for Science is 7 cm high. How many more Science books are there than History books?",
+      "options": [
+        "115 books",
+        "2.5 books",
+        "45 books",
+        "25 books"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the two values together (45 + 70 = 115) instead of finding the difference",
+        "subtracts the bar heights directly in centimeters without applying the scale",
+        "reads only the value of the History bar (45) instead of the difference",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-draw-double-bar-graph",
+      "nodeId": "class7-mathematics-data-handling-draw-double-bar-graph",
+      "question": "What is the correct way to arrange bars in a double bar graph comparing Term 1 and Term 2 marks for different subjects?",
+      "options": [
+        "Draw Term 2 bars on top of Term 1 bars vertically.",
+        "Draw all Term 1 bars first, then draw all Term 2 bars at the far end of the graph.",
+        "Draw Term 1 and Term 2 bars for each subject side by side with no gap between the pair.",
+        "Leave different amounts of space between the two bars of the same subject."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a double bar graph with a stacked (segmented) bar graph",
+        "separates the two datasets entirely instead of pairing them by subject for comparison",
+        "",
+        "thinks bars within a pair should have varying gaps between them"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-interpret-double-bar-graph",
+      "nodeId": "class7-mathematics-data-handling-interpret-double-bar-graph",
+      "question": "A double bar graph shows marks out of 100 in two terms: Maths (Term 1: 60, Term 2: 85), English (Term 1: 70, Term 2: 75), Science (Term 1: 80, Term 2: 82). In which subject is the improvement greatest?",
+      "options": [
+        "Science",
+        "English",
+        "Maths",
+        "Improvement is equal in all three"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "picks the subject with the highest initial score instead of largest increase",
+        "picks English because both scores are above 70",
+        "",
+        "assumes any positive change represents the exact same amount of improvement"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-classify-event-certainty",
+      "nodeId": "class7-mathematics-data-handling-classify-event-certainty",
+      "question": "Which of these events is 'impossible'?",
+      "options": [
+        "Getting a head when a coin is tossed.",
+        "The sun rising in the east tomorrow.",
+        "It will rain tomorrow afternoon.",
+        "A tossed die landing with an 8 on top."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses 'can happen but not certain' with 'impossible'",
+        "confuses 'certain to happen' with 'impossible'",
+        "confuses an uncertain weather event with an impossible event",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-list-outcomes-random-experiment",
+      "nodeId": "class7-mathematics-data-handling-list-outcomes-random-experiment",
+      "question": "What are all the possible outcomes when rolling a standard six-faced die once?",
+      "options": [
+        "Even numbers only",
+        "1, 2, 3, 4, 5, 6",
+        "6",
+        "Head and Tail"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "lists only a subset of the outcomes rather than the complete sample space",
+        "",
+        "names only the highest score instead of all possible outcomes",
+        "confuses the outcomes of rolling a die with tossing a coin"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-calculate-coin-toss-probability",
+      "nodeId": "class7-mathematics-data-handling-calculate-coin-toss-probability",
+      "question": "A fair coin is tossed once. What is the probability of getting a Head?",
+      "options": [
+        "1",
+        "1/2",
+        "2/1",
+        "0"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the probability is 1 because a head is one specific outcome",
+        "",
+        "inverts the probability fraction as total outcomes divided by favourable outcomes",
+        "thinks the probability of getting a head is 0 because it is not guaranteed"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-calculate-dice-roll-probability",
+      "nodeId": "class7-mathematics-data-handling-calculate-dice-roll-probability",
+      "question": "A standard six-faced die is rolled once. What is the probability of getting an even number (2, 4, or 6)?",
+      "options": [
+        "1/6",
+        "3/6",
+        "3/3",
+        "2/6"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the probability of rolling a single specific number instead of three even numbers",
+        "",
+        "puts favourable outcomes over non-favourable outcomes (odds) rather than total outcomes",
+        "counts only 2 and 4 as even numbers, missing 6"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-data-handling-probability-formula-fraction",
+      "nodeId": "class7-mathematics-data-handling-probability-formula-fraction",
+      "question": "A bag contains 3 red marbles and 7 blue marbles. What is the probability of drawing a red marble without looking?",
+      "options": [
+        "3/7",
+        "7/10",
+        "3/10",
+        "10/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "compares red marbles to blue marbles (favourable/unfavourable) instead of total marbles",
+        "finds the probability of drawing a blue marble instead of a red marble",
+        "",
+        "inverts the fraction as total outcomes divided by favourable outcomes"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-identify-variable-and-constant",
+      "nodeId": "class7-mathematics-simple-equations-identify-variable-and-constant",
+      "question": "In the expression 4x - 7, which part is the variable and which part is the constant term?",
+      "options": [
+        "Variable is x; constant term is 4",
+        "Variable is 4; constant term is -7",
+        "Variable is 4x; constant term is 7",
+        "Variable is x; constant term is -7"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the coefficient attached to the variable with an isolated constant term",
+        "confuses the numerical coefficient with the variable itself",
+        "believes the entire algebraic term including the coefficient is the variable",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-distinguish-expression-and-equation",
+      "nodeId": "class7-mathematics-simple-equations-distinguish-expression-and-equation",
+      "question": "Which of the following is an equation?",
+      "options": [
+        "2x + 5",
+        "5(m + 3)",
+        "7p - 8 + 2p",
+        "3y - 4 = 11"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks any combination of numbers and letters is an equation even without an equality sign",
+        "thinks expressions with brackets are automatically equations",
+        "confuses a multi-term algebraic expression with an equation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-identify-lhs-and-rhs",
+      "nodeId": "class7-mathematics-simple-equations-identify-lhs-and-rhs",
+      "question": "In the equation 5y - 3 = 12, what are the LHS (Left Hand Side) and RHS (Right Hand Side)?",
+      "options": [
+        "LHS is 5y - 3; RHS is 12",
+        "LHS is 12; RHS is 5y - 3",
+        "LHS is 5y; RHS is 12",
+        "LHS is y; RHS is 15"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps left and right hand sides completely",
+        "ignores the constant term on the left side when naming the LHS",
+        "confuses the terms on each side with the simplified solution of the equation"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-statement-to-equation-sum-diff",
+      "nodeId": "class7-mathematics-simple-equations-statement-to-equation-sum-diff",
+      "question": "Which equation correctly represents the statement: 'Taking away 7 from x gives 15'?",
+      "options": [
+        "7 - x = 15",
+        "x + 7 = 15",
+        "x - 7 = 15",
+        "15 - x = 7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts the variable from the number instead of subtracting the number from the variable",
+        "interprets taking away as addition",
+        "",
+        "reverses the relationship by subtracting the variable from the result"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-statement-to-equation-mult-div",
+      "nodeId": "class7-mathematics-simple-equations-statement-to-equation-mult-div",
+      "question": "Which equation represents the statement: 'One-fourth of a number m is 3 more than 2'?",
+      "options": [
+        "4m = 5",
+        "m/4 = 5",
+        "m/4 + 3 = 2",
+        "m + 1/4 = 5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies by 4 instead of dividing by 4 when translating one-fourth",
+        "",
+        "adds 3 to the fractional part instead of adding 3 to 2 to get the value",
+        "adds the fraction 1/4 to the number instead of taking one-fourth of it"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-statement-to-equation-multi-op",
+      "nodeId": "class7-mathematics-simple-equations-statement-to-equation-multi-op",
+      "question": "Which equation represents the statement: 'Add 4 to eight times a number y to get 60'?",
+      "options": [
+        "8(y + 4) = 60",
+        "4y + 8 = 60",
+        "8y + 4 = 60",
+        "y/8 + 4 = 60"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds 4 before multiplying by 8 due to misreading operation order",
+        "swaps the coefficient of the variable with the constant to be added",
+        "",
+        "divides by 8 instead of multiplying by 8"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-equation-to-statement",
+      "nodeId": "class7-mathematics-simple-equations-equation-to-statement",
+      "question": "Which of these statements correctly describes the equation 3p + 7 = 25?",
+      "options": [
+        "Three times a number p is 7 more than 25",
+        "The sum of 3 and p multiplied by 7 gives 25",
+        "Three added to seven times a number p gives 25",
+        "Seven added to three times a number p gives 25"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "interprets + 7 on LHS as meaning the LHS is 7 greater than the RHS",
+        "treats the addition as occurring before the multiplication",
+        "switches the multiplier 3 with the added term 7",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-test-solution-by-substitution",
+      "nodeId": "class7-mathematics-simple-equations-test-solution-by-substitution",
+      "question": "Check whether x = 3 is the solution of the equation 4x - 5 = 7.",
+      "options": [
+        "Yes, because substituting x = 3 gives LHS = 12 - 5 = 7, which equals RHS",
+        "No, because substituting x = 3 gives LHS = 43 - 5 = 38",
+        "No, because substituting x = 3 gives LHS = 17, which does not equal 7",
+        "Yes, because 4 + 3 - 5 = 2, which equals 7"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "places the digit 3 next to 4 to make 43 instead of multiplying 4 by 3",
+        "adds 5 to 12 instead of subtracting 5 when evaluating LHS",
+        "adds 4 and 3 instead of multiplying them in the term 4x"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-trial-and-error-method",
+      "nodeId": "class7-mathematics-simple-equations-trial-and-error-method",
+      "question": "Using trial and error for 2n + 3 = 11, what is the value of 2n + 3 when n = 3, and is n = 3 the solution?",
+      "options": [
+        "Value is 11; n = 3 is the solution",
+        "Value is 9; n = 3 is not the solution",
+        "Value is 8; n = 3 is not the solution",
+        "Value is 23; n = 3 is not the solution"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes the tested value must be correct without evaluating 2(3) + 3 accurately",
+        "",
+        "evaluates 2 * 3 as 5 instead of 6 before adding 3",
+        "concatenates 2 and 3 to get 23 instead of multiplying"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-balance-addition-subtraction",
+      "nodeId": "class7-mathematics-simple-equations-balance-addition-subtraction",
+      "question": "To solve x - 8 = 13 by the balancing method, what step must be applied to both sides?",
+      "options": [
+        "Subtract 8 from both sides, giving x = 5",
+        "Add 8 to both sides, giving x = 21",
+        "Subtract 13 from both sides, giving x = -5",
+        "Add 13 to both sides, giving x = 21"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "repeats the operation seen in the equation instead of doing the inverse operation",
+        "",
+        "subtracts the RHS value from both sides instead of eliminating the term next to x",
+        "adds the RHS value to both sides instead of eliminating the constant with the variable"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-balance-multiplication-division",
+      "nodeId": "class7-mathematics-simple-equations-balance-multiplication-division",
+      "question": "Solve the equation y / 5 = 12 using the balancing method.",
+      "options": [
+        "Divide both sides by 5 to get y = 12/5",
+        "Multiply both sides by 5 to get y = 60",
+        "Subtract 5 from both sides to get y = 7",
+        "Add 5 to both sides to get y = 17"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "repeats division instead of applying the inverse operation of multiplication",
+        "",
+        "uses subtraction to undo division",
+        "uses addition to undo division"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-balance-two-step",
+      "nodeId": "class7-mathematics-simple-equations-balance-two-step",
+      "question": "What is the correct sequence of steps to solve 3x + 5 = 26 by balancing?",
+      "options": [
+        "Subtract 5 from both sides, then divide both sides by 3",
+        "Divide both sides by 3, then subtract 5 from both sides",
+        "Add 5 to both sides, then multiply both sides by 3",
+        "Subtract 5 from both sides, then multiply both sides by 3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "attempts to divide by the coefficient first without dividing every term on both sides",
+        "applies addition instead of subtraction to remove +5, and multiplication instead of division",
+        "correctly subtracts 5 but then multiplies by 3 instead of dividing to isolate x"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-transpose-constant-term",
+      "nodeId": "class7-mathematics-simple-equations-transpose-constant-term",
+      "question": "When transposing the constant +9 in the equation 2x + 9 = 17 to the RHS, what does the equation become?",
+      "options": [
+        "2x = 17 + 9",
+        "2x = 17 / 9",
+        "x = 17 - 9",
+        "2x = 17 - 9"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "moves the term across the equals sign without changing its sign",
+        "changes addition to division when transposing a constant term",
+        "drops the coefficient of x when transposing only the constant term",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-transpose-coefficient",
+      "nodeId": "class7-mathematics-simple-equations-transpose-coefficient",
+      "question": "When transposing 6 in the equation 6m = 42 to the RHS, which calculation gives m?",
+      "options": [
+        "m = 42 / 6",
+        "m = 42 * 6",
+        "m = 42 - 6",
+        "m = 6 / 42"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "multiplies by the coefficient instead of dividing when moving it across '='",
+        "treats multiplication as addition and transposes it by subtracting",
+        "divides the coefficient by the RHS instead of dividing the RHS by the coefficient"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-solve-two-step-transposition",
+      "nodeId": "class7-mathematics-simple-equations-solve-two-step-transposition",
+      "question": "Solve for p: 5p - 7 = 18",
+      "options": [
+        "p = 25",
+        "p = 2.2",
+        "p = 5",
+        "p = 16"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds 7 to 18 to get 25, but forgets to divide by 5",
+        "subtracts 7 from 18 instead of adding 7 during transposition (gets 11/5 = 2.2)",
+        "",
+        "transposes by subtracting 7 and multiplying by 5: (18 - 7)... or miscalculates completely"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-solve-fractional-coefficients",
+      "nodeId": "class7-mathematics-simple-equations-solve-fractional-coefficients",
+      "question": "Solve the equation: (2/3)x + 1 = 9",
+      "options": [
+        "x = 15",
+        "x = 16/3",
+        "x = 12",
+        "x = 8"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the original RHS 9 by 3/2 without subtracting 1 first",
+        "multiplies 8 by 2/3 instead of dividing by 2/3 (or multiplying by 3/2)",
+        "",
+        "subtracts 1 from 9 to get 8, but ignores the fraction 2/3"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-solve-with-brackets",
+      "nodeId": "class7-mathematics-simple-equations-solve-with-brackets",
+      "question": "Solve the equation: 4(x - 3) = 20",
+      "options": [
+        "x = 2",
+        "x = 23/4",
+        "x = 8",
+        "x = 5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "expands to 4x - 3 = 20 (forgetting to multiply 3 by 4) and gets x = 23/4, or subtracts 3 from 5 to get 2",
+        "forgets to distribute the 4 to the -3, giving 4x - 3 = 20, so 4x = 23",
+        "",
+        "divides 20 by 4 to get 5, but forgets to add 3 to find x"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-construct-equations-from-solution",
+      "nodeId": "class7-mathematics-simple-equations-construct-equations-from-solution",
+      "question": "Starting from x = 4, which of the following is a correctly constructed equation?",
+      "options": [
+        "3x + 2 = 10",
+        "2x - 5 = 3",
+        "5x + 1 = 20",
+        "4x - 1 = 12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates 3(4) + 2 as 10 by miscalculating arithmetic (3*4 = 8)",
+        "",
+        "adds 1 to the RHS incorrectly instead of maintaining balance: 5(4) + 1 = 21, not 20",
+        "does not balance both sides when subtracting 1: 4(4) - 1 = 15, not 12"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-word-problems-number-relations",
+      "nodeId": "class7-mathematics-simple-equations-word-problems-number-relations",
+      "question": "When 6 is added to three times a number, the result is 33. What is the number?",
+      "options": [
+        "9",
+        "13",
+        "11",
+        "27"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 6 to 33 instead of subtracting, then divides by 3: (33 + 6)/3 = 13",
+        "divides 33 by 3 first without subtracting 6",
+        "subtracts 6 from 33 to get 27, but forgets to divide by 3"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-word-problems-ages",
+      "nodeId": "class7-mathematics-simple-equations-word-problems-ages",
+      "question": "Rohan's father is 45 years old. He is 5 years older than four times Rohan's age. What is Rohan's age?",
+      "options": [
+        "10 years",
+        "12.5 years",
+        "8 years",
+        "40 years"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 5 to 45 instead of subtracting: (45 + 5)/4 = 12.5",
+        "subtracts 5 twice or miscalculates 40/4",
+        "subtracts 5 from 45 to get 40 but forgets to divide by 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-word-problems-geometry",
+      "nodeId": "class7-mathematics-simple-equations-word-problems-geometry",
+      "question": "The perimeter of a rectangle is 28 cm. If its length is 8 cm, what is its breadth?",
+      "options": [
+        "20 cm",
+        "10 cm",
+        "12 cm",
+        "6 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts length from perimeter directly (28 - 8) without accounting for two lengths and two breadths",
+        "divides the perimeter by 2 to get 14, but then does not subtract the length",
+        "subtracts 8 from 28 to get 20, then divides by 2 but subtracts incorrectly",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-word-problems-money-collections",
+      "nodeId": "class7-mathematics-simple-equations-word-problems-money-collections",
+      "question": "Aman has 7 more marbles than twice the number of marbles Rahul has. If Aman has 31 marbles, how many marbles does Rahul have?",
+      "options": [
+        "19",
+        "24",
+        "12",
+        "14"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds 7 to 31 instead of subtracting: (31 + 7)/2 = 19",
+        "subtracts 7 from 31 to get 24, but forgets to divide by 2",
+        "",
+        "divides 31 by 2 and ignores the extra 7 marbles"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-simple-equations-validate-practical-context",
+      "nodeId": "class7-mathematics-simple-equations-validate-practical-context",
+      "question": "A teacher sets up an equation to find the number of students, n, on a field trip: 4n + 15 = 50. Solving gives n = 8.75. What does this solution tell us about the real-life situation?",
+      "options": [
+        "There are exactly 8 full students and 1 small student on the trip",
+        "The original statement is impossible in real life because the number of students must be a whole number",
+        "The count must be rounded up, so there are exactly 9 students",
+        "The solution is correct because decimal numbers are valid in all algebraic equations"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "interprets the fractional part literally as a partial or smaller human being",
+        "",
+        "assumes any non-integer answer in a discrete problem should simply be rounded",
+        "focuses purely on abstract algebraic validity while ignoring real-world physical constraints"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-define-complementary-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-define-complementary-angles",
+      "question": "Two angles are called complementary if the sum of their measures is:",
+      "options": [
+        "90°",
+        "180°",
+        "360°",
+        "45°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Confuses complementary angles with supplementary angles whose sum is 180°.",
+        "Confuses complementary angles with a complete angle of 360°.",
+        "Thinks complementary angles must each measure 45° rather than sum to 90°."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-complementary-pairs",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-complementary-pairs",
+      "question": "Which of the following pairs of angles is complementary?",
+      "options": [
+        "35° and 55°",
+        "65° and 115°",
+        "40° and 60°",
+        "45° and 135°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Identified supplementary angles summing to 180° instead of complementary angles.",
+        "Added incorrectly or thought any two acute angles are complementary.",
+        "Identified supplementary angles summing to 180° instead of complementary angles."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-calculate-complement-angle",
+      "nodeId": "class7-mathematics-lines-and-angles-calculate-complement-angle",
+      "question": "What is the complement of an angle measuring 28°?",
+      "options": [
+        "152°",
+        "62°",
+        "72°",
+        "28°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Subtracted from 180° instead of 90°, confusing complement with supplement.",
+        "",
+        "Made an arithmetic error during subtraction from 90° (computed 90 - 28 = 72).",
+        "Assumed an angle's complement is always equal to the angle itself."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-define-supplementary-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-define-supplementary-angles",
+      "question": "Two angles are called supplementary if the sum of their measures is:",
+      "options": [
+        "90°",
+        "180°",
+        "270°",
+        "360°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Confuses supplementary angles with complementary angles whose sum is 90°.",
+        "",
+        "Thinks supplementary angles sum to three right angles (270°).",
+        "Confuses supplementary angles with angles around a full circle (360°)."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-supplementary-pairs",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-supplementary-pairs",
+      "question": "Which of the following pairs of angles is supplementary?",
+      "options": [
+        "120° and 70°",
+        "62° and 28°",
+        "112° and 68°",
+        "85° and 85°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Added incorrectly, selecting a pair that sums to 190°.",
+        "Identified a complementary pair summing to 90° instead of a supplementary pair.",
+        "",
+        "Selected equal acute angles instead of checking that the sum equals 180°."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-calculate-supplement-angle",
+      "nodeId": "class7-mathematics-lines-and-angles-calculate-supplement-angle",
+      "question": "What is the supplement of an angle measuring 105°?",
+      "options": [
+        "75°",
+        "85°",
+        "15°",
+        "255°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Made a subtraction error when calculating 180° - 105°.",
+        "Attempted to subtract from 90° (finding 105 - 90 = 15°), confusing supplement with complement.",
+        "Subtracted 105° from 360° instead of 180°."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-algebraic-complement-supplement",
+      "nodeId": "class7-mathematics-lines-and-angles-algebraic-complement-supplement",
+      "question": "An angle is equal to its supplement. What is the measure of the angle?",
+      "options": [
+        "90°",
+        "45°",
+        "180°",
+        "60°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Found the angle that is equal to its complement (45° + 45° = 90°) instead of supplement.",
+        "Thought the angle must itself be 180° rather than half of 180°.",
+        "Divided 180° into three equal parts instead of two equal parts."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-adjacent-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-adjacent-angles",
+      "question": "Which condition is NOT required for two angles to be adjacent?",
+      "options": [
+        "They must have a common vertex.",
+        "They must have a common arm.",
+        "Their non-common arms must be on opposite sides of the common arm.",
+        "Their measures must add up to 90°."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Believes having a common vertex is optional for adjacent angles.",
+        "Believes having a common arm is optional for adjacent angles.",
+        "Believes the position of the non-common arms is irrelevant for adjacent angles.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-define-linear-pair",
+      "nodeId": "class7-mathematics-lines-and-angles-define-linear-pair",
+      "question": "A linear pair consists of two adjacent angles whose non-common arms:",
+      "options": [
+        "are perpendicular to each other",
+        "are parallel to each other",
+        "form a straight line",
+        "are equal in length"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Confuses a linear pair with complementary adjacent angles forming a 90° angle.",
+        "Thinks non-common arms run parallel rather than forming opposite rays.",
+        "",
+        "Thinks ray length is a geometric condition for angles forming a linear pair."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-calculate-linear-pair-angle",
+      "nodeId": "class7-mathematics-lines-and-angles-calculate-linear-pair-angle",
+      "question": "Two angles form a linear pair. If one angle measures 64°, what is the measure of the other angle?",
+      "options": [
+        "26°",
+        "116°",
+        "64°",
+        "126°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Subtracted from 90° instead of 180°, confusing a linear pair with complementary angles.",
+        "",
+        "Assumed angles in a linear pair must be equal.",
+        "Made a subtraction error when calculating 180° - 64°."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-linear-pair-with-algebra",
+      "nodeId": "class7-mathematics-lines-and-angles-linear-pair-with-algebra",
+      "question": "Two angles forming a linear pair have measures (2x + 10)° and (3x + 20)°. What is the value of x?",
+      "options": [
+        "36",
+        "12",
+        "30",
+        "150"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Set the two expressions equal to each other (3x + 20 = 2x + 10, or forgot to subtract the constants correctly).",
+        "Set the sum equal to 90° instead of 180° (5x + 30 = 90, so 5x = 60, x = 12).",
+        "",
+        "Calculated 180 - 30 = 150 but forgot to divide by 5."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-vertically-opposite-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-vertically-opposite-angles",
+      "question": "When two straight lines intersect at a point, which angles are vertically opposite?",
+      "options": [
+        "Angles that share a common arm",
+        "Angles that lie next to each other on the same line",
+        "Angles that add up to 90°",
+        "Angles that lie directly across from each other at the intersection"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses vertically opposite angles with adjacent angles that share an arm.",
+        "Confuses vertically opposite angles with adjacent angles forming a linear pair.",
+        "Thinks vertically opposite means complementary.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-prove-vertically-opposite-angles-equal",
+      "nodeId": "class7-mathematics-lines-and-angles-prove-vertically-opposite-angles-equal",
+      "question": "Lines AB and CD intersect at O. Why is ∠AOC equal to ∠BOD?",
+      "options": [
+        "They are equal because any two intersecting lines must be perpendicular.",
+        "Both angles add up to 90° with ∠AOD.",
+        "Both angles form a linear pair with the same angle ∠AOD, so both equal 180° - ∠AOD.",
+        "They are equal because they share the vertex O and ray OA."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Assumes intersecting lines are always perpendicular.",
+        "Uses 90° instead of 180° for the linear pair relation along the line.",
+        "",
+        "Incorrectly claims vertically opposite angles share an arm."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-calculate-angles-at-intersection",
+      "nodeId": "class7-mathematics-lines-and-angles-calculate-angles-at-intersection",
+      "question": "Two straight lines intersect. If one of the four angles formed is 50°, what are the measures of the other three angles?",
+      "options": [
+        "50°, 50°, 50°",
+        "140°, 50°, 140°",
+        "40°, 50°, 40°",
+        "130°, 50°, 130°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Believes all four angles formed at any intersection must be equal.",
+        "Made an arithmetic subtraction error (computed 180 - 50 = 140).",
+        "Calculated the adjacent angle using 90° - 50° = 40° instead of using 180°.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-transversal",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-transversal",
+      "question": "A line that intersects two or more lines at distinct points is called a:",
+      "options": [
+        "Parallel line",
+        "Perpendicular bisector",
+        "Transversal",
+        "Ray"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Confuses the intersecting line with the parallel lines it cuts.",
+        "Thinks a line intersecting other lines must be a perpendicular bisector.",
+        "",
+        "Confuses a line cutting across other lines with a basic geometric ray."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-classify-interior-exterior-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-classify-interior-exterior-angles",
+      "question": "When a transversal intersects two lines, which angles are called 'interior angles'?",
+      "options": [
+        "The angles that lie outside the region between the two lines",
+        "The angles that are acute",
+        "The angles that lie on the right side of the transversal only",
+        "The angles that lie inside the region between the two lines"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses interior angles with exterior angles.",
+        "Thinks 'interior' means angles measuring less than 90°.",
+        "Thinks 'interior' refers to one specific side of the transversal rather than the space between the two lines.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-corresponding-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-corresponding-angles",
+      "question": "Which pair describes corresponding angles formed by a transversal?",
+      "options": [
+        "Angles in matching relative positions at each intersection",
+        "Angles on opposite sides of the transversal between the two lines",
+        "Angles on the same side of the transversal between the two lines",
+        "Angles that lie directly across from each other at a single intersection"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Describes alternate interior angles rather than corresponding angles.",
+        "Describes consecutive interior (co-interior) angles rather than corresponding angles.",
+        "Describes vertically opposite angles at one intersection."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-alternate-interior-exterior",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-alternate-interior-exterior",
+      "question": "Which pair describes alternate interior angles?",
+      "options": [
+        "Angles on the same side of the transversal between the two lines",
+        "Angles on opposite sides of the transversal between the two lines",
+        "Angles in matching corners at each intersection",
+        "Angles on opposite sides of the transversal outside the two lines"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Describes consecutive interior (co-interior) angles.",
+        "",
+        "Describes corresponding angles.",
+        "Describes alternate exterior angles rather than alternate interior angles."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-identify-cointerior-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-identify-cointerior-angles",
+      "question": "Which pair describes consecutive interior (co-interior) angles?",
+      "options": [
+        "Angles on opposite sides of the transversal between the two lines",
+        "Angles that lie opposite to each other at one vertex",
+        "Angles on the same side of the transversal outside the two lines",
+        "Angles on the same side of the transversal between the two lines"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Describes alternate interior angles.",
+        "Describes vertically opposite angles.",
+        "Describes exterior angles on the same side rather than interior angles.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+      "nodeId": "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+      "question": "Two parallel lines are cut by a transversal. If one angle is 70°, what is the measure of its corresponding angle?",
+      "options": [
+        "110°",
+        "70°",
+        "20°",
+        "140°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Thinks corresponding angles are supplementary (180° - 70° = 110°) instead of equal.",
+        "",
+        "Subtracted from 90°, thinking corresponding angles are complementary.",
+        "Doubled the angle measure instead of recognizing that corresponding angles are equal."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+      "nodeId": "class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+      "question": "Two parallel lines are cut by a transversal. If an alternate interior angle measures 115°, what is the measure of the other alternate interior angle?",
+      "options": [
+        "65°",
+        "115°",
+        "75°",
+        "180°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Thinks alternate interior angles are supplementary (180° - 115° = 65°) instead of equal.",
+        "",
+        "Subtracted from 180° with a calculation mistake (180 - 115 = 75).",
+        "Thinks the alternate interior angle must be the full straight angle of 180°."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-parallel-lines-cointerior-property",
+      "nodeId": "class7-mathematics-lines-and-angles-parallel-lines-cointerior-property",
+      "question": "Two parallel lines are cut by a transversal. If one interior angle on one side of the transversal is 125°, what is the other interior angle on the same side?",
+      "options": [
+        "125°",
+        "65°",
+        "35°",
+        "55°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Thinks co-interior angles are equal instead of supplementary.",
+        "Made a subtraction error when calculating 180° - 125°.",
+        "Subtracted from 90° or subtracted 125° - 90°, confusing supplementary with complementary.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-find-all-parallel-transversal-angles",
+      "nodeId": "class7-mathematics-lines-and-angles-find-all-parallel-transversal-angles",
+      "question": "A transversal cuts two parallel lines, creating eight angles. If one acute angle is 40°, what are the measures of all eight angles?",
+      "options": [
+        "Eight angles of 40° each",
+        "Four angles of 40° and four angles of 50°",
+        "Four angles of 40° and four angles of 140°",
+        "Two angles of 40° and six angles of 140°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Believes all eight angles formed by a transversal are equal to 40°.",
+        "Used 90° - 40° = 50° for the obtuse angles instead of 180° - 40° = 140°.",
+        "",
+        "Incorrectly counted the distribution of acute and obtuse angles at the two intersections."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-lines-and-angles-test-parallelism-lines",
+      "nodeId": "class7-mathematics-lines-and-angles-test-parallelism-lines",
+      "question": "A transversal intersects two lines l and m. Which of the following conditions proves that line l is parallel to line m?",
+      "options": [
+        "A pair of alternate interior angles are equal.",
+        "A pair of vertically opposite angles are equal.",
+        "A pair of co-interior angles add up to 90°.",
+        "A pair of adjacent angles form a linear pair."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Vertically opposite angles are always equal for any intersecting lines; this does not test parallelism between two distinct lines.",
+        "Thinks co-interior angles must sum to 90° rather than 180° to prove lines are parallel.",
+        "Adjacent angles always form a linear pair along any straight line; it does not test if two lines are parallel."
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-define-median",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-define-median",
+      "question": "What is a median of a triangle?",
+      "options": [
+        "A line segment connecting a vertex to the midpoint of the opposite side",
+        "A line segment drawn perpendicular from a vertex to the opposite side",
+        "A line segment that divides an angle of the triangle into two equal halves",
+        "A line segment joining the midpoints of any two sides of the triangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a median with an altitude",
+        "confuses a median with an angle bisector",
+        "confuses a median with a mid-segment connecting two midpoints"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-draw-median",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-draw-median",
+      "question": "Which statement is true about the three medians drawn in an obtuse-angled triangle?",
+      "options": [
+        "All three medians lie completely inside the triangle",
+        "Two medians lie outside the triangle and one lies inside",
+        "One median lies along the longest side of the triangle",
+        "All three medians meet at a point outside the triangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the positions of medians with altitudes in an obtuse triangle",
+        "thinks medians can coincide with the sides of a triangle",
+        "assumes the intersection of medians lies outside like the orthocenter"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-define-altitude",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-define-altitude",
+      "question": "What is an altitude of a triangle?",
+      "options": [
+        "A line segment connecting a vertex to the midpoint of the opposite side",
+        "A perpendicular line segment drawn from a vertex to the line containing the opposite side",
+        "The line segment dividing a side into two equal parts at right angles",
+        "The longest side in any given triangle"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses an altitude with a median",
+        "",
+        "confuses an altitude with a perpendicular bisector of a side",
+        "confuses altitude with the hypotenuse or longest side"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-draw-altitude-acute-right-obtuse",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-draw-altitude-acute-right-obtuse",
+      "question": "Where do the altitudes from the two acute vertices fall in an obtuse-angled triangle?",
+      "options": [
+        "Completely inside the triangle",
+        "Directly along the two shorter sides of the triangle",
+        "Outside the triangle on the extended opposite sides",
+        "At the exact midpoint of the longest side"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes all altitudes must lie inside the triangle regardless of type",
+        "confuses the altitude configuration of an obtuse triangle with a right-angled triangle",
+        "",
+        "confuses the altitude with a median"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-contrast-median-and-altitude",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-contrast-median-and-altitude",
+      "question": "Which of the following correctly compares the positions of medians and altitudes of a triangle?",
+      "options": [
+        "A median always lies inside the triangle, but an altitude can lie outside",
+        "Both medians and altitudes can lie outside an obtuse triangle",
+        "An altitude always lies inside the triangle, but a median can lie outside",
+        "Both medians and altitudes must always lie strictly inside every triangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes medians can also lie outside an obtuse triangle",
+        "swaps the location properties of medians and altitudes",
+        "fails to recognize that altitudes can lie outside obtuse triangles"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-identify-exterior-interior-opposite-angles",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-identify-exterior-interior-opposite-angles",
+      "question": "In triangle PQR, the side QR is extended past R to point S. Which two angles are the interior opposite angles to exterior angle PRS?",
+      "options": [
+        "Angle Q and Angle PRQ",
+        "Angle P and Angle PRQ",
+        "Angle P and Angle Q",
+        "Angle PRS and Angle PRQ"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "includes the adjacent interior angle instead of the opposite vertex angle",
+        "includes the adjacent interior angle along with one opposite angle",
+        "",
+        "selects the linear pair forming the exterior angle rather than interior opposite angles"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property",
+      "question": "According to the exterior angle property of a triangle, an exterior angle is always equal to:",
+      "options": [
+        "The difference between the two interior opposite angles",
+        "The sum of all three interior angles of the triangle",
+        "180 degrees minus the sum of the two interior opposite angles",
+        "The sum of its two interior opposite angles"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses sum with difference in the exterior angle formula",
+        "confuses the exterior angle with the total angle sum of the triangle",
+        "confuses the exterior angle with the adjacent interior angle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-prove-exterior-angle-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-prove-exterior-angle-property",
+      "question": "In triangle ABC, side BC is extended to D. Which two relationships together prove that angle ACD = angle A + angle B?",
+      "options": [
+        "angle ACD + angle ACB = 180° and angle A + angle B + angle ACB = 180°",
+        "angle ACD + angle A = 180° and angle B + angle ACB = 180°",
+        "angle A + angle B = 90° and angle ACD = 90°",
+        "angle ACD = angle ACB and angle A = angle B"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "incorrectly pairs non-adjacent angles into linear pairs",
+        "assumes the triangle must be a right-angled triangle",
+        "incorrectly assumes all adjacent and interior angles are equal"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-calculate-exterior-or-interior-opposite-angle",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-calculate-exterior-or-interior-opposite-angle",
+      "question": "An exterior angle of a triangle measures 110°. If one of the interior opposite angles is 45°, what is the measure of the other interior opposite angle?",
+      "options": [
+        "155°",
+        "70°",
+        "65°",
+        "25°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the exterior angle and interior angle instead of subtracting",
+        "finds the supplement of the exterior angle (180° - 110°) instead of the opposite interior angle",
+        "",
+        "subtracts 110° and 45° from 180° thinking 110° is inside the triangle"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property",
+      "question": "What is the sum of the measures of the three interior angles of any triangle?",
+      "options": [
+        "180°",
+        "360°",
+        "270°",
+        "90°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the interior angle sum of a triangle with a quadrilateral or exterior angle sum",
+        "confuses the angle sum of a triangle with three right angles",
+        "confuses total angle sum with a right angle or the sum of acute angles in a right triangle"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-prove-angle-sum-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-prove-angle-sum-property",
+      "question": "To prove that the sum of angles in triangle ABC is 180°, side BC is extended to D. Since angle ACD = angle A + angle B, what final step completes the proof?",
+      "options": [
+        "Set angle ACD equal to 180° because it forms a straight line by itself",
+        "Subtract angle B from 180° to show angle A and angle C are complementary",
+        "Add angle C to both sides and use the linear pair property: angle ACD + angle C = 180°",
+        "Multiply angle ACD by 2 because the triangle has two opposite angles"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes an exterior angle is itself equal to 180°",
+        "incorrectly assumes angles are complementary rather than using the full straight line sum",
+        "",
+        "applies an arbitrary doubling operation without geometric justification"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-calculate-third-angle",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-calculate-third-angle",
+      "question": "Two angles of a triangle measure 55° and 65°. What is the measure of the third angle?",
+      "options": [
+        "60°",
+        "120°",
+        "70°",
+        "50°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the sum of the two given angles but forgets to subtract from 180°",
+        "makes an arithmetic error when subtracting 120° from 180°",
+        "subtracts 65° - 55° from 60° or makes an arithmetic error"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-solve-algebraic-angle-sum",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-solve-algebraic-angle-sum",
+      "question": "The three angles of a triangle are x, 2x, and 3x. What is the value of x?",
+      "options": [
+        "60°",
+        "45°",
+        "20°",
+        "30°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides 180 by 3 instead of dividing by the total coefficients (6)",
+        "divides 180 by 4 by miscounting the variable terms",
+        "divides 180 by 9 or makes a division error",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-equilateral-triangle-properties",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-equilateral-triangle-properties",
+      "question": "Which statement is true for every equilateral triangle?",
+      "options": [
+        "All three sides are equal, and each interior angle measures 90°",
+        "All three sides are equal, and each interior angle measures 60°",
+        "Only two sides are equal, and all three angles measure 60°",
+        "All three sides are equal, and the angles can have any measures as long as their sum is 180°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses equilateral triangle angle measures with right angles",
+        "",
+        "confuses an equilateral triangle with an isosceles triangle",
+        "thinks side lengths can be equal without fixing the angle measures to 60°"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-isosceles-equal-angles-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-isosceles-equal-angles-property",
+      "question": "In triangle XYZ, side XY = side XZ. Which two angles must be equal in measure?",
+      "options": [
+        "Angle X and Angle Y",
+        "Angle X and Angle Z",
+        "All three angles must be equal",
+        "Angle Y and Angle Z"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies the angle between the equal sides instead of the opposite angle",
+        "picks the vertex angle and one base angle instead of the two base angles",
+        "assumes an isosceles triangle must have all three angles equal like an equilateral triangle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-find-angles-isosceles-triangle",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-find-angles-isosceles-triangle",
+      "question": "In an isosceles triangle ABC with AB = AC, the vertex angle A measures 40°. What is the measure of angle B?",
+      "options": [
+        "40°",
+        "140°",
+        "70°",
+        "100°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes angle B must be equal to vertex angle A",
+        "calculates 180° - 40° = 140° but forgets to divide by 2 for the two equal base angles",
+        "",
+        "subtracts 40° from 140° instead of dividing 140° by 2"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-state-triangle-inequality",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-state-triangle-inequality",
+      "question": "Which statement correctly describes the relationship between the side lengths of any triangle?",
+      "options": [
+        "The sum of the lengths of any two sides is equal to the third side",
+        "The square of any side equals the sum of the other two sides",
+        "The sum of the lengths of any two sides is always less than the third side",
+        "The sum of the lengths of any two sides is always greater than the third side"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the sum of two sides can equal the third side in a non-degenerate triangle",
+        "confuses triangle inequality with the Pythagoras theorem",
+        "inverts the inequality relation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-test-triangle-existence",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-test-triangle-existence",
+      "question": "Which of the following sets of side lengths can form a triangle?",
+      "options": [
+        "2 cm, 3 cm, 6 cm",
+        "4 cm, 5 cm, 8 cm",
+        "3 cm, 4 cm, 7 cm",
+        "1 cm, 2 cm, 4 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "fails to check that 2 + 3 = 5 is less than 6",
+        "",
+        "thinks that sum of two sides equal to the third side (3 + 4 = 7) forms a triangle",
+        "fails to check that 1 + 2 = 3 is less than 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-range-of-third-side",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-range-of-third-side",
+      "question": "Two sides of a triangle have lengths 6 cm and 9 cm. Between which two values must the length of the third side lie?",
+      "options": [
+        "Between 3 cm and 9 cm",
+        "Between 6 cm and 9 cm",
+        "Between 0 cm and 15 cm",
+        "Between 3 cm and 15 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses the difference for lower bound but takes the larger given side as the upper bound",
+        "assumes the third side must fall within the bounds of the given two side lengths",
+        "ignores the difference condition and assumes the lower bound is 0",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-identify-hypotenuse-and-legs",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-identify-hypotenuse-and-legs",
+      "question": "In right-angled triangle ABC, angle B = 90°. Which side is the hypotenuse?",
+      "options": [
+        "Side AB",
+        "Side BC",
+        "Either AB or BC depending on how the triangle is oriented",
+        "Side AC"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "picks an adjacent side containing the right angle instead of the opposite side",
+        "picks an adjacent side containing the right angle instead of the opposite side",
+        "thinks hypotenuse depends on base orientation rather than being opposite to the right angle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-state-pythagoras-property",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-state-pythagoras-property",
+      "question": "In a right-angled triangle with legs of lengths a and b and hypotenuse of length c, which formula is correct?",
+      "options": [
+        "a + b = c",
+        "a² + b² = c²",
+        "a² + c² = b²",
+        "(a + b)² = c²"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses sum of lengths with sum of squared lengths",
+        "",
+        "incorrectly adds hypotenuse squared to one leg squared",
+        "confuses sum of squares with square of the sum"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-calculate-hypotenuse",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-calculate-hypotenuse",
+      "question": "The two legs of a right-angled triangle are 6 cm and 8 cm. What is the length of the hypotenuse?",
+      "options": [
+        "14 cm",
+        "100 cm",
+        "10 cm",
+        "12 cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the lengths of the legs directly (6 + 8) instead of using squares",
+        "calculates the sum of squares (36 + 64 = 100) but forgets to take the square root",
+        "",
+        "guesses an intermediate number without applying the Pythagoras property"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-calculate-unknown-leg",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-calculate-unknown-leg",
+      "question": "A right-angled triangle has a hypotenuse of 13 cm and one leg of 5 cm. What is the length of the other leg?",
+      "options": [
+        "12 cm",
+        "8 cm",
+        "18 cm",
+        "144 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts 13 - 5 directly without squaring the sides",
+        "adds 13 + 5 instead of using the Pythagorean subtraction",
+        "computes 169 - 25 = 144 but forgets to take the square root"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-verify-right-angled-triangle",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-verify-right-angled-triangle",
+      "question": "Which set of side lengths forms a right-angled triangle?",
+      "options": [
+        "5 cm, 7 cm, 9 cm",
+        "9 cm, 12 cm, 15 cm",
+        "6 cm, 8 cm, 11 cm",
+        "4 cm, 6 cm, 8 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes any triangle satisfying triangle inequality (25 + 49 > 81 is false, but picks arbitrarily) is right-angled",
+        "",
+        "calculates 36 + 64 = 100 which does not equal 121, but estimates 11 is close to 10",
+        "checks 16 + 36 = 52 which does not equal 64, misjudging the calculation"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-the-triangle-and-its-properties-pythagoras-word-problems",
+      "nodeId": "class7-mathematics-the-triangle-and-its-properties-pythagoras-word-problems",
+      "question": "A 15 m long ladder is placed against a vertical wall so that its top reaches a window 12 m above the ground. How far is the foot of the ladder from the base of the wall?",
+      "options": [
+        "3 m",
+        "9 m",
+        "27 m",
+        "81 m"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "subtracts the heights directly (15 - 12 = 3) instead of using the Pythagoras theorem",
+        "",
+        "adds the two lengths (15 + 12 = 27) instead of using the Pythagorean relationship",
+        "calculates 225 - 144 = 81 but forgets to take the square root"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-simplify-ratio",
+      "nodeId": "class7-mathematics-comparing-quantities-simplify-ratio",
+      "question": "What is the ratio 15 cm to 25 cm in its simplest form?",
+      "options": [
+        "3 : 8",
+        "5 : 3",
+        "3 : 5",
+        "15 : 25"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the two simplified parts together as the second term",
+        "reverses the terms of the ratio when simplifying",
+        "",
+        "believes a ratio cannot be simplified if both numbers are whole numbers"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-compare-ratios",
+      "nodeId": "class7-mathematics-comparing-quantities-compare-ratios",
+      "question": "Which ratio is greater: 2 : 3 or 3 : 5?",
+      "options": [
+        "3 : 5 is greater",
+        "Cannot be compared",
+        "They are equal",
+        "2 : 3 is greater"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks 3 : 5 is greater because 3 and 5 are individually larger than 2 and 3",
+        "believes ratios with different denominators cannot be compared",
+        "thinks the ratios are equal because the difference between terms is 1 in the first and 2 in the second",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-divide-quantity-in-ratio",
+      "nodeId": "class7-mathematics-comparing-quantities-divide-quantity-in-ratio",
+      "question": "Divide 60 candies between Reena and Tina in the ratio 2 : 3. How many candies does Reena get?",
+      "options": [
+        "30 candies",
+        "24 candies",
+        "40 candies",
+        "20 candies"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides the total equally into two parts ignoring the ratio",
+        "",
+        "gives Reena Tina's share of 3 parts instead of 2 parts",
+        "divides 60 by 3 instead of by the total sum of parts (5)"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-define-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-define-percentage",
+      "question": "What does the statement '35%' literally mean?",
+      "options": [
+        "35 parts out of 10",
+        "35 parts out of 1000",
+        "35 parts out of 100",
+        "35 parts out of 50"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses per cent with per ten",
+        "confuses per cent with per thousand",
+        "",
+        "thinks percent means half of 70 out of 50"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-fraction-to-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-fraction-to-percentage",
+      "question": "Convert the fraction 4/5 into a percentage.",
+      "options": [
+        "80%",
+        "45%",
+        "40%",
+        "20%"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "concatenates the numerator and denominator digits directly",
+        "multiplies only the numerator by 10 instead of converting to out of 100",
+        "calculates 100 divided by 5 but forgets to multiply by the numerator 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-decimal-to-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-decimal-to-percentage",
+      "question": "What is 0.07 written as a percentage?",
+      "options": [
+        "0.7%",
+        "70%",
+        "0.07%",
+        "7%"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "shifts the decimal point by only one place to the right instead of two",
+        "shifts the decimal point three places or confuses 0.07 with 0.7",
+        "adds the percent sign without multiplying by 100",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-percentage-to-fraction",
+      "nodeId": "class7-mathematics-comparing-quantities-percentage-to-fraction",
+      "question": "What is 36% expressed as a fraction in simplest form?",
+      "options": [
+        "36/100",
+        "18/50",
+        "9/25",
+        "9/20"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "writes the percentage directly over 100 without simplifying",
+        "simplifies by dividing by 2 once but fails to reduce to lowest terms",
+        "",
+        "simplifies incorrectly by dividing 100 by 5 instead of 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-percentage-to-decimal",
+      "nodeId": "class7-mathematics-comparing-quantities-percentage-to-decimal",
+      "question": "What is 6.5% expressed as a decimal?",
+      "options": [
+        "0.65",
+        "6.50",
+        "0.0065",
+        "0.065"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides by 10 instead of 100, moving the decimal point one place left",
+        "removes the percent sign without dividing by 100",
+        "divides by 1000 instead of 100, moving the decimal point three places left",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-ratio-to-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-ratio-to-percentage",
+      "question": "A mixture has sand and cement in the ratio 1 : 4. What percentage of the mixture is sand?",
+      "options": [
+        "20%",
+        "25%",
+        "10%",
+        "80%"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "takes 1/4 of 100% instead of dividing the first part by the total parts (1+4=5)",
+        "divides 100 by 10 arbitrarily",
+        "finds the percentage of cement instead of sand"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-find-percent-of-quantity",
+      "nodeId": "class7-mathematics-comparing-quantities-find-percent-of-quantity",
+      "question": "Find 15% of 240 apples.",
+      "options": [
+        "24 apples",
+        "36 apples",
+        "16 apples",
+        "360 apples"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates 10% of 240 instead of 15%",
+        "",
+        "divides 240 by 15 instead of calculating percentage",
+        "multiplies 15 by 240 without dividing by 100"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-find-whole-from-percent",
+      "nodeId": "class7-mathematics-comparing-quantities-find-whole-from-percent",
+      "question": "If 8% of a total amount of money is ₹40, what is the total amount?",
+      "options": [
+        "₹320",
+        "₹50",
+        "₹3200",
+        "₹500"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies 40 by 8 instead of dividing by 8/100",
+        "divides 40 by 8 and forgets to multiply by 100",
+        "multiplies 40 by 8 and by 100 instead of dividing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-percent-increase-decrease",
+      "nodeId": "class7-mathematics-comparing-quantities-percent-increase-decrease",
+      "question": "The price of a book increases from ₹50 to ₹60. What is the percentage increase?",
+      "options": [
+        "10%",
+        "20%",
+        "16.67%",
+        "25%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the absolute increase of ₹10 with the percentage value",
+        "",
+        "divides the increase by the new price (10/60) instead of the original price (10/50)",
+        "calculates percentage as (60 - 50) / 40 * 100"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-identify-cp-sp-terms",
+      "nodeId": "class7-mathematics-comparing-quantities-identify-cp-sp-terms",
+      "question": "A shopkeeper bought a chair for ₹450 and sold it to a customer for ₹520. What is the Cost Price (CP)?",
+      "options": [
+        "₹520",
+        "₹450",
+        "₹70",
+        "₹970"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses Cost Price (buying price) with Selling Price",
+        "",
+        "identifies the Profit (difference) as the Cost Price",
+        "adds both prices together"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-classify-profit-loss",
+      "nodeId": "class7-mathematics-comparing-quantities-classify-profit-loss",
+      "question": "A toy bought for ₹200 is sold for ₹180. What does this transaction result in?",
+      "options": [
+        "Profit",
+        "Neither profit nor loss",
+        "Discount",
+        "Loss"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks any sale where money is received results in profit",
+        "thinks small differences result in no profit or loss",
+        "confuses the concept of commercial loss with a discount granted",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-calculate-profit-loss-amount",
+      "nodeId": "class7-mathematics-comparing-quantities-calculate-profit-loss-amount",
+      "question": "A merchant buys a watch for ₹650 and sells it for ₹580. What is the amount of profit or loss?",
+      "options": [
+        "Loss of ₹70",
+        "Profit of ₹70",
+        "Loss of ₹130",
+        "Profit of ₹1230"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "correctly calculates difference but misidentifies loss as profit",
+        "calculates difference incorrectly by miscarrying subtraction",
+        "adds CP and SP together instead of finding the difference"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-profit-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-profit-percentage",
+      "question": "An item is bought for ₹400 and sold for ₹500. What is the profit percentage?",
+      "options": [
+        "25%",
+        "20%",
+        "100%",
+        "80%"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates profit over Selling Price (100/500 * 100) instead of Cost Price",
+        "takes the absolute profit amount (₹100) directly as percentage",
+        "calculates CP as a percentage of SP (400/500 * 100)"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-loss-percentage",
+      "nodeId": "class7-mathematics-comparing-quantities-loss-percentage",
+      "question": "A cycle bought for ₹2000 is sold at a loss of ₹300. What is the loss percentage?",
+      "options": [
+        "17.65%",
+        "15%",
+        "30%",
+        "7.5%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides loss by SP (300/1700 * 100) instead of CP",
+        "",
+        "drops a zero from 300 and writes 30%",
+        "divides loss by twice the CP or calculates 150/2000"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-find-sp-from-cp-and-percent",
+      "nodeId": "class7-mathematics-comparing-quantities-find-sp-from-cp-and-percent",
+      "question": "A table is bought for ₹800 and sold at a 10% profit. What is the Selling Price?",
+      "options": [
+        "₹80",
+        "₹880",
+        "₹720",
+        "₹810"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds only the profit amount (₹80) and fails to add it to CP",
+        "",
+        "subtracts the profit from CP instead of adding it",
+        "adds the percentage value (10) directly to the cost price"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-find-cp-from-sp-and-percent",
+      "nodeId": "class7-mathematics-comparing-quantities-find-cp-from-sp-and-percent",
+      "question": "An article was sold for ₹540 at a profit of 20%. What was its Cost Price?",
+      "options": [
+        "₹648",
+        "₹432",
+        "₹520",
+        "₹450"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates 20% of SP and adds it to SP",
+        "calculates 20% of SP (₹108) and subtracts it from SP (540 - 108 = 432)",
+        "subtracts 20 directly from 540",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-identify-si-terms",
+      "nodeId": "class7-mathematics-comparing-quantities-identify-si-terms",
+      "question": "In simple interest, what is the term 'Principal' defined as?",
+      "options": [
+        "The extra money paid for using borrowed money",
+        "The total amount returned at the end of the loan",
+        "The money originally borrowed or deposited",
+        "The percentage charged per year"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses Principal with Interest",
+        "confuses Principal with Amount",
+        "",
+        "confuses Principal with Rate of interest"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-calculate-simple-interest",
+      "nodeId": "class7-mathematics-comparing-quantities-calculate-simple-interest",
+      "question": "What is the Simple Interest on ₹2000 at 5% per annum for 3 years?",
+      "options": [
+        "₹100",
+        "₹30000",
+        "₹300",
+        "₹2300"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates interest for only 1 year instead of 3 years",
+        "multiplies P * R * T but forgets to divide by 100",
+        "",
+        "calculates the total Amount (P + I) instead of just the interest"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-calculate-total-amount",
+      "nodeId": "class7-mathematics-comparing-quantities-calculate-total-amount",
+      "question": "If a loan of ₹1500 yields a simple interest of ₹180, what is the total Amount to be repaid?",
+      "options": [
+        "₹1680",
+        "₹1320",
+        "₹1800",
+        "₹180"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts interest from principal instead of adding (A = P - I)",
+        "rounds up to the nearest hundred arbitrarily",
+        "confuses total Amount with only the interest portion"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-find-principal-rate-or-time",
+      "nodeId": "class7-mathematics-comparing-quantities-find-principal-rate-or-time",
+      "question": "At what rate of interest per annum will ₹800 earn ₹160 simple interest in 2 years?",
+      "options": [
+        "5%",
+        "20%",
+        "10%",
+        "8%"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "divides 160 by (800 * 2) but forgets to multiply by 100",
+        "multiplies 160 by 2 instead of dividing by time",
+        "",
+        "divides 160 by 20 without considering principal correctly"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-comparing-quantities-si-fractional-time-rate",
+      "nodeId": "class7-mathematics-comparing-quantities-si-fractional-time-rate",
+      "question": "Find the Simple Interest on ₹1200 at 6% per annum for 2 years and 6 months.",
+      "options": [
+        "₹180",
+        "₹187.20",
+        "₹144",
+        "₹1800"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "treats 2 years 6 months as 2.6 years instead of 2.5 years",
+        "calculates interest for only 2 years and ignores the 6 months",
+        "forgets to divide by 100 after multiplying by 2.5"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-need-for-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-need-for-rational-numbers",
+      "question": "If a height of 3/4 km above sea level is represented as +3/4 km, how should a depth of 3/4 km below sea level be represented?",
+      "options": [
+        "-3/4 km",
+        "+3/4 km",
+        "-4/3 km",
+        "0 km"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks direction does not change the sign of a fractional quantity",
+        "inverts the fraction instead of changing the sign to represent opposite direction",
+        "thinks below sea level must be represented by zero"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-define-rational-number",
+      "nodeId": "class7-mathematics-rational-numbers-define-rational-number",
+      "question": "Which of the following numbers is NOT a rational number?",
+      "options": [
+        "-7/11",
+        "4/0",
+        "0/5",
+        "3/1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks negative fractions cannot be rational numbers",
+        "",
+        "believes zero in the numerator makes a number undefined or non-rational",
+        "thinks whole numbers or integers written with denominator 1 are not rational"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-integers-and-fractions-as-rational",
+      "nodeId": "class7-mathematics-rational-numbers-integers-and-fractions-as-rational",
+      "question": "How is the integer -8 expressed in the rational form p/q?",
+      "options": [
+        "-8/0",
+        "1/-8",
+        "-8/1",
+        "-8/-8"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses 0 as the default denominator for integers",
+        "places the integer in the denominator instead of the numerator",
+        "",
+        "divides the integer by itself thinking it keeps the value intact"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-classify-positive-negative-zero",
+      "nodeId": "class7-mathematics-rational-numbers-classify-positive-negative-zero",
+      "question": "Which of the following rational numbers is a positive rational number?",
+      "options": [
+        "-3/7",
+        "5/-9",
+        "0/-6",
+        "-4/-11"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes a single negative sign on the numerator makes the entire number positive",
+        "believes a negative sign in the denominator makes the number positive",
+        "confuses zero with a positive rational number",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-generate-equivalent-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers",
+      "question": "Which of the following is equivalent to -3/5?",
+      "options": [
+        "-6/10",
+        "-6/5",
+        "0/2",
+        "-1/3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "multiplies only the numerator without multiplying the denominator",
+        "adds 3 to both numerator and denominator instead of multiplying",
+        "adds 2 to both numerator and denominator to get an equivalent fraction"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-convert-positive-denominator",
+      "nodeId": "class7-mathematics-rational-numbers-convert-positive-denominator",
+      "question": "What is 7/(-12) written as an equivalent rational number with a positive denominator?",
+      "options": [
+        "7/12",
+        "-12/7",
+        "-7/12",
+        "12/7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "drops the negative sign entirely when making the denominator positive",
+        "inverts the fraction when moving the negative sign",
+        "",
+        "inverts the fraction and drops the negative sign"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-reduce-to-standard-form",
+      "nodeId": "class7-mathematics-rational-numbers-reduce-to-standard-form",
+      "question": "What is the standard form of 24/(-36)?",
+      "options": [
+        "-12/18",
+        "2/(-3)",
+        "-2/3",
+        "4/(-6)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "does not divide by the highest common factor completely",
+        "simplifies to lowest terms but leaves the denominator negative",
+        "",
+        "divides by a common factor but leaves the denominator negative and not fully reduced"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-represent-positive-on-number-line",
+      "nodeId": "class7-mathematics-rational-numbers-represent-positive-on-number-line",
+      "question": "Between which two consecutive integers does the rational number 7/3 lie on the number line?",
+      "options": [
+        "2 and 3",
+        "1 and 2",
+        "0 and 1",
+        "3 and 4"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "focuses on the denominator 3 and places it between 1 and 2",
+        "thinks all positive proper and improper fractions lie between 0 and 1",
+        "looks at the numerator 7 and assumes it lies between 3 and 4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-represent-negative-on-number-line",
+      "nodeId": "class7-mathematics-rational-numbers-represent-negative-on-number-line",
+      "question": "Between which two integers does -5/4 lie on the number line?",
+      "options": [
+        "0 and -1",
+        "-4 and -5",
+        "-2 and -3",
+        "-1 and -2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "treats -5/4 as a proper fraction lying between 0 and -1",
+        "uses the digits of the fraction (-4 and -5) as the bounding integers",
+        "miscounts negative unit intervals to the left of zero",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-compare-same-denominator",
+      "nodeId": "class7-mathematics-rational-numbers-compare-same-denominator",
+      "question": "Which statement correctly compares -7/9 and -4/9?",
+      "options": [
+        "-7/9 > -4/9",
+        "-7/9 = -4/9",
+        "-7/9 < -4/9",
+        "-4/9 < -7/9"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks -7 is greater than -4 because 7 is greater than 4",
+        "thinks fractions with the same denominator are equal",
+        "",
+        "confuses the inequality symbols while attempting to state -7/9 is smaller"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-compare-different-denominators",
+      "nodeId": "class7-mathematics-rational-numbers-compare-different-denominators",
+      "question": "Which of the following comparisons between -3/4 and -5/6 is correct?",
+      "options": [
+        "-3/4 < -5/6",
+        "-5/6 > -3/4",
+        "-3/4 = -5/6",
+        "-3/4 > -5/6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "compares without considering negative signs, thinking 9/12 < 10/12 implies -9/12 < -10/12",
+        "confuses the greater than symbol when meaning -3/4 is larger",
+        "assumes the fractions are equal because both numerators and denominators differ by 2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-order-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-order-rational-numbers",
+      "question": "Which list shows the rational numbers -1/2, -3/4, and 1/4 in ascending order (smallest to largest)?",
+      "options": [
+        "-3/4, -1/2, 1/4",
+        "-1/2, -3/4, 1/4",
+        "1/4, -1/2, -3/4",
+        "-3/4, 1/4, -1/2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "orders negative numbers by their absolute values ignoring negative magnitude",
+        "orders from largest to smallest instead of ascending",
+        "places positive numbers in the middle of negative numbers"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-find-between-using-equivalent-fractions",
+      "nodeId": "class7-mathematics-rational-numbers-find-between-using-equivalent-fractions",
+      "question": "Which rational number lies between 1/3 and 1/2?",
+      "options": [
+        "2/5",
+        "1/5",
+        "7/12",
+        "5/12"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds numerators and denominators (1+1)/(3+2) = 2/5 and misidentifies relative sizes",
+        "adds denominators together to get 1/5, which is smaller than 1/3",
+        "picks a fraction that is larger than 1/2 because 7/12 > 6/12",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-add-same-denominator",
+      "nodeId": "class7-mathematics-rational-numbers-add-same-denominator",
+      "question": "What is the sum of -8/11 and 3/11?",
+      "options": [
+        "-5/11",
+        "-5/22",
+        "-11/11",
+        "5/11"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds both the numerators and the denominators together",
+        "adds the absolute values of numerators: -8 - 3 = -11",
+        "fails to apply the negative sign to the result after subtracting"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-add-different-denominators",
+      "nodeId": "class7-mathematics-rational-numbers-add-different-denominators",
+      "question": "What is the value of (-2/3) + (5/6)?",
+      "options": [
+        "3/9",
+        "1/6",
+        "-1/6",
+        "7/6"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds numerators together and denominators together directly: (-2+5)/(3+6)",
+        "",
+        "makes an integer sign error: calculates -4 + 5 as -1",
+        "adds absolute numerators 4 + 5 = 9/6 or makes arithmetic error"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-additive-inverse",
+      "nodeId": "class7-mathematics-rational-numbers-additive-inverse",
+      "question": "What is the additive inverse of -4/9?",
+      "options": [
+        "-9/4",
+        "4/9",
+        "9/4",
+        "0"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the fraction instead of changing its sign",
+        "",
+        "both inverts the fraction and changes the sign",
+        "confuses additive inverse with the additive identity"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-subtract-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-subtract-rational-numbers",
+      "question": "What is the result of (-1/4) - (3/8)?",
+      "options": [
+        "-5/8",
+        "-1/8",
+        "5/8",
+        "1/8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "computes -2 + 3 = 1 instead of -2 - 3 = -5",
+        "ignores negative signs completely and computes 2 + 3 = 5",
+        "drops negative signs and computes 3/8 - 2/8 = 1/8"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-multiply-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-multiply-rational-numbers",
+      "question": "What is the product of (-3/5) and (-10/9)?",
+      "options": [
+        "-2/3",
+        "-30/45",
+        "2/3",
+        "13/14"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes multiplying two negative numbers gives a negative product",
+        "fails to simplify the fraction and assigns a negative sign",
+        "",
+        "adds numerators and denominators instead of multiplying"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-multiplicative-inverse-reciprocal",
+      "nodeId": "class7-mathematics-rational-numbers-multiplicative-inverse-reciprocal",
+      "question": "What is the multiplicative inverse (reciprocal) of -5/7?",
+      "options": [
+        "5/7",
+        "-7/5",
+        "7/5",
+        "-5/7"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "changes the sign instead of inverting the fraction",
+        "",
+        "both inverts the fraction and flips the sign to positive",
+        "thinks the multiplicative inverse of a number is itself"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-divide-rational-numbers",
+      "nodeId": "class7-mathematics-rational-numbers-divide-rational-numbers",
+      "question": "What is the result of (-4/7) ÷ (2/21)?",
+      "options": [
+        "-8/147",
+        "6",
+        "-6",
+        "-2/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the fractions directly without inverting the second fraction",
+        "loses the negative sign during division",
+        "",
+        "divides numerators directly (-4/2) and denominators directly (7/21) without inverting"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-simplify-combined-operations",
+      "nodeId": "class7-mathematics-rational-numbers-simplify-combined-operations",
+      "question": "What is the value of (1/2) + (-3/4) × (2/3)?",
+      "options": [
+        "-1/6",
+        "0",
+        "1",
+        "-1/4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds (1/2 + -3/4) first to get -1/4 and multiplies by 2/3 to get -1/6",
+        "",
+        "computes product as +1/2 instead of -1/2, yielding 1/2 + 1/2 = 1",
+        "miscalculates the product of -3/4 and 2/3 as -3/4"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-word-problems-addition-subtraction",
+      "nodeId": "class7-mathematics-rational-numbers-word-problems-addition-subtraction",
+      "question": "A rope of length 7/2 metres is cut into two pieces. If one piece is 4/3 metres long, what is the length of the other piece?",
+      "options": [
+        "29/6 metres",
+        "13/6 metres",
+        "3/1 metres",
+        "11/5 metres"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the two lengths instead of subtracting",
+        "",
+        "subtracts numerators (7-4) and denominators (2-3 or 3-2) directly",
+        "adds numerators (7+4) and denominators (2+3) directly"
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-word-problems-multiplication-division",
+      "nodeId": "class7-mathematics-rational-numbers-word-problems-multiplication-division",
+      "question": "If 1 metre of ribbon costs Rs 15/2, what is the cost of 4/5 metres of ribbon?",
+      "options": [
+        "Rs 19/7",
+        "Rs 75/8",
+        "Rs 31/10",
+        "Rs 6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds numerators and denominators directly",
+        "divides (15/2) by (4/5) instead of multiplying",
+        "adds 15/2 and 4/5 by finding a common denominator",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class7-mathematics-rational-numbers-multi-step-word-problems",
+      "nodeId": "class7-mathematics-rational-numbers-multi-step-word-problems",
+      "question": "A student had Rs 60. She spent 1/3 of it on a book and 1/4 of the remaining amount on a pen. How much money is left with her?",
+      "options": [
+        "Rs 10",
+        "Rs 35",
+        "Rs 25",
+        "Rs 30"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "finds the cost of the pen (Rs 10) instead of the remaining money",
+        "calculates 1/4 of Rs 60 as Rs 15 and subtracts both from Rs 60 yielding Rs 25, then adds Rs 10 back",
+        "calculates 1/4 of the original Rs 60 as Rs 15 and subtracts both from Rs 60 yielding 60 - 20 - 15 = Rs 25",
+        ""
+      ]
+    }
+  ]
+}

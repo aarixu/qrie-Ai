@@ -1,0 +1,4325 @@
+{
+  "version": 1,
+  "probes": [
+    {
+      "id": "probe-class6-mathematics-patterns-identify-repeating-shapes",
+      "nodeId": "class6-mathematics-patterns-identify-repeating-shapes",
+      "question": "Look at this sequence of shapes: Circle, Triangle, Square, Circle, Triangle, Square, Circle, Triangle, Square. What is the repeating core unit of this pattern?",
+      "options": [
+        "Circle, Triangle",
+        "Square, Circle, Triangle",
+        "Circle, Triangle, Square",
+        "Circle, Triangle, Square, Circle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the core pattern only consists of the first two shapes and misses the third",
+        "starts identifying the core from the end of the first repetition instead of the beginning",
+        "",
+        "includes an extra shape beyond the minimal repeating unit"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-predict-next-shape",
+      "nodeId": "class6-mathematics-patterns-predict-next-shape",
+      "question": "A pattern goes: Star, Star, Heart, Star, Star, Heart, Star, Star, Heart, Star... What shape comes next?",
+      "options": [
+        "Heart",
+        "Star",
+        "Diamond",
+        "Circle"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the pattern switches to Heart immediately after any Star",
+        "",
+        "introduces a new unrelated shape instead of following the repeating pattern",
+        "guesses an unrelated shape not found in the sequence"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-rotational-patterns",
+      "nodeId": "class6-mathematics-patterns-identify-rotational-patterns",
+      "question": "An arrow points Up, then Right, then Down, then Left. How is the arrow turning in each step?",
+      "options": [
+        "Half turn (180°) clockwise",
+        "Quarter turn (90°) anticlockwise",
+        "Quarter turn (90°) clockwise",
+        "Full turn (360°) clockwise"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a quarter turn with a half turn",
+        "confuses clockwise direction with anticlockwise direction",
+        "",
+        "confuses a quarter turn with a complete revolution"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-growing-visual",
+      "nodeId": "class6-mathematics-patterns-identify-growing-visual",
+      "question": "A pattern of staircases is built with blocks: Stage 1 has 2 blocks, Stage 2 has 5 blocks, Stage 3 has 8 blocks, and Stage 4 has 11 blocks. How many blocks are added at each new stage?",
+      "options": [
+        "5 blocks",
+        "2 blocks",
+        "3 blocks",
+        "4 blocks"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "takes the number of blocks in Stage 2 as the step size",
+        "takes the number of blocks in the very first stage as the increment",
+        "",
+        "calculates the step size incorrectly by miscounting the difference"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-even-odd",
+      "nodeId": "class6-mathematics-patterns-identify-even-odd",
+      "question": "In the number sequence 1, 2, 3, 4, 5, 6, 7, 8..., which rule correctly describes the arrangement of even and odd numbers?",
+      "options": [
+        "Two odd numbers are always followed by two even numbers",
+        "All numbers in the sequence are odd numbers",
+        "Odd and even numbers alternate one after the other",
+        "All numbers in the sequence are even numbers"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes numbers group in pairs of parity rather than strictly alternating",
+        "confuses natural numbers with odd numbers only",
+        "",
+        "confuses natural numbers with even numbers only"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-addition-step",
+      "nodeId": "class6-mathematics-patterns-identify-addition-step",
+      "question": "What is the constant number added to get each next term in the sequence: 7, 13, 19, 25, 31...?",
+      "options": [
+        "7",
+        "5",
+        "8",
+        "6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "takes the first term of the sequence as the common difference",
+        "miscalculates 13 - 7 as 5",
+        "miscalculates 13 - 7 as 8",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-subtraction-step",
+      "nodeId": "class6-mathematics-patterns-identify-subtraction-step",
+      "question": "What number is subtracted each time in the sequence: 48, 41, 34, 27, 20...?",
+      "options": [
+        "6",
+        "9",
+        "8",
+        "7"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "miscalculates the subtraction step as 6",
+        "miscalculates the subtraction step as 9",
+        "miscalculates the subtraction step as 8",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-identify-multiplicative-step",
+      "nodeId": "class6-mathematics-patterns-identify-multiplicative-step",
+      "question": "Look at the sequence: 3, 12, 48, 192... What is the constant number multiplied at each step?",
+      "options": [
+        "9",
+        "3",
+        "6",
+        "4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "finds the difference between the first two terms by subtraction instead of division",
+        "assumes the multiplier must be the first term of the sequence",
+        "guesses an incorrect multiplier without verifying 12 divided by 3",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-find-missing-term-linear",
+      "nodeId": "class6-mathematics-patterns-find-missing-term-linear",
+      "question": "Find the missing number in the sequence: 5, 11, ___, 23, 29.",
+      "options": [
+        "16",
+        "17",
+        "18",
+        "19"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds 5 instead of the common difference 6 to 11",
+        "",
+        "adds 7 instead of the common difference 6 to 11",
+        "adds 8 instead of the common difference 6 to 11"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-describe-rule-in-words",
+      "nodeId": "class6-mathematics-patterns-describe-rule-in-words",
+      "question": "Which statement correctly describes the rule for the sequence: 4, 9, 14, 19, 24...?",
+      "options": [
+        "Start at 4 and add 5 each time",
+        "Start at 5 and add 4 each time",
+        "Start at 4 and multiply by 5 each time",
+        "Start at 4 and add 4 each time"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps the starting value and the step value",
+        "confuses addition with multiplication",
+        "uses the start value as the addition step"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-matchstick-relation-table",
+      "nodeId": "class6-mathematics-patterns-matchstick-relation-table",
+      "question": "A single square requires 4 matchsticks. Two joined squares require 7 matchsticks. Three joined squares require 10 matchsticks. How many matchsticks are needed for 4 joined squares?",
+      "options": [
+        "16 matchsticks",
+        "13 matchsticks",
+        "14 matchsticks",
+        "12 matchsticks"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies 4 squares by 4 sticks without accounting for shared sides",
+        "",
+        "adds 4 sticks instead of 3 to the previous total of 10",
+        "multiplies 3 sticks by 4 without adding the 1 closing stick"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-write-expression-with-variable",
+      "nodeId": "class6-mathematics-patterns-write-expression-with-variable",
+      "question": "The number of toothpicks in shape number 'n' is given by the sequence: 5, 8, 11, 14... Which expression gives the number of toothpicks for shape 'n'?",
+      "options": [
+        "5n",
+        "3n + 2",
+        "3n + 5",
+        "5n + 3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies the first term by n without looking at the constant difference",
+        "",
+        "uses the first term 5 as the constant term in the formula instead of finding the 0th term",
+        "swaps the common difference and the initial term value"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-evaluate-nth-term",
+      "nodeId": "class6-mathematics-patterns-evaluate-nth-term",
+      "question": "The rule for the nth term of a number pattern is 4n + 3. What is the value of the 20th term?",
+      "options": [
+        "80",
+        "87",
+        "83",
+        "27"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies 4 by 20 but forgets to add 3",
+        "computes 4 times 21 instead of 4 times 20 plus 3",
+        "",
+        "adds 4 + 3 + 20 instead of multiplying 4 by 20"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-dot-arrays-rectangular",
+      "nodeId": "class6-mathematics-patterns-dot-arrays-rectangular",
+      "question": "Which of these numbers CANNOT be arranged as a rectangular dot array with more than 1 row and more than 1 dot in each row?",
+      "options": [
+        "12",
+        "15",
+        "18",
+        "13"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks 12 cannot form a rectangle because it is an even composite number",
+        "thinks 15 cannot form a rectangle because it is odd",
+        "thinks 18 cannot form a rectangle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-square-numbers-visual",
+      "nodeId": "class6-mathematics-patterns-square-numbers-visual",
+      "question": "If a square dot pattern has 6 rows with 6 dots in each row, how many dots are there in total?",
+      "options": [
+        "36",
+        "12",
+        "24",
+        "30"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 6 + 6 instead of multiplying 6 by 6",
+        "multiplies 6 by 4 as if finding the perimeter of the square",
+        "multiplies 6 by 5 by missing one column"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-square-numbers-sequence",
+      "nodeId": "class6-mathematics-patterns-square-numbers-sequence",
+      "question": "What is the 8th square number in the sequence 1, 4, 9, 16, 25...?",
+      "options": [
+        "16",
+        "49",
+        "56",
+        "64"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "doubles 8 instead of squaring 8",
+        "gives the 7th square number (7 × 7) instead of the 8th",
+        "multiplies 8 by 7 instead of multiplying 8 by 8",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-triangular-numbers-visual",
+      "nodeId": "class6-mathematics-patterns-triangular-numbers-visual",
+      "question": "In a triangular dot pattern, the 1st figure has 1 dot, the 2nd has 3 dots, and the 3rd has 6 dots. How many dots are in the 4th triangular figure?",
+      "options": [
+        "9",
+        "10",
+        "8",
+        "12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds 3 dots instead of adding 4 dots to the previous figure",
+        "",
+        "doubles the step size incorrectly",
+        "doubles the 3rd figure dot count (6 × 2) instead of adding the 4th row"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-triangular-numbers-sum-formula",
+      "nodeId": "class6-mathematics-patterns-triangular-numbers-sum-formula",
+      "question": "What is the 6th triangular number, found by calculating 1 + 2 + 3 + 4 + 5 + 6?",
+      "options": [
+        "21",
+        "20",
+        "36",
+        "15"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "makes an addition error when summing consecutive numbers",
+        "calculates the 6th square number (6 × 6) instead of the 6th triangular number",
+        "calculates the 5th triangular number (1 + 2 + 3 + 4 + 5) instead of the 6th"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-two-triangles-make-square",
+      "nodeId": "class6-mathematics-patterns-two-triangles-make-square",
+      "question": "The 3rd triangular number is 6 and the 4th triangular number is 10. What square number is formed when these two consecutive triangular numbers are added together?",
+      "options": [
+        "16",
+        "25",
+        "9",
+        "36"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "picks the 5th square number (5 × 5)",
+        "picks the 3rd square number (3 × 3) instead of summing 6 + 10",
+        "picks the 6th square number"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-sum-of-odd-numbers-square",
+      "nodeId": "class6-mathematics-patterns-sum-of-odd-numbers-square",
+      "question": "What is the sum of the first 5 consecutive odd numbers: 1 + 3 + 5 + 7 + 9?",
+      "options": [
+        "25",
+        "20",
+        "30",
+        "16"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "makes a calculation error in adding the odd terms",
+        "multiplies the number of terms 5 by 6 instead of evaluating 5²",
+        "evaluates 4² instead of 5²"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-differences-of-squares",
+      "nodeId": "class6-mathematics-patterns-differences-of-squares",
+      "question": "Look at the differences between consecutive squares: 4 - 1 = 3, 9 - 4 = 5, 16 - 9 = 7. What is the difference between the next two squares, 25 and 16 (25 - 16)?",
+      "options": [
+        "8",
+        "10",
+        "11",
+        "9"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "expects an even difference instead of the next odd number",
+        "makes an arithmetic subtraction error",
+        "skips an odd number and jumps to 11",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-number-tower-patterns",
+      "nodeId": "class6-mathematics-patterns-number-tower-patterns",
+      "question": "In a number tower, each upper block is the sum of the two blocks directly below it. If the bottom row has blocks [3, 5, 4], what number goes in the very top block?",
+      "options": [
+        "17",
+        "12",
+        "24",
+        "16"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "simply adds the three bottom numbers (3 + 5 + 4 = 12) without building the middle row",
+        "multiplies numbers instead of adding them across the tower levels",
+        "makes an addition error when adding the middle row blocks (8 + 9)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-palindromic-multiplication",
+      "nodeId": "class6-mathematics-patterns-palindromic-multiplication",
+      "question": "Observe the pattern: 1 × 1 = 1, 11 × 11 = 121, 111 × 111 = 12321. Following this pattern, what is 1111 × 1111?",
+      "options": [
+        "123454321",
+        "1234321",
+        "11111111",
+        "12344321"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "counts up to 5 instead of 4 for a 4-digit number",
+        "",
+        "repeats digit 1 instead of applying the palindromic number pattern",
+        "duplicates the middle peak digit 4 instead of having a single peak"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-patterns-magic-squares-check",
+      "nodeId": "class6-mathematics-patterns-magic-squares-check",
+      "question": "In a 3 × 3 magic square, every row, column, and diagonal adds up to 15. If a row contains the numbers 8 and 1, what must the third number in that row be?",
+      "options": [
+        "5",
+        "7",
+        "6",
+        "9"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts incorrectly from 15 (calculates 15 - 9 as 5)",
+        "adds 8 + 1 and thinks 7 is needed to reach something else",
+        "",
+        "repeats the sum of the two given numbers (8 + 1 = 9)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-identify-point-environment",
+      "nodeId": "class6-mathematics-lines-and-angles-identify-point-environment",
+      "question": "Which of these best represents a model of a geometric point in your classroom?",
+      "options": [
+        "The stretched wire of a window screen",
+        "The edge of a long wooden ruler",
+        "The flat surface of the teacher's desk",
+        "The sharp tip of a sharpened pencil"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a physical line segment with a point",
+        "confuses a one-dimensional line or edge with a zero-dimensional point",
+        "confuses a two-dimensional surface or plane with a point",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-identify-lines-edges-environment",
+      "nodeId": "class6-mathematics-lines-and-angles-identify-lines-edges-environment",
+      "question": "Which of the following gives the best physical idea of a line segment?",
+      "options": [
+        "The pointy tip of a needle",
+        "The flat cover of a notebook",
+        "A straight edge of a blackboard frame",
+        "A single grain of sand"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a point with a straight edge or line segment",
+        "confuses a flat surface or plane region with a straight edge",
+        "",
+        "thinks very small objects represent line segments instead of points"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-identify-intersections-environment",
+      "nodeId": "class6-mathematics-lines-and-angles-identify-intersections-environment",
+      "question": "Which of these everyday objects shows intersecting lines?",
+      "options": [
+        "The two opposite rails of a straight railway track",
+        "Two electric wires running straight side by side",
+        "The top and bottom edges of a ruler",
+        "The two crossing metal bars in a window grill"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses parallel lines with intersecting lines",
+        "confuses lines that stay equally spaced with lines that cross",
+        "picks parallel opposite boundaries instead of crossing lines",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-identify-angles-environment",
+      "nodeId": "class6-mathematics-lines-and-angles-identify-angles-environment",
+      "question": "Where is an angle clearly formed in everyday life?",
+      "options": [
+        "Between the hour hand and minute hand of a clock",
+        "On the completely flat surface of a mirror",
+        "Along the single straight edge of a desk",
+        "Around the round edge of a coin"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses an entire flat surface with an angle formed at a corner",
+        "thinks a single line segment alone forms an angle without meeting another edge",
+        "confuses a smooth curved boundary with the meeting of two straight arms"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-point-notation",
+      "nodeId": "class6-mathematics-lines-and-angles-define-point-notation",
+      "question": "What is a geometric point, and how is it usually labelled?",
+      "options": [
+        "A short line with measurable length, labelled using two letters",
+        "A location with no length, width, or thickness, labelled with a single capital letter",
+        "A circular dot whose size determines its value, labelled with a number",
+        "A flat surface extending endlessly, labelled with a Greek letter"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks a point has length and requires two letters like a segment",
+        "",
+        "believes a geometric point has physical size or area that matters",
+        "confuses a point with a plane"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-line-segment",
+      "nodeId": "class6-mathematics-lines-and-angles-define-line-segment",
+      "question": "Which statement correctly describes a line segment?",
+      "options": [
+        "It extends endlessly in both directions without any endpoints",
+        "It starts at one fixed point and continues forever in one direction",
+        "It is the shortest path between two fixed endpoints and has a fixed length",
+        "It is any curved or straight path joining two points on a plane"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a line segment with a line",
+        "confuses a line segment with a ray",
+        "",
+        "thinks any curve connecting two points is called a line segment"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-label-line-segment",
+      "nodeId": "class6-mathematics-lines-and-angles-label-line-segment",
+      "question": "Which symbol represents the line segment connecting endpoints P and Q?",
+      "options": [
+        "$\\overline{PQ}$",
+        "$\\overleftrightarrow{PQ}$",
+        "$\\overrightarrow{PQ}$",
+        "$\\angle PQ$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the line segment symbol with the double-headed line symbol",
+        "confuses the line segment symbol with the ray symbol",
+        "confuses a line segment with an angle symbol"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-line",
+      "nodeId": "class6-mathematics-lines-and-angles-define-line",
+      "question": "In geometry, what is the definition of a line?",
+      "options": [
+        "A straight path with two fixed endpoints that can be measured with a ruler",
+        "A straight path extending infinitely in both directions with no endpoints",
+        "A straight path starting at one point and ending at another point",
+        "A boundary mark having both measurable length and thickness"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a line with a line segment",
+        "",
+        "thinks a line has two stopping ends",
+        "thinks a line has physical thickness and ends"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-label-line",
+      "nodeId": "class6-mathematics-lines-and-angles-label-line",
+      "question": "A line passes through two points X and Y. How is this line written in standard notation?",
+      "options": [
+        "$\\overline{XY}$",
+        "$\\overleftrightarrow{XY}$",
+        "$\\overrightarrow{XY}$",
+        "$\\angle XY$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses a straight bar, confusing a line with a line segment",
+        "",
+        "uses a single arrow, confusing a line with a ray",
+        "uses the angle symbol instead of the line symbol"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-compare-line-segment-line",
+      "nodeId": "class6-mathematics-lines-and-angles-compare-line-segment-line",
+      "question": "How do a line and a line segment differ?",
+      "options": [
+        "A line has a definite length, while a line segment cannot be measured",
+        "A line segment has 1 endpoint, while a line has 2 endpoints",
+        "A line segment has 2 endpoints, while a line has 0 endpoints",
+        "A line has 2 endpoints, while a line segment extends endlessly"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the measurability of a line and a line segment",
+        "confuses a line segment with a ray by assigning it 1 endpoint",
+        "",
+        "completely swaps the definitions of a line and a line segment"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-intersecting-parallel-lines",
+      "nodeId": "class6-mathematics-lines-and-angles-define-intersecting-parallel-lines",
+      "question": "Two straight lines lie on the same flat page and never meet, no matter how far they are extended. What are they called?",
+      "options": [
+        "Parallel lines",
+        "Perpendicular lines",
+        "Intersecting lines",
+        "Overlapping lines"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks lines that do not meet must cross at 90 degrees",
+        "confuses parallel lines with lines that intersect",
+        "thinks lines that never meet must be the exact same line"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-ray",
+      "nodeId": "class6-mathematics-lines-and-angles-define-ray",
+      "question": "What is a ray?",
+      "options": [
+        "A straight figure with two endpoints and a fixed length",
+        "A part of a line with one starting point that goes on endlessly in one direction",
+        "A straight line extending without end in both directions",
+        "A point where two separate lines cross each other"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a ray with a line segment",
+        "",
+        "confuses a ray with a line",
+        "confuses a ray with an intersection point"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-label-ray",
+      "nodeId": "class6-mathematics-lines-and-angles-label-ray",
+      "question": "A ray starts at initial point A and passes through point B forever. How is this ray correctly written?",
+      "options": [
+        "$\\overrightarrow{BA}$",
+        "$\\overline{AB}$",
+        "$\\overleftrightarrow{AB}$",
+        "$\\overrightarrow{AB}$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "names the destination point before the initial starting endpoint",
+        "uses a line segment bar instead of a ray arrow",
+        "uses a two-headed line arrow instead of a ray arrow",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-define-angle-and-arms",
+      "nodeId": "class6-mathematics-lines-and-angles-define-angle-and-arms",
+      "question": "In the angle formed by rays $\\overrightarrow{OA}$ and $\\overrightarrow{OB}$, what is point O called?",
+      "options": [
+        "Vertex",
+        "Arm",
+        "Segment",
+        "Degree"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the common meeting point with the rays or arms",
+        "confuses the common endpoint with a line segment",
+        "confuses the geometric point with the unit of angle measurement"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-label-angle-three-letters",
+      "nodeId": "class6-mathematics-lines-and-angles-label-angle-three-letters",
+      "question": "An angle has its vertex at point Y, with arms passing through points X and Z. Which is a correct name for this angle?",
+      "options": [
+        "$\\angle YZX$",
+        "$\\angle YXZ$",
+        "$\\angle XYZ$",
+        "$\\angle XZY$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "puts the vertex first and swaps arm points incorrectly",
+        "puts the vertex at the beginning of the name instead of the middle",
+        "",
+        "puts an arm point in the middle position instead of the vertex"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-identify-interior-exterior-angle",
+      "nodeId": "class6-mathematics-lines-and-angles-identify-interior-exterior-angle",
+      "question": "Point P lies inside the opening between the two arms of $\\angle ABC$. Where is point P located?",
+      "options": [
+        "In the exterior of $\\angle ABC$",
+        "On the boundary of $\\angle ABC$",
+        "At the vertex of $\\angle ABC$",
+        "In the interior of $\\angle ABC$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the inside region (interior) with the outside region (exterior)",
+        "thinks being inside the arms means lying directly on an arm (boundary)",
+        "thinks any point inside the angle must be the vertex point itself",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-understand-degree-unit",
+      "nodeId": "class6-mathematics-lines-and-angles-understand-degree-unit",
+      "question": "What unit is used to measure angles, and how many units make up one complete full turn?",
+      "options": [
+        "Centimetres; 100 cm make one full turn",
+        "Degrees; 360 degrees make one full turn",
+        "Degrees; 180 degrees make one full turn",
+        "Radians; 90 radians make one full turn"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses length units like centimetres with angle rotation units",
+        "",
+        "thinks a straight angle of 180 degrees is a complete full rotation",
+        "confuses a quarter turn (90) with a complete rotation"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-align-protractor",
+      "nodeId": "class6-mathematics-lines-and-angles-align-protractor",
+      "question": "To measure an angle accurately with a protractor, how must the protractor be placed?",
+      "options": [
+        "Place the outer curved edge on the vertex and point the baseline upwards",
+        "Place the center mark on the vertex and align the baseline along one arm",
+        "Place the 90-degree mark on the vertex and align the baseline with the other arm",
+        "Place the zero mark on the vertex and rest the center mark on one arm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the curved outer edge of the protractor with its center point",
+        "",
+        "thinks the 90-degree mark goes directly on the vertex",
+        "thinks the 0-degree end goes on the vertex instead of the center mark"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-read-protractor-inner-outer",
+      "nodeId": "class6-mathematics-lines-and-angles-read-protractor-inner-outer",
+      "question": "When measuring an angle, the baseline arm lies along the protractor's zero mark on the inner scale. Which scale should you read for the other arm?",
+      "options": [
+        "The inner scale, because it starts at 0 degrees on your baseline arm",
+        "Always read the outer scale because it has larger numbers",
+        "Take the average of the readings on the inner and outer scales",
+        "The outer scale if the angle opens to the right, regardless of where zero is"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the outer scale is always the default scale to use",
+        "thinks angle measurement requires averaging both protractor scales",
+        "relies on an arbitrary directional rule rather than matching the scale starting at 0"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-classify-right-straight-complete",
+      "nodeId": "class6-mathematics-lines-and-angles-classify-right-straight-complete",
+      "question": "What is an angle of measure exactly $180^\\circ$ called?",
+      "options": [
+        "Right angle",
+        "Reflex angle",
+        "Complete angle",
+        "Straight angle"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a 180-degree straight angle with a 90-degree right angle",
+        "confuses an exact 180-degree angle with a reflex angle",
+        "confuses a 180-degree half turn with a 360-degree complete angle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex",
+      "nodeId": "class6-mathematics-lines-and-angles-classify-acute-obtuse-reflex",
+      "question": "An angle measures $135^\\circ$. What type of angle is it?",
+      "options": [
+        "Acute angle",
+        "Right angle",
+        "Obtuse angle",
+        "Reflex angle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks any angle less than 180 degrees is acute",
+        "confuses obtuse angles with right angles",
+        "",
+        "confuses angles between 90 and 180 with reflex angles greater than 180"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-estimate-angle-type-visually",
+      "nodeId": "class6-mathematics-lines-and-angles-estimate-angle-type-visually",
+      "question": "An angle opens wider than a square corner (quarter turn) but does not form a flat straight line. What type of angle is it?",
+      "options": [
+        "Acute angle",
+        "Right angle",
+        "Obtuse angle",
+        "Straight angle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks an angle smaller than a straight line must be acute",
+        "confuses an opening wider than a square corner with the square corner itself",
+        "",
+        "thinks any angle wider than 90 degrees must be a straight line"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-draw-given-angle-measure",
+      "nodeId": "class6-mathematics-lines-and-angles-draw-given-angle-measure",
+      "question": "Rohan wants to draw an acute angle of $50^\\circ$ opening to the right. After drawing the base arm $\\overrightarrow{OA}$ to the right, he aligns his protractor. What is his correct next step?",
+      "options": [
+        "Measure 5 cm along the baseline and draw a vertical line upwards",
+        "Find $130^\\circ$ on the scale starting at $0^\\circ$ on $\\overrightarrow{OA}$, mark a point, and draw a ray from O through that point",
+        "Find $50^\\circ$ on the outer scale regardless of where $0^\\circ$ lies, and connect it to point A",
+        "Find $50^\\circ$ on the scale starting at $0^\\circ$ on $\\overrightarrow{OA}$, mark a point, and draw a ray from O through that point"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses degree angle measure with centimetre linear length",
+        "reads the supplementary angle on the wrong scale ($180 - 50 = 130$)",
+        "connects the mark to the outer end A instead of the vertex O",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-lines-and-angles-measure-and-classify-drawn-angles",
+      "nodeId": "class6-mathematics-lines-and-angles-measure-and-classify-drawn-angles",
+      "question": "A student measures an angle with a protractor. The base arm is on the zero of the inner scale. The other arm passes through 45 on the inner scale and 135 on the outer scale. What is the correct measure and type of the angle?",
+      "options": [
+        "$45^\\circ$, Acute angle",
+        "$135^\\circ$, Obtuse angle",
+        "$45^\\circ$, Obtuse angle",
+        "$135^\\circ$, Acute angle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reads the wrong (outer) scale instead of the one starting at zero on the baseline",
+        "reads the correct degree measure but misclassifies 45 degrees as obtuse",
+        "reads the wrong scale and misclassifies 135 degrees as acute"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-natural-numbers",
+      "nodeId": "class6-mathematics-number-play-define-natural-numbers",
+      "question": "Which of these describes the set of natural numbers?",
+      "options": [
+        "Counting numbers starting from 0: 0, 1, 2, 3, ...",
+        "Counting numbers starting from 1: 1, 2, 3, 4, ...",
+        "Even numbers only: 2, 4, 6, 8, ...",
+        "Positive numbers including fractions like 1/2, 1, 3/2, ..."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks zero is included in the natural numbers",
+        "",
+        "confuses natural numbers with even numbers",
+        "thinks fractions are included in the natural numbers"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-whole-numbers",
+      "nodeId": "class6-mathematics-number-play-define-whole-numbers",
+      "question": "How do whole numbers differ from natural numbers?",
+      "options": [
+        "Whole numbers include negative numbers, but natural numbers do not.",
+        "Whole numbers include fractions, but natural numbers do not.",
+        "Whole numbers include 0, but natural numbers start from 1.",
+        "Whole numbers are only even numbers, while natural numbers include odd numbers."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses whole numbers with integers",
+        "thinks whole numbers include fractional parts",
+        "",
+        "confuses whole numbers with even numbers"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-compare-multi-digit-numbers",
+      "nodeId": "class6-mathematics-number-play-compare-multi-digit-numbers",
+      "question": "Which statement correctly compares the numbers 45,280 and 45,820?",
+      "options": [
+        "45,280 > 45,820 because 8 in the tens place is greater than 2.",
+        "45,280 = 45,820 because they have the exact same digits.",
+        "45,820 > 45,280 because the digit in the hundreds place is greater.",
+        "45,280 > 45,820 because 2 comes before 8."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "compares lower place values before higher place values",
+        "thinks two numbers are equal if they contain the same set of digits in any order",
+        "",
+        "thinks a smaller digit at a higher place value makes a number larger"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-order-multi-digit-numbers",
+      "nodeId": "class6-mathematics-number-play-order-multi-digit-numbers",
+      "question": "Which list shows the numbers arranged in ascending order (smallest to largest)?",
+      "options": [
+        "3,405; 3,045; 3,504; 3,540",
+        "3,540; 3,504; 3,405; 3,045",
+        "3,045; 3,405; 3,504; 3,540",
+        "3,045; 3,504; 3,405; 3,540"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "ignores place value in the hundreds and tens place when ordering",
+        "confuses ascending order with descending order",
+        "",
+        "compares the last two digits instead of comparing from left to right"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-factors",
+      "nodeId": "class6-mathematics-number-play-define-factors",
+      "question": "What is a factor of a given number?",
+      "options": [
+        "The number of digits present in the given number.",
+        "A number obtained by multiplying the given number by another whole number.",
+        "Any number that is strictly smaller than the given number.",
+        "A number that divides the given number exactly without leaving a remainder."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the mathematical concept of factor with the count of digits",
+        "confuses the definition of factor with the definition of multiple",
+        "thinks any smaller number is automatically a factor",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-find-factor-pairs",
+      "nodeId": "class6-mathematics-number-play-find-factor-pairs",
+      "question": "Which of the following shows all the factor pairs of 36?",
+      "options": [
+        "1 × 36, 3 × 12, 4 × 8, 6 × 6",
+        "1 × 36, 2 × 18, 3 × 12, 4 × 9",
+        "2 × 18, 3 × 12, 4 × 9, 6 × 6",
+        "1 × 36, 2 × 18, 3 × 12, 4 × 9, 6 × 6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "makes an arithmetic error thinking 4 times 8 equals 36",
+        "misses the square root factor pair when factors are identical",
+        "omits the trivial factor pair involving 1 and the number itself",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-list-all-factors-under-100",
+      "nodeId": "class6-mathematics-number-play-list-all-factors-under-100",
+      "question": "What is the complete list of factors of 28?",
+      "options": [
+        "1, 2, 4, 7, 14, 28",
+        "2, 4, 7, 14",
+        "1, 2, 4, 6, 7, 14, 28",
+        "1, 2, 14, 28"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets that 1 and the number itself are always factors",
+        "incorrectly includes 6 assuming it divides 28",
+        "misses the intermediate factor pair 4 and 7"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-multiples",
+      "nodeId": "class6-mathematics-number-play-define-multiples",
+      "question": "What is a multiple of a given number?",
+      "options": [
+        "The product of the given number and any natural number.",
+        "The difference between the given number and 10.",
+        "A number that divides the given number completely.",
+        "A number that is always smaller than the given number."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "invents a definition based on subtraction from a base number",
+        "confuses multiple with factor",
+        "thinks multiples are smaller than the original number"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-list-multiples-single-digit",
+      "nodeId": "class6-mathematics-number-play-list-multiples-single-digit",
+      "question": "What are the first five multiples of 7?",
+      "options": [
+        "1, 7, 14, 21, 28",
+        "0, 7, 14, 21, 28",
+        "7, 14, 21, 28, 35",
+        "7, 9, 11, 13, 15"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "starts multiples with 1 instead of the number itself times 1",
+        "starts the sequence of multiples from 0 instead of the first natural multiple",
+        "",
+        "adds 2 repeatedly instead of multiplying by consecutive natural numbers"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-identify-common-factors",
+      "nodeId": "class6-mathematics-number-play-identify-common-factors",
+      "question": "What are all the common factors of 12 and 18?",
+      "options": [
+        "1, 2, 3, 4, 6, 9",
+        "2, 3, 6",
+        "1, 6",
+        "1, 2, 3, 6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "lists factors of either number rather than factors common to both",
+        "forgets that 1 is a common factor of all natural numbers",
+        "misses common factors that are not 1 or the highest common factor",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-find-hcf",
+      "nodeId": "class6-mathematics-number-play-find-hcf",
+      "question": "What is the highest common factor (HCF) of 24 and 36?",
+      "options": [
+        "6",
+        "72",
+        "12",
+        "4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies a common factor but fails to find the highest one",
+        "calculates the lowest common multiple (LCM) instead of the HCF",
+        "",
+        "picks an arbitrary common factor instead of the greatest"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-identify-common-multiples",
+      "nodeId": "class6-mathematics-number-play-identify-common-multiples",
+      "question": "What are the first three common multiples of 4 and 6?",
+      "options": [
+        "12, 24, 36",
+        "2, 4, 6",
+        "12, 18, 24",
+        "24, 48, 72"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses common multiples with common factors",
+        "lists multiples of 6 that are not all multiples of 4",
+        "finds common multiples starting with the product of the two numbers, skipping the lowest common multiple"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-find-lcm",
+      "nodeId": "class6-mathematics-number-play-find-lcm",
+      "question": "What is the lowest common multiple (LCM) of 6 and 8?",
+      "options": [
+        "24",
+        "48",
+        "2",
+        "14"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "multiplies the two numbers together without finding the lowest common multiple",
+        "calculates the highest common factor instead of LCM",
+        "adds the two numbers instead of finding their multiple"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-prime-numbers",
+      "nodeId": "class6-mathematics-number-play-define-prime-numbers",
+      "question": "What is the definition of a prime number?",
+      "options": [
+        "A natural number greater than 1 with exactly two distinct factors: 1 and itself.",
+        "Any odd number greater than 1.",
+        "A number that can be divided by 2 without a remainder.",
+        "A number that has three or more factors."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses prime numbers with odd numbers",
+        "confuses prime numbers with even numbers",
+        "states the definition of a composite number"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-composite-numbers",
+      "nodeId": "class6-mathematics-number-play-define-composite-numbers",
+      "question": "Which of the following correctly defines a composite number?",
+      "options": [
+        "Any number that ends in an even digit.",
+        "A natural number that has more than two factors.",
+        "A number that has only one factor.",
+        "A number that is divisible only by 1 and itself."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks all composite numbers must be even",
+        "",
+        "describes the special property of the number 1",
+        "states the definition of a prime number"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-explain-one-neither-prime-nor-composite",
+      "nodeId": "class6-mathematics-number-play-explain-one-neither-prime-nor-composite",
+      "question": "Why is the number 1 classified as neither prime nor composite?",
+      "options": [
+        "Because it is an odd number.",
+        "Because it has only one factor (itself), while primes need exactly two and composites need more than two.",
+        "Because it is the smallest whole number.",
+        "Because 1 can divide every other number without a remainder."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "focuses on parity rather than the number of factors",
+        "",
+        "gives an irrelevant property about number ordering",
+        "states a true property of 1 that does not explain its prime/composite classification"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-classify-prime-composite-under-100",
+      "nodeId": "class6-mathematics-number-play-classify-prime-composite-under-100",
+      "question": "Which of these numbers is a prime number?",
+      "options": [
+        "51",
+        "91",
+        "37",
+        "49"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks 51 is prime because it is odd, missing that 3 × 17 = 51",
+        "thinks 91 is prime because it looks unfamiliar, missing that 7 × 13 = 91",
+        "",
+        "thinks 49 is prime because it is odd, missing that 7 × 7 = 49"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-define-coprime-numbers",
+      "nodeId": "class6-mathematics-number-play-define-coprime-numbers",
+      "question": "Which pair of numbers is co-prime?",
+      "options": [
+        "4 and 9",
+        "6 and 9",
+        "14 and 21",
+        "8 and 12"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks numbers are co-prime because they are both divisible by 3",
+        "fails to notice that both numbers share a common factor of 7",
+        "assumes two even numbers can be co-prime"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-10-5",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-10-5",
+      "question": "Which statement about the number 435 is correct?",
+      "options": [
+        "It is divisible by 10 because it ends in 5.",
+        "It is divisible by both 5 and 10.",
+        "It is not divisible by 5 because it is an odd number.",
+        "It is divisible by 5 because its units digit is 5, but not by 10."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks numbers ending in 5 are divisible by 10",
+        "assumes divisibility by 5 automatically implies divisibility by 10",
+        "thinks only even numbers can be divisible by 5",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-2",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-2",
+      "question": "Which of the following numbers is divisible by 2?",
+      "options": [
+        "3,581",
+        "7,294",
+        "4,115",
+        "8,003"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "looks at the first digit 3 or thinks any multi-digit number with an even tens digit is divisible by 2",
+        "",
+        "confuses divisibility by 5 with divisibility by 2",
+        "ignores the units digit and focuses on the zeros"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-3-9",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-3-9",
+      "question": "Is the number 2,367 divisible by 3 and by 9?",
+      "options": [
+        "It is not divisible by 3 or 9 because its last digit is not 3 or 9.",
+        "It is divisible by 3 because it ends in 7, but not by 9.",
+        "It is divisible by 9, but not by 3.",
+        "It is divisible by 3 and by 9 because the sum of its digits is 18."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks divisibility by 3 or 9 depends solely on the units digit",
+        "checks only the last digit for divisibility by 3 instead of the sum of digits",
+        "believes a number can be divisible by 9 without being divisible by 3",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-4-8",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-4-8",
+      "question": "How can you test if the number 5,316 is divisible by 4?",
+      "options": [
+        "Check if the last digit 6 is divisible by 4.",
+        "Check if the number formed by the last two digits, 16, is divisible by 4.",
+        "Check if the sum of all digits (5 + 3 + 1 + 6 = 15) is divisible by 4.",
+        "Check if the first digit 5 is divisible by 4."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "looks only at the last single digit rather than the last two digits",
+        "",
+        "applies the sum-of-digits rule (for 3 and 9) to test for 4",
+        "checks the highest place value digit instead of the lowest place value digits"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-6",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-6",
+      "question": "Which of these numbers is divisible by 6?",
+      "options": [
+        "423",
+        "512",
+        "730",
+        "624"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "checks divisibility by 3 (sum is 9) but ignores that the number is odd (not divisible by 2)",
+        "checks divisibility by 2 (even units digit) but forgets to check divisibility by 3 (sum is 8)",
+        "checks that it is even and ends in 0 without verifying divisibility by 3 (sum is 10)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-number-play-divisibility-rule-11",
+      "nodeId": "class6-mathematics-number-play-divisibility-rule-11",
+      "question": "Using the divisibility test for 11, which number is divisible by 11?",
+      "options": [
+        "8,195",
+        "3,828",
+        "5,724",
+        "6,241"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates (8+9) - (1+5) = 11, but adds wrong alternate positions (8+1 vs 9+5)",
+        "",
+        "thinks the sum of digits (5+7+2+4 = 18) determines divisibility by 11",
+        "subtracts adjacent digits (62 - 41) rather than calculating the difference of alternate digit sums"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-define-data",
+      "nodeId": "class6-mathematics-data-handling-define-data",
+      "question": "What is data?",
+      "options": [
+        "A collection of numbers or facts gathered to give information",
+        "A mathematical formula used to solve complex equations",
+        "Only pictures and drawings used in a textbook",
+        "The total time spent doing homework in a day"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks data refers to algebraic formulas or calculation rules",
+        "thinks data must be visual pictures rather than gathered facts or numbers",
+        "confuses one specific measured value with the general definition of data"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-identify-data-examples",
+      "nodeId": "class6-mathematics-data-handling-identify-data-examples",
+      "question": "Which of the following is an example of collecting data from daily life?",
+      "options": [
+        "Drawing a colorful flower in a drawing book",
+        "Memorizing multiplication tables from 2 to 10",
+        "Writing a fictional story about an astronaut",
+        "Recording the daily maximum temperature for a week"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses artistic activity with systematic information gathering",
+        "confuses learning fixed arithmetic facts with gathering observations",
+        "confuses creative writing with recording factual observations",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-raw-vs-organized-data",
+      "nodeId": "class6-mathematics-data-handling-raw-vs-organized-data",
+      "question": "A teacher notes students' favorite fruits as they call them out: Apple, Banana, Apple, Orange, Banana, Apple. What type of data is this initial list?",
+      "options": [
+        "Raw data",
+        "Organized data",
+        "A bar graph",
+        "A frequency table"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks any recorded list is already organized",
+        "confuses written text with a graphical representation",
+        "confuses an unordered list of observations with a tabulated frequency summary"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-explain-need-for-organization",
+      "nodeId": "class6-mathematics-data-handling-explain-need-for-organization",
+      "question": "Why do we organize raw data into tables?",
+      "options": [
+        "To increase the total number of observations recorded",
+        "To change the original values so they look bigger",
+        "To avoid using any numbers in our work",
+        "To easily understand, compare, and draw conclusions from the data"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks organizing data creates new or additional entries",
+        "thinks organizing data modifies the recorded facts",
+        "thinks tables replace numerical information with words",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-represent-numbers-tally-marks",
+      "nodeId": "class6-mathematics-data-handling-represent-numbers-tally-marks",
+      "question": "How is the number 8 correctly represented using tally marks?",
+      "options": [
+        "|||| ||||",
+        "卌 |||",
+        "卌 卌",
+        "||||||||"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "groups tallies in sets of four without using a fifth diagonal stroke",
+        "",
+        "counts two full bundles of five instead of five plus three",
+        "draws eight loose strokes without grouping by fives"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-construct-tally-table-raw-data",
+      "nodeId": "class6-mathematics-data-handling-construct-tally-table-raw-data",
+      "question": "In a survey of favorite pets, the responses were: Dog, Cat, Dog, Dog, Bird, Cat, Dog. How many tally marks should be under 'Dog'?",
+      "options": [
+        "3",
+        "7",
+        "4",
+        "5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "miscounts the occurrences by missing one instance of Dog",
+        "counts the total number of all pet responses instead of just Dog",
+        "",
+        "overcounts by including other animals or misreading the list"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-calculate-total-frequency-table",
+      "nodeId": "class6-mathematics-data-handling-calculate-total-frequency-table",
+      "question": "A table shows the number of vehicles passing a gate: Cars = 12, Buses = 5, Bikes = 18, Trucks = 3. What is the total number of vehicles observed?",
+      "options": [
+        "35",
+        "38",
+        "18",
+        "4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "makes an arithmetic addition error when summing the frequencies",
+        "",
+        "takes the largest single frequency instead of finding the total sum",
+        "counts the number of categories instead of summing the frequencies"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-identify-extremes-tally-table",
+      "nodeId": "class6-mathematics-data-handling-identify-extremes-tally-table",
+      "question": "A table lists shirt sizes sold: Small = 14, Medium = 28, Large = 22, Extra Large = 6. Which size was sold the least?",
+      "options": [
+        "Medium",
+        "Small",
+        "Large",
+        "Extra Large"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses least frequent with most frequent",
+        "picks the first row in the table instead of checking frequency values",
+        "picks an intermediate value without comparing all rows",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-define-pictograph",
+      "nodeId": "class6-mathematics-data-handling-define-pictograph",
+      "question": "What is a pictograph?",
+      "options": [
+        "A representation of data using pictures or symbols",
+        "A paragraph that describes data using only words",
+        "A drawing of a geometric shape using a ruler and compass",
+        "A list of calculations done on a calculator"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a pictograph with a written prose summary",
+        "thinks any geometrical drawing is called a pictograph",
+        "thinks a pictograph is a computational procedure"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-read-pictograph-one-to-one",
+      "nodeId": "class6-mathematics-data-handling-read-pictograph-one-to-one",
+      "question": "In a pictograph where 1 🍎 = 1 apple, Ravi has 🍎 🍎 🍎 🍎 🍎. How many apples does Ravi have?",
+      "options": [
+        "1",
+        "10",
+        "5",
+        "4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "takes the value of the key symbol instead of counting the symbols shown",
+        "assumes each symbol stands for 2 units by default",
+        "",
+        "miscounts the number of symbols by one"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-interpret-pictograph-scale-key",
+      "nodeId": "class6-mathematics-data-handling-interpret-pictograph-scale-key",
+      "question": "In a pictograph, the key shows: 1 🚗 = 10 cars. If a factory shows 6 car symbols for Monday, how many cars were made on Monday?",
+      "options": [
+        "6",
+        "16",
+        "60",
+        "600"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "counts the symbols directly without multiplying by the scale key",
+        "adds the number of symbols to the scale key value instead of multiplying",
+        "",
+        "multiplies by 100 instead of the given key of 10"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-interpret-partial-symbols-pictograph",
+      "nodeId": "class6-mathematics-data-handling-interpret-partial-symbols-pictograph",
+      "question": "In a pictograph, 1 complete circle represents 8 students. If a row shows 3 complete circles and 1 half circle, how many students are represented?",
+      "options": [
+        "32",
+        "24",
+        "28",
+        "25"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "treats the half circle as a full circle, calculating 4 * 8",
+        "ignores the half circle completely and only calculates 3 * 8",
+        "",
+        "adds 1 for the half circle instead of half the scale value (4)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-answer-questions-pictograph",
+      "nodeId": "class6-mathematics-data-handling-answer-questions-pictograph",
+      "question": "In a pictograph where 1 🌸 = 5 flowers, Class A has 4 symbols and Class B has 7 symbols. How many more flowers does Class B have than Class A?",
+      "options": [
+        "3",
+        "20",
+        "35",
+        "15"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "finds the difference in symbol count but forgets to multiply by the scale key",
+        "calculates only Class A's total flowers (4 * 5) instead of the difference",
+        "calculates only Class B's total flowers (7 * 5) instead of the difference",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-choose-scale-pictograph",
+      "nodeId": "class6-mathematics-data-handling-choose-scale-pictograph",
+      "question": "You want to make a pictograph for the numbers of books: 40, 60, 90, and 120. Which scale is the most suitable for 1 symbol?",
+      "options": [
+        "1 symbol = 1 book",
+        "1 symbol = 100 books",
+        "1 symbol = 7 books",
+        "1 symbol = 10 books"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "chooses a 1:1 scale which requires drawing an impractical number of symbols (up to 120)",
+        "chooses a scale larger than most data values, making values under 100 impossible to show easily",
+        "chooses a scale that is not a factor of the data values, making symbols hard to divide",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-draw-pictograph-from-table",
+      "nodeId": "class6-mathematics-data-handling-draw-pictograph-from-table",
+      "question": "A table shows: Monday = 20 visitors, Tuesday = 30 visitors. Using the scale 1 👤 = 10 visitors, what should you draw for Tuesday?",
+      "options": [
+        "3 symbols",
+        "2 symbols",
+        "30 symbols",
+        "10 symbols"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "draws the number of symbols corresponding to Monday instead of Tuesday",
+        "draws the raw number of visitors without using the scale",
+        "draws the scale value instead of the number of symbols needed"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-identify-axes-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-identify-axes-bar-graph",
+      "question": "In a standard vertical bar graph, where are the names of categories usually written?",
+      "options": [
+        "Inside each bar only",
+        "Along the horizontal axis at the bottom",
+        "Only in the main title at the top",
+        "Along the scale on the vertical axis"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks labels must be written inside the bar shapes",
+        "",
+        "confuses category labels with the graph title",
+        "confuses the category axis with the numerical scale axis"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-read-scale-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-read-scale-bar-graph",
+      "question": "On the vertical axis of a bar graph, the grid marks go 0, 5, 10, 15, 20. What quantity does 1 unit length represent?",
+      "options": [
+        "1 unit",
+        "10 units",
+        "20 units",
+        "5 units"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes every grid line always means 1 unit regardless of the numbers",
+        "calculates the step between alternate marks rather than consecutive marks",
+        "takes the maximum value shown on the axis instead of the step size",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-read-bar-heights",
+      "nodeId": "class6-mathematics-data-handling-read-bar-heights",
+      "question": "On a bar graph where the vertical axis goes by 10s (0, 10, 20, 30, ...), the top of the bar for 'English' aligns exactly with 40. How many marks were scored in English?",
+      "options": [
+        "4",
+        "30",
+        "40",
+        "50"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "counts grid line intervals instead of reading the axis value",
+        "reads the value below the top of the bar",
+        "",
+        "reads the value above the top of the bar"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-compare-categories-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-compare-categories-bar-graph",
+      "question": "In a bar graph showing rainfall across 4 cities, City A's bar is 8 cm, City B is 12 cm, City C is 5 cm, and City D is 10 cm. Which city had the maximum rainfall?",
+      "options": [
+        "City B",
+        "City A",
+        "City C",
+        "City D"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "picks the first category listed",
+        "confuses maximum with minimum and picks the shortest bar",
+        "picks the second highest value instead of the maximum"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-solve-multi-step-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-solve-multi-step-bar-graph",
+      "question": "A bar graph shows trees planted: Neem = 25, Mango = 40, Peepal = 15. How many more Neem and Peepal trees combined were planted compared to Mango?",
+      "options": [
+        "40",
+        "0",
+        "15",
+        "25"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the sum of Neem and Peepal (25 + 15 = 40) but forgets to subtract Mango",
+        "",
+        "finds the difference between Neem and Peepal (25 - 15 = 10) or Mango and Neem (40 - 25 = 15)",
+        "reports the Neem count without combining or subtracting"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-choose-scale-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-choose-scale-bar-graph",
+      "question": "You need to draw a bar graph on a page with 15 grid lines for values: 50, 120, 200, 280. Which scale is most appropriate?",
+      "options": [
+        "1 unit length = 20",
+        "1 unit length = 1",
+        "1 unit length = 500",
+        "1 unit length = 2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "chooses 1 unit = 1, which would require 280 grid lines and cannot fit on the page",
+        "chooses an overly large scale where the highest bar would barely be half a unit tall",
+        "chooses 1 unit = 2, which would require 140 grid lines and exceeds 15 lines"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-draw-vertical-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-draw-vertical-bar-graph",
+      "question": "When drawing a vertical bar graph, which rule MUST be followed for the bars?",
+      "options": [
+        "Each bar must have a different width depending on its value",
+        "All bars must have the same width and equal spacing between them",
+        "There should be no gaps between any bars",
+        "The bars must be drawn horizontally from left to right"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the width of a bar changes with the quantity it represents",
+        "",
+        "confuses a bar graph with a histogram where bars touch without gaps",
+        "confuses vertical bar graph orientation with horizontal bar graph orientation"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-draw-horizontal-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-draw-horizontal-bar-graph",
+      "question": "In a horizontal bar graph, where are the numerical values (scale) placed?",
+      "options": [
+        "Along the vertical axis",
+        "Inside the title only",
+        "Along the horizontal axis",
+        "At the end of each bar only"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses horizontal bar graph layout with vertical bar graph layout",
+        "thinks numerical scale is only written in the title",
+        "",
+        "thinks the scale is just numbers written at the tips of bars rather than an axis"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-data-handling-compare-pictograph-and-bar-graph",
+      "nodeId": "class6-mathematics-data-handling-compare-pictograph-and-bar-graph",
+      "question": "Why is a bar graph generally better than a pictograph for representing large and exact numbers like 347?",
+      "options": [
+        "Bar graphs do not use any numbers",
+        "Drawing fractions of picture symbols accurately is difficult and time-consuming",
+        "Pictographs can only be drawn using computers",
+        "Bar graphs always use fewer colors than pictographs"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "falsely believes bar graphs do not display numerical values",
+        "",
+        "believes pictographs cannot be drawn by hand",
+        "focuses on cosmetic coloring rather than precision and ease of representation"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-link-factors-to-equal-sharing",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-link-factors-to-equal-sharing",
+      "question": "A teacher has 18 pencils to distribute equally among students without any pencils left over. Which of the following CANNOT be the number of students?",
+      "options": [
+        "9 students",
+        "6 students",
+        "3 students",
+        "4 students"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks 9 is not a factor because 18 divided by 9 is small",
+        "confuses division with remainder with exact factors",
+        "thinks odd numbers cannot divide an even number",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-whole-shape",
+      "question": "A circle is divided into 8 equal slices. If 3 slices are shaded, what fraction of the circle is shaded?",
+      "options": [
+        "3/5",
+        "8/3",
+        "5/8",
+        "3/8"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "compares shaded parts to unshaded parts instead of total parts",
+        "inverts the numerator and denominator",
+        "finds the unshaded fraction instead of the shaded fraction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-collection",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-fraction-as-part-of-collection",
+      "question": "In a basket of 15 fruits, 7 are apples and the rest are oranges. What fraction of the fruits are apples?",
+      "options": [
+        "7/8",
+        "7/15",
+        "8/15",
+        "15/7"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "puts apple count over orange count instead of total fruits",
+        "",
+        "finds the fraction of oranges instead of apples",
+        "inverts the total and the subset count"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-identify-numerator-denominator",
+      "question": "In the fraction 5/9, what does the denominator 9 represent?",
+      "options": [
+        "The number of parts being considered",
+        "The total number of equal parts the whole is divided into",
+        "The difference between the parts taken and parts left",
+        "The number of wholes being added together"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses denominator with numerator",
+        "",
+        "thinks denominator represents subtraction of parts",
+        "confuses denominator with the whole number in a mixed fraction"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-factor-tree-method",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-factor-tree-method",
+      "question": "In a factor tree for 36, the first branch splits 36 into 4 and 9. What are the final prime factors at the ends of all branches?",
+      "options": [
+        "2, 2, 3, 3",
+        "2, 2, 9",
+        "4, 9",
+        "2, 3, 6"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "only factors one branch and leaves the other composite branch uncompleted",
+        "stops at composite branches without breaking them down into primes",
+        "includes composite numbers like 6 in the prime branch ends"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-continuous-division-prime-factors",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-continuous-division-prime-factors",
+      "question": "Using repeated division by prime numbers, what is the prime factorisation of 60?",
+      "options": [
+        "2 × 2 × 3 × 5",
+        "2 × 3 × 10",
+        "4 × 3 × 5",
+        "2 × 30"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "stops division while 10 is still a composite number",
+        "uses a composite divisor 4 instead of only prime divisors",
+        "stops after only one step of division"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-write-prime-factorisation-product",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-write-prime-factorisation-product",
+      "question": "How is the prime factorisation of 72 written in exponent notation?",
+      "options": [
+        "2^3 + 3^2",
+        "2^2 × 3^3",
+        "8 × 9",
+        "2^3 × 3^2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the prime powers instead of multiplying them",
+        "swaps the powers of 2 and 3",
+        "writes factors without prime exponent breakdown",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-hcf-by-prime-factorisation-two-numbers",
+      "question": "The prime factorisations are 24 = 2^3 × 3 and 36 = 2^2 × 3^2. What is the HCF of 24 and 36?",
+      "options": [
+        "72",
+        "6",
+        "12",
+        "4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the LCM instead of the HCF by taking highest powers",
+        "takes only single common primes without their powers (2 × 3)",
+        "",
+        "considers only the common factor 2^2 and forgets the factor 3"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-hcf-three-numbers",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-hcf-three-numbers",
+      "question": "What is the HCF of 12, 18, and 30?",
+      "options": [
+        "3",
+        "12",
+        "2",
+        "6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies 3 as a common factor but misses the highest common factor 6",
+        "assumes the smallest given number must be the HCF",
+        "identifies 2 as a common factor but misses the higher factor 6",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-solve-hcf-word-problems",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-solve-hcf-word-problems",
+      "question": "Two milk cans contain 48 litres and 60 litres of milk. What is the maximum capacity of a measuring container that can measure the milk of both cans an exact number of times?",
+      "options": [
+        "240 litres",
+        "12 litres",
+        "24 litres",
+        "6 litres"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "computes the LCM instead of the HCF for container capacity",
+        "",
+        "halves the smaller quantity instead of finding the HCF",
+        "picks a common factor that is not the greatest"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-lcm-by-prime-factorisation-two-numbers",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-lcm-by-prime-factorisation-two-numbers",
+      "question": "The prime factorisations are 12 = 2^2 × 3 and 18 = 2 × 3^2. What is the LCM of 12 and 18?",
+      "options": [
+        "6",
+        "216",
+        "36",
+        "72"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the HCF instead of the LCM by taking the lowest powers",
+        "multiplies the two numbers together without dividing by their common factors",
+        "",
+        "multiplies all powers together without taking the highest power per prime"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-lcm-common-division-method",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-lcm-common-division-method",
+      "question": "What is the LCM of 8, 12, and 20 using the common division method?",
+      "options": [
+        "4",
+        "240",
+        "120",
+        "60"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the HCF instead of the LCM",
+        "fails to bring down numbers that are not divisible, repeating factors unnecessarily",
+        "",
+        "ignores factors that apply to only some of the numbers"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-solve-lcm-word-problems",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-solve-lcm-word-problems",
+      "question": "Three bells toll together at intervals of 9, 12, and 15 minutes respectively. After how many minutes will they toll together next?",
+      "options": [
+        "180 minutes",
+        "3 minutes",
+        "36 minutes",
+        "540 minutes"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "finds the HCF instead of the LCM for repeating cycle problems",
+        "finds the LCM of only the first two numbers (9 and 12)",
+        "multiplies all three numbers together directly (9 × 12 × 15)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-relationship-hcf-lcm-product",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-relationship-hcf-lcm-product",
+      "question": "The HCF of two numbers is 6 and their LCM is 180. If one of the numbers is 30, what is the other number?",
+      "options": [
+        "5",
+        "25",
+        "1080",
+        "36"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides LCM by given number but forgets to multiply by HCF",
+        "subtracts the given number from the LCM instead of using the formula",
+        "multiplies HCF and LCM but forgets to divide by the given number",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-identify-proper-fractions",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-identify-proper-fractions",
+      "question": "Which of the following is a proper fraction?",
+      "options": [
+        "7/4",
+        "5/5",
+        "9/2",
+        "3/8"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses proper and improper fractions (numerator greater than denominator)",
+        "thinks a fraction equal to 1 is a proper fraction",
+        "confuses proper fractions with mixed numbers written as fractions",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-identify-improper-fractions",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-identify-improper-fractions",
+      "question": "Which of the following is an improper fraction?",
+      "options": [
+        "5/6",
+        "2/7",
+        "8/3",
+        "4/9"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes a fraction close to 1 is improper",
+        "thinks unit fractions or small fractions are improper",
+        "",
+        "believes proper fractions are improper"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-identify-mixed-fractions",
+      "question": "Which of the following numbers is a mixed fraction?",
+      "options": [
+        "11/4",
+        "3 2/5",
+        "7/9",
+        "6/1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses improper fraction format with mixed fraction format",
+        "",
+        "thinks any fraction is a mixed fraction",
+        "thinks a whole number written over 1 is a mixed fraction"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-convert-improper-to-mixed",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-convert-improper-to-mixed",
+      "question": "What is 17/5 written as a mixed fraction?",
+      "options": [
+        "3 2/5",
+        "2 7/5",
+        "3 5/2",
+        "5 2/3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "leaves the remainder larger than the divisor instead of dividing fully",
+        "inverts the remainder and denominator",
+        "swaps the whole quotient with the original denominator"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-convert-mixed-to-improper",
+      "question": "What is 4 2/3 written as an improper fraction?",
+      "options": [
+        "14/3",
+        "11/3",
+        "24/3",
+        "8/3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the whole number to the numerator and denominator incorrectly",
+        "multiplies the whole number by both numerator and denominator",
+        "multiplies whole number by numerator and keeps denominator (4 × 2 / 3)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-subdivide-unit-interval-number-line",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-subdivide-unit-interval-number-line",
+      "question": "To represent the fraction 5/7 on a number line, into how many equal parts must the segment between 0 and 1 be divided?",
+      "options": [
+        "7 equal parts",
+        "2 equal parts",
+        "5 equal parts",
+        "12 equal parts"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts numerator from denominator to decide subdivisions",
+        "thinks the numerator decides the number of subdivisions",
+        "adds numerator and denominator to get total subdivisions"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-plot-proper-fraction-number-line",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-plot-proper-fraction-number-line",
+      "question": "The segment from 0 to 1 on a number line is divided into 6 equal parts. How many steps to the right of 0 should you count to plot 4/6?",
+      "options": [
+        "2 steps",
+        "4 steps",
+        "6 steps",
+        "10 steps"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "counts the remaining unshaded steps (6 - 4) from 0",
+        "",
+        "counts all the total divisions up to 1",
+        "adds numerator and denominator to find steps from 0"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-locate-mixed-fraction-number-line",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-locate-mixed-fraction-number-line",
+      "question": "Between which two consecutive whole numbers does the mixed fraction 3 4/7 lie on a number line?",
+      "options": [
+        "2 and 3",
+        "4 and 5",
+        "3 and 4",
+        "0 and 3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts 1 from the whole number",
+        "looks at the numerator 4 and thinks it lies between 4 and 5",
+        "",
+        "thinks the whole interval starts at 0 and ends at 3"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-plot-improper-fraction-number-line",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-plot-improper-fraction-number-line",
+      "question": "To plot 7/3 on a number line, where will the point be located?",
+      "options": [
+        "Between 0 and 1, at the 7th mark",
+        "Between 1 and 2, at 1 1/3",
+        "Between 2 and 3, at 2 1/3",
+        "Between 3 and 4, at 3 1/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "treats 7/3 as a proper fraction lying between 0 and 1",
+        "calculates 7 ÷ 3 incorrectly as 1 with remainder 1",
+        "",
+        "takes the divisor 3 as the whole number part"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-prime-numbers-and-fractions-read-fraction-from-number-line",
+      "nodeId": "class6-mathematics-prime-numbers-and-fractions-read-fraction-from-number-line",
+      "question": "On a number line, the interval between 0 and 1 is divided into 5 equal parts. A point P is marked at the 3rd mark to the right of 0. What fraction does point P represent?",
+      "options": [
+        "2/5",
+        "3/5",
+        "3/2",
+        "5/3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "counts the distance from 1 to P instead of from 0 to P",
+        "",
+        "compares the marked steps to the remaining steps instead of total",
+        "inverts the numerator and denominator"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+      "nodeId": "class6-mathematics-operations-on-fractions-generate-equivalent-multiplication",
+      "question": "Which fraction is equivalent to 3/5 when both the numerator and denominator are multiplied by 4?",
+      "options": [
+        "7/9",
+        "12/20",
+        "12/5",
+        "3/20"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks adding 4 to both numerator and denominator creates an equivalent fraction",
+        "",
+        "multiplies only the numerator by 4 and forgets to multiply the denominator",
+        "multiplies only the denominator by 4 and forgets to multiply the numerator"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-generate-equivalent-division",
+      "nodeId": "class6-mathematics-operations-on-fractions-generate-equivalent-division",
+      "question": "Which fraction is equivalent to 18/24 after dividing both numerator and denominator by 6?",
+      "options": [
+        "3/24",
+        "3/4",
+        "18/4",
+        "12/18"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides only the numerator by 6 and leaves the denominator unchanged",
+        "",
+        "divides only the denominator by 6 and leaves the numerator unchanged",
+        "subtracts 6 from both numerator and denominator instead of dividing"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-test-equivalent-cross-product",
+      "nodeId": "class6-mathematics-operations-on-fractions-test-equivalent-cross-product",
+      "question": "Using cross-multiplication, which pair of fractions is equivalent?",
+      "options": [
+        "2/3 and 6/8",
+        "4/5 and 8/15",
+        "3/7 and 9/21",
+        "5/6 and 10/18"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "compares 2*8=16 and 3*6=18 and incorrectly assumes they are equal",
+        "confuses cross products with adding equal numbers to terms",
+        "",
+        "doubles the numerator but triples the denominator, failing to check that 5*18 is not equal to 6*10"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-find-missing-numerator-denominator",
+      "nodeId": "class6-mathematics-operations-on-fractions-find-missing-numerator-denominator",
+      "question": "What is the missing number in the equivalent fraction: 4/7 = [ ? ] / 35?",
+      "options": [
+        "32",
+        "28",
+        "20",
+        "9"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies 4 by 8 instead of by 5",
+        "adds 28 to numerator because 35 - 7 = 28 instead of multiplying",
+        "",
+        "adds 5 to the numerator instead of multiplying by 5"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-simplify-fraction-hcf",
+      "nodeId": "class6-mathematics-operations-on-fractions-simplify-fraction-hcf",
+      "question": "What is the fraction 24/36 in its simplest form?",
+      "options": [
+        "2/3",
+        "6/9",
+        "12/18",
+        "4/6"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides by 4 but does not reduce fully to lowest terms",
+        "divides by 2 only once and stops before reaching simplest form",
+        "divides by 6 but stops before reducing completely"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-compare-like-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-compare-like-fractions",
+      "question": "Which statement is true?",
+      "options": [
+        "5/8 > 3/8",
+        "3/8 > 5/8",
+        "3/8 = 5/8",
+        "5/8 < 3/8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks a smaller numerator makes a fraction larger when denominators are the same",
+        "believes like fractions with the same denominator are always equal",
+        "confuses the less-than and greater-than comparison symbols"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-convert-unlike-to-like",
+      "nodeId": "class6-mathematics-operations-on-fractions-convert-unlike-to-like",
+      "question": "When converting 2/3 and 3/4 to like fractions using their LCM, what do they become?",
+      "options": [
+        "6/12 and 6/12",
+        "5/12 and 7/12",
+        "8/12 and 9/12",
+        "2/12 and 3/12"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "makes numerators equal instead of scaling each fraction properly",
+        "adds the common denominator's scale factor to numerators instead of multiplying",
+        "",
+        "keeps original numerators while changing denominators to the LCM"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-compare-unlike-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-compare-unlike-fractions",
+      "question": "Which fraction is larger: 3/5 or 4/7?",
+      "options": [
+        "4/7 because 4 is greater than 3",
+        "3/5 because 21/35 is greater than 20/35",
+        "4/7 because 7 is greater than 5",
+        "They are equal because 3+4 = 7"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "compares only numerators without finding a common denominator",
+        "",
+        "thinks a larger denominator always makes the fraction larger",
+        "adds numbers across numerator and denominator to justify equality"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-add-like-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-add-like-fractions",
+      "question": "What is 2/7 + 3/7?",
+      "options": [
+        "5/14",
+        "6/14",
+        "6/7",
+        "5/7"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds both the numerators and the denominators together",
+        "multiplies numerators and adds denominators",
+        "multiplies the numerators instead of adding them",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-subtract-like-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-subtract-like-fractions",
+      "question": "What is 7/11 - 4/11?",
+      "options": [
+        "3/11",
+        "3/22",
+        "3/0",
+        "11/11"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts numerators and adds denominators",
+        "subtracts the denominators to get zero in the denominator",
+        "adds the numerators instead of subtracting them"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-add-unlike-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-add-unlike-fractions",
+      "question": "What is 1/4 + 2/3?",
+      "options": [
+        "3/7",
+        "3/12",
+        "9/12",
+        "11/12"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds numerators together and denominators together directly",
+        "adds numerators directly while finding the correct common denominator",
+        "multiplies denominators to get 12 and incorrectly scales numerators",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-subtract-unlike-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-subtract-unlike-fractions",
+      "question": "What is 5/6 - 1/4?",
+      "options": [
+        "4/2",
+        "4/12",
+        "7/12",
+        "4/24"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts numerators directly and subtracts denominators directly",
+        "subtracts numerators directly while placing result over common denominator 12",
+        "",
+        "subtracts numerators directly while placing result over denominator product 24"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-add-subtract-mixed-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-add-subtract-mixed-fractions",
+      "question": "What is 2 1/3 + 1 1/2?",
+      "options": [
+        "3 5/6",
+        "3 2/5",
+        "3 2/6",
+        "4 1/6"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds whole parts and then adds numerators and denominators directly",
+        "adds numerators directly without finding a common denominator for the fraction parts",
+        "incorrectly converts mixed fractions before adding"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-solve-addition-subtraction-word-problems",
+      "nodeId": "class6-mathematics-operations-on-fractions-solve-addition-subtraction-word-problems",
+      "question": "Rohan bought 3/4 kg of apples and 1/2 kg of oranges. What is the total mass of fruits he bought?",
+      "options": [
+        "4/6 kg",
+        "1 1/4 kg",
+        "1/4 kg",
+        "4/8 kg"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds numerators and denominators directly: (3+1)/(4+2) = 4/6",
+        "",
+        "subtracts the quantities instead of adding them",
+        "adds numerators directly over the product of denominators"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-multiply-fraction-whole-number",
+      "nodeId": "class6-mathematics-operations-on-fractions-multiply-fraction-whole-number",
+      "question": "What is 5 * (2/3)?",
+      "options": [
+        "10/3",
+        "7/3",
+        "10/15",
+        "2/15"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the whole number to the numerator instead of multiplying",
+        "multiplies both the numerator and the denominator by the whole number",
+        "multiplies only the denominator by the whole number"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-fraction-as-operator-of",
+      "nodeId": "class6-mathematics-operations-on-fractions-fraction-as-operator-of",
+      "question": "What is 3/5 of 40 kg?",
+      "options": [
+        "8 kg",
+        "24 kg",
+        "120 kg",
+        "200 kg"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides 40 by 5 but forgets to multiply by the numerator 3",
+        "",
+        "multiplies 40 by 3 but forgets to divide by the denominator 5",
+        "multiplies 40 by 5 instead of dividing"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-multiply-two-proper-improper-fractions",
+      "question": "What is 3/7 * 2/5?",
+      "options": [
+        "5/12",
+        "15/14",
+        "6/35",
+        "6/12"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds numerators and adds denominators instead of multiplying",
+        "cross-multiplies to find the numerator and denominator",
+        "",
+        "multiplies numerators but adds denominators"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-multiply-mixed-fractions",
+      "nodeId": "class6-mathematics-operations-on-fractions-multiply-mixed-fractions",
+      "question": "What is 1 1/2 * 2 1/3?",
+      "options": [
+        "2 1/6",
+        "3 1/2",
+        "3 1/6",
+        "3 2/5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies whole numbers together and fraction parts together separately",
+        "",
+        "adds whole parts and multiplies fractional parts",
+        "adds whole parts and adds numerators and denominators"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-simplify-before-multiplying",
+      "nodeId": "class6-mathematics-operations-on-fractions-simplify-before-multiplying",
+      "question": "When calculating (4/9) * (3/8), what is the simplest result after canceling common factors?",
+      "options": [
+        "12/72",
+        "1/4",
+        "7/17",
+        "1/6"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies numbers straight across without simplifying to lowest terms",
+        "cancels incorrectly by pairing numbers with the wrong common factor",
+        "adds the numerators and denominators instead of multiplying",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+      "nodeId": "class6-mathematics-operations-on-fractions-find-reciprocal-fraction",
+      "question": "What is the reciprocal of 2 3/4?",
+      "options": [
+        "2 4/3",
+        "11/4",
+        "4/11",
+        "4/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "inverts only the fractional part and keeps the whole number unchanged",
+        "converts to an improper fraction but forgets to invert it",
+        "",
+        "drops the whole number completely and just inverts the fractional part"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-divide-fraction-by-whole-number",
+      "nodeId": "class6-mathematics-operations-on-fractions-divide-fraction-by-whole-number",
+      "question": "What is (3/4) / 6?",
+      "options": [
+        "18/4",
+        "1/2",
+        "9/2",
+        "1/8"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies the numerator by the whole number instead of dividing",
+        "divides 6 by 3 and places it in the denominator without keeping 4",
+        "inverts the fraction first instead of the whole number divisor",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-divide-whole-number-by-fraction",
+      "nodeId": "class6-mathematics-operations-on-fractions-divide-whole-number-by-fraction",
+      "question": "What is 4 / (2/5)?",
+      "options": [
+        "8/5",
+        "5/2",
+        "2/10",
+        "10"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies the whole number directly by the fraction without inverting",
+        "ignores the whole number and just inverts the divisor",
+        "inverts the whole number instead of inverting the divisor fraction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-divide-fraction-by-fraction",
+      "nodeId": "class6-mathematics-operations-on-fractions-divide-fraction-by-fraction",
+      "question": "What is (5/6) / (2/3)?",
+      "options": [
+        "4/5",
+        "10/18",
+        "5/9",
+        "5/4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "inverts both the dividend and the divisor fractions before multiplying",
+        "multiplies fractions directly without inverting the divisor",
+        "inverts the dividend fraction instead of the divisor fraction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-operations-on-fractions-solve-multiplication-division-word-problems",
+      "nodeId": "class6-mathematics-operations-on-fractions-solve-multiplication-division-word-problems",
+      "question": "A piece of ribbon of length 5 1/2 meters is cut into small pieces of length 1/2 meter each. How many pieces are obtained?",
+      "options": [
+        "11",
+        "5",
+        "2 3/4",
+        "6"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "ignores the fraction and divides only the whole number part by the divisor",
+        "multiplies the total length by 1/2 instead of dividing by 1/2",
+        "rounds the mixed number down to 5 and adds 1"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-define-tenths",
+      "nodeId": "class6-mathematics-decimals-define-tenths",
+      "question": "What is the value of one tenth?",
+      "options": [
+        "1 divided into 2 equal parts, written as 0.5",
+        "1 divided into 100 equal parts, written as 0.01",
+        "10 whole units combined together, written as 10.0",
+        "1 divided into 10 equal parts, written as 0.1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses one tenth with one half",
+        "confuses tenths with hundredths",
+        "confuses one tenth with ten whole units",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-represent-tenths-visually",
+      "nodeId": "class6-mathematics-decimals-represent-tenths-visually",
+      "question": "A rectangle is divided into 10 equal strips. If 4 strips are shaded, what decimal does the shaded part represent?",
+      "options": [
+        "0.4",
+        "0.04",
+        "4.0",
+        "0.14"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "interprets tenths as hundredths by placing a zero immediately after the decimal point",
+        "interprets the number of shaded parts as whole units instead of fractional parts",
+        "concatenates 1 and 4 because the strip has 10 parts and 4 are shaded"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-define-hundredths",
+      "nodeId": "class6-mathematics-decimals-define-hundredths",
+      "question": "Which fraction and decimal represent one hundredth?",
+      "options": [
+        "1/100 and 0.01",
+        "1/1000 and 0.001",
+        "1/10 and 0.1",
+        "1/100 and 0.100"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses hundredths with thousandths",
+        "confuses hundredths with tenths",
+        "thinks the number of zeros in the denominator determines the number of zeros after the digit 1"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-define-thousandths",
+      "nodeId": "class6-mathematics-decimals-define-thousandths",
+      "question": "How is one thousandth written as a fraction and as a decimal?",
+      "options": [
+        "1/100 and 0.01",
+        "1/1000 and 0.001",
+        "1/1000 and 0.01",
+        "1/10000 and 0.0001"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses thousandths with hundredths",
+        "",
+        "writes 0.01 for 1/1000 by miscounting the decimal places needed for thousandths",
+        "confuses thousandths with ten-thousandths"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-place-value-chart-read",
+      "nodeId": "class6-mathematics-decimals-place-value-chart-read",
+      "question": "In the number 45.387, what is the place value of the digit 8?",
+      "options": [
+        "8 tens",
+        "8 hundredths",
+        "8 tenths",
+        "8 thousandths"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "mirrors whole number place values from right to left across the decimal point",
+        "",
+        "identifies the first digit after the decimal point as the position of 8",
+        "confuses hundredths with thousandths place"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-write-number-from-place-value-table",
+      "nodeId": "class6-mathematics-decimals-write-number-from-place-value-table",
+      "question": "A number has 3 tens, 0 ones, 4 tenths, and 5 hundredths. What is the number?",
+      "options": [
+        "34.5",
+        "3.45",
+        "30.45",
+        "304.5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "omits the zero in the ones place and shifts the decimal point left",
+        "treats tens as ones, ignoring the zero in the ones place",
+        "",
+        "places the decimal point after tenths instead of after ones"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-write-expanded-form",
+      "nodeId": "class6-mathematics-decimals-write-expanded-form",
+      "question": "What is the expanded form of 23.07?",
+      "options": [
+        "20 + 3 + 7/10",
+        "20 + 3 + 0/10 + 7/10",
+        "2 + 3 + 7/100",
+        "20 + 3 + 7/100"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "ignores the zero in the tenths place and treats 7 as 7 tenths",
+        "assigns hundredths digit the denominator 10",
+        "treats 2 tens as 2 ones",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-plot-on-number-line",
+      "nodeId": "class6-mathematics-decimals-plot-on-number-line",
+      "question": "Between which two consecutive whole numbers does 4.7 lie on a number line?",
+      "options": [
+        "3 and 4",
+        "7 and 8",
+        "4 and 5",
+        "40 and 50"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "rounds down incorrectly by subtracting 1 from the whole number",
+        "uses the digit in the tenths place (7) to determine the whole number boundaries",
+        "",
+        "multiplies the whole numbers by 10"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-fraction-powers-of-ten",
+      "nodeId": "class6-mathematics-decimals-convert-fraction-powers-of-ten",
+      "question": "Convert 7/100 into a decimal.",
+      "options": [
+        "0.07",
+        "0.7",
+        "0.007",
+        "7.00"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "converts 7/100 to tenths (0.7) instead of hundredths",
+        "converts 7/100 to thousandths (0.007)",
+        "interprets the denominator 100 as adding two zeros after a decimal point to the right of 7"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-any-fraction-to-decimal",
+      "nodeId": "class6-mathematics-decimals-convert-any-fraction-to-decimal",
+      "question": "What is 3/5 written as a decimal?",
+      "options": [
+        "0.35",
+        "3.5",
+        "0.6",
+        "0.3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "concatenates the numerator and denominator after the decimal point",
+        "places a decimal point directly between the numerator and denominator",
+        "",
+        "copies the numerator as the tenths digit directly without making the denominator 10"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-decimal-to-fraction-unsimplified",
+      "nodeId": "class6-mathematics-decimals-convert-decimal-to-fraction-unsimplified",
+      "question": "What is 0.45 written as a fraction with a power of 10 in the denominator?",
+      "options": [
+        "45/10",
+        "45/100",
+        "45/1000",
+        "4/5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses denominator 10 regardless of the two decimal places",
+        "",
+        "uses denominator 1000 by adding an extra zero",
+        "uses the digits as numerator and denominator directly"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-decimal-to-simplest-fraction",
+      "nodeId": "class6-mathematics-decimals-convert-decimal-to-simplest-fraction",
+      "question": "What is 0.75 expressed as a fraction in its simplest form?",
+      "options": [
+        "75/100",
+        "3/4",
+        "7/5",
+        "3/5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "converts correctly to a fraction with denominator 100 but forgets to reduce to lowest terms",
+        "",
+        "splits the digits 7 and 5 into numerator and denominator",
+        "reduces 75/100 incorrectly by dividing numerator by 25 and denominator by 20"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-understand-equivalent-decimals",
+      "nodeId": "class6-mathematics-decimals-understand-equivalent-decimals",
+      "question": "Which decimal is equal to 0.8?",
+      "options": [
+        "0.08",
+        "8.08",
+        "0.008",
+        "0.800"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks inserting a zero between the decimal point and digit does not change its value",
+        "thinks adding a whole number 8 keeps the value equal",
+        "confuses 8 tenths with 8 thousandths",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-compare-two-decimals",
+      "nodeId": "class6-mathematics-decimals-compare-two-decimals",
+      "question": "Which statement is true?",
+      "options": [
+        "0.09 > 0.5",
+        "0.09 = 0.9",
+        "0.09 = 0.5",
+        "0.5 > 0.09"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks 9 is bigger than 5, ignoring place value positions",
+        "ignores the leading zero after the decimal point in 0.09",
+        "thinks the two values are equal because both have one non-zero digit",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-order-decimals",
+      "nodeId": "class6-mathematics-decimals-order-decimals",
+      "question": "Which list shows the decimals arranged in ascending order (smallest to largest)?",
+      "options": [
+        "0.07, 0.35, 0.4",
+        "0.4, 0.35, 0.07",
+        "0.07, 0.4, 0.35",
+        "0.35, 0.07, 0.4"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "orders in descending order instead of ascending order",
+        "compares by number of digits or misreads 0.4 as smaller than 0.35 because 4 < 35",
+        "places 0.07 after 0.35 by treating whole-like numbers 35, 7, 4"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-money-units",
+      "nodeId": "class6-mathematics-decimals-convert-money-units",
+      "question": "How is 5 rupees and 5 paise written in decimal form as rupees?",
+      "options": [
+        "₹ 5.5",
+        "₹ 5.50",
+        "₹ 5.05",
+        "₹ 50.5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "writes 5 paise as 5 tenths (50 paise) instead of 5 hundredths",
+        "treats 5 paise as 50 paise",
+        "",
+        "shifts the decimal point incorrectly multiplying rupees by 10"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-length-units",
+      "nodeId": "class6-mathematics-decimals-convert-length-units",
+      "question": "How is 8 cm expressed in metres as a decimal?",
+      "options": [
+        "0.8 m",
+        "0.08 m",
+        "0.008 m",
+        "8.0 m"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides by 10 instead of 100, treating 1 m as 10 cm",
+        "",
+        "divides by 1000 instead of 100, confusing metre conversion with kilometre conversion",
+        "treats cm and m as identical units"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-convert-weight-units",
+      "nodeId": "class6-mathematics-decimals-convert-weight-units",
+      "question": "How is 350 grams expressed in kilograms as a decimal?",
+      "options": [
+        "3.5 kg",
+        "0.035 kg",
+        "35.0 kg",
+        "0.35 kg"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides by 100 instead of 1000",
+        "divides by 10000 instead of 1000",
+        "divides by 10 instead of 1000",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-align-vertically",
+      "nodeId": "class6-mathematics-decimals-align-vertically",
+      "question": "To add 12.3 and 4.56, how should the digits be aligned?",
+      "options": [
+        "Align 3 directly above 6 by lining up the numbers to the right edge",
+        "Align the decimal points vertically so 3 tenths is directly above 5 tenths",
+        "Align 1 directly above 4 by lining up the numbers to the left edge",
+        "Align the last digit of the first number with the first digit of the second number"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "applies whole-number right-alignment rules to decimals without aligning decimal points",
+        "",
+        "aligns numbers along the leftmost digit regardless of place values",
+        "arbitrarily staggers digits without regard for place value or decimal points"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-add-decimals",
+      "nodeId": "class6-mathematics-decimals-add-decimals",
+      "question": "What is the sum of 14.8 and 7.45?",
+      "options": [
+        "21.53",
+        "8.93",
+        "22.25",
+        "21.125"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "right-aligns 14.8 and 7.45 adding 8+5=13 and 4+4=8 incorrectly",
+        "subtracts instead of adding",
+        "",
+        "adds digits across columns without regrouping (e.g. 8+4=12 placed directly)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-subtract-decimals",
+      "nodeId": "class6-mathematics-decimals-subtract-decimals",
+      "question": "What is 9.2 − 3.65?",
+      "options": [
+        "6.45",
+        "5.65",
+        "5.55",
+        "5.45"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts smaller from larger digits upside down (6-2 and 5-0) without borrowing",
+        "brings down the 5 hundredths directly without subtracting it from 0 (regrouping)",
+        "",
+        "regroups tenths to hundredths but fails to decrease the tenths digit by 1"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-solve-money-word-problems",
+      "nodeId": "class6-mathematics-decimals-solve-money-word-problems",
+      "question": "Raju bought a notebook for ₹ 35.75 and a pen for ₹ 12.50. He gave a ₹ 50 note to the shopkeeper. How much balance did he receive?",
+      "options": [
+        "₹ 1.75",
+        "₹ 2.25",
+        "₹ 48.25",
+        "₹ 2.75"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts 50 - 48.25 incorrectly as 2.25 by forgetting to borrow across zeros",
+        "calculates only the total cost (₹ 48.25) and forgets to subtract from ₹ 50",
+        "makes an addition error when finding the total cost of items"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-solve-measurement-word-problems",
+      "nodeId": "class6-mathematics-decimals-solve-measurement-word-problems",
+      "question": "Anita had 5 m of ribbon. She cut off a piece measuring 2.35 m for a craft project. How much ribbon is left with her?",
+      "options": [
+        "3.65 m",
+        "2.75 m",
+        "3.35 m",
+        "2.65 m"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates 5.00 - 2.35 incorrectly by borrowing from 5 but writing 3 in the whole part instead of 2",
+        "subtracts 2.35 from 5 by making an error in the tenths place (5 - 3 = 2 without borrowing)",
+        "brings down .35 without subtracting it from .00, resulting in 5 - 2 = 3 and keeping .35",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-decimals-solve-multi-step-word-problems",
+      "nodeId": "class6-mathematics-decimals-solve-multi-step-word-problems",
+      "question": "A fruit basket weighs 5.5 kg in total. It contains 2.25 kg of apples and 1.75 kg of oranges. The rest of the weight is the empty basket. What is the weight of the empty basket?",
+      "options": [
+        "1.5 kg",
+        "4.0 kg",
+        "2.5 kg",
+        "1.0 kg"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates only the combined weight of apples and oranges (4.0 kg) without subtracting from total",
+        "subtracts only the weight of apples (5.5 - 2.25 = 3.25) then miscalculates with oranges",
+        "makes a subtraction error when subtracting 4.0 kg from 5.5 kg"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-identify-symmetric-objects-nature-art",
+      "nodeId": "class6-mathematics-symmetry-identify-symmetric-objects-nature-art",
+      "question": "Which of these objects from nature has a clear line of symmetry?",
+      "options": [
+        "A jagged lump of rock",
+        "A natural tree branch with irregular twigs",
+        "A jagged mountain peak",
+        "A butterfly with spread wings"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks solid natural objects are automatically symmetric",
+        "confuses organic complexity with symmetrical balance",
+        "assumes tall natural structures always have symmetry",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-describe-symmetry-balanced-proportion",
+      "nodeId": "class6-mathematics-symmetry-describe-symmetry-balanced-proportion",
+      "question": "What does it mean when we say a picture has symmetry?",
+      "options": [
+        "It is painted with only bright colours",
+        "It has more than four straight edges",
+        "One half matches the other half exactly",
+        "All of its sides have different lengths"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses visual symmetry with colour harmony",
+        "thinks symmetry only applies to polygons with many edges",
+        "",
+        "confuses asymmetry with symmetry"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-define-line-of-symmetry",
+      "nodeId": "class6-mathematics-symmetry-define-line-of-symmetry",
+      "question": "What is a line of symmetry of a figure?",
+      "options": [
+        "The outline going all the way around the figure",
+        "Any line that touches the outer edge of the figure",
+        "A line connecting the two sharpest corners",
+        "A line dividing the figure into two identical matching halves"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the line of symmetry with perimeter or border",
+        "confuses a tangent or boundary line with a line of symmetry",
+        "thinks any diagonal line connecting corners is a line of symmetry",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-test-symmetry-paper-folding",
+      "nodeId": "class6-mathematics-symmetry-test-symmetry-paper-folding",
+      "question": "How can you test if a paper shape has a line of symmetry along a drawn line?",
+      "options": [
+        "Fold along the line to see if both parts cover each other completely",
+        "Measure the total boundary length of the paper",
+        "Count the total number of corners on the paper",
+        "Cut the shape into four equal pieces"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks finding perimeter tests symmetry",
+        "thinks corner count determines whether a fold is symmetric",
+        "confuses folding test with dividing into area fractions"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-identify-horizontal-vertical-lines-symmetry",
+      "nodeId": "class6-mathematics-symmetry-identify-horizontal-vertical-lines-symmetry",
+      "question": "What type of line of symmetry does the capital letter 'A' have?",
+      "options": [
+        "Only a horizontal line of symmetry",
+        "Only a slanting line of symmetry",
+        "Only a vertical line of symmetry",
+        "Both a vertical and a horizontal line of symmetry"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses horizontal and vertical directions",
+        "thinks the slanted legs of A create a slanting line of symmetry",
+        "",
+        "thinks symmetrical letters always have both horizontal and vertical lines"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-identify-symmetry-english-alphabet",
+      "nodeId": "class6-mathematics-symmetry-identify-symmetry-english-alphabet",
+      "question": "Which of these capital letters has BOTH a vertical line and a horizontal line of symmetry?",
+      "options": [
+        "M",
+        "H",
+        "E",
+        "T"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks M has both vertical and horizontal symmetry instead of only vertical",
+        "",
+        "thinks E has both vertical and horizontal symmetry instead of only horizontal",
+        "thinks T has both vertical and horizontal symmetry instead of only vertical"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-mirror-reflection-concept",
+      "nodeId": "class6-mathematics-symmetry-mirror-reflection-concept",
+      "question": "If you place a mirror right along the line of symmetry of a figure, what will you see?",
+      "options": [
+        "A complete picture identical to the original figure",
+        "An upside-down picture of the whole figure",
+        "Only a completely dark reflection",
+        "A picture twice as large as the original figure"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses mirror reflection with an upside-down inversion",
+        "thinks a mirror line blocks the image rather than reflecting it",
+        "confuses mirror reflection with magnification"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-complete-figure-squared-paper-vertical-horizontal",
+      "nodeId": "class6-mathematics-symmetry-complete-figure-squared-paper-vertical-horizontal",
+      "question": "On grid paper, a point is 4 squares to the left of a vertical mirror line. Where must its matching point be placed to complete the symmetric figure?",
+      "options": [
+        "4 squares to the right of the line",
+        "4 squares directly above the point",
+        "2 squares to the right of the line",
+        "8 squares to the right of the line"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "moves vertically instead of reflecting across the vertical axis",
+        "halves the distance from the line of symmetry",
+        "doubles the distance from the line of symmetry"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-complete-figure-diagonal-axis",
+      "nodeId": "class6-mathematics-symmetry-complete-figure-diagonal-axis",
+      "question": "When completing a figure across a diagonal line of symmetry on squared paper, how do you find the matching point for a given corner?",
+      "options": [
+        "Count squares straight down regardless of the diagonal line",
+        "Move perpendicularly across the diagonal line by the exact same distance",
+        "Count squares straight horizontally to the edge of the paper",
+        "Place the point anywhere on the diagonal line itself"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses standard vertical reflection instead of reflecting perpendicular to the diagonal",
+        "",
+        "uses horizontal reflection instead of reflecting perpendicular to the diagonal",
+        "thinks symmetric points must lie on the line of symmetry itself"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-find-lines-symmetry-triangles",
+      "nodeId": "class6-mathematics-symmetry-find-lines-symmetry-triangles",
+      "question": "How many lines of symmetry does an equilateral triangle have?",
+      "options": [
+        "0",
+        "3",
+        "2",
+        "1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses an equilateral triangle with a scalene triangle",
+        "",
+        "thinks triangles have at most 2 lines of symmetry",
+        "confuses an equilateral triangle with an isosceles triangle"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-find-lines-symmetry-quadrilaterals",
+      "nodeId": "class6-mathematics-symmetry-find-lines-symmetry-quadrilaterals",
+      "question": "How many lines of symmetry does a rectangle (that is not a square) have?",
+      "options": [
+        "4",
+        "0",
+        "1",
+        "2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "counts the two diagonals as lines of symmetry",
+        "confuses a rectangle with a general parallelogram having no lines of symmetry",
+        "thinks a rectangle has only a vertical line of symmetry",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-lines-of-symmetry-regular-polygons",
+      "nodeId": "class6-mathematics-symmetry-lines-of-symmetry-regular-polygons",
+      "question": "How many lines of symmetry does a regular hexagon have?",
+      "options": [
+        "3",
+        "6",
+        "4",
+        "12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "counts only lines joining opposite vertices and misses lines joining midpoints of opposite sides",
+        "",
+        "thinks all regular shapes have four lines of symmetry",
+        "doubles the number of sides by counting each half-line separately"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-identify-infinite-symmetry-circle",
+      "nodeId": "class6-mathematics-symmetry-identify-infinite-symmetry-circle",
+      "question": "How many lines of symmetry can be drawn for a circle?",
+      "options": [
+        "Only 2 (one vertical and one horizontal)",
+        "Only 4",
+        "Only 360",
+        "Infinitely many (endless)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks a circle only has vertical and horizontal axes",
+        "confuses four quadrants with having only four symmetry lines",
+        "thinks there is only one line per degree in a circle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-compare-shapes-by-line-count",
+      "nodeId": "class6-mathematics-symmetry-compare-shapes-by-line-count",
+      "question": "Which list arranges the shapes from the FEWEST to the MOST lines of symmetry?",
+      "options": [
+        "Rectangle, Scalene triangle, Square",
+        "Square, Rectangle, Scalene triangle",
+        "Scalene triangle, Rectangle, Square",
+        "Scalene triangle, Square, Rectangle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks a rectangle has fewer lines of symmetry than a scalene triangle",
+        "reverses the order from most to fewest",
+        "",
+        "thinks a square has fewer lines of symmetry than a rectangle"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-draw-figure-with-given-number-of-lines",
+      "nodeId": "class6-mathematics-symmetry-draw-figure-with-given-number-of-lines",
+      "question": "Which of these shapes has EXACTLY 1 line of symmetry?",
+      "options": [
+        "An isosceles triangle",
+        "A square",
+        "A rectangle",
+        "A circle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks a square has 1 line of symmetry instead of 4",
+        "thinks a rectangle has 1 line of symmetry instead of 2",
+        "thinks a circle has 1 line of symmetry instead of infinitely many"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-understand-rotation-about-a-point",
+      "nodeId": "class6-mathematics-symmetry-understand-rotation-about-a-point",
+      "question": "What happens to a shape when it is rotated by a quarter turn (90 degrees) around a centre point?",
+      "options": [
+        "It changes its size and becomes twice as big",
+        "It flips over like a mirror reflection",
+        "It turns around the point while keeping its size and shape unchanged",
+        "It slides in a straight line without turning"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses rotation with resizing or scaling",
+        "confuses rotation with reflection",
+        "",
+        "confuses rotation with translation (sliding)"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-identify-rotational-symmetry-visual",
+      "nodeId": "class6-mathematics-symmetry-identify-rotational-symmetry-visual",
+      "question": "A shape has rotational symmetry if it looks identical to its starting position after being turned by:",
+      "options": [
+        "Only a full 360-degree turn",
+        "Any flip across a fold line",
+        "Less than a full 360-degree turn",
+        "Moving it 5 cm to the left"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks every shape has rotational symmetry just because a 360-degree turn brings it back",
+        "confuses rotational symmetry with reflectional symmetry",
+        "",
+        "confuses rotational symmetry with sliding displacement"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-define-centre-and-angle-of-rotation",
+      "nodeId": "class6-mathematics-symmetry-define-centre-and-angle-of-rotation",
+      "question": "What is the smallest angle of rotation that makes a square look exactly the same as its original position?",
+      "options": [
+        "45 degrees",
+        "90 degrees",
+        "180 degrees",
+        "360 degrees"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks an eight-fold turn (45 degrees) matches a square",
+        "",
+        "thinks a half turn (180 degrees) is the smallest turn for a square",
+        "thinks only a full turn (360 degrees) brings a square to match itself"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-determine-order-of-rotational-symmetry",
+      "nodeId": "class6-mathematics-symmetry-determine-order-of-rotational-symmetry",
+      "question": "A windmill fan with 3 identical equally spaced blades is rotated by one full turn (360 degrees). How many times does it fit onto itself?",
+      "options": [
+        "3 times",
+        "2 times",
+        "1 time",
+        "6 times"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks only 2-fold or 4-fold rotations exist",
+        "counts only the final 360-degree position",
+        "doubles the blade count to find the order"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-order-of-rotation-common-polygons",
+      "nodeId": "class6-mathematics-symmetry-order-of-rotation-common-polygons",
+      "question": "What is the order of rotational symmetry of a rectangle (that is not a square)?",
+      "options": [
+        "1",
+        "4",
+        "2",
+        "0"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks a rectangle only matches itself after a full 360-degree turn",
+        "confuses the order of a rectangle with the order of a square",
+        "",
+        "thinks shapes without 4-fold symmetry have order 0"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-rotational-symmetry-english-letters",
+      "nodeId": "class6-mathematics-symmetry-rotational-symmetry-english-letters",
+      "question": "Which of these capital letters has rotational symmetry of order 2?",
+      "options": [
+        "T",
+        "A",
+        "C",
+        "S"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses vertical line symmetry in T with rotational symmetry",
+        "confuses vertical line symmetry in A with rotational symmetry",
+        "confuses horizontal line symmetry in C with rotational symmetry",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-relate-line-and-rotational-symmetry",
+      "nodeId": "class6-mathematics-symmetry-relate-line-and-rotational-symmetry",
+      "question": "Which of these shapes has rotational symmetry of order 2, but NO line of symmetry?",
+      "options": [
+        "A general parallelogram",
+        "A square",
+        "A rectangle",
+        "An isosceles triangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks a square has no line of symmetry",
+        "thinks a rectangle has no lines of symmetry",
+        "confuses having 1 line of symmetry with having rotational symmetry"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-relationship-sides-order-regular-polygons",
+      "nodeId": "class6-mathematics-symmetry-relationship-sides-order-regular-polygons",
+      "question": "A regular polygon has 8 equal sides (a regular octagon). How many lines of symmetry and what order of rotational symmetry does it have?",
+      "options": [
+        "16 lines of symmetry and order 8",
+        "4 lines of symmetry and order 8",
+        "8 lines of symmetry and order 4",
+        "8 lines of symmetry and order 8"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "doubles the lines of symmetry for an 8-sided shape",
+        "halves the number of lines of symmetry while keeping order 8",
+        "halves the order of rotation while keeping 8 lines of symmetry",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-symmetry-create-symmetric-rangoli-patterns",
+      "nodeId": "class6-mathematics-symmetry-create-symmetric-rangoli-patterns",
+      "question": "A student wants to make a rangoli design that has 4 lines of symmetry and rotational symmetry of order 4. Which central base shape should they use?",
+      "options": [
+        "An equilateral triangle",
+        "A square",
+        "A general parallelogram",
+        "A regular pentagon"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses 3-fold symmetry of a triangle with 4-fold symmetry",
+        "",
+        "thinks a general parallelogram provides 4 lines of symmetry",
+        "confuses 5-fold symmetry of a pentagon with 4-fold symmetry"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-define-perimeter-boundary",
+      "nodeId": "class6-mathematics-perimeter-and-area-define-perimeter-boundary",
+      "question": "Which of the following best describes the perimeter of a closed flat shape?",
+      "options": [
+        "The number of square units needed to fill the shape completely",
+        "The total amount of flat surface covered inside the shape",
+        "The total length of the continuous boundary line enclosing the shape",
+        "The distance from the center of the shape to its outer edge"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses perimeter with measuring area by counting unit squares",
+        "confuses perimeter with the definition of area as enclosed surface",
+        "",
+        "confuses perimeter with radius or apothem"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-define-area-surface-region",
+      "nodeId": "class6-mathematics-perimeter-and-area-define-area-surface-region",
+      "question": "What does the area of a closed two-dimensional shape measure?",
+      "options": [
+        "The total distance around the outside edge of the shape",
+        "The amount of flat surface enclosed inside the boundary of the shape",
+        "The sum of the lengths of all straight sides of the shape",
+        "The total space occupied by a three-dimensional solid object"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses area with perimeter as the boundary distance",
+        "",
+        "defines area as the sum of side lengths which is perimeter",
+        "confuses two-dimensional surface area with three-dimensional volume"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-distinguish-perimeter-and-area",
+      "nodeId": "class6-mathematics-perimeter-and-area-distinguish-perimeter-and-area",
+      "question": "A farmer wants to put a wooden fence around a garden and lay grass turf over the entire ground inside. Which measures should be used?",
+      "options": [
+        "Area for the fence and perimeter for the grass turf",
+        "Perimeter for both the fence and the grass turf",
+        "Perimeter for the fence and area for the grass turf",
+        "Area for both the fence and the grass turf"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the concepts of perimeter and area in a practical context",
+        "thinks covering an entire flat surface uses perimeter",
+        "",
+        "thinks building an outer border uses area"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-identify-units-perimeter-vs-area",
+      "nodeId": "class6-mathematics-perimeter-and-area-identify-units-perimeter-vs-area",
+      "question": "Which pair gives the correct units for measuring the perimeter and area of a room?",
+      "options": [
+        "Perimeter in square metres (sq m), Area in metres (m)",
+        "Perimeter in metres (m), Area in metres (m)",
+        "Perimeter in metres (m), Area in square metres (sq m)",
+        "Perimeter in square metres (sq m), Area in square metres (sq m)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "swaps linear units with square units between perimeter and area",
+        "thinks area is measured in linear units like perimeter",
+        "",
+        "thinks perimeter is measured in square units like area"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-perimeter-irregular-polygon",
+      "question": "An irregular five-sided field has sides measuring 4 m, 6 m, 3 m, 7 m, and 5 m. What is its perimeter?",
+      "options": [
+        "25 m",
+        "20 m",
+        "50 m",
+        "420 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "misses one of the sides when adding the lengths together",
+        "adds all sides and then doubles the result unnecessarily",
+        "multiplies side lengths together instead of adding them"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-find-missing-side-given-perimeter",
+      "nodeId": "class6-mathematics-perimeter-and-area-find-missing-side-given-perimeter",
+      "question": "A quadrilateral has a perimeter of 30 cm. Three of its sides measure 6 cm, 8 cm, and 9 cm. What is the length of the fourth side?",
+      "options": [
+        "23 cm",
+        "15 cm",
+        "7 cm",
+        "14 cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the sum of known sides but forgets to subtract from total perimeter",
+        "subtracts the sum of known sides from half the perimeter instead of the total",
+        "",
+        "adds the known sides and then subtracts the first side only"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-derive-perimeter-rectangle-formula",
+      "nodeId": "class6-mathematics-perimeter-and-area-derive-perimeter-rectangle-formula",
+      "question": "Why is the perimeter of a rectangle with length 'l' and breadth 'b' written as 2 * (l + b)?",
+      "options": [
+        "Because a rectangle has only two sides in total, one length and one breadth",
+        "Because a rectangle has two equal lengths and two equal breadths, giving l + b + l + b",
+        "Because multiplying length by breadth gives the total boundary length",
+        "Because the perimeter is always double the area of any rectangular shape"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks a rectangle has only two boundary sides",
+        "",
+        "confuses the boundary perimeter with the multiplication used for area",
+        "believes perimeter is directly double the numerical area"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-perimeter-rectangle",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-perimeter-rectangle",
+      "question": "What is the perimeter of a rectangle with a length of 12 cm and a breadth of 5 cm?",
+      "options": [
+        "17 cm",
+        "34 cm",
+        "29 cm",
+        "60 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds length and breadth once without doubling for all four sides",
+        "",
+        "doubles the length but adds the breadth only once",
+        "multiplies length by breadth instead of finding the perimeter"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-perimeter-square",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-perimeter-square",
+      "question": "A square picture frame has a side of length 9 cm. What is the perimeter of the frame?",
+      "options": [
+        "36 cm",
+        "81 cm",
+        "18 cm",
+        "27 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the area by squaring the side instead of multiplying by 4",
+        "multiplies the side by 2 instead of accounting for all 4 sides",
+        "multiplies the side by 3 as if it were a triangle"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-perimeter-equilateral-triangle",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-perimeter-equilateral-triangle",
+      "question": "What is the perimeter of an equilateral triangle with a side length of 7 cm?",
+      "options": [
+        "14 cm",
+        "21 cm",
+        "28 cm",
+        "49 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies side by 2 instead of 3",
+        "",
+        "multiplies side by 4 using the formula for a square",
+        "squares the side length instead of multiplying by 3"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-perimeter-regular-polygon",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-perimeter-regular-polygon",
+      "question": "A regular hexagon has sides of length 8 cm. What is its perimeter?",
+      "options": [
+        "40 cm",
+        "48 cm",
+        "32 cm",
+        "64 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a hexagon with a pentagon and multiplies by 5",
+        "",
+        "confuses a hexagon with a quadrilateral and multiplies by 4",
+        "squares the side length instead of multiplying by the number of sides"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-find-side-from-regular-perimeter",
+      "nodeId": "class6-mathematics-perimeter-and-area-find-side-from-regular-perimeter",
+      "question": "A regular pentagon has a perimeter of 45 cm. What is the length of each side?",
+      "options": [
+        "15 cm",
+        "11.25 cm",
+        "225 cm",
+        "9 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides the perimeter by 3 treating the pentagon as a triangle",
+        "divides the perimeter by 4 treating the pentagon as a square",
+        "multiplies the perimeter by 5 instead of dividing by the number of sides",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-solve-fencing-cost-problems",
+      "nodeId": "class6-mathematics-perimeter-and-area-solve-fencing-cost-problems",
+      "question": "A rectangular park is 20 m long and 15 m wide. Fencing wire costs ₹10 per metre. What is the total cost to fence the park?",
+      "options": [
+        "₹350",
+        "₹3,000",
+        "₹700",
+        "₹1,400"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "multiplies the sum of only one length and breadth by the cost rate",
+        "multiplies the area of the park by the cost rate instead of its perimeter",
+        "",
+        "doubles the perimeter value again before multiplying by the cost rate"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-explain-grid-square-unit",
+      "nodeId": "class6-mathematics-perimeter-and-area-explain-grid-square-unit",
+      "question": "Why is a square of 1 cm by 1 cm used as a standard unit to measure area instead of a simple 1 cm straight line?",
+      "options": [
+        "A straight line only measures one-dimensional length, while covering a surface requires two dimensions",
+        "A 1 cm line has no fixed size, but a 1 cm by 1 cm square always stays constant",
+        "Square units are used only because all geometric shapes are made of straight lines",
+        "A straight line cannot be placed on a piece of paper without curling"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks 1 cm linear distance is not a fixed measurement",
+        "thinks square units exist because shapes have straight edges rather than two-dimensional surface",
+        "believes straight lines cannot be drawn or placed flat on paper"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-count-fully-enclosed-squares",
+      "nodeId": "class6-mathematics-perimeter-and-area-count-fully-enclosed-squares",
+      "question": "A shape drawn on a 1 cm grid paper completely covers exactly 14 full unit squares, with no partial squares. What is its area?",
+      "options": [
+        "28 cm",
+        "7 sq cm",
+        "14 cm",
+        "14 sq cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "doubles the count and assigns linear units thinking it is perimeter",
+        "divides the square count by 2",
+        "uses linear units (cm) instead of square units (sq cm) for area",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-estimate-area-grid-rules",
+      "nodeId": "class6-mathematics-perimeter-and-area-estimate-area-grid-rules",
+      "question": "On a 1 cm grid, an irregular leaf shape covers 6 fully filled squares, 4 squares that are more than half filled, 2 squares that are exactly half filled, and 5 squares that are less than half filled. What is its estimated area?",
+      "options": [
+        "17 sq cm",
+        "12 sq cm",
+        "10 sq cm",
+        "11 sq cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "counts all squares touched by the shape as full squares of 1 sq cm each",
+        "counts less than half squares as full squares while ignoring half squares",
+        "ignores both exactly half-filled and less than half-filled squares completely",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-derive-area-rectangle-grid",
+      "nodeId": "class6-mathematics-perimeter-and-area-derive-area-rectangle-grid",
+      "question": "A rectangle is made of 4 rows of 1 cm unit squares, with 7 squares in each row. Why is its area equal to 4 * 7 sq cm?",
+      "options": [
+        "Because adding 4 rows of 7 equal unit squares is calculated by repeated addition: 4 * 7",
+        "Because 4 and 7 are the two opposite sides that form the boundary of the rectangle",
+        "Because perimeter is 4 + 7, and multiplying them gives the required area",
+        "Because any four-sided shape always has an area equal to its two side lengths multiplied"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses row-and-column tiling array with opposite boundary edges",
+        "thinks area is directly derived from the perimeter addition formula",
+        "overgeneralizes the rectangle grid area formula to any four-sided polygon"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-area-rectangle",
+      "question": "A rectangular rug is 8 m long and 6 m wide. What is the area of the rug?",
+      "options": [
+        "28 sq m",
+        "48 m",
+        "14 sq m",
+        "48 sq m"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates the perimeter instead of the area",
+        "calculates the correct numerical value but attaches linear units instead of square units",
+        "adds length and breadth instead of multiplying them",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-calculate-area-square",
+      "nodeId": "class6-mathematics-perimeter-and-area-calculate-area-square",
+      "question": "What is the area of a square tile with a side of 11 cm?",
+      "options": [
+        "44 sq cm",
+        "121 sq cm",
+        "22 sq cm",
+        "121 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies side by 4 using the perimeter formula instead of squaring",
+        "",
+        "multiplies side by 2 instead of multiplying side by side",
+        "omits square units and uses linear units for area"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-find-missing-dimension-from-area",
+      "nodeId": "class6-mathematics-perimeter-and-area-find-missing-dimension-from-area",
+      "question": "The area of a rectangular chart paper is 96 sq cm. If its length is 12 cm, what is its breadth?",
+      "options": [
+        "4 cm",
+        "84 cm",
+        "36 cm",
+        "8 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides the length by 3 arbitrarily",
+        "subtracts the length from the area instead of dividing",
+        "divides area by 2 and then subtracts length as if working with perimeter",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-solve-tiling-paving-problems",
+      "nodeId": "class6-mathematics-perimeter-and-area-solve-tiling-paving-problems",
+      "question": "A room floor is 6 m long and 4 m wide. How many square tiles of side 2 m are needed to completely cover the floor?",
+      "options": [
+        "6 tiles",
+        "12 tiles",
+        "24 tiles",
+        "4 tiles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides floor area by tile side length instead of dividing by tile area",
+        "finds total floor area and forgets to divide by the tile area",
+        "divides floor perimeter by tile perimeter"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-area-combined-rectangles-splitting",
+      "nodeId": "class6-mathematics-perimeter-and-area-area-combined-rectangles-splitting",
+      "question": "An L-shaped figure is split into two non-overlapping rectangles: Rectangle A (5 cm by 2 cm) and Rectangle B (3 cm by 2 cm). What is the total area of the figure?",
+      "options": [
+        "16 sq cm",
+        "20 sq cm",
+        "30 sq cm",
+        "60 sq cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the dimensions of both rectangles together and multiplies the sum",
+        "multiplies the areas of the two parts instead of adding them",
+        "multiplies all four given dimension numbers together"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-compare-shapes-same-perimeter-different-area",
+      "nodeId": "class6-mathematics-perimeter-and-area-compare-shapes-same-perimeter-different-area",
+      "question": "Two rectangles each have a perimeter of 24 cm. Rectangle X has sides 8 cm and 4 cm. Rectangle Y has sides 6 cm and 6 cm (a square). Which has the larger area?",
+      "options": [
+        "Both rectangles have the same area because their perimeters are equal",
+        "Rectangle X, because it is longer than Rectangle Y",
+        "Rectangle Y, because its area is 36 sq cm compared to 32 sq cm for Rectangle X",
+        "Rectangle X, because multiplying 8 by 4 gives 32 sq cm which is greater than 24 sq cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes shapes with the same perimeter must have the exact same area",
+        "assumes longer shapes always enclose more area regardless of width",
+        "",
+        "compares rectangle area to the perimeter value instead of comparing the two areas"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-perimeter-and-area-solve-multi-step-cost-and-dimension-problems",
+      "nodeId": "class6-mathematics-perimeter-and-area-solve-multi-step-cost-and-dimension-problems",
+      "question": "A rectangular room is 5 m long and 4 m wide. It costs ₹50 per square metre to lay carpet on the floor and ₹20 per metre to put a decorative border along the walls. What is the total cost?",
+      "options": [
+        "₹1,720",
+        "₹1,000",
+        "₹1,180",
+        "₹1,360"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps the rates, multiplying perimeter by ₹50 and area by ₹20",
+        "calculates only the carpeting cost and completely ignores the border cost",
+        "calculates border cost using half the perimeter (length + width) instead of full perimeter",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-identify-constants-arithmetic",
+      "nodeId": "class6-mathematics-algebraic-thinking-identify-constants-arithmetic",
+      "question": "What are the constants in the arithmetic expression 12 + 8 - 5?",
+      "options": [
+        "Only 15, because that is the total value",
+        "+ and -",
+        "12, 8, and 5",
+        "Only 12, because it comes first"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks only the final simplified answer is a constant",
+        "thinks arithmetic operation signs are constants",
+        "",
+        "thinks only the first number written in an expression is a constant"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-identify-unknowns-word-problems",
+      "nodeId": "class6-mathematics-algebraic-thinking-identify-unknowns-word-problems",
+      "question": "Rohan has some marbles in a bag. His friend gives him 6 more marbles, so he now has 15 marbles in total. What is the unknown quantity?",
+      "options": [
+        "The total number of friends Rohan has",
+        "The 6 marbles his friend gave him",
+        "The 15 total marbles Rohan has now",
+        "The number of marbles Rohan started with"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies an irrelevant background detail as the unknown mathematical quantity",
+        "confuses a given known value with the unknown quantity",
+        "confuses the given total result with the unknown quantity",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-differentiate-arithmetic-algebraic",
+      "nodeId": "class6-mathematics-algebraic-thinking-differentiate-arithmetic-algebraic",
+      "question": "Which of the following is an algebraic expression?",
+      "options": [
+        "4 + 7 - 2",
+        "5n + 2",
+        "3 × (8 - 5)",
+        "18 ÷ 3 + 1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks any multi-term expression without variables is algebraic",
+        "",
+        "thinks using brackets makes an arithmetic expression algebraic",
+        "confuses arithmetic division expressions with algebraic expressions"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-define-variable-letter-symbol",
+      "nodeId": "class6-mathematics-algebraic-thinking-define-variable-letter-symbol",
+      "question": "What is a variable in mathematics?",
+      "options": [
+        "A fixed number whose value can never change",
+        "The final answer to an arithmetic problem",
+        "An operation sign such as + or ×",
+        "A symbol or letter that can take different numerical values"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the definition of a variable with the definition of a constant",
+        "thinks the variable refers to the final evaluated result",
+        "thinks operational symbols are variables",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-state-rules-geometry-variables",
+      "nodeId": "class6-mathematics-algebraic-thinking-state-rules-geometry-variables",
+      "question": "If each side of a regular pentagon has length s, which formula gives its perimeter P?",
+      "options": [
+        "P = s + 5",
+        "P = s × s",
+        "P = 5s",
+        "P = 5 + 5s"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the number of sides to side length instead of multiplying",
+        "confuses perimeter with area calculation",
+        "",
+        "adds an extra constant term to the perimeter formula"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-state-arithmetic-properties-variables",
+      "nodeId": "class6-mathematics-algebraic-thinking-state-arithmetic-properties-variables",
+      "question": "Which rule shows the distributive property of multiplication over addition for any numbers a, b, and c?",
+      "options": [
+        "a(b + c) = ab + ac",
+        "a × (b × c) = (a × b) × c",
+        "a + b = b + a",
+        "a + (b + c) = (a + b) + c"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the associative property of multiplication with the distributive property",
+        "confuses the commutative property of addition with the distributive property",
+        "confuses the associative property of addition with the distributive property"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-translate-addition-subtraction-phrases",
+      "nodeId": "class6-mathematics-algebraic-thinking-translate-addition-subtraction-phrases",
+      "question": "Which algebraic expression represents '7 subtracted from y'?",
+      "options": [
+        "y - 7",
+        "7 - y",
+        "7 + y",
+        "y / 7"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses the order of terms in subtraction by translating word-for-word",
+        "confuses subtraction with addition",
+        "confuses subtraction with division"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-translate-multiplication-division-phrases",
+      "nodeId": "class6-mathematics-algebraic-thinking-translate-multiplication-division-phrases",
+      "question": "Which algebraic expression represents 'one-fourth of p'?",
+      "options": [
+        "p + 4",
+        "p - 4",
+        "4p",
+        "p / 4"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses fractional parts with addition",
+        "confuses fractional parts with subtraction",
+        "interprets a fraction of a quantity as multiplying by the integer denominator",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-translate-multi-operation-phrases",
+      "nodeId": "class6-mathematics-algebraic-thinking-translate-multi-operation-phrases",
+      "question": "Which algebraic expression represents '5 added to twice of x'?",
+      "options": [
+        "2x + 5",
+        "2(x + 5)",
+        "5x + 2",
+        "x + 10"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "applies the addition first and then multiplies by 2",
+        "swaps the multiplier and the added constant",
+        "multiplies the added constant by 2 instead of the variable"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-convert-expression-to-words",
+      "nodeId": "class6-mathematics-algebraic-thinking-convert-expression-to-words",
+      "question": "Which verbal phrase correctly describes the expression 3x - 4?",
+      "options": [
+        "3 times the difference of x and 4",
+        "4 subtracted from 3 times x",
+        "3 subtracted from 4 times x",
+        "4 times x decreased by 3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "interprets the expression as 3(x - 4) instead of 3x - 4",
+        "",
+        "swaps the coefficient and the subtracted constant",
+        "misreads the coefficients and constants in reverse order"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-substitute-single-variable-single-operation",
+      "nodeId": "class6-mathematics-algebraic-thinking-substitute-single-variable-single-operation",
+      "question": "What is the value of 4m when m = 6?",
+      "options": [
+        "46",
+        "24",
+        "10",
+        "2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "concatenates digits instead of multiplying coefficient and variable",
+        "",
+        "adds the coefficient and variable value instead of multiplying",
+        "subtracts the coefficient from the variable value instead of multiplying"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-substitute-single-variable-multi-operation",
+      "nodeId": "class6-mathematics-algebraic-thinking-substitute-single-variable-multi-operation",
+      "question": "What is the value of 3y + 4 when y = 5?",
+      "options": [
+        "27",
+        "39",
+        "19",
+        "12"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds 5 and 4 first to get 9, then multiplies by 3",
+        "concatenates 3 and 5 to get 35, then adds 4",
+        "",
+        "multiplies 3 and 4 while ignoring the variable value 5"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-evaluate-expression-table-of-values",
+      "nodeId": "class6-mathematics-algebraic-thinking-evaluate-expression-table-of-values",
+      "question": "For the expression 2n + 1, what are the values when n = 1, 2, and 3?",
+      "options": [
+        "21, 22, 23",
+        "2, 4, 6",
+        "3, 4, 5",
+        "3, 5, 7"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "concatenates the digit 2 with each input value",
+        "evaluates 2n correctly but forgets to add 1",
+        "substitutes n for the entire expression and increments by 1",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-define-equation-equal-sign",
+      "nodeId": "class6-mathematics-algebraic-thinking-define-equation-equal-sign",
+      "question": "What makes a mathematical statement an equation?",
+      "options": [
+        "It must contain only numbers and plus signs",
+        "It must contain at least three different variables",
+        "It must contain an equals sign (=) showing two sides have the same value",
+        "It must not have any numbers in it"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks an equation only contains arithmetic addition",
+        "thinks an equation requires multiple different variables",
+        "",
+        "thinks equations are made exclusively of letters without numbers"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-identify-lhs-rhs",
+      "nodeId": "class6-mathematics-algebraic-thinking-identify-lhs-rhs",
+      "question": "In the equation 5x + 3 = 18, what is the Left Hand Side (LHS)?",
+      "options": [
+        "5x + 3",
+        "5x",
+        "18",
+        "3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "takes only the variable term and ignores the added constant on the left",
+        "confuses the LHS with the RHS",
+        "takes only the constant term on the left side"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-distinguish-equation-from-expression",
+      "nodeId": "class6-mathematics-algebraic-thinking-distinguish-equation-from-expression",
+      "question": "Which of the following is an equation?",
+      "options": [
+        "2x + 7",
+        "4y - 1",
+        "6 + 9",
+        "3a + 5 = 14"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses an algebraic expression with an equation",
+        "confuses an algebraic expression with an equation",
+        "confuses an arithmetic expression with an equation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-translate-verbal-statement-to-equation",
+      "nodeId": "class6-mathematics-algebraic-thinking-translate-verbal-statement-to-equation",
+      "question": "Which equation represents the statement: 'The sum of a number x and 8 is 20'?",
+      "options": [
+        "x + 8 = 20",
+        "8x = 20",
+        "x - 8 = 20",
+        "x / 8 = 20"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses multiplication instead of addition for sum",
+        "uses subtraction instead of addition for sum",
+        "uses division instead of addition for sum"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-check-solution-by-substitution",
+      "nodeId": "class6-mathematics-algebraic-thinking-check-solution-by-substitution",
+      "question": "Is x = 4 a solution to the equation 3x - 2 = 10?",
+      "options": [
+        "Yes, because 3 × 4 - 2 = 10, which equals the RHS",
+        "No, because 3 × 4 - 2 = 14, which does not equal 10",
+        "No, because 4 - 2 = 2, which does not equal 10",
+        "Yes, because 34 - 2 = 32"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 2 instead of subtracting 2 during verification",
+        "ignores the coefficient 3 and calculates 4 - 2",
+        "concatenates 3 and 4 to get 34 instead of multiplying"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-solve-by-trial-and-error-table",
+      "nodeId": "class6-mathematics-algebraic-thinking-solve-by-trial-and-error-table",
+      "question": "Using systematic trial, for which value of x does the expression 2x + 3 equal 13?",
+      "options": [
+        "x = 4",
+        "x = 5",
+        "x = 6",
+        "x = 8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "evaluates 2(4) + 3 as 11 and stops too early",
+        "",
+        "evaluates 2(6) + 3 as 15 and overshoots the target",
+        "subtracts 3 from 13 to get 10 and forgets to divide by 2"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-solve-one-step-addition-subtraction-inspection",
+      "nodeId": "class6-mathematics-algebraic-thinking-solve-one-step-addition-subtraction-inspection",
+      "question": "What is the value of y in the equation y - 5 = 11?",
+      "options": [
+        "6",
+        "55",
+        "16",
+        "15"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts 5 from 11 instead of adding 5",
+        "multiplies 11 by 5 instead of adding 5",
+        "",
+        "adds 4 instead of 5 to 11"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-solve-one-step-multiplication-division-inspection",
+      "nodeId": "class6-mathematics-algebraic-thinking-solve-one-step-multiplication-division-inspection",
+      "question": "What is the value of x in the equation 4x = 28?",
+      "options": [
+        "32",
+        "24",
+        "112",
+        "7"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds 4 to 28 instead of dividing by 4",
+        "subtracts 4 from 28 instead of dividing by 4",
+        "multiplies 28 by 4 instead of dividing by 4",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-solve-two-step-equation-inspection",
+      "nodeId": "class6-mathematics-algebraic-thinking-solve-two-step-equation-inspection",
+      "question": "What is the value of n in the equation 3n + 2 = 17?",
+      "options": [
+        "15",
+        "5",
+        "6",
+        "19"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "subtracts 2 from 17 to get 15 but forgets to divide by 3",
+        "",
+        "divides 18 by 3 after mistakenly adding 2 to 17",
+        "adds 2 to 17 instead of subtracting 2"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-set-up-equation-word-problem",
+      "nodeId": "class6-mathematics-algebraic-thinking-set-up-equation-word-problem",
+      "question": "A box has x chocolates. After giving 4 chocolates to Priya, 12 chocolates are left. Which equation matches this situation?",
+      "options": [
+        "x + 4 = 12",
+        "4x = 12",
+        "x - 4 = 12",
+        "12 - x = 4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the chocolates given away instead of subtracting from the initial amount",
+        "treats giving away chocolates as a multiplication relationship",
+        "",
+        "confuses the remaining amount with the starting total"
+      ]
+    },
+    {
+      "id": "probe-class6-mathematics-algebraic-thinking-solve-word-problem-by-trial",
+      "nodeId": "class6-mathematics-algebraic-thinking-solve-word-problem-by-trial",
+      "question": "A teacher distributes pens equally among 5 students and has 2 pens left. She started with 17 pens. How many pens did each student get?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "guesses 2 because 5 × 2 = 10, ignoring the remaining pens count",
+        "",
+        "divides 17 directly by 5 and rounds down without accounting for remainder correctly",
+        "guesses 5 because there are 5 students"
+      ]
+    }
+  ]
+}

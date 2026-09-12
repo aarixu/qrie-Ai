@@ -1,0 +1,3765 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class6-science-components-of-food-nutrients-list",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "List Major Nutrients",
+      "outcome": "List carbohydrates, proteins, fats, vitamins, and minerals as the major nutrients in food",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-different-food-items-contain"
+    },
+    {
+      "id": "class6-science-components-of-food-starch-iodine-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Test for Starch",
+      "outcome": "Demonstrate the presence of starch in a food item by observing a blue-black colour change with dilute iodine solution",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-different-food-items-contain"
+    },
+    {
+      "id": "class6-science-components-of-food-protein-chemical-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Test for Protein",
+      "outcome": "Demonstrate the presence of protein in a food sample using copper sulphate solution and caustic soda to produce a violet colour",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/components-of-food/what-do-different-food-items-contain"
+    },
+    {
+      "id": "class6-science-components-of-food-fat-paper-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Test for Fats",
+      "outcome": "Identify the presence of fat in a food item by detecting a translucent oily patch on paper",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-different-food-items-contain"
+    },
+    {
+      "id": "class6-science-components-of-food-energy-giving-foods",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Identify Energy Giving Nutrients",
+      "outcome": "Compare carbohydrates and fats as energy providers, identifying fats as providing more energy per unit amount",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-carbohydrate-sources",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Identify Carbohydrate Sources",
+      "outcome": "Identify common food sources rich in carbohydrates such as rice, wheat, potatoes, and maize",
+      "prerequisites": [
+        "class6-science-components-of-food-energy-giving-foods"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-fat-sources",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Identify Fat Sources",
+      "outcome": "Classify sources of fats into plant sources like nuts and oils, and animal sources like butter and ghee",
+      "prerequisites": [
+        "class6-science-components-of-food-energy-giving-foods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-protein-role",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Role of Proteins",
+      "outcome": "Explain the role of proteins as body-building foods needed for growth and tissue repair",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-protein-sources",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Identify Protein Sources",
+      "outcome": "List plant sources such as pulses and beans, and animal sources such as milk, eggs, and fish, as rich in proteins",
+      "prerequisites": [
+        "class6-science-components-of-food-protein-role"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-vitamins-role",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Role of Vitamins",
+      "outcome": "State the role of vitamins in protecting the body against diseases and keeping eyes, bones, teeth, and gums healthy",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-vitamin-types-roles",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Roles of Specific Vitamins",
+      "outcome": "Describe specific roles of Vitamin A for skin and eye health, Vitamin C for fighting infections, and Vitamin D for calcium usage",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamins-role"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-minerals-role",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Role of Minerals",
+      "outcome": "Identify essential minerals including calcium, phosphorus, iron, and iodine and their role in overall growth and maintenance",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-roughage-function",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Function of Dietary Fibre",
+      "outcome": "Explain the importance of dietary fibres (roughage) in adding bulk to food and helping the body get rid of undigested food",
+      "prerequisites": [
+        "class6-science-components-of-food-nutrients-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-roughage-sources",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Sources of Dietary Fibre",
+      "outcome": "Identify whole grains, pulses, fresh fruits, and vegetables as the main sources of dietary fibre",
+      "prerequisites": [
+        "class6-science-components-of-food-roughage-function"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-water-function",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Functions of Water in Body",
+      "outcome": "State the functions of water in absorbing nutrients from food and throwing out wastes as urine and sweat",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/components-of-food/what-do-various-nutrients-do-for-our-body"
+    },
+    {
+      "id": "class6-science-components-of-food-balanced-diet-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Define Balanced Diet",
+      "outcome": "Define a balanced diet as a diet providing all essential nutrients, roughage, and water in the right quantities",
+      "prerequisites": [
+        "class6-science-components-of-food-energy-giving-foods",
+        "class6-science-components-of-food-protein-role",
+        "class6-science-components-of-food-vitamins-role",
+        "class6-science-components-of-food-roughage-function",
+        "class6-science-components-of-food-water-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/balanced-diet"
+    },
+    {
+      "id": "class6-science-components-of-food-cost-effective-diet",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Plan Cost-Effective Balanced Meal",
+      "outcome": "Design a balanced meal plan using inexpensive local ingredients like pulses, fermented food, sprouted seeds, and seasonal vegetables",
+      "prerequisites": [
+        "class6-science-components-of-food-balanced-diet-def"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/components-of-food/balanced-diet"
+    },
+    {
+      "id": "class6-science-components-of-food-obesity-cause",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Cause of Obesity",
+      "outcome": "Explain how consuming an excess of fat-rich foods leads to obesity",
+      "prerequisites": [
+        "class6-science-components-of-food-energy-giving-foods",
+        "class6-science-components-of-food-balanced-diet-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/balanced-diet"
+    },
+    {
+      "id": "class6-science-components-of-food-cooking-nutrient-loss",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Nutrient Loss from Cooking and Washing",
+      "outcome": "Identify that repeated washing of rice/pulses and excessive heat during cooking lead to loss of vitamins and minerals",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamin-types-roles",
+        "class6-science-components-of-food-minerals-role"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/balanced-diet"
+    },
+    {
+      "id": "class6-science-components-of-food-deficiency-disease-concept",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Concept of Deficiency Diseases",
+      "outcome": "Define deficiency diseases as disorders caused by a prolonged lack of one or more nutrients in the diet",
+      "prerequisites": [
+        "class6-science-components-of-food-balanced-diet-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-components-of-food-vitamin-a-deficiency",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Vitamin A Deficiency Symptoms",
+      "outcome": "Match Vitamin A deficiency with night blindness and symptoms such as poor vision in darkness",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamin-types-roles",
+        "class6-science-components-of-food-deficiency-disease-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-components-of-food-vitamin-b1-beriberi",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Vitamin B1 Deficiency and Beriberi",
+      "outcome": "Identify beriberi as the deficiency disease of Vitamin B1 and name its symptoms of weak muscles and low energy",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamins-role",
+        "class6-science-components-of-food-deficiency-disease-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-components-of-food-vitamin-c-scurvy",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Vitamin C Deficiency and Scurvy",
+      "outcome": "Identify scurvy as the deficiency disease of Vitamin C and recognize symptoms like bleeding gums and delayed wound healing",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamin-types-roles",
+        "class6-science-components-of-food-deficiency-disease-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-components-of-food-rickets-calcium-vitd",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Deficiencies of Vitamin D and Calcium",
+      "outcome": "Correlate Vitamin D deficiency with rickets (bent, soft bones) and calcium deficiency with weak bones and tooth decay",
+      "prerequisites": [
+        "class6-science-components-of-food-vitamin-types-roles",
+        "class6-science-components-of-food-minerals-role",
+        "class6-science-components-of-food-deficiency-disease-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-components-of-food-iodine-iron-deficiency",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "components-of-food",
+      "title": "Deficiencies of Iodine and Iron",
+      "outcome": "Match iodine deficiency with goitre (swollen neck gland) and iron deficiency with anaemia (general body weakness)",
+      "prerequisites": [
+        "class6-science-components-of-food-minerals-role",
+        "class6-science-components-of-food-deficiency-disease-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/components-of-food/deficiency-diseases"
+    },
+    {
+      "id": "class6-science-sorting-materials-objects-vs-materials",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Distinguish Objects from Materials",
+      "outcome": "Distinguish between an object and the material it is made of using everyday examples",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-multiple-materials-single-object",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Single Object Made of Multiple Materials",
+      "outcome": "Identify different materials that combine to make a single object, such as a pencil made of wood, graphite, and rubber",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-multiple-objects-single-material",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Multiple Objects from One Material",
+      "outcome": "List several different objects that can be manufactured from a single material like wood, plastic, or iron",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-same-object-different-materials",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Same Object Made from Different Materials",
+      "outcome": "Give examples of a single kind of object that can be made from different materials, such as a tumbler made of glass, plastic, or metal",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-classify-by-material",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Classify Objects by Material",
+      "outcome": "Group a given set of household objects based on the primary material they are made of",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-reasons-for-grouping",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Purpose of Grouping Materials",
+      "outcome": "State the advantages of grouping materials and objects based on convenience and studying their properties",
+      "prerequisites": [
+        "class6-science-sorting-materials-classify-by-material"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/objects-around-us"
+    },
+    {
+      "id": "class6-science-sorting-materials-lustre-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Lustre",
+      "outcome": "Define lustre as the natural shine or gloss present on the freshly cut surface of certain materials",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-classify-lustrous-non-lustrous",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Classify by Lustre",
+      "outcome": "Classify given materials into lustrous (such as metals) and non-lustrous (such as wood or cardboard)",
+      "prerequisites": [
+        "class6-science-sorting-materials-lustre-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-loss-of-lustre",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Explain Loss of Lustre in Metals",
+      "outcome": "Explain why metals often lose their shine and appear dull when exposed to air and moisture over time",
+      "prerequisites": [
+        "class6-science-sorting-materials-lustre-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-hardness-scratch-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Hardness by Scratching and Compressing",
+      "outcome": "Distinguish between hard and soft materials based on whether they can be easily compressed or scratched",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-classify-hard-soft",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Classify Materials as Hard or Soft",
+      "outcome": "Classify everyday substances into hard (like iron and stone) and soft (like cotton and sponge)",
+      "prerequisites": [
+        "class6-science-sorting-materials-hardness-scratch-test"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-solubility-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Soluble and Insoluble Substances",
+      "outcome": "Define soluble substances as those that completely dissolve in water, and insoluble substances as those that do not",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-solubility-test-solids",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Test Solubility of Solid Substances",
+      "outcome": "Identify whether common solid substances like salt, sugar, sand, chalk powder, and sawdust are soluble or insoluble in water",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-solubility-liquids-in-water",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Test Miscibility of Liquids in Water",
+      "outcome": "Classify liquids such as vinegar, lemon juice, mustard oil, and kerosene based on whether they mix completely with water or form a separate layer",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-gases-solubility-water",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Identify Solubility of Gases in Water",
+      "outcome": "Identify that some gases like oxygen dissolve in water to support aquatic life, whereas other gases do not",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-floating-sinking-observation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Observe Floating and Sinking in Water",
+      "outcome": "Identify whether an insoluble material floats on the surface of water or sinks to the bottom",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-classify-floating-sinking",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Classify Objects by Floating and Sinking",
+      "outcome": "Classify given objects like dry leaves, wood, stones, iron nails, and plastic balls into those that float and those that sink in water",
+      "prerequisites": [
+        "class6-science-sorting-materials-floating-sinking-observation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-transparent-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Transparent Materials",
+      "outcome": "Define transparent materials as substances through which things can be seen clearly because light passes through them",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-opaque-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Opaque Materials",
+      "outcome": "Define opaque materials as substances through which you cannot see anything because light cannot pass through them",
+      "prerequisites": [
+        "class6-science-sorting-materials-objects-vs-materials"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-translucent-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Define Translucent Materials",
+      "outcome": "Define translucent materials as substances through which objects can be seen, but not clearly",
+      "prerequisites": [
+        "class6-science-sorting-materials-transparent-definition",
+        "class6-science-sorting-materials-opaque-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-classify-transparency",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Classify Objects by Transparency",
+      "outcome": "Classify items such as clear glass, butter paper, cardboard, clear water, and a wooden board as transparent, translucent, or opaque",
+      "prerequisites": [
+        "class6-science-sorting-materials-transparent-definition",
+        "class6-science-sorting-materials-opaque-definition",
+        "class6-science-sorting-materials-translucent-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-oily-patch-translucency",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Demonstrate Translucency via Oil Patch",
+      "outcome": "Demonstrate that an oily patch on paper makes the paper translucent by observing a light source through it",
+      "prerequisites": [
+        "class6-science-components-of-food-fat-paper-test",
+        "class6-science-sorting-materials-translucent-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/sorting-materials-into-groups/floating-and-transparency"
+    },
+    {
+      "id": "class6-science-sorting-materials-match-material-to-use",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Match Material Properties to Function",
+      "outcome": "Explain why a specific material is chosen for an object based on its properties, such as why cooking pots are made of metal rather than paper",
+      "prerequisites": [
+        "class6-science-sorting-materials-hardness-scratch-test",
+        "class6-science-sorting-materials-solubility-definition",
+        "class6-science-sorting-materials-classify-transparency"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-sorting-materials-multi-property-sorting",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "sorting-materials-into-groups",
+      "title": "Sort Materials by Multiple Properties",
+      "outcome": "Categorize an unknown material using a combination of properties including lustre, hardness, solubility, flotation, and transparency",
+      "prerequisites": [
+        "class6-science-sorting-materials-classify-lustrous-non-lustrous",
+        "class6-science-sorting-materials-classify-hard-soft",
+        "class6-science-sorting-materials-solubility-test-solids",
+        "class6-science-sorting-materials-classify-floating-sinking",
+        "class6-science-sorting-materials-classify-transparency"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/sorting-materials-into-groups/properties-of-materials"
+    },
+    {
+      "id": "class6-science-separation-of-substances-need-for-separation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Need for Separation",
+      "outcome": "State reasons for separating components of a mixture, including removing harmful substances and obtaining useful components",
+      "prerequisites": [
+        "class6-science-sorting-materials-reasons-for-grouping"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-handpicking-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Principle of Handpicking",
+      "outcome": "Identify handpicking as a separation method suitable when impurities differ in size, shape, or colour and are present in small quantities",
+      "prerequisites": [
+        "class6-science-separation-of-substances-need-for-separation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-handpicking-application",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Application of Handpicking",
+      "outcome": "Apply handpicking to separate visible stone pieces and husk from grain samples like rice or pulses",
+      "prerequisites": [
+        "class6-science-separation-of-substances-handpicking-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-threshing-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Principle of Threshing",
+      "outcome": "Describe threshing as the process of beating dry stalks to free the attached grains",
+      "prerequisites": [
+        "class6-science-separation-of-substances-need-for-separation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-threshing-methods",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Methods of Threshing",
+      "outcome": "Compare manual beating, using bullocks, and using motorized threshers for threshing large quantities of harvest",
+      "prerequisites": [
+        "class6-science-separation-of-substances-threshing-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-winnowing-principle",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Principle of Winnowing",
+      "outcome": "Explain how winnowing separates heavier and lighter components of a dry mixture using wind or blowing air",
+      "prerequisites": [
+        "class6-science-sorting-materials-floating-sinking-observation",
+        "class6-science-separation-of-substances-need-for-separation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-winnowing-application",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Application of Winnowing",
+      "outcome": "Predict the separation pattern of husk particles from grain seeds during winnowing in the presence of wind",
+      "prerequisites": [
+        "class6-science-separation-of-substances-winnowing-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-sieving-principle",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Principle of Sieving",
+      "outcome": "Explain how a sieve allows particles smaller than the mesh pore size to pass while retaining larger particles",
+      "prerequisites": [
+        "class6-science-separation-of-substances-need-for-separation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-sieving-applications",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Applications of Sieving",
+      "outcome": "Identify everyday applications of sieving, such as separating bran from flour and pebbles from sand at construction sites",
+      "prerequisites": [
+        "class6-science-separation-of-substances-sieving-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-select-dry-method",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Selecting Dry Separation Methods",
+      "outcome": "Select the most appropriate dry separation technique (handpicking, threshing, winnowing, or sieving) based on differences in size and weight of particles",
+      "prerequisites": [
+        "class6-science-separation-of-substances-handpicking-application",
+        "class6-science-separation-of-substances-threshing-methods",
+        "class6-science-separation-of-substances-winnowing-application",
+        "class6-science-separation-of-substances-sieving-applications"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-dry"
+    },
+    {
+      "id": "class6-science-separation-of-substances-sedimentation-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Sedimentation Process",
+      "outcome": "Define sedimentation as the settling down of heavier, insoluble solid particles at the bottom of a liquid mixture",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-test-solids",
+        "class6-science-sorting-materials-floating-sinking-observation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-decantation-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Decantation Process",
+      "outcome": "Describe decantation as the careful pouring out of the upper clear liquid layer without disturbing the settled sediment",
+      "prerequisites": [
+        "class6-science-separation-of-substances-sedimentation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-decantation-immiscible-liquids",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Decantation of Immiscible Liquids",
+      "outcome": "Apply decantation to separate a mixture of two immiscible liquids that form distinct layers, such as oil and water",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-liquids-in-water",
+        "class6-science-separation-of-substances-decantation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-filtration-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Principle of Filtration",
+      "outcome": "Explain how filtration uses a porous medium to separate fine insoluble solid particles from a liquid",
+      "prerequisites": [
+        "class6-science-separation-of-substances-decantation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-filter-cone-assembly",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Assembling a Filter Paper Cone",
+      "outcome": "Demonstrate the folding of a circular filter paper into a cone and fitting it inside a funnel for filtration",
+      "prerequisites": [
+        "class6-science-separation-of-substances-filtration-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-filtrate-and-residue",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Filtrate and Residue",
+      "outcome": "Identify the substance retained on the filter as residue and the liquid that passes through as filtrate",
+      "prerequisites": [
+        "class6-science-separation-of-substances-filter-cone-assembly"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/methods-of-separation-wet"
+    },
+    {
+      "id": "class6-science-separation-of-substances-evaporation-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Evaporation for Separation",
+      "outcome": "Define evaporation as the process of converting a liquid into its vapour to recover dissolved solid solutes",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-test-solids"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/evaporation-and-condensation"
+    },
+    {
+      "id": "class6-science-separation-of-substances-salt-from-seawater",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Salt Harvesting by Evaporation",
+      "outcome": "Explain how common salt is harvested by trapping seawater in shallow pits (lagoons) and allowing sunlight to evaporate the water",
+      "prerequisites": [
+        "class6-science-separation-of-substances-evaporation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/evaporation-and-condensation"
+    },
+    {
+      "id": "class6-science-separation-of-substances-condensation-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Condensation Process",
+      "outcome": "Define condensation as the process of converting water vapour into its liquid form upon cooling",
+      "prerequisites": [
+        "class6-science-separation-of-substances-evaporation-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/separation-of-substances/evaporation-and-condensation"
+    },
+    {
+      "id": "class6-science-separation-of-substances-combine-evaporation-condensation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Combined Evaporation and Condensation",
+      "outcome": "Trace the path of water vaporising and condensing on a cold metal plate to recover pure water from a salt-water solution",
+      "prerequisites": [
+        "class6-science-separation-of-substances-condensation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/separation-of-substances/evaporation-and-condensation"
+    },
+    {
+      "id": "class6-science-separation-of-substances-multi-step-separation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Multi-step Separation Sequence",
+      "outcome": "Order sequential separation steps (dissolution, decantation/filtration, and evaporation) to separate a complex mixture like sand and salt",
+      "prerequisites": [
+        "class6-science-separation-of-substances-filtrate-and-residue",
+        "class6-science-separation-of-substances-evaporation-definition"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/separation-of-substances/evaporation-and-condensation"
+    },
+    {
+      "id": "class6-science-separation-of-substances-saturated-solution-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Definition of Saturated Solution",
+      "outcome": "Define a saturated solution as one in which no more solute can dissolve at a given fixed temperature",
+      "prerequisites": [
+        "class6-science-sorting-materials-solubility-test-solids"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/separation-of-substances/saturated-solutions"
+    },
+    {
+      "id": "class6-science-separation-of-substances-solubility-temperature-effect",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Effect of Temperature on Solubility",
+      "outcome": "Explain how heating allows more solute to dissolve in a saturated solution, and cooling causes excess dissolved solute to separate out",
+      "prerequisites": [
+        "class6-science-separation-of-substances-saturated-solution-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/separation-of-substances/saturated-solutions"
+    },
+    {
+      "id": "class6-science-separation-of-substances-solute-capacity-differences",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "separation-of-substances",
+      "title": "Comparing Solute Capacities",
+      "outcome": "Compare the different maximum amounts of distinct solutes (e.g., salt vs sugar) that dissolve in an equal volume of water",
+      "prerequisites": [
+        "class6-science-separation-of-substances-saturated-solution-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/separation-of-substances/saturated-solutions"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-herbs-characteristics",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Characteristics of Herbs",
+      "outcome": "Identify herbs by their short height, green stems, and tender branches",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/herbs-shrubs-and-trees"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-shrubs-characteristics",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Characteristics of Shrubs",
+      "outcome": "Identify shrubs by their medium height, hard but not very thick stems branching near the base",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/herbs-shrubs-and-trees"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-trees-characteristics",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Characteristics of Trees",
+      "outcome": "Identify trees by their tall height, thick, brown, woody stems with branches high above the ground",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/herbs-shrubs-and-trees"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-classify-herb-shrub-tree",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Classify Herbs, Shrubs, and Trees",
+      "outcome": "Classify given plant examples into herbs, shrubs, or trees based on physical features",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-herbs-characteristics",
+        "class6-science-getting-to-know-plants-shrubs-characteristics",
+        "class6-science-getting-to-know-plants-trees-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/herbs-shrubs-and-trees"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-creepers-vs-climbers",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Differentiate Creepers and Climbers",
+      "outcome": "Distinguish between creepers that spread on the ground and climbers that take support to climb up",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/herbs-shrubs-and-trees"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-stem-conduction-experiment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Stem Water Conduction Experiment",
+      "outcome": "Demonstrate that stems conduct water using a stem placed in coloured water",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/stem"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-stem-conduction-path",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Trace Water Path Through Stem",
+      "outcome": "Trace the upward movement of water and dissolved minerals through narrow tubes inside the stem to leaves",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-stem-conduction-experiment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/stem"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-leaf-parts",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Identify Parts of a Leaf",
+      "outcome": "Identify and label the petiole, lamina, veins, and midrib of a leaf",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-reticulate-parallel-venation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Compare Leaf Venation Types",
+      "outcome": "Distinguish between reticulate venation (net-like) and parallel venation in leaves",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-leaf-parts"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-transpiration-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Define Transpiration",
+      "outcome": "State that transpiration is the release of water vapour by leaves into the air",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-transpiration-experiment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Demonstrate Transpiration Experimentally",
+      "outcome": "Explain the appearance of water droplets inside an enclosed polythene bag tied around a leafy branch",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-transpiration-definition",
+        "class6-science-separation-of-substances-condensation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-photosynthesis-inputs-outputs",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Inputs and Outputs of Photosynthesis",
+      "outcome": "List sunlight, chlorophyll, water, and carbon dioxide as requirements, and oxygen and food (starch) as products of photosynthesis",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-leaf-parts"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-leaf-starch-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Test Starch in Green Leaves",
+      "outcome": "Apply iodine solution to a decolourized leaf to verify the synthesis of starch by photosynthesis",
+      "prerequisites": [
+        "class6-science-components-of-food-starch-iodine-test",
+        "class6-science-getting-to-know-plants-photosynthesis-inputs-outputs"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/getting-to-know-plants/leaf"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-root-functions",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Functions of Roots",
+      "outcome": "State the primary functions of roots as anchoring the plant firmly in soil and absorbing water and minerals",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/root"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-root-types",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Compare Taproot and Fibrous Roots",
+      "outcome": "Compare taproots (having a main taproot and lateral roots) with fibrous roots (a cluster of similar-sized roots)",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-root-functions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/root"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-venation-root-correlation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Correlate Venation with Root Type",
+      "outcome": "Predict the root type of an intact plant from its leaf venation (reticulate with taproot, parallel with fibrous root)",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-reticulate-parallel-venation",
+        "class6-science-getting-to-know-plants-root-types"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/getting-to-know-plants/root"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-flower-sepals-petals",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Identify Sepals and Petals",
+      "outcome": "Identify sepals (outer green leaf-like parts) and petals (prominent coloured parts) in a flower",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/flower"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-flower-stamen-parts",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Parts of a Stamen",
+      "outcome": "Identify the two parts of a stamen: anther and filament",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/flower"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-flower-pistil-parts",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Parts of a Pistil",
+      "outcome": "Identify the three main parts of the pistil: stigma, style, and ovary",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/getting-to-know-plants/flower"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-ovary-structure-ovules",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Structure of Ovary and Ovules",
+      "outcome": "Identify small bead-like structures called ovules inside a longitudinal or transverse section of an ovary",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-flower-pistil-parts"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/getting-to-know-plants/flower"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-flower-dissection-label",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Dissect and Label Flower Whorls",
+      "outcome": "Separate and label all four main whorls (sepals, petals, stamens, and pistil) in a dissected flower",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-flower-sepals-petals",
+        "class6-science-getting-to-know-plants-flower-stamen-parts",
+        "class6-science-getting-to-know-plants-flower-pistil-parts"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/getting-to-know-plants/flower"
+    },
+    {
+      "id": "class6-science-getting-to-know-plants-water-path-whole-plant",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "getting-to-know-plants",
+      "title": "Trace Water Path Through Whole Plant",
+      "outcome": "Trace the continuous path of water from soil absorption by roots, upward conduction through stem, to transpiration and photosynthesis in leaves",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-stem-conduction-path",
+        "class6-science-getting-to-know-plants-transpiration-definition",
+        "class6-science-getting-to-know-plants-root-functions"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/getting-to-know-plants/stem"
+    },
+    {
+      "id": "class6-science-body-movements-joint-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Definition of Joint",
+      "outcome": "Define a joint as a place where two or more bones meet in the human body",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-ball-and-socket-joint",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Ball and Socket Joint",
+      "outcome": "Identify shoulder and hip joints as ball and socket joints that allow movement in all directions",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-pivotal-joint",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Pivotal Joint Structure and Movement",
+      "outcome": "Describe the pivotal joint between the neck and head that allows forward-backward bending and left-right turning",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-hinge-joint",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Hinge Joint Structure and Movement",
+      "outcome": "Identify elbow and knee joints as hinge joints that allow back-and-forth movement in one plane only",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-fixed-joints",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Fixed Joints in Skull",
+      "outcome": "Identify fixed joints in the cranium/upper jaw where bones cannot move relative to one another",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-compare-joint-mobility",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Compare Joint Ranges of Motion",
+      "outcome": "Compare the range of motion among ball-and-socket, pivotal, hinge, and fixed joints",
+      "prerequisites": [
+        "class6-science-body-movements-ball-and-socket-joint",
+        "class6-science-body-movements-pivotal-joint",
+        "class6-science-body-movements-hinge-joint",
+        "class6-science-body-movements-fixed-joints"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/human-body-and-its-movements"
+    },
+    {
+      "id": "class6-science-body-movements-skeleton-definition-function",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Functions of Human Skeleton",
+      "outcome": "State the main functions of the human skeleton: framework shape, organ protection, and movement support",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-rib-cage-structure-function",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Rib Cage Structure and Function",
+      "outcome": "Describe the cone-shaped rib cage formed by 12 pairs of ribs joined to the chest bone and backbone protecting the heart and lungs",
+      "prerequisites": [
+        "class6-science-body-movements-skeleton-definition-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-backbone-structure-function",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Backbone Structure and Function",
+      "outcome": "Explain how the backbone consists of 33 small vertebrae allowing flexibility and protecting the spinal cord",
+      "prerequisites": [
+        "class6-science-body-movements-skeleton-definition-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-shoulder-pelvic-bones",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Shoulder and Pelvic Bones",
+      "outcome": "Identify shoulder bones and pelvic bones and state their role in enclosing and supporting lower body organs",
+      "prerequisites": [
+        "class6-science-body-movements-skeleton-definition-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-cartilage-properties-locations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Cartilage Properties and Locations",
+      "outcome": "Locate cartilage in the ear pinna, nose tip, and joint surfaces, noting it is softer and more flexible than bone",
+      "prerequisites": [
+        "class6-science-body-movements-skeleton-definition-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-muscle-contraction-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Muscle Contraction and Relaxation",
+      "outcome": "Describe how a muscle becomes shorter, thicker, and harder during contraction, pulling on a bone",
+      "prerequisites": [
+        "class6-science-body-movements-joint-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-antagonistic-muscle-pairs",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Antagonistic Muscle Pairs Action",
+      "outcome": "Explain how a pair of antagonistic muscles (like biceps and triceps) work together by alternate contraction and relaxation to move a bone",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/bones-cartilage-and-muscles"
+    },
+    {
+      "id": "class6-science-body-movements-earthworm-body-structure",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Earthworm Body Structure",
+      "outcome": "Identify that an earthworm has no bones and consists of rings joined end to end with tiny bristles (setae)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-earthworm-locomotion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Earthworm Locomotion Mechanism",
+      "outcome": "Explain the wave-like contraction and expansion of circular and longitudinal muscles coupled with bristle anchoring that drives earthworm locomotion",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism",
+        "class6-science-body-movements-earthworm-body-structure"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-snail-shell-structure",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Snail Shell and Muscular Foot Structure",
+      "outcome": "Identify the snail's outer shell as a non-bony exoskeleton and describe the thick muscular foot emerging from it",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-snail-locomotion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Snail Locomotion via Muscular Foot",
+      "outcome": "Describe how a snail moves by producing wavy muscular contractions and a slimy mucus trail along its muscular foot",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism",
+        "class6-science-body-movements-snail-shell-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-cockroach-outer-skeleton",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Cockroach Exoskeleton and Appendages",
+      "outcome": "Identify the hard outer exoskeleton, three pairs of legs, and two pairs of wings attached to the breast of a cockroach",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-cockroach-locomotion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Cockroach Walking and Flying Mechanics",
+      "outcome": "Explain how distinct breast muscles coordinated with legs and wings enable a cockroach to walk, climb, and fly",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism",
+        "class6-science-body-movements-cockroach-outer-skeleton"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/gait-of-animals-invertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-bird-flight-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Skeletal Adaptations of Birds",
+      "outcome": "List skeletal adaptations of birds for flight, including hollow lightweight bones and forelimbs modified into wings",
+      "prerequisites": [
+        "class6-science-body-movements-skeleton-definition-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/gait-of-animals-vertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-bird-flight-muscles",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Flight Muscles and Breastbone in Birds",
+      "outcome": "Explain how modified breastbones hold powerful flight muscles used to flap wings up and down during bird flight",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism",
+        "class6-science-body-movements-bird-flight-adaptations"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/gait-of-animals-vertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-fish-streamlined-shape",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Streamlined Body Shape of Fish",
+      "outcome": "Define a streamlined shape (tapering at both head and tail) and explain how it minimizes water resistance during swimming",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/body-movements/gait-of-animals-vertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-fish-swimming-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Fish Swimming Mechanics via Fins and Body Curves",
+      "outcome": "Describe how alternating side-to-side body curves combined with caudal and paired fin movements propel and balance a fish in water",
+      "prerequisites": [
+        "class6-science-body-movements-muscle-contraction-mechanism",
+        "class6-science-body-movements-fish-streamlined-shape"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/gait-of-animals-vertebrates"
+    },
+    {
+      "id": "class6-science-body-movements-snake-slithering-locomotion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "body-movements",
+      "title": "Snake Locomotion via Lateral Loops",
+      "outcome": "Explain how a long backbone and interconnected thin muscles curve a snake's body into multiple lateral loops that press against the ground to push it forward",
+      "prerequisites": [
+        "class6-science-body-movements-backbone-structure-function",
+        "class6-science-body-movements-muscle-contraction-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/body-movements/gait-of-animals-vertebrates"
+    },
+    {
+      "id": "class6-science-the-living-organisms-habitat-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Define Habitat",
+      "outcome": "Define a habitat as the physical surroundings or environment where an organism naturally lives and survives.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/organisms-and-surroundings"
+    },
+    {
+      "id": "class6-science-the-living-organisms-biotic-abiotic-components",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Biotic and Abiotic Components",
+      "outcome": "Classify elements of an ecosystem into biotic components (living organisms) and abiotic components (non-living physical factors like rocks, soil, air, water, and sunlight).",
+      "prerequisites": [
+        "class6-science-the-living-organisms-habitat-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/organisms-and-surroundings"
+    },
+    {
+      "id": "class6-science-the-living-organisms-adaptation-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Define Adaptation",
+      "outcome": "Define adaptation as the presence of specific features or habits that enable an organism to naturally live in its habitat over thousands of years.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-habitat-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/organisms-and-surroundings"
+    },
+    {
+      "id": "class6-science-the-living-organisms-acclimatisation-vs-adaptation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Adaptation vs Acclimatisation",
+      "outcome": "Distinguish between adaptation (long-term evolutionary changes over generations) and acclimatisation (short-term physiological adjustments by an individual organism to overcome changes in surroundings).",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/organisms-and-surroundings"
+    },
+    {
+      "id": "class6-science-the-living-organisms-camel-desert-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Camel Adaptations in Deserts",
+      "outcome": "List the structural adaptations of camels for desert survival, including long legs, concentrated urine, dry dung, lack of sweat, and fat storage in humps.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-desert-burrowing-animals",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Desert Small Animal Adaptations",
+      "outcome": "Explain how small desert animals such as rats and snakes stay cool during the day by staying in deep burrows and coming out only at night.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-cactus-desert-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Cactus Structural Adaptations",
+      "outcome": "Describe the structural adaptations of desert plants like cacti, including leaves modified into spines to reduce transpiration, photosynthetic stems covered with a thick waxy layer, and deep roots.",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-transpiration-definition",
+        "class6-science-getting-to-know-plants-root-functions",
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-mountain-trees-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Mountain Tree Adaptations",
+      "outcome": "Identify how cone-shaped branching and needle-like leaves help mountain trees shed rainwater and snow easily.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-mountain-animals-cold-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Mountain Animals Cold Adaptations",
+      "outcome": "Explain how thick skin, dense fur, or layers of wool protect mountain animals like snow leopards, yaks, and mountain goats from extreme cold.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-mountain-goat-hooves",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Mountain Goat Hoof Adaptation",
+      "outcome": "Explain the role of strong hooves in mountain goats for running up rocky, steep slopes.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-grassland-predator-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Grassland Predator Adaptations in Lions",
+      "outcome": "Describe the adaptations of predators like lions in grasslands, including light brown camouflage color, eyes in front of the head for depth perception, and sharp retractable claws.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-grassland-prey-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Grassland Prey Adaptations in Deer",
+      "outcome": "Describe the adaptations of prey like deer in grasslands, including strong teeth for chewing hard plant stems, long ears for hearing predators, eyes on the sides of the head to look in all directions, and fast running speed.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/terrestrial-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-marine-fish-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Fish Adaptations for Water",
+      "outcome": "List the key adaptations of fish for aquatic survival: streamlined body shape, slippery scales, fins and flat tails for balance and direction, and gills to extract dissolved oxygen from water.",
+      "prerequisites": [
+        "class6-science-body-movements-fish-streamlined-shape",
+        "class6-science-sorting-materials-gases-solubility-water",
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-squid-octopus-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Squid and Octopus Adaptations",
+      "outcome": "Explain how squids and octopuses adapt to sea life by staying deep near the seabed, making their bodies streamlined when moving, and using gills to breathe dissolved oxygen.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-marine-fish-adaptations"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-dolphin-whale-blowholes",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Dolphin and Whale Respiration",
+      "outcome": "Explain how whales and dolphins breathe atmospheric air through blowholes or nostrils located on the upper parts of their heads without using gills.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-marine-fish-adaptations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-aquatic-floating-plants",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Floating Aquatic Plant Adaptations",
+      "outcome": "Describe the adaptations of floating aquatic plants, such as highly reduced roots primarily for anchorage, hollow light stems, and broad leaves covered with a waxy coating.",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-root-functions",
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-submerged-aquatic-plants",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Submerged Aquatic Plant Adaptations",
+      "outcome": "Describe the adaptations of completely submerged aquatic plants, including narrow ribbon-like leaves and highly divided leaf structures that bend easily without breaking in flowing water.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-aquatic-floating-plants"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-amphibian-frog-adaptations",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Frog Adaptations for Land and Water",
+      "outcome": "Identify the adaptations of frogs that allow them to live both in water and on land, including strong back legs for leaping and webbed feet for swimming.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-adaptation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/aquatic-habitats"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-food-growth",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Nutrition and Growth in Living Organisms",
+      "outcome": "Explain how the requirements for food/nutrition and irreversible growth from young stages to adult stages characterize all living organisms.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-biotic-abiotic-components"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-respiration",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Respiration in Living Organisms",
+      "outcome": "Explain respiration as the process by which living organisms take in oxygen to release energy from food, producing carbon dioxide as a byproduct.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-characteristic-food-growth"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-stimuli-response",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Stimulus and Response in Organisms",
+      "outcome": "Define stimuli and provide examples of responses to stimuli in both animals (flinching from sharp objects) and plants (Mimosa leaves folding upon touch, flowers opening at sunrise).",
+      "prerequisites": [
+        "class6-science-the-living-organisms-biotic-abiotic-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-excretion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Excretion in Plants and Animals",
+      "outcome": "Define excretion as the process of getting rid of toxic wastes produced by life processes, and compare how animals eliminate wastes with plant mechanisms like storing secretions or shedding leaves.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-characteristic-food-growth"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-reproduction",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Reproduction in Living Organisms",
+      "outcome": "Compare reproduction methods across organisms, distinguishing between animals that lay eggs versus give birth to young, and plants that reproduce through seeds versus vegetative parts like tubers and cuttings.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-characteristic-food-growth"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-the-living-organisms-characteristic-movement-compare",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "the-living-organisms-characteristics-and-habitats",
+      "title": "Movement in Plants vs Animals",
+      "outcome": "Compare locomotion from place to place in animals with internal transport and directional growth movements towards light or water in anchored plants.",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-stem-conduction-path",
+        "class6-science-the-living-organisms-characteristic-stimuli-response"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/the-living-organisms-characteristics-and-habitats/characteristics-of-organisms"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-early-transport-modes",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Early Modes of Transport",
+      "outcome": "Identify walking, animal-drawn carts, and simple hollowed-log boats as ancient modes of transport",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/story-of-transport"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-wheel-invention-impact",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Impact of Wheel Invention",
+      "outcome": "Explain how the invention of the wheel transformed transport efficiency and vehicle design",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-early-transport-modes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/story-of-transport"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-steam-engine-revolution",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Steam Engine Transport Revolution",
+      "outcome": "Describe the transition from animal-driven vehicles to steam-powered railways and ships",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-wheel-invention-impact"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/story-of-transport"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-timeline-transport-evolution",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Chronological Sequence of Transport",
+      "outcome": "Order modes of transportation chronologically from animal carts to steam engines, automobiles, aircraft, and high-speed electric trains",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-steam-engine-revolution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/story-of-transport"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-concept-of-measurement",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Concept of Measurement",
+      "outcome": "Define measurement as the comparison of an unknown quantity with a known fixed quantity consisting of a number and a unit",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-non-standard-body-units",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Non-Standard Body Units",
+      "outcome": "Identify handspan, cubit, foot, and pace as traditional body-based units of length",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-concept-of-measurement"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-need-standard-units",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Inconsistency of Non-Standard Units",
+      "outcome": "Explain why body-based units vary between individuals and create the need for standard units",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-non-standard-body-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-si-unit-of-length",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "SI Unit of Length",
+      "outcome": "State the metre (m) as the standard SI unit of length",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-need-standard-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-metric-subunits-conversion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Metre to Centimetre and Millimetre Conversion",
+      "outcome": "Calculate length conversions between metres, centimetres (1 m = 100 cm), and millimetres (1 cm = 10 mm)",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-si-unit-of-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-kilometre-conversion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Kilometre to Metre Conversion",
+      "outcome": "Convert large distances between kilometres and metres (1 km = 1000 m)",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-metric-subunits-conversion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/standard-units-of-measurements"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-appropriate-measuring-tool",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Selecting Appropriate Measuring Tools",
+      "outcome": "Select an appropriate measuring instrument (metre scale, measuring tape, or small ruler) based on the object's size and shape",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-si-unit-of-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/correct-measurement-of-length"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-ruler-alignment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Proper Ruler Alignment",
+      "outcome": "Demonstrate placing the scale in complete contact and parallel along the length being measured",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-appropriate-measuring-tool"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/correct-measurement-of-length"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-broken-zero-mark",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Measuring with Damaged Zero Mark",
+      "outcome": "Calculate correct length when starting from a non-zero mark by subtracting the initial reading from the final reading",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-ruler-alignment"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/correct-measurement-of-length"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-parallax-error-avoidance",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Avoiding Parallax Error",
+      "outcome": "Identify the correct eye position directly above the point of measurement to avoid parallax errors",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-ruler-alignment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/correct-measurement-of-length"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-curved-line-thread-method",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Measuring Curved Lines Using Thread",
+      "outcome": "Measure the length of a curved line by tracing it with a non-stretchable thread and measuring the straightened thread on a scale",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-broken-zero-mark",
+        "class6-science-motion-and-measurement-of-distances-parallax-error-avoidance"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/correct-measurement-of-length"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-rest-vs-motion-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Rest and Motion with Respect to Time",
+      "outcome": "Distinguish between objects at rest and objects in motion based on whether their position changes over time",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-rectilinear-motion-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Rectilinear Motion Definition",
+      "outcome": "Define rectilinear motion as the movement of an object along a straight line path",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rest-vs-motion-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-rectilinear-motion-examples",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Examples of Rectilinear Motion",
+      "outcome": "Classify real-world examples (march past of soldiers, falling stone, car on straight road) as rectilinear motion",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rectilinear-motion-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-circular-motion-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Circular Motion Definition",
+      "outcome": "Define circular motion as the movement of an object along a circular path such that its distance from a fixed point remains constant",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rest-vs-motion-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-circular-motion-examples",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Examples of Circular Motion",
+      "outcome": "Classify movements such as the tip of a clock hand, blades of a ceiling fan, and a stone tied to a string as circular motion",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-circular-motion-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-periodic-motion-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Periodic Motion Definition",
+      "outcome": "Define periodic motion as motion that repeats itself at regular, equal intervals of time",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rest-vs-motion-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-periodic-motion-examples",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Examples of Periodic Motion",
+      "outcome": "Classify movements such as a swinging pendulum, tree branch in wind, guitar string, and surface of a tabla as periodic motion",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-periodic-motion-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-compare-motion-types",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Comparing Types of Motion",
+      "outcome": "Compare rectilinear, circular, and periodic motions based on trajectory and repetition characteristics",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rectilinear-motion-examples",
+        "class6-science-motion-and-measurement-of-distances-circular-motion-examples",
+        "class6-science-motion-and-measurement-of-distances-periodic-motion-examples"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-motion-and-measurement-of-distances-multiple-motion-types",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "motion-and-measurement-of-distances",
+      "title": "Simultaneous Combination of Motions",
+      "outcome": "Identify combinations of motion in single objects, such as a rolling ball (rectilinear and rotational) or a sewing machine needle and wheel",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-compare-motion-types"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/motion-and-measurement-of-distances/types-of-motion"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-luminous-objects-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Luminous Objects Definition",
+      "outcome": "Define luminous objects as objects that emit their own light",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-classify-luminous-non-luminous",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Classify Luminous and Non-Luminous",
+      "outcome": "Classify everyday objects as luminous or non-luminous",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-luminous-objects-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-vision-requires-light",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Light Requirement for Vision",
+      "outcome": "State that light is essential to see non-luminous objects around us",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-classify-luminous-non-luminous"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-transparent-opaque-translucent-recall",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Identify Optical Medium Types",
+      "outcome": "Differentiate between transparent, opaque, and translucent materials based on how light passes through them",
+      "prerequisites": [
+        "class6-science-sorting-materials-transparent-definition",
+        "class6-science-sorting-materials-opaque-definition",
+        "class6-science-sorting-materials-translucent-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-straight-line-propagation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Straight-Line Travel of Light",
+      "outcome": "State the principle that light travels along straight lines (rectilinear propagation)",
+      "prerequisites": [
+        "class6-science-motion-and-measurement-of-distances-rectilinear-motion-def"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-straight-line-pipe-experiment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Bent Pipe Light Demonstration",
+      "outcome": "Explain why a candle flame is visible through a straight pipe but not through a bent pipe",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-straight-line-propagation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/transparent-opaque-and-translucent-objects"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-concept",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Concept of a Shadow",
+      "outcome": "Define a shadow as a dark patch formed when an opaque object blocks the path of light",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-transparent-opaque-translucent-recall",
+        "class6-science-light-shadows-and-reflections-straight-line-propagation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-requirements",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Three Requirements for a Shadow",
+      "outcome": "List the three requirements for shadow formation: a source of light, an opaque object, and a screen",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-screen-necessity",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Role of Screen in Shadows",
+      "outcome": "Demonstrate that a shadow cannot be observed without a screen behind the object",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-requirements"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-color-independence",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Color of Shadows",
+      "outcome": "Identify that the color of a shadow is always dark regardless of the color of the object",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-concept"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-information-limits",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Information Provided by Shadows",
+      "outcome": "Explain why shadows give information only about the outline of an object and may sometimes mislead about its true shape",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-shadow-size-factors",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Factors Affecting Shadow Size",
+      "outcome": "Predict how the size of a shadow changes when the distances between the source, object, and screen are varied",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-requirements"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/what-exactly-are-shadows"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-pinhole-camera-principle",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Pinhole Camera Working Principle",
+      "outcome": "Explain how straight-line propagation of light allows a tiny aperture to form an image",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-straight-line-pipe-experiment"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/a-pinhole-camera"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-pinhole-camera-construction",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Construct a Pinhole Camera",
+      "outcome": "Describe the construction of a sliding two-box pinhole camera using cardboard and tracing paper screen",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-pinhole-camera-principle",
+        "class6-science-sorting-materials-translucent-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/a-pinhole-camera"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-pinhole-image-characteristics",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Characteristics of Pinhole Images",
+      "outcome": "Identify that a pinhole camera forms an inverted and colored image of distant luminous or brightly lit objects",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-pinhole-camera-construction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/a-pinhole-camera"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-natural-pinhole-sun-images",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Natural Pinhole Camera under Trees",
+      "outcome": "Explain how circular patches of light seen under a leafy tree are pinhole images of the sun",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-pinhole-image-characteristics"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/a-pinhole-camera"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-solar-eclipse-pinhole-observation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Observe Eclipse via Pinhole",
+      "outcome": "Describe how a pinhole camera is safely used to view the changing shape of the sun during a solar eclipse",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-natural-pinhole-sun-images"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/a-pinhole-camera"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-reflection-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Definition of Reflection",
+      "outcome": "Define reflection of light as the change in direction of light upon striking a surface",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-straight-line-propagation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-plane-mirror-redirection",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Light Redirection by a Plane Mirror",
+      "outcome": "Demonstrate that a plane mirror redirects a beam of light in a specific new straight-line direction",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-reflection-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-mirror-comb-experiment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Comb and Mirror Light Pattern Experiment",
+      "outcome": "Trace the pattern of light rays passing through a comb and reflecting off a flat mirror placed on thermocol",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-plane-mirror-redirection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-mirror-image-properties",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Characteristics of Mirror Images",
+      "outcome": "Identify that a plane mirror produces an erect, same-sized, and colored image of an object",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-plane-mirror-redirection"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-compare-shadow-and-reflection",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Compare Shadows and Reflections",
+      "outcome": "Compare a shadow and a mirror reflection in terms of color, details shown, and mechanism of formation",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-shadow-color-independence",
+        "class6-science-light-shadows-and-reflections-shadow-information-limits",
+        "class6-science-light-shadows-and-reflections-mirror-image-properties"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-light-shadows-and-reflections-compare-pinhole-and-mirror-image",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "light-shadows-and-reflections",
+      "title": "Compare Pinhole and Mirror Images",
+      "outcome": "Compare an image formed by a pinhole camera (inverted) with an image formed by a plane mirror (erect)",
+      "prerequisites": [
+        "class6-science-light-shadows-and-reflections-pinhole-image-characteristics",
+        "class6-science-light-shadows-and-reflections-mirror-image-properties"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/light-shadows-and-reflections/mirrors-and-reflections"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-electricity-sources-uses",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Uses and Sources of Electricity",
+      "outcome": "List common appliances powered by electricity and identify the electric cell and power stations as sources of electric current",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-electric-cell-terminals",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Terminals of an Electric Cell",
+      "outcome": "Identify the positive terminal (metal cap) and negative terminal (metal disc) of a standard electric cell",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-electricity-sources-uses"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-cell-chemical-energy",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Chemical Action in Electric Cell",
+      "outcome": "State that an electric cell produces electricity from chemicals stored inside it and stops working when these chemicals are exhausted",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-electric-cell-terminals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-torch-bulb-structure",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Structure of a Torch Bulb",
+      "outcome": "Identify the glass chamber, filament, supporting thick wires, and two terminals of a miniature torch bulb",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-filament-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Filament of a Bulb",
+      "outcome": "Define the filament as the thin wire fixed inside the bulb that gives off light when electricity passes through it",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-torch-bulb-structure"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-bulb-terminals-connection",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Terminals of a Torch Bulb",
+      "outcome": "Locate the two non-touching terminals of a bulb: one at the metal base and the other at the metal tip at the centre of the base",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-torch-bulb-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-complete-circuit-concept",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Concept of an Electric Circuit",
+      "outcome": "Define an electric circuit as a complete, closed path for electric current to flow between the two terminals of an electric cell",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-electric-cell-terminals",
+        "class6-science-electricity-and-circuits-bulb-terminals-connection"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-current-direction",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Direction of Electric Current",
+      "outcome": "State that the convention for the direction of electric current in an external circuit is from the positive terminal to the negative terminal",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-complete-circuit-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-closed-vs-open-circuit",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Closed vs Open Circuits",
+      "outcome": "Distinguish between a closed circuit (continuous path, current flows) and an open circuit (broken path, current does not flow)",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-complete-circuit-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-predict-circuit-glowing",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Predicting Circuit Continuity",
+      "outcome": "Predict whether a bulb will glow given various wire arrangements connecting a cell to a bulb",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-closed-vs-open-circuit"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-fused-bulb-explanation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Cause of a Fused Bulb",
+      "outcome": "Explain that a bulb is fused when its filament is broken, which creates a break in the path of the electric current preventing it from glowing",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-filament-definition",
+        "class6-science-electricity-and-circuits-closed-vs-open-circuit"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-simple-torch-assembly",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Assembling a Simple Torch",
+      "outcome": "Construct a working home-made torch using an electric cell, a bulb, and a connecting wire",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-predict-circuit-glowing"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-electric-switch-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Function of an Electric Switch",
+      "outcome": "Define an electric switch as a simple device that is used to either break the electric circuit or complete it",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-closed-vs-open-circuit"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-safety-pin-switch-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Safety Pin Switch Mechanism",
+      "outcome": "Describe how a safety pin rotating across two drawing pins acts as an ON/OFF switch in a model circuit",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-electric-switch-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-torch-internal-circuit-trace",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Tracing Torch Internal Circuit",
+      "outcome": "Trace the path of electric current in the cross-sectional diagram of a commercial torch from cells through sliding switch to the bulb",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-current-direction",
+        "class6-science-electricity-and-circuits-safety-pin-switch-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/an-electric-circuit-and-switch"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-short-circuit-warning",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Direct Cell Terminal Connection Hazard",
+      "outcome": "State why directly connecting the two terminals of an electric cell with a wire without a bulb or load discharges the cell extremely fast and is unsafe",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-cell-chemical-energy",
+        "class6-science-electricity-and-circuits-complete-circuit-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/electric-cell-and-bulb"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-conduction-tester-setup",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Conduction Tester Circuit",
+      "outcome": "Design a conduction tester circuit with two free wire ends to test whether a given sample conducts electricity",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-closed-vs-open-circuit"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-conductors-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Definition of Electrical Conductors",
+      "outcome": "Define electrical conductors as materials that allow electric current to pass through them easily",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-conduction-tester-setup"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-insulators-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Definition of Electrical Insulators",
+      "outcome": "Define electrical insulators as materials that do not allow electric current to pass through them",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-conduction-tester-setup"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-classify-conductors-insulators",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Classifying Conductors and Insulators",
+      "outcome": "Classify common items (e.g., key, eraser, scale, matchstick, glass bangle, iron nail) into conductors and insulators using experimental tester results",
+      "prerequisites": [
+        "class6-science-sorting-materials-classify-by-material",
+        "class6-science-electricity-and-circuits-conductors-definition",
+        "class6-science-electricity-and-circuits-insulators-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-metals-are-conductors",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Metallic Nature of Conductors",
+      "outcome": "Generalise that metals (copper, aluminium, iron) are generally good conductors of electricity",
+      "prerequisites": [
+        "class6-science-sorting-materials-classify-lustrous-non-lustrous",
+        "class6-science-electricity-and-circuits-classify-conductors-insulators"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-wire-insulation-rationale",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Purpose of Wire Insulation",
+      "outcome": "Explain why connecting wires have a metallic inner core and an outer covering of plastic or rubber",
+      "prerequisites": [
+        "class6-science-sorting-materials-match-material-to-use",
+        "class6-science-electricity-and-circuits-metals-are-conductors"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-electrician-tools-insulation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Insulation on Electrical Tools",
+      "outcome": "Explain why handles of screwdrivers and plier grips used by electricians are covered with rubber or plastic",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-wire-insulation-rationale"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-electricity-and-circuits-human-body-conduction-safety",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "electricity-and-circuits",
+      "title": "Human Body as a Conductor and Electrical Safety",
+      "outcome": "Identify the human body as a conductor of electricity and deduce safety precautions needed when handling electrical appliances",
+      "prerequisites": [
+        "class6-science-electricity-and-circuits-classify-conductors-insulators"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/electricity-and-circuits/conductors-and-insulators"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-discovery-magnes-story",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Discovery of Magnets",
+      "outcome": "Narrate the discovery of natural magnets by the shepherd Magnus in ancient Greece",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetite-natural-magnet",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Magnetite as Natural Magnet",
+      "outcome": "Identify magnetite as a naturally occurring magnetic rock containing iron",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-discovery-magnes-story"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-artificial-magnets-shapes",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Shapes of Artificial Magnets",
+      "outcome": "Identify common shapes of artificial magnets including bar, horse-shoe, cylindrical, and ball-ended magnets",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-magnetite-natural-magnet"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetic-materials-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Magnetic Materials Definition",
+      "outcome": "Define magnetic materials as those materials that get attracted towards a magnet",
+      "prerequisites": [
+        "class6-science-sorting-materials-classify-by-material"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-non-magnetic-materials-def",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Non-Magnetic Materials Definition",
+      "outcome": "Define non-magnetic materials as those materials that are not attracted towards a magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-magnetic-materials-def"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetic-metals-list",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Common Magnetic Metals",
+      "outcome": "List iron, nickel, and cobalt as common magnetic materials",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-magnetic-materials-def"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-classify-magnetic-non-magnetic",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Classify Materials by Magnetism",
+      "outcome": "Classify everyday objects as magnetic or non-magnetic using a test magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-non-magnetic-materials-def",
+        "class6-science-fun-with-magnets-magnetic-metals-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-soil-iron-particles-activity",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Finding Iron Particles in Soil",
+      "outcome": "Demonstrate the presence of iron particles in soil or sand by rolling a magnet in it",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-classify-magnetic-non-magnetic"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/discovery-and-materials"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-iron-filings-poles-observation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Poles Concentration with Iron Filings",
+      "outcome": "Observe that iron filings spread on a sheet cling mostly near the two ends of a bar magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-classify-magnetic-non-magnetic"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetic-poles-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Definition of Magnetic Poles",
+      "outcome": "Define magnetic poles as the two end regions of a magnet where magnetic attraction is strongest",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-iron-filings-poles-observation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-freely-suspended-orientation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Suspended Magnet Alignment",
+      "outcome": "State that a freely suspended bar magnet always comes to rest pointing in a North-South direction",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-magnetic-poles-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-identify-north-south-poles",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Identifying North and South Poles",
+      "outcome": "Identify the North-seeking pole as the North pole and the South-seeking pole as the South pole of a magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-freely-suspended-orientation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-find-directions-using-magnet",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Finding Geographic Directions",
+      "outcome": "Determine the four cardinal directions (North, South, East, West) at a given place using a suspended magnet and the morning sun",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-identify-north-south-poles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetic-compass-structure",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Structure of a Magnetic Compass",
+      "outcome": "Describe the construction of a magnetic compass including its dial, glass cover, and pivoted magnetic needle",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-identify-north-south-poles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetic-compass-usage",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Using a Magnetic Compass",
+      "outcome": "Demonstrate how to find directions using a magnetic compass by rotating the case until the needle aligns with the North-South markings",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-magnetic-compass-structure",
+        "class6-science-fun-with-magnets-find-directions-using-magnet"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/poles-of-magnet-and-direction"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-single-touch-magnetisation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Single-Touch Magnetisation Method",
+      "outcome": "Create a temporary magnet from an iron strip by stroking it repeatedly in one direction with a single pole of a bar magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-classify-magnetic-non-magnetic",
+        "class6-science-fun-with-magnets-magnetic-poles-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnetised-needle-compass",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Making a Floating Needle Compass",
+      "outcome": "Construct a simple compass by floating a magnetised sewing needle inserted in a cork or foam piece in a bowl of water",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-single-touch-magnetisation",
+        "class6-science-fun-with-magnets-freely-suspended-orientation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-like-poles-repulsion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Repulsion Between Like Poles",
+      "outcome": "State and observe that like magnetic poles (N-N or S-S) repel each other",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-identify-north-south-poles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-unlike-poles-attraction",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Attraction Between Unlike Poles",
+      "outcome": "State and observe that unlike magnetic poles (N-S or S-N) attract each other",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-identify-north-south-poles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-predict-pole-interactions",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Predicting Pole Interactions",
+      "outcome": "Predict whether two magnets will attract or repel given the orientation of their facing poles",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-like-poles-repulsion",
+        "class6-science-fun-with-magnets-unlike-poles-attraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-repulsion-sure-test",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Repulsion as Sure Test of Magnetism",
+      "outcome": "Explain why repulsion, and not attraction, is the sure test for identifying whether an object is a magnet",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-predict-pole-interactions"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-causes-of-demagnetisation",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Causes of Loss of Magnetism",
+      "outcome": "Identify heating, hammering, and dropping from a height as actions that cause a magnet to lose its magnetic properties",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-single-touch-magnetisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-proper-storage-bar-magnets",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Storing Bar Magnets with Keepers",
+      "outcome": "Explain how to store bar magnets in pairs with opposite poles alongside, separated by wood, with soft iron pieces across their ends",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-unlike-poles-attraction",
+        "class6-science-fun-with-magnets-causes-of-demagnetisation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-fun-with-magnets-magnet-safety-devices",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "fun-with-magnets",
+      "title": "Safe Handling Near Electronic Devices",
+      "outcome": "State precautions for keeping magnets away from cassettes, mobiles, televisions, music systems, and computers to prevent damage",
+      "prerequisites": [
+        "class6-science-fun-with-magnets-causes-of-demagnetisation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/fun-with-magnets/making-magnets-and-interactions"
+    },
+    {
+      "id": "class6-science-air-around-us-atmosphere-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Atmosphere Definition",
+      "outcome": "Define atmosphere as the thin blanket of air surrounding the Earth.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-air-occupies-space",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air Occupies Space",
+      "outcome": "Demonstrate that air occupies space using an inverted bottle submerged in water.",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-air-in-soil",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air Trapped in Soil",
+      "outcome": "Show that soil contains trapped air by observing bubbles when water is added to a lump of dry soil.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-occupies-space"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-air-in-water",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Dissolved Air in Water",
+      "outcome": "Demonstrate that water contains dissolved air by observing tiny bubbles forming on the inner surface of a heated pan before boiling.",
+      "prerequisites": [
+        "class6-science-sorting-materials-gases-solubility-water",
+        "class6-science-air-around-us-air-occupies-space"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-air-properties-transparency",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air Physical Properties",
+      "outcome": "Identify that air is colourless, transparent, and cannot be seen but only felt when in motion.",
+      "prerequisites": [
+        "class6-science-sorting-materials-transparent-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-wind-definition",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Wind Definition",
+      "outcome": "Define wind as moving air and identify everyday examples of its effects.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-properties-transparency"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-air-is-a-mixture",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air as a Mixture",
+      "outcome": "State that air is not a single substance but a mixture of many gases, water vapour, and dust particles.",
+      "prerequisites": [
+        "class6-science-air-around-us-atmosphere-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-water-vapour-in-air",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Water Vapour in Air",
+      "outcome": "Demonstrate the presence of water vapour in air using droplets condensing on the outer surface of a glass containing ice-cold water.",
+      "prerequisites": [
+        "class6-science-separation-of-substances-condensation-definition",
+        "class6-science-air-around-us-air-is-a-mixture"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-oxygen-supports-combustion",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Oxygen Supports Combustion",
+      "outcome": "Demonstrate that oxygen supports burning using a candle extinguished by covering it with an inverted glass tumbler.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-occupies-space",
+        "class6-science-air-around-us-air-is-a-mixture"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-nitrogen-incombustible",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Nitrogen in Air",
+      "outcome": "Identify nitrogen as the major component of air that does not support combustion and remains after a candle extinguishes in a sealed space.",
+      "prerequisites": [
+        "class6-science-air-around-us-oxygen-supports-combustion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-carbon-dioxide-presence",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Carbon Dioxide in Air",
+      "outcome": "Identify that carbon dioxide is produced during the burning of materials and by respiration in living organisms.",
+      "prerequisites": [
+        "class6-science-the-living-organisms-characteristic-respiration",
+        "class6-science-air-around-us-oxygen-supports-combustion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-dust-and-smoke-in-air",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Dust and Smoke in Air",
+      "outcome": "Identify the presence of dust and smoke in air by observing a beam of sunlight in a dark room.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-is-a-mixture"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-composition-percentages",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Composition of Air",
+      "outcome": "List the approximate percentage composition of major gases in clean air: 78% nitrogen, 21% oxygen, and 1% carbon dioxide, water vapour, and other gases.",
+      "prerequisites": [
+        "class6-science-air-around-us-nitrogen-incombustible",
+        "class6-science-air-around-us-carbon-dioxide-presence",
+        "class6-science-air-around-us-water-vapour-in-air"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-nasal-filtration",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Nasal Hair and Mucus Function",
+      "outcome": "Explain why breathing through the nose is safer than through the mouth, citing the filtration role of fine hairs and mucus.",
+      "prerequisites": [
+        "class6-science-air-around-us-dust-and-smoke-in-air"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/what-is-air-made-up-of"
+    },
+    {
+      "id": "class6-science-air-around-us-high-altitude-oxygen",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Oxygen Cylinders at High Altitudes",
+      "outcome": "Explain why mountaineers carry oxygen cylinders by referencing the reduced availability of air at higher altitudes in the atmosphere.",
+      "prerequisites": [
+        "class6-science-air-around-us-atmosphere-definition",
+        "class6-science-air-around-us-composition-percentages"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-aquatic-organism-respiration",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Respiration in Aquatic Organisms",
+      "outcome": "Explain how aquatic animals and plants use oxygen dissolved in water for respiration.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-in-water",
+        "class6-science-the-living-organisms-characteristic-respiration"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-soil-organism-respiration",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Respiration of Organisms in Soil",
+      "outcome": "Explain why organisms living in soil (such as earthworms) come out to the surface during heavy rains due to water filling air spaces in the soil.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-in-soil",
+        "class6-science-the-living-organisms-characteristic-respiration"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/air-around-us/is-air-present-everywhere"
+    },
+    {
+      "id": "class6-science-air-around-us-plant-oxygen-production",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Oxygen Production in Photosynthesis",
+      "outcome": "Identify that plants produce more oxygen during photosynthesis than they consume during respiration.",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-photosynthesis-inputs-outputs",
+        "class6-science-air-around-us-composition-percentages"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-oxygen-carbon-dioxide-balance",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Oxygen-Carbon Dioxide Balance",
+      "outcome": "Trace the interdependence between plants and animals that maintains the balance of oxygen and carbon dioxide in the atmosphere.",
+      "prerequisites": [
+        "class6-science-air-around-us-plant-oxygen-production",
+        "class6-science-air-around-us-carbon-dioxide-presence"
+      ],
+      "difficulty": 4,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-windmill-functions",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Functions of Windmills",
+      "outcome": "List applications of windmills, including drawing water from tubewells, running flour mills, and generating electricity.",
+      "prerequisites": [
+        "class6-science-air-around-us-wind-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-air-role-in-transport",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Role of Air in Transport",
+      "outcome": "Describe how air movements assist the movement of sailing yachts, gliders, parachutes, and aeroplanes.",
+      "prerequisites": [
+        "class6-science-air-around-us-wind-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-air-role-in-water-cycle",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Role of Air in the Water Cycle",
+      "outcome": "Explain the role of air movement in the water cycle by carrying evaporated water vapour upward to form clouds.",
+      "prerequisites": [
+        "class6-science-air-around-us-water-vapour-in-air",
+        "class6-science-air-around-us-wind-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-air-seed-dispersal-pollination",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air in Seed Dispersal and Pollination",
+      "outcome": "Explain how wind aids in the dispersal of seeds and the pollination of flowers in different plants.",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-flower-stamen-parts",
+        "class6-science-air-around-us-wind-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-air-around-us-air-medium-for-sound",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "air-around-us",
+      "title": "Air as Medium for Sound",
+      "outcome": "Identify that air acts as a medium that allows birds to fly and sounds to travel to our ears.",
+      "prerequisites": [
+        "class6-science-air-around-us-air-occupies-space"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/air-around-us/oxygen-cycle-and-balance"
+    },
+    {
+      "id": "class6-science-water-daily-uses-listing",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Daily domestic uses of water",
+      "outcome": "List routine household activities that require water, such as drinking, cooking, bathing, washing, and cleaning",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/how-much-water-do-we-use"
+    },
+    {
+      "id": "class6-science-water-calculate-family-consumption",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Estimate daily household water consumption",
+      "outcome": "Calculate the approximate total volume of water used daily by a family based on individual activity estimates",
+      "prerequisites": [
+        "class6-science-water-daily-uses-listing"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/how-much-water-do-we-use"
+    },
+    {
+      "id": "class6-science-water-indirect-water-use",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Indirect water use in production",
+      "outcome": "Identify indirect uses of water required to produce everyday goods like food crops, paper, and clothing",
+      "prerequisites": [
+        "class6-science-water-daily-uses-listing"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/how-much-water-do-we-use"
+    },
+    {
+      "id": "class6-science-water-sources-identification",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Primary sources of water",
+      "outcome": "List primary sources of freshwater and domestic supply, including rivers, ponds, lakes, springs, wells, and tube wells",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/where-do-we-get-water-from"
+    },
+    {
+      "id": "class6-science-water-ocean-salinity-freshwater-distinction",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Saline ocean water vs freshwater",
+      "outcome": "Distinguish between saline ocean water and freshwater in terms of fitness for direct drinking and irrigation",
+      "prerequisites": [
+        "class6-science-water-sources-identification",
+        "class6-science-separation-of-substances-salt-from-seawater"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/where-do-we-get-water-from"
+    },
+    {
+      "id": "class6-science-water-evaporation-open-surfaces",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Evaporation from water bodies and wet surfaces",
+      "outcome": "Explain how water evaporates from oceans, rivers, soil, and wet clothes into the air as invisible water vapour",
+      "prerequisites": [
+        "class6-science-separation-of-substances-evaporation-definition",
+        "class6-science-air-around-us-water-vapour-in-air"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-sunlight-shade-evaporation-rate",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Evaporation in sunlight versus shade",
+      "outcome": "Compare the rates of water evaporation in open sunlight versus in shade and explain why warm air enables evaporation everywhere",
+      "prerequisites": [
+        "class6-science-water-evaporation-open-surfaces"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-transpiration-by-plants",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Transpiration contributing to water vapour",
+      "outcome": "State that plants release large quantities of water vapour into the atmosphere through the process of transpiration",
+      "prerequisites": [
+        "class6-science-getting-to-know-plants-transpiration-definition",
+        "class6-science-air-around-us-water-vapour-in-air"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-condensation-ice-glass-experiment",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Condensation on cold surface experiment",
+      "outcome": "Demonstrate that water vapour condenses into water droplets on the outer surface of a glass containing ice cubes",
+      "prerequisites": [
+        "class6-science-separation-of-substances-condensation-definition",
+        "class6-science-air-around-us-water-vapour-in-air"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-cloud-formation-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Cloud formation through cooling and condensation",
+      "outcome": "Explain how air cools as it rises high up in the atmosphere, causing water vapour to condense around tiny particles to form clouds",
+      "prerequisites": [
+        "class6-science-water-condensation-ice-glass-experiment"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-precipitation-forms",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Forms of precipitation",
+      "outcome": "Identify rain, hail, and snow as forms of precipitation resulting from coalescing droplets inside clouds",
+      "prerequisites": [
+        "class6-science-water-cloud-formation-mechanism"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-cycle-diagram-sequence",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Sequence of the water cycle",
+      "outcome": "Trace the cyclic movement of water from Earth's surface to the atmosphere via evaporation and transpiration, and back via precipitation",
+      "prerequisites": [
+        "class6-science-water-evaporation-open-surfaces",
+        "class6-science-water-transpiration-by-plants",
+        "class6-science-water-precipitation-forms",
+        "class6-science-air-around-us-air-role-in-water-cycle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/water-cycle"
+    },
+    {
+      "id": "class6-science-water-surface-runoff-rivers-oceans",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Surface runoff of rain and snowmelt",
+      "outcome": "Trace how rainwater and melting mountain snow flow down as streams and rivers into lakes and ultimately return to the oceans",
+      "prerequisites": [
+        "class6-science-water-precipitation-forms",
+        "class6-science-water-ocean-salinity-freshwater-distinction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/back-to-the-oceans"
+    },
+    {
+      "id": "class6-science-water-groundwater-seepage-concept",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Seepage of rainwater into groundwater",
+      "outcome": "Explain how rainwater seeps through soil and rocks to become stored as groundwater",
+      "prerequisites": [
+        "class6-science-water-precipitation-forms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/back-to-the-oceans"
+    },
+    {
+      "id": "class6-science-water-groundwater-extraction-sources",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Groundwater extraction methods",
+      "outcome": "Identify open wells, tube wells, and hand pumps as mechanisms to draw usable groundwater to the surface",
+      "prerequisites": [
+        "class6-science-water-groundwater-seepage-concept",
+        "class6-science-water-sources-identification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/back-to-the-oceans"
+    },
+    {
+      "id": "class6-science-water-paving-impact-on-seepage",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Effect of concrete paving on seepage",
+      "outcome": "Explain why extensive concrete paving and reduction of open soil reduce rainwater seepage and lower groundwater levels",
+      "prerequisites": [
+        "class6-science-water-groundwater-seepage-concept"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/back-to-the-oceans"
+    },
+    {
+      "id": "class6-science-water-heavy-rainfall-floods-cause",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Causes of floods from heavy rainfall",
+      "outcome": "State that excessive or prolonged rainfall causes water levels in rivers, lakes, and ponds to overflow their banks, resulting in floods",
+      "prerequisites": [
+        "class6-science-water-surface-runoff-rivers-oceans"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/what-if-it-rains-heavily"
+    },
+    {
+      "id": "class6-science-water-floods-consequences",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Impacts of floods on life and environment",
+      "outcome": "Describe the consequences of floods, including crop submergence, property damage, displacement of people, and harm to terrestrial and aquatic animals",
+      "prerequisites": [
+        "class6-science-water-heavy-rainfall-floods-cause"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/what-if-it-rains-heavily"
+    },
+    {
+      "id": "class6-science-water-drought-causes-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Mechanism leading to drought",
+      "outcome": "Explain how continuous evaporation and transpiration without replenishment by rain over a year or more leads to severe drying of soil and water bodies",
+      "prerequisites": [
+        "class6-science-water-evaporation-open-surfaces",
+        "class6-science-water-transpiration-by-plants"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/droughts"
+    },
+    {
+      "id": "class6-science-water-drought-consequences",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Impacts of droughts on life and agriculture",
+      "outcome": "Describe the consequences of drought, including depletion of groundwater, scarcity of food and fodder (famine), and loss of livestock",
+      "prerequisites": [
+        "class6-science-water-drought-causes-mechanism",
+        "class6-science-water-groundwater-seepage-concept"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/droughts"
+    },
+    {
+      "id": "class6-science-water-conservation-need",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Need for water conservation",
+      "outcome": "Explain why water conservation is essential given the limited usable freshwater fraction and rising population demand",
+      "prerequisites": [
+        "class6-science-water-calculate-family-consumption",
+        "class6-science-water-ocean-salinity-freshwater-distinction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class6-science/water/how-can-we-conserve-water"
+    },
+    {
+      "id": "class6-science-water-conservation-daily-practices",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Everyday water-saving practices",
+      "outcome": "List practical everyday measures to save water, including turning off running taps, repairing leaks promptly, and reusing rinse water for gardening",
+      "prerequisites": [
+        "class6-science-water-conservation-need"
+      ],
+      "difficulty": 1,
+      "topicRef": "class6-science/water/how-can-we-conserve-water"
+    },
+    {
+      "id": "class6-science-water-rooftop-rainwater-harvesting-mechanism",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Rooftop rainwater harvesting system",
+      "outcome": "Explain how rainwater collected from building rooftops is routed through pipes and filters to storage tanks or recharge pits",
+      "prerequisites": [
+        "class6-science-water-groundwater-seepage-concept",
+        "class6-science-water-conservation-need"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/rainwater-harvesting"
+    },
+    {
+      "id": "class6-science-water-roadside-recharge-rainwater-harvesting",
+      "klass": 6,
+      "subject": "Science",
+      "chapter": "water",
+      "title": "Roadside runoff rainwater harvesting",
+      "outcome": "Describe how roadside storm runoff is directed directly into roadside drains and ground percolation pits to recharge aquifers",
+      "prerequisites": [
+        "class6-science-water-paving-impact-on-seepage",
+        "class6-science-water-rooftop-rainwater-harvesting-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class6-science/water/rainwater-harvesting"
+    }
+  ]
+}

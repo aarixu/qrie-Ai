@@ -9,7 +9,8 @@
       "title": "Identify Rational Form p/q",
       "outcome": "Identify whether a given number can be expressed in the form p/q where p and q are integers and q is not zero",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/introduction"
     },
     {
       "id": "class10-mathematics-real-numbers-define-irrational-numbers",
@@ -21,7 +22,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-classify-rational-form"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/introduction"
     },
     {
       "id": "class10-mathematics-real-numbers-classify-terminating-decimal",
@@ -31,7 +33,8 @@
       "title": "Identify Terminating Decimals",
       "outcome": "Classify a decimal expansion with finite digits after the decimal point as terminating",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/introduction"
     },
     {
       "id": "class10-mathematics-real-numbers-classify-non-terminating-repeating",
@@ -41,7 +44,8 @@
       "title": "Identify Non-Terminating Repeating Decimals",
       "outcome": "Classify a recurring decimal expansion as non-terminating repeating",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/introduction"
     },
     {
       "id": "class10-mathematics-real-numbers-relate-decimal-to-rationality",
@@ -55,7 +59,8 @@
         "class10-mathematics-real-numbers-classify-terminating-decimal",
         "class10-mathematics-real-numbers-classify-non-terminating-repeating"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/introduction"
     },
     {
       "id": "class10-mathematics-real-numbers-prime-vs-composite",
@@ -65,7 +70,8 @@
       "title": "Distinguish Prime and Composite Numbers",
       "outcome": "Distinguish between prime numbers and composite numbers based on their number of factors",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-factor-tree-method",
@@ -77,7 +83,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-prime-vs-composite"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-express-prime-factorisation",
@@ -89,7 +96,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-factor-tree-method"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-state-fta",
@@ -101,7 +109,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-express-prime-factorisation"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-end-in-zero-condition",
@@ -113,7 +122,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-state-fta"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-composite-explanation",
@@ -125,7 +135,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-state-fta"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
@@ -137,7 +148,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-express-prime-factorisation"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-calculate-lcm-prime-factors",
@@ -149,7 +161,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-express-prime-factorisation"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-hcf-lcm-three-numbers",
@@ -162,7 +175,8 @@
         "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
         "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-verify-hcf-lcm-product-relation",
@@ -175,7 +189,8 @@
         "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
         "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-solve-for-unknown-using-relation",
@@ -187,7 +202,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-verify-hcf-lcm-product-relation"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-word-problems-hcf-lcm",
@@ -200,7 +216,8 @@
         "class10-mathematics-real-numbers-calculate-hcf-prime-factors",
         "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/fundamental-theorem-of-arithmetic"
     },
     {
       "id": "class10-mathematics-real-numbers-prime-divides-square-theorem",
@@ -212,7 +229,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-state-fta"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-define-coprime",
@@ -224,7 +242,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-calculate-hcf-prime-factors"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-prove-root2-irrational",
@@ -237,7 +256,8 @@
         "class10-mathematics-real-numbers-prime-divides-square-theorem",
         "class10-mathematics-real-numbers-define-coprime"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-prove-root3-root5-irrational",
@@ -249,7 +269,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-prove-root2-irrational"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-prove-linear-irrational-combination",
@@ -261,7 +282,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-prove-root2-irrational"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-prove-product-quotient-irrational",
@@ -273,7 +295,8 @@
       "prerequisites": [
         "class10-mathematics-real-numbers-prove-root2-irrational"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-real-numbers-classify-combined-real-expressions",
@@ -286,7 +309,8 @@
         "class10-mathematics-real-numbers-prove-linear-irrational-combination",
         "class10-mathematics-real-numbers-prove-product-quotient-irrational"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/real-numbers/revisiting-irrational-numbers"
     },
     {
       "id": "class10-mathematics-polynomials-identify-polynomial-expression",
@@ -296,7 +320,8 @@
       "title": "Identify Polynomial Expressions",
       "outcome": "Identify whether an algebraic expression is a polynomial by checking if all exponents of the variable are non-negative integers",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-determine-degree",
@@ -308,7 +333,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-polynomial-expression"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-classify-by-degree",
@@ -320,7 +346,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-determine-degree"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-identify-standard-form-coefficients",
@@ -332,7 +359,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-classify-by-degree"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-evaluate-at-given-value",
@@ -344,7 +372,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-polynomial-expression"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-define-zero-of-polynomial",
@@ -356,7 +385,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-evaluate-at-given-value"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-verify-zero-algebraically",
@@ -368,7 +398,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-define-zero-of-polynomial"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/introduction"
     },
     {
       "id": "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept",
@@ -380,7 +411,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-define-zero-of-polynomial"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/geometrical-meaning-of-zeroes"
     },
     {
       "id": "class10-mathematics-polynomials-identify-parabola-shape",
@@ -392,7 +424,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-standard-form-coefficients"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/geometrical-meaning-of-zeroes"
     },
     {
       "id": "class10-mathematics-polynomials-read-zeroes-from-graph",
@@ -404,7 +437,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/geometrical-meaning-of-zeroes"
     },
     {
       "id": "class10-mathematics-polynomials-count-zeroes-from-graph",
@@ -416,7 +450,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-read-zeroes-from-graph"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/geometrical-meaning-of-zeroes"
     },
     {
       "id": "class10-mathematics-polynomials-bound-zeroes-by-degree",
@@ -429,7 +464,8 @@
         "class10-mathematics-polynomials-count-zeroes-from-graph",
         "class10-mathematics-polynomials-determine-degree"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/geometrical-meaning-of-zeroes"
     },
     {
       "id": "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
@@ -442,7 +478,8 @@
         "class10-mathematics-polynomials-identify-standard-form-coefficients",
         "class10-mathematics-polynomials-define-zero-of-polynomial"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
@@ -454,7 +491,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-standard-form-coefficients"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-state-product-of-zeroes-formula",
@@ -466,7 +504,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-standard-form-coefficients"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-verify-sum-of-zeroes",
@@ -479,7 +518,8 @@
         "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
         "class10-mathematics-polynomials-state-sum-of-zeroes-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-verify-product-of-zeroes",
@@ -492,7 +532,8 @@
         "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
         "class10-mathematics-polynomials-state-product-of-zeroes-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-compute-sum-product-from-coefficients",
@@ -505,7 +546,8 @@
         "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
         "class10-mathematics-polynomials-state-product-of-zeroes-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-construct-quadratic-from-sum-product",
@@ -517,7 +559,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-construct-quadratic-from-two-zeroes",
@@ -529,7 +572,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-construct-quadratic-from-sum-product"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-evaluate-symmetric-sum-of-squares",
@@ -541,7 +585,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-evaluate-reciprocal-sum-zeroes",
@@ -553,7 +598,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-find-unknown-coefficient-from-condition",
@@ -565,7 +611,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-compute-sum-product-from-coefficients"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-polynomials-cubic-zeroes-coefficients-relation",
@@ -579,7 +626,8 @@
         "class10-mathematics-polynomials-state-sum-of-zeroes-formula",
         "class10-mathematics-polynomials-state-product-of-zeroes-formula"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/polynomials/zeroes-and-coefficients"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
@@ -591,7 +639,8 @@
       "prerequisites": [
         "class10-mathematics-polynomials-identify-standard-form-coefficients"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
@@ -603,7 +652,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
@@ -615,7 +665,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph",
@@ -628,7 +679,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-find-table-of-solutions",
         "class10-mathematics-polynomials-relate-linear-zero-to-x-intercept"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution",
@@ -640,7 +692,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-parallel-lines-graph",
@@ -652,7 +705,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-coincident-lines-graph",
@@ -664,7 +718,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-plot-lines-on-graph"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-graphical-area-of-triangle",
@@ -676,7 +731,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-read-intersection-solution"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/graphical-method-of-solution"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-intersecting",
@@ -688,7 +744,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
@@ -700,7 +757,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel",
@@ -712,7 +770,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-find-unknown-parameter-consistency",
@@ -726,7 +785,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-coincident",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-ratio-condition-parallel"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/introduction"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other",
@@ -738,7 +798,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution",
@@ -750,7 +811,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-express-one-variable-in-terms-of-other"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-verify-solution-algebraically",
@@ -763,7 +825,8 @@
         "class10-mathematics-polynomials-evaluate-at-given-value",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-substitution-degenerate-cases",
@@ -775,7 +838,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable",
@@ -788,7 +852,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-identify-standard-form",
         "class10-mathematics-real-numbers-calculate-lcm-prime-factors"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier",
@@ -800,7 +865,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-select-elimination-variable"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination",
@@ -812,7 +878,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-scale-equation-by-multiplier"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-symmetric-coefficient-system",
@@ -824,7 +891,8 @@
       "prerequisites": [
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-age",
@@ -837,7 +905,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-fractions-and-numbers",
@@ -850,7 +919,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-two-digit-numbers",
@@ -863,7 +933,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time",
@@ -876,7 +947,8 @@
         "class10-mathematics-pair-of-linear-equations-in-two-variables-translate-word-problem-to-equations",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/pair-of-linear-equations-in-two-variables/elimination-method"
     },
     {
       "id": "class10-mathematics-quadratic-equations-define-standard-form",
@@ -889,7 +961,8 @@
         "class10-mathematics-polynomials-identify-standard-form-coefficients",
         "class10-mathematics-polynomials-classify-by-degree"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/quadratic-equations/introduction"
     },
     {
       "id": "class10-mathematics-quadratic-equations-identify-coefficients",
@@ -901,7 +974,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-define-standard-form"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/quadratic-equations/introduction"
     },
     {
       "id": "class10-mathematics-quadratic-equations-verify-by-simplification",
@@ -913,7 +987,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-define-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/quadratic-equations-definition"
     },
     {
       "id": "class10-mathematics-quadratic-equations-distinguish-degree",
@@ -925,7 +1000,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-verify-by-simplification"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/quadratic-equations-definition"
     },
     {
       "id": "class10-mathematics-quadratic-equations-formulate-geometric-context",
@@ -937,7 +1013,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-define-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/introduction"
     },
     {
       "id": "class10-mathematics-quadratic-equations-formulate-number-relation",
@@ -949,7 +1026,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-define-standard-form"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/introduction"
     },
     {
       "id": "class10-mathematics-quadratic-equations-define-root",
@@ -962,7 +1040,8 @@
         "class10-mathematics-polynomials-define-zero-of-polynomial",
         "class10-mathematics-quadratic-equations-define-standard-form"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-verify-given-root",
@@ -975,7 +1054,8 @@
         "class10-mathematics-quadratic-equations-define-root",
         "class10-mathematics-polynomials-verify-zero-algebraically"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-zero-product-rule",
@@ -987,7 +1067,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-define-root"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-solve-pure-quadratic",
@@ -999,7 +1080,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-zero-product-rule"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-split-middle-term-monic",
@@ -1012,7 +1094,8 @@
         "class10-mathematics-polynomials-find-quadratic-zeroes-by-factorisation",
         "class10-mathematics-quadratic-equations-zero-product-rule"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-split-middle-term-non-monic",
@@ -1024,7 +1107,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-split-middle-term-monic"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-factorise-irrational-coefficients",
@@ -1036,7 +1120,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-split-middle-term-non-monic"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-word-problems-factorisation",
@@ -1050,7 +1135,8 @@
         "class10-mathematics-quadratic-equations-formulate-number-relation",
         "class10-mathematics-quadratic-equations-split-middle-term-non-monic"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/quadratic-equations/solution-by-factorisation"
     },
     {
       "id": "class10-mathematics-quadratic-equations-state-quadratic-formula",
@@ -1062,7 +1148,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-identify-coefficients"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-calculate-discriminant",
@@ -1074,7 +1161,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-identify-coefficients"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-solve-using-formula",
@@ -1087,7 +1175,8 @@
         "class10-mathematics-quadratic-equations-state-quadratic-formula",
         "class10-mathematics-quadratic-equations-calculate-discriminant"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-relate-discriminant-positive",
@@ -1099,7 +1188,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-calculate-discriminant"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-relate-discriminant-zero",
@@ -1111,7 +1201,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-calculate-discriminant"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-relate-discriminant-negative",
@@ -1123,7 +1214,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-calculate-discriminant"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-find-parameter-for-equal-roots",
@@ -1135,7 +1227,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-relate-discriminant-zero"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-determine-existence-of-real-solution",
@@ -1149,7 +1242,8 @@
         "class10-mathematics-quadratic-equations-relate-discriminant-negative",
         "class10-mathematics-quadratic-equations-formulate-geometric-context"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-word-problems-speed-time",
@@ -1162,7 +1256,8 @@
         "class10-mathematics-quadratic-equations-solve-using-formula",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-speed-distance-time"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-quadratic-equations-word-problems-work-and-pipes",
@@ -1174,7 +1269,8 @@
       "prerequisites": [
         "class10-mathematics-quadratic-equations-solve-using-formula"
       ],
-      "difficulty": 5
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/quadratic-equations/nature-of-roots"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-define-sequence-pattern",
@@ -1184,7 +1280,8 @@
       "title": "Identify Patterns in Number Lists",
       "outcome": "Identify the rule or pattern connecting consecutive terms in a given list of numbers",
       "prerequisites": [],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/introduction"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-define-ap",
@@ -1196,7 +1293,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-define-sequence-pattern"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/introduction"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff",
@@ -1208,7 +1306,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-define-ap"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/arithmetic-progressions-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap",
@@ -1220,7 +1319,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/arithmetic-progressions-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-distinguish-finite-infinite-ap",
@@ -1232,7 +1332,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-define-ap"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/arithmetic-progressions-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
@@ -1244,7 +1345,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/arithmetic-progressions-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-derive-nth-term-formula",
@@ -1256,7 +1358,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-calculate-nth-term",
@@ -1268,7 +1371,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-derive-nth-term-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-find-number-of-terms",
@@ -1280,7 +1384,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-calculate-nth-term"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-determine-term-membership",
@@ -1292,7 +1397,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-calculate-nth-term"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-find-nth-term-from-end",
@@ -1304,7 +1410,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-calculate-nth-term"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-determine-ap-from-two-terms",
@@ -1317,7 +1424,8 @@
         "class10-mathematics-arithmetic-progressions-calculate-nth-term",
         "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-condition-for-three-terms-in-ap",
@@ -1329,7 +1437,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-derive-sum-formula",
@@ -1341,7 +1450,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-derive-nth-term-formula"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
@@ -1353,7 +1463,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-derive-sum-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term",
@@ -1365,7 +1476,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-derive-sum-formula"
       ],
-      "difficulty": 2
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-sum-of-first-n-natural-numbers",
@@ -1377,7 +1489,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
       ],
-      "difficulty": 1
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-find-n-given-sum",
@@ -1390,7 +1503,8 @@
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
         "class10-mathematics-quadratic-equations-split-middle-term-monic"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-interpret-double-answer-for-n",
@@ -1402,7 +1516,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-find-n-given-sum"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-relate-nth-term-to-sum",
@@ -1414,7 +1529,8 @@
       "prerequisites": [
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-sum-of-multiples-in-range",
@@ -1427,7 +1543,8 @@
         "class10-mathematics-arithmetic-progressions-find-number-of-terms",
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-word-problems-nth-term",
@@ -1440,7 +1557,8 @@
         "class10-mathematics-arithmetic-progressions-calculate-nth-term",
         "class10-mathematics-arithmetic-progressions-find-number-of-terms"
       ],
-      "difficulty": 3
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/arithmetic-progressions/nth-term-of-an-ap"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-word-problems-sum",
@@ -1453,7 +1571,8 @@
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
         "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
     },
     {
       "id": "class10-mathematics-arithmetic-progressions-select-symmetric-terms",
@@ -1466,7 +1585,2890 @@
         "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
         "class10-mathematics-quadratic-equations-solve-pure-quadratic"
       ],
-      "difficulty": 4
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/arithmetic-progressions/sum-of-first-n-terms"
+    },
+    {
+      "id": "class10-mathematics-triangles-distinguish-congruence-similarity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Congruence vs Similarity",
+      "outcome": "Distinguish between congruent figures having same shape and size versus similar figures having same shape but not necessarily same size",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/introduction"
+    },
+    {
+      "id": "class10-mathematics-triangles-similarity-conditions-polygons",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Similarity of Polygons",
+      "outcome": "State the two conditions for similarity of two polygons: corresponding angles are equal and corresponding sides are in the same ratio",
+      "prerequisites": [
+        "class10-mathematics-triangles-distinguish-congruence-similarity"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/introduction"
+    },
+    {
+      "id": "class10-mathematics-triangles-regular-polygons-similarity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Similarity of Regular Polygons",
+      "outcome": "Explain why all regular polygons with the same number of sides, such as equilateral triangles and squares, are always similar",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/similar-figures"
+    },
+    {
+      "id": "class10-mathematics-triangles-verify-polygon-similarity-counterexamples",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Verify Non-Similarity with Counterexamples",
+      "outcome": "Verify non-similarity of two quadrilaterals when only angles are equal or only side ratios are equal using counterexamples like square and rectangle or square and rhombus",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/similar-figures"
+    },
+    {
+      "id": "class10-mathematics-triangles-state-bpt",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State Basic Proportionality Theorem",
+      "outcome": "State the Basic Proportionality Theorem (Thales Theorem) for a line drawn parallel to one side of a triangle",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-bpt",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove Basic Proportionality Theorem",
+      "outcome": "Prove the Basic Proportionality Theorem using the ratio of areas of triangles having the same height",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-bpt"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-derive-bpt-corollaries",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Derive BPT Corollaries",
+      "outcome": "Derive the alternate ratio forms AD/AB = AE/AC and DB/AB = EC/AC from the Basic Proportionality Theorem",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-bpt"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-apply-bpt-find-segment-length",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Find Unknown Length using BPT",
+      "outcome": "Calculate an unknown side segment in a triangle given parallel lines using the Basic Proportionality Theorem",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-bpt"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-state-bpt-converse",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State Converse of BPT",
+      "outcome": "State the converse of the Basic Proportionality Theorem",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-bpt"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-apply-bpt-converse-parallelism",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Check Parallelism using BPT Converse",
+      "outcome": "Determine whether a line segment joining two sides of a triangle is parallel to the third side by comparing segment ratios",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-bpt-converse"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-apply-bpt-trapezium-and-quadrilaterals",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Apply BPT in Trapeziums",
+      "outcome": "Prove geometric ratio relations involving diagonals and parallel lines in a trapezium using the Basic Proportionality Theorem",
+      "prerequisites": [
+        "class10-mathematics-triangles-apply-bpt-find-segment-length"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/triangles/similarity-of-triangles"
+    },
+    {
+      "id": "class10-mathematics-triangles-state-aaa-aa-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State AAA and AA Similarity Criteria",
+      "outcome": "State the AAA and AA (Angle-Angle) similarity criteria for two triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-state-sss-similarity-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State SSS Similarity Criterion",
+      "outcome": "State the SSS (Side-Side-Side) similarity criterion for two triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-state-sas-similarity-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "State SAS Similarity Criterion",
+      "outcome": "State the SAS (Side-Angle-Side) similarity criterion where the equal angle is included between proportional sides",
+      "prerequisites": [
+        "class10-mathematics-triangles-similarity-conditions-polygons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-write-symbolic-similarity-correspondence",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Write Correct Vertex Correspondence",
+      "outcome": "Write the similarity relation between two triangles using the symbol '~' with strictly matching vertex correspondence order",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-aaa-aa-criterion",
+        "class10-mathematics-triangles-state-sss-similarity-criterion",
+        "class10-mathematics-triangles-state-sas-similarity-criterion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-similarity-aa-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove Similarity using AA Criterion",
+      "outcome": "Prove that two triangles are similar by identifying two pairs of equal corresponding angles using vertically opposite, alternate interior, or common angles",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-aaa-aa-criterion",
+        "class10-mathematics-triangles-write-symbolic-similarity-correspondence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-similarity-sss-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove Similarity using SSS Criterion",
+      "outcome": "Prove that two triangles are similar by verifying that the ratios of all three pairs of corresponding sides are equal",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-sss-similarity-criterion",
+        "class10-mathematics-triangles-write-symbolic-similarity-correspondence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-similarity-sas-criterion",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove Similarity using SAS Criterion",
+      "outcome": "Prove that two triangles are similar by establishing the equality of one angle and the proportionality of the sides including that angle",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-sas-similarity-criterion",
+        "class10-mathematics-triangles-write-symbolic-similarity-correspondence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-calculate-lengths-from-similar-triangles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Calculate Lengths in Similar Triangles",
+      "outcome": "Calculate missing side lengths of similar triangles by equating ratios of corresponding sides",
+      "prerequisites": [
+        "class10-mathematics-triangles-write-symbolic-similarity-correspondence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-calculate-angles-from-similar-triangles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Calculate Angles in Similar Triangles",
+      "outcome": "Calculate missing angle measures in a triangle by equating corresponding angles of proved similar triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-write-symbolic-similarity-correspondence"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-nested-right-triangles-similarity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Similarity in Altitude to Hypotenuse",
+      "outcome": "Prove that the two triangles formed by the altitude drawn to the hypotenuse of a right triangle are similar to each other and to the original triangle",
+      "prerequisites": [
+        "class10-mathematics-triangles-prove-similarity-aa-criterion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-geometric-product-relations",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Prove Geometric Product Relations",
+      "outcome": "Prove geometric product identities like AB * CD = EF * GH by setting up proportional side ratios between similar triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-calculate-lengths-from-similar-triangles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-solve-word-problems-shadow-similarity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Shadow and Height Word Problems",
+      "outcome": "Solve real-world word problems calculating heights of poles or buildings using shadow lengths and triangle similarity",
+      "prerequisites": [
+        "class10-mathematics-triangles-prove-similarity-aa-criterion",
+        "class10-mathematics-triangles-calculate-lengths-from-similar-triangles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-triangles-prove-multi-step-geometric-configurations",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "triangles",
+      "title": "Multi-Step Similarity Proofs",
+      "outcome": "Prove complex geometric properties involving medians, angle bisectors, or intersecting chords across multiple pairs of similar triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-prove-similarity-sas-criterion",
+        "class10-mathematics-triangles-prove-geometric-product-relations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/triangles/criteria-for-similarity"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-identify-axes-and-origin",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Identify Axes and Origin",
+      "outcome": "Identify the x-axis, y-axis, and the origin (0, 0) on a Cartesian coordinate plane",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/coordinate-geometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-locate-ordered-pairs",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Locate Ordered Pairs",
+      "outcome": "Locate and plot a point given its coordinates (x, y) across all four quadrants and axes",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-identify-axes-and-origin"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/coordinate-geometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-perpendicular-distance-from-axes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Distances from Axes",
+      "outcome": "State the perpendicular distance of any point (x, y) from the y-axis as |x| and from the x-axis as |y|",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-locate-ordered-pairs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/coordinate-geometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-points-on-axes-form",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Coordinates on Axes",
+      "outcome": "Identify that any point on the x-axis has coordinates (x, 0) and any point on the y-axis has coordinates (0, y)",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-locate-ordered-pairs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/coordinate-geometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-distance-from-origin",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Distance from Origin",
+      "outcome": "Calculate the distance of a point (x, y) from the origin using the formula sqrt(x^2 + y^2)",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-perpendicular-distance-from-axes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-derive-distance-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Derive Distance Formula",
+      "outcome": "Derive the distance formula d = sqrt((x2 - x1)^2 + (y2 - y1)^2) using the Pythagoras theorem on a Cartesian plane",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-perpendicular-distance-from-axes"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-calculate-distance-two-points",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Calculate Distance Between Points",
+      "outcome": "Calculate the numerical distance between two given points using the distance formula",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-derive-distance-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-test-collinearity-distance",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Test Collinearity via Distance",
+      "outcome": "Determine whether three given points are collinear by checking if the sum of two segment distances equals the third",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-classify-triangles-distance",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Classify Triangles by Distance",
+      "outcome": "Classify a triangle formed by three given vertices as equilateral, isosceles, scalene, or right-angled using side lengths",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-classify-quadrilaterals-distance",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Classify Quadrilaterals by Distance",
+      "outcome": "Identify whether four given points form a square, rectangle, rhombus, or parallelogram using side and diagonal lengths",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-equidistant-point-on-axis",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Equidistant Point on Axis",
+      "outcome": "Find the coordinates of a point on an axis that is equidistant from two given points by setting up an algebraic equation",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-points-on-axes-form",
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-relation-equidistant-points",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Equidistant Linear Relation",
+      "outcome": "Find a linear relation between x and y such that the point (x, y) is equidistant from two specified points",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-missing-coordinate-distance",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Coordinate from Distance",
+      "outcome": "Solve for an unknown coordinate of a point given its distance from another point",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points",
+        "class10-mathematics-quadratic-equations-solve-using-formula"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/distance-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-state-internal-section-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "State Section Formula",
+      "outcome": "State the section formula ((m1*x2 + m2*x1)/(m1 + m2), (m1*y2 + m2*y1)/(m1 + m2)) for internal division in ratio m1:m2",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-locate-ordered-pairs",
+        "class10-mathematics-triangles-calculate-lengths-from-similar-triangles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-compute-internal-division-point",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Compute Dividing Point Coordinates",
+      "outcome": "Calculate the coordinates of the point that divides the line segment joining two given points in a specified ratio m1:m2",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-state-internal-section-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-derive-midpoint-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Derive Midpoint Formula",
+      "outcome": "Derive the midpoint formula ((x1 + x2)/2, (y1 + y2)/2) as a special case of the section formula with ratio 1:1",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-state-internal-section-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-calculate-midpoint",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Calculate Midpoint Coordinates",
+      "outcome": "Calculate the coordinates of the midpoint of a line segment given its two endpoints",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-derive-midpoint-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-endpoint-from-midpoint",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Endpoint from Midpoint",
+      "outcome": "Find the coordinates of one endpoint of a line segment given the midpoint and the other endpoint",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-midpoint"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-points-of-trisection",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Points of Trisection",
+      "outcome": "Calculate the coordinates of the points of trisection of a line segment by dividing it in ratios 1:2 and 2:1",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-compute-internal-division-point"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-ratio-given-dividing-point",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Division Ratio from Point",
+      "outcome": "Determine the ratio k:1 in which a known point divides the line segment joining two given points",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-compute-internal-division-point"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-axis-division-ratio",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Axis Division Ratio",
+      "outcome": "Find the ratio in which the x-axis or y-axis divides a given line segment and determine the point of intersection",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-points-on-axes-form",
+        "class10-mathematics-coordinate-geometry-find-ratio-given-dividing-point"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-find-parallelogram-fourth-vertex",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Find Fourth Vertex of Parallelogram",
+      "outcome": "Find the missing vertex of a parallelogram by equating the midpoints of its diagonals",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-midpoint"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-calculate-centroid-of-triangle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Calculate Centroid Coordinates",
+      "outcome": "Calculate the coordinates of the centroid of a triangle with vertices (x1, y1), (x2, y2), and (x3, y3) using ((x1+x2+x3)/3, (y1+y2+y3)/3)",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-compute-internal-division-point",
+        "class10-mathematics-coordinate-geometry-calculate-midpoint"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-coordinate-geometry-solve-geometric-modeling-problems",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "coordinate-geometry",
+      "title": "Solve Real-World Coordinate Problems",
+      "outcome": "Solve multi-step real-world problems (such as positions in sports fields or grids) by setting up a coordinate grid and applying distance and section formulas",
+      "prerequisites": [
+        "class10-mathematics-coordinate-geometry-calculate-distance-two-points",
+        "class10-mathematics-coordinate-geometry-compute-internal-division-point"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/coordinate-geometry/section-formula"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-identify-sides-reference-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Identify Sides for Reference Angle",
+      "outcome": "Identify the opposite side, adjacent side, and hypotenuse of a right-angled triangle relative to a specified acute angle",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Define Sine Cosine and Tangent",
+      "outcome": "Define sine, cosine, and tangent as ratios of sides of a right-angled triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-identify-sides-reference-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Define Reciprocal Trigonometric Ratios",
+      "outcome": "Define cosecant, secant, and cotangent as the reciprocals of sine, cosine, and tangent respectively",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-quotient-relations-tan-cot",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "State Quotient Relations for Tan and Cot",
+      "outcome": "State the quotient relations tan A = sin A / cos A and cot A = cos A / sin A",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent",
+        "class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Compute Ratios from Side Lengths",
+      "outcome": "Calculate all six trigonometric ratios when all three side lengths of a right triangle are given",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-find-remaining-ratios-from-one",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Find Other Ratios from One Ratio",
+      "outcome": "Calculate the remaining trigonometric ratios when one trigonometric ratio is given using the Pythagorean theorem",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-compare-ratios-complementary-angles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Compare Ratios of Both Acute Angles",
+      "outcome": "Compare the trigonometric ratios of the two acute angles in the same right triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-invariance-of-ratios",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Explain Ratio Invariance by Triangle Size",
+      "outcome": "Explain why trigonometric ratios of an angle do not depend on the side lengths of the triangle using similarity of triangles",
+      "prerequisites": [
+        "class10-mathematics-triangles-state-aaa-aa-criterion",
+        "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-calculate-unknown-sides",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Calculate Unknown Side from Ratio",
+      "outcome": "Calculate the unknown side lengths of a right triangle given one side length and one trigonometric ratio",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-find-remaining-ratios-from-one"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-evaluate-algebraic-ratio-expression",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Evaluate Expression Given a Ratio",
+      "outcome": "Evaluate numerical or fractional expressions involving trigonometric ratios given the value of a single trigonometric ratio",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-find-remaining-ratios-from-one"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-derive-ratios-45-degrees",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Derive Trigonometric Ratios of 45 Degrees",
+      "outcome": "Derive the exact values of all trigonometric ratios of 45 degrees using an isosceles right-angled triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-derive-ratios-30-60-degrees",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Derive Ratios of 30 and 60 Degrees",
+      "outcome": "Derive the exact values of trigonometric ratios of 30 degrees and 60 degrees using an equilateral triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-deduce-ratios-0-90-degrees",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Deduce Ratios of 0 and 90 Degrees",
+      "outcome": "Deduce the values of trigonometric ratios for 0 degrees and 90 degrees using limiting geometric arguments",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-state-values-table",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "State Trigonometric Values for Standard Angles",
+      "outcome": "State the exact trigonometric values of 0, 30, 45, 60, and 90 degrees for all six trigonometric functions",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-derive-ratios-45-degrees",
+        "class10-mathematics-introduction-to-trigonometry-derive-ratios-30-60-degrees",
+        "class10-mathematics-introduction-to-trigonometry-deduce-ratios-0-90-degrees"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-evaluate-standard-angle-expressions",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Evaluate Standard Angle Expressions",
+      "outcome": "Evaluate arithmetic expressions involving trigonometric values of standard angles 0, 30, 45, 60, and 90 degrees",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-state-values-table"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-solve-linear-trig-angle-equations",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Solve Equations for Unknown Angles",
+      "outcome": "Solve systems of linear equations to determine unknown acute angles from given trigonometric values",
+      "prerequisites": [
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination",
+        "class10-mathematics-introduction-to-trigonometry-state-values-table"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-ratios-of-specific-angles"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identity-sin-cos",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Derive sin²θ + cos²θ = 1",
+      "outcome": "Derive the fundamental trigonometric identity sin²θ + cos²θ = 1 from the Pythagorean theorem in a right triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identities-sec-tan-cosec-cot",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Derive 1 + tan²θ = sec²θ and 1 + cot²θ = cosec²θ",
+      "outcome": "Derive the identities 1 + tan²θ = sec²θ and 1 + cot²θ = cosec²θ by dividing the primary Pythagorean identity",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identity-sin-cos",
+        "class10-mathematics-introduction-to-trigonometry-quotient-relations-tan-cot"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-express-ratios-in-terms-of-one",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Express All Ratios in Terms of One",
+      "outcome": "Express any trigonometric ratio in terms of a specified trigonometric ratio using algebraic identities",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identities-sec-tan-cosec-cot"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Simplify Expressions Using Identities",
+      "outcome": "Simplify trigonometric expressions into single trigonometric terms or constants using Pythagorean and quotient identities",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identities-sec-tan-cosec-cot"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-prove-identities-converting-to-sin-cos",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Prove Identities by Converting to Sin and Cos",
+      "outcome": "Prove trigonometric identities by converting all terms into sine and cosine and simplifying algebraically",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-prove-identities-conjugate-multiplication",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Prove Identities Using Conjugate Multiplication",
+      "outcome": "Prove trigonometric identities involving square roots or rational expressions by multiplying the numerator and denominator by algebraic conjugates",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-prove-identities-algebraic-factorisation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Prove Identities Using Factorisation",
+      "outcome": "Prove complex trigonometric identities by applying algebraic factorisation identities such as a³ ± b³ and a² - b²",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-introduction-to-trigonometry-prove-advanced-multi-identity-relations",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-trigonometry",
+      "title": "Prove Multi-Step Trigonometric Identities",
+      "outcome": "Prove multi-step trigonometric identities requiring simultaneous application of reciprocal, quotient, and Pythagorean identities",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-prove-identities-converting-to-sin-cos",
+        "class10-mathematics-introduction-to-trigonometry-prove-identities-conjugate-multiplication",
+        "class10-mathematics-introduction-to-trigonometry-prove-identities-algebraic-factorisation"
+      ],
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/introduction-to-trigonometry/trigonometric-identities"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-identify-line-of-sight",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Identify Line of Sight",
+      "outcome": "Identify the line of sight as the straight line drawn from the eye of an observer to the point in the object viewed",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-identify-sides-reference-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-define-angle-of-elevation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Define Angle of Elevation",
+      "outcome": "Define the angle of elevation as the angle formed by the line of sight with the horizontal when the object is above the horizontal level",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-identify-line-of-sight"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-define-angle-of-depression",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Define Angle of Depression",
+      "outcome": "Define the angle of depression as the angle formed by the line of sight with the horizontal when the object is below the horizontal level",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-identify-line-of-sight"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-relate-elevation-depression-alternate-angles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Relate Elevation and Depression Angles",
+      "outcome": "Demonstrate that the angle of depression of an object from an observer equals the angle of elevation of the observer from the object using alternate interior angles",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-define-angle-of-elevation",
+        "class10-mathematics-some-applications-of-trigonometry-define-angle-of-depression"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-draw-single-triangle-diagram",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Draw Single-Triangle Diagram",
+      "outcome": "Draw and label a correct right-angled triangle representing a real-world single observer/object scenario from a verbal description",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-define-angle-of-elevation",
+        "class10-mathematics-some-applications-of-trigonometry-define-angle-of-depression"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-select-trig-ratio",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Select Appropriate Trigonometric Ratio",
+      "outcome": "Select the appropriate trigonometric ratio (sin, cos, or tan) to relate a known length and angle to an unknown length in a right-angled triangle",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent",
+        "class10-mathematics-some-applications-of-trigonometry-draw-single-triangle-diagram"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Calculate Height from Distance and Angle",
+      "outcome": "Calculate the height of an object given the distance from the observer and the angle of elevation using tangent",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-state-values-table",
+        "class10-mathematics-some-applications-of-trigonometry-select-trig-ratio"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-calculate-distance-given-height-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Calculate Distance from Height and Angle",
+      "outcome": "Calculate the horizontal distance from an observer to the base of a vertical object given its height and the angle of elevation or depression",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-state-values-table",
+        "class10-mathematics-some-applications-of-trigonometry-select-trig-ratio",
+        "class10-mathematics-some-applications-of-trigonometry-relate-elevation-depression-alternate-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-calculate-slant-hypotenuse",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Calculate Hypotenuse Length",
+      "outcome": "Calculate the length of an inclined line of sight (such as a ladder, cable, or kite string) using sine or cosine",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-state-values-table",
+        "class10-mathematics-some-applications-of-trigonometry-select-trig-ratio"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-account-for-observer-height",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Account for Observer's Height",
+      "outcome": "Calculate the total height of an object by adding the height of the observer to the perpendicular segment computed from the angle of elevation",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-broken-tree-problem",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Solve Broken Tree Problems",
+      "outcome": "Calculate the total height of a vertical pole or tree that bends to touch the ground by summing the perpendicular and hypotenuse lengths",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-slant-hypotenuse"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Draw Multi-Triangle Diagrams",
+      "outcome": "Draw and label geometric figures involving two right-angled triangles sharing a common side or a common collinear base from a word problem",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-single-triangle-diagram"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/introduction"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Heights from Two Points on Same Side",
+      "outcome": "Calculate heights and distances when two observation points lie along the same line on the same side of a vertical object",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-opposite-sides",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Heights from Two Points on Opposite Sides",
+      "outcome": "Calculate the total distance between two observers situated on opposite sides of a vertical object using angles of elevation or depression",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-distance-given-height-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-statue-on-pedestal",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Solve Statue on Pedestal Problems",
+      "outcome": "Calculate the height of a pedestal or a statue placed on top of it given angles of elevation from a single observation point to the top and bottom of the statue",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-top-and-bottom-from-height",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Observation from Elevated Platform",
+      "outcome": "Calculate the height and distance of a building or tower when observed from the top of another structure with given angles of elevation and depression",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+        "class10-mathematics-some-applications-of-trigonometry-relate-elevation-depression-alternate-angles",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-two-poles-equal-height",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Solve Two Equal Poles Problem",
+      "outcome": "Calculate the height of two equal poles on opposite sides of a road and the position of the observation point between them given the angles of elevation",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-speed-distance-time-angles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Calculate Speed/Time from Changing Angles",
+      "outcome": "Calculate the speed of a moving object or the time taken to reach a target given the change in angle of elevation/depression over a time interval",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-cloud-and-reflection",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Solve Cloud and Lake Reflection Problem",
+      "outcome": "Calculate the height of a cloud above lake level using the angle of elevation of the cloud and the angle of depression of its reflection in the water",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-top-and-bottom-from-height"
+      ],
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-prove-height-complementary-angles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Prove Height Formula for Complementary Angles",
+      "outcome": "Prove that the height of a tower is sqrt(ab) when the angles of elevation from two points at distances a and b from the base are complementary",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-compare-ratios-complementary-angles",
+        "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-algebraic-parameter-proofs",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Prove General Relations with Literal Coefficients",
+      "outcome": "Derive general algebraic expressions for heights and distances involving arbitrary angles (alpha, beta) and parameters (h, d)",
+      "prerequisites": [
+        "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side",
+        "class10-mathematics-some-applications-of-trigonometry-top-and-bottom-from-height"
+      ],
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-some-applications-of-trigonometry-simplify-surd-answers",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "some-applications-of-trigonometry",
+      "title": "Rationalise and Evaluate Surd Answers",
+      "outcome": "Rationalise denominators and substitute numerical approximations for root 3 and root 2 to calculate final decimal answers to specified precision",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-evaluate-standard-angle-expressions",
+        "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/some-applications-of-trigonometry/heights-and-distances"
+    },
+    {
+      "id": "class10-mathematics-circles-define-secant",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Define Secant to a Circle",
+      "outcome": "Define a secant as a line that intersects a circle in two distinct points",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-circles-define-tangent",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Define Tangent to a Circle",
+      "outcome": "Define a tangent as a line that touches a circle at exactly one point",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-circles-define-point-of-contact",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Define Point of Contact",
+      "outcome": "Identify the common point of a tangent and the circle as the point of contact",
+      "prerequisites": [
+        "class10-mathematics-circles-define-tangent"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-circles-distinguish-secant-chord-tangent",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Distinguish Secant, Chord, and Tangent",
+      "outcome": "Distinguish between a chord, a secant, and a tangent based on intersection points and line versus segment characteristics",
+      "prerequisites": [
+        "class10-mathematics-circles-define-secant",
+        "class10-mathematics-circles-define-tangent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-circles-tangent-as-limiting-case-of-secant",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Tangent as Limiting Case of Secant",
+      "outcome": "Explain that a tangent is the limiting position of a secant when the two endpoints of its corresponding chord coincide",
+      "prerequisites": [
+        "class10-mathematics-circles-distinguish-secant-chord-tangent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-count-tangents-at-a-given-point",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Tangents at a Given Point on Circle",
+      "outcome": "State that there is one and only one tangent passing through a given point on a circle",
+      "prerequisites": [
+        "class10-mathematics-circles-define-tangent",
+        "class10-mathematics-circles-define-point-of-contact"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-parallel-tangents-to-given-secant",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Maximum Parallel Tangents",
+      "outcome": "Identify that a circle can have at most two parallel tangents for a given secant or diameter",
+      "prerequisites": [
+        "class10-mathematics-circles-tangent-as-limiting-case-of-secant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-state-tangent-radius-perpendicularity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "State Tangent-Radius Perpendicularity",
+      "outcome": "State the theorem that the tangent at any point of a circle is perpendicular to the radius through the point of contact",
+      "prerequisites": [
+        "class10-mathematics-circles-define-point-of-contact"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-prove-tangent-radius-perpendicularity",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Prove Tangent-Radius Perpendicularity",
+      "outcome": "Prove that the tangent is perpendicular to the radius through the point of contact using the shortest distance property",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-calculate-radius-or-tangent-pythagoras",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Calculate Side Length Using Perpendicularity",
+      "outcome": "Calculate the radius, distance to centre, or tangent length for a single right triangle formed by the radius and tangent",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-prove-parallel-tangents-at-diameter-ends",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Parallel Tangents at Diameter Ends",
+      "outcome": "Prove that tangents drawn at the endpoints of a diameter of a circle are parallel",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity",
+        "class10-mathematics-circles-parallel-tangents-to-given-secant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/tangent-to-a-circle"
+    },
+    {
+      "id": "class10-mathematics-circles-count-tangents-by-point-position",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Number of Tangents from a Point",
+      "outcome": "State that the number of tangents to a circle is zero from an interior point, exactly one from a point on the circle, and exactly two from an exterior point",
+      "prerequisites": [
+        "class10-mathematics-circles-count-tangents-at-a-given-point"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-define-length-of-tangent-from-external-point",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Define Length of Tangent Segment",
+      "outcome": "Define the length of the tangent segment from an external point to the point of contact",
+      "prerequisites": [
+        "class10-mathematics-circles-count-tangents-by-point-position"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-prove-equal-tangents-theorem",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Prove Lengths of Tangents from External Point Equal",
+      "outcome": "Prove that the lengths of tangents drawn from an external point to a circle are equal using RHS triangle congruence",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity",
+        "class10-mathematics-circles-define-length-of-tangent-from-external-point"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-subtended-angles-by-tangents-at-centre",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Equal Angles Subtended at Centre",
+      "outcome": "Prove that tangents from an external point subtend equal angles at the centre and are equally inclined to the line segment joining the centre and the external point",
+      "prerequisites": [
+        "class10-mathematics-circles-prove-equal-tangents-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-supplementary-angles-tangents-radii",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Supplementary Tangent-Chord Angles at Centre",
+      "outcome": "Prove that the angle between two tangents from an external point and the angle subtended by the line segment joining the points of contact at the centre are supplementary",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-concentric-circles-chord-bisected",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Chord of Larger Circle Tangent to Smaller",
+      "outcome": "Prove that in two concentric circles, the chord of the larger circle which touches the smaller circle is bisected at the point of contact",
+      "prerequisites": [
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-calculate-chord-length-concentric-circles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Calculate Tangent Chord Length in Concentric Circles",
+      "outcome": "Calculate the length of the chord of a larger concentric circle that is tangent to the inner circle using Pythagoras theorem",
+      "prerequisites": [
+        "class10-mathematics-circles-calculate-radius-or-tangent-pythagoras",
+        "class10-mathematics-circles-concentric-circles-chord-bisected"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-isosceles-triangle-formed-by-tangents",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Angles in Tangent-Chord Triangle",
+      "outcome": "Calculate or prove angle relations in the isosceles triangle formed by two external tangents and the chord joining their points of contact",
+      "prerequisites": [
+        "class10-mathematics-circles-prove-equal-tangents-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-opposite-sides-quadrilateral-circumscribing",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Perimeter Sum of Circumscribing Quadrilateral",
+      "outcome": "Prove that if a quadrilateral circumscribes a circle, the sum of opposite sides is equal: AB + CD = AD + BC",
+      "prerequisites": [
+        "class10-mathematics-circles-prove-equal-tangents-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-parallelogram-circumscribing-is-rhombus",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Circumscribed Parallelogram is Rhombus",
+      "outcome": "Prove that a parallelogram circumscribing a circle is a rhombus",
+      "prerequisites": [
+        "class10-mathematics-circles-opposite-sides-quadrilateral-circumscribing"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-opposite-sides-subtend-supplementary-angles",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Opposite Sides Subtend Supplementary Angles at Centre",
+      "outcome": "Prove that opposite sides of a quadrilateral circumscribing a circle subtend supplementary angles at the centre of the circle",
+      "prerequisites": [
+        "class10-mathematics-circles-subtended-angles-by-tangents-at-centre"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-calculate-lengths-circumscribed-triangle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Calculate Sides of Circumscribed Triangle",
+      "outcome": "Calculate unknown side lengths of a triangle circumscribing a circle by equating its area computed via inradius to Heron's formula",
+      "prerequisites": [
+        "class10-mathematics-circles-prove-equal-tangents-theorem"
+      ],
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-circles-tangent-chord-similarity-configuration",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "circles",
+      "title": "Tangents and Chords Multi-step Similarity",
+      "outcome": "Prove geometric properties and calculate lengths in tangent-secant and right triangle configurations using triangle similarity",
+      "prerequisites": [
+        "class10-mathematics-triangles-prove-similarity-aa-criterion",
+        "class10-mathematics-circles-state-tangent-radius-perpendicularity",
+        "class10-mathematics-circles-prove-equal-tangents-theorem"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/circles/number-of-tangents-from-a-point"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Circumference and Area Formulae",
+      "outcome": "State the standard formulae for the circumference ($C = 2\\pi r$) and area ($A = \\pi r^2$) of a circle of radius $r$.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Circumference and Area",
+      "outcome": "Calculate the circumference and area of a circle given its radius or diameter using $\\pi = \\frac{22}{7}$ or $3.14$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-determine-radius-from-perimeter-or-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Find Radius from Perimeter or Area",
+      "outcome": "Determine the radius or diameter of a circle given its perimeter or area.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-perimeter-and-area-of-semicircle-quadrant",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Semicircle and Quadrant Computations",
+      "outcome": "Calculate the perimeter and area of a semicircle and a quadrant of a circle.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-wheel-revolutions-distance",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Revolutions and Distance Covered",
+      "outcome": "Calculate the number of revolutions made by a rolling circular wheel in covering a given distance, or vice versa.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-cost-of-fencing-and-ploughing",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Cost of Fencing and Ploughing Circular Fields",
+      "outcome": "Solve word problems involving unit costs of fencing (perimeter) and ploughing or turfing (area) a circular field.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-determine-radius-from-perimeter-or-area"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Define Sector and Central Angle",
+      "outcome": "Define a sector of a circle and identify its central angle, distinguishing between minor and major sectors.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-derive-arc-length-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Arc Length Formula",
+      "outcome": "State and derive the formula for the length of an arc of a sector with central angle $\\theta$: $l = \\frac{\\theta}{360^\\circ} \\times 2\\pi r$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-arc-length",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Length of an Arc",
+      "outcome": "Calculate the length of an arc subtending a given angle $\\theta$ at the centre of a circle of given radius.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-derive-arc-length-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-derive-sector-area-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Sector Area Formula",
+      "outcome": "State and derive the formula for the area of a sector with central angle $\\theta$: $A = \\frac{\\theta}{360^\\circ} \\times \\pi r^2$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Minor Sector Area",
+      "outcome": "Calculate the area of a minor sector given the radius of the circle and the central angle $\\theta$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-derive-sector-area-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-major-sector-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Major Sector Area",
+      "outcome": "Calculate the area of a major sector by subtracting the minor sector area from the total circle area or using $(360^\\circ - \\theta)$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-relate-sector-area-to-arc-length",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Relate Sector Area to Arc Length",
+      "outcome": "Calculate the area of a sector using the relationship $A = \\frac{1}{2} l r$, where $l$ is the arc length.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-arc-length",
+        "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-perimeter-of-a-sector",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Perimeter of a Sector",
+      "outcome": "Calculate the total perimeter of a sector by summing the arc length and the lengths of the two bounding radii ($P = l + 2r$).",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-arc-length"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-clock-hands-sector-problems",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Clock Hand Swept Area Problems",
+      "outcome": "Calculate the area swept by the minute hand or hour hand of a clock in a given duration of time.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-define-segment",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Define Minor and Major Segments",
+      "outcome": "Define a segment of a circle and distinguish between minor and major segments formed by a chord.",
+      "prerequisites": [
+        "class10-mathematics-circles-distinguish-secant-chord-tangent",
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-right-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Triangle Area in Sector with 90° Angle",
+      "outcome": "Calculate the area of the isosceles right triangle formed by radii subtending an angle of $90^\\circ$ at the centre using $\\frac{1}{2} r^2$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-equilateral",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Triangle Area in Sector with 60° Angle",
+      "outcome": "Calculate the area of the equilateral triangle formed by radii subtending an angle of $60^\\circ$ at the centre using $\\frac{\\sqrt{3}}{4} r^2$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-general-angle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Triangle Area in Sector with 120° Angle",
+      "outcome": "Calculate the area of the isosceles triangle formed by radii subtending an angle of $120^\\circ$ at the centre using trigonometry or geometric altitude construction.",
+      "prerequisites": [
+        "class10-mathematics-introduction-to-trigonometry-state-values-table",
+        "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-minor-segment-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Minor Segment Area",
+      "outcome": "Calculate the area of a minor segment by subtracting the area of the corresponding triangle from the area of the sector.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area",
+        "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-right-angle",
+        "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-equilateral"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-calculate-major-segment-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Calculate Major Segment Area",
+      "outcome": "Calculate the area of a major segment by subtracting the area of the corresponding minor segment from the total area of the circle.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-segment-area"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-annulus-concentric-circular-ring-area",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Area of Circular Ring / Annulus",
+      "outcome": "Calculate the area of a circular ring (annulus) bounded by two concentric circles of radii $R$ and $r$ using $\\pi(R^2 - r^2)$.",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+        "class10-mathematics-circles-concentric-circles-chord-bisected"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/areas-related-to-circles/introduction"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-word-problems-brooch-umbrella-wiper",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Real-world Applications of Sectors",
+      "outcome": "Solve applied contextual problems involving sectors (such as car wipers, lighthouses, umbrellas, and silver wire brooches).",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area",
+        "class10-mathematics-areas-related-to-circles-calculate-arc-length"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-areas-related-to-circles-cost-and-design-segment-problems",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "areas-related-to-circles",
+      "title": "Segment Designs and Cost Estimation",
+      "outcome": "Solve multi-step problems calculating the area and cost of making designs formed by segments (such as round table covers with equal designs).",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-minor-segment-area",
+        "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-equilateral"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/areas-related-to-circles/areas-of-sector-and-segment"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-identify-basic-solids",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Identify Basic 3D Solids",
+      "outcome": "Identify cuboids, cubes, right circular cylinders, cones, spheres, and hemispheres from geometric descriptions and visual representations",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-recall-cuboid-cube-formulae",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Formulae for Cuboid and Cube",
+      "outcome": "State the formulae for the curved surface area, total surface area, and volume of a cuboid and a cube",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-identify-basic-solids"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Formulae for Right Circular Cylinder",
+      "outcome": "State the formulae for the curved surface area, total surface area, and volume of a right circular cylinder",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae",
+        "class10-mathematics-surface-areas-and-volumes-identify-basic-solids"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-calculate-slant-height-cone",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Calculate Slant Height of Cone",
+      "outcome": "Calculate the slant height of a right circular cone given its radius and vertical height using l = sqrt(r^2 + h^2)",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-identify-basic-solids"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Formulae for Right Circular Cone",
+      "outcome": "State the formulae for the curved surface area, total surface area, and volume of a right circular cone",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-calculate-slant-height-cone"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Formulae for Sphere and Hemisphere",
+      "outcome": "State the formulae for the surface area and volume of a sphere and hemisphere, distinguishing between curved and total surface area of a hemisphere",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae",
+        "class10-mathematics-surface-areas-and-volumes-identify-basic-solids"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/introduction"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-decompose-composite-solid",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Decompose Composite Solids",
+      "outcome": "Decompose a given composite object into its constituent basic solids such as cylinders, cones, and hemispheres",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-identify-basic-solids"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Identify Hidden Surfaces in Combinations",
+      "outcome": "Identify interface surfaces that become interior and hidden when two or more solids are joined base-to-base",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-decompose-composite-solid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Deduce Shared Geometric Dimensions",
+      "outcome": "Determine shared radii, individual component heights, and lengths of combined shapes from given total dimensions",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-decompose-composite-solid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-tsa-cone-hemisphere-toy",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Surface Area of Cone on Hemisphere",
+      "outcome": "Calculate the total surface area of a toy formed by mounting a cone on a hemisphere of equal radius",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+        "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+        "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-hemispherical-ends",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Surface Area of Capsule Shape",
+      "outcome": "Calculate the surface area of a capsule or tanker consisting of a cylinder with two hemispherical ends",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+        "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+        "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-conical-top-tent",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Surface Area of Conical-Topped Tent",
+      "outcome": "Calculate the surface area of canvas required to make a tent consisting of a cylinder surmounted by a conical roof",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+        "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+        "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-tsa-cube-hemisphere-surmounted",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Surface Area of Cube Surmounted by Hemisphere",
+      "outcome": "Calculate the total surface area of a solid block formed by surmounting a hemisphere on a face of a cube",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cuboid-cube-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+        "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-tsa-cavity-scooped-out",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Surface Area After Scooping Out Cavity",
+      "outcome": "Calculate the total surface area of a solid when a conical or hemispherical depression is scooped out from a cylinder or cube",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-tsa-cube-hemisphere-surmounted",
+        "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-hemispherical-ends"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-cost-of-painting-or-canvas",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Cost of Surface Coating Composite Solids",
+      "outcome": "Calculate the total cost of painting, tin-plating, or covering a composite solid given a rate per unit area",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-tsa-cone-hemisphere-toy",
+        "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-conical-top-tent"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/surface-area-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Additive Principle of Volume",
+      "outcome": "Explain that the volume of a composite solid is the simple algebraic sum of the volumes of its non-overlapping constituent parts",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-decompose-composite-solid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-volume-cone-hemisphere-solid",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Volume of Cone Combined with Hemisphere",
+      "outcome": "Calculate the total volume of a solid composed of a cone attached to a hemisphere of equal base radius",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+        "class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+        "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-volume-cylinder-two-cones-or-hemispheres",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Volume of Cylinder with Shaped Ends",
+      "outcome": "Calculate the volume of a model consisting of a central cylinder with conical or hemispherical attachments at both ends",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+        "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+        "class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+        "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-volume-remaining-after-scooping",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Volume Remaining After Scooping Cavity",
+      "outcome": "Calculate the remaining volume of a solid after a conical or hemispherical cavity is removed from a cylinder or cuboid",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+        "class10-mathematics-surface-areas-and-volumes-tsa-cavity-scooped-out"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-volume-pen-stand-cuboid-cones",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Volume of Multi-Cavity Solid",
+      "outcome": "Calculate the volume of wood in an object like a pen stand with multiple conical or hemispherical depressions",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-volume-remaining-after-scooping"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-solve-submerged-solid-displacement",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Water Displaced by Submerged Solids",
+      "outcome": "Calculate the volume of liquid displaced or remaining in a vessel when a solid is submerged inside it",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-volume-cylinder-two-cones-or-hemispheres",
+        "class10-mathematics-surface-areas-and-volumes-volume-cone-hemisphere-solid"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-calculate-submerged-spheres-count",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Count of Submerged Spheres from Displacement",
+      "outcome": "Determine the number of identical spherical lead shots dropped into a vessel given the fraction of liquid displaced",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-solve-submerged-solid-displacement"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-calculate-mass-from-density",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Calculate Mass from Volume and Density",
+      "outcome": "Calculate the total mass of a composite solid given its total volume and the density per cubic centimetre",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-volume-cylinder-two-cones-or-hemispheres"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-surface-areas-and-volumes-multi-step-composite-solid-problems",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "surface-areas-and-volumes",
+      "title": "Multi-Step Optimization and Comparison Problems",
+      "outcome": "Solve comprehensive multi-step contextual problems comparing surface areas, volumes, and costs across different composite solid configurations",
+      "prerequisites": [
+        "class10-mathematics-surface-areas-and-volumes-cost-of-painting-or-canvas",
+        "class10-mathematics-surface-areas-and-volumes-solve-submerged-solid-displacement",
+        "class10-mathematics-surface-areas-and-volumes-calculate-mass-from-density"
+      ],
+      "difficulty": 5,
+      "topicRef": "class10-mathematics/surface-areas-and-volumes/volume-of-combination"
+    },
+    {
+      "id": "class10-mathematics-statistics-distinguish-grouped-ungrouped-data",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Distinguish Grouped and Ungrouped Data",
+      "outcome": "Distinguish between ungrouped raw data, discrete frequency distributions, and grouped frequency distributions with continuous intervals",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/introduction"
+    },
+    {
+      "id": "class10-mathematics-statistics-identify-class-limits-and-size",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Identify Class Limits and Size",
+      "outcome": "Identify the lower limit, upper limit, and class size (width) for a given class interval",
+      "prerequisites": [
+        "class10-mathematics-statistics-distinguish-grouped-ungrouped-data"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/introduction"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-class-mark",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Class Mark",
+      "outcome": "Calculate the class mark (mid-point) of a class interval using the formula (Upper Limit + Lower Limit) / 2",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-class-limits-and-size"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/introduction"
+    },
+    {
+      "id": "class10-mathematics-statistics-convert-inclusive-to-exclusive-intervals",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Convert Discontinuous to Continuous Classes",
+      "outcome": "Convert inclusive (discontinuous) class intervals into continuous (exclusive) class intervals by adjusting boundary limits",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-class-limits-and-size"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/introduction"
+    },
+    {
+      "id": "class10-mathematics-statistics-compute-product-fi-xi",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Compute Frequency and Class Mark Products",
+      "outcome": "Construct a column of products f_i * x_i for each class interval in a grouped data table",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-class-mark"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-mean-direct-method",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Mean by Direct Method",
+      "outcome": "Calculate the mean of grouped data using the Direct Method formula x̄ = (∑ f_i x_i) / (∑ f_i)",
+      "prerequisites": [
+        "class10-mathematics-statistics-compute-product-fi-xi"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-choose-assumed-mean",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Choose Assumed Mean",
+      "outcome": "Select an appropriate assumed mean 'a' from the central values of the class marks column",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-class-mark"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-compute-deviations-di",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Compute Deviations di",
+      "outcome": "Compute deviations d_i = x_i - a for every class mark relative to the chosen assumed mean",
+      "prerequisites": [
+        "class10-mathematics-statistics-choose-assumed-mean"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-mean-assumed-mean-method",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Mean by Assumed Mean Method",
+      "outcome": "Calculate the mean of grouped data using the Assumed Mean Method formula x̄ = a + (∑ f_i d_i) / (∑ f_i)",
+      "prerequisites": [
+        "class10-mathematics-statistics-compute-deviations-di"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-compute-step-deviations-ui",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Compute Step Deviations ui",
+      "outcome": "Compute scaled step deviations u_i = (x_i - a) / h for equal class width h",
+      "prerequisites": [
+        "class10-mathematics-statistics-compute-deviations-di"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-mean-step-deviation-method",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Mean by Step-Deviation Method",
+      "outcome": "Calculate the mean of grouped data using the Step-Deviation formula x̄ = a + h * ((∑ f_i u_i) / (∑ f_i))",
+      "prerequisites": [
+        "class10-mathematics-statistics-compute-step-deviations-ui"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-find-missing-frequency-from-mean",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Find Missing Frequency Given Mean",
+      "outcome": "Solve a linear equation to determine a single unknown frequency 'f' from a grouped distribution when the mean is given",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-mean-direct-method"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-find-two-missing-frequencies-mean",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Find Two Missing Frequencies Given Mean",
+      "outcome": "Determine two missing frequencies by setting up and solving a pair of linear equations using total frequency and the given mean",
+      "prerequisites": [
+        "class10-mathematics-statistics-find-missing-frequency-from-mean",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-elimination"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/statistics/mean-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-identify-modal-class",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Identify Modal Class",
+      "outcome": "Identify the modal class of a grouped frequency distribution as the class interval with the maximum frequency",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-class-limits-and-size"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/mode-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-identify-mode-formula-parameters",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Identify Mode Formula Parameters",
+      "outcome": "Extract the values of l, h, f1 (modal class frequency), f0 (preceding frequency), and f2 (succeeding frequency) from a grouped distribution",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-modal-class",
+        "class10-mathematics-statistics-convert-inclusive-to-exclusive-intervals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/mode-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-mode-grouped-data",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Mode of Grouped Data",
+      "outcome": "Calculate the mode of a grouped frequency distribution using the formula Mode = l + [(f1 - f0) / (2f1 - f0 - f2)] * h",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-mode-formula-parameters"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/mode-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-construct-less-than-cf-table",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Construct 'Less Than' Cumulative Frequency Table",
+      "outcome": "Construct a cumulative frequency column ('less than' type) by running successive additions of individual class frequencies",
+      "prerequisites": [
+        "class10-mathematics-statistics-distinguish-grouped-ungrouped-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-convert-cf-to-frequency-distribution",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Convert Cumulative to Simple Frequencies",
+      "outcome": "Recover individual class intervals and their simple frequencies from a given 'less than' or 'more than' cumulative distribution table",
+      "prerequisites": [
+        "class10-mathematics-statistics-construct-less-than-cf-table"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-identify-median-class",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Identify Median Class",
+      "outcome": "Locate the median class as the interval whose cumulative frequency is just greater than or equal to n/2",
+      "prerequisites": [
+        "class10-mathematics-statistics-construct-less-than-cf-table"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-calculate-median-grouped-data",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Median of Grouped Data",
+      "outcome": "Calculate the median of grouped data using the formula Median = l + [((n/2) - cf) / f] * h",
+      "prerequisites": [
+        "class10-mathematics-statistics-identify-median-class",
+        "class10-mathematics-statistics-convert-inclusive-to-exclusive-intervals"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-find-missing-frequencies-from-median",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Find Missing Frequencies Given Median",
+      "outcome": "Calculate two unknown frequencies (x and y) from a grouped frequency table when the median and total frequency N are given",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-median-grouped-data",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-solve-by-substitution"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-state-empirical-relation",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "State Empirical Central Tendency Relation",
+      "outcome": "State the empirical relationship between the three measures of central tendency: 3 Median = Mode + 2 Mean",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-mean-direct-method",
+        "class10-mathematics-statistics-calculate-mode-grouped-data",
+        "class10-mathematics-statistics-calculate-median-grouped-data"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-apply-empirical-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Calculate Unknown Measure via Empirical Relation",
+      "outcome": "Calculate any one measure of central tendency given the other two using 3 Median = Mode + 2 Mean",
+      "prerequisites": [
+        "class10-mathematics-statistics-state-empirical-relation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-statistics-compare-measures-of-central-tendency",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "statistics",
+      "title": "Compare Measures of Central Tendency",
+      "outcome": "Interpret and compare the mean, median, and mode calculated for the same data set in terms of average value, central position, and most frequent value",
+      "prerequisites": [
+        "class10-mathematics-statistics-calculate-mean-direct-method",
+        "class10-mathematics-statistics-calculate-mode-grouped-data",
+        "class10-mathematics-statistics-calculate-median-grouped-data"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/statistics/median-of-grouped-data"
+    },
+    {
+      "id": "class10-mathematics-probability-define-random-experiment-outcomes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Random Experiment and Outcomes",
+      "outcome": "Identify a random experiment and list its set of possible outcomes",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/introduction"
+    },
+    {
+      "id": "class10-mathematics-probability-distinguish-experimental-theoretical",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Distinguish Experimental and Theoretical Probability",
+      "outcome": "Distinguish between experimental (empirical) probability and classical (theoretical) probability",
+      "prerequisites": [
+        "class10-mathematics-probability-define-random-experiment-outcomes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/introduction"
+    },
+    {
+      "id": "class10-mathematics-probability-define-equally-likely-outcomes",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Equally Likely Outcomes",
+      "outcome": "Identify whether the outcomes of a given experiment are equally likely",
+      "prerequisites": [
+        "class10-mathematics-probability-define-random-experiment-outcomes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-state-classical-probability-formula",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "State Classical Probability Formula",
+      "outcome": "State the classical definition of probability as the ratio of favourable outcomes to total possible outcomes",
+      "prerequisites": [
+        "class10-mathematics-probability-define-equally-likely-outcomes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-define-elementary-event",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Elementary Event",
+      "outcome": "Define an elementary event and identify elementary events in a given random experiment",
+      "prerequisites": [
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-sum-of-elementary-probabilities",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Sum of Elementary Probabilities",
+      "outcome": "Verify that the sum of the probabilities of all elementary events of an experiment is 1",
+      "prerequisites": [
+        "class10-mathematics-probability-define-elementary-event"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-define-impossible-event",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Impossible Event",
+      "outcome": "Define an impossible event and state that its probability is 0",
+      "prerequisites": [
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-define-sure-certain-event",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Sure Event",
+      "outcome": "Define a sure (certain) event and state that its probability is 1",
+      "prerequisites": [
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-state-probability-range",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "State Range of Probability",
+      "outcome": "State the inequality 0 <= P(E) <= 1 for any event E and identify valid probability values",
+      "prerequisites": [
+        "class10-mathematics-probability-define-impossible-event",
+        "class10-mathematics-probability-define-sure-certain-event"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/introduction"
+    },
+    {
+      "id": "class10-mathematics-probability-define-complementary-event",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Define Complementary Event",
+      "outcome": "Define the complementary event E-bar (not E) for any event E",
+      "prerequisites": [
+        "class10-mathematics-probability-sum-of-elementary-probabilities"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-apply-complement-rule",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Apply Complement Rule P(not E)",
+      "outcome": "Calculate P(not E) using the relation P(E) + P(not E) = 1 given P(E)",
+      "prerequisites": [
+        "class10-mathematics-probability-define-complementary-event"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-single-coin-toss",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability in Single Coin Toss",
+      "outcome": "Calculate probabilities of getting a head or a tail in a single toss of a fair coin",
+      "prerequisites": [
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-two-coins-toss",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability in Two Coins Toss",
+      "outcome": "List the 4 outcomes of tossing two coins simultaneously and calculate probabilities of events involving heads and tails",
+      "prerequisites": [
+        "class10-mathematics-probability-single-coin-toss"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-three-coins-toss",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability in Three Coins Toss",
+      "outcome": "List the 8 sample outcomes of tossing three coins simultaneously and calculate probabilities for 'at least' or 'at most' conditions",
+      "prerequisites": [
+        "class10-mathematics-probability-two-coins-toss"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-single-die-roll",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability in Single Die Roll",
+      "outcome": "Calculate the probability of events involving prime, composite, odd, even, or bounded numbers in a single throw of a die",
+      "prerequisites": [
+        "class10-mathematics-real-numbers-prime-vs-composite",
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-two-dice-sample-space",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Construct Sample Space for Two Dice",
+      "outcome": "Construct and represent the 36 equally likely outcomes of throwing two dice simultaneously",
+      "prerequisites": [
+        "class10-mathematics-probability-single-die-roll"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-two-dice-sum-events",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability of Sum Events on Two Dice",
+      "outcome": "Calculate the probability of obtaining a specific sum, difference, or product when throwing two dice simultaneously",
+      "prerequisites": [
+        "class10-mathematics-probability-two-dice-sample-space"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-two-dice-doublet-and-conditions",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability of Doublets and Advanced Conditions on Two Dice",
+      "outcome": "Calculate probabilities of getting a doublet or conditions such as '5 will not come up on either die' using complementary logic",
+      "prerequisites": [
+        "class10-mathematics-probability-apply-complement-rule",
+        "class10-mathematics-probability-two-dice-sample-space"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-structure-deck-of-cards",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Structure of a Playing Card Deck",
+      "outcome": "Classify a standard deck of 52 cards by suits, colours, number cards, and face cards (King, Queen, Jack)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-cards-single-draw",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability of Drawing Specific Cards",
+      "outcome": "Calculate the probability of drawing a specific card, suit, face card, or colour from a well-shuffled deck of 52 cards",
+      "prerequisites": [
+        "class10-mathematics-probability-state-classical-probability-formula",
+        "class10-mathematics-probability-structure-deck-of-cards"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-cards-removed-subset",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability from Modified Deck of Cards",
+      "outcome": "Calculate probabilities of drawing cards when specific cards have been removed from the standard deck",
+      "prerequisites": [
+        "class10-mathematics-probability-cards-single-draw"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-balls-urn-selection",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability with Coloured Balls in an Urn",
+      "outcome": "Calculate the probability of selecting a ball of a specified colour or combination from a bag containing multiple coloured balls",
+      "prerequisites": [
+        "class10-mathematics-probability-apply-complement-rule"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-solve-for-unknown-in-urn",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Find Unknown Count in Urn from Probability",
+      "outcome": "Set up and solve a linear equation to find the unknown number of objects of a given type in a bag given an event's probability",
+      "prerequisites": [
+        "class10-mathematics-probability-balls-urn-selection",
+        "class10-mathematics-pair-of-linear-equations-in-two-variables-word-problems-fractions-and-numbers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-numbered-discs-and-tickets",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability with Numbered Discs and Tickets",
+      "outcome": "Calculate the probability of drawing a disc or ticket satisfying properties such as two-digit numbers, perfect squares, or multiples of a number",
+      "prerequisites": [
+        "class10-mathematics-arithmetic-progressions-sum-of-multiples-in-range",
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-defective-items-and-lotteries",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Probability of Defective Items and Lotteries",
+      "outcome": "Calculate probabilities in quality control contexts involving good vs. defective pens/bulbs, with or without non-replacement steps",
+      "prerequisites": [
+        "class10-mathematics-probability-apply-complement-rule"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
+    },
+    {
+      "id": "class10-mathematics-probability-geometric-probability-areas",
+      "klass": 10,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Geometric Probability Using Area Ratios",
+      "outcome": "Calculate geometric probability of an object landing in a target region using the ratio of favourable area to total area",
+      "prerequisites": [
+        "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+        "class10-mathematics-probability-state-classical-probability-formula"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-mathematics/probability/probability-theoretical-approach"
     }
   ]
 }

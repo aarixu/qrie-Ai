@@ -1,0 +1,2824 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class11-chemistry-redox-reactions-classical-ox-red-def",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Classical Definition of Redox",
+      "outcome": "Define oxidation as the addition of oxygen/electronegative element or removal of hydrogen/electropositive element, and reduction as the reverse",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/redox-reactions/classical-idea-of-redox-reactions-oxidation-and-reduction-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-classical-agents",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Identify Classical Redox Agents",
+      "outcome": "Identify the oxidizing and reducing agents in reactions involving the transfer of oxygen or hydrogen atoms",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-classical-ox-red-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/classical-idea-of-redox-reactions-oxidation-and-reduction-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-electron-transfer-def",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Electronic Concept of Redox",
+      "outcome": "Define oxidation as a loss of electrons (de-electronation) and reduction as a gain of electrons (electronation)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-in-terms-of-electron-transfer-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-electron-transfer-agents",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Redox Agents via Electron Transfer",
+      "outcome": "Identify oxidizing agents as electron acceptors and reducing agents as electron donors in ionic equations",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-electron-transfer-def"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-in-terms-of-electron-transfer-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-competitive-metal-reactivity",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Competitive Electron Transfer in Metals",
+      "outcome": "Compare the relative tendencies of Zn, Cu, and Ag to lose electrons using observations of metal displacement in aqueous solutions",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-electron-transfer-agents"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/competitive-electron-transfer-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-oxidation-number-rules",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Rules for Oxidation Number",
+      "outcome": "State the standard NCERT rules for assigning oxidation numbers to elements in uncombined, elemental, and combined states",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/redox-reactions/oxidation-number"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-calc-ox-num-simple",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Calculate Oxidation Numbers",
+      "outcome": "Calculate the oxidation number of an underlined element in standard neutral molecules and polyatomic ions",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-oxidation-number-rules"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/oxidation-number"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-fractional-ox-num-structures",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Fractional Oxidation Numbers and Structure",
+      "outcome": "Explain why compounds like C3O2, Br3O8, and S4O6 2- exhibit fractional average oxidation states by deducing individual atomic states from structural formulas",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-calc-ox-num-simple"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/redox-reactions/oxidation-number"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-redox-definition-ox-num",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Redox via Oxidation Numbers",
+      "outcome": "Identify whether a reaction is a redox reaction by evaluating increases and decreases in oxidation numbers of participating atoms",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-calc-ox-num-simple"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/oxidation-number"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-combination-redox",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Combination Redox Reactions",
+      "outcome": "Identify and write balanced chemical equations for combination redox reactions where at least one reactant is in elemental form",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-redox-definition-ox-num"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/types-of-redox-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-decomposition-redox",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Decomposition Redox Reactions",
+      "outcome": "Identify and write equations for decomposition redox reactions, noting cases where decomposition does not involve redox changes",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-redox-definition-ox-num"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/types-of-redox-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-displacement-redox",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Displacement Redox Reactions",
+      "outcome": "Classify metal displacement and non-metal displacement reactions using chemical equations",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-redox-definition-ox-num",
+        "class11-chemistry-redox-reactions-competitive-metal-reactivity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/types-of-redox-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-disproportionation-redox",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Disproportionation Reactions",
+      "outcome": "Identify disproportionation reactions by verifying that an element in one oxidation state is simultaneously oxidized and reduced",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-redox-definition-ox-num"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/types-of-redox-reactions"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-balance-ox-num-acidic",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Balance by Oxidation Number (Acidic)",
+      "outcome": "Balance a skeletal redox equation in acidic medium using the oxidation number change method",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-calc-ox-num-simple"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/balancing-of-redox-chemical-equations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-balance-ox-num-basic",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Balance by Oxidation Number (Basic)",
+      "outcome": "Balance a skeletal redox equation in basic medium using the oxidation number change method and OH- ions",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-balance-ox-num-acidic"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/redox-reactions/balancing-of-redox-chemical-equations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-split-half-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Split into Half-Reactions",
+      "outcome": "Separate an overall redox equation into distinct oxidation and reduction half-reactions",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-redox-definition-ox-num"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/balancing-of-redox-chemical-equations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-balance-half-reaction-acidic",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Half-Reaction Method (Acidic)",
+      "outcome": "Balance redox reactions in acidic solution by balancing atoms, oxygen with H2O, hydrogen with H+, and charge with electrons in separate half-reactions",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-split-half-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/balancing-of-redox-chemical-equations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-balance-half-reaction-basic",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Half-Reaction Method (Basic)",
+      "outcome": "Balance redox reactions in basic solution by neutralizing H+ with OH- in the half-reaction method",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-balance-half-reaction-acidic"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/redox-reactions/balancing-of-redox-chemical-equations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-permanganate-titration",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Permanganate Titration as Self-Indicator",
+      "outcome": "Explain the self-indicating behavior and endpoint color transition from colorless to permanent light pink in acidic KMnO4 titrations",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-balance-half-reaction-acidic"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-as-the-basis-for-titrations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-dichromate-titration-indicator",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Dichromate Titration Indicators",
+      "outcome": "Identify diphenylamine as an internal redox indicator used to detect the endpoint in potassium dichromate titrations",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-balance-half-reaction-acidic"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-as-the-basis-for-titrations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-iodometric-titration-starch",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Iodometric Titration with Starch",
+      "outcome": "Explain the role of starch indicator and the disappearance of deep blue color at the endpoint of iodine-thiosulphate titrations",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-balance-half-reaction-acidic"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-as-the-basis-for-titrations"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-daniell-cell-construction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Construction of Daniell Cell",
+      "outcome": "Construct and label a Daniell cell, indicating the zinc anode, copper cathode, salt bridge, and direction of electron and current flow",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-competitive-metal-reactivity",
+        "class11-chemistry-redox-reactions-split-half-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-and-electrode-processes"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-electrode-potential-def",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Electrode Potential Definition",
+      "outcome": "Define electrode potential and distinguish between oxidation potential and reduction potential according to IUPAC convention",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-daniell-cell-construction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-and-electrode-processes"
+    },
+    {
+      "id": "class11-chemistry-redox-reactions-standard-electrode-potential-she",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "redox-reactions",
+      "title": "Standard Electrode Potential and SHE",
+      "outcome": "Define Standard Electrode Potential (E°) using Standard Hydrogen Electrode (SHE) as a reference with assigned potential of 0.00 V",
+      "prerequisites": [
+        "class11-chemistry-redox-reactions-electrode-potential-def"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/redox-reactions/redox-reactions-and-electrode-processes"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Carbon Hybridisation in Organic Molecules",
+      "outcome": "Determine the hybridisation state (sp, sp2, sp3) of each carbon atom in a given organic molecule",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/tetravalence-of-carbon-shapes-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Structural Representation Conversions",
+      "outcome": "Convert between complete, condensed, and bond-line structural formulas for organic molecules",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/complete-condensed-and-bond-line-structural-formulas"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-wedge-dash-projection",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "3D Wedge-Dash Representation",
+      "outcome": "Identify spatial orientation of bonds projecting towards, away from, or lying in the plane of the observer using wedge-dash notation",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/three-dimensional-representation-of-organic-molecules"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identifying Functional Groups",
+      "outcome": "Identify and name the functional groups present in a given organic structure",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/classification-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-alkanes",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "IUPAC Nomenclature of Branched Alkanes",
+      "outcome": "Apply longest chain and lowest locant rules to write systematic IUPAC names for branched alkanes",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/iupac-nomenclature-of-alkanes"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-polyfunctional",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "IUPAC Nomenclature of Polyfunctional Compounds",
+      "outcome": "Assign systematic IUPAC names to polyfunctional organic compounds using principal functional group priority rules",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-alkanes"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-organic-compounds-having-functional-groups"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-benzene-derivatives",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "IUPAC Nomenclature of Substituted Benzenes",
+      "outcome": "Assign systematic names to substituted benzene derivatives using numerical locants and ortho/meta/para prefixes",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-polyfunctional"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-substituted-benzene-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-isomerism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Classification of Structural Isomerism",
+      "outcome": "Classify pairs of molecules into chain, position, functional, or metamerism isomers",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/structural-isomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-stereoisomerism-basics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Geometrical and Optical Isomerism Basics",
+      "outcome": "Distinguish geometrical (cis-trans) from optical isomerism based on spatial arrangement and restricted rotation",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-wedge-dash-projection",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-isomerism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/stereoisomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Homolytic and Heterolytic Bond Fission",
+      "outcome": "Describe homolytic versus heterolytic cleavage and identify carbocations, carbanions, and free radicals formed",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/fission-of-a-covalent-bond"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Classifying Nucleophiles and Electrophiles",
+      "outcome": "Classify chemical reagents and reaction centers as electrophilic or nucleophilic based on electron availability",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nucleophiles-and-electrophiles"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Curved Arrow Notation in Mechanisms",
+      "outcome": "Draw single-barbed and double-barbed curved arrows to depict the movement of single electrons and electron pairs",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electron-movement-in-organic-reactions"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-inductive-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Inductive Effect and Group Classification",
+      "outcome": "Classify substituents as +I or -I groups and explain the transmission of polarization along a carbon chain",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/inductive-effect"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-resonance-structures",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Drawing and Evaluating Resonance Structures",
+      "outcome": "Draw valid canonical structures using curved arrows and evaluate their relative stability based on octet completion and charge distribution",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/resonance-structure"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mesomeric-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Resonance (+R and -R) Effects",
+      "outcome": "Differentiate between +R and -R effects by drawing delocalised charge structures in substituted conjugated systems",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-resonance-structures"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/resonance-effect"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-electromeric-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Electromeric Effect (+E and -E)",
+      "outcome": "Differentiate between +E and -E temporary effects in the presence of electrophiles and nucleophiles",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electromeric-effect"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-hyperconjugation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Hyperconjugation and Intermediate Stability",
+      "outcome": "Predict the relative stabilities of carbocations, free radicals, and alkenes based on the number of alpha-hydrogens involved in hyperconjugation",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/hyperconjugation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-organic-reaction-types",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Classification of Organic Reactions",
+      "outcome": "Classify organic reactions into substitution, addition, elimination, and rearrangement reactions",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-curved-arrow-notation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/types-of-organic-reactions-and-mechanisms"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-distillation-methods",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Principles of Distillation Techniques",
+      "outcome": "Select appropriate distillation methods (simple, fractional, reduced pressure, or steam) based on boiling point differences and thermal stability",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/distillation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-chromatography-rf",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Chromatography Principles and Rf Value",
+      "outcome": "Calculate Rf values from thin-layer chromatograms and explain the differential migration of components in adsorption chromatography",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/chromatography"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-lassaigne-test-detection",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Lassaigne's Test for Extra Elements",
+      "outcome": "Write balanced chemical reactions for the preparation of sodium fusion extract and the detection of nitrogen, sulphur, and halogens",
+      "prerequisites": [],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/detection-of-other-elements"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Quantitative Estimation of Carbon and Hydrogen",
+      "outcome": "Calculate the mass percentages of carbon and hydrogen using masses of carbon dioxide and water obtained from Liebig's combustion method",
+      "prerequisites": [],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-carbon-and-hydrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-dumas-kjeldahl-nitrogen",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Quantitative Estimation of Nitrogen",
+      "outcome": "Calculate the percentage of nitrogen in an organic compound from experimental data using Dumas and Kjeldahl methods",
+      "prerequisites": [],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-nitrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-halogens-sulphur",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Carius Method for Halogens and Sulphur",
+      "outcome": "Calculate the percentage of halogens and sulphur from the mass of silver halide and barium sulphate precipitates formed in the Carius method",
+      "prerequisites": [],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-halogens"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-classification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Classification of Hydrocarbons",
+      "outcome": "Classify hydrocarbons into open-chain (acyclic), cyclic (alicyclic), and aromatic compounds based on their carbon skeleton",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/classification"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-structure-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Alkane General Formula and Types of Carbon",
+      "outcome": "Classify carbon atoms in an alkane as primary, secondary, tertiary, or quaternary and apply the general formula CnH2n+2",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-alkanes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-physical-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Physical Trends in Alkanes",
+      "outcome": "Explain trends in boiling points of isomeric and homologous alkanes based on van der Waals forces and molecular branching",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-structure-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-preparation-methods",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Preparation of Alkanes",
+      "outcome": "Write balanced chemical equations for the preparation of alkanes via Wurtz reaction, decarboxylation, and hydrogenation of unsaturated hydrocarbons",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-structure-formula",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-organic-reaction-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-preparation"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-kolbe-electrolysis",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Kolbe's Electrolytic Synthesis",
+      "outcome": "Formulate half-reactions occurring at the anode and cathode during Kolbe's electrolytic decarboxylation of carboxylate salts",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-preparation-methods",
+        "class11-chemistry-redox-reactions-electron-transfer-def"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-preparation"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-free-radical-halogenation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Free Radical Halogenation Mechanism",
+      "outcome": "Write the initiation, propagation, and termination steps for the free radical substitution mechanism in the chlorination of methane",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-chemical-conversions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Combustion, Isomerisation, and Aromatisation of Alkanes",
+      "outcome": "Predict products of controlled oxidation, catalytic isomerisation, aromatisation, and pyrolysis of alkanes",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-structure-formula"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-ethane-conformations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Conformations of Ethane",
+      "outcome": "Draw Newman and Sawhorse projections of ethane and compare the relative stabilities of staggered and eclipsed conformers in terms of torsional strain",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-wedge-dash-projection",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-stereoisomerism-basics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes-conformations"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-structure-and-bonding",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Structure of Carbon-Carbon Double Bond",
+      "outcome": "Describe the sp2 hybridisation, planar geometry, sigma bond, and pi bond formation in ethene",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-structure-of-double-bond"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-geometrical-isomerism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Geometrical Isomerism in Alkenes",
+      "outcome": "Assign cis and trans configurations to alkenes and compare their physical properties including boiling points and dipole moments",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-structure-and-bonding",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-stereoisomerism-basics"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-preparation-saytzeff",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Preparation of Alkenes and Saytzeff's Rule",
+      "outcome": "Apply Saytzeff's rule to predict the major alkene formed via dehydrohalogenation of alkyl halides and acid-catalysed dehydration of alcohols",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-structure-and-bonding",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-hyperconjugation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-preparation"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-markovnikov-addition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Markovnikov Electrophilic Addition",
+      "outcome": "Predict the major product of electrophilic addition of hydrogen halides (HX), water, and halogens to unsymmetrical alkenes using Markovnikov's rule",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-peroxide-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Anti-Markovnikov Addition (Peroxide Effect)",
+      "outcome": "Explain why the anti-Markovnikov addition of HBr to unsymmetrical alkenes occurs in the presence of peroxides using a free radical mechanism",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-markovnikov-addition",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-ozonolysis-oxidation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Ozonolysis and Oxidation of Alkenes",
+      "outcome": "Deduce the structure of an alkene from its ozonolysis products and write oxidation reactions with Baeyer's reagent and acidic KMnO4",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-structure-and-bonding"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-structure-acidity",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Structure and Acidity of Alkynes",
+      "outcome": "Explain the acidic character of terminal alkynes based on the high s-character of sp-hybridised carbon atoms",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-hybridisation",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-electromeric-effect"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-preparation-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Preparation and Addition Reactions of Alkynes",
+      "outcome": "Write balanced chemical equations for the preparation of ethyne from calcium carbide and for the addition of water, halogens, and hydrogen halides to alkynes",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-structure-acidity",
+        "class11-chemistry-hydrocarbons-alkenes-markovnikov-addition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-preparation"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-polymerisation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Polymerisation of Alkynes",
+      "outcome": "Write chemical equations for the linear polymerisation of ethyne and cyclic polymerisation to form benzene",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-preparation-reactions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-benzene-resonance-structure",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Resonance and Structure of Benzene",
+      "outcome": "Explain the equal carbon-carbon bond lengths and thermodynamic stability of benzene in terms of resonance hybridisation and delocalised pi molecular orbitals",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-resonance-structures"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/resonance-and-stability-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-huckel-aromaticity-rule",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Hückel's Rule of Aromaticity",
+      "outcome": "Apply Hückel's (4n + 2) pi-electron rule to classify planar cyclic conjugated systems as aromatic, anti-aromatic, or non-aromatic",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-benzene-resonance-structure"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/aromaticity"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-benzene-preparation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Preparation of Benzene",
+      "outcome": "Write balanced equations for the preparation of benzene from phenol, sodium benzoate, and ethyne",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-polymerisation",
+        "class11-chemistry-hydrocarbons-alkanes-preparation-methods"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/preparation-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-electrophilic-aromatic-substitution-mechanism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Mechanism of Electrophilic Aromatic Substitution",
+      "outcome": "Trace the three steps (electrophile generation, arenium ion formation, proton loss) of electrophilic aromatic substitution in benzene",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-benzene-resonance-structure",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-nucleophiles-electrophiles"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-chemical-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-benzene-electrophilic-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Nitration, Halogenation, Sulphonation, and Friedel-Crafts Reactions",
+      "outcome": "Write balanced equations and identify reagents for the nitration, halogenation, sulphonation, Friedel-Crafts alkylation, and acylation of benzene",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-electrophilic-aromatic-substitution-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-chemical-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-directive-influence",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Directive Influence of Substituents",
+      "outcome": "Predict the directing effect (ortho/para vs meta) and activating/deactivating nature of functional groups on mono-substituted benzene using resonance structures",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-electrophilic-aromatic-substitution-mechanism",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mesomeric-effect",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-inductive-effect"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/hydrocarbons/directive-influence-of-a-functional-group-in-mono-substituted-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-carcinogenicity-toxicity",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Carcinogenicity of Polynuclear Aromatic Hydrocarbons",
+      "outcome": "Name common polynuclear aromatic hydrocarbons (such as 1,2-benzanthracene) and describe their carcinogenic hazard resulting from incomplete combustion",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/carcinogenicity-and-toxicity"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-applications-agriculture-pharma",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Applications in Agriculture and Medicine",
+      "outcome": "List key applications of chemistry in developing fertilizers, pesticides, and life-saving drugs like cisplatin and AZT",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/importance-of-chemistry"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-green-chemistry-environment",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Chemistry and Environmental Protection",
+      "outcome": "Describe how green chemistry principles help synthesize safer alternatives to ozone-depleting chlorofluorocarbons (CFCs)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/importance-of-chemistry"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-classify-matter-bulk",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Classification of Matter",
+      "outcome": "Classify a given sample of matter as a homogeneous mixture, heterogeneous mixture, element, or compound",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/nature-of-matter"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-si-base-units",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "SI Base Units and Quantities",
+      "outcome": "Identify the seven SI base units and their corresponding physical quantities and symbols",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/properties-of-matter-and-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-temperature-conversions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Temperature Scale Conversions",
+      "outcome": "Convert temperatures between Celsius, Fahrenheit, and Kelvin scales using standard formulas",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-si-base-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/properties-of-matter-and-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-scientific-notation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Scientific Notation and Arithmetic",
+      "outcome": "Express numbers in standard scientific notation and perform multiplication and division operations on them",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/uncertainty-in-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-rules",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Counting Significant Figures",
+      "outcome": "Count the number of significant figures in measured or calculated values using standard rounding rules",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-scientific-notation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/uncertainty-in-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-calculations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Calculations with Significant Figures",
+      "outcome": "Express the results of addition, subtraction, multiplication, and division to the correct number of significant figures",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-significant-figures-rules"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/uncertainty-in-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-dimensional-analysis",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Unit Conversions via Factor-Label Method",
+      "outcome": "Apply dimensional analysis using unit factors to convert physical quantities between different measurement units",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-si-base-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/uncertainty-in-measurement"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-laws-mass-definite-proportions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Laws of Conservation of Mass and Definite Proportions",
+      "outcome": "State the Law of Conservation of Mass and the Law of Definite Proportions, applying them to simple combination reactions",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-classify-matter-bulk"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/laws-of-chemical-combinations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-law-multiple-proportions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Law of Multiple Proportions",
+      "outcome": "Verify the Law of Multiple Proportions using mass ratio data for two or more binary compounds formed by the same pair of elements",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-laws-mass-definite-proportions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/laws-of-chemical-combinations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-gay-lussac-avogadro-laws",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Gay Lussac's and Avogadro's Laws of Gases",
+      "outcome": "Apply Gay Lussac's law of gaseous volumes and Avogadro's law to determine volume ratios of reacting gases",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-laws-mass-definite-proportions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/laws-of-chemical-combinations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-daltons-atomic-theory",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Postulates of Dalton's Atomic Theory",
+      "outcome": "Explain how Dalton's atomic theory accounts for the laws of chemical combinations and state its main postulates",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-law-multiple-proportions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/daltons-atomic-theory"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Atomic Mass Unit Definition",
+      "outcome": "Define unified atomic mass unit (u) relative to the mass of one Carbon-12 atom",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-daltons-atomic-theory"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/atomic-and-molecular-masses"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-average-atomic-mass",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Calculating Average Atomic Mass",
+      "outcome": "Calculate the average atomic mass of an element from the fractional abundances and isotopic masses of its isotopes",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/atomic-and-molecular-masses"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-molecular-formula-mass",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Molecular Mass and Formula Mass",
+      "outcome": "Calculate the molecular mass of a covalent compound or formula mass of an ionic substance from constituent atomic masses",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/atomic-and-molecular-masses"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-mole-concept-particles",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Mole Concept and Avogadro Constant",
+      "outcome": "Define the mole and use Avogadro's constant (6.022 x 10^23) to convert between number of particles and moles",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/mole-concept-and-molar-masses"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Molar Mass Conversions",
+      "outcome": "Calculate the number of moles, total mass, or number of constituent atoms in a given sample of an element or compound",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-molecular-formula-mass",
+        "class11-chemistry-some-basic-concepts-of-chemistry-mole-concept-particles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/mole-concept-and-molar-masses"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-composition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Mass Percentage Composition",
+      "outcome": "Calculate the mass percent of each constituent element in a compound given its chemical formula and molar mass",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/percentage-composition"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-empirical-molecular-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Empirical and Molecular Formula Determination",
+      "outcome": "Derive the empirical and molecular formulas of a compound from elemental mass percentage data and molar mass",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-composition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/percentage-composition"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-stoichiometric-mole-mass-calculations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Stoichiometric Calculations (Mass and Moles)",
+      "outcome": "Calculate the amount in moles or mass of reactants required and products formed in a balanced chemical reaction",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/stoichiometry-and-stoichiometric-calculations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-limiting-reagent",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Limiting Reagent Identification and Yield",
+      "outcome": "Identify the limiting reagent in a chemical reaction mixture and calculate the theoretical yield of products",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-stoichiometric-mole-mass-calculations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/stoichiometry-and-stoichiometric-calculations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-mole-fraction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Mass Percent and Mole Fraction of Solutions",
+      "outcome": "Calculate the mass percent (w/w%) and mole fraction of solute and solvent in a binary solution",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-molar-mass-conversions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/stoichiometry-and-stoichiometric-calculations"
+    },
+    {
+      "id": "class11-chemistry-some-basic-concepts-of-chemistry-molarity-molality",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "some-basic-concepts-of-chemistry",
+      "title": "Molarity and Molality Calculations",
+      "outcome": "Calculate the molarity and molality of a solution and determine changes in concentration upon dilution",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-mole-fraction"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/some-basic-concepts-of-chemistry/stoichiometry-and-stoichiometric-calculations"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-cathode-ray-properties",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Cathode Ray Properties",
+      "outcome": "List the fundamental properties of cathode rays and deduce that electrons are constituent particles of all atoms",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-daltons-atomic-theory"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/structure-of-atom/discovery-of-sub-atomic-particles"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-electron-charge-mass-ratio",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Electron Charge-to-Mass Ratio",
+      "outcome": "State Thomson's charge-to-mass ratio (e/m) for an electron and calculate electron mass given Millikan's measured charge",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-cathode-ray-properties"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/discovery-of-sub-atomic-particles"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-proton-neutron-discovery",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Proton and Neutron Discovery",
+      "outcome": "Identify the key experimental observations leading to the discovery of canal rays (protons) by Goldstein and neutrons by Chadwick",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-cathode-ray-properties"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/structure-of-atom/discovery-of-sub-atomic-particles"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-subatomic-particles-properties",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Subatomic Particles Comparison",
+      "outcome": "Compare the relative and absolute masses and charges of electrons, protons, and neutrons",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-electron-charge-mass-ratio",
+        "class11-chemistry-structure-of-atom-proton-neutron-discovery",
+        "class11-chemistry-some-basic-concepts-of-chemistry-atomic-mass-unit-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/structure-of-atom/discovery-of-sub-atomic-particles"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-thomson-model",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Thomson's Atomic Model",
+      "outcome": "Describe Thomson's plum pudding model of the atom and identify its limitations",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-subatomic-particles-properties"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/structure-of-atom/atomic-models"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-rutherford-scattering-experiment",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Rutherford's Scattering Experiment",
+      "outcome": "Explain the observations and corresponding deductions of Rutherford's alpha-particle scattering experiment",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-thomson-model"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/atomic-models"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-rutherford-nuclear-model",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Rutherford Nuclear Model",
+      "outcome": "State the features and primary limitations of Rutherford's nuclear model of the atom",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-rutherford-scattering-experiment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/atomic-models"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-atomic-mass-number-calculations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Atomic and Mass Number Calculations",
+      "outcome": "Calculate the number of protons, neutrons, and electrons in neutral atoms and ions given atomic and mass numbers",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-subatomic-particles-properties",
+        "class11-chemistry-structure-of-atom-rutherford-nuclear-model"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/atomic-models"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-isotopes-isobars-isodiaphers",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Isotopes, Isobars, and Isotones",
+      "outcome": "Classify given nuclides as isotopes, isobars, or isotones based on their atomic and mass numbers",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-atomic-mass-number-calculations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/atomic-models"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-emr-wave-parameters",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "EMR Wave Parameters",
+      "outcome": "Calculate wavelength, frequency, and wavenumber of electromagnetic radiation using the wave equation c = nu * lambda",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-si-base-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/developments-leading-to-bohr-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-plancks-quantum-theory",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Planck's Quantum Theory",
+      "outcome": "Calculate the energy of a photon or a mole of photons using Planck's relation E = h * nu",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-emr-wave-parameters",
+        "class11-chemistry-some-basic-concepts-of-chemistry-mole-concept-particles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/developments-leading-to-bohr-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-photoelectric-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Photoelectric Effect Calculations",
+      "outcome": "Apply Einstein's photoelectric equation to calculate work function, threshold frequency, or kinetic energy of ejected photoelectrons",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-plancks-quantum-theory"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/developments-leading-to-bohr-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-continuous-line-spectra",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Continuous vs Line Spectra",
+      "outcome": "Differentiate between continuous spectra and discontinuous line emission/absorption spectra",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-emr-wave-parameters"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/structure-of-atom/developments-leading-to-bohr-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-bohr-model-postulates",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Bohr Model Postulates",
+      "outcome": "State the postulates of Bohr's model of the hydrogen atom, including quantization of angular momentum",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-rutherford-nuclear-model",
+        "class11-chemistry-structure-of-atom-plancks-quantum-theory"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/bohrs-model-for-hydrogen-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-bohr-radii-energy-calculations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Bohr Orbit Radius and Energy",
+      "outcome": "Calculate the radius and electronic energy of stationary states in hydrogen and hydrogen-like species (He+, Li2+)",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-bohr-model-postulates"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/bohrs-model-for-hydrogen-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-hydrogen-spectral-lines",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Hydrogen Line Spectrum Series",
+      "outcome": "Identify spectral series (Lyman, Balmer, Paschen, Brackett, Pfund) and their respective electromagnetic regions",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-continuous-line-spectra",
+        "class11-chemistry-structure-of-atom-bohr-model-postulates"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/bohrs-model-for-hydrogen-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-rydberg-formula-transitions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Rydberg Equation Calculations",
+      "outcome": "Calculate the wavelength or wavenumber of photons emitted or absorbed during electronic transitions using the Rydberg formula",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-bohr-radii-energy-calculations",
+        "class11-chemistry-structure-of-atom-hydrogen-spectral-lines"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/bohrs-model-for-hydrogen-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-bohr-model-limitations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Limitations of Bohr's Model",
+      "outcome": "Explain the limitations of Bohr's model with respect to multi-electron atoms, Zeeman effect, Stark effect, and fine structure",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-rydberg-formula-transitions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/bohrs-model-for-hydrogen-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-de-broglie-wavelength",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "de Broglie Wavelength Calculations",
+      "outcome": "Calculate the de Broglie wavelength for macroscopic and microscopic moving particles using lambda = h / (m * v)",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-plancks-quantum-theory"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/towards-quantum-mechanical-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-heisenberg-uncertainty",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Heisenberg Uncertainty Principle",
+      "outcome": "Calculate simultaneous uncertainties in position and momentum/velocity using Heisenberg's relation Delta_x * Delta_p >= h / (4*pi)",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-de-broglie-wavelength"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/towards-quantum-mechanical-model"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-quantum-numbers",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Four Quantum Numbers",
+      "outcome": "Determine valid sets of quantum numbers (n, l, ml, ms) and their physical significance regarding energy, shape, orientation, and spin",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-heisenberg-uncertainty"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/structure-of-atom/quantum-mechanical-model-of-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-orbital-shapes-nodes",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Orbital Shapes and Nodes",
+      "outcome": "Calculate the number of radial nodes (n - l - 1), angular nodes (l), and total nodes for given atomic orbitals and identify their boundary diagrams",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-quantum-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/quantum-mechanical-model-of-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Orbital Filling Principles",
+      "outcome": "Apply the Aufbau principle ((n+l) rule), Pauli exclusion principle, and Hund's rule of maximum multiplicity to orbital filling",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-quantum-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/structure-of-atom/quantum-mechanical-model-of-atom"
+    },
+    {
+      "id": "class11-chemistry-structure-of-atom-electronic-configurations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "structure-of-atom",
+      "title": "Electronic Configurations up to Z=30",
+      "outcome": "Write ground-state electronic configurations for neutral atoms and ions up to Z = 30, highlighting anomalous stabilities in Cr and Cu",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/structure-of-atom/quantum-mechanical-model-of-atom"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-need-for-classification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Need for Classification of Elements",
+      "outcome": "Explain why organizing elements into groups is necessary for the systematic study of their physical and chemical properties",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/why-classify-elements"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-dobereiner-triads",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Dobereiner's Law of Triads",
+      "outcome": "Calculate the arithmetic mean of atomic masses of the first and third elements in a triad to identify Dobereiner's triads",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-average-atomic-mass",
+        "class11-chemistry-classification-of-elements-and-periodicity-need-for-classification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/genesis-of-periodic-classification"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-newlands-octaves",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Newlands' Law of Octaves",
+      "outcome": "State Newlands' Law of Octaves and identify the limitation of its validity up to calcium",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-dobereiner-triads"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/genesis-of-periodic-classification"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-periodic-law",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Mendeleev's Periodic Law and Table",
+      "outcome": "State Mendeleev's Periodic Law based on atomic masses and describe the arrangement of periods and groups in his table",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-newlands-octaves"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/genesis-of-periodic-classification"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-merits-anomalies",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Merits and Anomalies of Mendeleev's Table",
+      "outcome": "Identify the merits of Mendeleev's table (such as predicting undiscovered elements) and its anomalies regarding anomalous pairs and isotope placement",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-isotopes-isobars-isodiaphers",
+        "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-periodic-law"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/genesis-of-periodic-classification"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-modern-periodic-law",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Moseley's Work and Modern Periodic Law",
+      "outcome": "State the Modern Periodic Law and relate Moseley's X-ray frequency experiment (sqrt(nu) vs Z) to atomic number as the fundamental property",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-atomic-mass-number-calculations",
+        "class11-chemistry-classification-of-elements-and-periodicity-mendeleev-merits-anomalies"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/modern-periodic-law"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-iupac-nomenclature-above-100",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Nomenclature of Elements with Z > 100",
+      "outcome": "Derive the systematic IUPAC name and three-letter symbol for an element with atomic number greater than 100 using numerical roots",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-modern-periodic-law"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/nomenclature-elements-above-100"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Identifying Period and Group from Configuration",
+      "outcome": "Determine the period, group, and block of an element from its ground-state electronic configuration",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-electronic-configurations",
+        "class11-chemistry-classification-of-elements-and-periodicity-modern-periodic-law"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-s-block-characteristics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Characteristics of s-Block Elements",
+      "outcome": "Identify the general valence configuration ns1-2 and characteristic properties of alkali and alkaline earth metals in the s-block",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-p-block-characteristics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Characteristics of p-Block Elements",
+      "outcome": "Identify the general valence configuration ns2 np1-6 and describe the inclusion of metals, non-metals, and metalloids in the p-block",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-d-block-characteristics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Characteristics of d-Block Elements",
+      "outcome": "State the general valence configuration (n-1)d1-10 ns0-2 and explain why d-block elements act as transition elements with variable oxidation states",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-f-block-characteristics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Characteristics of f-Block Elements",
+      "outcome": "Differentiate between lanthanoids and actinoids based on their (n-2)f filling and state their position as inner-transition elements",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-metals-nonmetals-metalloids",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Metals, Non-metals, and Metalloids",
+      "outcome": "Classify elements across the periodic table as metals, non-metals, or metalloids based on their position relative to the zigzag dividing line",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-s-block-characteristics",
+        "class11-chemistry-classification-of-elements-and-periodicity-p-block-characteristics",
+        "class11-chemistry-classification-of-elements-and-periodicity-d-block-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/electronic-configurations-and-blocks"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-screening-effective-nuclear-charge",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Shielding Effect and Effective Nuclear Charge",
+      "outcome": "Explain the variation of effective nuclear charge (Zeff) across a period and down a group using the shielding/screening effect of inner electrons",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-quantum-numbers",
+        "class11-chemistry-classification-of-elements-and-periodicity-period-group-identification"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-atomic-radii-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Trends in Atomic Radii",
+      "outcome": "Predict and explain the periodic decrease in covalent and metallic radii across a period and increase down a group using Zeff and principal quantum number",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-screening-effective-nuclear-charge"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-ionic-radii-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Trends in Ionic Radii",
+      "outcome": "Compare the size of a cation and an anion with their parent atom and explain why cations are smaller and anions are larger",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-atomic-radii-trends"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-isoelectronic-species-radii",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Radii of Isoelectronic Species",
+      "outcome": "Order a given set of isoelectronic ions according to increasing or decreasing ionic radius based on their nuclear charge",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-ionic-radii-trends"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Trends in Ionization Enthalpy",
+      "outcome": "Define first and successive ionization enthalpies and explain why IE1 < IE2 < IE3 for a given atom",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-atomic-radii-trends"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-anomalies",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Anomalies in Ionization Enthalpy Trends",
+      "outcome": "Explain the higher first ionization enthalpy of Be compared to B and N compared to O using completely filled and half-filled subshell stabilities",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules",
+        "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Trends in Electron Gain Enthalpy",
+      "outcome": "Explain the periodic trends in electron gain enthalpy (Delta_eg H) and identify why noble gases possess large positive values",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-screening-effective-nuclear-charge"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-anomalies",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Anomalous Electron Gain Enthalpy of Second Period Elements",
+      "outcome": "Explain why oxygen and fluorine have less negative electron gain enthalpies than sulfur and chlorine in terms of interelectronic repulsion in compact 2p orbitals",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Electronegativity Scales and Periodic Trends",
+      "outcome": "Define electronegativity on the Pauling scale, trace its trend across periods and groups, and contrast it with electron gain enthalpy",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-anomalous-second-period-diagonal-relationship",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Anomalous Properties and Diagonal Relationships",
+      "outcome": "Explain the anomalous behavior of second-period elements (Li, Be, B) and the origin of diagonal relationships (Li-Mg, Be-Al) based on charge-to-radius ratio",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-ionic-radii-trends",
+        "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-classification-of-elements-and-periodicity-periodic-trends-chemical-reactivity-oxides",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "classification-of-elements-and-periodicity",
+      "title": "Periodic Trends in Oxide Acidity and Chemical Reactivity",
+      "outcome": "Predict the basic, amphoteric, or acidic nature of normal element oxides and correlate overall chemical reactivity across a period with periodic properties",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+        "class11-chemistry-classification-of-elements-and-periodicity-metals-nonmetals-metalloids"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/classification-of-elements-and-periodicity/periodic-trends-in-properties"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-lewis-dot-symbols",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Lewis Dot Symbols for Atoms",
+      "outcome": "Write Lewis dot symbols representing valence electrons for representative main-group atoms and monoatomic ions",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-electronic-configurations"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/kossel-lewis-approach"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Octet Rule and Lewis Structures",
+      "outcome": "Draw Lewis dot structures for simple covalent molecules and polyatomic ions by satisfying the octet rule",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-lewis-dot-symbols"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/kossel-lewis-approach"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-formal-charge-calculation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Formal Charge on Atoms",
+      "outcome": "Calculate the formal charge of each atom in a polyatomic Lewis structure to identify the most stable arrangement",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/kossel-lewis-approach"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-limitations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Limitations of the Octet Rule",
+      "outcome": "Identify exceptions to the octet rule including incomplete octets, odd-electron molecules, and expanded octets",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/kossel-lewis-approach"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-ionic-bond-formation-factors",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Factors Favoring Ionic Bonding",
+      "outcome": "Identify how low ionization enthalpy, high negative electron gain enthalpy, and high lattice enthalpy favor ionic bond formation",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends",
+        "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/ionic-or-electrovalent-bond"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-lattice-enthalpy-born-haber",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Lattice Enthalpy and Stability",
+      "outcome": "Define lattice enthalpy and relate it to the thermodynamic stability and solubility of ionic solids",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-ionic-bond-formation-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/ionic-or-electrovalent-bond"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Fundamental Bond Parameters",
+      "outcome": "Compare covalent bonds in terms of bond length, bond angle, bond enthalpy, and bond order",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/bond-parameters"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-resonance-structures",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Resonance Structures and Hybrids",
+      "outcome": "Construct canonical resonance structures and the resonance hybrid for species like ozone, carbonate, and nitrate",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-formal-charge-calculation",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/bond-parameters"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-dipole-moment-molecular-polarity",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Dipole Moment and Polarity",
+      "outcome": "Calculate net molecular dipole moments from bond dipoles to differentiate between polar and nonpolar molecules",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/bond-parameters"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-ideal-geometries",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "VSEPR for Molecules Without Lone Pairs",
+      "outcome": "Predict the regular molecular geometry of ABn molecules having 2 to 6 bonding electron pairs around the central atom",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-octet-rule-lewis-structures"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/vsepr-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-lone-pair-repulsions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "VSEPR Deviations from Lone Pairs",
+      "outcome": "Explain bond angle reductions and shape distortions in molecules containing lone pairs using the order of electron pair repulsions",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-ideal-geometries"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/vsepr-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-valence-bond-orbital-overlap",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Valence Bond Orbital Overlap",
+      "outcome": "Explain covalent bond formation in terms of directional overlap of half-filled atomic orbitals and potential energy curves",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-orbital-shapes-nodes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/valence-bond-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-sigma-pi-bonds",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Sigma vs Pi Bonds",
+      "outcome": "Differentiate between sigma and pi bonds based on head-on axial overlap versus sideways lateral overlap",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-valence-bond-orbital-overlap"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/valence-bond-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-sp-sp2-sp3",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "sp, sp2, and sp3 Hybridisation",
+      "outcome": "Describe the mixing of atomic orbitals to form sp, sp2, and sp3 hybrid orbitals and their directional characteristics",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-sigma-pi-bonds"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/hybridisation"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-organic-molecules",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Hybridisation in Simple Hydrocarbons",
+      "outcome": "Determine the hybridisation state of carbon atoms and trace orbital overlap in methane, ethene, and ethyne",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-sp-sp2-sp3"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/hybridisation"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-d-orbitals",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Hybridisation Involving d Orbitals",
+      "outcome": "Predict the hybridization and geometry of molecules involving d-orbitals such as PCl5 (sp3d) and SF6 (sp3d2)",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-hybridisation-sp-sp2-sp3",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-vsepr-lone-pair-repulsions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/hybridisation"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-lcao-principles",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "LCAO Principles in MOT",
+      "outcome": "Explain the linear combination of atomic orbitals (LCAO) conditions to produce bonding and antibonding molecular orbitals",
+      "prerequisites": [
+        "class11-chemistry-structure-of-atom-orbital-shapes-nodes",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-valence-bond-orbital-overlap"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/molecular-orbital-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-light-diatomics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "MO Energy Diagram up to N2",
+      "outcome": "Construct molecular orbital energy level diagrams for homonuclear diatomic species with up to 14 electrons exhibiting 2s-2p mixing",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-mot-lcao-principles",
+        "class11-chemistry-structure-of-atom-aufbau-pauli-hund-rules"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/molecular-orbital-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-heavy-diatomics",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "MO Energy Diagram for O2 and F2",
+      "outcome": "Construct molecular orbital energy level diagrams for homonuclear diatomic molecules with more than 14 electrons",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-light-diatomics"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/molecular-orbital-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-bond-order-stability",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Bond Order and Relative Stability",
+      "outcome": "Calculate bond order from molecular orbital electron counts to predict relative bond lengths and bond dissociation energies",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-mot-energy-diagram-heavy-diatomics"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/molecular-orbital-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-mot-magnetic-properties",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Magnetic Properties from MOT",
+      "outcome": "Predict diamagnetic or paramagnetic behavior of diatomic molecules and ions based on unpaired electrons in MO diagrams",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-mot-bond-order-stability"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/molecular-orbital-theory"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-cause-conditions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Cause and Conditions for Hydrogen Bonding",
+      "outcome": "Explain the origin of hydrogen bonding as an electrostatic dipole-dipole attraction involving highly electronegative atoms (N, O, F)",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-electronegativity-trends",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-dipole-moment-molecular-polarity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/hydrogen-bonding"
+    },
+    {
+      "id": "class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-types-effects",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-bonding-and-molecular-structure",
+      "title": "Types and Effects of Hydrogen Bonding",
+      "outcome": "Distinguish between intermolecular and intramolecular hydrogen bonding and compare their effects on boiling point and solubility",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-hydrogen-bonding-cause-conditions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-bonding-and-molecular-structure/hydrogen-bonding"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-system-surroundings-types",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "System, Surroundings, and System Types",
+      "outcome": "Classify a given thermodynamic system as open, closed, or isolated based on mass and energy exchange with surroundings",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-classify-matter-bulk"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/thermodynamic-terms"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-extensive-intensive-properties",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Extensive and Intensive Properties",
+      "outcome": "Classify measurable physical and chemical properties as extensive or intensive",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-system-surroundings-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/thermodynamic-terms"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-state-and-path-functions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "State vs Path Functions",
+      "outcome": "Distinguish between state functions and path functions with examples including internal energy, enthalpy, heat, and work",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-system-surroundings-types"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/thermodynamic-terms"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-first-law-internal-energy",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "First Law of Thermodynamics",
+      "outcome": "Apply the mathematical formulation of the first law of thermodynamics (Delta U = q + w) using standard IUPAC sign conventions",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-state-and-path-functions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/applications-work-and-enthalpy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-work-irreversible-expansion",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Work in Irreversible Expansion",
+      "outcome": "Calculate the pressure-volume work done during irreversible expansion or compression against a constant external pressure",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-first-law-internal-energy"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/applications-work-and-enthalpy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-work-reversible-isothermal",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Work in Reversible Isothermal Expansion",
+      "outcome": "Calculate the work done during isothermal reversible expansion of an ideal gas using w = -2.303 nRT log(V2/V1)",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-work-irreversible-expansion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/applications-work-and-enthalpy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Relation Between Delta H and Delta U",
+      "outcome": "Calculate enthalpy change (Delta H) from internal energy change (Delta U) for gaseous reactions using Delta H = Delta U + Delta n_g R T",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-first-law-internal-energy"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/applications-work-and-enthalpy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-heat-capacity-relations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Heat Capacity and Cp - Cv Relation",
+      "outcome": "Derive the relation Cp - Cv = R for an ideal gas from heat capacity definitions at constant pressure and volume",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/applications-work-and-enthalpy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-bomb-calorimetry-delta-u",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Measurement of Delta U by Bomb Calorimeter",
+      "outcome": "Calculate the internal energy of combustion (Delta U) from experimental temperature rise in a constant-volume bomb calorimeter",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-first-law-internal-energy"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/measurement-of-u-and-h-calorimetry"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-coffee-cup-calorimetry-delta-h",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Measurement of Delta H by Constant Pressure Calorimeter",
+      "outcome": "Calculate the enthalpy change (Delta H) of a solution reaction from temperature changes measured at constant atmospheric pressure",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/measurement-of-u-and-h-calorimetry"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Standard Enthalpy of Formation",
+      "outcome": "Identify valid standard enthalpy of formation equations for compounds and write standard reaction enthalpies in terms of Delta_f H values",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-enthalpy-phase-transitions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Enthalpies of Phase Transitions",
+      "outcome": "Calculate heat required for phase changes using standard enthalpies of fusion, vaporisation, and sublimation",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-enthalpy-internal-energy-relation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-enthalpy-combustion-atomization",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Enthalpy of Combustion and Atomization",
+      "outcome": "Write balanced thermochemical equations defining the standard enthalpies of combustion and atomization for given substances",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-bond-dissociation-enthalpy",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Bond Dissociation Enthalpy Calculations",
+      "outcome": "Calculate the reaction enthalpy of a gaseous reaction using mean bond dissociation enthalpies of reactants and products",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-bond-parameters",
+        "class11-chemistry-chemical-thermodynamics-enthalpy-combustion-atomization"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-hess-law-summation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Hess's Law of Constant Heat Summation",
+      "outcome": "Apply Hess's Law to calculate the unknown enthalpy change of a target reaction by algebraically combining intermediate thermochemical equations",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-born-haber-cycle-lattice-energy",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Lattice Enthalpy via Born-Haber Cycle",
+      "outcome": "Calculate the lattice enthalpy of an ionic solid by constructing a complete Born-Haber cycle from experimental thermochemical data",
+      "prerequisites": [
+        "class11-chemistry-classification-of-elements-and-periodicity-ionization-enthalpy-trends",
+        "class11-chemistry-classification-of-elements-and-periodicity-electron-gain-enthalpy-trends",
+        "class11-chemistry-chemical-bonding-and-molecular-structure-lattice-enthalpy-born-haber",
+        "class11-chemistry-chemical-thermodynamics-hess-law-summation"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/enthalpy-change-of-a-reaction"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-entropy-qualitative-molecular",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Qualitative Understanding of Entropy",
+      "outcome": "Predict the sign of entropy change (Delta S) for physical and chemical transformations based on changes in randomness or molecular disorder",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-state-and-path-functions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-entropy-calculation-reversible",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Quantitative Entropy Calculation",
+      "outcome": "Calculate the entropy change for reversible isothermal phase transitions and processes using Delta S = q_rev / T",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-entropy-qualitative-molecular",
+        "class11-chemistry-chemical-thermodynamics-enthalpy-phase-transitions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-second-third-laws",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Second and Third Laws of Thermodynamics",
+      "outcome": "State the Second Law (Delta S_total > 0 for spontaneous processes) and the Third Law of Thermodynamics regarding perfectly crystalline solids at absolute zero",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-entropy-calculation-reversible"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-gibbs-energy-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Gibbs Energy and Gibbs-Helmholtz Equation",
+      "outcome": "Derive the relation Delta G_sys = Delta H_sys - T Delta S_sys and relate Delta G_sys to total entropy change (Delta S_total)",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-second-third-laws"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-spontaneity-criteria-delta-g",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Spontaneity Criteria Using Gibbs Energy",
+      "outcome": "Predict the temperature range of spontaneity for a process based on the signs of Delta H and Delta S",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-gibbs-energy-definition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-standard-gibbs-energy-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Standard Gibbs Energy of Reaction",
+      "outcome": "Calculate the standard Gibbs energy change (Delta_r G°) of a reaction from tabulated standard free energies of formation",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-spontaneity-criteria-delta-g"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-gibbs-energy-equilibrium-constant",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Gibbs Energy and Equilibrium Constant",
+      "outcome": "Calculate the equilibrium constant K of a chemical reaction using the relation Delta_r G° = -2.303 RT log K",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-standard-gibbs-energy-reactions"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/gibbs-energy-change-and-equilibrium"
+    },
+    {
+      "id": "class11-chemistry-chemical-thermodynamics-non-spontaneous-coupled-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "chemical-thermodynamics",
+      "title": "Thermodynamics of Coupled Reactions",
+      "outcome": "Explain how a non-spontaneous endergonic reaction can be driven by coupling it with a strongly exergonic reaction sharing a common intermediate",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-gibbs-energy-equilibrium-constant"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/chemical-thermodynamics/spontaneity-entropy-and-gibbs-energy"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-physical-processes-dynamic-nature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Dynamic Physical Equilibria",
+      "outcome": "Describe the dynamic nature of phase equilibria in solid-liquid, liquid-vapour, and solid-vapour closed systems",
+      "prerequisites": [
+        "class11-chemistry-chemical-thermodynamics-enthalpy-phase-transitions"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/equilibrium/equilibrium-in-physical-processes"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-henrys-law",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Henry's Law for Gas Solubility",
+      "outcome": "Apply Henry's law to calculate gas solubility or partial pressure in gas-liquid dissolution equilibria",
+      "prerequisites": [
+        "class11-chemistry-some-basic-concepts-of-chemistry-mass-percent-mole-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/equilibrium-in-physical-processes"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-chemical-dynamic-nature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Dynamic Nature of Chemical Equilibrium",
+      "outcome": "Explain chemical equilibrium as a dynamic state where forward and reverse reaction rates are equal and concentrations remain constant",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-physical-processes-dynamic-nature"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/equilibrium/equilibrium-in-chemical-processes"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-law-mass-action-kc",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Law of Mass Action and Kc",
+      "outcome": "Write the equilibrium constant expression in terms of concentration (Kc) for a given homogeneous reversible reaction",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-chemical-dynamic-nature",
+        "class11-chemistry-some-basic-concepts-of-chemistry-molarity-molality"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/law-of-chemical-equilibrium"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-kp-expression",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Equilibrium Constant in Partial Pressures",
+      "outcome": "Write the equilibrium constant expression in terms of partial pressures (Kp) for a gaseous reaction",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-law-mass-action-kc"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/law-of-chemical-equilibrium"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-kp-kc-relation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Relation Between Kp and Kc",
+      "outcome": "Calculate Kp from Kc or vice versa using the relation Kp = Kc(RT)^(delta_n_g)",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-kp-expression"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/law-of-chemical-equilibrium"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-heterogeneous-expressions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Heterogeneous Equilibrium Expressions",
+      "outcome": "Write simplified equilibrium constant expressions (Kc and Kp) for heterogeneous reactions by omitting pure solids and pure liquids",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-kp-kc-relation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/homogeneous-and-heterogeneous-equilibria"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-extent-of-reaction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Predicting Extent of Reaction",
+      "outcome": "Predict the extent of a chemical reaction based on the numerical magnitude of its equilibrium constant",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-law-mass-action-kc"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/applications-of-equilibrium-constant"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-reaction-quotient-direction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Reaction Quotient and Direction of Shift",
+      "outcome": "Compare the reaction quotient (Qc or Qp) with K to determine the direction of net reaction to achieve equilibrium",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-law-mass-action-kc"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/applications-of-equilibrium-constant"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-equilibrium-concentrations-calc",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Calculating Equilibrium Concentrations",
+      "outcome": "Calculate equilibrium concentrations or partial pressures from initial concentrations and the equilibrium constant using an ICE table",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-reaction-quotient-direction",
+        "class11-chemistry-some-basic-concepts-of-chemistry-stoichiometric-mole-mass-calculations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/equilibrium/applications-of-equilibrium-constant"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-le-chatelier-concentration-pressure",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Le Chatelier: Concentration and Pressure",
+      "outcome": "Predict the direction of shift in an equilibrium system in response to changes in reactant/product concentration, volume, and total pressure",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-reaction-quotient-direction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/factors-affecting-equilibria"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-le-chatelier-temp-catalyst-inert-gas",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Le Chatelier: Temperature, Inert Gas, Catalyst",
+      "outcome": "Predict the effect of temperature change, addition of inert gas (at constant volume/pressure), and catalysts on equilibrium position and K",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-le-chatelier-concentration-pressure",
+        "class11-chemistry-chemical-thermodynamics-standard-enthalpy-formation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/factors-affecting-equilibria"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-electrolytes-classification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Classification of Electrolytes",
+      "outcome": "Classify chemical species as strong electrolytes, weak electrolytes, or non-electrolytes based on their degree of ionization in aqueous solution",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-chemical-dynamic-nature"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/equilibrium/ionic-equilibrium-in-solution"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-acid-base-theories",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Arrhenius, Brönsted-Lowry, and Lewis Theories",
+      "outcome": "Classify substances as acids or bases according to the Arrhenius, Brönsted-Lowry, and Lewis concepts",
+      "prerequisites": [
+        "class11-chemistry-chemical-bonding-and-molecular-structure-lewis-dot-symbols"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/acids-bases-and-salts"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-conjugate-acid-base-pairs",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Conjugate Acid-Base Pairs",
+      "outcome": "Identify the conjugate acid-base pairs in a given Brönsted-Lowry proton transfer reaction",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-acid-base-theories"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/acids-bases-and-salts"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-ionic-product-water-kw",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Ionic Product of Water",
+      "outcome": "State the expression for the ionic product of water (Kw) and explain its temperature dependence",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-law-mass-action-kc"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-ph-poh-scale-calculations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "pH and pOH Scale Calculations",
+      "outcome": "Calculate pH and pOH of aqueous solutions of strong monoprotic acids and strong bases from molar concentrations",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-ionic-product-water-kw"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-weak-acids-bases-ka-kb",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Ionization Constants Ka and Kb",
+      "outcome": "Calculate the ionization constant (Ka or Kb), degree of ionization, and pH of a weak acid or weak base solution",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-ph-poh-scale-calculations"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-common-ion-effect",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Common Ion Effect on Ionization",
+      "outcome": "Explain the suppression of ionization of a weak electrolyte by the addition of a strong electrolyte containing a common ion",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-le-chatelier-concentration-pressure",
+        "class11-chemistry-equilibrium-weak-acids-bases-ka-kb"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-buffer-solutions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Buffer Action and Henderson-Hasselbalch Equation",
+      "outcome": "Calculate the pH of acidic and basic buffer solutions using the Henderson-Hasselbalch equation",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-common-ion-effect"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-salt-hydrolysis-nature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Salt Hydrolysis and Solution Nature",
+      "outcome": "Predict whether an aqueous salt solution is acidic, basic, or neutral by identifying the hydrolysing cation or anion",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-conjugate-acid-base-pairs",
+        "class11-chemistry-equilibrium-ionic-product-water-kw"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-salt-hydrolysis-ph-calc",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "pH Calculation of Hydrolysed Salt Solutions",
+      "outcome": "Calculate the hydrolysis constant, degree of hydrolysis, and pH of solutions of salts of weak acid/strong base and strong acid/weak base",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-salt-hydrolysis-nature",
+        "class11-chemistry-equilibrium-weak-acids-bases-ka-kb"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/equilibrium/ionization-of-acids-and-bases"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-solubility-product-ksp-expression",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Solubility Product Constant Ksp",
+      "outcome": "Write the solubility product constant (Ksp) expression and derive the relationship between molar solubility (S) and Ksp for various salt types",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-heterogeneous-expressions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/equilibrium/solubility-equilibria-of-sparingly-soluble-salts"
+    },
+    {
+      "id": "class11-chemistry-equilibrium-solubility-common-ion-precipitation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "equilibrium",
+      "title": "Common Ion Effect and Precipitation Criteria",
+      "outcome": "Calculate solubility in the presence of a common ion and predict precipitation by comparing ionic product (Qsp) with Ksp",
+      "prerequisites": [
+        "class11-chemistry-equilibrium-solubility-product-ksp-expression",
+        "class11-chemistry-equilibrium-common-ion-effect"
+      ],
+      "difficulty": 4,
+      "topicRef": "class11-chemistry/equilibrium/solubility-equilibria-of-sparingly-soluble-salts"
+    }
+  ]
+}

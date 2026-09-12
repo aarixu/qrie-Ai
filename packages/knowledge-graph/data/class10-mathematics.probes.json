@@ -1728,6 +1728,4326 @@
         "defines the larger tap's time as x + 10 instead of x - 10 when x is the smaller tap's time",
         "adds times directly instead of adding rates per unit time"
       ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-define-sequence-pattern",
+      "nodeId": "class10-mathematics-arithmetic-progressions-define-sequence-pattern",
+      "question": "What is the rule connecting consecutive terms in the sequence 2, 6, 18, 54, ...?",
+      "options": [
+        "Multiply the previous term by 3",
+        "Add 4 to the previous term",
+        "Square the previous term plus 2",
+        "Add 6 to the previous term"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "looks only at the difference between the first two terms (6 - 2 = 4) and assumes it is an additive pattern",
+        "tries to fit an overly complex non-linear algebraic rule instead of checking simple multiplication",
+        "confuses the second term value with the operation to apply"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-define-ap",
+      "nodeId": "class10-mathematics-arithmetic-progressions-define-ap",
+      "question": "Which statement correctly defines an Arithmetic Progression (AP)?",
+      "options": [
+        "A sequence where each term is obtained by multiplying the preceding term by a fixed number",
+        "A sequence where each term after the first is obtained by adding a fixed number to the preceding term",
+        "A sequence where the difference between alternate terms is always constant",
+        "A sequence where each term is the square of its position index"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses arithmetic progression with geometric progression",
+        "",
+        "believes the constant difference applies to alternate terms rather than consecutive terms",
+        "confuses sequence of square numbers with an arithmetic progression"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff",
+      "nodeId": "class10-mathematics-arithmetic-progressions-identify-first-term-and-common-diff",
+      "question": "For the AP: 12, 7, 2, -3, ..., what are the first term (a) and common difference (d)?",
+      "options": [
+        "a = 12, d = 5",
+        "a = 7, d = 5",
+        "a = -3, d = -5",
+        "a = 12, d = -5"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts the second term from the first term instead of calculating a2 - a1, giving the wrong sign for d",
+        "takes the second term as the first term",
+        "confuses the last listed term with the first term",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap",
+      "nodeId": "class10-mathematics-arithmetic-progressions-test-if-sequence-is-ap",
+      "question": "Which of the following lists of numbers forms an Arithmetic Progression?",
+      "options": [
+        "1, 3, 9, 27, ...",
+        "sqrt(3), sqrt(12), sqrt(27), sqrt(48), ...",
+        "0.2, 0.22, 0.222, 0.2222, ...",
+        "1^2, 2^2, 3^2, 4^2, ..."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "mistakes a geometric progression for an AP",
+        "",
+        "assumes adding digits to decimal places creates a constant difference",
+        "thinks the sequence of consecutive squares has a constant difference"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-distinguish-finite-infinite-ap",
+      "nodeId": "class10-mathematics-arithmetic-progressions-distinguish-finite-infinite-ap",
+      "question": "Which of the following represents a finite Arithmetic Progression?",
+      "options": [
+        "5, 10, 15, 20, ...",
+        "100, 70, 40, 10, ...",
+        "4, 7, 10, ..., 40",
+        "-2, -4, -6, -8, ..."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks an AP that increases indefinitely is finite",
+        "thinks an AP with decreasing terms terminates on its own",
+        "",
+        "thinks an AP with negative numbers must be bounded and therefore finite"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
+      "nodeId": "class10-mathematics-arithmetic-progressions-generate-terms-given-a-and-d",
+      "question": "If the first term a = -4 and common difference d = -3, what are the first four terms of the AP?",
+      "options": [
+        "-3, -7, -11, -15",
+        "-4, -1, 2, 5",
+        "-4, 12, -36, 108",
+        "-4, -7, -10, -13"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses the common difference d as the first term",
+        "subtracts a negative number (i.e. adds 3) instead of adding -3",
+        "multiplies by d instead of adding d to get consecutive terms",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-derive-nth-term-formula",
+      "nodeId": "class10-mathematics-arithmetic-progressions-derive-nth-term-formula",
+      "question": "In an AP with first term a and common difference d, the 4th term is a + 3d, and the 5th term is a + 4d. Following this pattern, what is the nth term (a_n)?",
+      "options": [
+        "a + (n - 1)d",
+        "a + (n + 1)d",
+        "a + nd",
+        "(a + n)d"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "incorrectly increments the index offset to n + 1",
+        "assumes the coefficient of d is equal to the term index n rather than n - 1",
+        "misplaces parentheses and multiplies the sum of a and n by d"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-calculate-nth-term",
+      "nodeId": "class10-mathematics-arithmetic-progressions-calculate-nth-term",
+      "question": "Find the 11th term of the AP: -3, -1/2, 2, ...",
+      "options": [
+        "28",
+        "25/2",
+        "22",
+        "-28"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses n instead of (n - 1), calculating a + 11d = -3 + 27.5 = 24.5 or makes an arithmetic error with 11",
+        "forgets to multiply d by (n - 1) properly, adding d only once or twice",
+        "",
+        "applies the wrong sign to the entire expression"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-find-number-of-terms",
+      "nodeId": "class10-mathematics-arithmetic-progressions-find-number-of-terms",
+      "question": "How many terms are there in the AP: 7, 13, 19, ..., 205?",
+      "options": [
+        "34",
+        "33",
+        "35",
+        "32"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates (l - a)/d = 198/6 = 33 but forgets to add 1 at the end",
+        "adds 2 instead of 1 to (l - a)/d",
+        "subtracts 1 from (l - a)/d instead of adding 1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-determine-term-membership",
+      "nodeId": "class10-mathematics-arithmetic-progressions-determine-term-membership",
+      "question": "Is -150 a term of the AP: 11, 8, 5, 2, ...?",
+      "options": [
+        "Yes, because n = 54 is an integer",
+        "Yes, because every negative integer is eventually in this decreasing AP",
+        "No, because solving for n gives a non-integer (n = 164/3)",
+        "No, because the AP contains only positive terms"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "makes an algebraic error in solving 11 + (n - 1)(-3) = -150 and thinks n is a whole number",
+        "assumes any decreasing AP hits all negative numbers without checking divisibility",
+        "",
+        "believes an AP starting with positive numbers cannot have negative terms"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-find-nth-term-from-end",
+      "nodeId": "class10-mathematics-arithmetic-progressions-find-nth-term-from-end",
+      "question": "What is the 4th term from the end of the AP: 3, 7, 11, ..., 47?",
+      "options": [
+        "31",
+        "35",
+        "39",
+        "15"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "subtracts 4d from the last term instead of (4 - 1)d = 3d",
+        "",
+        "subtracts only 2d from the last term",
+        "calculates the 4th term from the beginning instead of the end"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-determine-ap-from-two-terms",
+      "nodeId": "class10-mathematics-arithmetic-progressions-determine-ap-from-two-terms",
+      "question": "In an AP, the 3rd term is 5 and the 7th term is 9. What is the 1st term (a)?",
+      "options": [
+        "3",
+        "2",
+        "1",
+        "4"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides the 3rd term by 2 or makes a subtraction mistake",
+        "finds d = 1 correctly but calculates a = a3 - 4d instead of a3 - 2d",
+        "sets a equal to the difference between 9 and 5"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-condition-for-three-terms-in-ap",
+      "nodeId": "class10-mathematics-arithmetic-progressions-condition-for-three-terms-in-ap",
+      "question": "If k + 2, 4k - 6, and 3k - 2 are three consecutive terms of an AP, what is the value of k?",
+      "options": [
+        "1",
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "sets b = a + c instead of 2b = a + c, leading to an incorrect linear equation",
+        "",
+        "solves (4k - 6) - (k + 2) = (3k - 2) but drops the middle term in the second difference",
+        "assumes the middle term is simply the difference of the outer terms"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-derive-sum-formula",
+      "nodeId": "class10-mathematics-arithmetic-progressions-derive-sum-formula",
+      "question": "When deriving the sum formula S_n by adding the AP forwards and backwards, each of the n pairs of terms sums to:",
+      "options": [
+        "a + d",
+        "2a + nd",
+        "2a + (n - 1)d",
+        "a + (n - 1)d"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the pair sum with the sum of the first two terms",
+        "forgets that the nth term has coefficient (n - 1) for d, mistakenly using nd",
+        "",
+        "gives the formula for the nth term itself instead of the sum of first and last terms"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
+      "nodeId": "class10-mathematics-arithmetic-progressions-calculate-sum-given-a-d-n",
+      "question": "What is the sum of the first 12 terms of the AP: 2, 7, 12, 17, ...?",
+      "options": [
+        "354",
+        "708",
+        "324",
+        "372"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets to divide by 2 in the sum formula S_n = (n/2)[2a + (n - 1)d]",
+        "uses a instead of 2a inside the bracket, calculating (n/2)[a + (n - 1)d]",
+        "uses nd instead of (n - 1)d inside the bracket"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term",
+      "nodeId": "class10-mathematics-arithmetic-progressions-calculate-sum-given-first-and-last-term",
+      "question": "An AP has 20 terms. The first term is 5 and the last term is 95. What is the sum of these 20 terms?",
+      "options": [
+        "2000",
+        "1050",
+        "950",
+        "1000"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to divide by 2, computing n * (a + l) instead of (n/2) * (a + l)",
+        "adds n to the product of first and last terms",
+        "multiplies (n - 1) by (a + l)/2 instead of using n",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-sum-of-first-n-natural-numbers",
+      "nodeId": "class10-mathematics-arithmetic-progressions-sum-of-first-n-natural-numbers",
+      "question": "What is the sum of the first 50 positive integers (1 + 2 + 3 + ... + 50)?",
+      "options": [
+        "1250",
+        "1275",
+        "2550",
+        "1225"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses n^2/2 instead of n(n + 1)/2",
+        "",
+        "forgets to divide by 2, computing 50 * 51",
+        "uses n(n - 1)/2 instead of n(n + 1)/2"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-find-n-given-sum",
+      "nodeId": "class10-mathematics-arithmetic-progressions-find-n-given-sum",
+      "question": "How many terms of the AP: 9, 17, 25, ... must be taken to give a sum of 636?",
+      "options": [
+        "10",
+        "14",
+        "16",
+        "12"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "makes an arithmetic error when factoring the quadratic equation 4n^2 + 5n - 636 = 0",
+        "takes an incorrect factor pair from the quadratic equation",
+        "estimates n by dividing the sum directly by the common difference",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-interpret-double-answer-for-n",
+      "nodeId": "class10-mathematics-arithmetic-progressions-interpret-double-answer-for-n",
+      "question": "The sum of n terms of the AP: 20, 16, 12, ... is 48 for both n = 3 and n = 8. What is the mathematical reason for this double answer?",
+      "options": [
+        "The quadratic formula always produces an extraneous root that has no real meaning",
+        "The terms repeat in a cycle after the 3rd term",
+        "The sum was calculated incorrectly, as an AP can have only one number of terms for a given sum",
+        "The AP contains decreasing numbers, so the sum from the 4th to the 8th term is zero"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes one of the two positive integer roots in AP sum problems is always meaningless",
+        "thinks an AP can cycle back to earlier positive values",
+        "believes a sum of an AP must be strictly one-to-one with n, rejecting valid algebra",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-relate-nth-term-to-sum",
+      "nodeId": "class10-mathematics-arithmetic-progressions-relate-nth-term-to-sum",
+      "question": "If the sum of first n terms of an AP is given by S_n = 3n^2 + 5n, what is the 10th term (a_10)?",
+      "options": [
+        "350",
+        "59",
+        "62",
+        "65"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "evaluates S_10 directly instead of computing S_10 - S_9",
+        "computes a_n as S_n - S_{n-1} but makes an algebraic sign error with the constant term",
+        "",
+        "calculates the 11th term instead of the 10th term"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-sum-of-multiples-in-range",
+      "nodeId": "class10-mathematics-arithmetic-progressions-sum-of-multiples-in-range",
+      "question": "What is the sum of all two-digit numbers divisible by 3?",
+      "options": [
+        "1710",
+        "1650",
+        "1665",
+        "1500"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "includes 102 as a two-digit number, counting 31 terms",
+        "counts 29 terms instead of 30 terms (miscalculates (99 - 12)/3 + 1)",
+        "",
+        "forgets to add the first term 12 when applying the sum formula"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-word-problems-nth-term",
+      "nodeId": "class10-mathematics-arithmetic-progressions-word-problems-nth-term",
+      "question": "A worker's starting monthly salary is Rs 5000 in the 1st year, and she receives a fixed annual increment of Rs 200 each year. In which year will her monthly salary reach Rs 7000?",
+      "options": [
+        "10th year",
+        "9th year",
+        "12th year",
+        "11th year"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides the total increase 2000 by 200 to get 10, but forgets that n = 10 + 1",
+        "subtracts 1 from 10 instead of adding 1",
+        "adds 2 to 10 instead of 1",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-word-problems-sum",
+      "nodeId": "class10-mathematics-arithmetic-progressions-word-problems-sum",
+      "question": "A sum of Rs 700 is to be used to give 7 cash prizes to students. If each prize is Rs 20 less than its preceding prize, what is the value of the first (highest) prize?",
+      "options": [
+        "Rs 160",
+        "Rs 140",
+        "Rs 100",
+        "Rs 120"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "sets the common difference as d = +20 instead of d = -20, leading to a = Rs 40 or Rs 140",
+        "simply divides the total prize money equally (700/7 = 100) ignoring the difference",
+        "uses (n - 1) = 7 instead of 6 in the sum equation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-arithmetic-progressions-select-symmetric-terms",
+      "nodeId": "class10-mathematics-arithmetic-progressions-select-symmetric-terms",
+      "question": "The sum of three numbers in an AP is 21 and their product is 231. Using the symmetric representation (a - d), a, (a + d), what are the three numbers?",
+      "options": [
+        "1, 7, 13",
+        "3, 7, 11",
+        "4, 7, 10",
+        "5, 7, 9"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "selects numbers that add to 21 but whose product is 91, not 231",
+        "",
+        "selects numbers that add to 21 but whose product is 280, not 231",
+        "selects numbers that add to 21 but whose product is 315, not 231"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-distinguish-congruence-similarity",
+      "nodeId": "class10-mathematics-triangles-distinguish-congruence-similarity",
+      "question": "Which of the following statements correctly describes the relationship between congruent and similar geometric figures?",
+      "options": [
+        "All congruent figures are similar, but similar figures may not be congruent.",
+        "All similar figures are congruent, but congruent figures may not be similar.",
+        "Congruent figures have the same shape but different sizes.",
+        "Similar figures must always have both the exact same shape and the exact same size."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks similarity is a stricter condition than congruence",
+        "confuses the definition of congruent with that of similar",
+        "believes similar figures must be identical in size"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-similarity-conditions-polygons",
+      "nodeId": "class10-mathematics-triangles-similarity-conditions-polygons",
+      "question": "Two polygons having the same number of sides are similar if and only if:",
+      "options": [
+        "their corresponding sides are proportional, regardless of their angles",
+        "their corresponding angles are equal, regardless of their side lengths",
+        "their perimeters and their areas are strictly equal",
+        "their corresponding angles are equal and their corresponding sides are proportional"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes equal side ratios alone guarantee polygon similarity without matching angles",
+        "assumes equal angles alone guarantee polygon similarity for general polygons",
+        "confuses the similarity of polygons with equality of perimeter and area",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-regular-polygons-similarity",
+      "nodeId": "class10-mathematics-triangles-regular-polygons-similarity",
+      "question": "Why are any two regular polygons with the same number of sides (such as two squares) always similar?",
+      "options": [
+        "Their diagonals are always equal in length regardless of their side lengths.",
+        "All regular polygons with the same number of sides have equal perimeters.",
+        "All their internal angles are equal, and all sides in each polygon are equal so corresponding sides are in the same ratio.",
+        "Any two polygons with equal numbers of vertices are automatically similar."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks diagonal equality across different figures is the reason for similarity",
+        "believes similarity requires equal perimeters instead of proportional sides",
+        "",
+        "assumes merely having the same number of vertices makes any two polygons similar"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-verify-polygon-similarity-counterexamples",
+      "nodeId": "class10-mathematics-triangles-verify-polygon-similarity-counterexamples",
+      "question": "A square and a rhombus both have all four sides of length 5 cm. Are they similar?",
+      "options": [
+        "Yes, because their corresponding sides are in the ratio 1:1.",
+        "No, because their corresponding angles are not necessarily equal.",
+        "Yes, because both figures are regular quadrilaterals.",
+        "No, because their perimeters are different."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes equal side ratios alone guarantee similarity in quadrilaterals",
+        "",
+        "incorrectly thinks a general rhombus is a regular polygon",
+        "claims perimeters differ even when side lengths are given as identical"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-state-bpt",
+      "nodeId": "class10-mathematics-triangles-state-bpt",
+      "question": "Which of the following correctly states the Basic Proportionality Theorem (Thales Theorem)?",
+      "options": [
+        "A line drawn parallel to one side of a triangle is always half the length of that side.",
+        "If a line divides two sides of a triangle in the same ratio, then it bisects the third side.",
+        "If a line is drawn parallel to one side of a triangle intersecting the other two sides, then it divides the two sides in the same ratio.",
+        "The line joining the midpoints of two sides of a triangle is perpendicular to the third side."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the theorem with the specific midpoint theorem relation",
+        "confuses the conclusion of the theorem with bisecting the third side",
+        "",
+        "confuses parallel lines with perpendicular bisectors"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-bpt",
+      "nodeId": "class10-mathematics-triangles-prove-bpt",
+      "question": "In the standard geometric proof of the Basic Proportionality Theorem for triangle ABC with DE || BC, why is Area(ADE) / Area(BDE) = AD / DB?",
+      "options": [
+        "Because both triangles share the base DE.",
+        "Because both triangles have the same height drawn from vertex E to the line AB.",
+        "Because DE is equal to half of BC.",
+        "Because angle ADE is equal to angle B."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the shared base is DE rather than taking AD and DB as the bases",
+        "",
+        "assumes DE is half of BC which is not part of the standard proof",
+        "thinks the area ratio of triangles with a common vertex depends on corresponding angle equality"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-derive-bpt-corollaries",
+      "nodeId": "class10-mathematics-triangles-derive-bpt-corollaries",
+      "question": "In triangle ABC, DE || BC intersects AB at D and AC at E. Given AD/DB = AE/EC, which step correctly derives AD/AB = AE/AC?",
+      "options": [
+        "Multiply both sides by -1.",
+        "Square both sides of the ratio.",
+        "Subtract 1 directly from both sides of the given ratio.",
+        "Invert the ratios, add 1 to both sides, and then invert the result."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks changing signs produces whole-segment ratios",
+        "thinks squaring ratios relates parts to wholes",
+        "thinks subtracting 1 from the given ratio yields the total length",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-apply-bpt-find-segment-length",
+      "nodeId": "class10-mathematics-triangles-apply-bpt-find-segment-length",
+      "question": "In triangle ABC, D is on AB and E is on AC such that DE || BC. If AD = 2 cm, DB = 6 cm, and AE = 3 cm, what is the length of EC?",
+      "options": [
+        "1 cm",
+        "4 cm",
+        "9 cm",
+        "7 cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "divides 3 by (6/2) incorrectly or computes AE * AD / DB = 3*2/6 = 1",
+        "adds DB - AD to AE instead of using proportional multiplication",
+        "",
+        "adds DB and AE directly: 6 + 3 - 2 = 7"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-state-bpt-converse",
+      "nodeId": "class10-mathematics-triangles-state-bpt-converse",
+      "question": "Which statement represents the converse of the Basic Proportionality Theorem?",
+      "options": [
+        "If a line divides any two sides of a triangle in the same ratio, then the line is parallel to the third side.",
+        "If a line is parallel to one side of a triangle, it divides the other two sides in the same ratio.",
+        "If two triangles are similar, their corresponding sides are proportional.",
+        "If a line bisects an angle of a triangle, it divides the opposite side into segments proportional to the adjacent sides."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "states the theorem itself rather than its converse",
+        "states the definition of similar triangles instead of the converse of BPT",
+        "confuses BPT converse with the angle bisector theorem"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-apply-bpt-converse-parallelism",
+      "nodeId": "class10-mathematics-triangles-apply-bpt-converse-parallelism",
+      "question": "In triangle PQR, E and F are points on PQ and PR respectively. PE = 4 cm, EQ = 4.5 cm, PF = 8 cm, and FR = 9 cm. Is EF parallel to QR?",
+      "options": [
+        "No, because the ratio PE/EQ is 8/9 while PF/FR is 9/8.",
+        "Yes, because PE + PF = EQ + FR.",
+        "No, because PE + EQ is not equal to PF + FR.",
+        "Yes, because PE/EQ = PF/FR = 8/9."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "inverts one of the ratios during calculation",
+        "thinks parallelism depends on the sum of segments rather than their ratios",
+        "thinks the sides PQ and PR must have equal total lengths for lines to be parallel",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-apply-bpt-trapezium-and-quadrilaterals",
+      "nodeId": "class10-mathematics-triangles-apply-bpt-trapezium-and-quadrilaterals",
+      "question": "In a trapezium ABCD with AB || DC, the diagonals AC and BD intersect at point O. Which of the following relations is correct?",
+      "options": [
+        "AO / OC = BO / OD",
+        "AO / OD = BO / OC",
+        "AO * BO = CO * DO",
+        "AO + OC = BO + OD"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "cross-pairs numerator and denominator incorrectly across diagonals",
+        "confuses ratio equivalence AO/OC = BO/OD with the incorrect cross product AO*BO = CO*DO",
+        "thinks diagonal segments have equal sums rather than proportional parts"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-state-aaa-aa-criterion",
+      "nodeId": "class10-mathematics-triangles-state-aaa-aa-criterion",
+      "question": "Why is the AA (Angle-Angle) similarity criterion sufficient to prove two triangles similar without checking the third angle?",
+      "options": [
+        "Because side lengths do not depend on the third angle.",
+        "Because triangles only need two angles to be defined completely.",
+        "Because the third angle is always equal to the sum of the first two angles.",
+        "Because the sum of angles in any triangle is 180°, so if two angles are equal, the third angles must also be equal."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the third angle has no relationship to side proportionality",
+        "thinks a triangle only has two independent features",
+        "believes the third angle equals the sum of the other two rather than 180° minus their sum",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-state-sss-similarity-criterion",
+      "nodeId": "class10-mathematics-triangles-state-sss-similarity-criterion",
+      "question": "Which of the following correctly describes the SSS similarity criterion for two triangles ABC and DEF?",
+      "options": [
+        "AB = DE, BC = EF, and CA = FD",
+        "AB/DE = BC/EF = CA/FD",
+        "AB/DE = BC/EF and angle B = angle E",
+        "AB + BC + CA = DE + EF + FD"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses SSS similarity with SSS congruence",
+        "",
+        "confuses SSS similarity with SAS similarity",
+        "thinks equal perimeters is the criterion for SSS similarity"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-state-sas-similarity-criterion",
+      "nodeId": "class10-mathematics-triangles-state-sas-similarity-criterion",
+      "question": "To prove triangle ABC is similar to triangle DEF by the SAS similarity criterion, if AB/DE = AC/DF, which angles must be equal?",
+      "options": [
+        "Angle A and Angle D",
+        "Angle C and Angle F",
+        "Angle B and Angle E",
+        "Any pair of corresponding angles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "picks a non-included angle opposite to AB and DE",
+        "picks a non-included angle opposite to AC and DF",
+        "thinks any angle equality works regardless of whether it is included between the sides"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-write-symbolic-similarity-correspondence",
+      "nodeId": "class10-mathematics-triangles-write-symbolic-similarity-correspondence",
+      "question": "In triangles ABC and PQR, angle A = angle R, angle B = angle P, and angle C = angle Q. What is the correct symbolic similarity statement?",
+      "options": [
+        "triangle ABC ~ triangle PQR",
+        "triangle ABC ~ triangle RPQ",
+        "triangle ABC ~ triangle PRQ",
+        "triangle ABC ~ triangle QRP"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "writes vertices in alphabetical order ignoring angle correspondence",
+        "",
+        "swaps the second and third vertices without checking angle equality",
+        "matches angle A with angle Q instead of angle R"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-similarity-aa-criterion",
+      "nodeId": "class10-mathematics-triangles-prove-similarity-aa-criterion",
+      "question": "In triangle ABC, D is a point on AB and E is on AC such that angle ADE = angle ACB. Which pair of triangles is similar by the AA criterion?",
+      "options": [
+        "triangle ADE ~ triangle ABC",
+        "triangle ADE ~ triangle BCA",
+        "triangle ADE ~ triangle CAB",
+        "triangle ADE ~ triangle ACB"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "matches vertex D to B instead of D to C as given by the angle equality",
+        "matches the shared vertex A to vertex B",
+        "incorrectly matches the shared vertex A to vertex C",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-similarity-sss-criterion",
+      "nodeId": "class10-mathematics-triangles-prove-similarity-sss-criterion",
+      "question": "In triangle ABC, sides are AB = 3 cm, BC = 6 cm, CA = 4.5 cm. In triangle PQR, sides are PQ = 9 cm, QR = 12 cm, RP = 6 cm. Which similarity statement is correct?",
+      "options": [
+        "triangle ABC ~ triangle PQR",
+        "triangle ABC ~ triangle RQP",
+        "triangle ABC ~ triangle PRQ",
+        "triangle ABC ~ triangle QPR"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "pairs sides in written order without matching proportional ratios",
+        "",
+        "pairs AB with PR (ratio 1:2) but mismatches BC and CA to RQ and QP",
+        "pairs AB with QP (ratio 1:3) instead of checking consistent scale factor across all sides"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-similarity-sas-criterion",
+      "nodeId": "class10-mathematics-triangles-prove-similarity-sas-criterion",
+      "question": "In triangle ABC and triangle DEF, AB = 4 cm, AC = 6 cm, and angle A = 50°. Which measurements for triangle DEF prove triangle ABC ~ triangle DEF by the SAS criterion?",
+      "options": [
+        "DE = 8 cm, DF = 12 cm, and angle E = 50°",
+        "DE = 8 cm, EF = 12 cm, and angle E = 50°",
+        "DE = 8 cm, DF = 12 cm, and angle D = 50°",
+        "DE = 6 cm, DF = 9 cm, and angle F = 50°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the correct side lengths but chooses a non-included angle",
+        "uses the wrong side EF instead of DF to include angle E",
+        "",
+        "uses proportional sides but pairs the angle at F instead of the included angle D"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-calculate-lengths-from-similar-triangles",
+      "nodeId": "class10-mathematics-triangles-calculate-lengths-from-similar-triangles",
+      "question": "Given triangle ABC ~ triangle DEF, AB = 5 cm, BC = 8 cm, and DE = 15 cm. What is the length of EF?",
+      "options": [
+        "18 cm",
+        "20 cm",
+        "12 cm",
+        "24 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the difference (15 - 5 = 10) to 8 to get 18 instead of multiplying by the scale factor",
+        "multiplies 5 by 4 and applies an arbitrary factor to get 20",
+        "inverts the ratio: computes 8 * 15 / 10 = 12",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-calculate-angles-from-similar-triangles",
+      "nodeId": "class10-mathematics-triangles-calculate-angles-from-similar-triangles",
+      "question": "If triangle ABC ~ triangle DEF, angle A = 45°, and angle B = 85°, what is the measure of angle F?",
+      "options": [
+        "50°",
+        "85°",
+        "45°",
+        "130°"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes angle F corresponds to angle B",
+        "assumes angle F corresponds to angle A",
+        "adds angle A and angle B (45 + 85 = 130) instead of subtracting from 180°"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-nested-right-triangles-similarity",
+      "nodeId": "class10-mathematics-triangles-prove-nested-right-triangles-similarity",
+      "question": "In right-angled triangle ABC (right-angled at B), BD is perpendicular to hypotenuse AC. Which of the following is true regarding the resulting triangles?",
+      "options": [
+        "triangle ADB ~ triangle ABC and triangle BDC ~ triangle ABC",
+        "triangle ADB ~ triangle BDC, but neither is similar to triangle ABC",
+        "triangle ADB and triangle BDC are congruent to each other",
+        "BD divides triangle ABC into two triangles only if AB = BC"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the two smaller triangles are only similar to each other and not to the main triangle",
+        "confuses similarity with congruence for the two subdivided triangles",
+        "believes this property only holds for isosceles right triangles"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-geometric-product-relations",
+      "nodeId": "class10-mathematics-triangles-prove-geometric-product-relations",
+      "question": "Two line segments AB and CD intersect at point P such that triangle APD ~ triangle CPB. Which of the following product relations is correct?",
+      "options": [
+        "AP * CP = BP * PD",
+        "AP * PB = CP * PD",
+        "AP * PD = BP * CP",
+        "AP * CD = CP * AB"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "cross-multiplies non-corresponding segments from the ratio AP/CP = PD/PB",
+        "",
+        "multiplies sides within the same triangle instead of cross-multiplying the similarity ratio",
+        "incorrectly pairs whole line lengths with segments"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-solve-word-problems-shadow-similarity",
+      "nodeId": "class10-mathematics-triangles-solve-word-problems-shadow-similarity",
+      "question": "A vertical pole of length 6 m casts a shadow 4 m long on the ground. At the same time, a nearby tower casts a shadow 28 m long. What is the height of the tower?",
+      "options": [
+        "30 m",
+        "18.6 m",
+        "42 m",
+        "56 m"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the difference in shadow length (24) to the pole height (6) to get 30 m",
+        "sets up ratio upside down as 4/6 = tower_height/28, yielding 18.67 m",
+        "",
+        "multiplies the tower shadow by 2 (28 * 2 = 56) ignoring the 6:4 ratio"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-triangles-prove-multi-step-geometric-configurations",
+      "nodeId": "class10-mathematics-triangles-prove-multi-step-geometric-configurations",
+      "question": "Chords AB and CD of a circle intersect externally at point P. Which pair of triangles is similar, leading to the relation PA * PB = PC * PD?",
+      "options": [
+        "triangle PAC ~ triangle PDB",
+        "triangle PAB ~ triangle PCD",
+        "triangle PAC ~ triangle PBD",
+        "triangle PAD ~ triangle PCB"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "misaligns vertices B and D when writing the similarity correspondence",
+        "assumes the collinear segments form directly similar triangles PAB and PCD",
+        "",
+        "confuses the alternate chord cyclic quadrilateral angle pairings"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-identify-axes-and-origin",
+      "nodeId": "class10-mathematics-coordinate-geometry-identify-axes-and-origin",
+      "question": "Which of the following correctly describes the axes and origin on a Cartesian plane?",
+      "options": [
+        "The horizontal line is the x-axis, the vertical line is the y-axis, and their intersection is the origin (0, 0).",
+        "The horizontal line is the y-axis, the vertical line is the x-axis, and their intersection is the origin (0, 0).",
+        "The horizontal line is the x-axis, the vertical line is the y-axis, and their intersection is the origin (1, 1).",
+        "The horizontal line is the x-axis, the vertical line is the y-axis, and the origin is any point on the x-axis."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses horizontal and vertical axes with each other",
+        "thinks the origin is at (1, 1) rather than (0, 0)",
+        "thinks the origin is an entire axis rather than a single intersection point"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-locate-ordered-pairs",
+      "nodeId": "class10-mathematics-coordinate-geometry-locate-ordered-pairs",
+      "question": "In which quadrant does the point (-3, 5) lie?",
+      "options": [
+        "Quadrant II",
+        "Quadrant I",
+        "Quadrant III",
+        "Quadrant IV"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "ignores negative signs and assumes all points lie in Quadrant I",
+        "thinks both coordinates are negative in Quadrant II",
+        "swaps x and y signs, thinking Quadrant IV has negative x and positive y"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-perpendicular-distance-from-axes",
+      "nodeId": "class10-mathematics-coordinate-geometry-perpendicular-distance-from-axes",
+      "question": "What is the perpendicular distance of the point P(-4, 3) from the y-axis?",
+      "options": [
+        "3 units",
+        "5 units",
+        "-4 units",
+        "4 units"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the distance from the y-axis with the y-coordinate value",
+        "computes the distance from the origin instead of from the y-axis",
+        "forgets that distance must be non-negative and retains the negative sign of the coordinate",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-points-on-axes-form",
+      "nodeId": "class10-mathematics-coordinate-geometry-points-on-axes-form",
+      "question": "Which of the following points lies entirely on the y-axis?",
+      "options": [
+        "(5, 0)",
+        "(5, 5)",
+        "(-7, 0)",
+        "(0, -7)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses points on the x-axis with points on the y-axis",
+        "thinks points on an axis have both coordinates equal",
+        "confuses a negative x-intercept with a point on the y-axis",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-distance-from-origin",
+      "nodeId": "class10-mathematics-coordinate-geometry-distance-from-origin",
+      "question": "What is the distance of the point P(-6, 8) from the origin?",
+      "options": [
+        "2 units",
+        "14 units",
+        "10 units",
+        "100 units"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "subtracts the coordinates instead of applying the distance formula",
+        "adds the absolute values of the coordinates instead of using the square root of sum of squares",
+        "",
+        "forgets to take the square root of x squared plus y squared"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-derive-distance-formula",
+      "nodeId": "class10-mathematics-coordinate-geometry-derive-distance-formula",
+      "question": "In deriving the distance formula between A(x1, y1) and B(x2, y2) using a right triangle ACB where C is (x2, y1), how are the lengths of AC and BC represented?",
+      "options": [
+        "AC = (x2 + x1) and BC = (y2 + y1)",
+        "AC = |x2 - x1| and BC = |y2 - y1|",
+        "AC = |y2 - y1| and BC = |x2 - x1|",
+        "AC = (x2 - y1) and BC = (y2 - x1)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds coordinates instead of finding the difference between them",
+        "",
+        "swaps horizontal and vertical side lengths relative to the axes",
+        "subtracts y-coordinates from x-coordinates instead of matching corresponding axes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-calculate-distance-two-points",
+      "nodeId": "class10-mathematics-coordinate-geometry-calculate-distance-two-points",
+      "question": "What is the distance between the points A(2, -3) and B(6, 0)?",
+      "options": [
+        "7 units",
+        "5 units",
+        "25 units",
+        "1 unit"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the coordinate differences (4 + 3) instead of computing the hypotenuse",
+        "",
+        "forgets to take the square root after squaring and adding differences",
+        "subtracts the differences (4 - 3) instead of applying the distance formula"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-test-collinearity-distance",
+      "nodeId": "class10-mathematics-coordinate-geometry-test-collinearity-distance",
+      "question": "Three points A, B, and C have segment lengths AB = 3, BC = 4, and AC = 7. What can you conclude about these points?",
+      "options": [
+        "They are collinear because AB + BC = AC.",
+        "They form a right-angled triangle because 3^2 + 4^2 = 5^2.",
+        "They form an isosceles triangle because two segments are unequal.",
+        "They are collinear because AB * BC = AC."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses collinearity condition with Pythagorean triples for right triangles",
+        "fails to recognize collinearity when segment lengths sum to the total length",
+        "believes collinearity depends on multiplication of segment lengths"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-classify-triangles-distance",
+      "nodeId": "class10-mathematics-coordinate-geometry-classify-triangles-distance",
+      "question": "A triangle has vertices A(0, 0), B(3, 0), and C(0, 4). What type of triangle is ABC?",
+      "options": [
+        "Equilateral triangle",
+        "Isosceles triangle",
+        "Right-angled scalene triangle",
+        "Right-angled isosceles triangle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes all triangles drawn on Cartesian axes are equilateral",
+        "thinks two sides are equal without checking lengths (3, 4, 5)",
+        "",
+        "identifies it as right-angled but incorrectly assumes two perpendicular legs must be equal"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-classify-quadrilaterals-distance",
+      "nodeId": "class10-mathematics-coordinate-geometry-classify-quadrilaterals-distance",
+      "question": "A quadrilateral has all four sides equal in length, but its diagonals are not equal in length. What is this quadrilateral?",
+      "options": [
+        "Square",
+        "Rectangle",
+        "Parallelogram with unequal sides",
+        "Rhombus"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes all four-equal-sided quadrilaterals must be squares regardless of diagonal length",
+        "confuses equal sides with equal diagonals",
+        "fails to recognize that four equal sides define a rhombus",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-equidistant-point-on-axis",
+      "nodeId": "class10-mathematics-coordinate-geometry-equidistant-point-on-axis",
+      "question": "Which point on the x-axis is equidistant from (2, -5) and (-2, 9)?",
+      "options": [
+        "(0, -7)",
+        "(-7, 0)",
+        "(7, 0)",
+        "(-2, 0)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes the point lies on the y-axis instead of the x-axis",
+        "",
+        "makes a sign error during the algebraic simplification (8x = -56 vs 8x = 56)",
+        "takes the average of the x-coordinates without accounting for the y-distance differences"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-relation-equidistant-points",
+      "nodeId": "class10-mathematics-coordinate-geometry-relation-equidistant-points",
+      "question": "What is the relation between x and y such that the point P(x, y) is equidistant from A(3, 6) and B(-3, 4)?",
+      "options": [
+        "6x + 2y - 20 = 0",
+        "3x - y + 5 = 0",
+        "x + 3y - 5 = 0",
+        "3x + y - 5 = 0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to divide the entire simplified equation by the common factor",
+        "makes a sign error when expanding (y - 6)^2 and (y - 4)^2",
+        "swaps the coefficients of x and y",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-missing-coordinate-distance",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-missing-coordinate-distance",
+      "question": "The distance between P(2, -3) and Q(10, y) is 10 units. What are the possible values of y?",
+      "options": [
+        "3 or -9",
+        "-3 or 9",
+        "6 or -6",
+        "9 or -9"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "solves (y + 3)^2 = 36 as y + 3 = 6 or -6 but flips signs at the end",
+        "assumes y must be symmetric around zero without shifting by the center coordinate",
+        "neglects the negative root when taking the square root of 36"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-state-internal-section-formula",
+      "nodeId": "class10-mathematics-coordinate-geometry-state-internal-section-formula",
+      "question": "Which formula gives the coordinates of the point dividing the segment joining (x1, y1) and (x2, y2) internally in the ratio m1 : m2?",
+      "options": [
+        "((m1*x2 + m2*x1)/2, (m1*y2 + m2*y1)/2)",
+        "((m1*x1 + m2*x2)/(m1 + m2), (m1*y1 + m2*y2)/(m1 + m2))",
+        "((m1*x2 - m2*x1)/(m1 - m2), (m1*y2 - m2*y1)/(m1 - m2))",
+        "((m1*x2 + m2*x1)/(m1 + m2), (m1*y2 + m2*y1)/(m1 + m2))"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides by 2 instead of the sum of the ratio terms (m1 + m2)",
+        "multiplies m1 with x1 instead of cross-multiplying m1 with x2",
+        "uses the external division formula with subtractions instead of internal division",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-compute-internal-division-point",
+      "nodeId": "class10-mathematics-coordinate-geometry-compute-internal-division-point",
+      "question": "What are the coordinates of the point that divides the segment joining (-1, 7) and (4, -3) in the ratio 2 : 3 internally?",
+      "options": [
+        "(7/5, 1)",
+        "(2, 1)",
+        "(1, 3)",
+        "(3, 1)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "makes an arithmetic error in the numerator addition (2*4 + 3*(-1))",
+        "applies ratio 3:2 instead of 2:3",
+        "",
+        "swaps x and y values in the final coordinate pair"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-derive-midpoint-formula",
+      "nodeId": "class10-mathematics-coordinate-geometry-derive-midpoint-formula",
+      "question": "How is the midpoint formula obtained from the internal section formula?",
+      "options": [
+        "By setting m1 = 0 and m2 = 1 in the section formula.",
+        "By setting m1 = 1 and m2 = 2 in the section formula.",
+        "By setting m1 = 1 and m2 = 1 in the section formula.",
+        "By setting m1 = -1 and m2 = 1 in the section formula."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks one of the ratio parts must be zero for the midpoint",
+        "confuses midpoint ratio 1:1 with trisection ratio 1:2",
+        "",
+        "thinks midpoint requires an external division with opposite signs"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-calculate-midpoint",
+      "nodeId": "class10-mathematics-coordinate-geometry-calculate-midpoint",
+      "question": "What is the midpoint of the line segment joining the points A(-4, 6) and B(8, -2)?",
+      "options": [
+        "(2, 2)",
+        "(6, 4)",
+        "(4, 2)",
+        "(-2, -2)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the coordinates instead of adding them before dividing by 2",
+        "forgets to divide the sum of the x-coordinates by 2",
+        "swaps signs when adding positive and negative coordinates"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-endpoint-from-midpoint",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-endpoint-from-midpoint",
+      "question": "The midpoint of segment AB is M(2, -1). If point A is (-3, 5), what are the coordinates of point B?",
+      "options": [
+        "(-0.5, 2)",
+        "(7, -7)",
+        "(1, 4)",
+        "(7, 3)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the midpoint between A and M instead of finding the other endpoint B",
+        "",
+        "adds coordinates of M and A instead of solving (xA + xB)/2 = xM",
+        "makes a sign error when solving (5 + y)/2 = -1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-points-of-trisection",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-points-of-trisection",
+      "question": "What are the two points of trisection of the line segment joining A(2, -2) and B(-7, 4)?",
+      "options": [
+        "(-1, 2) and (-4, 0)",
+        "(-2.5, 1) and (0, 0)",
+        "(-1, 0) and (-4, 2)",
+        "(0, -1) and (2, -4)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "swaps the y-coordinates of the two trisection points",
+        "computes the midpoint instead of the two 1:2 and 2:1 trisection points",
+        "",
+        "swaps x and y coordinates for both trisection points"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-ratio-given-dividing-point",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-ratio-given-dividing-point",
+      "question": "In what ratio does the point P(-1, 6) divide the line segment joining A(-3, 10) and B(6, -8)?",
+      "options": [
+        "7 : 2",
+        "2 : 7",
+        "1 : 3",
+        "3 : 4"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the ratio m1 : m2 as m2 : m1",
+        "",
+        "sets up the division equation incorrectly by subtracting coordinates backwards",
+        "makes an arithmetic mistake when solving for k in the ratio k:1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-axis-division-ratio",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-axis-division-ratio",
+      "question": "In what ratio does the x-axis divide the line segment joining A(1, -5) and B(-4, 5)?",
+      "options": [
+        "1 : 1",
+        "4 : 1",
+        "1 : 4",
+        "2 : 3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the reciprocal of the x-coordinates ratio",
+        "uses the x-coordinates ratio instead of setting the y-coordinate to 0",
+        "guesses an unequal ratio due to the differing magnitudes of x-coordinates"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-find-parallelogram-fourth-vertex",
+      "nodeId": "class10-mathematics-coordinate-geometry-find-parallelogram-fourth-vertex",
+      "question": "If A(1, 2), B(4, 3), C(6, 6), and D(x, y) are the vertices of a parallelogram taken in order, what are the coordinates of D?",
+      "options": [
+        "(3, 7)",
+        "(5, 3)",
+        "(9, 7)",
+        "(3, 5)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "makes a sign error when solving (2 + 6)/2 = (3 + y)/2",
+        "swaps the x and y coordinates of point D",
+        "adds coordinates of A, B, and C directly instead of equating diagonal midpoints",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-calculate-centroid-of-triangle",
+      "nodeId": "class10-mathematics-coordinate-geometry-calculate-centroid-of-triangle",
+      "question": "What is the centroid of a triangle whose vertices are (3, -5), (-7, 4), and (10, -2)?",
+      "options": [
+        "(6, -3)",
+        "(2, -1)",
+        "(3, -1)",
+        "(2, 1)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the vertices but forgets to divide the sums by 3",
+        "",
+        "divides the sum of x-coordinates incorrectly",
+        "makes a sign error when summing the negative y-coordinates"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-coordinate-geometry-solve-geometric-modeling-problems",
+      "nodeId": "class10-mathematics-coordinate-geometry-solve-geometric-modeling-problems",
+      "question": "On a sports field grid, player A is at (2, 3) and player B is at (8, 11). A coach wants to place a marker at the point that divides the segment AB in the ratio 1 : 2 from player A. What are the coordinates of the marker?",
+      "options": [
+        "(5, 7)",
+        "(6, 8.33)",
+        "(4, 5.67)",
+        "(4, 7)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates the midpoint (ratio 1:1) instead of the 1:2 internal division point",
+        "calculates the point dividing AB in the ratio 2:1 instead of 1:2 from A",
+        "",
+        "calculates x correctly with ratio 1:2 but computes the average for y"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-identify-sides-reference-angle",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-identify-sides-reference-angle",
+      "question": "In a right-angled triangle PQR, right-angled at Q, which side is adjacent to angle R?",
+      "options": [
+        "PR",
+        "PQ",
+        "QR",
+        "PQ + QR"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the hypotenuse with the adjacent side",
+        "confuses the opposite side with the adjacent side relative to angle R",
+        "",
+        "believes the adjacent side is the sum of both non-hypotenuse legs"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-define-sine-cosine-tangent",
+      "question": "For an acute angle θ in a right-angled triangle, how is cos θ defined?",
+      "options": [
+        "Opposite side / Adjacent side",
+        "Opposite side / Hypotenuse",
+        "Adjacent side / Hypotenuse",
+        "Hypotenuse / Adjacent side"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses cosine with tangent",
+        "confuses cosine with sine",
+        "",
+        "confuses cosine with secant"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-define-reciprocal-ratios",
+      "question": "Which of the following correctly pairs a trigonometric ratio with its reciprocal?",
+      "options": [
+        "sec θ = 1 / sin θ",
+        "cosec θ = 1 / cos θ",
+        "cot θ = 1 / cos θ",
+        "cosec θ = 1 / sin θ"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks secant is the reciprocal of sine because both start with 's'",
+        "confuses cosecant with the reciprocal of cosine",
+        "confuses cotangent with the reciprocal of cosine",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-quotient-relations-tan-cot",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-quotient-relations-tan-cot",
+      "question": "Which expression represents the quotient relation for cot A?",
+      "options": [
+        "sin A / cos A",
+        "1 / (sin A × cos A)",
+        "cos A / sin A",
+        "sin A × cos A"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the quotient identity of cotangent with tangent",
+        "thinks cotangent is the reciprocal of the product of sine and cosine",
+        "",
+        "thinks cotangent is the product of sine and cosine"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-compute-ratios-from-sides",
+      "question": "In a right triangle ABC, right-angled at B, AB = 3 cm, BC = 4 cm, and AC = 5 cm. What is the value of sin C?",
+      "options": [
+        "4/5",
+        "3/5",
+        "3/4",
+        "4/3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses the adjacent side BC instead of the opposite side AB in the numerator",
+        "",
+        "computes tan C instead of sin C",
+        "computes cot C instead of sin C"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-find-remaining-ratios-from-one",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-find-remaining-ratios-from-one",
+      "question": "If sin A = 5/13, what is the value of tan A for the acute angle A?",
+      "options": [
+        "12/13",
+        "5/12",
+        "12/5",
+        "13/12"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds cos A instead of tan A",
+        "",
+        "inverts the ratio of opposite to adjacent giving cot A",
+        "computes sec A instead of tan A"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-compare-ratios-complementary-angles",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-compare-ratios-complementary-angles",
+      "question": "In triangle ABC right-angled at B, which of the following is always true regarding acute angles A and C?",
+      "options": [
+        "tan A = tan C",
+        "sin A = sin C",
+        "cos A = cos C",
+        "sin A = cos C"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes tangents of complementary angles are equal rather than reciprocals",
+        "assumes the sines of complementary angles are equal without swapping opposite and adjacent sides",
+        "assumes cosines of complementary angles are equal regardless of reference angle",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-invariance-of-ratios",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-invariance-of-ratios",
+      "question": "If all side lengths of a right-angled triangle are doubled while keeping the angles the same, what happens to the value of sin θ?",
+      "options": [
+        "It doubles",
+        "It remains unchanged",
+        "It is halved",
+        "It quadruples"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks scaling the side lengths by 2 doubles the ratio of the sides",
+        "",
+        "thinks the ratio scales inversely with the side lengths",
+        "thinks the ratio scales with the area factor of 4"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-calculate-unknown-sides",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-calculate-unknown-sides",
+      "question": "In a right triangle ABC right-angled at B, side AB = 6 cm and tan A = 4/3. What is the length of side BC?",
+      "options": [
+        "8 cm",
+        "4.5 cm",
+        "10 cm",
+        "12 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "inverts the tangent formula and calculates AB / (4/3) instead of AB × (4/3)",
+        "computes the hypotenuse AC instead of side BC",
+        "multiplies side AB by 2 mistakenly instead of using the ratio 4/3"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-evaluate-algebraic-ratio-expression",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-evaluate-algebraic-ratio-expression",
+      "question": "If cot θ = 7/8, what is the value of (1 + sin θ)(1 - sin θ) / (1 + cos θ)(1 - cos θ)?",
+      "options": [
+        "7/8",
+        "64/49",
+        "49/64",
+        "8/7"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "simplifies the expression to cot θ instead of cot² θ",
+        "inverts the expression mistakenly to get tan² θ instead of cot² θ",
+        "",
+        "simplifies the expression to tan θ instead of cot² θ"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-derive-ratios-45-degrees",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-derive-ratios-45-degrees",
+      "question": "In an isosceles right-angled triangle with equal legs of length a, what is the length of the hypotenuse and the resulting value of sin 45°?",
+      "options": [
+        "Hypotenuse = a√2, so sin 45° = 1/√2",
+        "Hypotenuse = 2a, so sin 45° = 1/2",
+        "Hypotenuse = a√3, so sin 45° = 1/√3",
+        "Hypotenuse = a√2, so sin 45° = √2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the legs linearly instead of using the Pythagorean theorem",
+        "confuses the 45-45-90 triangle geometry with a 30-60-90 triangle involving √3",
+        "takes the ratio of hypotenuse over opposite side instead of opposite over hypotenuse"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-derive-ratios-30-60-degrees",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-derive-ratios-30-60-degrees",
+      "question": "In an equilateral triangle of side length 2a, an altitude bisects one angle into two 30° angles. What is the length of this altitude?",
+      "options": [
+        "a",
+        "a√2",
+        "2a√3",
+        "a√3"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the altitude with the half-base length a",
+        "uses √2 from the 45-degree derivation instead of √3",
+        "multiplies the full side length 2a by √3 instead of the half-base a",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-deduce-ratios-0-90-degrees",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-deduce-ratios-0-90-degrees",
+      "question": "As an acute angle θ in a right triangle approaches 0°, what happens to the opposite side and to sin θ?",
+      "options": [
+        "Opposite side approaches the adjacent side, so sin θ is undefined",
+        "Opposite side approaches the hypotenuse, so sin θ approaches 1",
+        "Opposite side approaches 0, so sin θ approaches 1",
+        "Opposite side approaches 0, so sin θ approaches 0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the definition of sine with tangent when approaching 90°",
+        "confuses the limiting behavior of angle approaching 0° with angle approaching 90°",
+        "correctly identifies side length approaches 0 but incorrectly concludes sin 0° = 1",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-state-values-table",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-state-values-table",
+      "question": "What is the exact value of cos 60°?",
+      "options": [
+        "1 / 2",
+        "1 / √2",
+        "√3 / 2",
+        "√3"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses cos 60° with cos 45°",
+        "confuses cos 60° with sin 60° or cos 30°",
+        "confuses cos 60° with tan 60°"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-evaluate-standard-angle-expressions",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-evaluate-standard-angle-expressions",
+      "question": "What is the value of 2 tan² 45° + cos² 30° - sin² 60°?",
+      "options": [
+        "1",
+        "0",
+        "3/2",
+        "2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to multiply tan² 45° by 2 and evaluates 1 + 0 = 1",
+        "evaluates 2 tan² 45° as 0 mistakenly",
+        "adds the squared terms cos² 30° and sin² 60° instead of subtracting",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-solve-linear-trig-angle-equations",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-solve-linear-trig-angle-equations",
+      "question": "If sin(A - B) = 1/2 and cos(A + B) = 1/2, where 0° < A + B ≤ 90° and A > B, find the values of A and B.",
+      "options": [
+        "A = 30°, B = 15°",
+        "A = 60°, B = 30°",
+        "A = 45°, B = 15°",
+        "A = 45°, B = 30°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "solves using incorrect sum and difference angles A+B=45 and A-B=15",
+        "takes A and B directly as the angles 60° and 30° rather than solving the system A+B=60, A-B=30",
+        "",
+        "makes an arithmetic error when solving 2A = 90°"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identity-sin-cos",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identity-sin-cos",
+      "question": "In a right triangle ABC right-angled at B, the Pythagorean theorem states AB² + BC² = AC². How is the identity sin² A + cos² A = 1 derived from this?",
+      "options": [
+        "By dividing every term by AC²",
+        "By dividing every term by BC²",
+        "By dividing every term by AB²",
+        "By taking the square root of each term"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks dividing by side BC² derives sin² A + cos² A = 1 instead of tan² A + 1 = sec² A",
+        "thinks dividing by side AB² derives sin² A + cos² A = 1 instead of 1 + cot² A = cosec² A",
+        "believes taking square roots of individual terms leads directly to the trigonometric identity"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identities-sec-tan-cosec-cot",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-derive-pythagorean-identities-sec-tan-cosec-cot",
+      "question": "Which operation on the identity sin² θ + cos² θ = 1 directly derives the identity 1 + tan² θ = sec² θ?",
+      "options": [
+        "Dividing each term by cos² θ",
+        "Dividing each term by sin² θ",
+        "Dividing each term by tan² θ",
+        "Multiplying each term by cos² θ"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the derivation of 1 + cot² θ = cosec² θ with 1 + tan² θ = sec² θ",
+        "believes division by the target term tan² θ produces the identity",
+        "thinks multiplying by cos² θ rather than dividing gives tangent"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-express-ratios-in-terms-of-one",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-express-ratios-in-terms-of-one",
+      "question": "How is cos A expressed in terms of cot A for an acute angle A?",
+      "options": [
+        "1 / √(1 + cot² A)",
+        "cot A / √(1 + cot² A)",
+        "√(1 + cot² A) / cot A",
+        "cot A / √(cot² A - 1)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "gives the expression for sin A in terms of cot A instead of cos A",
+        "",
+        "gives the reciprocal sec A in terms of cot A instead of cos A",
+        "uses an incorrect Pythagorean sign under the radical"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-simplify-expressions-identities",
+      "question": "What is the simplified form of (1 + tan² θ)(1 - sin θ)(1 + sin θ)?",
+      "options": [
+        "tan² θ",
+        "1",
+        "sec² θ",
+        "cos² θ"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "simplifies (1 - sin² θ) to 1, leaving only (1 + tan² θ) = sec² θ",
+        "",
+        "evaluates product incorrectly as sec² θ",
+        "forgets that sec² θ and cos² θ are reciprocals whose product is 1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-prove-identities-converting-to-sin-cos",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-prove-identities-converting-to-sin-cos",
+      "question": "When converting (tan θ + sec θ) entirely into terms of sin θ and cos θ, which expression is obtained?",
+      "options": [
+        "(sin θ + cos θ) / cos θ",
+        "(sin θ + 1) / cos θ",
+        "(1 + cos θ) / sin θ",
+        "(sin θ + 1) / cos² θ"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "replaces sec θ with 1/1 instead of 1/cos θ",
+        "",
+        "swaps sine and cosine in the denominator",
+        "multiplies denominators instead of finding a common denominator"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-prove-identities-conjugate-multiplication",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-prove-identities-conjugate-multiplication",
+      "question": "To simplify √((1 + sin A) / (1 - sin A)), what should the numerator and denominator inside the square root be multiplied by?",
+      "options": [
+        "1 - sin A",
+        "1 + cos A",
+        "cos A",
+        "1 + sin A"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies by the denominator itself rather than its algebraic conjugate",
+        "confuses the sine term with a cosine term when forming the conjugate",
+        "attempts to eliminate sine directly by multiplying by cosine",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-prove-identities-algebraic-factorisation",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-prove-identities-algebraic-factorisation",
+      "question": "Which algebraic factorization is used to simplify (sin³ θ + cos³ θ) / (sin θ + cos θ)?",
+      "options": [
+        "a³ + b³ = (a + b)(a² - ab + b²)",
+        "a³ + b³ = (a + b)(a² + ab + b²)",
+        "a³ + b³ = (a + b)³ - 3ab",
+        "a³ - b³ = (a - b)(a² + ab + b²)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the wrong sign for the middle term in the quadratic factor of sum of cubes",
+        "uses an incomplete binomial expansion identity missing the factor (a + b)",
+        "uses the difference of cubes factorization instead of sum of cubes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-introduction-to-trigonometry-prove-advanced-multi-identity-relations",
+      "nodeId": "class10-mathematics-introduction-to-trigonometry-prove-advanced-multi-identity-relations",
+      "question": "Which of the following is identical to (sin A + cosec A)² + (cos A + sec A)²?",
+      "options": [
+        "5 + tan² A + cot² A",
+        "7 + sin² A + cos² A",
+        "7 + tan² A + cot² A",
+        "9 + tan² A + cot² A"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "forgets to convert cosec² A to 1 + cot² A and sec² A to 1 + tan² A, missing 2 in the constant sum",
+        "leaves sin² A and cos² A instead of converting to tangent and cotangent",
+        "",
+        "adds extra terms during cross-multiplication, resulting in a constant of 9"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-identify-line-of-sight",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-identify-line-of-sight",
+      "question": "A student stands on the ground and looks up at a bird sitting on a tree branch. Which line segment represents the line of sight?",
+      "options": [
+        "The horizontal line along the ground from the student's feet to the tree base",
+        "The straight line from the student's eye to the bird",
+        "The vertical line from the ground up to the bird",
+        "The horizontal line drawn from the student's eye level to the tree trunk"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses line of sight with the horizontal ground distance",
+        "",
+        "confuses line of sight with the vertical height of the object",
+        "confuses line of sight with the horizontal reference line"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-define-angle-of-elevation",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-define-angle-of-elevation",
+      "question": "When viewing the top of a tower from a point on the ground, what is the angle of elevation?",
+      "options": [
+        "The angle between the line of sight and the horizontal line",
+        "The angle between the line of sight and the vertical line of the tower",
+        "The angle between the ground and the vertical tower wall",
+        "The angle between the vertical line at the observer and the line of sight"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the angle of elevation is measured against the vertical object",
+        "confuses the angle of elevation with the right angle at the base of the tower",
+        "measures the angle of elevation from the vertical axis at the observer instead of the horizontal"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-define-angle-of-depression",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-define-angle-of-depression",
+      "question": "A guard standing on top of a lighthouse looks down at a boat in the sea. Which angle is the angle of depression?",
+      "options": [
+        "The angle between the lighthouse wall and the line of sight to the boat",
+        "The angle between the line of sight and the surface of the sea",
+        "The angle between the lighthouse wall and the surface of the sea",
+        "The angle between the horizontal line from the guard's eye and the line of sight"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "measures the angle of depression from the vertical wall instead of the horizontal",
+        "confuses angle of depression with the angle at the boat on the sea level",
+        "confuses angle of depression with the 90 degree angle between the tower and the ground",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-relate-elevation-depression-alternate-angles",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-relate-elevation-depression-alternate-angles",
+      "question": "An observer at the top of a cliff looks down at a car with an angle of depression of 30°. Why is the angle of elevation of the observer as seen from the car also 30°?",
+      "options": [
+        "They are vertically opposite angles formed by intersecting lines.",
+        "They are corresponding angles formed by a transversal cutting vertical lines.",
+        "They are complementary angles in a right-angled triangle.",
+        "They are alternate interior angles between two parallel horizontal lines."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses alternate interior angles with vertically opposite angles",
+        "confuses alternate interior angles with corresponding angles",
+        "thinks the two angles add up to 90 degrees rather than being equal",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-draw-single-triangle-diagram",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-draw-single-triangle-diagram",
+      "question": "A ladder 10 m long leans against a vertical wall, making an angle of 60° with the ground. In the right-angled triangle formed by the ladder, wall, and ground, which side is the hypotenuse and where is the 60° angle located?",
+      "options": [
+        "The wall is the hypotenuse; the 60° angle is between the ladder and the wall.",
+        "The ladder is the hypotenuse; the 60° angle is between the ladder and the ground.",
+        "The ladder is the hypotenuse; the 60° angle is between the ladder and the wall.",
+        "The ground distance is the hypotenuse; the 60° angle is between the ladder and the ground."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the vertical wall with the hypotenuse and places the angle against the wall",
+        "",
+        "identifies the hypotenuse correctly but places the given angle at the top with the wall",
+        "thinks the horizontal base is the hypotenuse of the triangle"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-select-trig-ratio",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-select-trig-ratio",
+      "question": "A kite is flying at an altitude of 45 m. You want to find the length of the taut string attached to it, knowing the string makes an angle of 30° with the level ground. Which trigonometric ratio should you use directly?",
+      "options": [
+        "tan 30°",
+        "cos 30°",
+        "sin 30°",
+        "cot 30°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "defaults to tangent regardless of whether hypotenuse or adjacent side is involved",
+        "uses cosine because it is a common ratio, confusing adjacent with opposite",
+        "",
+        "uses cotangent thinking it directly relates opposite and hypotenuse"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-calculate-height-given-distance-angle",
+      "question": "A person standing 20 m away from the base of a vertical tower observes the angle of elevation of its top to be 45°. What is the height of the tower?",
+      "options": [
+        "10 m",
+        "20 m",
+        "20√2 m",
+        "20√3 m"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides distance by 2 instead of multiplying by tan 45°",
+        "",
+        "calculates the hypotenuse distance (20 / cos 45°) instead of height",
+        "uses tan 60° = √3 instead of tan 45° = 1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-calculate-distance-given-height-angle",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-calculate-distance-given-height-angle",
+      "question": "From the top of a 30 m high cliff, the angle of depression of a boat is 30°. How far is the boat from the base of the cliff?",
+      "options": [
+        "30 / √3 m",
+        "30√3 m",
+        "60 m",
+        "15 m"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies height by tan 30° instead of dividing by tan 30°",
+        "",
+        "uses sin 30° = 1/2 to find distance instead of tangent",
+        "multiplies height by sin 30° instead of using tangent"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-calculate-slant-hypotenuse",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-calculate-slant-hypotenuse",
+      "question": "A straight wire attached to the top of a vertical pole of height 6 m makes an angle of 30° with the level ground. What is the length of the wire?",
+      "options": [
+        "12 m",
+        "6√3 m",
+        "3 m",
+        "12√3 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses tan 30° to find adjacent side instead of hypotenuse",
+        "multiplies height by sin 30° (6 * 0.5) instead of dividing by sin 30°",
+        "confuses sin 30° with tan 30° and divides by (1/√3)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-account-for-observer-height",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-account-for-observer-height",
+      "question": "An observer 1.5 m tall stands 28.5 m away from a chimney. The angle of elevation of the top of the chimney from their eyes is 45°. What is the total height of the chimney?",
+      "options": [
+        "28.5 m",
+        "27.0 m",
+        "57.0 m",
+        "30.0 m"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to add the observer's height to the calculated opposite side",
+        "subtracts the observer's height instead of adding it",
+        "doubles the distance assuming symmetrical height",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-broken-tree-problem",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-broken-tree-problem",
+      "question": "A vertical tree breaks due to a storm and the broken top bends so that it touches the ground, making an angle of 30° with it. The distance from the foot of the tree to the point where the top touches the ground is 8 m. What was the original height of the tree?",
+      "options": [
+        "16 / √3 m",
+        "8 / √3 m",
+        "8√3 m",
+        "24 m"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "calculates only the hypotenuse/broken part (16/√3) and forgets the standing part",
+        "calculates only the vertical standing part (8/√3) and forgets to add the fallen part",
+        "",
+        "adds the distance to the broken part directly without trigonometry"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-draw-two-triangle-diagram",
+      "question": "From a point P on the ground, the angles of elevation of the bottom and top of a flagstaff fixed on top of a 20 m high building are 45° and 60° respectively. If the base of the building is B, which geometric setup correctly describes this problem?",
+      "options": [
+        "Two right-angled triangles sharing the same vertical side representing the building",
+        "One right-angled triangle and one obtuse triangle with no common vertex",
+        "Two right-angled triangles sharing the same horizontal base PB on the ground",
+        "Two separate right-angled triangles positioned on opposite sides of point P"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the vertical side is the shared side rather than the ground base PB",
+        "fails to realize the right angle is common to both triangles at base B",
+        "",
+        "places the objects on opposite sides of the observer instead of stacked vertically"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-same-side",
+      "question": "The angle of elevation of the top of a tower from a point A is 30°. Moving 20 m closer to the tower along the ground to point B, the angle of elevation becomes 60°. What is the height of the tower?",
+      "options": [
+        "10√3 m",
+        "10 m",
+        "20√3 m",
+        "15√3 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "ignores the root 3 factor and takes height as 20/2",
+        "assumes the distance moved equals the height divided by tan 60°",
+        "takes the average of the coefficients without solving the simultaneous equations"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-opposite-sides",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-two-points-collinear-base-opposite-sides",
+      "question": "Two observers on opposite sides of a 50 m high tower observe its top at angles of elevation 45° and 30° respectively. All three are in the same straight line. What is the total distance between the two observers?",
+      "options": [
+        "50(√3 + 1) m",
+        "50(√3 - 1) m",
+        "100 m",
+        "50√3 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the two distances instead of adding them because they are on opposite sides",
+        "assumes equal distances of 50 m on both sides",
+        "takes only the distance for the 30° observer and ignores the 45° observer"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-statue-on-pedestal",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-statue-on-pedestal",
+      "question": "A 1.6 m tall statue stands on top of a pedestal. From a point on the ground, the angle of elevation of the top of the statue is 60° and from the same point, the angle of elevation of the top of the pedestal is 45°. What is the height of the pedestal?",
+      "options": [
+        "1.6 / (√3 - 1) m",
+        "1.6 / (√3 + 1) m",
+        "1.6(√3 - 1) m",
+        "1.6√3 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 1 in the denominator instead of subtracting",
+        "inverts the denominator expression during rearrangement",
+        "multiplies statue height directly by tan 60°"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-top-and-bottom-from-height",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-top-and-bottom-from-height",
+      "question": "From the top of a 7 m high building, the angle of elevation of the top of a cable tower is 60° and the angle of depression of its foot is 45°. What is the total height of the tower?",
+      "options": [
+        "7√3 m",
+        "14 m",
+        "7(√3 - 1) m",
+        "7(√3 + 1) m"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates only the portion above the building (7√3) and forgets to add the building's height",
+        "assumes the tower is twice the height of the building",
+        "subtracts 7 from 7√3 instead of adding",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-two-poles-equal-height",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-two-poles-equal-height",
+      "question": "Two poles of equal height stand on opposite sides of an 80 m wide road. From a point between them on the road, the angles of elevation of the tops of the poles are 60° and 30°. How far is the point from the base of the pole with the 60° elevation?",
+      "options": [
+        "20 m",
+        "40 m",
+        "60 m",
+        "30 m"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes the observation point is midway between the two poles",
+        "finds the distance to the pole with the 30° elevation instead of 60°",
+        "estimates distance without using the ratio of tangents"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-speed-distance-time-angles",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-speed-distance-time-angles",
+      "question": "From the top of a tower, a car moving at uniform speed toward the base is observed. The angle of depression changes from 30° to 60° in 6 seconds. How much more time will it take the car to reach the foot of the tower?",
+      "options": [
+        "6 seconds",
+        "2 seconds",
+        "3 seconds",
+        "12 seconds"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes time taken is equal because the angle increased by 30 degrees",
+        "divides 6 seconds by 3 incorrectly instead of recognizing the remaining distance is half the covered distance",
+        "",
+        "doubles the time assuming moving closer takes longer"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-cloud-and-reflection",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-cloud-and-reflection",
+      "question": "An observer at a height h above a lake observes the angle of elevation of a cloud as α and the angle of depression of its reflection in the lake as β. If H is the height of the cloud above the water surface, which relation correctly equates the horizontal distance x?",
+      "options": [
+        "x = (H + h) / tan α = (H - h) / tan β",
+        "x = (H - h) / tan α = (H + h) / tan β",
+        "x = H / tan α = H / tan β",
+        "x = (H - h) / tan α = H / tan β"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the signs, adding height above lake for elevation and subtracting for reflection",
+        "",
+        "ignores the observer's height above the water level entirely",
+        "forgets that the reflection is measured from the observer's height above the lake surface"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-prove-height-complementary-angles",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-prove-height-complementary-angles",
+      "question": "The angles of elevation of the top of a tower from two points on the ground at distances a and b from its base (in the same straight line) are complementary. What is the height h of the tower?",
+      "options": [
+        "h = (a + b) / 2",
+        "h = a * b",
+        "h = √(a² + b²)",
+        "h = √(ab)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "takes the arithmetic mean of distances instead of geometric mean",
+        "forgets the square root when multiplying tan θ and cot θ = 1",
+        "applies the Pythagorean theorem directly to the base distances",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-algebraic-parameter-proofs",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-algebraic-parameter-proofs",
+      "question": "A vertical pole stands on level ground. From two points on the same side of the pole, at distances d₁ and d₂ from its base (d₁ > d₂), the angles of elevation of the top are α and β respectively. What is the correct expression for the height h of the pole in terms of the distance between the two points, (d₁ - d₂)?",
+      "options": [
+        "h = (d₁ - d₂) / (tan β - tan α)",
+        "h = (d₁ - d₂) * (tan α + tan β)",
+        "h = (d₁ - d₂) / (cot α - cot β)",
+        "h = (d₁ - d₂) / (cot β - cot α)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "replaces cotangent with tangent directly without taking reciprocals",
+        "multiplies distances by the sum of tangents",
+        "",
+        "reverses the subtraction order of cotangents leading to a negative height"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-some-applications-of-trigonometry-simplify-surd-answers",
+      "nodeId": "class10-mathematics-some-applications-of-trigonometry-simplify-surd-answers",
+      "question": "An expression simplifies to 6 / √3. Rationalising the denominator and using √3 ≈ 1.732, what is the value rounded to two decimal places?",
+      "options": [
+        "1.15",
+        "3.46",
+        "10.39",
+        "2.00"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides 6 by 3 and then divides by 1.732 instead of multiplying (2 / 1.732)",
+        "",
+        "multiplies 6 directly by 1.732 without dividing by 3",
+        "cancels √3 incorrectly and rounds 6/3 to 2.00"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-define-secant",
+      "nodeId": "class10-mathematics-circles-define-secant",
+      "question": "What is a secant of a circle?",
+      "options": [
+        "A line segment joining any two points on the circle",
+        "A line passing through the centre of the circle",
+        "A line that touches the circle at exactly one point",
+        "A line that intersects the circle in two distinct points"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a secant line with a chord line segment",
+        "thinks a secant must pass through the centre",
+        "confuses a secant with a tangent",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-define-tangent",
+      "nodeId": "class10-mathematics-circles-define-tangent",
+      "question": "Which statement correctly defines a tangent to a circle?",
+      "options": [
+        "A line segment that connects the centre to the boundary",
+        "A line that cuts across the circle at two points",
+        "A line that divides the circle into two equal semicircles",
+        "A line that intersects the circle at exactly one point"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a tangent with a radius",
+        "confuses a tangent with a secant",
+        "confuses a tangent with a line containing a diameter",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-define-point-of-contact",
+      "nodeId": "class10-mathematics-circles-define-point-of-contact",
+      "question": "What is the common point where a tangent meets a circle called?",
+      "options": [
+        "Midpoint of the tangent",
+        "Point of intersection of secants",
+        "Point of contact",
+        "Centre of curvature"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the tangent is a finite segment centered at the meeting point",
+        "confuses tangent touching with secant intersection",
+        "",
+        "confuses the touchpoint with the centre of the circle"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-distinguish-secant-chord-tangent",
+      "nodeId": "class10-mathematics-circles-distinguish-secant-chord-tangent",
+      "question": "Line L extends infinitely in both directions and crosses a circle at two points P and Q. What is line L?",
+      "options": [
+        "A chord",
+        "A tangent",
+        "A secant",
+        "A diameter"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "does not distinguish between an infinite line and a finite line segment",
+        "thinks any line meeting a circle at boundary points is a tangent",
+        "",
+        "confuses any two-point line with a diameter line"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-tangent-as-limiting-case-of-secant",
+      "nodeId": "class10-mathematics-circles-tangent-as-limiting-case-of-secant",
+      "question": "How can a tangent to a circle be viewed as a limiting case of a secant?",
+      "options": [
+        "When the two points of intersection of the secant move along the circle and coincide",
+        "When the secant moves infinitely far away from the centre",
+        "When the secant passes directly through the centre of the circle",
+        "When the secant becomes perpendicular to the diameter"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks limiting position means moving away to infinity",
+        "thinks the limiting position of a secant is the diameter line",
+        "confuses limiting geometric process with perpendicularity condition"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-count-tangents-at-a-given-point",
+      "nodeId": "class10-mathematics-circles-count-tangents-at-a-given-point",
+      "question": "How many tangents can be drawn to a circle passing through a single specified point lying on the circle?",
+      "options": [
+        "Exactly one",
+        "Zero",
+        "Exactly two",
+        "Infinitely many"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a point on the circle with a point inside the circle",
+        "confuses a point on the circle with a point outside the circle",
+        "thinks infinitely many lines passing through the point touch without crossing"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-parallel-tangents-to-given-secant",
+      "nodeId": "class10-mathematics-circles-parallel-tangents-to-given-secant",
+      "question": "What is the maximum number of tangents to a circle that can be parallel to a given secant line?",
+      "options": [
+        "1",
+        "Infinitely many",
+        "4",
+        "2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks only one side of the circle can have a parallel tangent",
+        "confuses parallel tangents with parallel secants",
+        "doubles the count thinking of tangents at four quadrants",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-state-tangent-radius-perpendicularity",
+      "nodeId": "class10-mathematics-circles-state-tangent-radius-perpendicularity",
+      "question": "What is the angle between a tangent to a circle and the radius drawn through the point of contact?",
+      "options": [
+        "45°",
+        "60°",
+        "180°",
+        "90°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the angle depends on the inclination and defaults to 45 degrees",
+        "guesses 60 degrees from equilateral triangle configurations",
+        "confuses perpendicularity with lying along the same straight line",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-prove-tangent-radius-perpendicularity",
+      "nodeId": "class10-mathematics-circles-prove-tangent-radius-perpendicularity",
+      "question": "In the standard proof that tangent PT at P is perpendicular to radius OP, why is OP shorter than the segment OQ joining centre O to any other point Q on the tangent?",
+      "options": [
+        "Because Q lies inside the circle, making OQ smaller than the radius",
+        "Because Q lies outside the circle, so OQ is greater than the radius OP",
+        "Because OP and OQ are radii of two different concentric circles",
+        "Because angle OPQ is always an obtuse angle"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks points on the tangent line lie inside the circle",
+        "",
+        "invents a second circle rather than using the definition of a tangent",
+        "assumes properties of the triangle angle before establishing perpendicularity"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-calculate-radius-or-tangent-pythagoras",
+      "nodeId": "class10-mathematics-circles-calculate-radius-or-tangent-pythagoras",
+      "question": "A tangent PQ at a point P of a circle of radius 5 cm meets a line through the centre O at a point Q such that OQ = 13 cm. What is the length of PQ?",
+      "options": [
+        "12 cm",
+        "8 cm",
+        "14 cm",
+        "sqrt(194) cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the radius directly from OQ instead of using the Pythagorean theorem",
+        "adds radius and distance then divides incorrectly",
+        "treats OQ as a leg and adds squares instead of recognizing OQ as the hypotenuse"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-prove-parallel-tangents-at-diameter-ends",
+      "nodeId": "class10-mathematics-circles-prove-parallel-tangents-at-diameter-ends",
+      "question": "Tangents are drawn at the endpoints A and B of a diameter AB of a circle. Why are these two tangents parallel?",
+      "options": [
+        "Because their lengths from A and B are equal",
+        "Because the sum of interior angles on the same side of the transversal AB is 90° + 90° = 180°",
+        "Because both tangents pass through the centre of the circle",
+        "Because the diameter bisects the angle between the two tangents"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses tangent segment equality with the parallelism condition",
+        "",
+        "believes tangents pass through the centre",
+        "treats the parallel lines as intersecting lines with an angle bisector"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-count-tangents-by-point-position",
+      "nodeId": "class10-mathematics-circles-count-tangents-by-point-position",
+      "question": "Point P lies inside a circle. How many tangents can be drawn to the circle passing through P?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "Infinitely many"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses an interior point with a point lying on the circle",
+        "confuses an interior point with an exterior point",
+        "thinks any line through an interior point that does not hit the centre is a tangent"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-define-length-of-tangent-from-external-point",
+      "nodeId": "class10-mathematics-circles-define-length-of-tangent-from-external-point",
+      "question": "For a tangent drawn from an external point P touching the circle at point T, what is meant by the 'length of the tangent' from P?",
+      "options": [
+        "The total length of the infinite line containing P and T",
+        "The distance from P to the centre of the circle",
+        "The length of the line segment PT",
+        "The length of the chord drawn from T"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the tangent has infinite length since it is a line",
+        "confuses the tangent length with the distance to the centre",
+        "",
+        "confuses the tangent segment with an internal chord"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-prove-equal-tangents-theorem",
+      "nodeId": "class10-mathematics-circles-prove-equal-tangents-theorem",
+      "question": "Two tangents PA and PB are drawn from an external point P to a circle with centre O. Which congruence criterion directly proves triangle OAP is congruent to triangle OBP?",
+      "options": [
+        "RHS",
+        "AAA",
+        "SSS",
+        "ASA"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses similarity criterion AAA with a congruence criterion",
+        "assumes PA = PB to prove congruence, which is circular reasoning",
+        "assumes angle equality between tangents before proving triangle congruence"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-subtended-angles-by-tangents-at-centre",
+      "nodeId": "class10-mathematics-circles-subtended-angles-by-tangents-at-centre",
+      "question": "Tangents PA and PB touch a circle with centre O at A and B respectively. If angle APB = 70°, what is the measure of angle POA?",
+      "options": [
+        "35°",
+        "70°",
+        "55°",
+        "110°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses angle POA with angle APO, which is half of angle APB",
+        "assumes angle POA equals angle APB",
+        "",
+        "finds the full central angle AOB (110°) but forgets to divide by 2 for angle POA"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-supplementary-angles-tangents-radii",
+      "nodeId": "class10-mathematics-circles-supplementary-angles-tangents-radii",
+      "question": "Tangents PA and PB are drawn to a circle with centre O from an external point P. If angle APB = 80°, what is the measure of angle AOB?",
+      "options": [
+        "80°",
+        "90°",
+        "120°",
+        "100°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the opposite angles in the quadrilateral are equal rather than supplementary",
+        "thinks angle AOB is always a right angle",
+        "confuses supplementary sum (180°) with 200° from an arithmetic slip",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-concentric-circles-chord-bisected",
+      "nodeId": "class10-mathematics-circles-concentric-circles-chord-bisected",
+      "question": "Two concentric circles have centre O. A chord AB of the outer circle touches the inner circle at P. Why is P the midpoint of AB?",
+      "options": [
+        "Triangle OAB is an equilateral triangle with OP as an altitude",
+        "AB is a diameter of the outer circle, so its centre must be P",
+        "OP is perpendicular to AB, and the perpendicular from the centre to a chord bisects the chord",
+        "The two tangents from A and B to the inner circle must be equal"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes triangle OAB is equilateral without any angle conditions",
+        "confuses a chord of the outer circle with its diameter",
+        "",
+        "invents non-existent tangents from chord endpoints"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-calculate-chord-length-concentric-circles",
+      "nodeId": "class10-mathematics-circles-calculate-chord-length-concentric-circles",
+      "question": "Two concentric circles have radii 5 cm and 3 cm. What is the length of the chord of the larger circle which touches the smaller circle?",
+      "options": [
+        "8 cm",
+        "4 cm",
+        "sqrt(34) cm",
+        "16 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "finds half the chord length using Pythagoras (4 cm) but forgets to double it",
+        "adds squares of radii instead of subtracting when finding the chord half-length",
+        "doubles the full chord length calculation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-isosceles-triangle-formed-by-tangents",
+      "nodeId": "class10-mathematics-circles-isosceles-triangle-formed-by-tangents",
+      "question": "Tangents PA and PB are drawn from point P to a circle with centre O. If angle APB = 50°, what is the measure of angle PAB?",
+      "options": [
+        "50°",
+        "65°",
+        "130°",
+        "25°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes triangle PAB is equilateral so all angles equal 50° or 60°",
+        "",
+        "computes 180° - 50° = 130° but forgets to divide by 2 for the base angles",
+        "halves angle APB instead of finding the base angle of the isosceles triangle"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-opposite-sides-quadrilateral-circumscribing",
+      "nodeId": "class10-mathematics-circles-opposite-sides-quadrilateral-circumscribing",
+      "question": "A quadrilateral ABCD circumscribes a circle. If AB = 6 cm, BC = 7 cm, and CD = 4 cm, what is the length of AD?",
+      "options": [
+        "5 cm",
+        "3 cm",
+        "9 cm",
+        "13 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "computes AB + BC - CD instead of using AB + CD = BC + AD",
+        "",
+        "adds adjacent sides AB + BC and subtracts nothing",
+        "adds all three known sides together"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-parallelogram-circumscribing-is-rhombus",
+      "nodeId": "class10-mathematics-circles-parallelogram-circumscribing-is-rhombus",
+      "question": "Parallelogram ABCD circumscribes a circle. Which step proves that ABCD is a rhombus?",
+      "options": [
+        "Showing that opposite angles are supplementary, so all angles must be 90°",
+        "Using AB + CD = AD + BC and AB = CD, AD = BC to deduce that AB = AD",
+        "Proving that the diagonals are equal using the radius of the circle",
+        "Showing that the area of ABCD equals four times the circle's area"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses proving a rhombus with proving a rectangle or square",
+        "",
+        "believes diagonals must be equal in a rhombus (a property of rectangles)",
+        "uses area relations that do not establish equal adjacent side lengths"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-opposite-sides-subtend-supplementary-angles",
+      "nodeId": "class10-mathematics-circles-opposite-sides-subtend-supplementary-angles",
+      "question": "Quadrilateral ABCD circumscribes a circle with centre O. If angle AOB = 125°, what is the measure of angle COD?",
+      "options": [
+        "235°",
+        "65°",
+        "125°",
+        "55°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts 125° from 360° instead of using the supplementary property (180°)",
+        "subtracts 125° from 190° due to an arithmetic error",
+        "thinks opposite central angles are equal rather than supplementary",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-calculate-lengths-circumscribed-triangle",
+      "nodeId": "class10-mathematics-circles-calculate-lengths-circumscribed-triangle",
+      "question": "A triangle ABC circumscribes a circle of radius 4 cm such that segment BD = 6 cm and DC = 8 cm where D is the point of contact on BC. What is the length of side AB if the segment from A to the tangent points has length x = 7 cm?",
+      "options": [
+        "15 cm",
+        "14 cm",
+        "13 cm",
+        "12 cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "computes side AC (x + 8 = 15 cm) instead of side AB",
+        "computes side BC (14 cm) instead of side AB",
+        "",
+        "adds radius 4 to DC (8) instead of adding x (7) to BD (6)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-circles-tangent-chord-similarity-configuration",
+      "nodeId": "class10-mathematics-circles-tangent-chord-similarity-configuration",
+      "question": "From an external point P, a tangent PT of length 6 cm touches a circle, and a secant PAB passes through the circle intersecting it at A and B. If PA = 4 cm, what is the length of AB?",
+      "options": [
+        "2 cm",
+        "5 cm",
+        "9 cm",
+        "13 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "subtracts PA directly from PT (6 - 4 = 2)",
+        "",
+        "finds total secant PB = 9 cm (PT^2 / PA = 36 / 4 = 9) but forgets to subtract PA to get AB",
+        "adds PT and PA instead of using the tangent-secant similarity relation"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae",
+      "nodeId": "class10-mathematics-areas-related-to-circles-recall-perimeter-area-formulae",
+      "question": "For a circle of radius $r$, which pair correctly gives its circumference $C$ and area $A$?",
+      "options": [
+        "$C = \\pi r^2$ and $A = 2\\pi r$",
+        "$C = 2\\pi r$ and $A = \\pi r^2$",
+        "$C = 2\\pi r^2$ and $A = \\pi r$",
+        "$C = \\pi r$ and $A = \\pi r^2$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the formula for circumference with the formula for area",
+        "",
+        "incorrectly squares the radius in circumference and uses linear radius in area",
+        "omits the factor of 2 in the circumference formula"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-circumference-and-area",
+      "question": "What is the area of a circle with a diameter of $14\\text{ cm}$? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$154\\text{ cm}^2$",
+        "$88\\text{ cm}^2$",
+        "$616\\text{ cm}^2$",
+        "$44\\text{ cm}^2$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the circumference using diameter as radius instead of area",
+        "uses the diameter directly as the radius in the area formula",
+        "calculates the circumference of the circle instead of its area"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-determine-radius-from-perimeter-or-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-determine-radius-from-perimeter-or-area",
+      "question": "The circumference of a circle is $132\\text{ cm}$. What is its radius? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$21\\text{ cm}$",
+        "$42\\text{ cm}$",
+        "$10.5\\text{ cm}$",
+        "$66\\text{ cm}$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the diameter instead of the radius by forgetting to divide by 2",
+        "divides by an extra factor of 2 during calculation",
+        "divides circumference by 2 but forgets to divide by pi"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-perimeter-and-area-of-semicircle-quadrant",
+      "nodeId": "class10-mathematics-areas-related-to-circles-perimeter-and-area-of-semicircle-quadrant",
+      "question": "What is the total perimeter of a closed semicircular protractor of radius $7\\text{ cm}$? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$22\\text{ cm}$",
+        "$36\\text{ cm}$",
+        "$44\\text{ cm}$",
+        "$29\\text{ cm}$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates only the curved boundary arc length and forgets to add the diameter",
+        "",
+        "uses the full circumference of the circle",
+        "adds only one radius instead of the full diameter to the semicircular arc"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-wheel-revolutions-distance",
+      "nodeId": "class10-mathematics-areas-related-to-circles-wheel-revolutions-distance",
+      "question": "A circular wheel has a radius of $35\\text{ cm}$. How many complete revolutions must it make to cover a distance of $110\\text{ m}$? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$50$",
+        "$25$",
+        "$500$",
+        "$100$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the diameter in the circumference formula instead of radius",
+        "makes an error in converting metres to centimetres by a factor of 10",
+        "uses half circumference as the distance covered in one revolution"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-cost-of-fencing-and-ploughing",
+      "nodeId": "class10-mathematics-areas-related-to-circles-cost-of-fencing-and-ploughing",
+      "question": "The cost of fencing a circular field at 24 rupees per metre is 5280 rupees. What is the radius of the field? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$70\\text{ m}$",
+        "$35\\text{ m}$",
+        "$17.5\\text{ m}$",
+        "$110\\text{ m}$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds the diameter instead of the radius",
+        "",
+        "divides the total perimeter by $4\\pi$ instead of $2\\pi$",
+        "takes the total cost divided by rate as diameter rather than perimeter"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-define-sector-and-central-angle",
+      "nodeId": "class10-mathematics-areas-related-to-circles-define-sector-and-central-angle",
+      "question": "Which statement correctly defines a sector of a circle?",
+      "options": [
+        "The region between a chord and its corresponding arc",
+        "The region enclosed by two radii and the arc between them",
+        "The line segment connecting any two points on the circle",
+        "The region bounded by two parallel chords"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the definition of a sector with that of a segment",
+        "",
+        "confuses a sector with a chord",
+        "confuses a sector with the area between parallel secants"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-derive-arc-length-formula",
+      "nodeId": "class10-mathematics-areas-related-to-circles-derive-arc-length-formula",
+      "question": "What is the formula for the length $l$ of an arc of a sector with central angle $\\theta^\\circ$ in a circle of radius $r$?",
+      "options": [
+        "$l = \\frac{\\theta}{360^\\circ} \\times \\pi r^2$",
+        "$l = \\frac{\\theta}{180^\\circ} \\times 2\\pi r$",
+        "$l = \\frac{\\theta}{360^\\circ} \\times 2\\pi r$",
+        "$l = \\frac{\\theta}{360^\\circ} \\times \\pi r$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the area formula $\\pi r^2$ instead of circumference in the arc length formula",
+        "uses $180^\\circ$ in the denominator with the full circumference $2\\pi r$",
+        "",
+        "omits the factor of 2 from the circumference term"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-arc-length",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-arc-length",
+      "question": "An arc of a circle of radius $21\\text{ cm}$ subtends an angle of $60^\\circ$ at the centre. What is the length of the arc? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$11\\text{ cm}$",
+        "$44\\text{ cm}$",
+        "$22\\text{ cm}$",
+        "$231\\text{ cm}$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses $\\pi r$ instead of $2\\pi r$ in the formula",
+        "forgets to divide by 2 or uses diameter instead of radius",
+        "",
+        "calculates the area of the sector instead of the arc length"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-derive-sector-area-formula",
+      "nodeId": "class10-mathematics-areas-related-to-circles-derive-sector-area-formula",
+      "question": "Which expression represents the area $A$ of a sector of a circle of radius $r$ with central angle $\\theta$ (in degrees)?",
+      "options": [
+        "$A = \\frac{\\theta}{360^\\circ} \\times 2\\pi r$",
+        "$A = \\frac{\\theta}{360^\\circ} \\times \\pi r^2$",
+        "$A = \\frac{\\theta}{180^\\circ} \\times \\pi r^2$",
+        "$A = \\frac{\\theta}{360^\\circ} \\times 2\\pi r^2$"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses sector area formula with arc length formula",
+        "",
+        "uses $180^\\circ$ instead of $360^\\circ$ for the whole circle angle",
+        "multiplies $\\pi r^2$ by an extra factor of 2"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-minor-sector-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-minor-sector-area",
+      "question": "Find the area of a sector of a circle with radius $6\\text{ cm}$ if the angle of the sector is $60^\\circ$. (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$\\frac{264}{7}\\text{ cm}^2$",
+        "$\\frac{44}{7}\\text{ cm}^2$",
+        "$\\frac{132}{7}\\text{ cm}^2$",
+        "$\\frac{66}{7}\\text{ cm}^2$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses $2\\pi r^2$ instead of $\\pi r^2$ in the sector area formula",
+        "calculates the arc length of the sector instead of the sector area",
+        "",
+        "uses $r$ instead of $r^2$ in the area formula"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-major-sector-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-major-sector-area",
+      "question": "In a circle of radius $6\\text{ cm}$, a minor sector has a central angle of $60^\\circ$. What is the area of the corresponding major sector? (Use $\\pi = 3.14$)",
+      "options": [
+        "$94.2\\text{ cm}^2$",
+        "$113.04\\text{ cm}^2$",
+        "$18.84\\text{ cm}^2$",
+        "$56.52\\text{ cm}^2$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates the total area of the circle instead of the major sector",
+        "calculates the area of the minor sector instead of the major sector",
+        "calculates the area using half the major sector angle"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-relate-sector-area-to-arc-length",
+      "nodeId": "class10-mathematics-areas-related-to-circles-relate-sector-area-to-arc-length",
+      "question": "A sector of a circle of radius $10\\text{ cm}$ has an arc length of $14\\text{ cm}$. What is the area of the sector?",
+      "options": [
+        "$140\\text{ cm}^2$",
+        "$280\\text{ cm}^2$",
+        "$35\\text{ cm}^2$",
+        "$70\\text{ cm}^2$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies arc length and radius without multiplying by half",
+        "multiplies arc length by diameter instead of half radius",
+        "divides by 4 instead of 2 when applying the formula",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-perimeter-of-a-sector",
+      "nodeId": "class10-mathematics-areas-related-to-circles-perimeter-of-a-sector",
+      "question": "A sector of a circle of radius $7\\text{ cm}$ subtends an angle of $90^\\circ$ at the centre. What is the total perimeter of this sector? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$11\\text{ cm}$",
+        "$18\\text{ cm}$",
+        "$32\\text{ cm}$",
+        "$25\\text{ cm}$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates only the arc length and does not add the bounding radii",
+        "adds only one radius instead of two to the arc length",
+        "adds two diameters instead of two radii to the arc length",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-clock-hands-sector-problems",
+      "nodeId": "class10-mathematics-areas-related-to-circles-clock-hands-sector-problems",
+      "question": "The length of the minute hand of a clock is $14\\text{ cm}$. What is the area swept by the minute hand in $5\\text{ minutes}$? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$\\frac{77}{3}\\text{ cm}^2$",
+        "$154\\text{ cm}^2$",
+        "$\\frac{154}{3}\\text{ cm}^2$",
+        "$\\frac{308}{3}\\text{ cm}^2$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses linear radius instead of squared radius in the area formula",
+        "assumes the minute hand sweeps through a right angle in 5 minutes",
+        "",
+        "doubles the sector area by using diameter instead of radius"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-define-segment",
+      "nodeId": "class10-mathematics-areas-related-to-circles-define-segment",
+      "question": "Which of the following correctly describes a segment of a circle?",
+      "options": [
+        "The region bounded by two radii and their included arc",
+        "The line segment connecting the centre to any point on the circle",
+        "The region between two concentric circles",
+        "The region bounded by a chord and either of its arcs"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a segment with a sector",
+        "confuses a segment with a radius",
+        "confuses a segment with a circular ring (annulus)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-right-angle",
+      "nodeId": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-right-angle",
+      "question": "Two radii of a circle of radius $8\\text{ cm}$ meet at the centre at an angle of $90^\\circ$. What is the area of the triangle formed by these two radii and the chord joining their endpoints?",
+      "options": [
+        "$64\\text{ cm}^2$",
+        "$16\\sqrt{2}\\text{ cm}^2$",
+        "$16\\text{ cm}^2$",
+        "$32\\text{ cm}^2$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates $r^2$ instead of half $r^2$",
+        "multiplies half radius by chord length instead of correctly finding the altitude",
+        "divides $r^2$ by 4 instead of 2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-equilateral",
+      "nodeId": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-equilateral",
+      "question": "A chord of a circle of radius $10\\text{ cm}$ subtends an angle of $60^\\circ$ at the centre. What is the area of the triangle formed by the chord and the radii?",
+      "options": [
+        "$50\\text{ cm}^2$",
+        "$100\\sqrt{3}\\text{ cm}^2$",
+        "$50\\sqrt{3}\\text{ cm}^2$",
+        "$25\\sqrt{3}\\text{ cm}^2$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "treats the triangle as a right triangle and uses half $r^2$",
+        "forgets to divide by 4 in the equilateral triangle formula",
+        "uses square root of 3 divided by 2 instead of 4",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-general-angle",
+      "nodeId": "class10-mathematics-areas-related-to-circles-area-of-triangle-in-sector-general-angle",
+      "question": "In a circle of radius $12\\text{ cm}$, two radii subtend an angle of $120^\\circ$ at the centre. What is the area of the triangle formed by the radii and the chord connecting their endpoints?",
+      "options": [
+        "$36\\text{ cm}^2$",
+        "$72\\sqrt{3}\\text{ cm}^2$",
+        "$36\\sqrt{3}\\text{ cm}^2$",
+        "$72\\text{ cm}^2$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses sine of 120 degrees as half instead of root 3 over 2",
+        "forgets the half factor when computing triangle area",
+        "",
+        "treats the triangle as right-angled and computes half $r^2$"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-minor-segment-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-minor-segment-area",
+      "question": "A chord of a circle of radius $14\\text{ cm}$ subtends a right angle at the centre. What is the area of the corresponding minor segment? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$154\\text{ cm}^2$",
+        "$98\\text{ cm}^2$",
+        "$252\\text{ cm}^2$",
+        "$56\\text{ cm}^2$"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "finds the sector area but forgets to subtract the triangle area",
+        "finds the triangle area instead of the segment area",
+        "adds the triangle area to the sector area instead of subtracting it",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-calculate-major-segment-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-calculate-major-segment-area",
+      "question": "A circle has an area of $616\\text{ cm}^2$. A chord forms a minor segment of area $56\\text{ cm}^2$. What is the area of the corresponding major segment?",
+      "options": [
+        "$560\\text{ cm}^2$",
+        "$672\\text{ cm}^2$",
+        "$280\\text{ cm}^2$",
+        "$504\\text{ cm}^2$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the minor segment area to the circle area instead of subtracting it",
+        "divides the remaining area by 2",
+        "subtracts the minor segment area twice from the circle area"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-annulus-concentric-circular-ring-area",
+      "nodeId": "class10-mathematics-areas-related-to-circles-annulus-concentric-circular-ring-area",
+      "question": "What is the area of a circular path of uniform width enclosed between two concentric circles of radii $14\\text{ m}$ and $7\\text{ m}$? (Use $\\pi = \\frac{22}{7}$)",
+      "options": [
+        "$154\\text{ m}^2$",
+        "$616\\text{ m}^2$",
+        "$462\\text{ m}^2$",
+        "$308\\text{ m}^2$"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "computes $\\pi(R - r)^2$ instead of $\\pi(R^2 - r^2)$",
+        "computes only the area of the outer circle",
+        "",
+        "subtracts the circumferences instead of the areas"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-word-problems-brooch-umbrella-wiper",
+      "nodeId": "class10-mathematics-areas-related-to-circles-word-problems-brooch-umbrella-wiper",
+      "question": "An umbrella has $8$ ribs that are equally spaced. Assuming the umbrella to be a flat circle of radius $45\\text{ cm}$, what is the central angle of the sector between two consecutive ribs?",
+      "options": [
+        "$45^\\circ$",
+        "$40^\\circ$",
+        "$60^\\circ$",
+        "$90^\\circ$"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides $360^\\circ$ by 9 instead of 8",
+        "divides $360^\\circ$ by 6 instead of 8",
+        "divides $360^\\circ$ by 4 instead of 8"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-areas-related-to-circles-cost-and-design-segment-problems",
+      "nodeId": "class10-mathematics-areas-related-to-circles-cost-and-design-segment-problems",
+      "question": "A round table cover has $6$ equal designs formed by segments along its border. The total area of all $6$ designs combined is $462\\text{ cm}^2$. If the cost of making the design is 0.50 rupees per square centimetre, what is the total cost?",
+      "options": [
+        "924 rupees",
+        "231 rupees",
+        "1386 rupees",
+        "38.50 rupees"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies by 2 instead of multiplying by 0.50",
+        "",
+        "multiplies the total area by 6 again before multiplying by the rate",
+        "calculates the cost for only one design instead of all six designs"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-identify-basic-solids",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-identify-basic-solids",
+      "question": "Which 3D solid has exactly one circular flat base tapering smoothly to a single vertex?",
+      "options": [
+        "Sphere",
+        "Right circular cylinder",
+        "Hemisphere",
+        "Right circular cone"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks a sphere has a flat circular base and a vertex",
+        "confuses a cylinder which has two parallel circular faces with a cone tapering to a single point",
+        "thinks a hemisphere tapers to a vertex instead of curving continuously without a sharp point",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-recall-cuboid-cube-formulae",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-recall-cuboid-cube-formulae",
+      "question": "What is the formula for the lateral (curved) surface area of a cuboid with length l, breadth b, and height h?",
+      "options": [
+        "2(lb + bh + hl)",
+        "4a^2",
+        "lbh",
+        "2h(l + b)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the lateral surface area of a cuboid with its total surface area",
+        "gives the lateral surface area formula for a cube instead of a general cuboid",
+        "confuses surface area with volume of a cuboid",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-recall-cylinder-formulae",
+      "question": "What is the total surface area of a closed right circular cylinder of base radius r and height h?",
+      "options": [
+        "2πr(r + h)",
+        "πr^2h",
+        "2πrh",
+        "2πr^2h"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses surface area with the volume of a cylinder",
+        "confuses total surface area with curved surface area by omitting the two circular bases",
+        "incorrectly multiplies the base area by 2 and height instead of summing the areas"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-calculate-slant-height-cone",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-calculate-slant-height-cone",
+      "question": "A right circular cone has a base radius of 6 cm and a vertical height of 8 cm. What is its slant height?",
+      "options": [
+        "14 cm",
+        "10 cm",
+        "2 cm",
+        "7 cm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds radius and vertical height directly instead of using the Pythagorean relationship",
+        "",
+        "subtracts the radius from the height instead of applying the Pythagorean theorem",
+        "averages the radius and height instead of calculating the square root of the sum of squares"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-recall-cone-formulae",
+      "question": "What is the curved surface area of a right circular cone with base radius r, vertical height h, and slant height l?",
+      "options": [
+        "πr(l + r)",
+        "πrl",
+        "(1/3)πr^2h",
+        "2πrh"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses curved surface area with total surface area by including the base circle",
+        "",
+        "confuses curved surface area with the volume of a cone",
+        "confuses the curved surface area of a cone with that of a cylinder"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-recall-sphere-hemisphere-formulae",
+      "question": "What is the total surface area of a solid hemisphere of radius r?",
+      "options": [
+        "2πr^2",
+        "3πr^2",
+        "4πr^2",
+        "(2/3)πr^3"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "uses the curved surface area of a hemisphere and forgets to add the base circular face",
+        "",
+        "uses the total surface area of a full sphere instead of a hemisphere",
+        "confuses total surface area of a hemisphere with its volume"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-decompose-composite-solid",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-decompose-composite-solid",
+      "question": "A test tube has a cylindrical body and a rounded, closed bottom. Into which two basic shapes is this solid decomposed?",
+      "options": [
+        "A cylinder and a cone",
+        "A cone and a hemisphere",
+        "A cylinder and a hemisphere",
+        "Two cylinders of different radii"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes the curved bottom is a pointed cone rather than a smooth dome",
+        "ignores the cylindrical stem entirely",
+        "",
+        "thinks the rounded end is another smaller cylinder"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-identify-hidden-joining-surfaces",
+      "question": "A cone is fixed on top of a hemisphere such that their circular bases match perfectly. When calculating the total surface area of this new toy, which surface is hidden inside and must NOT be included?",
+      "options": [
+        "The curved surface of the cone",
+        "The curved surface of the hemisphere",
+        "The flat circular base where they meet",
+        "The vertex point of the cone"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the exposed conical mantle becomes hidden",
+        "thinks the outer curved bowl of the hemisphere becomes interior",
+        "",
+        "confuses an interior surface area with an exterior geometric point"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-deduce-common-dimensions",
+      "question": "A toy is in the shape of a cone mounted on a hemisphere of radius 3.5 cm. If the total height of the toy is 15.5 cm, what is the vertical height of the conical part?",
+      "options": [
+        "12 cm",
+        "15.5 cm",
+        "8.5 cm",
+        "7 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "takes the total height of the toy as the cone height without subtracting the radius of the hemisphere",
+        "subtracts the diameter (7 cm) instead of the radius (3.5 cm) from the total height",
+        "doubles the radius and mistakes it for the cone's height"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-tsa-cone-hemisphere-toy",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-tsa-cone-hemisphere-toy",
+      "question": "A toy is formed by a cone of radius r and slant height l mounted on a hemisphere of radius r. What is the expression for its total surface area?",
+      "options": [
+        "πr(l + r) + 3πr^2",
+        "πrl + 3πr^2",
+        "πrl + 2πr^2",
+        "πrl + 4πr^2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the total surface area of the cone to the total surface area of the hemisphere, double-counting the interface",
+        "includes the hidden base circle by adding the total surface area of the hemisphere instead of just its curved surface area",
+        "",
+        "uses the surface area of a full sphere instead of a hemisphere"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-tsa-cylinder-hemispherical-ends",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-hemispherical-ends",
+      "question": "A medicine capsule consists of a cylinder of radius r and height h with two hemispheres of radius r attached at both ends. What is the total external surface area of the capsule?",
+      "options": [
+        "2πrh + 2πr^2",
+        "2πr(h + r) + 4πr^2",
+        "2πrh + 6πr^2",
+        "2πrh + 4πr^2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "includes only one hemisphere's curved surface area instead of two",
+        "uses the total surface area of the cylinder along with the spherical ends, double-counting both circular interfaces",
+        "uses the total surface area of each hemisphere, mistakenly adding the two interior circular bases",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-tsa-cylinder-conical-top-tent",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-tsa-cylinder-conical-top-tent",
+      "question": "A circus tent consists of a cylindrical base of radius r and height h topped by a conical roof of the same radius and slant height l. What is the area of canvas required to make the tent (assuming no canvas for the floor)?",
+      "options": [
+        "2πrh + πrl",
+        "2πrh + πrl + πr^2",
+        "2πr(h + r) + πr(l + r)",
+        "πr^2h + (1/3)πr^2h"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds a flat circular area between the cylinder and cone or for the floor",
+        "adds total surface areas of both shapes, counting internal and floor surfaces",
+        "calculates the total volume of the tent instead of its surface area"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-tsa-cube-hemisphere-surmounted",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-tsa-cube-hemisphere-surmounted",
+      "question": "A solid is made by placing a hemisphere of radius r on one face of a solid cube of side a. What is the total surface area of this combined solid?",
+      "options": [
+        "6a^2 + 2πr^2",
+        "5a^2 + 2πr^2",
+        "6a^2 + 3πr^2",
+        "6a^2 + πr^2"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the hemisphere curved surface area to all 6 faces without subtracting the base circle covered by the hemisphere",
+        "removes an entire face of the cube (assuming it is completely open) rather than subtracting just the circular contact area",
+        "adds the total surface area of the hemisphere without subtracting the overlap area from the cube",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-tsa-cavity-scooped-out",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-tsa-cavity-scooped-out",
+      "question": "A hemispherical depression of radius r is scooped out from one flat end of a solid cylinder of radius r and height h. What is the total surface area of the remaining solid?",
+      "options": [
+        "2πrh + πr^2 + 2πr^2",
+        "2πrh + πr^2 - 2πr^2",
+        "2πrh - 2πr^2",
+        "2πrh + 2πr^2 - πr^2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "subtracts the hemispherical curved area assuming scooping out decreases surface area",
+        "subtracts both circular ends and the hemispherical surface area",
+        "subtracts the bottom flat circular base instead of retaining it"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-cost-of-painting-or-canvas",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-cost-of-painting-or-canvas",
+      "question": "A conical tent requires 44 m^2 of canvas. If the canvas costs ₹50 per square metre, what is the total cost of the canvas needed?",
+      "options": [
+        "₹440",
+        "₹2200",
+        "₹880",
+        "₹4400"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies 44 by 10 instead of 50 due to a place-value error",
+        "",
+        "multiplies 44 by 20 instead of 50",
+        "multiplies 44 by 100 instead of 50"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-volume-additive-principle",
+      "question": "When two distinct non-overlapping solids A and B are glued together base-to-base, how is the total volume of the combined solid calculated?",
+      "options": [
+        "(Volume of A + Volume of B) / 2",
+        "Volume of A + Volume of B - Area of common base",
+        "Volume of A + Volume of B",
+        "Volume of A × Volume of B"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "averages the two volumes instead of summing them",
+        "confuses volume with surface area and tries to subtract the joining base area",
+        "",
+        "multiplies the volumes together instead of adding them"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-volume-cone-hemisphere-solid",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-volume-cone-hemisphere-solid",
+      "question": "A solid consists of a cone of height h mounted on a hemisphere, both having radius r. What is the total volume of the solid?",
+      "options": [
+        "(2/3)πr^2(h + r)",
+        "(1/3)πr^2(h + 4r)",
+        "πr^2(h + (2/3)r)",
+        "(1/3)πr^2(h + 2r)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "factors out 2/3 from both terms incorrectly",
+        "uses the volume of a full sphere ((4/3)πr^3) instead of a hemisphere ((2/3)πr^3)",
+        "omits the 1/3 factor from the cone's volume formula",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-volume-cylinder-two-cones-or-hemispheres",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-volume-cylinder-two-cones-or-hemispheres",
+      "question": "A solid model has a central cylinder of radius r and height H with two identical cones of radius r and height h attached at each end. What is the total volume of the model?",
+      "options": [
+        "πr^2(H + 2h)",
+        "πr^2H + (1/3)πr^2h",
+        "2πr^2H + (2/3)πr^2h",
+        "πr^2H + (2/3)πr^2h"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "treats the two cones as cylinders of the same height",
+        "includes the volume of only one cone instead of two",
+        "doubles the volume of the central cylinder unnecessarily",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-volume-remaining-after-scooping",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-volume-remaining-after-scooping",
+      "question": "A conical cavity of base radius r and height h is drilled out from a solid cylinder of the same radius r and same height h. What is the volume of the remaining solid?",
+      "options": [
+        "(1/3)πr^2h",
+        "πr^2h",
+        "(2/3)πr^2h",
+        "(4/3)πr^2h"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "states the volume of the removed cone rather than the remaining solid",
+        "thinks the volume remains unchanged after drilling out a cavity",
+        "",
+        "adds the cone volume to the cylinder volume instead of subtracting it"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-volume-pen-stand-cuboid-cones",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-volume-pen-stand-cuboid-cones",
+      "question": "A wooden pen stand is a cuboid of dimensions l × b × h with 4 identical conical depressions of volume V each made to hold pens. What is the volume of wood in the entire stand?",
+      "options": [
+        "lbh - 4V",
+        "lbh + 4V",
+        "lbh - V",
+        "4(lbh - V)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the volume of the depressions instead of subtracting the removed wood",
+        "subtracts the volume of only one conical depression instead of all four",
+        "multiplies the entire expression by 4 instead of just the depression volume"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-solve-submerged-solid-displacement",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-solve-submerged-solid-displacement",
+      "question": "A solid sphere of volume 150 cm^3 is completely submerged in a cylinder completely filled with water. How much water overflows?",
+      "options": [
+        "75 cm^3",
+        "150 cm^3",
+        "300 cm^3",
+        "It depends on the height of the cylinder"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides the displaced volume by 2 assuming only half the submerged volume causes overflow",
+        "",
+        "doubles the volume thinking both the solid and equal air are displaced",
+        "believes displacement depends on the vessel's dimensions rather than purely on the submerged solid's volume"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-calculate-submerged-spheres-count",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-calculate-submerged-spheres-count",
+      "question": "A vessel filled with water loses 100 cm^3 of water when n identical lead shots, each of volume 0.5 cm^3, are dropped into it and fully submerged. What is the value of n?",
+      "options": [
+        "50",
+        "200",
+        "100",
+        "500"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "multiplies 100 by 0.5 instead of dividing 100 by 0.5",
+        "",
+        "thinks the number of shots equals the total displaced volume directly",
+        "divides incorrectly by taking 100 / 0.2 instead of 100 / 0.5"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-calculate-mass-from-density",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-calculate-mass-from-density",
+      "question": "A solid iron pole has a total volume of 250 cm^3. If 1 cm^3 of iron has an approximate mass of 8 g, what is the total mass of the pole?",
+      "options": [
+        "2000 g",
+        "31.25 g",
+        "258 g",
+        "242 g"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides volume by density instead of multiplying volume by density",
+        "adds density to volume instead of multiplying",
+        "subtracts density from volume"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-surface-areas-and-volumes-multi-step-composite-solid-problems",
+      "nodeId": "class10-mathematics-surface-areas-and-volumes-multi-step-composite-solid-problems",
+      "question": "A solid is composed of a cylinder of radius 3 cm and height 4 cm with a cone of the same base radius and height 4 cm on one end. What is the ratio of the volume of the conical part to the volume of the cylindrical part?",
+      "options": [
+        "1 : 1",
+        "3 : 1",
+        "1 : 3",
+        "1 : 4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes the cone and cylinder have equal volumes because they have the same base and height",
+        "inverts the ratio, placing the cylinder's volume before the cone's volume",
+        "",
+        "uses the height value in the ratio instead of the 1/3 volume formula ratio"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-distinguish-grouped-ungrouped-data",
+      "nodeId": "class10-mathematics-statistics-distinguish-grouped-ungrouped-data",
+      "question": "Which of the following representations describes a grouped frequency distribution with continuous intervals?",
+      "options": [
+        "A list of individual student marks: 12, 15, 18, 12, 20, 15",
+        "A table listing daily rainfall ranges like 0–10 mm, 10–20 mm with corresponding days",
+        "A table listing each unique shoe size alongside the number of students wearing it",
+        "A list of values arranged in increasing order without frequencies"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses raw ungrouped data with a continuous grouped frequency distribution",
+        "",
+        "confuses a discrete frequency distribution with a grouped continuous distribution",
+        "confuses ordered raw data with grouped continuous intervals"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-identify-class-limits-and-size",
+      "nodeId": "class10-mathematics-statistics-identify-class-limits-and-size",
+      "question": "For the class interval 35–50, what are the lower limit, upper limit, and class size?",
+      "options": [
+        "Lower limit = 50, Upper limit = 35, Class size = 15",
+        "Lower limit = 35, Upper limit = 50, Class size = 16",
+        "Lower limit = 35, Upper limit = 50, Class size = 15",
+        "Lower limit = 35, Upper limit = 50, Class size = 42.5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the definitions of lower limit and upper limit",
+        "calculates class size by adding one to the difference as if counting discrete integers",
+        "",
+        "confuses class size with class mark"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-class-mark",
+      "nodeId": "class10-mathematics-statistics-calculate-class-mark",
+      "question": "What is the class mark of the class interval 40–60?",
+      "options": [
+        "20",
+        "50",
+        "100",
+        "45"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates class size by subtracting lower limit from upper limit instead of finding midpoint",
+        "",
+        "adds the limits without dividing the sum by 2",
+        "subtracts and averages incorrectly or estimates without calculating"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-convert-inclusive-to-exclusive-intervals",
+      "nodeId": "class10-mathematics-statistics-convert-inclusive-to-exclusive-intervals",
+      "question": "When converting the inclusive class interval 21–30 into a continuous (exclusive) interval (where the next interval is 31–40), what does it become?",
+      "options": [
+        "20.5–30.5",
+        "21.5–29.5",
+        "20.0–30.0",
+        "21.0–31.0"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds 0.5 to the lower limit and subtracts 0.5 from the upper limit instead of the reverse",
+        "assumes inclusive classes are already continuous without applying the adjustment factor of 0.5",
+        "adds 1 to the upper limit without adjusting the lower limit"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-compute-product-fi-xi",
+      "nodeId": "class10-mathematics-statistics-compute-product-fi-xi",
+      "question": "A class interval is 20–40 with a frequency of 6. What is the value of f_i * x_i for this class?",
+      "options": [
+        "120",
+        "360",
+        "240",
+        "180"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "multiplies frequency by the lower limit instead of the class mark",
+        "multiplies frequency by the sum of limits instead of the midpoint",
+        "multiplies frequency by the upper limit instead of the class mark",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-mean-direct-method",
+      "nodeId": "class10-mathematics-statistics-calculate-mean-direct-method",
+      "question": "In a frequency distribution table, ∑ f_i x_i = 720 and ∑ f_i = 40. What is the mean (x̄)?",
+      "options": [
+        "18",
+        "72",
+        "680",
+        "28.8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides 720 by 10 instead of dividing by the total frequency 40",
+        "subtracts the total frequency from ∑ f_i x_i instead of dividing",
+        "multiplies the two numbers and divides by 1000"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-choose-assumed-mean",
+      "nodeId": "class10-mathematics-statistics-choose-assumed-mean",
+      "question": "The class marks for five classes are 15, 25, 35, 45, and 55. Which value is the most appropriate choice for the assumed mean 'a'?",
+      "options": [
+        "15",
+        "35",
+        "55",
+        "40"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "chooses the smallest class mark rather than a central value",
+        "",
+        "chooses the largest class mark rather than a central value",
+        "calculates the average of the first and last values without choosing from the given class marks list"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-compute-deviations-di",
+      "nodeId": "class10-mathematics-statistics-compute-deviations-di",
+      "question": "If the assumed mean a = 50, what is the deviation d_i for a class mark x_i = 35?",
+      "options": [
+        "15",
+        "85",
+        "-15",
+        "-85"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "computes a - x_i instead of x_i - a, losing the negative sign",
+        "adds x_i and a instead of subtracting a from x_i",
+        "",
+        "negates the sum of x_i and a"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-mean-assumed-mean-method",
+      "nodeId": "class10-mathematics-statistics-calculate-mean-assumed-mean-method",
+      "question": "Using the assumed mean method with a = 45, ∑ f_i d_i = -100, and ∑ f_i = 50, what is the mean of the data?",
+      "options": [
+        "47",
+        "43",
+        "45.2",
+        "44.8"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the absolute value of the ratio instead of adding a negative value",
+        "",
+        "divides ∑ f_i d_i by 50 and adds to 45 without keeping the negative sign",
+        "forgets to divide by ∑ f_i and performs an incorrect subtraction"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-compute-step-deviations-ui",
+      "nodeId": "class10-mathematics-statistics-compute-step-deviations-ui",
+      "question": "For a class with class mark x_i = 65, assumed mean a = 45, and class size h = 10, what is the step deviation u_i?",
+      "options": [
+        "2",
+        "-2",
+        "20",
+        "0.2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses the subtraction order computing (a - x_i) / h",
+        "calculates deviation d_i = x_i - a but forgets to divide by class size h",
+        "divides deviation by 100 instead of h = 10"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-mean-step-deviation-method",
+      "nodeId": "class10-mathematics-statistics-calculate-mean-step-deviation-method",
+      "question": "In a step-deviation calculation, a = 50, h = 20, ∑ f_i = 50, and ∑ f_i u_i = 15. What is the mean?",
+      "options": [
+        "50.3",
+        "65",
+        "53",
+        "56"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to multiply the ratio (∑ f_i u_i / ∑ f_i) by class width h",
+        "adds 15 directly to 50 without dividing by total frequency",
+        "multiplies 15/50 by 10 instead of the given class width h = 20",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-find-missing-frequency-from-mean",
+      "nodeId": "class10-mathematics-statistics-find-missing-frequency-from-mean",
+      "question": "A distribution with class marks 5, 15, 25 has frequencies 4, f, 6. If the mean is 17, what is the value of f?",
+      "options": [
+        "8",
+        "10",
+        "5",
+        "4"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes the missing frequency is the average of known frequencies (4 + 6) / 2 = 5 but guesses 8",
+        "solves 170 + 15f = 170 + 17f incorrectly by ignoring constant balance",
+        "",
+        "sets the missing frequency equal to the first frequency"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-find-two-missing-frequencies-mean",
+      "nodeId": "class10-mathematics-statistics-find-two-missing-frequencies-mean",
+      "question": "A dataset with class marks 10, 30, 50, 70 has frequencies 5, x, y, 7. The total frequency is 30 and the mean is 42. What are the values of x and y?",
+      "options": [
+        "x = 8, y = 10",
+        "x = 9, y = 9",
+        "x = 10, y = 8",
+        "x = 7, y = 11"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "splits the remaining frequency 18 equally between x and y without satisfying the mean",
+        "swaps the values of x and y, satisfying the sum but not the weighted mean equation",
+        "picks arbitrary numbers that sum to 18 without checking against the mean"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-identify-modal-class",
+      "nodeId": "class10-mathematics-statistics-identify-modal-class",
+      "question": "Consider the following table:\nClass: 0–10 | 10–20 | 20–30 | 30–40\nFrequency: 4 | 12 | 8 | 6\nWhat is the modal class?",
+      "options": [
+        "0–10",
+        "20–30",
+        "10–20",
+        "30–40"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "selects the class with the smallest frequency instead of the largest",
+        "selects the middle class interval regardless of frequency",
+        "",
+        "selects the class with the highest upper limit"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-identify-mode-formula-parameters",
+      "nodeId": "class10-mathematics-statistics-identify-mode-formula-parameters",
+      "question": "In the classes 10–20, 20–30, 30–40 with frequencies 5, 12, 7, for the modal class 20–30, what are the values of f0, f1, and f2?",
+      "options": [
+        "f0 = 5, f1 = 12, f2 = 7",
+        "f0 = 12, f1 = 5, f2 = 7",
+        "f0 = 7, f1 = 12, f2 = 5",
+        "f0 = 5, f1 = 7, f2 = 12"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the modal frequency f1 with preceding frequency f0",
+        "reverses preceding (f0) and succeeding (f2) frequencies",
+        "assigns succeeding frequency f2 as f1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-mode-grouped-data",
+      "nodeId": "class10-mathematics-statistics-calculate-mode-grouped-data",
+      "question": "For a grouped distribution, the modal class is 30–40 with l = 30, h = 10, f1 = 16, f0 = 10, and f2 = 12. What is the mode?",
+      "options": [
+        "36",
+        "33.5",
+        "30.6",
+        "34.8"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates (f1 - f0) / (f1 + f2) * h and adds to l",
+        "forgets to multiply by class width h before adding to lower limit",
+        "calculates the denominator as 2f1 - f0 + f2 instead of 2f1 - f0 - f2"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-construct-less-than-cf-table",
+      "nodeId": "class10-mathematics-statistics-construct-less-than-cf-table",
+      "question": "The frequencies for the classes 0–10, 10–20, and 20–30 are 5, 8, and 12 respectively. What is the cumulative frequency of the 'less than 30' group?",
+      "options": [
+        "12",
+        "20",
+        "25",
+        "13"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the simple frequency of the third class instead of adding all preceding frequencies",
+        "adds only the second and third class frequencies (8 + 12) omitting the first",
+        "",
+        "adds only the first two class frequencies (5 + 8)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-convert-cf-to-frequency-distribution",
+      "nodeId": "class10-mathematics-statistics-convert-cf-to-frequency-distribution",
+      "question": "A 'less than' cumulative frequency table shows:\nLess than 20: 8\nLess than 40: 22\nLess than 60: 35\nWhat is the frequency of the class interval 20–40?",
+      "options": [
+        "22",
+        "8",
+        "30",
+        "14"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "reads the cumulative frequency 22 directly as the simple frequency",
+        "takes the frequency of the previous class",
+        "adds the two cumulative frequencies (8 + 22) instead of subtracting",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-identify-median-class",
+      "nodeId": "class10-mathematics-statistics-identify-median-class",
+      "question": "Total frequency n = 60, so n/2 = 30. The cumulative frequencies for classes 0–10, 10–20, 20–30, and 30–40 are 10, 24, 42, and 60. Which is the median class?",
+      "options": [
+        "10–20",
+        "20–30",
+        "30–40",
+        "0–10"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "picks the class with cumulative frequency just below n/2 instead of just greater than or equal to n/2",
+        "",
+        "picks the final class because it contains all items",
+        "picks the first class regardless of cumulative frequency"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-calculate-median-grouped-data",
+      "nodeId": "class10-mathematics-statistics-calculate-median-grouped-data",
+      "question": "For a grouped distribution: median class = 20–30, l = 20, n/2 = 25, cf (preceding class) = 15, frequency f = 20, and h = 10. What is the median?",
+      "options": [
+        "27.5",
+        "22.5",
+        "20.5",
+        "25"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds cf instead of subtracting it: (25 + 15)/20 * 10 = 20, leading to 20 + 20/something",
+        "uses 25/20 * 10 without subtracting preceding cf",
+        "forgets to multiply the fraction by class width h = 10",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-find-missing-frequencies-from-median",
+      "nodeId": "class10-mathematics-statistics-find-missing-frequencies-from-median",
+      "question": "A dataset has total frequency N = 50 and median = 27 (which lies in class 20–30). The cumulative frequency just before the median class is 12 + x, the median class frequency is 15, and h = 10. If 27 = 20 + [(25 - (12 + x)) / 15] * 10, what is the value of x?",
+      "options": [
+        "8",
+        "5.5",
+        "2",
+        "2.5"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to divide by 15 when clearing the fraction",
+        "drops the brackets and computes 25 - 12 + x instead of 25 - 12 - x, getting 13 + x = 10.5",
+        "solves the linear equation with an arithmetic rounding error",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-state-empirical-relation",
+      "nodeId": "class10-mathematics-statistics-state-empirical-relation",
+      "question": "Which equation correctly states the empirical relationship among mean, median, and mode?",
+      "options": [
+        "Mode = 3 Mean - 2 Median",
+        "3 Median = Mode + 2 Mean",
+        "3 Mode = Median + 2 Mean",
+        "Mean = 3 Median + 2 Mode"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "swaps the positions of Mean and Median in the formula",
+        "",
+        "attaches the coefficient 3 to Mode instead of Median",
+        "rearranges incorrectly with the wrong signs and coefficients"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-apply-empirical-formula",
+      "nodeId": "class10-mathematics-statistics-apply-empirical-formula",
+      "question": "If the mean of a distribution is 24 and the median is 26, what is its mode using the empirical formula?",
+      "options": [
+        "32",
+        "25",
+        "28",
+        "30"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates 3 Mean - 2 Median = 72 - 52 = 20, or adds instead of subtracting",
+        "takes the simple average of mean and median",
+        "computes 2 Median - Mean instead of 3 Median - 2 Mean",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-statistics-compare-measures-of-central-tendency",
+      "nodeId": "class10-mathematics-statistics-compare-measures-of-central-tendency",
+      "question": "A small business has 5 employees earning ₹15,000 each and 1 owner earning ₹1,50,000. Which measure of central tendency best represents the typical employee salary, and why?",
+      "options": [
+        "Mean, because it uses all the salary values in its calculation",
+        "Mean, because it is always the most accurate measure for any distribution",
+        "Mode or Median, because the extreme owner salary pulls the mean far above typical earnings",
+        "None of the measures can be used for financial data"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes the mean is always best because it incorporates every data point, ignoring outlier skew",
+        "thinks the mean has a universal mathematical superiority regardless of data skewness",
+        "",
+        "believes central tendency measures are inapplicable to monetary values"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-random-experiment-outcomes",
+      "nodeId": "class10-mathematics-probability-define-random-experiment-outcomes",
+      "question": "Which of the following is a random experiment with its complete set of all possible outcomes?",
+      "options": [
+        "Heating pure water to 100°C at normal atmospheric pressure; outcomes = {boils}",
+        "Tossing a coin once; outcomes = {Head}",
+        "Measuring the side of a square of perimeter 20 cm; outcomes = {4 cm, 5 cm, 6 cm}",
+        "Rolling a standard six-sided die; outcomes = {1, 2, 3, 4, 5, 6}"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a deterministic scientific fact with a random experiment",
+        "omits an outcome from the sample space of a random experiment",
+        "confuses measurement of a fixed geometric relation with a random experiment",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-distinguish-experimental-theoretical",
+      "nodeId": "class10-mathematics-probability-distinguish-experimental-theoretical",
+      "question": "A student tosses a coin 100 times and gets 58 heads. What are the experimental probability and theoretical probability of getting a head?",
+      "options": [
+        "Experimental: 0.58; Theoretical: 0.50",
+        "Experimental: 0.50; Theoretical: 0.58",
+        "Experimental: 0.58; Theoretical: 0.58",
+        "Experimental: 0.50; Theoretical: 0.50"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps the definitions of experimental probability and theoretical probability",
+        "believes theoretical probability is always determined by the observed trial results",
+        "believes experimental probability must match theoretical probability regardless of trial count"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-equally-likely-outcomes",
+      "nodeId": "class10-mathematics-probability-define-equally-likely-outcomes",
+      "question": "In which of the following experiments are the two stated outcomes equally likely?",
+      "options": [
+        "A baby is born: it is a boy, or it is a girl.",
+        "A player attempts a basketball shot: the basket is scored, or missed.",
+        "A driver tries to start a car: the car starts, or the car does not start.",
+        "A student answers a 4-option multiple choice question by pure guess: the answer is correct, or incorrect."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses having two possible outcomes with both outcomes being equally likely",
+        "assumes any binary outcome situation has equal chances of occurring",
+        "thinks binary success/failure outcomes are always equally likely despite unequal option spaces"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-state-classical-probability-formula",
+      "nodeId": "class10-mathematics-probability-state-classical-probability-formula",
+      "question": "According to the classical definition, what is the formula for the probability P(E) of an event E when all outcomes are equally likely?",
+      "options": [
+        "P(E) = (Number of outcomes not favourable to E) / (Number of all possible outcomes)",
+        "P(E) = (Number of all possible outcomes) / (Number of outcomes favourable to E)",
+        "P(E) = (Number of outcomes favourable to E) / (Number of all possible outcomes)",
+        "P(E) = (Number of outcomes favourable to E) / (Number of outcomes not favourable to E)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses the number of unfavourable outcomes instead of favourable outcomes in the numerator",
+        "inverts the numerator and denominator in the classical probability formula",
+        "",
+        "sets up probability as odds (favourable to unfavourable) rather than favourable to total"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-elementary-event",
+      "nodeId": "class10-mathematics-probability-define-elementary-event",
+      "question": "A standard die is rolled once. Which of the following is an elementary event?",
+      "options": [
+        "Getting an even number",
+        "Getting a number greater than 4",
+        "Getting the number 5",
+        "Getting a prime number"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks an event with multiple outcomes like {2, 4, 6} is an elementary event",
+        "confuses a compound event {5, 6} with an elementary event",
+        "",
+        "thinks a subset of outcomes defined by a single property like prime is an elementary event"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-sum-of-elementary-probabilities",
+      "nodeId": "class10-mathematics-probability-sum-of-elementary-probabilities",
+      "question": "A spinner has 4 distinct coloured sectors: red, blue, green, and yellow. If P(red) = 0.2, P(blue) = 0.35, and P(green) = 0.15, what must be the probability of landing on yellow?",
+      "options": [
+        "0.30",
+        "0.70",
+        "0.40",
+        "1.00"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "adds the known probabilities without subtracting from 1",
+        "makes an arithmetic error in subtracting the sum 0.70 from 1",
+        "thinks the remaining probability must be 1 rather than the total sum being 1"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-impossible-event",
+      "nodeId": "class10-mathematics-probability-define-impossible-event",
+      "question": "A single standard six-sided die is thrown once. What is the probability of getting a number 8?",
+      "options": [
+        "1/8",
+        "1",
+        "8/6",
+        "0"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses the number itself as the denominator rather than identifying the event as impossible",
+        "confuses an impossible event with a certain event",
+        "divides the target number by the total number of faces",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-sure-certain-event",
+      "nodeId": "class10-mathematics-probability-define-sure-certain-event",
+      "question": "A standard six-sided die is rolled once. What is the probability of getting a number less than 7?",
+      "options": [
+        "5/6",
+        "6",
+        "0",
+        "1"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "miscounts the favourable outcomes as 5 instead of 6",
+        "states the number of favourable outcomes instead of the probability ratio",
+        "confuses a certain event with an impossible event",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-state-probability-range",
+      "nodeId": "class10-mathematics-probability-state-probability-range",
+      "question": "Which of the following numbers CANNOT represent the probability of an event?",
+      "options": [
+        "-1.5",
+        "2/3",
+        "15%",
+        "0.7"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks a proper fraction cannot be a probability",
+        "thinks percentages cannot be used to express probabilities",
+        "thinks decimals close to 1 are invalid probabilities"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-define-complementary-event",
+      "nodeId": "class10-mathematics-probability-define-complementary-event",
+      "question": "When rolling a single die, let E be the event 'getting a prime number'. Which set describes the complementary event (not E)?",
+      "options": [
+        "{1, 4, 6}",
+        "{4, 6}",
+        "{1, 2, 3, 5}",
+        "{2, 3, 5}"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "forgets that 1 is not a prime number and mistakenly omits it from not E",
+        "includes prime numbers along with 1 in not E",
+        "defines the event E itself rather than its complement not E"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-apply-complement-rule",
+      "nodeId": "class10-mathematics-probability-apply-complement-rule",
+      "question": "If the probability of an event E occurring is P(E) = 0.05, what is the value of P(not E)?",
+      "options": [
+        "0.05",
+        "0.50",
+        "-0.05",
+        "0.95"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks P(not E) is equal to P(E)",
+        "confuses the decimal place and computes 1 - 0.5 instead of 1 - 0.05",
+        "subtracts 1 from P(E) to get a negative value instead of 1 - P(E)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-single-coin-toss",
+      "nodeId": "class10-mathematics-probability-single-coin-toss",
+      "question": "A fair coin is tossed once. What is the probability of getting a tail?",
+      "options": [
+        "1",
+        "1/2",
+        "0",
+        "2/1"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks getting a tail is certain",
+        "",
+        "thinks getting a tail is impossible",
+        "inverts the probability ratio as total outcomes divided by favourable outcomes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-two-coins-toss",
+      "nodeId": "class10-mathematics-probability-two-coins-toss",
+      "question": "Two fair coins are tossed simultaneously. What is the probability of getting exactly one head?",
+      "options": [
+        "1/4",
+        "3/4",
+        "1/2",
+        "1/3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "counts only one outcome (HT) and ignores TH",
+        "confuses 'exactly one head' with 'at least one head'",
+        "",
+        "thinks there are only 3 outcomes (2 heads, 1 head, 0 heads) and each is equally likely"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-three-coins-toss",
+      "nodeId": "class10-mathematics-probability-three-coins-toss",
+      "question": "Three unbiased coins are tossed together. What is the probability of getting at most 2 heads?",
+      "options": [
+        "3/8",
+        "1/2",
+        "7/8",
+        "6/8"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses 'at most 2 heads' with 'exactly 2 heads'",
+        "interprets 'at most 2 heads' as 1 or 2 heads, omitting 0 heads (TTT)",
+        "",
+        "omits TTT and counts only outcomes with 1 or 2 heads as 6/8"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-single-die-roll",
+      "nodeId": "class10-mathematics-probability-single-die-roll",
+      "question": "A standard six-sided die is thrown once. What is the probability of getting a prime number?",
+      "options": [
+        "2/3",
+        "1/3",
+        "1/2",
+        "1/6"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "treats 1 as a prime number, giving favourable outcomes {1, 2, 3, 5} so 4/6 = 2/3",
+        "identifies only 2 prime numbers on the die (e.g. {3, 5} or {2, 3})",
+        "",
+        "thinks 2 is the only prime number on a die"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-two-dice-sample-space",
+      "nodeId": "class10-mathematics-probability-two-dice-sample-space",
+      "question": "Two standard dice are thrown simultaneously. How many total possible elementary outcomes are in this experiment?",
+      "options": [
+        "12",
+        "36",
+        "6",
+        "24"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the outcomes of the two dice (6 + 6) instead of multiplying them (6 x 6)",
+        "",
+        "thinks the total outcomes are just the 6 faces of one die",
+        "multiplies 6 faces by 4 instead of 6 x 6"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-two-dice-sum-events",
+      "nodeId": "class10-mathematics-probability-two-dice-sum-events",
+      "question": "Two standard dice are thrown at the same time. What is the probability of getting a sum of 8?",
+      "options": [
+        "1/11",
+        "4/36",
+        "6/36",
+        "5/36"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes the 11 possible sums (from 2 to 12) are all equally likely",
+        "fails to count the symmetric pairs like (2,6) and (6,2) as distinct outcomes",
+        "miscounts the number of pairs that sum to 8 as 6 pairs",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-two-dice-doublet-and-conditions",
+      "nodeId": "class10-mathematics-probability-two-dice-doublet-and-conditions",
+      "question": "Two standard dice are thrown simultaneously. What is the probability that 5 will not come up on either die?",
+      "options": [
+        "11/36",
+        "25/36",
+        "26/36",
+        "30/36"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the probability that 5 appears on at least one die instead of not appearing on either",
+        "",
+        "double counts the pair (5, 5) when computing outcomes where 5 appears, getting 10 instead of 11",
+        "subtracts 6 outcomes from 36 assuming only 6 outcomes contain a 5"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-structure-deck-of-cards",
+      "nodeId": "class10-mathematics-probability-structure-deck-of-cards",
+      "question": "In a standard deck of 52 playing cards, how many face cards (Kings, Queens, Jacks) are there in total?",
+      "options": [
+        "16",
+        "4",
+        "12",
+        "3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "includes the 4 Aces as face cards (4 ranks x 4 suits = 16)",
+        "counts only one face card per suit rather than three",
+        "",
+        "counts face cards of only one suit instead of all four suits"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-cards-single-draw",
+      "nodeId": "class10-mathematics-probability-cards-single-draw",
+      "question": "One card is drawn at random from a well-shuffled deck of 52 cards. What is the probability of getting a red face card?",
+      "options": [
+        "3/13",
+        "3/26",
+        "6/13",
+        "1/26"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the probability of getting any face card (12/52 = 3/13) instead of a red face card",
+        "",
+        "doubles the face card count or divides by 26 instead of 52",
+        "counts only red Kings and ignores red Queens and Jacks"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-cards-removed-subset",
+      "nodeId": "class10-mathematics-probability-cards-removed-subset",
+      "question": "The king, queen, and jack of clubs are removed from a 52-card deck and the remaining cards are shuffled. What is the probability of drawing a club from the remaining cards?",
+      "options": [
+        "13/49",
+        "10/49",
+        "10/52",
+        "13/52"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reduces the total deck size to 49 but forgets to reduce the number of clubs from 13 to 10",
+        "",
+        "reduces the number of clubs to 10 but keeps the total deck size as 52",
+        "uses the original deck proportions without accounting for removed cards"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-balls-urn-selection",
+      "nodeId": "class10-mathematics-probability-balls-urn-selection",
+      "question": "A bag contains 5 red balls, 8 white balls, and 7 black balls. A ball is drawn at random. What is the probability of getting a ball that is NOT white?",
+      "options": [
+        "8/20",
+        "12/20",
+        "5/20",
+        "7/20"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the probability of drawing a white ball instead of not white",
+        "",
+        "calculates the probability of drawing only a red ball",
+        "calculates the probability of drawing only a black ball"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-solve-for-unknown-in-urn",
+      "nodeId": "class10-mathematics-probability-solve-for-unknown-in-urn",
+      "question": "A bag contains 6 red balls and x blue balls. If the probability of drawing a blue ball is twice that of a red ball, what is the value of x?",
+      "options": [
+        "12",
+        "3",
+        "6",
+        "18"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "halves the number of red balls instead of doubling it",
+        "assumes the number of blue balls must equal the number of red balls",
+        "adds the red balls to the doubled amount (6 + 12 = 18)"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-numbered-discs-and-tickets",
+      "nodeId": "class10-mathematics-probability-numbered-discs-and-tickets",
+      "question": "A box contains 90 discs numbered from 1 to 90. If one disc is drawn at random, what is the probability that it bears a two-digit number?",
+      "options": [
+        "9/90",
+        "80/90",
+        "89/90",
+        "81/90"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "calculates the probability of drawing a single-digit number instead of a two-digit number",
+        "subtracts 10 single-digit numbers instead of 9 (numbers 1 to 9)",
+        "subtracts only 1 disc instead of all 9 single-digit discs",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-defective-items-and-lotteries",
+      "nodeId": "class10-mathematics-probability-defective-items-and-lotteries",
+      "question": "A lot consists of 144 ball pens of which 20 are defective and the others are good. If a customer buys one pen at random, what is the probability that it is a good pen?",
+      "options": [
+        "5/36",
+        "31/36",
+        "20/144",
+        "31/31"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates the probability of picking a defective pen (20/144 = 5/36)",
+        "",
+        "gives the defective pen ratio without simplifying",
+        "confuses favourable outcomes with total outcomes"
+      ]
+    },
+    {
+      "id": "probe-class10-mathematics-probability-geometric-probability-areas",
+      "nodeId": "class10-mathematics-probability-geometric-probability-areas",
+      "question": "A circular target of radius 1 m is placed inside a rectangular region of dimensions 3 m by 2 m. If a dart lands randomly inside the rectangle, what is the probability that it lands inside the circle?",
+      "options": [
+        "π / 6",
+        "2π / 6",
+        "1 / 6",
+        "π / 5"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the circumference formula 2πr instead of the area formula πr² for the circle",
+        "omits the factor π when computing the area of the circle with radius 1",
+        "adds the dimensions (3 + 2 = 5) for the rectangle's total region instead of multiplying for area"
+      ]
     }
   ]
 }

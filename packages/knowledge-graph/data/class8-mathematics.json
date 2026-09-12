@@ -1,0 +1,3837 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class8-mathematics-rational-numbers-define-rational-number",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Define Rational Numbers",
+      "outcome": "State the definition of a rational number in the form p/q where p and q are integers and q is not zero",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-closure-addition",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Closure Property under Addition",
+      "outcome": "Test whether the sum of any two rational numbers is always a rational number",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-closure-subtraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Closure Property under Subtraction",
+      "outcome": "Test whether the difference of any two rational numbers is always a rational number",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-closure-multiplication",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Closure Property under Multiplication",
+      "outcome": "Test whether the product of any two rational numbers is always a rational number",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-closure-division",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Closure Property under Division",
+      "outcome": "Explain why rational numbers are not closed under division due to division by zero",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-commutative-addition",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Commutativity of Addition",
+      "outcome": "Verify that a + b = b + a for any two rational numbers a and b",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-non-commutative-subtraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Non-commutativity of Subtraction",
+      "outcome": "Show by counterexample that subtraction is not commutative for rational numbers",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-subtraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-commutative-multiplication",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Commutativity of Multiplication",
+      "outcome": "Verify that a * b = b * a for any two rational numbers a and b",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-non-commutative-division",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Non-commutativity of Division",
+      "outcome": "Show by counterexample that division is not commutative for rational numbers",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-division"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-associative-addition",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Associativity of Addition",
+      "outcome": "Verify that (a + b) + c = a + (b + c) for any three rational numbers a, b, and c",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-commutative-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-non-associative-subtraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Non-associativity of Subtraction",
+      "outcome": "Show by counterexample that subtraction is not associative for rational numbers",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-non-commutative-subtraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-associative-multiplication",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Associativity of Multiplication",
+      "outcome": "Verify that (a * b) * c = a * (b * c) for any three rational numbers a, b, and c",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-commutative-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-non-associative-division",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Non-associativity of Division",
+      "outcome": "Show by counterexample that division is not associative for rational numbers",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-non-commutative-division"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-rearrangement-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Simplify Using Commutativity and Associativity",
+      "outcome": "Rearrange rational numbers using commutative and associative properties to simplify multi-term addition and multiplication expressions",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-associative-addition",
+        "class8-mathematics-rational-numbers-associative-multiplication"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-additive-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Role of Zero as Additive Identity",
+      "outcome": "Identify zero as the additive identity for rational numbers such that a + 0 = 0 + a = a",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-multiplicative-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Role of One as Multiplicative Identity",
+      "outcome": "Identify one as the multiplicative identity for rational numbers such that a * 1 = 1 * a = a",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/rational-numbers/properties-of-rational-numbers"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-additive-inverse",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Find Additive Inverse",
+      "outcome": "Calculate the additive inverse (negative) of a given rational number a/b such that a/b + (-a/b) = 0",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-additive-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-multiplicative-inverse",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Find Multiplicative Inverse",
+      "outcome": "Calculate the multiplicative inverse (reciprocal) of a non-zero rational number a/b such that a/b * b/a = 1",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-multiplicative-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-reciprocal-of-zero",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Multiplicative Inverse of Zero",
+      "outcome": "Explain why zero has no reciprocal or multiplicative inverse",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-multiplicative-inverse"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-distributive-addition",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Distributivity of Multiplication over Addition",
+      "outcome": "Apply the distributive property a * (b + c) = (a * b) + (a * c) to expand products of rational numbers",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-addition",
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-distributive-subtraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Distributivity of Multiplication over Subtraction",
+      "outcome": "Apply the distributive property a * (b - c) = (a * b) - (a * c) to expand products involving subtraction",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-subtraction",
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-factor-using-distributivity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Factor Out Common Terms Using Distributivity",
+      "outcome": "Factor out a common rational term from an expression of the form (a * b) + (a * c) to simplify calculation",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-distributive-addition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-simplify-combined-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Simplify Complex Rational Expressions",
+      "outcome": "Evaluate multi-operation rational expressions by combining distributive, commutative, and associative properties",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-rearrangement-properties",
+        "class8-mathematics-rational-numbers-factor-using-distributivity"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-rational-numbers-verify-property-equations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Verify Property Equations with Substitution",
+      "outcome": "Verify algebraic statements involving additive inverse, multiplicative inverse, and distributivity for given numerical values of variables",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-additive-inverse",
+        "class8-mathematics-rational-numbers-distributive-addition"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/rational-numbers/distributivity-and-inverse"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-identify-linear-expression",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Identify Linear Expressions",
+      "outcome": "Identify whether an algebraic expression is linear in one variable based on the highest exponent of the variable being one",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-distinguish-expression-equation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Distinguish Expressions and Equations",
+      "outcome": "Distinguish between an algebraic expression and an algebraic equation using the presence of an equality sign",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-identify-linear-expression"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-transpose-terms",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Transpose Terms Across Equality",
+      "outcome": "Transpose a constant or variable term from one side of an equation to the other by changing its sign",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-distinguish-expression-equation",
+        "class8-mathematics-rational-numbers-additive-inverse"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Equations with Integer Coefficients",
+      "outcome": "Calculate the value of the variable in an equation of the form ax + b = cx + d with integer coefficients",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Equations with Parentheses",
+      "outcome": "Apply the distributive property to expand brackets before collecting terms with variables on both sides",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers",
+        "class8-mathematics-rational-numbers-distributive-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-verify-solution",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Verify Equation Solution",
+      "outcome": "Verify whether a calculated value is a correct solution by substituting it into both LHS and RHS of the original equation",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-number-relations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Formulate Number Relation Problems",
+      "outcome": "Formulate a linear equation in one variable from word problems involving relationships between two unknown numbers",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-consecutive-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Consecutive Integer Problems",
+      "outcome": "Calculate unknown consecutive integers or multiples from given word problem conditions",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-word-problem-number-relations"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-digits-reversed",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Two-Digit Number Problems",
+      "outcome": "Determine an unknown two-digit number given the sum of its digits and the difference upon reversing the digits",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses",
+        "class8-mathematics-linear-equations-in-one-variable-word-problem-number-relations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-ages",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Age-Related Word Problems",
+      "outcome": "Construct and solve linear equations to find present ages given relationships between past or future ages",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-currency-denominations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Currency Denomination Problems",
+      "outcome": "Calculate the count of notes or coins of different denominations given total value and denomination ratios",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-perimeter-geometry",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Geometric Dimension Problems",
+      "outcome": "Calculate unknown lengths, widths, or angles of simple geometric shapes using perimeter or angle sum equations",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/equations-with-variable-on-both-sides"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-clear-fractions-lcm",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Clear Fractions Using LCM",
+      "outcome": "Clear fractional denominators from an equation by multiplying all terms on both sides by the LCM of the denominators",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-distinguish-expression-equation",
+        "class8-mathematics-rational-numbers-multiplicative-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Equations with Fractional Coefficients",
+      "outcome": "Solve linear equations where variable terms have rational or fractional coefficients on both sides",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-clear-fractions-lcm",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-fractional-numerators-with-binomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Equations with Binomial Numerators",
+      "outcome": "Solve linear equations containing rational expressions with binomial numerators such as (x - 5)/3 = (x - 3)/5",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-clear-fractions-lcm",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-handle-negative-signs-fraction-numerators",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Distribute Negative Sign Across Numerators",
+      "outcome": "Correctly distribute a leading negative sign across all terms of a multi-term numerator when simplifying equations",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-numerators-with-binomials",
+        "class8-mathematics-rational-numbers-distributive-subtraction"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-decimal-coefficients",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Equations with Decimal Coefficients",
+      "outcome": "Solve linear equations involving decimal coefficients either by multiplying by powers of 10 or using decimal arithmetic",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-identify-reducible-rational-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Identify Reducible Rational Forms",
+      "outcome": "Identify equations of the form (ax + b)/(cx + d) = k/m as non-linear forms that can be reduced to linear equations",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-distinguish-expression-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-cross-multiplication-method",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Apply Cross-Multiplication Method",
+      "outcome": "Apply cross-multiplication to transform an equation of the form (ax + b)/(cx + d) = k/m into m(ax + b) = k(cx + d)",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-identify-reducible-rational-form",
+        "class8-mathematics-linear-equations-in-one-variable-clear-fractions-lcm"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-solve-reducible-equations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Cross-Multiplied Equations",
+      "outcome": "Solve the linear equation resulting from cross-multiplication and verify the non-zero denominator condition",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-cross-multiplication-method",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-parentheses"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-rational-numbers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Rational Number Word Problems",
+      "outcome": "Formulate and solve equations reducible to linear form from word problems involving numerator-denominator modifications of a fraction",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-reducible-equations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-age-ratios",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Ratio-Based Age Problems",
+      "outcome": "Determine present ages from given past or future age ratios by formulating equations reducible to linear form",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-word-problem-ages",
+        "class8-mathematics-linear-equations-in-one-variable-solve-reducible-equations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-word-problem-upstream-downstream",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Solve Speed and Distance Problems",
+      "outcome": "Calculate boat or stream speeds from word problems involving upstream and downstream travel times and distances",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients",
+        "class8-mathematics-linear-equations-in-one-variable-solve-reducible-equations"
+      ],
+      "difficulty": 5,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-linear-equations-in-one-variable-identify-no-solution-infinite-solutions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "linear-equations-in-one-variable",
+      "title": "Identify Special Solution Cases",
+      "outcome": "Identify whether a simplified linear equation results in no solution (e.g., 0 = k) or infinitely many solutions (e.g., 0 = 0)",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/linear-equations-in-one-variable/reducing-equations-to-simpler-form"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-classify-curves",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Classify Curves",
+      "outcome": "Classify given 2D curves as open, closed, simple, or non-simple",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-define-polygon",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Define Polygon",
+      "outcome": "Identify a polygon as a simple closed curve made up entirely of line segments",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-classify-curves"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-classify-polygons-by-sides",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Classify Polygons by Sides",
+      "outcome": "Name polygons with 3 to 10 sides (triangle, quadrilateral, pentagon, hexagon, heptagon, octagon, nonagon, decagon)",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-define-polygon"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-identify-diagonals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Diagonals",
+      "outcome": "Draw and identify diagonals connecting non-consecutive vertices of a polygon",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-define-polygon"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-convex-concave-polygons",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Distinguish Convex and Concave Polygons",
+      "outcome": "Distinguish between convex and concave polygons based on whether diagonals lie strictly inside the polygon or contain reflex interior angles",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-identify-diagonals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-regular-irregular-polygons",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Distinguish Regular and Irregular Polygons",
+      "outcome": "Classify a polygon as regular (both equilateral and equiangular) or irregular",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-define-polygon"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/polygons-and-classification"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-interior-angle-sum-formula",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Calculate Polygon Interior Angle Sum",
+      "outcome": "Calculate the sum of interior angles of an n-sided polygon using (n - 2) * 180°",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-classify-polygons-by-sides"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/angle-sum-properties"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-find-missing-interior-angle",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Find Unknown Interior Angle in Polygon",
+      "outcome": "Solve for an unknown interior angle in a polygon given the other angles by setting up a linear equation with the total interior angle sum",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-interior-angle-sum-formula",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/angle-sum-properties"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-solve-interior-angles-algebraic",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Solve Algebraic Expressions for Interior Angles",
+      "outcome": "Solve for x and determine all interior angles when angle measures are given as algebraic expressions in a polygon",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-find-missing-interior-angle",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/angle-sum-properties"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-exterior-angle-sum-theorem",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Exterior Angle Sum Property",
+      "outcome": "State that the sum of the measures of the exterior angles of any convex polygon is 360°",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-convex-concave-polygons"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/exterior-angles"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-find-missing-exterior-angle",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Find Unknown Exterior Angle",
+      "outcome": "Calculate a missing exterior angle in a polygon using the 360° total sum property",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-exterior-angle-sum-theorem",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/exterior-angles"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-regular-polygon-angles-and-sides",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Calculate Angles and Number of Sides of Regular Polygon",
+      "outcome": "Calculate the measure of each exterior angle (360°/n), interior angle (180° - 360°/n), or number of sides given the exterior angle for a regular polygon",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-regular-irregular-polygons",
+        "class8-mathematics-understanding-quadrilaterals-exterior-angle-sum-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/exterior-angles"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-identify-trapezium",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Properties of a Trapezium",
+      "outcome": "Identify a trapezium as a quadrilateral with at least one pair of parallel sides and calculate missing angles using consecutive interior angles on the same side of a transversal",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-classify-polygons-by-sides"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-identify-kite",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Properties of a Kite",
+      "outcome": "Identify a kite by its pairs of equal consecutive sides, perpendicular diagonals, and one pair of equal opposite angles",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-classify-polygons-by-sides",
+        "class8-mathematics-understanding-quadrilaterals-identify-diagonals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-parallelogram-side-angle-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "State Parallelogram Side and Angle Properties",
+      "outcome": "State that in a parallelogram, opposite sides are equal, opposite angles are equal, and adjacent angles are supplementary",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-classify-polygons-by-sides"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-parallelogram-diagonal-property",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "State Parallelogram Diagonal Property",
+      "outcome": "State that the diagonals of a parallelogram bisect each other",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-parallelogram-side-angle-properties",
+        "class8-mathematics-understanding-quadrilaterals-identify-diagonals"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-calculate-parallelogram-angles",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Calculate Unknown Angles in a Parallelogram",
+      "outcome": "Calculate unknown angles in a parallelogram using opposite angle equality and adjacent angle supplementary relations",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-parallelogram-side-angle-properties",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-calculate-parallelogram-sides-diagonals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Calculate Unknown Sides and Diagonals in a Parallelogram",
+      "outcome": "Solve linear equations to find missing side lengths and segment lengths of bisected diagonals in a parallelogram",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-parallelogram-diagonal-property",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/kinds-of-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-rhombus-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Properties of a Rhombus",
+      "outcome": "State that a rhombus has all sides equal and its diagonals are perpendicular bisectors of each other",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-parallelogram-diagonal-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-rhombus-calculate-lengths-angles",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Calculate Dimensions Using Rhombus Properties",
+      "outcome": "Apply perpendicular bisector properties of rhombus diagonals to find missing segment lengths and right-triangle-related dimensions",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-rhombus-properties"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-rectangle-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Properties of a Rectangle",
+      "outcome": "State that a rectangle is an equiangular parallelogram (all angles 90°) with diagonals that are equal in length and bisect each other",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-parallelogram-diagonal-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-rectangle-diagonal-equations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Solve Equations Using Rectangle Diagonals",
+      "outcome": "Form and solve linear equations using the equality and bisection of rectangle diagonals",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-rectangle-properties",
+        "class8-mathematics-linear-equations-in-one-variable-solve-variable-both-sides-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-square-properties",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Identify Properties of a Square",
+      "outcome": "State that a square is a regular quadrilateral possessing all properties of a parallelogram, rhombus, and rectangle",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-rhombus-properties",
+        "class8-mathematics-understanding-quadrilaterals-rectangle-properties"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-understanding-quadrilaterals-classify-and-compare-quadrilaterals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "understanding-quadrilaterals",
+      "title": "Compare and Classify Special Quadrilaterals",
+      "outcome": "Determine whether statements comparing types of quadrilaterals (e.g., 'all rhombuses are parallelograms') are true or false based on inclusive definitions",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-identify-trapezium",
+        "class8-mathematics-understanding-quadrilaterals-identify-kite",
+        "class8-mathematics-understanding-quadrilaterals-square-properties"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/understanding-quadrilaterals/special-parallelograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-record-tally-marks",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Record Data with Tally Marks",
+      "outcome": "Record raw data counts using tally marks grouped in bunches of five",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/organising-and-grouping-data"
+    },
+    {
+      "id": "class8-mathematics-data-handling-construct-ungrouped-frequency-table",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Construct Ungrouped Frequency Table",
+      "outcome": "Construct an ungrouped frequency distribution table showing frequencies for distinct observations",
+      "prerequisites": [
+        "class8-mathematics-data-handling-record-tally-marks"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/organising-and-grouping-data"
+    },
+    {
+      "id": "class8-mathematics-data-handling-define-class-limits-and-width",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Class Limits and Width",
+      "outcome": "Identify the lower class limit, upper class limit, and class size (width) for a given class interval",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/organising-and-grouping-data"
+    },
+    {
+      "id": "class8-mathematics-data-handling-group-data-continuous-intervals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Group Raw Data into Intervals",
+      "outcome": "Group a raw numerical dataset into continuous class intervals by assigning values to their respective classes",
+      "prerequisites": [
+        "class8-mathematics-data-handling-record-tally-marks",
+        "class8-mathematics-data-handling-define-class-limits-and-width"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/organising-and-grouping-data"
+    },
+    {
+      "id": "class8-mathematics-data-handling-construct-grouped-frequency-table",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Construct Grouped Frequency Table",
+      "outcome": "Construct a complete grouped frequency distribution table using tally marks for continuous intervals",
+      "prerequisites": [
+        "class8-mathematics-data-handling-construct-ungrouped-frequency-table",
+        "class8-mathematics-data-handling-group-data-continuous-intervals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/organising-and-grouping-data"
+    },
+    {
+      "id": "class8-mathematics-data-handling-distinguish-bar-graph-and-histogram",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Distinguish Bar Graph and Histogram",
+      "outcome": "Distinguish between a standard bar graph and a histogram based on the continuity of data and presence of gaps",
+      "prerequisites": [
+        "class8-mathematics-data-handling-define-class-limits-and-width"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-identify-jagged-line-kink",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Use Kink or Broken Line on Axis",
+      "outcome": "Explain the use of a kink (zigzag line) on the horizontal axis when the scale does not start at zero",
+      "prerequisites": [
+        "class8-mathematics-data-handling-distinguish-bar-graph-and-histogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-choose-histogram-axes-scales",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Choose Scales for Histogram",
+      "outcome": "Choose appropriate uniform scales on horizontal and vertical axes to plot class intervals and frequencies",
+      "prerequisites": [
+        "class8-mathematics-data-handling-construct-grouped-frequency-table",
+        "class8-mathematics-data-handling-identify-jagged-line-kink"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-plot-histogram",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Plot Histogram for Grouped Data",
+      "outcome": "Draw adjacent rectangular bars over continuous class intervals to construct a histogram",
+      "prerequisites": [
+        "class8-mathematics-data-handling-choose-histogram-axes-scales"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-read-histogram-frequencies",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Read Frequencies from Histogram",
+      "outcome": "Identify the frequency corresponding to any given class interval directly from a histogram",
+      "prerequisites": [
+        "class8-mathematics-data-handling-plot-histogram"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-interpret-histogram-intervals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Interval Data from Histogram",
+      "outcome": "Calculate the total number of items falling above, below, or between specified threshold values using a histogram",
+      "prerequisites": [
+        "class8-mathematics-data-handling-read-histogram-frequencies"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/data-handling/histograms"
+    },
+    {
+      "id": "class8-mathematics-data-handling-find-sector-fraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Find Category Proportion of Total",
+      "outcome": "Calculate the fractional part that a category represents out of the whole dataset",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-calculate-central-angle",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Central Angle for Sector",
+      "outcome": "Calculate the central angle of a sector for a category by multiplying its fraction by 360 degrees",
+      "prerequisites": [
+        "class8-mathematics-data-handling-find-sector-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-verify-sum-of-central-angles",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Verify Central Angle Sum is 360 Degrees",
+      "outcome": "Verify that the sum of central angles of all sectors in a pie chart equals 360 degrees",
+      "prerequisites": [
+        "class8-mathematics-data-handling-calculate-central-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-construct-pie-chart",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Draw Sectors for Pie Chart",
+      "outcome": "Construct a complete pie chart by drawing a circle and constructing central angles using a protractor",
+      "prerequisites": [
+        "class8-mathematics-data-handling-verify-sum-of-central-angles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-read-pie-chart-values",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Quantity from Pie Chart Sector",
+      "outcome": "Calculate the absolute quantity or percentage for a category from its central angle and the total value",
+      "prerequisites": [
+        "class8-mathematics-data-handling-calculate-central-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-compare-pie-chart-sectors",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Compare Sectors in Pie Chart",
+      "outcome": "Compare proportions between different categories using the relative sizes of their sectors in a pie chart",
+      "prerequisites": [
+        "class8-mathematics-data-handling-read-pie-chart-values"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/pie-charts"
+    },
+    {
+      "id": "class8-mathematics-data-handling-define-random-experiment-outcomes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Random Experiment and Outcomes",
+      "outcome": "State the possible individual outcomes of standard random experiments such as tossing a coin or rolling a die",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-list-outcomes-compound-experiment",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "List Outcomes for Two-Stage Experiment",
+      "outcome": "List all possible outcomes systematically for two-stage experiments such as tossing two coins simultaneously",
+      "prerequisites": [
+        "class8-mathematics-data-handling-define-random-experiment-outcomes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-identify-equally-likely-outcomes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Equally Likely Outcomes",
+      "outcome": "Determine whether the outcomes of a given random experiment are equally likely",
+      "prerequisites": [
+        "class8-mathematics-data-handling-define-random-experiment-outcomes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-identify-favourable-outcomes-event",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Favourable Outcomes for an Event",
+      "outcome": "Identify and count the subset of outcomes that satisfy a specified event condition (e.g., getting a prime number on a die)",
+      "prerequisites": [
+        "class8-mathematics-data-handling-define-random-experiment-outcomes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-calculate-single-event-probability",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Theoretical Probability of Event",
+      "outcome": "Calculate the probability of an event using the ratio of favourable outcomes to total possible outcomes",
+      "prerequisites": [
+        "class8-mathematics-data-handling-identify-equally-likely-outcomes",
+        "class8-mathematics-data-handling-identify-favourable-outcomes-event",
+        "class8-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-interpret-probability-scale",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Probability Values Between 0 and 1",
+      "outcome": "Explain that the probability of an impossible event is 0, a certain event is 1, and any event lies between 0 and 1",
+      "prerequisites": [
+        "class8-mathematics-data-handling-calculate-single-event-probability"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-data-handling-calculate-complementary-event-probability",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Find Probability of Non-Occurrence of Event",
+      "outcome": "Calculate the probability of an event not occurring by finding favourable non-outcomes or subtracting from 1",
+      "prerequisites": [
+        "class8-mathematics-data-handling-interpret-probability-scale"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-define-square-number",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Define Square Number",
+      "outcome": "Define a square number as the product of an integer multiplied by itself",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-unit-digit-property",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Identify Possible Unit Digits",
+      "outcome": "Identify that square numbers can only end with unit digits 0, 1, 4, 5, 6, or 9",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-non-square-by-unit-digit",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Rule Out Non-Squares by Unit Digit",
+      "outcome": "Determine that a number cannot be a perfect square if its unit digit is 2, 3, 7, or 8",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-unit-digit-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-unit-digit-of-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Predict Unit Digit of a Square",
+      "outcome": "Predict the unit digit of the square of a given number by squaring its unit digit",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-unit-digit-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-trailing-zeros-rule",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "State Rule on Trailing Zeros",
+      "outcome": "State that a perfect square must have an even number of zeros at its end",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-non-squares-between-consecutive-squares",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Count Numbers Between Squares",
+      "outcome": "Calculate the number of non-perfect square numbers between n^2 and (n+1)^2 as 2n",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-sum-of-odd-numbers-property",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Express Square as Sum of Odds",
+      "outcome": "Express a square number n^2 as the sum of the first n consecutive odd natural numbers",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/properties-of-square-numbers"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-square-using-distributivity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Square Using Expansion",
+      "outcome": "Calculate the square of a two-digit number by expanding (a + b)^2 using the distributive property",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-distributive-addition",
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/finding-squares-and-pythagorean-triplets"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-square-numbers-ending-in-five",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Square Numbers Ending in 5",
+      "outcome": "Apply the shortcut formula (10a + 5)^2 = a(a + 1) hundreds + 25 to find squares of numbers ending in 5",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-square-using-distributivity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/finding-squares-and-pythagorean-triplets"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-verify-pythagorean-triplet",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Verify Pythagorean Triplet",
+      "outcome": "Verify whether a given set of three natural numbers (a, b, c) satisfies a^2 + b^2 = c^2",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/finding-squares-and-pythagorean-triplets"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-generate-pythagorean-triplet",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Generate Pythagorean Triplet",
+      "outcome": "Generate a Pythagorean triplet of the form (2m, m^2 - 1, m^2 + 1) when given one of its members",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms",
+        "class8-mathematics-squares-and-square-roots-verify-pythagorean-triplet"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/finding-squares-and-pythagorean-triplets"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-define-square-root",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Define Square Root and Radical Sign",
+      "outcome": "Define the square root as the inverse operation of squaring and denote it using the radical symbol",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-repeated-subtraction-method",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Find Square Root by Repeated Subtraction",
+      "outcome": "Calculate the square root of a small perfect square by repeatedly subtracting consecutive odd numbers starting from 1",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-sum-of-odd-numbers-property",
+        "class8-mathematics-squares-and-square-roots-define-square-root"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-prime-factorisation-method",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Square Root by Prime Factorisation",
+      "outcome": "Calculate the square root of a perfect square by pairing identical prime factors",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-root"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-find-multiplier-for-perfect-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Find Smallest Multiplier for Perfect Square",
+      "outcome": "Determine the smallest whole number by which a given non-perfect square must be multiplied to yield a perfect square",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-prime-factorisation-method"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-find-divisor-for-perfect-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Find Smallest Divisor for Perfect Square",
+      "outcome": "Determine the smallest whole number by which a given non-perfect square must be divided to yield a perfect square",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-prime-factorisation-method"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-place-bars-division-method",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Place Bars on Digits in Integer",
+      "outcome": "Place bars over pairs of digits in an integer starting from the unit digit to determine the number of digits in its square root",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-define-square-root"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-division-method"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-division-method-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Square Root by Long Division",
+      "outcome": "Calculate the square root of large integers using the long division method",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-place-bars-division-method"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-division-method"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-least-subtracted-for-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Find Least Number to Subtract",
+      "outcome": "Find the least number that must be subtracted from a given number to make it a perfect square using the division remainder",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-division-method-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-division-method"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-least-added-for-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Find Least Number to Add",
+      "outcome": "Find the least number that must be added to a given number to make it a perfect square by comparing with the next integer square",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-division-method-integers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-division-method"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-place-bars-decimals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Place Bars on Decimal Numbers",
+      "outcome": "Place bars over integer pairs leftwards from the decimal point and over decimal pairs rightwards from the decimal point",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-place-bars-division-method"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-of-decimals"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-division-method-decimals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Square Root of Decimals by Long Division",
+      "outcome": "Calculate the square root of a decimal number using the long division method with correct decimal point placement",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-division-method-integers",
+        "class8-mathematics-squares-and-square-roots-place-bars-decimals"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-of-decimals"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-estimate-square-root",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Estimate Square Root to Nearest Integer",
+      "outcome": "Estimate the square root of a non-perfect square to the nearest whole number by bounding it between consecutive perfect squares",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-non-squares-between-consecutive-squares"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-by-division-method"
+    },
+    {
+      "id": "class8-mathematics-squares-and-square-roots-word-problems-area-square",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "squares-and-square-roots",
+      "title": "Solve Geometry Problems Using Square Root",
+      "outcome": "Calculate the side length of a square given its area by applying square roots in word problems",
+      "prerequisites": [
+        "class8-mathematics-squares-and-square-roots-division-method-integers",
+        "class8-mathematics-understanding-quadrilaterals-square-properties"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/squares-and-square-roots/square-roots-of-decimals"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-define-cube-number",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Define Cube Number",
+      "outcome": "Define a cube number (or perfect cube) as the product obtained by multiplying a number by itself three times",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-calculate-cube-of-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Calculate Cubes of Numbers",
+      "outcome": "Calculate the cube of a given single-digit or two-digit integer by repeated multiplication",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-unit-digit-of-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Determine Unit Digit of Cube",
+      "outcome": "Predict the unit digit of the cube of a number from the unit digit of the number itself",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-calculate-cube-of-integers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-trailing-zeros-in-cubes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Trailing Zeros in Cubes",
+      "outcome": "State that the number of trailing zeros in a cube number is always a multiple of three",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-calculate-cube-of-integers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-parity-of-cubes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Parity of Cubes",
+      "outcome": "Identify whether the cube of a given number is even or odd based on the parity of the base number",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-unit-digit-of-cube"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-sum-of-consecutive-odds-pattern",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cubes as Consecutive Odd Sums",
+      "outcome": "Express the cube of a natural number n as the sum of n consecutive odd numbers",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-calculate-cube-of-integers"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-prime-factorisation-triplet-property",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Triplet Factorisation Property",
+      "outcome": "Explain that each prime factor of a perfect cube appears in groups of three (triplets)",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-identify-perfect-cube-prime-factorisation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Check Perfect Cube by Prime Factorisation",
+      "outcome": "Determine whether a given natural number is a perfect cube by grouping its prime factors into triplets",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-prime-factorisation-triplet-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-find-smallest-multiplier-for-perfect-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Smallest Multiplier for Perfect Cube",
+      "outcome": "Calculate the smallest natural number by which a given number must be multiplied to make it a perfect cube",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-identify-perfect-cube-prime-factorisation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-find-smallest-divisor-for-perfect-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Smallest Divisor for Perfect Cube",
+      "outcome": "Calculate the smallest natural number by which a given number must be divided to make it a perfect cube",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-identify-perfect-cube-prime-factorisation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-define-cube-root-and-symbol",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Define Cube Root and Radical Symbol",
+      "outcome": "Define cube root as the inverse operation of cubing and write it using the radical notation ∛",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-number"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-unit-digit-of-cube-root",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Identify Unit Digit of Cube Root",
+      "outcome": "Identify the unit digit of the cube root of a perfect cube from the unit digit of the cube",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-unit-digit-of-cube",
+        "class8-mathematics-cubes-and-cube-roots-define-cube-root-and-symbol"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-single-triplets",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root of Simple Numbers by Factorisation",
+      "outcome": "Calculate the cube root of a perfect cube having a single distinct prime triplet using prime factorisation",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-root-and-symbol",
+        "class8-mathematics-cubes-and-cube-roots-identify-perfect-cube-prime-factorisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-multiple-triplets",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root with Multiple Prime Triplets",
+      "outcome": "Calculate the cube root of a large perfect cube by grouping multiple prime factors into triplets and multiplying one factor from each triplet",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-single-triplets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-of-negative-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root of Negative Integers",
+      "outcome": "Calculate the cube root of a negative perfect cube using the property ∛(-x) = -∛x",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-multiple-triplets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-of-product",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root of a Product",
+      "outcome": "Evaluate the cube root of a product of two or more numbers using the property ∛(a × b) = ∛a × ∛b",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-multiple-triplets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-of-fractions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root of Rational Numbers",
+      "outcome": "Evaluate the cube root of a rational number a/b by calculating ∛a / ∛b",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-define-rational-number",
+        "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-multiple-triplets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-cube-root-of-decimals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Cube Root of Decimals",
+      "outcome": "Calculate the cube root of a decimal number by converting it to fractional form with a power-of-10 denominator",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-cube-root-of-fractions",
+        "class8-mathematics-cubes-and-cube-roots-trailing-zeros-in-cubes"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-group-digits-for-estimation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Group Digits for Cube Root Estimation",
+      "outcome": "Partition the digits of a perfect cube into groups of three starting from the rightmost digit",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-root-and-symbol"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-of-cube-numbers"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-estimate-units-place",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Determine Units Place by Estimation",
+      "outcome": "Determine the units place digit of the estimated cube root from the first (rightmost) 3-digit group",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-group-digits-for-estimation",
+        "class8-mathematics-cubes-and-cube-roots-unit-digit-of-cube-root"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-of-cube-numbers"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-estimate-tens-place",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Determine Tens Place by Estimation",
+      "outcome": "Determine the tens place digit of the cube root by bounding the second group between two consecutive perfect cubes",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-calculate-cube-of-integers",
+        "class8-mathematics-cubes-and-cube-roots-group-digits-for-estimation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-of-cube-numbers"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-estimate-cube-root-complete",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Estimate Cube Root of Perfect Cube",
+      "outcome": "Combine the tens and units digits obtained from grouping to state the estimated cube root of up to a six-digit perfect cube",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-estimate-units-place",
+        "class8-mathematics-cubes-and-cube-roots-estimate-tens-place"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-of-cube-numbers"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-word-problems-volume-of-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Word Problems on Volume of Cube",
+      "outcome": "Calculate the side length of a cube given its volume by applying the cube root operation",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-cube-root-prime-factorisation-multiple-triplets"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cube-roots-by-prime-factorisation"
+    },
+    {
+      "id": "class8-mathematics-cubes-and-cube-roots-word-problems-cuboid-to-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "cubes-and-cube-roots",
+      "title": "Forming Cubes from Cuboids",
+      "outcome": "Calculate the minimum number of identical cuboids of given dimensions required to form a perfect cube",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-find-smallest-multiplier-for-perfect-cube"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/cubes-and-cube-roots/cubes-and-patterns"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-express-ratio-same-units",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Express Ratio in Same Units",
+      "outcome": "Calculate the ratio of two quantities after converting them into the same unit",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-convert-ratio-to-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Ratio to Percentage",
+      "outcome": "Convert a given part-to-part or part-to-whole ratio into percentage",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-express-ratio-same-units"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-convert-percentage-to-ratio-or-fraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Percentage to Ratio",
+      "outcome": "Convert a given percentage into a simplified fraction and ratio",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-percentage-of-quantity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Percentage of Quantity",
+      "outcome": "Calculate the value representing a specified percentage of a total given quantity",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-convert-percentage-to-ratio-or-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-total-given-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Total from Percentage",
+      "outcome": "Determine the whole quantity when a percentage part and its value are known",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-percentage-of-quantity",
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-percentage-increase-decrease",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Percentage Change",
+      "outcome": "Calculate the percentage increase or percentage decrease given initial and final values",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-convert-ratio-to-percentage"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-new-quantity-after-percentage-change",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Value After Percentage Change",
+      "outcome": "Calculate the new quantity after applying a given percentage increase or decrease to the original amount",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-percentage-of-quantity",
+        "class8-mathematics-comparing-quantities-calculate-percentage-increase-decrease"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/recalling-ratios-and-percentages"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-discount-amount",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Discount Amount",
+      "outcome": "Calculate the discount as the difference between Marked Price (MP) and Selling Price (SP)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-discount-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Discount Percentage",
+      "outcome": "Calculate the discount percentage based on Marked Price",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-discount-amount",
+        "class8-mathematics-comparing-quantities-convert-ratio-to-percentage"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-sp-from-mp-and-discount-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find SP from MP and Discount Rate",
+      "outcome": "Calculate Selling Price given the Marked Price and discount percentage",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-discount-percentage",
+        "class8-mathematics-comparing-quantities-find-percentage-of-quantity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-mp-from-sp-and-discount-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find MP from SP and Discount Rate",
+      "outcome": "Calculate Marked Price given the Selling Price and discount percentage",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-sp-from-mp-and-discount-percentage",
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-gst-amount",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate GST Amount",
+      "outcome": "Calculate Goods and Services Tax (GST) or sales tax on the selling price of an item",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-percentage-of-quantity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-total-bill-with-gst",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Total Bill with GST",
+      "outcome": "Determine the final billing amount by adding GST to the discounted selling price",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-gst-amount",
+        "class8-mathematics-comparing-quantities-find-sp-from-mp-and-discount-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-original-price-before-gst",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Price Before GST",
+      "outcome": "Calculate the original price of an article before GST was included in the billed amount",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-gst-amount",
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/discounts-and-gst"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-effective-cost-price-with-overheads",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Effective CP with Overheads",
+      "outcome": "Calculate total cost price by adding overhead expenses (repairs, transport) to the purchase price",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/profit-and-loss"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-calculate-profit-or-loss-percentage",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Profit or Loss Percent",
+      "outcome": "Determine profit or loss percentage on the effective cost price",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-effective-cost-price-with-overheads",
+        "class8-mathematics-comparing-quantities-convert-ratio-to-percentage"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/profit-and-loss"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-sp-from-cp-and-profit-loss-percent",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find SP from CP and Profit/Loss Percent",
+      "outcome": "Calculate Selling Price given Cost Price and profit percentage or loss percentage",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-calculate-profit-or-loss-percentage"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/profit-and-loss"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-find-cp-from-sp-and-profit-loss-percent",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find CP from SP and Profit/Loss Percent",
+      "outcome": "Calculate Cost Price given Selling Price and profit percentage or loss percentage",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-sp-from-cp-and-profit-loss-percent",
+        "class8-mathematics-linear-equations-in-one-variable-solve-fractional-coefficients"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/profit-and-loss"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-solve-combined-profit-loss-multiple-items",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Overall Profit or Loss on Multiple Items",
+      "outcome": "Calculate overall profit or loss percentage for a transaction involving multiple items bought and sold under different conditions",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-sp-from-cp-and-profit-loss-percent",
+        "class8-mathematics-comparing-quantities-calculate-profit-or-loss-percentage"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/comparing-quantities/profit-and-loss"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-stepwise-compound-interest-calculation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate CI Step-by-Step",
+      "outcome": "Calculate compound interest year-by-year by treating the amount at the end of each year as the principal for the next year",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-find-percentage-of-quantity"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-differentiate-si-and-ci",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Compare SI and CI",
+      "outcome": "Compare the growth of principal and interest under Simple Interest versus Compound Interest over multiple conversion periods",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-stepwise-compound-interest-calculation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-apply-ci-formula-annually",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Amount and CI Annually",
+      "outcome": "Calculate total amount and compound interest using the formula A = P(1 + R/100)^n compounded annually",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-stepwise-compound-interest-calculation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-apply-ci-formula-fractional-years",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate CI for Fractional Time Periods",
+      "outcome": "Calculate amount and compound interest when the time period involves a mixed fraction of years with annual compounding",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-apply-ci-formula-annually"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-apply-ci-formula-half-yearly",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate CI Compounded Half-Yearly",
+      "outcome": "Calculate total amount and compound interest when interest is compounded semi-annually by halving the rate and doubling the conversion periods",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-apply-ci-formula-annually"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-comparing-quantities-apply-growth-and-depreciation-formula",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Model Growth and Depreciation",
+      "outcome": "Apply compound interest formulas to solve real-world problems on population growth, bacterial increase, and asset depreciation",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-apply-ci-formula-annually"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/comparing-quantities/compound-interest"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-identify-terms-and-factors",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Identify Terms and Factors",
+      "outcome": "Identify individual terms and their constituent factors in a given algebraic expression",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-identify-linear-expression"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/terms-factors-and-coefficients"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-identify-coefficients",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Identify Numerical Coefficients",
+      "outcome": "Identify the numerical coefficient of any specified term in an algebraic expression",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-identify-terms-and-factors"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/terms-factors-and-coefficients"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-classify-monomial-binomial-trinomial-polynomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Classify Polynomials by Term Count",
+      "outcome": "Classify algebraic expressions as monomials, binomials, trinomials, or general polynomials based on the number of non-zero terms",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-identify-terms-and-factors"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/terms-factors-and-coefficients"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-distinguish-like-and-unlike-terms",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Distinguish Like and Unlike Terms",
+      "outcome": "Differentiate between like and unlike algebraic terms by comparing their variable factors and corresponding powers",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-identify-terms-and-factors"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/terms-factors-and-coefficients"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-add-expressions-horizontal-vertical",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Add Algebraic Expressions",
+      "outcome": "Calculate the sum of two or more algebraic expressions by grouping and combining like terms horizontally or vertically",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-distinguish-like-and-unlike-terms",
+        "class8-mathematics-rational-numbers-distributive-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/addition-and-subtraction-of-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-subtract-expressions-horizontal-vertical",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Subtract Algebraic Expressions",
+      "outcome": "Subtract one algebraic expression from another by changing the signs of terms of the subtrahend and combining like terms",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-add-expressions-horizontal-vertical",
+        "class8-mathematics-rational-numbers-additive-inverse"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/addition-and-subtraction-of-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-two-monomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Two Monomials",
+      "outcome": "Calculate the product of two monomials by multiplying their numerical coefficients and combining variable exponents",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-identify-coefficients",
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-three-or-more-monomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Multiple Monomials",
+      "outcome": "Calculate the product of three or more monomials in succession",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-two-monomials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-find-area-and-volume-using-monomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Calculate Area and Volume Using Monomials",
+      "outcome": "Express and compute the area of rectangles and volume of rectangular boxes as products of algebraic monomials",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-three-or-more-monomials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-binomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Monomial by Binomial",
+      "outcome": "Multiply a monomial by a binomial using the distributive law of multiplication over addition or subtraction",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-two-monomials",
+        "class8-mathematics-rational-numbers-distributive-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-trinomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Monomial by Trinomial",
+      "outcome": "Multiply a monomial by a trinomial or polynomial by distributing the monomial across each term",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-binomial"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-simplify-and-evaluate-expression-products",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Simplify and Evaluate Expression Products",
+      "outcome": "Simplify algebraic expressions containing products of monomials and polynomials, and evaluate their values for given numerical substitutions",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-trinomial",
+        "class8-mathematics-algebraic-expressions-and-identities-add-expressions-horizontal-vertical"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Two Binomials",
+      "outcome": "Multiply two binomials term-by-term and combine the resulting like terms",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-binomial"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-trinomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Multiply Binomial by Trinomial",
+      "outcome": "Calculate the product of a binomial and a trinomial by term-by-term expansion and simplification",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-trinomial"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/multiplication-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-distinguish-identity-and-equation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Distinguish Algebraic Identity from Equation",
+      "outcome": "Explain the difference between an algebraic equation true for specific values and an identity true for all values of the variables",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-distinguish-expression-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-derive-identity-square-of-sum",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Derive Identity for Square of a Sum",
+      "outcome": "Derive the standard identity (a + b)^2 = a^2 + 2ab + b^2 by direct binomial multiplication",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+        "class8-mathematics-algebraic-expressions-and-identities-distinguish-identity-and-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-derive-identity-square-of-difference",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Derive Identity for Square of a Difference",
+      "outcome": "Derive the standard identity (a - b)^2 = a^2 - 2ab + b^2 by direct binomial multiplication",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+        "class8-mathematics-algebraic-expressions-and-identities-distinguish-identity-and-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-derive-identity-difference-of-squares",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Derive Difference of Squares Identity",
+      "outcome": "Derive the standard identity (a + b)(a - b) = a^2 - b^2 by binomial expansion",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+        "class8-mathematics-algebraic-expressions-and-identities-distinguish-identity-and-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-derive-identity-x-plus-a-x-plus-b",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Derive Identity (x+a)(x+b)",
+      "outcome": "Derive the identity (x + a)(x + b) = x^2 + (a + b)x + ab by binomial multiplication",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-binomial-by-binomial",
+        "class8-mathematics-algebraic-expressions-and-identities-distinguish-identity-and-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-sum-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Apply (a+b)^2 Identity",
+      "outcome": "Apply the identity (a + b)^2 = a^2 + 2ab + b^2 to expand algebraic binomial squares and compute numerical squares",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-derive-identity-square-of-sum"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-difference-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Apply (a-b)^2 Identity",
+      "outcome": "Apply the identity (a - b)^2 = a^2 - 2ab + b^2 to expand algebraic binomial squares and compute numerical squares",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-derive-identity-square-of-difference"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-apply-difference-of-squares-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Apply Difference of Squares Identity",
+      "outcome": "Apply the identity (a + b)(a - b) = a^2 - b^2 to calculate products of algebraic expressions and evaluate numerical products",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-derive-identity-difference-of-squares"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-apply-identity-x-plus-a-x-plus-b",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Apply (x+a)(x+b) Identity",
+      "outcome": "Apply the identity (x + a)(x + b) = x^2 + (a + b)x + ab to expand binomial products and evaluate numerical products directly",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-derive-identity-x-plus-a-x-plus-b"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-algebraic-expressions-and-identities-simplify-expressions-using-multiple-identities",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "algebraic-expressions-and-identities",
+      "title": "Simplify Expressions Using Identities",
+      "outcome": "Simplify complex algebraic expressions involving the combination and verification of multiple standard identities",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-sum-identity",
+        "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-difference-identity",
+        "class8-mathematics-algebraic-expressions-and-identities-apply-difference-of-squares-identity"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/algebraic-expressions-and-identities/algebraic-identities"
+    },
+    {
+      "id": "class8-mathematics-mensuration-identify-trapezium-dimensions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Identify Trapezium Dimensions",
+      "outcome": "Identify the parallel bases and the perpendicular height of a trapezium",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-identify-trapezium"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-area-of-trapezium",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Calculate Area of Trapezium",
+      "outcome": "Calculate the area of a trapezium using the formula 1/2 * (a + b) * h",
+      "prerequisites": [
+        "class8-mathematics-mensuration-identify-trapezium-dimensions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-find-missing-dimension-of-trapezium",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Find Missing Trapezium Dimension",
+      "outcome": "Calculate an unknown side or height of a trapezium given its area and other dimensions",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-area-of-trapezium",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-area-of-general-quadrilateral",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Area of General Quadrilateral",
+      "outcome": "Calculate the area of a general quadrilateral using the length of a diagonal and the heights of perpendicular offsets from opposite vertices",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-identify-diagonals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-area-of-rhombus-diagonals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Area of Rhombus Using Diagonals",
+      "outcome": "Calculate the area of a rhombus using the formula 1/2 * d1 * d2",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-rhombus-properties"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-find-rhombus-side-or-diagonal",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Find Rhombus Diagonal Given Area",
+      "outcome": "Calculate a missing diagonal or side of a rhombus given its area and other parameters",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-area-of-rhombus-diagonals",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/area-of-trapezium-and-quadrilaterals"
+    },
+    {
+      "id": "class8-mathematics-mensuration-decompose-polygon-into-triangles-trapeziums",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Decompose Polygon into Sub-regions",
+      "outcome": "Decompose an irregular polygon into non-overlapping triangles and trapeziums along a main diagonal",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-define-polygon"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/area-of-a-polygon"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-area-of-irregular-polygon",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Area of Irregular Polygon",
+      "outcome": "Calculate the total area of an irregular polygon by summing the areas of its component triangles and trapeziums",
+      "prerequisites": [
+        "class8-mathematics-mensuration-decompose-polygon-into-triangles-trapeziums",
+        "class8-mathematics-mensuration-calculate-area-of-trapezium"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/area-of-a-polygon"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-area-of-regular-polygon",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Area of Regular Polygon",
+      "outcome": "Calculate the area of a regular polygon such as a regular hexagon or octagon by partitioning it into congruent symmetric figures",
+      "prerequisites": [
+        "class8-mathematics-understanding-quadrilaterals-regular-irregular-polygons",
+        "class8-mathematics-mensuration-calculate-area-of-trapezium"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/area-of-a-polygon"
+    },
+    {
+      "id": "class8-mathematics-mensuration-distinguish-surface-areas-cuboid",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Differentiate Cuboid Surface Areas",
+      "outcome": "Differentiate between the lateral surface area and the total surface area of a cuboid based on face inclusion",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-surface-area-of-cuboid",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Surface Area of Cuboid",
+      "outcome": "Calculate the total surface area 2(lb + bh + hl) and lateral surface area 2h(l + b) of a cuboid",
+      "prerequisites": [
+        "class8-mathematics-mensuration-distinguish-surface-areas-cuboid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-surface-area-of-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Surface Area of Cube",
+      "outcome": "Calculate the total surface area 6l^2 and lateral surface area 4l^2 of a cube",
+      "prerequisites": [
+        "class8-mathematics-mensuration-distinguish-surface-areas-cuboid",
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-identify-cylinder-dimensions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Identify Cylinder Base Radius and Height",
+      "outcome": "Identify the radius (or diameter) and height of a right circular cylinder",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-curved-surface-area-cylinder",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Curved Surface Area of Cylinder",
+      "outcome": "Calculate the curved surface area of a cylinder using the formula 2 * pi * r * h",
+      "prerequisites": [
+        "class8-mathematics-mensuration-identify-cylinder-dimensions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-total-surface-area-cylinder",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Total Surface Area of Cylinder",
+      "outcome": "Calculate the total surface area of a closed cylinder using the formula 2 * pi * r * (r + h)",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-curved-surface-area-cylinder"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-solve-surface-area-application-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Surface Area Applications",
+      "outcome": "Apply surface area formulas to determine costs of painting, plastering, or wrapping objects with open tops or bases",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-surface-area-of-cuboid",
+        "class8-mathematics-mensuration-calculate-surface-area-of-cube",
+        "class8-mathematics-mensuration-calculate-total-surface-area-cylinder"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/mensuration/surface-area-of-solids"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-volume-of-cuboid",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Volume of Cuboid",
+      "outcome": "Calculate the volume of a cuboid using the formula length * breadth * height or base area * height",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-find-area-and-volume-using-monomials"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-volume-of-cube",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Volume of Cube",
+      "outcome": "Calculate the volume of a cube using the formula side^3",
+      "prerequisites": [
+        "class8-mathematics-cubes-and-cube-roots-define-cube-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-calculate-volume-of-cylinder",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Volume of Cylinder",
+      "outcome": "Calculate the volume of a right circular cylinder using the formula pi * r^2 * h",
+      "prerequisites": [
+        "class8-mathematics-mensuration-identify-cylinder-dimensions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-find-missing-dimension-from-volume",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Find Missing Dimension from Volume",
+      "outcome": "Calculate an unknown dimension (height, radius, or side length) of a 3D solid given its volume",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-volume-of-cuboid",
+        "class8-mathematics-mensuration-calculate-volume-of-cube",
+        "class8-mathematics-mensuration-calculate-volume-of-cylinder",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-differentiate-volume-and-capacity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Differentiate Volume and Capacity",
+      "outcome": "Distinguish between the volume of a solid object and the capacity of a hollow container",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-volume-of-cuboid"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-convert-volume-and-capacity-units",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Convert Volume and Capacity Units",
+      "outcome": "Convert between units of volume and capacity including cm^3, m^3, mL, and L (e.g., 1 cm^3 = 1 mL, 1000 cm^3 = 1 L, 1 m^3 = 1000 L)",
+      "prerequisites": [
+        "class8-mathematics-mensuration-differentiate-volume-and-capacity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-solve-capacity-word-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Solve Capacity Word Problems",
+      "outcome": "Calculate the capacity in litres or rate of fluid flow into cylindrical and cuboidal reservoirs",
+      "prerequisites": [
+        "class8-mathematics-mensuration-convert-volume-and-capacity-units",
+        "class8-mathematics-mensuration-calculate-volume-of-cylinder"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-mensuration-solve-composite-and-ratio-solid-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "mensuration",
+      "title": "Analyze Scaling and Reshaping Solids",
+      "outcome": "Predict how the surface area and volume of a 3D solid change when its linear dimensions are doubled, tripled, or halved",
+      "prerequisites": [
+        "class8-mathematics-mensuration-calculate-surface-area-of-cuboid",
+        "class8-mathematics-mensuration-calculate-volume-of-cuboid"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/mensuration/volume-and-capacity"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-define-negative-exponent",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Define Negative Integral Exponent",
+      "outcome": "State that for any non-zero integer a and positive integer m, a^(-m) equals 1/(a^m)",
+      "prerequisites": [
+        "class8-mathematics-rational-numbers-multiplicative-inverse"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-multiplicative-inverse-using-exponents",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Multiplicative Inverse in Exponent Form",
+      "outcome": "Identify a^(-m) as the multiplicative inverse of a^m",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-define-negative-exponent"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Convert Negative to Positive Exponents",
+      "outcome": "Rewrite numerical and variable terms with negative exponents as equivalent terms with positive exponents",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-define-negative-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-negative-exponent-of-fraction",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Negative Exponent of a Rational Number",
+      "outcome": "Apply the rule (a/b)^(-m) = (b/a)^m to rewrite fractions with negative exponents",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-evaluate-negative-powers-integers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Evaluate Negative Powers of Integers",
+      "outcome": "Calculate the exact rational numerical value of integers raised to negative integer exponents",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-evaluate-negative-powers-fractions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Evaluate Negative Powers of Fractions",
+      "outcome": "Calculate the exact rational numerical value of fractions raised to negative integer exponents",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-negative-exponent-of-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/powers-with-negative-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-product-law-same-base",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Product Law with Same Base",
+      "outcome": "Apply the law a^m * a^n = a^(m+n) for integer exponents m and n",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-quotient-law-same-base",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Quotient Law with Same Base",
+      "outcome": "Apply the law a^m / a^n = a^(m-n) for integer exponents m and n",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-power-of-a-power-law",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Power of a Power Law",
+      "outcome": "Apply the law (a^m)^n = a^(m*n) for integer exponents m and n",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-power-of-a-product-law",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Power of a Product Law",
+      "outcome": "Apply the law (a*b)^m = a^m * b^m for integer exponent m",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-convert-negative-to-positive-exponent"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-power-of-a-quotient-law",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Power of a Quotient Law",
+      "outcome": "Apply the law (a/b)^m = a^m / b^m for integer exponent m",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-negative-exponent-of-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-zero-exponent-property",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Zero Exponent Property",
+      "outcome": "Apply the rule a^0 = 1 for any non-zero base a to evaluate expressions",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-quotient-law-same-base"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-simplify-product-quotient-powers",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Simplify Products and Quotients with Integral Exponents",
+      "outcome": "Simplify multi-term exponential expressions involving products and quotients of the same base",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-product-law-same-base",
+        "class8-mathematics-exponents-and-powers-quotient-law-same-base",
+        "class8-mathematics-exponents-and-powers-zero-exponent-property"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-simplify-prime-factor-bases",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Simplify Powers by Prime Factorisation",
+      "outcome": "Simplify exponential expressions with composite bases by factoring bases into prime powers",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-power-of-a-power-law",
+        "class8-mathematics-exponents-and-powers-power-of-a-product-law",
+        "class8-mathematics-exponents-and-powers-simplify-product-quotient-powers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-evaluate-nested-power-expressions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Evaluate Nested Exponent Expressions",
+      "outcome": "Evaluate complex numerical expressions involving nested brackets and negative exponents",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-evaluate-negative-powers-fractions",
+        "class8-mathematics-exponents-and-powers-power-of-a-power-law"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-solve-unknown-exponent-equations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Solve Equations with Unknown Exponents",
+      "outcome": "Find the value of an unknown variable in the exponent by equating powers with identical bases",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-simplify-product-quotient-powers",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/exponents-and-powers/laws-of-exponents"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-define-standard-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Define Standard Scientific Form",
+      "outcome": "Identify whether a given expression is in standard form m * 10^n, where 1 <= m < 10 and n is an integer",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-define-negative-exponent"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-large-numbers-to-standard-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Express Large Numbers in Standard Form",
+      "outcome": "Convert very large numbers into standard scientific notation with positive powers of 10",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-define-standard-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-small-decimals-to-standard-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Express Small Decimals in Standard Form",
+      "outcome": "Convert very small decimal numbers into standard scientific notation with negative powers of 10",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-define-standard-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-standard-form-to-usual-form-positive",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Standard Form to Usual Form Positive Power",
+      "outcome": "Convert numbers with positive powers of 10 from standard form into usual decimal notation",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-large-numbers-to-standard-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-standard-form-to-usual-form-negative",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Standard Form to Usual Form Negative Power",
+      "outcome": "Convert numbers with negative powers of 10 from standard form into usual decimal notation",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-small-decimals-to-standard-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-compare-numbers-standard-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Compare Numbers in Standard Form",
+      "outcome": "Compare two extremely large or extremely small numbers expressed in standard form by inspecting exponents of 10",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-small-decimals-to-standard-form",
+        "class8-mathematics-exponents-and-powers-large-numbers-to-standard-form"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-add-subtract-standard-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Add and Subtract Numbers in Standard Form",
+      "outcome": "Calculate the sum or difference of numbers in standard form by converting them to have matching powers of 10",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-compare-numbers-standard-form"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-exponents-and-powers-ratio-and-comparison-applications",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "exponents-and-powers",
+      "title": "Ratio and Real-World Comparisons in Standard Form",
+      "outcome": "Calculate ratios and orders of magnitude to compare physical quantities like planetary masses and cell sizes",
+      "prerequisites": [
+        "class8-mathematics-exponents-and-powers-quotient-law-same-base",
+        "class8-mathematics-exponents-and-powers-compare-numbers-standard-form"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/exponents-and-powers/standard-form"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-identify-proportional-quantities",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Identify Related Changing Quantities",
+      "outcome": "Identify pairs of real-life quantities that increase or decrease together or in opposite directions",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-express-ratio-same-units"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-define-direct-proportion",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Define Direct Proportion",
+      "outcome": "State the definition of direct proportion as x/y = k, where k is a positive constant",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-identify-proportional-quantities"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-verify-direct-proportion-table",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Verify Direct Proportion in Tables",
+      "outcome": "Determine whether two quantities in a given tabular dataset are in direct proportion by checking if x/y is constant",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-define-direct-proportion",
+        "class8-mathematics-rational-numbers-closure-division"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-setup-direct-proportion-equation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Formulate Direct Proportion Equation",
+      "outcome": "Set up the direct proportion equation x1/y1 = x2/y2 from a given word problem or table",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-define-direct-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Solve Direct Proportion Table Values",
+      "outcome": "Calculate missing values in a direct variation table using cross-multiplication",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-setup-direct-proportion-equation",
+        "class8-mathematics-linear-equations-in-one-variable-cross-multiplication-method"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-cost-quantity-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Direct Variation: Cost and Quantity",
+      "outcome": "Solve word problems involving article quantities and total costs using direct proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-distance-time-constant-speed",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Direct Variation: Distance and Time",
+      "outcome": "Calculate distance or time at a constant speed using direct proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-map-scale-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Direct Variation: Map Scale and Model Scale",
+      "outcome": "Calculate actual distances or model lengths given a map scale ratio using direct proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-shadow-and-height-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Direct Variation: Object Heights and Shadows",
+      "outcome": "Find the height of an object or length of its shadow cast at the same time using direct proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-work-and-wages-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Direct Variation: Work and Machine Output",
+      "outcome": "Calculate the output or bottles filled by machines over varying durations using direct proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-direct-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-multi-step-direct-proportion",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Multi-Step Direct Proportion Problems",
+      "outcome": "Solve multi-step direct proportion problems requiring unit conversions before establishing ratios",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-solve-distance-time-constant-speed",
+        "class8-mathematics-direct-and-inverse-proportions-solve-map-scale-problems"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/direct-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-define-inverse-proportion",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Define Inverse Proportion",
+      "outcome": "State the definition of inverse proportion as x * y = k, where k is a constant product",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-identify-proportional-quantities"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-verify-inverse-proportion-table",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Verify Inverse Proportion in Tables",
+      "outcome": "Determine whether two quantities in a table vary inversely by calculating if their products x * y remain constant",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-define-inverse-proportion",
+        "class8-mathematics-rational-numbers-closure-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-setup-inverse-proportion-equation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Formulate Inverse Proportion Equation",
+      "outcome": "Set up the inverse proportion equation x1 * y1 = x2 * y2 from a given scenario or table",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-define-inverse-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Solve Inverse Proportion Table Values",
+      "outcome": "Calculate missing values in an inverse variation table by equating product pairs x1 * y1 = x2 * y2",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-setup-inverse-proportion-equation",
+        "class8-mathematics-linear-equations-in-one-variable-transpose-terms"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-workers-and-time-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Workers and Time",
+      "outcome": "Calculate the time required to complete a fixed task when the number of workers changes",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-speed-and-time-constant-distance",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Speed and Time",
+      "outcome": "Calculate the required speed or travel time for a constant distance journey using inverse proportion",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-provisions-and-persons-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Food Provisions and Campers",
+      "outcome": "Calculate how long a fixed food supply will last when the number of people changes",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-pipes-and-tank-filling-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Pipes and Tank Filling Time",
+      "outcome": "Calculate the time taken to fill a tank when varying numbers of identical pipes are used",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-periods-and-duration-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Number of Periods and Duration",
+      "outcome": "Calculate the adjusted duration of school periods when the total number of periods in a fixed school day changes",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-distinguish-direct-and-inverse-proportions",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Distinguish Direct and Inverse Proportions",
+      "outcome": "Classify a given word problem context as direct variation, inverse variation, or neither",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-define-direct-proportion",
+        "class8-mathematics-direct-and-inverse-proportions-define-inverse-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-mixed-variation-word-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Solve Mixed Variation Problems",
+      "outcome": "Solve unclassified word problems by first identifying the proportion type and then applying the appropriate algebraic formula",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-distinguish-direct-and-inverse-proportions",
+        "class8-mathematics-direct-and-inverse-proportions-solve-multi-step-direct-proportion",
+        "class8-mathematics-direct-and-inverse-proportions-solve-provisions-and-persons-problems"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-spokes-and-angles-problems",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Inverse Variation: Geometric Angles between Spokes",
+      "outcome": "Calculate the central angle between consecutive spokes of a wheel as the number of spokes varies",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-find-missing-value-inverse-proportion"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-direct-and-inverse-proportions-solve-compound-variation-applications",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "direct-and-inverse-proportions",
+      "title": "Compound Variation Application Problems",
+      "outcome": "Solve advanced proportion word problems involving changes in population/workers joining or leaving midway through a task",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-solve-mixed-variation-word-problems"
+      ],
+      "difficulty": 5,
+      "topicRef": "class8-mathematics/direct-and-inverse-proportions/inverse-proportion"
+    },
+    {
+      "id": "class8-mathematics-factorisation-define-irreducible-factor",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Define Irreducible Factors of Monomials",
+      "outcome": "State whether a given algebraic factorisation of a monomial is in irreducible form",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-identify-terms-and-factors"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-monomial-irreducible-factors",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Write Monomials in Irreducible Form",
+      "outcome": "Express a monomial as a product of its prime numerical factors and irreducible literal factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-define-irreducible-factor"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-hcf-of-monomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Find HCF of Monomials",
+      "outcome": "Identify the greatest common factor (HCF) among two or more algebraic monomials",
+      "prerequisites": [
+        "class8-mathematics-factorisation-monomial-irreducible-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-common-monomial-factor",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Take Out Common Monomial Factor",
+      "outcome": "Factorise an algebraic expression by taking out the highest common monomial factor from all terms",
+      "prerequisites": [
+        "class8-mathematics-factorisation-hcf-of-monomials",
+        "class8-mathematics-rational-numbers-factor-using-distributivity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-common-binomial-factor",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Take Out Common Binomial Factor",
+      "outcome": "Factorise an algebraic expression by taking out a common binomial factor",
+      "prerequisites": [
+        "class8-mathematics-factorisation-common-monomial-factor"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-regrouping-four-terms",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Factorise by Regrouping Terms",
+      "outcome": "Factorise a four-term polynomial by grouping pairs of terms that share common factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-common-binomial-factor"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-regrouping-with-sign-change",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Regroup Terms with Negative Signs",
+      "outcome": "Factorise four-term expressions by rearranging terms and factoring out negative signs to reveal common binomial factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-regrouping-four-terms"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-by-common-factors-and-regrouping"
+    },
+    {
+      "id": "class8-mathematics-factorisation-identify-square-of-sum-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Identify Square of Sum Form",
+      "outcome": "Identify whether a trinomial is of the form a^2 + 2ab + b^2",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-sum-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-apply-square-of-sum-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Factorise Using Square of Sum Identity",
+      "outcome": "Factorise a perfect square trinomial into the form (a + b)^2",
+      "prerequisites": [
+        "class8-mathematics-factorisation-identify-square-of-sum-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-identify-square-of-diff-form",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Identify Square of Difference Form",
+      "outcome": "Identify whether a trinomial is of the form a^2 - 2ab + b^2",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-apply-square-of-difference-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-apply-square-of-diff-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Factorise Using Square of Difference Identity",
+      "outcome": "Factorise a perfect square trinomial into the form (a - b)^2",
+      "prerequisites": [
+        "class8-mathematics-factorisation-identify-square-of-diff-form"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-apply-difference-of-squares",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Factorise Difference of Two Squares",
+      "outcome": "Factorise a binomial of the form a^2 - b^2 into (a + b)(a - b)",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-apply-difference-of-squares-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-difference-of-squares-repeated",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Repeated Difference of Squares",
+      "outcome": "Factorise expressions of higher degrees, such as a^4 - b^4, by applying the difference of squares identity repeatedly",
+      "prerequisites": [
+        "class8-mathematics-factorisation-apply-difference-of-squares"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-combine-common-factor-and-identity",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Factorise by Common Factor and Identity",
+      "outcome": "Factorise expressions by first taking out a common monomial factor and then applying standard algebraic identities",
+      "prerequisites": [
+        "class8-mathematics-factorisation-common-monomial-factor",
+        "class8-mathematics-factorisation-apply-difference-of-squares"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-splitting-middle-term-positive-constant",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Split Middle Term with Positive Constant",
+      "outcome": "Factorise quadratic trinomials x^2 + px + q where q > 0 into (x + a)(x + b)",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-apply-identity-x-plus-a-x-plus-b"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-splitting-middle-term-negative-constant",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Split Middle Term with Negative Constant",
+      "outcome": "Factorise quadratic trinomials x^2 + px + q where q < 0 by finding integer factors a and b with sum p and product q",
+      "prerequisites": [
+        "class8-mathematics-factorisation-splitting-middle-term-positive-constant"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/factorisation-using-identities"
+    },
+    {
+      "id": "class8-mathematics-factorisation-divide-monomial-by-monomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Divide Monomial by Monomial",
+      "outcome": "Calculate the quotient when a monomial is divided by another monomial using cancellation of irreducible factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-monomial-irreducible-factors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/division-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-factorisation-divide-polynomial-by-monomial-termwise",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Divide Polynomial by Monomial Term-by-Term",
+      "outcome": "Divide each term of a polynomial separately by a monomial divisor and simplify",
+      "prerequisites": [
+        "class8-mathematics-factorisation-divide-monomial-by-monomial"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/division-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-factorisation-divide-polynomial-by-monomial-common-factor",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Divide Polynomial by Monomial via Common Factor",
+      "outcome": "Divide a polynomial by a monomial by first factorising the numerator polynomial and canceling common factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-common-monomial-factor",
+        "class8-mathematics-factorisation-divide-monomial-by-monomial"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/division-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-factorisation-divide-polynomial-by-polynomial",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Divide Polynomial by Polynomial",
+      "outcome": "Calculate the quotient of a polynomial divided by another polynomial by factorising the dividend into linear or irreducible factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-regrouping-four-terms",
+        "class8-mathematics-factorisation-splitting-middle-term-positive-constant",
+        "class8-mathematics-factorisation-divide-polynomial-by-monomial-common-factor"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/factorisation/division-of-algebraic-expressions"
+    },
+    {
+      "id": "class8-mathematics-factorisation-find-error-in-brackets-multiplication",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Find Errors in Distributive Multiplication",
+      "outcome": "Identify and correct errors where a coefficient outside parentheses was not distributed to all terms inside",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-multiply-monomial-by-binomial"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/finding-errors-in-algebra"
+    },
+    {
+      "id": "class8-mathematics-factorisation-find-error-in-substitution-negatives",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Find Errors in Negative Variable Substitution",
+      "outcome": "Identify and correct errors when substituting negative numerical values into algebraic expressions involving powers",
+      "prerequisites": [
+        "class8-mathematics-algebraic-expressions-and-identities-simplify-and-evaluate-expression-products"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/finding-errors-in-algebra"
+    },
+    {
+      "id": "class8-mathematics-factorisation-find-error-in-squaring-binomials",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Find Errors in Binomial Squaring",
+      "outcome": "Identify and correct the common error of expanding (a + b)^2 or (a - b)^2 as simply a^2 + b^2 without the middle term",
+      "prerequisites": [
+        "class8-mathematics-factorisation-apply-square-of-sum-identity",
+        "class8-mathematics-factorisation-apply-square-of-diff-identity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/factorisation/finding-errors-in-algebra"
+    },
+    {
+      "id": "class8-mathematics-factorisation-find-error-in-fraction-cancellation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "factorisation",
+      "title": "Find Errors in Algebraic Fraction Cancellation",
+      "outcome": "Identify and correct incorrect cancellation of single terms from a numerator sum instead of canceling common factors",
+      "prerequisites": [
+        "class8-mathematics-factorisation-divide-polynomial-by-monomial-termwise"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/factorisation/finding-errors-in-algebra"
+    }
+  ]
+}

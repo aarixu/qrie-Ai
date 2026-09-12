@@ -1,0 +1,2530 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "class7-mathematics-integers-closure-addition",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Closure Property of Addition",
+      "outcome": "Verify that the sum of any two integers is always an integer",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-closure-subtraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Closure Property of Subtraction",
+      "outcome": "Verify that the difference between any two integers is always an integer",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-commutative-addition",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Commutativity of Addition",
+      "outcome": "State and verify that addition is commutative for integers such that a + b = b + a",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-non-commutative-subtraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Non-Commutativity of Subtraction",
+      "outcome": "Demonstrate with counterexamples that subtraction of integers is not commutative",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-subtraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-associative-addition",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Associativity of Addition",
+      "outcome": "Apply the associative property of addition (a + b) + c = a + (b + c) to rearrange integer terms",
+      "prerequisites": [
+        "class7-mathematics-integers-commutative-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-additive-identity",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Additive Identity of Integers",
+      "outcome": "Identify zero as the additive identity such that a + 0 = 0 + a = a for any integer a",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-addition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-additive-inverse",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Additive Inverse of an Integer",
+      "outcome": "Identify the additive inverse of an integer a as -a such that a + (-a) = 0",
+      "prerequisites": [
+        "class7-mathematics-integers-additive-identity"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-addition-and-subtraction-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-mult-pos-neg",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Multiply Positive and Negative Integers",
+      "outcome": "Calculate the product of a positive integer and a negative integer resulting in a negative integer",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-mult-two-negs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Multiply Two Negative Integers",
+      "outcome": "Calculate the product of two negative integers resulting in a positive integer",
+      "prerequisites": [
+        "class7-mathematics-integers-mult-pos-neg"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-sign-multiple-negs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Sign of Product of Multiple Integers",
+      "outcome": "Determine the sign of the product of three or more integers based on the count of negative factors",
+      "prerequisites": [
+        "class7-mathematics-integers-mult-two-negs"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/integers/multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-product-three-integers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Product of Three or More Integers",
+      "outcome": "Compute the numerical product of three or more integers containing both positive and negative values",
+      "prerequisites": [
+        "class7-mathematics-integers-sign-multiple-negs"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/integers/multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-closure-multiplication",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Closure Property of Multiplication",
+      "outcome": "Verify that the product of any two integers is always an integer",
+      "prerequisites": [
+        "class7-mathematics-integers-mult-pos-neg",
+        "class7-mathematics-integers-mult-two-negs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-commutative-multiplication",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Commutativity of Multiplication",
+      "outcome": "Verify that multiplication of integers is commutative such that a * b = b * a",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-multiplication-by-zero",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Multiplication by Zero",
+      "outcome": "State and apply the property that the product of any integer and zero is zero",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-multiplication"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-multiplicative-identity",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Multiplicative Identity for Integers",
+      "outcome": "Identify 1 as the multiplicative identity such that a * 1 = 1 * a = a for any integer a",
+      "prerequisites": [
+        "class7-mathematics-integers-closure-multiplication"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-associative-multiplication",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Associativity of Multiplication",
+      "outcome": "Apply the associative property (a * b) * c = a * (b * c) to group integer factors",
+      "prerequisites": [
+        "class7-mathematics-integers-commutative-multiplication"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-distributive-over-addition",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Distributive Property Over Addition",
+      "outcome": "Expand and evaluate expressions using a * (b + c) = (a * b) + (a * c)",
+      "prerequisites": [
+        "class7-mathematics-integers-associative-addition",
+        "class7-mathematics-integers-associative-multiplication"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-distributive-over-subtraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Distributive Property Over Subtraction",
+      "outcome": "Expand and evaluate expressions using a * (b - c) = (a * b) - (a * c)",
+      "prerequisites": [
+        "class7-mathematics-integers-distributive-over-addition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-simplify-using-properties",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Simplify Expressions Using Properties",
+      "outcome": "Simplify multi-term integer arithmetic expressions efficiently by factoring common terms using distributivity",
+      "prerequisites": [
+        "class7-mathematics-integers-distributive-over-addition",
+        "class7-mathematics-integers-distributive-over-subtraction"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/integers/properties-of-multiplication-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-divide-opposite-signs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Division with Opposite Signs",
+      "outcome": "Compute the quotient when a negative integer is divided by a positive integer or vice versa",
+      "prerequisites": [
+        "class7-mathematics-integers-mult-pos-neg"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-divide-same-signs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Division with Same Signs",
+      "outcome": "Compute the quotient when a negative integer is divided by another negative integer",
+      "prerequisites": [
+        "class7-mathematics-integers-mult-two-negs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-division-not-closed",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Non-Closure of Division",
+      "outcome": "Demonstrate that integers are not closed under division by providing counterexamples with non-integer quotients",
+      "prerequisites": [
+        "class7-mathematics-integers-divide-opposite-signs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-division-not-commutative",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Non-Commutativity of Division",
+      "outcome": "Verify that division of integers is not commutative by evaluating a / b and b / a",
+      "prerequisites": [
+        "class7-mathematics-integers-division-not-closed"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-division-by-one-and-negative-one",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Division by 1 and -1",
+      "outcome": "Evaluate division expressions of the form a / 1 = a and a / (-1) = -a for any non-zero integer a",
+      "prerequisites": [
+        "class7-mathematics-integers-divide-opposite-signs",
+        "class7-mathematics-integers-divide-same-signs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-integers-division-involving-zero",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "integers",
+      "title": "Division Involving Zero",
+      "outcome": "Evaluate 0 / a = 0 for any non-zero integer a and identify that division by zero (a / 0) is undefined",
+      "prerequisites": [
+        "class7-mathematics-integers-divide-opposite-signs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/integers/properties-of-division-of-integers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Fraction by Whole Number",
+      "outcome": "Calculate the product of a proper or improper fraction and a whole number by multiplying the numerator by the whole number while keeping the denominator unchanged",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-fraction-as-operator-of",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Fraction as Operator 'of'",
+      "outcome": "Apply the word 'of' as a multiplication operator to compute fractional parts of quantities or numbers",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-mixed-fraction-whole-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Mixed Fraction by Whole Number",
+      "outcome": "Calculate the product of a mixed fraction and a whole number by first converting the mixed fraction into an improper fraction",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-visualize-fraction-multiplication",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Visual Model of Fraction Multiplication",
+      "outcome": "Represent the multiplication of two proper fractions visually using overlapping shaded grid regions",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Two Fractions",
+      "outcome": "Calculate the product of two proper or improper fractions by multiplying their numerators together and denominators together",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-multiply-mixed-fractions",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Mixed Fractions",
+      "outcome": "Calculate the product of two mixed fractions by converting each to an improper fraction before multiplying",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions",
+        "class7-mathematics-fractions-and-decimals-mult-mixed-fraction-whole-number"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-compare-fraction-product-to-factors",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Compare Product of Fractions to Factors",
+      "outcome": "Compare the value of a product of two proper fractions to the individual factors to deduce that the product is smaller than each factor",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Find Reciprocal of a Fraction",
+      "outcome": "Determine the reciprocal of a given proper fraction, improper fraction, or mixed fraction by interchanging its numerator and denominator",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-whole-number-by-fraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Whole Number by Fraction",
+      "outcome": "Calculate the quotient of a whole number divided by a fraction by multiplying the whole number by the reciprocal of the fraction",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-fraction-by-whole-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Fraction by Whole Number",
+      "outcome": "Calculate the quotient of a fraction divided by a whole number by multiplying the fraction by the reciprocal of the whole number",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+        "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-fraction-by-fraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Fraction by Fraction",
+      "outcome": "Calculate the quotient of two fractions by multiplying the dividend fraction by the reciprocal of the divisor fraction",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction",
+        "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-involving-mixed-fractions",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Involving Mixed Fractions",
+      "outcome": "Calculate the division involving mixed fractions by converting mixed fractions to improper fractions and multiplying by the reciprocal",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-divide-fraction-by-fraction",
+        "class7-mathematics-fractions-and-decimals-multiply-mixed-fractions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-fractions"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-decimal-by-whole-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Decimal by Whole Number",
+      "outcome": "Calculate the product of a decimal number and a whole number by multiplying them as whole numbers and placing the decimal point",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Decimal by 10, 100, 1000",
+      "outcome": "Calculate the product of a decimal number and powers of ten (10, 100, 1000) by shifting the decimal point to the right by the number of zeros",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-count-decimal-places-for-product",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Count Decimal Places for Product",
+      "outcome": "Determine the number of decimal places in a product by summing the counts of decimal digits in the two factors",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-two-decimal-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multiply Two Decimal Numbers",
+      "outcome": "Calculate the product of two decimal numbers by multiplying them as whole numbers and placing the decimal point based on total decimal places",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-decimal-by-whole-number",
+        "class7-mathematics-fractions-and-decimals-count-decimal-places-for-product"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-mult-decimal-word-problems",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Solve Decimal Multiplication Word Problems",
+      "outcome": "Solve real-world word problems involving area, perimeter, unit cost, or distance that require multiplying decimal numbers",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-two-decimal-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-decimal-by-10-100-1000",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Decimal by 10, 100, 1000",
+      "outcome": "Calculate the quotient of a decimal number divided by 10, 100, or 1000 by shifting the decimal point to the left by the number of zeros",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-decimal-by-whole-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Decimal by Whole Number",
+      "outcome": "Calculate the quotient of a decimal number divided by a whole number using long division and correctly positioning the decimal point in the quotient",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-whole-number-by-decimal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Whole Number by Decimal",
+      "outcome": "Calculate the quotient of a whole number divided by a decimal by converting the divisor to a whole number through equivalent scaling",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-decimal-by-decimal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Divide Decimal by Decimal",
+      "outcome": "Calculate the quotient of one decimal number divided by another by shifting the decimal points of both numbers by equal positions until the divisor is a whole number",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-divide-decimal-by-whole-number",
+        "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-convert-units-using-decimals",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Convert Metric Units Using Decimals",
+      "outcome": "Convert between smaller and larger metric units of length, mass, and currency by multiplying or dividing by powers of 10",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000",
+        "class7-mathematics-fractions-and-decimals-divide-decimal-by-10-100-1000"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/fractions-and-decimals/multiplication-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-divide-decimal-word-problems",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Solve Decimal Division Word Problems",
+      "outcome": "Solve real-world word problems involving average, speed, rate, or division of quantities that require dividing decimal numbers",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-divide-decimal-by-decimal"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-fractions-and-decimals-multi-step-fraction-decimal-problems",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "fractions-and-decimals",
+      "title": "Multi-Step Fraction and Decimal Problems",
+      "outcome": "Solve multi-step word problems involving combined operations of multiplication and division on fractions and decimals",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-divide-involving-mixed-fractions",
+        "class7-mathematics-fractions-and-decimals-mult-decimal-word-problems",
+        "class7-mathematics-fractions-and-decimals-divide-decimal-word-problems"
+      ],
+      "difficulty": 5,
+      "topicRef": "class7-mathematics/fractions-and-decimals/division-of-decimal-numbers"
+    },
+    {
+      "id": "class7-mathematics-data-handling-construct-tally-table",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Construct Tally Frequency Table",
+      "outcome": "Organize raw data into a frequency distribution table using tally marks",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/collecting-and-organising-data"
+    },
+    {
+      "id": "class7-mathematics-data-handling-identify-extremes",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Highest and Lowest Values",
+      "outcome": "Identify the highest and lowest observations in a given data set",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/collecting-and-organising-data"
+    },
+    {
+      "id": "class7-mathematics-data-handling-calculate-range",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Range of Data",
+      "outcome": "Calculate the range of a data set by subtracting the lowest observation from the highest observation",
+      "prerequisites": [
+        "class7-mathematics-data-handling-identify-extremes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/collecting-and-organising-data"
+    },
+    {
+      "id": "class7-mathematics-data-handling-define-mean-formula",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "State Formula for Arithmetic Mean",
+      "outcome": "State the arithmetic mean as the sum of all observations divided by the total number of observations",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/arithmetic-mean"
+    },
+    {
+      "id": "class7-mathematics-data-handling-calculate-mean-integers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Mean of Whole Numbers",
+      "outcome": "Calculate the arithmetic mean for a given set of whole numbers or integers",
+      "prerequisites": [
+        "class7-mathematics-data-handling-define-mean-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/arithmetic-mean"
+    },
+    {
+      "id": "class7-mathematics-data-handling-calculate-mean-decimals",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Mean with Decimals",
+      "outcome": "Calculate the arithmetic mean when observations include decimals or fractions",
+      "prerequisites": [
+        "class7-mathematics-data-handling-calculate-mean-integers",
+        "class7-mathematics-fractions-and-decimals-divide-decimal-by-whole-number"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/arithmetic-mean"
+    },
+    {
+      "id": "class7-mathematics-data-handling-mean-lies-between-extremes",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Verify Mean Lies Between Extremes",
+      "outcome": "Explain that the arithmetic mean always lies between the minimum and maximum observations of the data set",
+      "prerequisites": [
+        "class7-mathematics-data-handling-calculate-mean-integers",
+        "class7-mathematics-data-handling-identify-extremes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/arithmetic-mean"
+    },
+    {
+      "id": "class7-mathematics-data-handling-find-missing-observation-from-mean",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Find Missing Observation from Mean",
+      "outcome": "Calculate the value of a missing observation given the arithmetic mean and the remaining observations",
+      "prerequisites": [
+        "class7-mathematics-data-handling-calculate-mean-integers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/arithmetic-mean"
+    },
+    {
+      "id": "class7-mathematics-data-handling-identify-mode-raw-data",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Mode of Raw Data",
+      "outcome": "Determine the mode of a small set of data by identifying the observation that occurs most frequently",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-identify-mode-frequency-table",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Mode from Frequency Table",
+      "outcome": "Identify the mode of a large data set from a frequency distribution table by locating the observation with the maximum frequency",
+      "prerequisites": [
+        "class7-mathematics-data-handling-construct-tally-table",
+        "class7-mathematics-data-handling-identify-mode-raw-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-identify-multimodal-data",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Identify Multiple Modes in Data",
+      "outcome": "Identify sets of data that have more than one mode (bimodal or multimodal)",
+      "prerequisites": [
+        "class7-mathematics-data-handling-identify-mode-raw-data"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-order-data-for-median",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Arrange Data in Ascending Order",
+      "outcome": "Order a set of numerical data in ascending or descending sequence in preparation to find the median",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-find-median-odd-n",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Find Median for Odd Count",
+      "outcome": "Locate the middle value as the median when the number of observations is odd",
+      "prerequisites": [
+        "class7-mathematics-data-handling-order-data-for-median"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-compare-mean-median-mode",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Compare Central Tendency Measures",
+      "outcome": "Compare the mean, median, and mode for a single data set and determine whether they are equal or different",
+      "prerequisites": [
+        "class7-mathematics-data-handling-calculate-mean-integers",
+        "class7-mathematics-data-handling-identify-mode-raw-data",
+        "class7-mathematics-data-handling-find-median-odd-n"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/mode-and-median"
+    },
+    {
+      "id": "class7-mathematics-data-handling-choose-bar-graph-scale",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Choose Scale for Bar Graph",
+      "outcome": "Choose an appropriate scale (e.g., 1 unit = 10 marks) for the vertical axis based on data range",
+      "prerequisites": [
+        "class7-mathematics-data-handling-calculate-range"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/bar-graphs-with-different-purpose"
+    },
+    {
+      "id": "class7-mathematics-data-handling-draw-single-bar-graph",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Draw Single Bar Graph",
+      "outcome": "Construct a single bar graph with uniform bar widths and equal spacing given a data table and scale",
+      "prerequisites": [
+        "class7-mathematics-data-handling-choose-bar-graph-scale"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/bar-graphs-with-different-purpose"
+    },
+    {
+      "id": "class7-mathematics-data-handling-read-single-bar-graph",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Single Bar Graph",
+      "outcome": "Extract values and answer comparative questions from a given single bar graph",
+      "prerequisites": [
+        "class7-mathematics-data-handling-choose-bar-graph-scale"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/bar-graphs-with-different-purpose"
+    },
+    {
+      "id": "class7-mathematics-data-handling-draw-double-bar-graph",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Construct Double Bar Graph",
+      "outcome": "Construct a double bar graph by drawing adjacent pairs of bars to compare two related collections of data",
+      "prerequisites": [
+        "class7-mathematics-data-handling-draw-single-bar-graph"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/data-handling/bar-graphs-with-different-purpose"
+    },
+    {
+      "id": "class7-mathematics-data-handling-interpret-double-bar-graph",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Interpret Double Bar Graph",
+      "outcome": "Compare trends and answer analytical questions using data displayed in a double bar graph",
+      "prerequisites": [
+        "class7-mathematics-data-handling-read-single-bar-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/bar-graphs-with-different-purpose"
+    },
+    {
+      "id": "class7-mathematics-data-handling-classify-event-certainty",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Classify Certainty of Events",
+      "outcome": "Classify real-life situations as 'certain to happen', 'impossible', or 'can happen but not certain'",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class7-mathematics-data-handling-list-outcomes-random-experiment",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "List Outcomes of Random Experiments",
+      "outcome": "List all possible equally likely outcomes of an experiment such as tossing a coin or rolling a die",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class7-mathematics-data-handling-calculate-coin-toss-probability",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Coin Toss Probability",
+      "outcome": "Calculate the probability of getting a head or a tail in a single toss of a fair coin as 1/2",
+      "prerequisites": [
+        "class7-mathematics-data-handling-list-outcomes-random-experiment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class7-mathematics-data-handling-calculate-dice-roll-probability",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Calculate Probability on a Die",
+      "outcome": "Calculate the probability of rolling a specific number or subset of numbers (e.g., an even number) on a standard 6-faced die",
+      "prerequisites": [
+        "class7-mathematics-data-handling-list-outcomes-random-experiment"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class7-mathematics-data-handling-probability-formula-fraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "data-handling",
+      "title": "Compute Probability as Fraction",
+      "outcome": "Compute the probability of an event using the ratio of favourable outcomes to total possible outcomes",
+      "prerequisites": [
+        "class7-mathematics-data-handling-list-outcomes-random-experiment"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/data-handling/chance-and-probability"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-identify-variable-and-constant",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Identify Variables and Constants",
+      "outcome": "Identify the variable and constants in a given algebraic expression or equation",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-distinguish-expression-and-equation",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Distinguish Expression from Equation",
+      "outcome": "Distinguish between an algebraic expression and an equation using the presence of the equality sign",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-identify-variable-and-constant"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-identify-lhs-and-rhs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Identify LHS and RHS",
+      "outcome": "Identify the Left Hand Side (LHS) and Right Hand Side (RHS) of a given equation",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-distinguish-expression-and-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-statement-to-equation-sum-diff",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Write Equations for Sums and Differences",
+      "outcome": "Translate a verbal statement involving addition or subtraction into an algebraic equation",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-distinguish-expression-and-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-statement-to-equation-mult-div",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Write Equations for Multiples and Quotients",
+      "outcome": "Translate a verbal statement involving multiplication, division, or fractions of an unknown into an algebraic equation",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-fraction-as-operator-of",
+        "class7-mathematics-simple-equations-statement-to-equation-sum-diff"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-statement-to-equation-multi-op",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Write Multi-Operation Equations",
+      "outcome": "Translate a complex word statement involving combinations of operations into a linear equation",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-statement-to-equation-mult-div"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-equation-to-statement",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Convert Equation to Statement",
+      "outcome": "Convert a given algebraic equation into a statement in plain language",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-statement-to-equation-multi-op"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/setting-up-of-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-test-solution-by-substitution",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Verify Solution by Substitution",
+      "outcome": "Verify whether a given value of a variable satisfies an equation by substituting it into LHS and RHS",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-identify-lhs-and-rhs",
+        "class7-mathematics-integers-mult-pos-neg"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-trial-and-error-method",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve by Trial and Error",
+      "outcome": "Find the solution of a simple linear equation by systematically testing integer values using trial and error",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-test-solution-by-substitution"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-balance-addition-subtraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve by Adding or Subtracting from Both Sides",
+      "outcome": "Solve an equation of the form x + a = b or x - a = b by applying the balancing method",
+      "prerequisites": [
+        "class7-mathematics-integers-additive-inverse",
+        "class7-mathematics-simple-equations-identify-lhs-and-rhs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-balance-multiplication-division",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve by Multiplying or Dividing Both Sides",
+      "outcome": "Solve an equation of the form ax = b or x/a = b by multiplying or dividing both sides by the same non-zero quantity",
+      "prerequisites": [
+        "class7-mathematics-integers-divide-opposite-signs",
+        "class7-mathematics-simple-equations-identify-lhs-and-rhs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-balance-two-step",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Two-Step Equations by Balancing",
+      "outcome": "Solve an equation of the form ax + b = c by balancing in two successive steps",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-balance-addition-subtraction",
+        "class7-mathematics-simple-equations-balance-multiplication-division"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-transpose-constant-term",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Transpose Constant Terms",
+      "outcome": "Transpose an added or subtracted constant term from one side of an equation to the other by changing its sign",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-balance-addition-subtraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-transpose-coefficient",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Transpose Multipliers and Divisors",
+      "outcome": "Transpose a multiplying coefficient to a divisor or a divisor to a multiplier across the equality sign",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-balance-multiplication-division"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-solve-two-step-transposition",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Two-Step Equations by Transposition",
+      "outcome": "Calculate the value of the unknown in ax + b = c using the method of transposition",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-transpose-constant-term",
+        "class7-mathematics-simple-equations-transpose-coefficient"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-solve-fractional-coefficients",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Equations with Fractional Coefficients",
+      "outcome": "Solve linear equations involving fractional terms or rational coefficients",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-divide-fraction-by-whole-number",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-solve-with-brackets",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Equations Involving Brackets",
+      "outcome": "Solve equations of the form a(x + b) = c by either expanding brackets or dividing the outside factor first",
+      "prerequisites": [
+        "class7-mathematics-integers-distributive-over-addition",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-construct-equations-from-solution",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Construct Equations from a Given Solution",
+      "outcome": "Construct multiple distinct linear equations starting from a given numerical solution",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/solving-an-equation"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-word-problems-number-relations",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Number Relation Word Problems",
+      "outcome": "Formulate and solve a linear equation for word problems involving unknown numbers and arithmetic operations",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-statement-to-equation-multi-op",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/simple-equations/applications-of-simple-equations"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-word-problems-ages",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Age-Related Word Problems",
+      "outcome": "Formulate and solve linear equations to find unknown ages from relational descriptions",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-word-problems-number-relations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/simple-equations/applications-of-simple-equations"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-word-problems-geometry",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Perimeter and Angle Problems Using Equations",
+      "outcome": "Formulate and solve a linear equation to find unknown lengths or angles in geometric figures given perimeter or angle relationships",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-word-problems-number-relations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/simple-equations/applications-of-simple-equations"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-word-problems-money-collections",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Solve Word Problems on Quantities and Values",
+      "outcome": "Formulate and solve linear equations involving totals of discrete items such as marbles, marks, or money",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-word-problems-number-relations"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/simple-equations/applications-of-simple-equations"
+    },
+    {
+      "id": "class7-mathematics-simple-equations-validate-practical-context",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "simple-equations",
+      "title": "Interpret and Validate Practical Solutions",
+      "outcome": "Interpret the mathematical solution of a linear equation in the context of the original real-life problem and verify its feasibility",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-word-problems-ages",
+        "class7-mathematics-simple-equations-word-problems-geometry",
+        "class7-mathematics-simple-equations-word-problems-money-collections"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/simple-equations/applications-of-simple-equations"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-define-complementary-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define complementary angles",
+      "outcome": "State that two angles are complementary when their measures add up to 90 degrees",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-complementary-pairs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify complementary angle pairs",
+      "outcome": "Classify a given pair of angle measures as complementary or not based on their sum",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-complementary-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-calculate-complement-angle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Calculate complement of an angle",
+      "outcome": "Calculate the measure of the complement of a given angle by subtracting from 90 degrees",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-complementary-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-define-supplementary-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define supplementary angles",
+      "outcome": "State that two angles are supplementary when their measures add up to 180 degrees",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-supplementary-pairs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify supplementary angle pairs",
+      "outcome": "Classify a given pair of angle measures as supplementary or not based on their sum",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-supplementary-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-calculate-supplement-angle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Calculate supplement of an angle",
+      "outcome": "Calculate the measure of the supplement of a given angle by subtracting from 180 degrees",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-supplementary-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-algebraic-complement-supplement",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Solve algebraic complement and supplement problems",
+      "outcome": "Formulate and solve a linear equation to find an angle that is equal to, or in a given ratio to, its complement or supplement",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-calculate-complement-angle",
+        "class7-mathematics-lines-and-angles-calculate-supplement-angle",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/complementary-and-supplementary-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-adjacent-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify adjacent angles",
+      "outcome": "Identify adjacent angles by verifying a common vertex, a common arm, and non-common arms on opposite sides of the common arm",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/adjacent-angles-and-linear-pair"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-define-linear-pair",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Define a linear pair",
+      "outcome": "State that a linear pair is a pair of adjacent angles whose non-common arms are opposite rays forming a straight line",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-adjacent-angles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/lines-and-angles/adjacent-angles-and-linear-pair"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-calculate-linear-pair-angle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Calculate unknown angle in a linear pair",
+      "outcome": "Calculate the measure of an unknown angle in a linear pair given one angle",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-linear-pair",
+        "class7-mathematics-lines-and-angles-define-supplementary-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/adjacent-angles-and-linear-pair"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-linear-pair-with-algebra",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Solve linear pair with algebraic expressions",
+      "outcome": "Calculate the value of a variable and unknown angle measures given linear expressions for angles in a linear pair",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-calculate-linear-pair-angle",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/adjacent-angles-and-linear-pair"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-vertically-opposite-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify vertically opposite angles",
+      "outcome": "Identify pairs of vertically opposite angles formed by two intersecting straight lines",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/lines-and-angles/vertically-opposite-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-prove-vertically-opposite-angles-equal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Prove vertically opposite angles are equal",
+      "outcome": "Explain why vertically opposite angles are equal using linear pair relationships along the intersecting lines",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-vertically-opposite-angles",
+        "class7-mathematics-lines-and-angles-calculate-linear-pair-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/vertically-opposite-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-calculate-angles-at-intersection",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Calculate angles around an intersection",
+      "outcome": "Calculate the measures of all four angles formed at the intersection of two lines given the measure of one angle",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-prove-vertically-opposite-angles-equal",
+        "class7-mathematics-lines-and-angles-calculate-linear-pair-angle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/vertically-opposite-angles"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-transversal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify a transversal line",
+      "outcome": "Identify a line that intersects two or more lines at distinct points as a transversal",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/lines-and-angles/pairs-of-lines-and-transversals"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-classify-interior-exterior-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Classify interior and exterior angles",
+      "outcome": "Classify angles formed by a transversal into interior angles and exterior angles based on their positions relative to the two lines",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-transversal"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/pairs-of-lines-and-transversals"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-corresponding-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify pairs of corresponding angles",
+      "outcome": "Identify pairs of corresponding angles lying in matching relative positions at each intersection of a transversal",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-transversal"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/pairs-of-lines-and-transversals"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-alternate-interior-exterior",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify alternate interior and exterior angles",
+      "outcome": "Identify pairs of alternate interior angles and alternate exterior angles on opposite sides of a transversal",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-classify-interior-exterior-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/pairs-of-lines-and-transversals"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-identify-cointerior-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Identify interior angles on the same side",
+      "outcome": "Identify pairs of consecutive interior angles located on the same side of a transversal",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-classify-interior-exterior-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/pairs-of-lines-and-transversals"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply corresponding angles property of parallel lines",
+      "outcome": "State and apply the property that corresponding angles are equal when two parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-corresponding-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/lines-and-angles/transversal-of-parallel-lines"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply alternate angles property of parallel lines",
+      "outcome": "State and apply the property that alternate interior (and alternate exterior) angles are equal when parallel lines are cut by a transversal",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-alternate-interior-exterior",
+        "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+        "class7-mathematics-lines-and-angles-prove-vertically-opposite-angles-equal"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/transversal-of-parallel-lines"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-parallel-lines-cointerior-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Apply consecutive interior angles property",
+      "outcome": "Calculate unknown angles using the property that interior angles on the same side of a transversal are supplementary for parallel lines",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-identify-cointerior-angles",
+        "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+        "class7-mathematics-lines-and-angles-calculate-linear-pair-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/transversal-of-parallel-lines"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-find-all-parallel-transversal-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Find all eight angles for parallel lines and transversal",
+      "outcome": "Calculate the measures of all eight angles formed by a transversal intersecting two parallel lines given the measure of just one angle",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+        "class7-mathematics-lines-and-angles-parallel-lines-cointerior-property",
+        "class7-mathematics-lines-and-angles-calculate-angles-at-intersection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/lines-and-angles/transversal-of-parallel-lines"
+    },
+    {
+      "id": "class7-mathematics-lines-and-angles-test-parallelism-lines",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "lines-and-angles",
+      "title": "Check if two lines are parallel",
+      "outcome": "Determine whether two lines are parallel by checking if corresponding angles are equal, alternate interior angles are equal, or co-interior angles sum to 180 degrees",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+        "class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+        "class7-mathematics-lines-and-angles-parallel-lines-cointerior-property"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/lines-and-angles/transversal-of-parallel-lines"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-define-median",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Define Median of Triangle",
+      "outcome": "Define a median as a line segment connecting a vertex of a triangle to the midpoint of the opposite side",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/medians-and-altitudes-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-draw-median",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Draw Medians of Triangle",
+      "outcome": "Draw the three medians of any given triangle and identify that they lie entirely in the interior of the triangle",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-define-median"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/medians-and-altitudes-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-define-altitude",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Define Altitude of Triangle",
+      "outcome": "Define an altitude as the perpendicular line segment drawn from a vertex to the line containing the opposite side",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/medians-and-altitudes-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-draw-altitude-acute-right-obtuse",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Draw Altitudes in Triangles",
+      "outcome": "Draw altitudes for acute-angled, right-angled, and obtuse-angled triangles",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-define-altitude"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/medians-and-altitudes-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-contrast-median-and-altitude",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Contrast Median and Altitude",
+      "outcome": "Contrast a median and an altitude by identifying whether they must lie inside the triangle or can lie outside it",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-draw-median",
+        "class7-mathematics-the-triangle-and-its-properties-draw-altitude-acute-right-obtuse"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/medians-and-altitudes-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-identify-exterior-interior-opposite-angles",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Identify Exterior and Interior Opposite Angles",
+      "outcome": "Identify an exterior angle formed by extending a side of a triangle and locate its two interior opposite angles",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-linear-pair"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/exterior-angle-of-a-triangle-and-its-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "State Exterior Angle Property",
+      "outcome": "State that the measure of an exterior angle of a triangle is equal to the sum of its two interior opposite angles",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-identify-exterior-interior-opposite-angles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/exterior-angle-of-a-triangle-and-its-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-prove-exterior-angle-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Justify Exterior Angle Property",
+      "outcome": "Justify the exterior angle property using parallel lines and alternate/corresponding angles or linear pair relations",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-parallel-lines-alternate-angles-property",
+        "class7-mathematics-lines-and-angles-parallel-lines-corresponding-property",
+        "class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/exterior-angle-of-a-triangle-and-its-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-calculate-exterior-or-interior-opposite-angle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Apply Exterior Angle Property",
+      "outcome": "Calculate an unknown exterior angle or an unknown interior opposite angle using the exterior angle property",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-transpose-constant-term",
+        "class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/exterior-angle-of-a-triangle-and-its-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "State Angle Sum Property",
+      "outcome": "State that the total measure of the three angles of a triangle is 180 degrees",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/angle-sum-property-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-prove-angle-sum-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Justify Angle Sum Property",
+      "outcome": "Justify the angle sum property of a triangle using the exterior angle property and linear pair property",
+      "prerequisites": [
+        "class7-mathematics-lines-and-angles-define-linear-pair",
+        "class7-mathematics-the-triangle-and-its-properties-state-exterior-angle-property",
+        "class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/angle-sum-property-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-calculate-third-angle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Find Missing Angle in Triangle",
+      "outcome": "Calculate the measure of the third angle of a triangle given the measures of the other two angles",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/angle-sum-property-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-solve-algebraic-angle-sum",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Solve Triangle Angles with Algebra",
+      "outcome": "Form and solve a linear equation to determine triangle angles expressed in terms of an unknown variable",
+      "prerequisites": [
+        "class7-mathematics-simple-equations-solve-two-step-transposition",
+        "class7-mathematics-the-triangle-and-its-properties-calculate-third-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/angle-sum-property-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-equilateral-triangle-properties",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Equilateral Triangle Properties",
+      "outcome": "State that an equilateral triangle has three equal side lengths and each angle measures exactly 60 degrees",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-calculate-third-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/equilateral-and-isosceles-triangles"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-isosceles-equal-angles-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Isosceles Base Angles Property",
+      "outcome": "Apply the property that the angles opposite to the equal sides of an isosceles triangle are equal in measure",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-state-angle-sum-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/equilateral-and-isosceles-triangles"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-find-angles-isosceles-triangle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Calculate Unknown Angles in Isosceles Triangle",
+      "outcome": "Calculate the remaining angles of an isosceles triangle when given only one angle (either vertex angle or a base angle)",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-isosceles-equal-angles-property",
+        "class7-mathematics-the-triangle-and-its-properties-calculate-third-angle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/equilateral-and-isosceles-triangles"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-state-triangle-inequality",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "State Triangle Inequality Property",
+      "outcome": "State that the sum of the lengths of any two sides of a triangle is always greater than the length of the third side",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/sum-of-the-lengths-of-two-sides-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-test-triangle-existence",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Test Triangle Existence from Sides",
+      "outcome": "Determine whether a triangle can be constructed from three given segment lengths by testing the triangle inequality for all pairs",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-state-triangle-inequality"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/sum-of-the-lengths-of-two-sides-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-range-of-third-side",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Find Range of Third Side Length",
+      "outcome": "Determine the range of possible lengths for the third side of a triangle given the lengths of the other two sides",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-test-triangle-existence"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/sum-of-the-lengths-of-two-sides-of-a-triangle"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-identify-hypotenuse-and-legs",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Identify Hypotenuse and Legs",
+      "outcome": "Identify the hypotenuse as the side opposite the right angle and the other two sides as the legs of a right-angled triangle",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-state-pythagoras-property",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "State Pythagoras Property",
+      "outcome": "State the Pythagoras property: in a right-angled triangle, the square of the hypotenuse equals the sum of the squares of the other two sides",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-identify-hypotenuse-and-legs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-calculate-hypotenuse",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Calculate Hypotenuse Length",
+      "outcome": "Calculate the length of the hypotenuse of a right-angled triangle given the lengths of both legs",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-state-pythagoras-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-calculate-unknown-leg",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Calculate Unknown Leg Length",
+      "outcome": "Calculate the length of an unknown leg of a right-angled triangle given the lengths of the hypotenuse and the other leg",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-calculate-hypotenuse"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-verify-right-angled-triangle",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Verify Right-Angled Triangle by Converse",
+      "outcome": "Verify whether a triangle with three given side lengths is right-angled using the converse of the Pythagoras property",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-state-pythagoras-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-the-triangle-and-its-properties-pythagoras-word-problems",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "the-triangle-and-its-properties",
+      "title": "Solve Pythagoras Practical Word Problems",
+      "outcome": "Solve real-world word problems (such as leaning ladders, broken trees, or perimeter of a rhombus) applying the Pythagoras property",
+      "prerequisites": [
+        "class7-mathematics-the-triangle-and-its-properties-calculate-unknown-leg"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/the-triangle-and-its-properties/right-angled-triangles-and-pythagoras-property"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-simplify-ratio",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Simplify Ratios",
+      "outcome": "Express a ratio of two quantities with same units in its simplest fractional form",
+      "prerequisites": [
+        "class7-mathematics-fractions-and-decimals-convert-units-using-decimals"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/comparing-quantities/equivalent-ratios-and-meaning-of-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-compare-ratios",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Check Equivalent Ratios",
+      "outcome": "Determine whether two given ratios are equivalent by converting them to like fractions",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-simplify-ratio"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/equivalent-ratios-and-meaning-of-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-divide-quantity-in-ratio",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Divide Quantity in Ratio",
+      "outcome": "Divide a given total quantity into parts according to a given ratio",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-simplify-ratio",
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/equivalent-ratios-and-meaning-of-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-define-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Define Percentage",
+      "outcome": "Define percentage as a fraction representing parts out of one hundred using the percent symbol",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/comparing-quantities/equivalent-ratios-and-meaning-of-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-fraction-to-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Fraction to Percentage",
+      "outcome": "Convert a given fraction into a percentage by multiplying by 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-define-percentage",
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-decimal-to-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Decimal to Percentage",
+      "outcome": "Convert a decimal number to a percentage by multiplying by 100 and shifting the decimal point",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-define-percentage",
+        "class7-mathematics-fractions-and-decimals-mult-decimal-by-10-100-1000"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-percentage-to-fraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Percentage to Fraction",
+      "outcome": "Convert a percentage to a fraction in simplest form by dividing by 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-define-percentage"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-percentage-to-decimal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Percentage to Decimal",
+      "outcome": "Convert a percentage to a decimal number by dividing by 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-define-percentage",
+        "class7-mathematics-fractions-and-decimals-divide-decimal-by-10-100-1000"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-ratio-to-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Convert Ratio to Percentage",
+      "outcome": "Calculate the percentage share of each component in a given ratio",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-divide-quantity-in-ratio",
+        "class7-mathematics-comparing-quantities-fraction-to-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-find-percent-of-quantity",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Percentage of Quantity",
+      "outcome": "Calculate the value of a given percentage of a specific whole quantity",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-percentage-to-fraction",
+        "class7-mathematics-fractions-and-decimals-fraction-as-operator-of"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-find-whole-from-percent",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find Whole from Percentage",
+      "outcome": "Determine the total whole quantity given the value of a certain percentage of it",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-find-percent-of-quantity",
+        "class7-mathematics-simple-equations-balance-multiplication-division"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-percent-increase-decrease",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Percentage Increase or Decrease",
+      "outcome": "Calculate the percentage increase or decrease as the change divided by the original amount multiplied by 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-fraction-to-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/converting-fractions-and-decimals-to-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-identify-cp-sp-terms",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Identify Cost Price and Selling Price",
+      "outcome": "Identify Cost Price (CP) and Selling Price (SP) in a given transaction context",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-classify-profit-loss",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Determine Profit or Loss",
+      "outcome": "Determine whether a transaction results in a profit, loss, or neither by comparing SP and CP",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-identify-cp-sp-terms"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-calculate-profit-loss-amount",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Compute Profit or Loss Amount",
+      "outcome": "Calculate the numerical profit (SP - CP) or loss (CP - SP) amount in a transaction",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-classify-profit-loss"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-profit-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Profit Percentage",
+      "outcome": "Calculate profit percentage using the formula (Profit / CP) * 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-calculate-profit-loss-amount",
+        "class7-mathematics-comparing-quantities-fraction-to-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-loss-percentage",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Loss Percentage",
+      "outcome": "Calculate loss percentage using the formula (Loss / CP) * 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-calculate-profit-loss-amount",
+        "class7-mathematics-comparing-quantities-fraction-to-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-find-sp-from-cp-and-percent",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find SP from CP and Profit/Loss Percentage",
+      "outcome": "Calculate the Selling Price given the Cost Price and the profit or loss percentage",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-find-percent-of-quantity",
+        "class7-mathematics-comparing-quantities-profit-percentage",
+        "class7-mathematics-comparing-quantities-loss-percentage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-find-cp-from-sp-and-percent",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Find CP from SP and Profit/Loss Percentage",
+      "outcome": "Calculate the Cost Price given the Selling Price and the profit or loss percentage using linear equations",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-find-sp-from-cp-and-percent",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/comparing-quantities/profit-or-loss-as-a-percentage"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-identify-si-terms",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Identify Simple Interest Terms",
+      "outcome": "State the definitions of Principal (P), Rate of interest per annum (R), Time period (T), and Simple Interest (I)",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/comparing-quantities/simple-interest"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-calculate-simple-interest",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Simple Interest",
+      "outcome": "Calculate Simple Interest using the formula I = (P * R * T) / 100",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-identify-si-terms",
+        "class7-mathematics-fractions-and-decimals-mult-fraction-whole-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/simple-interest"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-calculate-total-amount",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Total Amount",
+      "outcome": "Compute the total Amount (A) to be paid back using the formula A = P + I",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-calculate-simple-interest"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/comparing-quantities/simple-interest"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-find-principal-rate-or-time",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Unknown Variable in Simple Interest",
+      "outcome": "Determine an unknown variable (P, R, or T) given Simple Interest and the other two variables",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-calculate-simple-interest",
+        "class7-mathematics-simple-equations-solve-two-step-transposition"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/comparing-quantities/simple-interest"
+    },
+    {
+      "id": "class7-mathematics-comparing-quantities-si-fractional-time-rate",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "comparing-quantities",
+      "title": "Calculate Simple Interest with Fractional Time or Rate",
+      "outcome": "Compute Simple Interest and total Amount when time period or interest rate involves fractional years or months",
+      "prerequisites": [
+        "class7-mathematics-comparing-quantities-calculate-total-amount",
+        "class7-mathematics-fractions-and-decimals-mult-mixed-fraction-whole-number"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/comparing-quantities/simple-interest"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-need-for-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Need for Rational Numbers",
+      "outcome": "Explain the need for rational numbers using practical contexts like fractional measurements in opposite directions",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/rational-numbers/introduction-and-need-for-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-define-rational-number",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Define Rational Numbers",
+      "outcome": "Define a rational number as any number expressible in the form p/q where p and q are integers and q is non-zero",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-need-for-rational-numbers"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/rational-numbers/introduction-and-need-for-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-integers-and-fractions-as-rational",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Integers and Fractions as Rational Numbers",
+      "outcome": "Express any integer or fraction in the rational form p/q with non-zero denominator q",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/introduction-and-need-for-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-classify-positive-negative-zero",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Classify Positive, Negative, and Zero Rational Numbers",
+      "outcome": "Classify a given rational number as positive, negative, or zero based on the signs of its numerator and denominator",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-define-rational-number"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/positive-and-negative-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Generate Equivalent Rational Numbers",
+      "outcome": "Generate equivalent rational numbers by multiplying or dividing both numerator and denominator by the same non-zero integer",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-define-rational-number",
+        "class7-mathematics-integers-mult-pos-neg"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-in-standard-form"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-convert-positive-denominator",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Make Denominator Positive",
+      "outcome": "Convert a rational number with a negative denominator into an equivalent rational number with a positive denominator",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers",
+        "class7-mathematics-integers-divide-opposite-signs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-in-standard-form"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-reduce-to-standard-form",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Standard Form of Rational Numbers",
+      "outcome": "Reduce a rational number to standard form by ensuring a positive denominator and dividing by the highest common factor",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-convert-positive-denominator"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-in-standard-form"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-represent-positive-on-number-line",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Represent Positive Rational Numbers on Number Line",
+      "outcome": "Represent a positive rational number on a number line by partitioning unit intervals to the right of zero",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-classify-positive-negative-zero"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-on-a-number-line"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-represent-negative-on-number-line",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Represent Negative Rational Numbers on Number Line",
+      "outcome": "Represent a negative rational number on a number line by partitioning unit intervals to the left of zero",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-represent-positive-on-number-line"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-on-a-number-line"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-compare-same-denominator",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Compare Rational Numbers with Same Denominator",
+      "outcome": "Compare two rational numbers with equal positive denominators by comparing their numerators",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-convert-positive-denominator"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/comparison-of-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-compare-different-denominators",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Compare Rational Numbers with Different Denominators",
+      "outcome": "Compare two rational numbers with different denominators by converting them to equivalent forms with a common positive denominator",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-compare-same-denominator",
+        "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/comparison-of-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-order-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Order Rational Numbers",
+      "outcome": "Arrange a set of three or more rational numbers in ascending or descending order",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-compare-different-denominators"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/comparison-of-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-find-between-using-equivalent-fractions",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Find Rational Numbers Between Two Numbers",
+      "outcome": "Find a specified number of rational numbers lying between two given rational numbers using equivalent rational forms",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers",
+        "class7-mathematics-rational-numbers-compare-different-denominators"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/rational-numbers-between-two-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-add-same-denominator",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Add Rational Numbers with Same Denominator",
+      "outcome": "Calculate the sum of two rational numbers having identical positive denominators",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-convert-positive-denominator",
+        "class7-mathematics-integers-closure-addition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-add-different-denominators",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Add Rational Numbers with Different Denominators",
+      "outcome": "Calculate the sum of two rational numbers having different denominators using LCM of denominators",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-add-same-denominator",
+        "class7-mathematics-rational-numbers-generate-equivalent-rational-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-additive-inverse",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Additive Inverse of a Rational Number",
+      "outcome": "Identify and state the additive inverse of any given rational number",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-classify-positive-negative-zero",
+        "class7-mathematics-integers-additive-inverse"
+      ],
+      "difficulty": 1,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-subtract-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Subtract Rational Numbers",
+      "outcome": "Subtract one rational number from another by adding the additive inverse of the number to be subtracted",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-additive-inverse",
+        "class7-mathematics-rational-numbers-add-different-denominators"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-multiply-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Multiply Rational Numbers",
+      "outcome": "Calculate the product of two rational numbers by multiplying their numerators and denominators applying integer sign rules",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-define-rational-number",
+        "class7-mathematics-integers-mult-pos-neg",
+        "class7-mathematics-integers-mult-two-negs",
+        "class7-mathematics-fractions-and-decimals-multiply-two-proper-fractions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-multiplicative-inverse-reciprocal",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Reciprocal of a Rational Number",
+      "outcome": "Find the reciprocal (multiplicative inverse) of a non-zero rational number and state that zero has no reciprocal",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-multiply-rational-numbers",
+        "class7-mathematics-fractions-and-decimals-reciprocal-of-fraction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-divide-rational-numbers",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Divide Rational Numbers",
+      "outcome": "Divide a rational number by another non-zero rational number by multiplying by the reciprocal of the divisor",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-multiplicative-inverse-reciprocal"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-simplify-combined-operations",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Simplify Multi-Operation Expressions with Rational Numbers",
+      "outcome": "Simplify arithmetic expressions involving multiple operations on rational numbers using order of operations",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-subtract-rational-numbers",
+        "class7-mathematics-rational-numbers-divide-rational-numbers"
+      ],
+      "difficulty": 4,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-word-problems-addition-subtraction",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Word Problems: Addition and Subtraction",
+      "outcome": "Solve real-world word problems requiring addition or subtraction of rational numbers",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-subtract-rational-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-word-problems-multiplication-division",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Word Problems: Multiplication and Division",
+      "outcome": "Solve real-world word problems requiring multiplication or division of rational numbers",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-divide-rational-numbers"
+      ],
+      "difficulty": 3,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    },
+    {
+      "id": "class7-mathematics-rational-numbers-multi-step-word-problems",
+      "klass": 7,
+      "subject": "Mathematics",
+      "chapter": "rational-numbers",
+      "title": "Multi-Step Word Problems with Rational Numbers",
+      "outcome": "Solve multi-step contextual problems combining several arithmetic operations on rational numbers",
+      "prerequisites": [
+        "class7-mathematics-rational-numbers-simplify-combined-operations",
+        "class7-mathematics-rational-numbers-word-problems-addition-subtraction",
+        "class7-mathematics-rational-numbers-word-problems-multiplication-division"
+      ],
+      "difficulty": 5,
+      "topicRef": "class7-mathematics/rational-numbers/operations-on-rational-numbers"
+    }
+  ]
+}
