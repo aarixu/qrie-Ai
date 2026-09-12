@@ -93,12 +93,27 @@ describe('Diagnostic: the question', () => {
   });
 });
 
-describe('Diagnostic: no map for this class', () => {
-  it('renders the empty state and a way to continue instead of trapping the student', () => {
-    // Only Class 10 has a map so far; every other class must degrade, not crash.
-    expect(loadDiagnosticDataFor(7, SUBJECTS)).toBeNull();
+/**
+ * DERIVED, never pinned — for the reason stated three blocks below about map
+ * sizes, and learned the hard way here.
+ *
+ * This used to name Class 7, on the note that "only Class 10 has a map so far".
+ * Generating the Class 6-12 curriculum gave Class 7 a map, and the test failed
+ * on the generation run rather than on a defect — it had stopped exercising the
+ * empty state at all. Asking which class has no map keeps it honest however far
+ * the curriculum grows, and turns the day every class is covered into a skip
+ * rather than a red build.
+ */
+const UNMAPPED = [6, 7, 8, 9, 10, 11, 12].find(
+  (klass) => loadDiagnosticDataFor(klass, SUBJECTS) === null,
+);
 
-    const html = decode(renderScreen(7));
+describe.skipIf(UNMAPPED === undefined)('Diagnostic: no map for this class', () => {
+  it('renders the empty state and a way to continue instead of trapping the student', () => {
+    const klass = UNMAPPED!;
+    expect(loadDiagnosticDataFor(klass, SUBJECTS)).toBeNull();
+
+    const html = decode(renderScreen(klass));
 
     expect(html).toContain('Placement test not ready');
     expect(html).toContain(BRAND.name);

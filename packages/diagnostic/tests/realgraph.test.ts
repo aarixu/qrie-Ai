@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { GraphIndex, loadGraph, type ProbeBank } from '@ai-tutor/knowledge-graph';
+import { GraphIndex, evidenceFrom, loadGraph, type ProbeBank } from '@ai-tutor/knowledge-graph';
 import { answerProbe, isComplete, startSession } from '../src/session';
 import { selectNextProbe } from '../src/select';
 import { buildPlan } from '../src/plan';
@@ -71,6 +71,36 @@ describe('diagnostic over the real Class 10 Science map', () => {
     expect(result.plan.length).toBeLessThan(5);
   });
 
+  /**
+   * The invariant, not the symptom.
+   *
+   * A node nobody examined sits at whatever `initialMastery` seeded it with,
+   * and the difficulty bias seeds every difficulty-4 node at 0.46 — under the
+   * 0.5 line. Judging those on belief alone turned a flawless placement test
+   * into a twelve-step remedial plan about topics the test never raised.
+   *
+   * Difficulty is stated explicitly because the bias is what makes this
+   * reachable: were it ever removed, this test should keep passing for the
+   * right reason rather than quietly stop testing anything.
+   */
+  it('never calls a node a gap when nothing was ever asked about it', () => {
+    const { session, result } = simulate(new Set());
+    const spoken = evidenceFrom(index, session.answers);
+
+    for (const gap of result.gaps) {
+      expect(spoken.has(gap.nodeId), `${gap.nodeId} became a gap with no evidence`).toBe(true);
+    }
+
+    const hard = index.ids().filter((id) => (index.node(id)?.difficulty ?? 0) >= 4);
+    expect(hard.length).toBeGreaterThan(0);
+    const unexamined = hard.filter((id) => !spoken.has(id));
+    expect(unexamined.length).toBeGreaterThan(0);
+    for (const id of unexamined) {
+      expect(session.mastery[id]).toBeLessThan(0.5); // seeded below the line
+      expect(result.gaps.some((g) => g.nodeId === id)).toBe(false);
+    }
+  });
+
   it("finds a planted gap and names its foundation first", () => {
     // This student cannot balance an equation, so everything that rests on it
     // is shaky too — the plan must start at the foundation, not the symptom.
@@ -102,12 +132,27 @@ describe('diagnostic over the real Class 10 Science map', () => {
   });
 
   it('plan steps link into real lessons where one teaches the node', () => {
-    // A COHERENT weak student: shaky on the heart and on everything that rests
-    // on it. Marking only the foundation would describe a student who explains
-    // double circulation while denying the heart is a pump — and the model is
-    // right to refuse to believe that, so no gap would ever surface.
+    /**
+     * A COHERENT AND OBSERVABLE weak student: shaky on the heart, on what it
+     * rests on, AND on what rests on it — someone lost in this region from the
+     * foundations up.
+     *
+     * Both halves of that are load-bearing. Marking only the foundation
+     * describes a student who explains double circulation while denying the
+     * heart is a pump, and the model is right to refuse to believe it. But
+     * marking only the foundation and its descendants is no better, for a
+     * reason this test used to hide: twenty questions over 312 nodes never
+     * ASK about any of those twenty-one nodes. The selector spends its budget
+     * on high-reach hubs, which here are the ancestors. So the student answers
+     * everything put to them correctly and is, on the evidence, indistinguish-
+     * able from a student who is fine — and gets no plan at all.
+     *
+     * It passed before only because unexamined difficulty-4 nodes were being
+     * counted as gaps, and a few of those happened to carry a lessonRef. The
+     * assertion was being satisfied by the defect it should have caught.
+     */
     const heart = 'sci10-lp-heart-is-pump';
-    const weak = new Set([heart, ...index.descendantsOf(heart)]);
+    const weak = new Set([heart, ...index.ancestorsOf(heart), ...index.descendantsOf(heart)]);
     const { result } = simulate(weak);
 
     expect(result.plan.length).toBeGreaterThan(0);

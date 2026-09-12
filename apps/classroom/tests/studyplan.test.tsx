@@ -44,17 +44,33 @@ function diagnose(weak: ReadonlySet<string>): DiagnosticResult {
 }
 
 /**
- * A student weak on a node is weak on everything resting on it — otherwise the
- * engine correctly refuses to believe the gap and the plan comes back empty.
+ * A student weak on a node is weak on what it rests on AND on everything
+ * resting on it.
+ *
+ * Both directions are needed, for different reasons. Downward, because a
+ * student who denies the foundation while explaining what is built on it is
+ * incoherent, and the engine is right to refuse to believe the gap. Upward,
+ * because twenty questions over three hundred nodes rarely ASK about a node
+ * deep in the map — the selector spends its budget on high-reach hubs, which
+ * are the ancestors. Without them the student answers everything put to them
+ * correctly and is, on the evidence, a student with no gaps at all.
  */
-const withDescendants = (id: string): Set<string> => new Set([id, ...index.descendantsOf(id)]);
+const wholeChain = (id: string): Set<string> =>
+  new Set([id, ...index.ancestorsOf(id), ...index.descendantsOf(id)]);
 
 /**
- * Reading a chemical equation is the one weak spot that produces both kinds of
- * step in a single plan: the two chemistry nodes have no lesson yet, and the
- * life-processes nodes that build on them do.
+ * A student lost in life processes is the weak spot that produces both kinds of
+ * step in one plan: circulation and respiration have authored lessons, while
+ * control-and-coordination is taught live.
+ *
+ * It used to be `sci10-chem-read-equation`, on the claim that "the
+ * life-processes nodes that build on them do" have lessons. They do, but they
+ * never reach the plan — the chemistry gaps outscore them and fill all twelve
+ * steps, so that plan is entirely `live`. It only looked mixed because
+ * unexamined difficulty-4 nodes were being counted as gaps and a few of those
+ * carried a lessonRef.
  */
-const mixed = diagnose(withDescendants('sci10-chem-read-equation'));
+const mixed = diagnose(wholeChain('sci10-lp-heart-is-pump'));
 const clear = diagnose(new Set());
 
 const titleOf = (nodeId: string): string => {

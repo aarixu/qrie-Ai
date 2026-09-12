@@ -104,6 +104,33 @@ function edgeTrust(params: ModelParams | undefined, from: string, to: string, co
 }
 
 /**
+ * Every node one answer speaks about — the one asked, plus what it implies.
+ *
+ * Shared by `applyEvidence`, which moves belief across this region, and by
+ * `gapsFrom`, which refuses to call anything outside it a gap. They must agree:
+ * a node the model was never entitled to an opinion about must not be able to
+ * become a weakness by arithmetic alone.
+ */
+export function evidenceRegion(index: GraphIndex, answer: Answer): string[] {
+  // A skip is evidence about the node asked and nothing else. Silence says
+  // nothing about the rest of the map.
+  if (answer.chosenIndex === null) return [answer.nodeId];
+  const inferred = answer.correct
+    ? index.ancestorsOf(answer.nodeId)
+    : index.descendantsOf(answer.nodeId);
+  return [answer.nodeId, ...inferred];
+}
+
+/** Every node a whole answer list speaks about. */
+export function evidenceFrom(index: GraphIndex, answers: readonly Answer[]): Set<string> {
+  const seen = new Set<string>();
+  for (const answer of answers) {
+    for (const id of evidenceRegion(index, answer)) seen.add(id);
+  }
+  return seen;
+}
+
+/**
  * Fold one answer into the beliefs. Pure: returns a new map.
  */
 export function applyEvidence(
@@ -138,11 +165,10 @@ export function applyEvidence(
 
   // Correct answers speak upward about foundations; wrong answers speak
   // downward about everything built on the gap.
-  const region = answer.correct
-    ? index.ancestorsOf(answer.nodeId)
-    : index.descendantsOf(answer.nodeId);
-
-  for (const id of region) {
+  for (const id of evidenceRegion(index, answer)) {
+    // The answered node already has its Bayesian posterior above; a heuristic
+    // pull here would talk over it.
+    if (id === answer.nodeId) continue;
     if (probed.has(id)) continue; // direct evidence wins
     const hops = answer.correct
       ? index.distanceToAncestor(answer.nodeId, id)
@@ -263,6 +289,19 @@ export interface GapOptions {
   minKlass?: number;
   /** Below this belief a node counts as a gap. */
   threshold?: number;
+  /**
+   * Nodes an answer has actually spoken about, from `evidenceFrom`.
+   *
+   * Without this, a node nobody examined is judged purely on the belief it was
+   * SEEDED with — and `initialMastery({ biasByDifficulty: true })` seeds a
+   * difficulty-4 node at 0.46, below the threshold. Fifteen such nodes turned a
+   * flawless placement test into a twelve-step remedial plan. A prior is not a
+   * measurement; see the same principle stated in `decayMastery`.
+   *
+   * Omitted, every node is considered — the old behaviour, and what a
+   * hand-written fixture wants.
+   */
+  evidence?: ReadonlySet<string>;
 }
 
 /** The class-range test shared by every consumer of GapOptions. */
@@ -284,6 +323,7 @@ export function gapsFrom(mastery: Mastery, index: GraphIndex, opts: GapOptions =
 
   const gaps: Gap[] = [];
   for (const id of index.ids()) {
+    if (opts.evidence && !opts.evidence.has(id)) continue;
     const belief = mastery[id] ?? PRIOR;
     if (belief >= threshold) continue;
 

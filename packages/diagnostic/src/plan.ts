@@ -1,5 +1,6 @@
 import {
   GraphIndex,
+  evidenceFrom,
   gapsFrom,
   type DiagnosticResult,
   type Gap,
@@ -43,6 +44,9 @@ export function buildPlan(
     // step one, not a Class 9 restatement of it.
     minKlass: session.config.klass - (session.config.lookBack ?? 0),
     threshold: opts.threshold,
+    // Twenty questions cannot examine three hundred nodes. Only the ones this
+    // test actually spoke about are eligible to become steps.
+    evidence: evidenceFrom(index, session.answers),
   });
 
   return {

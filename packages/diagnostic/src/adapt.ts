@@ -2,6 +2,7 @@ import {
   GAP_THRESHOLD,
   GraphIndex,
   applyEvidence,
+  evidenceFrom,
   gapsFrom,
   type Answer,
   type DiagnosticResult,
@@ -137,7 +138,14 @@ export function learnFromQuiz(
     probed.add(answer.nodeId);
   }
 
-  const gaps = gapsFrom(mastery, index, { threshold });
+  // Everything the student has ever been asked, across the placement test and
+  // every quiz since. `gaps` is stored and becomes the next call's
+  // `before.gaps`, so an ineligible node admitted here would be carried forward
+  // as a phantom gap for the life of the profile.
+  const gaps = gapsFrom(mastery, index, {
+    threshold,
+    evidence: evidenceFrom(index, [...before.answers, ...usable]),
+  });
 
   /**
    * DROPPED: steps the student has now SHOWN they hold.

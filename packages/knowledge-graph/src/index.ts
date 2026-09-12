@@ -42,6 +42,8 @@ export { loadGraph, GraphIndex, type FilterOptions } from './graph';
 export {
   initialMastery,
   applyEvidence,
+  evidenceRegion,
+  evidenceFrom,
   applyDoubt,
   applyTaught,
   decayMastery,
