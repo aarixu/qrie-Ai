@@ -137,6 +137,64 @@ prepared class is measured; cost per student-hour is not.
 
 ---
 
+## THE CONTROL PLANE — added 2026-09-12
+
+The six parts above are a **delivery** decomposition: how a class reaches a
+student. It is accurate and it is not the whole system any more.
+
+A product brief in September recut the product as a **closed loop** —
+observe, diagnose, teach, test, update the learner model, choose the next
+action, revisit later — optimising for *unassisted mastery gain per learning
+minute*. Measured against that, this repo was a delivery pipeline with a
+measurement stub attached: the adaptive brain was about **7% of the code**, and
+`packages/pedagogy` was imported by nothing at all.
+
+The delivery stack survives intact. What it gains is a controller above it:
+
+```
+ SENSE      the ask gate · the ear · the judge · quiz · placement · raise-hand
+                          │
+ RECORD     packages/ledger          append-only, offline outbox      ← built
+                          │
+ MODEL      packages/learner-model   concept state, misconceptions    ← next
+                          │
+ CONTROL    packages/tutor-control   next-best-action, the ladder
+                          │  emits an ACTION, never a screen
+ ACTUATE    class-prep · stage · voice · player · persona   ← the six parts
+```
+
+**The rule that makes it work: actuators report and execute; they never
+decide.** Rule 2 above already says "the app is wiring" — the control plane is
+the work that makes that true, because roughly 5,000 lines of product logic
+still live in `apps/classroom/src/lib/`.
+
+### Why the ledger came first
+
+One answer in class used to produce `answeredRight[outcomeId] += 1`. A counter.
+Thrown away at that moment: which option, what they said, the response time, the
+attempt, whether a hint had been given, the judge's reason, the named
+misconception. Five of the brief's systems and the headline metric are functions
+of exactly that discarded data — and unlike everything else in the plan,
+**capture cannot be backfilled.**
+
+`packages/ledger` is pure: no clock, no storage, no network. Ids and timestamps
+come from the device, which is what lets a session be replayed. The event id is
+minted when the event happens and is the table's primary key, so a half-failed
+drain replays harmlessly. `seq` orders a session because `at` is a phone's clock
+and phones lie. `activeMs` is time ON TASK, because the metric divides by it.
+
+The full plan is `docs/superpowers/plans/2026-09-12-closed-loop-rebuild.md`.
+
+### Tenancy, before it is needed
+
+`organization → membership(role)` (migration 0005) exists with only the
+`student` role populated. Nothing in the product uses it yet. It is there
+because the LMS, the DPDP consent question and the fact that the parent is
+usually the buyer all want the same shape — and retrofitting tenancy onto a live
+table full of children's answers is a migration nobody wants to run.
+
+---
+
 ## How a class actually happens
 
 ```
@@ -188,6 +246,15 @@ student taps a topic
   separate path through the same room. Worth confirming both are still load-bearing.
 - **Two speech providers at once** — on-device and OpenRouter — is deliberate
   today and technical debt the moment on-device is trusted.
+- **The whole LiveKit path is dead** — `lib/liveKitAgent.ts` (735 lines),
+  `tools/livekit`, and `apps/agent`'s LiveKit half. Measured 2026-09-12:
+  `liveKitAgent.ts` is imported by its own test and nothing else, no server
+  runs, no `.env` holds its keys. The live doubt agent in the product uses the
+  Gemini Live socket. Flagged rather than deleted, by Aarav's call.
+- **The learner model is still a bare float per node.** `Mastery =
+  Record<string, number>` has no date attached, which is why `decayMastery` has
+  been correct, tested and uncallable for weeks — and why spaced retrieval is
+  structurally impossible until Phase 3 replaces the shape.
 
 ---
 

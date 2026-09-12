@@ -1,5 +1,13 @@
 # Curie — the six-part plan
 
+> **SUPERSEDED, later the same day, by
+> `2026-09-12-closed-loop-rebuild.md`.** Aarav's product brief recut the
+> product as a closed adaptive loop, which reorders everything below. Kept for
+> its record, and for two corrections worth carrying forward: **`topicRef` is
+> 100%, not ~39%** — all 3,636 nodes carry one and none dangle — and the
+> severed loop was in the CONTENT, where only 2 of 15 authored lessons carried
+> `teaches`/`checks`. Both are now fixed.
+
 **Written 2026-09-12.** Replaces the phase-ordered
 `2026-09-02-ship-plan.md` as the working list. That file stays for its
 **SETTLED — do not re-open** table, which is still binding; everything else has

@@ -98,6 +98,56 @@ try {
   show('auth reachable', false, String(e));
 }
 
+// 6. Did the tenancy migration (0005) land? anon may select, and RLS gives it
+//    nothing, so an empty 200 is the right answer and a 404 is the wrong one.
+for (const table of ['organization', 'membership', 'learning_session', 'ledger_event']) {
+  try {
+    const res = await fetch(`${URL_}/rest/v1/${table}?select=id&limit=1`, {
+      headers: { apikey: ANON, authorization: `Bearer ${ANON}` },
+    });
+    const body = await res.text();
+    show(`${table} exists`, res.ok, `HTTP ${res.status} ${body.slice(0, 70)}`);
+  } catch (e) {
+    show(`${table} reachable`, false, String(e));
+  }
+}
+
+// 7. The session close (0006). Present, and refusing a caller with no session.
+try {
+  const res = await fetch(`${URL_}/rest/v1/rpc/close_learning_session`, {
+    method: 'POST',
+    headers: { apikey: ANON, authorization: `Bearer ${ANON}`, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      p_session: '00000000-0000-0000-0000-000000000000',
+      p_ended_at: new Date().toISOString(),
+      p_active_ms: 0,
+    }),
+  });
+  const body = await res.text();
+  show('close_learning_session exists', res.status !== 404, `HTTP ${res.status} ${body.slice(0, 70)}`);
+} catch (e) {
+  show('close_learning_session reachable', false, String(e));
+}
+
+// 8. THE ONE THAT MATTERS. purge_old_ledger deletes children's answers by age,
+//    and a student holding the public anon key must not be able to call it —
+//    least of all with p_days = 1. It must exist (not 404) AND refuse (not 200).
+try {
+  const res = await fetch(`${URL_}/rest/v1/rpc/purge_old_ledger`, {
+    method: 'POST',
+    headers: { apikey: ANON, authorization: `Bearer ${ANON}`, 'content-type': 'application/json' },
+    body: JSON.stringify({ p_days: 3650 }),
+  });
+  const body = await res.text();
+  show(
+    'purge_old_ledger exists and is CLOSED to students',
+    res.status !== 404 && !res.ok,
+    `HTTP ${res.status} ${body.slice(0, 70)}`,
+  );
+} catch (e) {
+  show('purge_old_ledger reachable', false, String(e));
+}
+
 if (failed > 0) {
   console.log(`\n${failed} check${failed === 1 ? '' : 's'} failed.`);
   process.exit(1);
