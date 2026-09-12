@@ -21,8 +21,13 @@ const URL_ = env.VITE_SUPABASE_URL;
 const ANON = env.VITE_SUPABASE_ANON_KEY;
 const RELAY = env.VITE_RELAY_URL;
 
-const show = (label, ok, detail) =>
+// Every probe runs, then the process exits on the tally — all five results are
+// worth seeing, but printing FAIL and returning 0 means nothing can gate on it.
+let failed = 0;
+const show = (label, ok, detail) => {
+  if (!ok) failed += 1;
   console.log(`${ok ? '  OK   ' : '  FAIL '} ${label}${detail ? ` — ${detail}` : ''}`);
+};
 
 // 1. Is the function deployed and running OUR code? An unauthenticated call
 //    should come back with the gate's own refusal, not a platform error.
@@ -91,4 +96,9 @@ try {
   show('anonymous sign-in is switched on (B11)', ok, `HTTP ${res.status} ${body.slice(0, 120)}`);
 } catch (e) {
   show('auth reachable', false, String(e));
+}
+
+if (failed > 0) {
+  console.log(`\n${failed} check${failed === 1 ? '' : 's'} failed.`);
+  process.exit(1);
 }

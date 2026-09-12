@@ -1,0 +1,59 @@
+# A TUTOR THAT DIES EVERY SEVEN QUIET DAYS IS NOT A PRODUCT.
+#
+# Supabase pauses a free project after about a week with no activity, and this
+# repo generates none by design: migration 0003 computes the day/window rollover
+# at read time precisely so nothing has to run on a timer, and CI only fires on
+# a push. So the project went INACTIVE once, taking sign-in, every relay and the
+# class store with it — a phone in a student's hand could not even sign in.
+#
+# Two probes, every three days. Both are free, neither writes anything, and
+# together they separate "Postgres is up" from "our function is up", which are
+# different outages with different fixes.
+#
+# Deliberately NOT `tools/bin/verify-deploy.mjs`: its fifth check signs up, so
+# running it on a schedule would mint a throwaway anonymous account forever.
+name: Keep the backend awake
+
+on:
+  schedule:
+    # 06:00 UTC every third day. GitHub cron is best-effort and may run late;
+    # three days against a seven-day pause leaves room for that.
+    - cron: '0 6 */3 * *'
+  # GitHub disables scheduled workflows after 60 days of repo inactivity. This
+  # is how a human restarts it, and how you test a change to this file.
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # A real Postgres read. This is the half that counts as activity — the
+      # anon key is public by design and already ships inside the built app, so
+      # it is a secret here for tidiness, not for secrecy.
+      - name: Postgres answers
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          ANON: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/body -w '%{http_code}' \
+            "$URL/rest/v1/prepared_class?select=id&limit=1" \
+            -H "apikey: $ANON" -H "authorization: Bearer $ANON")
+          echo "HTTP $code — $(head -c 200 /tmp/body)"
+          test "$code" = "200"
+
+      # The Edge Function, answering with OUR refusal rather than a platform
+      # error page. A 401 whose body names the header we require is the cheapest
+      # possible proof that the deployed code is the code we wrote.
+      - name: The relay is our code
+        env:
+          RELAY: ${{ secrets.SUPABASE_URL }}/functions/v1/relay
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/relay -w '%{http_code}' -X POST "$RELAY/api/llm" \
+            -H 'content-type: application/json' -d '{}')
+          echo "HTTP $code — $(head -c 200 /tmp/relay)"
+          test "$code" = "401"
+          grep -q 'Authorization: Bearer' /tmp/relay
