@@ -132,26 +132,55 @@ being a sentence in a prompt.**
 
 ## THE PHASES
 
-### Phase 0 — Reconnect the loop `DONE except 0.3`
+### Phase 0 — Reconnect the loop `DONE`
 - **0.1 ✅ the 0.46 defect.** `gapsFrom` never asked whether a node had any
   evidence, so a difficulty prior was read as a measurement and a flawless
   placement test produced a twelve-step remedial plan. Two tests were passing
   *because* of it.
 - **0.2 ✅ the thirteen silent lessons.** 187 beats tagged; lessons that record
   nothing went 13/15 → 0, beats that record something 28/214 → 126/214.
-- **0.3 🔄 the curriculum gaps.** 19 chapters held zero nodes (157 bare topics);
-  48 more topics sit bare inside populated chapters. 0.2 produced an
-  evidence-led list of **97 named missing outcomes** as a by-product.
+- **0.3 ✅ the curriculum gaps.** The 19 chapters that held zero nodes are
+  generated: nodes 3,636 → 4,876, probes 3,242 → 4,482, topics with outcomes
+  81% → **96%**, `topicRef` still 100% with zero dangling refs. One probe is
+  hand-written because the node asks for the F1 of RRYY × rryy and every plant
+  in a dihybrid F1 is identical — there is no honest four-option question about
+  a result with one answer.
+  **48 topics remain bare**, and they are a different problem: they sit INSIDE
+  chapters that already have nodes, so the generator has no gap to fill. The
+  evidence-led list for those exists — **97 named missing outcomes** produced as
+  a by-product of 0.2, worst first: animal-tissues 17, structure-of-the-atom 12,
+  what-is-an-atom 11.
 - **0.4 ✅ backend keep-alive.** `keepalive.yml`, plus an external pinger until
   this repo has a remote.
 - **0.5 ✅ the two verify-script defects.**
 
-### Phase 1 — The interaction ledger `IN PROGRESS`
-Built: `packages/ledger` (pure), the outbox store, the drain, `classLedger`,
-`quizLedger`, `diagnosticLedger`, migrations 0005–0007, identity established at
-start-up, and the `flags` privacy defect closed.
+### Phase 1 — The interaction ledger `CODE COMPLETE, NOT LIVE`
 
-Remaining: the learner model reading from it, and a replay test.
+**Built and tested:** `packages/ledger` (pure), the outbox store, the drain,
+`classLedger` / `quizLedger` / `diagnosticLedger` and their wiring into the
+class, the quiz and the placement test, migrations 0005–0007 *written*,
+durable identity at start-up, the `flags` privacy defect closed, and the
+**replay test** — one class driven down both the old counters and the new
+ledger, asserted to match exactly.
+
+**TWO THINGS LEFT, and until they are done none of this records anything:**
+
+- **The migrations are not deployed.** Checked against the live project:
+  `organization`, `membership`, `learning_session`, `ledger_event`,
+  `close_learning_session` and `purge_old_ledger` all answer **404**. So a
+  student can use the app today and every event queues in localStorage, drains
+  into nothing, and starts dropping the oldest at 5,000. The code is right and
+  the record is empty — which is the same outcome as not having built it.
+  `npm run relay:deploy` is the whole job; it touches the live backend, so it
+  is Aarav's call to run.
+- **Auth is still email OTP.** Decision 6 is ordinary email and password.
+  `SignIn.tsx` still calls `sendEmailOtp`/`verifyEmailOtp`, and
+  `signInWithPassword` / `signUp` appear nowhere. The anonymous identity is
+  durable within an install; without an account it still dies with a reinstall,
+  which is the gap this phase was supposed to close.
+
+The learner model reading from the ledger is **Phase 3**, not this phase — an
+earlier draft of this line put it here and it was wrong.
 
 ### Phase 2 — Cost, credits and ads
 Measure cost per class and per student-hour **first**, price second. Two cost
