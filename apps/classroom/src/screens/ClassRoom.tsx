@@ -27,6 +27,7 @@ import { judgeSpokenAnswer, resolveCrossQuestion } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import { recordAnswerAtBeat, recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
+import { useClassLedger } from '../lib/classLedger';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore, setPreference } from '../stores/preferences';
@@ -240,6 +241,17 @@ export function ClassRoom({
   const player = usePlayer(lesson, tts);
 
   /**
+   * The ledger runs alongside the outcome counters, not instead of them.
+   *
+   * The counters say a student got something right; the ledger says which
+   * option, how long they took, which try it was, and whether a hint had
+   * already been handed over. Swapping the model onto it is a later phase —
+   * this one only has to start writing things down, because a class taught
+   * before the record exists is a class nobody can ever learn from.
+   */
+  const ledger = useClassLedger(lesson, player.state === 'playing', player.state === 'ended');
+
+  /**
    * The student answers a held question.
    *
    * Order matters on a RIGHT answer: the why is spoken while the class is
@@ -258,7 +270,9 @@ export function ClassRoom({
     if (!ask || !player.beat) return;
     const option = ask.options?.[index];
     const correct = option ? option.correct === true : true;
-    recordAnswerAtBeat(lesson, player.beat.id, correct);
+    const beatId = player.beat.id;
+    recordAnswerAtBeat(lesson, beatId, correct);
+    ledger.answered({ beatId, correct, surface: 'tap', chosenIndex: index });
     setAskBusy(true);
     try {
       if (correct) {
@@ -268,7 +282,12 @@ export function ClassRoom({
       } else {
         player.answer(index);
         const nudge = option?.hint ?? option?.why;
-        if (nudge) await tts.speak(nudge);
+        if (nudge) {
+          // Recorded BEFORE it is spoken, so the next attempt is already
+          // standing on rung 3 rather than being mistaken for an unassisted one.
+          ledger.helped(beatId, 3, false);
+          await tts.speak(nudge);
+        }
       }
     } finally {
       setAskBusy(false);
@@ -488,6 +507,17 @@ export function ClassRoom({
    */
   const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
   const heldAskBeat = player.pendingAsk && !inDoubt ? (player.beat?.id ?? null) : null;
+
+  // The question surfacing is what starts the clock on an answer. It is its own
+  // effect because the ear's effect returns early on a denied mic, and a
+  // student without a microphone still answers by tapping.
+  useEffect(() => {
+    if (!heldAskBeat) return;
+    ledger.asked(heldAskBeat, player.pendingAsk?.options?.length);
+    // Once per held question; `ledger` is memoised on the lesson.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heldAskBeat]);
+
   useEffect(() => {
     if (!heldAskBeat) return;
     let cancelled = false;
@@ -541,6 +571,17 @@ export function ClassRoom({
         // "unclear" is not evidence about the student — nothing is recorded.
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
+          // The ledger keeps what the counter cannot: their actual words, the
+          // verdict the judge reached, and how long the thinking took. A turn
+          // the safety screen stopped is dropped entirely rather than trimmed.
+          ledger.answered({
+            beatId: heldAskBeat,
+            correct: judged.verdict === 'right',
+            surface: 'voice',
+            verdict: judged.verdict,
+            answerText: heard.text,
+            flagged: judged.halt === true,
+          });
         }
         setEar('off');
         const spoken = await speakSafely(judged.say);
@@ -652,6 +693,7 @@ export function ClassRoom({
     // Located precisely: this hand is about the outcomes THIS beat teaches,
     // not about the chapter it happens to sit in.
     recordDoubtAtBeat(lesson, ctx.beatId);
+    ledger.confused(ctx.beatId);
 
     if (student !== null) {
       // A mic is no use without a live voice session to carry it, and that

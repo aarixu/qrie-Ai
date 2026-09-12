@@ -7,6 +7,7 @@ import {
   type QuizQuestion,
 } from '../lib/quiz';
 import { recordAttempt } from '../stores/quizHistory';
+import { recordQuizInLedger } from '../lib/quizLedger';
 import { adaptToQuiz, type PlanChange } from '../lib/adaptPlan';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -137,6 +138,20 @@ export function PracticeQuiz({
     // Recorded here rather than left to the caller: history is the retention
     // signal, and it must not depend on every future integrator remembering.
     recordAttempt(outcome.lessonRef, outcome.score, outcome.total);
+    /**
+     * And the full rows, which the score line throws away.
+     *
+     * Every question here is a probe with a node id and — on a wrong answer —
+     * a named misconception. That is the most specific evidence the product
+     * ever produces, and it existed for exactly as long as this screen was
+     * mounted. Never allowed to cost the student their result, for the same
+     * reason the map update below is not.
+     */
+    try {
+      recordQuizInLedger(outcome);
+    } catch (e) {
+      console.error('[ledger] the quiz could not be recorded:', e);
+    }
     /**
      * AND THE MAP HEARS ABOUT IT.
      *

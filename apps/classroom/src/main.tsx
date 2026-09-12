@@ -6,6 +6,8 @@ import './fonts';
 import './index.css';
 import App from './App';
 import { startAccountSync } from './lib/account';
+import { drainLedger, startLedgerDrain } from './lib/ledgerSync';
+import { ensureIdentity } from './lib/relay';
 import { nudgeIfDue, watchScheduleForNative } from './lib/reminders';
 
 // Body owns no colour: the page ground is `html { background }` in index.css,
@@ -101,6 +103,35 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
 // configured this is a no-op and the app stays exactly the local-only app it
 // has always been - nothing is gated behind signing in.
 startAccountSync();
+
+/**
+ * Drain the interaction ledger whenever this phone has signal.
+ *
+ * Separate from startAccountSync on purpose. That carries the key-value stores
+ * and is last-write-wins per blob; the ledger is an append-only queue and must
+ * never be carried that way, or one device's outbox would replace another's.
+ *
+ * Nothing is gated behind it either: with no project configured, or nobody
+ * signed in, the events simply wait on the device. A class must never block on
+ * a network.
+ */
+startLedgerDrain();
+
+/**
+ * And give the ledger somewhere to drain TO.
+ *
+ * The identity used to be created lazily, by the first relay call. A student
+ * replaying a cached class with on-device speech never makes one — so they had
+ * no account, and everything the class recorded about them waited in the outbox
+ * for a network request that was never going to happen.
+ *
+ * The drain listeners are registered first, above, so nothing is missed while
+ * this resolves; this only asks for one more flush once there is a student to
+ * attribute the rows to.
+ */
+void ensureIdentity().then((ok) => {
+  if (ok) void drainLedger();
+});
 
 /**
  * Put the student's own study schedule on the phone.

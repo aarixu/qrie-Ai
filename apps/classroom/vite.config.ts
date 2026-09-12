@@ -333,6 +333,7 @@ export default defineConfig(({ mode }) => {
         '@ai-tutor/syllabus': pkg('syllabus'),
         '@ai-tutor/knowledge-graph': pkg('knowledge-graph'),
         '@ai-tutor/diagnostic': pkg('diagnostic'),
+        '@ai-tutor/ledger': pkg('ledger'),
         '@ai-tutor/persona': pkg('persona'),
         '@ai-tutor/pedagogy': pkg('pedagogy'),
         '@ai-tutor/voice': pkg('voice'),

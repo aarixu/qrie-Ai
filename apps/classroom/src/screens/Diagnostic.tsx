@@ -11,6 +11,7 @@ import {
 import { applyDoubt, applyTaught, type DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from '../lib/diagnosticData';
 import { modelStore, trainOnSession } from '../stores/model';
+import { useDiagnosticLedger } from '../lib/diagnosticLedger';
 import { outcomeStore } from '../stores/outcomes';
 import { BRAND } from '../brand';
 import { EmptyState } from '../ui/Screen';
@@ -112,6 +113,10 @@ export function Diagnostic({
   // measurement any more.
   const params = useRef(modelStore.get()).current;
 
+  // Above the early returns at line 153: a hook that only runs when the map
+  // loaded would be a hook that runs conditionally.
+  const ledger = useDiagnosticLedger();
+
   // The beliefs the test STARTED from, kept for calibration. An item judged
   // against beliefs that already include its own answer always looks perfect.
   const beliefsBefore = useRef(session?.mastery ?? {}).current;
@@ -146,8 +151,9 @@ export function Diagnostic({
       beliefsBefore,
       beliefsAfter: session.mastery,
     });
+    ledger.finish();
     onComplete(buildPlan(session, data.index));
-  }, [data, session, probe, onComplete, beliefsBefore]);
+  }, [data, session, probe, onComplete, beliefsBefore, ledger]);
 
   if (!data || !session) {
     return (
@@ -195,9 +201,11 @@ export function Diagnostic({
   const percent = Math.round((current / target) * 100);
 
   const answer = (chosenIndex: number | null) => {
-    setSession(
-      answerProbe(session, data.index, probe, chosenIndex, Date.now() - shownAt.current, params),
-    );
+    const ms = Date.now() - shownAt.current;
+    // The ledger keeps what the belief update cannot: which distractor they
+    // chose, and therefore the named misconception behind it.
+    ledger.answered(probe, chosenIndex, ms);
+    setSession(answerProbe(session, data.index, probe, chosenIndex, ms, params));
   };
 
   const node = data.index.node(probe.nodeId);

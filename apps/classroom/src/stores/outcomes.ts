@@ -98,14 +98,22 @@ export function recordDoubtAtBeat(lesson: Lesson, beatId: string): void {
 }
 
 /**
- * Record an in-class answer against the outcomes the beat checks or teaches.
+ * What an ANSWER at this beat is evidence about.
  *
  * `checks` first: a question about something already covered is evidence about
- * THAT, not about whatever this beat happens to be teaching around it.
+ * THAT, not about whatever this beat happens to be teaching around it. Exported
+ * because the ledger has to file an answer against exactly the same outcomes
+ * this store does — two copies of this rule would drift, and the drift would be
+ * invisible until a belief and a ledger row disagreed about the same moment.
  */
-export function recordAnswerAtBeat(lesson: Lesson, beatId: string, correct: boolean): void {
+export function answeredOutcomesAtBeat(lesson: Lesson, beatId: string): string[] {
   const beat = lesson.beats.find((b) => b.id === beatId);
-  const ids = beat?.checks?.length ? beat.checks : (beat?.teaches ?? []);
+  return [...(beat?.checks?.length ? beat.checks : (beat?.teaches ?? []))];
+}
+
+/** Record an in-class answer against the outcomes the beat checks or teaches. */
+export function recordAnswerAtBeat(lesson: Lesson, beatId: string, correct: boolean): void {
+  const ids = answeredOutcomesAtBeat(lesson, beatId);
   if (ids.length === 0) return;
   outcomeStore.update((s) => ({
     ...s,
