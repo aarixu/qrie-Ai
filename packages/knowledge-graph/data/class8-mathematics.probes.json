@@ -5202,6 +5202,1158 @@
         "believes canceling a term in a sum leaves 0 instead of recognizing that terms cannot be canceled individually",
         ""
       ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-recall-bar-graph-features",
+      "nodeId": "class8-mathematics-introduction-to-graphs-recall-bar-graph-features",
+      "question": "Which of the following is a key feature of a standard bar graph?",
+      "options": [
+        "Bars must have uniform width with equal spaces between them.",
+        "Bars must touch each other with no spaces between them.",
+        "Bars must have widths that change according to each category's value.",
+        "Bars must always be arranged in a circular shape."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a bar graph with a histogram",
+        "thinks the width of a bar represents the numerical value rather than its height",
+        "confuses a bar graph with a pie chart"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-bar-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-bar-graph",
+      "question": "A bar graph shows favourite fruits: Apples (15 students), Bananas (25 students), and Oranges (10 students). How many more students prefer Bananas than Apples?",
+      "options": [
+        "15",
+        "35",
+        "25",
+        "10"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "reads the value of Apples instead of computing the difference",
+        "adds the two frequencies together instead of finding the difference",
+        "reads only the value of Bananas instead of comparing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-define-double-bar-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-define-double-bar-graph",
+      "question": "What is the primary purpose of a double bar graph?",
+      "options": [
+        "To compare two sets of data simultaneously across the same categories",
+        "To show how a whole quantity is divided into percentage slices",
+        "To show continuous data over unbroken intervals of time",
+        "To display grouped frequency data with continuous class intervals"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a double bar graph with a pie chart",
+        "confuses a double bar graph with a line graph",
+        "confuses a double bar graph with a histogram"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpret-double-bar-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpret-double-bar-graph",
+      "question": "In a double bar graph showing marks in Term 1 and Term 2, Rohit scored 65 in Term 1 and 80 in Term 2 in Science. By how many marks did his Science score increase in Term 2?",
+      "options": [
+        "80 marks",
+        "15 marks",
+        "145 marks",
+        "65 marks"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reads only the Term 2 mark without calculating the increase",
+        "",
+        "adds the marks of both terms instead of finding the increase",
+        "reads only the Term 1 mark without calculating the increase"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-recall-pie-graph-features",
+      "nodeId": "class8-mathematics-introduction-to-graphs-recall-pie-graph-features",
+      "question": "What does a pie graph (circle graph) represent?",
+      "options": [
+        "The relationship between a whole circle and its proportional parts",
+        "The continuous change of a variable over unbroken time",
+        "The frequency of data within continuous intervals",
+        "The comparison of two independent variables on Cartesian axes"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a pie graph with a line graph",
+        "confuses a pie graph with a histogram",
+        "confuses a pie graph with a scatter or linear coordinate plot"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpret-pie-graph-percentages",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpret-pie-graph-percentages",
+      "question": "A pie graph shows the daily activities of a student. If the sector for 'School' is 25%, how many hours does the student spend at school in a 24-hour day?",
+      "options": [
+        "25 hours",
+        "4 hours",
+        "6 hours",
+        "8 hours"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "treats the percentage number directly as the number of hours",
+        "divides 24 by 6 or confuses 25% with 1/6",
+        "",
+        "confuses 25% (one quarter) with one third of a day"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-recall-histogram-features",
+      "nodeId": "class8-mathematics-introduction-to-graphs-recall-histogram-features",
+      "question": "Which of the following is true for a histogram?",
+      "options": [
+        "It uses bars with equal spaces between them for separate categories.",
+        "It is always drawn as a circle divided into sectors.",
+        "It uses bars without gaps between them to represent continuous grouped data.",
+        "It uses a single straight line passing through the origin."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a histogram with a standard bar graph",
+        "confuses a histogram with a pie chart",
+        "",
+        "confuses a histogram with a linear graph"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-histogram-intervals",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-histogram-intervals",
+      "question": "In a histogram showing the heights of students, the bar over the class interval 140–150 cm has a height of 12 on the frequency axis. What does this mean?",
+      "options": [
+        "The tallest student is 150 cm tall.",
+        "The total number of students in the class is 12.",
+        "There are 12 students whose heights fall in the range 140–150 cm.",
+        "Each student in that group is exactly 145 cm tall."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the upper interval limit with an individual measurement",
+        "assumes the single bar height represents the total sample size",
+        "",
+        "assumes all data points inside an interval must equal the midpoint"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-define-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-define-line-graph",
+      "question": "Which graph is specially used to display data that changes continuously over unbroken periods of time?",
+      "options": [
+        "Bar graph",
+        "Pie graph",
+        "Line graph",
+        "Pictograph"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks discrete category graphs are used for continuous time series",
+        "thinks circle graphs are used for continuous time series",
+        "",
+        "thinks picture graphs represent continuous time tracking"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-points-on-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-points-on-line-graph",
+      "question": "A line graph shows a patient's temperature recorded every hour. At 10:00 AM, the point plotted is at a vertical height of 38 °C. What was the patient's temperature at 10:00 AM?",
+      "options": [
+        "48 °C",
+        "10 °C",
+        "38 °C",
+        "28 °C"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "adds the time and temperature values together",
+        "reads the horizontal time value as the temperature",
+        "",
+        "subtracts 10 from 38 mistakenly combining the two axes"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph",
+      "question": "On a line graph tracking temperature from 6:00 AM to 12:00 noon, the line goes upward from left to right. What does this indicate about the temperature?",
+      "options": [
+        "The temperature was increasing.",
+        "The temperature remained constant.",
+        "The temperature was decreasing.",
+        "The temperature dropped to zero."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses an upward sloping line with a flat horizontal line",
+        "confuses an upward slope with a downward decrease",
+        "interprets the slope as falling to the base axis"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-find-max-min-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-find-max-min-line-graph",
+      "question": "A line graph records the temperature of a city at 6 AM (15°C), 10 AM (22°C), 2 PM (30°C), and 6 PM (24°C). At what time was the temperature at its lowest?",
+      "options": [
+        "2 PM",
+        "6 PM",
+        "10 AM",
+        "6 AM"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies the maximum temperature time instead of the minimum",
+        "picks the end of the time period instead of the lowest value",
+        "selects an intermediate value",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-calculate-change-rate-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-calculate-change-rate-line-graph",
+      "question": "A line graph shows a plant's height was 4 cm on Day 2 and 11 cm on Day 5. How much did the plant grow between Day 2 and Day 5?",
+      "options": [
+        "15 cm",
+        "11 cm",
+        "3 cm",
+        "7 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds the two heights instead of finding the difference",
+        "reads only the final height on Day 5",
+        "calculates the difference in days (5 - 2 = 3) instead of the difference in height",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpret-kink-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpret-kink-line-graph",
+      "question": "What is the purpose of a jagged line (kink) drawn near the origin on an axis of a graph?",
+      "options": [
+        "It indicates that the line graph has an error in its measurements.",
+        "It shows that the data between zero and the first plotted value is skipped.",
+        "It shows that the values are decreasing rapidly to zero.",
+        "It marks the highest point reached on that axis."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the jagged symbol indicates a drawing mistake or faulty data",
+        "",
+        "thinks the kink represents a sharp downward trend in values",
+        "confuses the break marker with a peak indicator"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-compare-graph-types-purposes",
+      "nodeId": "class8-mathematics-introduction-to-graphs-compare-graph-types-purposes",
+      "question": "Which type of graph is best suited to show the proportion of monthly income spent on various household expenses?",
+      "options": [
+        "Histogram",
+        "Pie chart",
+        "Line graph",
+        "Linear graph"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks continuous grouped frequency graphs are used to show parts of a budget",
+        "",
+        "thinks continuous time-series graphs are used for expense breakdown",
+        "confuses a single straight-line graph with a proportional parts display"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpret-double-line-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpret-double-line-graph",
+      "question": "A double line graph displays the maximum temperatures of City A and City B across Monday, Tuesday, and Wednesday. On Tuesday, the point for City A is at 32 °C and for City B is at 28 °C. What does this tell us about Tuesday?",
+      "options": [
+        "City B was hotter than City A by 4 °C.",
+        "City A had no change in temperature from Monday.",
+        "The total temperature of both cities was 50 °C.",
+        "City A was hotter than City B by 4 °C."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "reverses which city had the higher temperature",
+        "assumes one point's value implies no change over time",
+        "computes an incorrect sum of temperatures rather than comparing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-cartesian-axes",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-cartesian-axes",
+      "question": "On a standard Cartesian coordinate grid, what are the horizontal and vertical axes called?",
+      "options": [
+        "Horizontal is y-axis; vertical is x-axis",
+        "Horizontal is origin; vertical is grid line",
+        "Horizontal is ordinate; vertical is abscissa",
+        "Horizontal is x-axis; vertical is y-axis"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps the names of the horizontal and vertical axes",
+        "confuses an axis with the origin point",
+        "reverses the terms abscissa and ordinate and assigns them as axis names",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-origin",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-origin",
+      "question": "What is the point of intersection of the x-axis and the y-axis called, and what are its coordinates?",
+      "options": [
+        "Origin, (0, 0)",
+        "Intercept, (1, 1)",
+        "Origin, (1, 0)",
+        "Center, (0, 1)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the intersection starts at (1, 1)",
+        "knows the name origin but gives the coordinates of a point on the x-axis",
+        "calls the origin 'center' and gives a point on the y-axis"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-define-ordered-pair",
+      "nodeId": "class8-mathematics-introduction-to-graphs-define-ordered-pair",
+      "question": "In the ordered pair (4, 7), what do the numbers 4 and 7 represent?",
+      "options": [
+        "4 represents vertical position, and 7 represents horizontal position.",
+        "4 is the area, and 7 is the perimeter of a shape.",
+        "Both 4 and 7 represent distances along the x-axis.",
+        "4 represents horizontal position, and 7 represents vertical position."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the first coordinate is vertical (y) and the second is horizontal (x)",
+        "confuses coordinate pairs with geometric measurements",
+        "thinks both numbers measure along the same axis",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-x-coordinate",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-x-coordinate",
+      "question": "What does the x-coordinate (abscissa) of a point represent geometrically?",
+      "options": [
+        "The perpendicular distance of the point from the x-axis",
+        "The perpendicular distance of the point from the origin along a diagonal",
+        "The perpendicular distance of the point from the y-axis",
+        "The total perimeter around the point"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses distance from y-axis with distance from x-axis",
+        "thinks the coordinate is the straight-line distance from the origin",
+        "",
+        "confuses coordinate definition with perimeter"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-y-coordinate",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-y-coordinate",
+      "question": "What is the y-coordinate (ordinate) of the point (3, 8), and what does it measure?",
+      "options": [
+        "8, which is the perpendicular distance of the point from the y-axis",
+        "3, which is the perpendicular distance of the point from the y-axis",
+        "8, which is the perpendicular distance of the point from the x-axis",
+        "3, which is the perpendicular distance of the point from the x-axis"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies 8 correctly as y but misidentifies it as the distance from the y-axis",
+        "picks the x-coordinate instead of the y-coordinate",
+        "",
+        "identifies 3 as the y-coordinate and gives the wrong distance definition"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-distinguish-coordinate-order",
+      "nodeId": "class8-mathematics-introduction-to-graphs-distinguish-coordinate-order",
+      "question": "Why do the points (2, 5) and (5, 2) represent different locations on a coordinate grid?",
+      "options": [
+        "Because (2, 5) is in the first quadrant, but (5, 2) is in the second quadrant.",
+        "Because the order in an ordered pair matters: (2, 5) is 2 units along x and 5 units along y, while (5, 2) is 5 units along x and 2 units along y.",
+        "Because (2, 5) lies on the y-axis, while (5, 2) lies on the x-axis.",
+        "Because the sum of coordinates in (2, 5) is different from the sum of coordinates in (5, 2)."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks reversing positive coordinates moves a point to a different quadrant",
+        "",
+        "thinks any coordinate pair with a 2 or 5 lies directly on an axis",
+        "thinks points are distinguished by the sum of their coordinates"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant",
+      "question": "To plot the point P(3, 4) starting from the origin (0, 0), how should you move?",
+      "options": [
+        "Move 4 units right along the x-axis, then 3 units up parallel to the y-axis.",
+        "Move 3 units up along the y-axis, then 4 units right parallel to the x-axis.",
+        "Move 3 units right along the x-axis, then 4 units up parallel to the y-axis.",
+        "Move 7 units diagonally from the origin."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reverses the x and y movements",
+        "applies the x-value vertically and y-value horizontally",
+        "",
+        "adds the coordinates together and moves diagonally"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-point-on-x-axis",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-point-on-x-axis",
+      "question": "Where does the point (6, 0) lie on a coordinate grid?",
+      "options": [
+        "On the y-axis, 6 units above the origin",
+        "On the x-axis, 6 units to the right of the origin",
+        "At the origin (0, 0)",
+        "In the middle of the first quadrant, 6 units up and 6 units right"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the x-axis with the y-axis when the y-coordinate is zero",
+        "",
+        "thinks any point containing a zero is at the origin",
+        "thinks 6 applies equally to both x and y directions"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-point-on-y-axis",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-point-on-y-axis",
+      "question": "Which of the following points lies directly on the y-axis?",
+      "options": [
+        "(5, 0)",
+        "(5, 5)",
+        "(1, 5)",
+        "(0, 5)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses points on the x-axis (x, 0) with points on the y-axis (0, y)",
+        "thinks equal coordinates place a point on the y-axis",
+        "thinks a small non-zero x-coordinate means the point is on the y-axis",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point",
+      "question": "A point A is plotted on a grid. Looking straight down from A to the horizontal axis gives 4, and looking straight across from A to the vertical axis gives 7. What are the coordinates of A?",
+      "options": [
+        "(7, 4)",
+        "(0, 7)",
+        "(4, 0)",
+        "(4, 7)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "writes the vertical projection first and horizontal projection second",
+        "reads only the y-projection and sets x to 0",
+        "reads only the x-projection and sets y to 0",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-points-on-axes",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-points-on-axes",
+      "question": "A point is located on the x-axis at a distance of 4 units to the right of the origin. What are its coordinates?",
+      "options": [
+        "(0, 4)",
+        "(4, 4)",
+        "(0, 0)",
+        "(4, 0)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "writes (0, 4) instead of (4, 0), confusing the x-axis format with the y-axis format",
+        "assigns 4 to both coordinates",
+        "identifies the point as the origin",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-choose-axis-scale",
+      "nodeId": "class8-mathematics-introduction-to-graphs-choose-axis-scale",
+      "question": "You need to plot values of cost: Rs 50, Rs 100, Rs 150, Rs 200, Rs 250 on a graph with 10 grid squares available on the vertical axis. Which scale is most suitable for the vertical axis?",
+      "options": [
+        "1 unit = Rs 1",
+        "1 unit = Rs 30",
+        "1 unit = Rs 1000",
+        "1 unit = Rs 200"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "chooses a scale far too small, so 250 cannot fit in 10 squares",
+        "",
+        "chooses an excessively large scale where all data squashes into a fraction of one square",
+        "chooses a scale where the entire range would take only 1.25 squares"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-table-of-values",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-table-of-values",
+      "question": "A table shows Number of Books (x) and Total Cost (y): (1, 15), (2, 30), (3, 45). Which set of ordered pairs should be plotted on the coordinate grid?",
+      "options": [
+        "(15, 1), (30, 2), (45, 3)",
+        "(16, 1), (32, 2), (48, 3)",
+        "(1, 2), (15, 30), (3, 45)",
+        "(1, 15), (2, 30), (3, 45)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "swaps x and y for each data pair",
+        "adds x and y values together before forming pairs",
+        "pairs consecutive x-values and consecutive y-values together incorrectly",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-define-collinear-points",
+      "nodeId": "class8-mathematics-introduction-to-graphs-define-collinear-points",
+      "question": "What does it mean if three or more points are 'collinear'?",
+      "options": [
+        "They all lie at equal distances from the origin.",
+        "They form the vertices of a triangle.",
+        "They all lie on the same straight line.",
+        "They all lie inside the same quadrant."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses collinearity with lying on a circle centered at the origin",
+        "thinks collinear points form a closed geometric triangle",
+        "",
+        "thinks any points in the same quadrant are called collinear"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-verify-collinearity-by-plotting",
+      "nodeId": "class8-mathematics-introduction-to-graphs-verify-collinearity-by-plotting",
+      "question": "Consider the points A(1, 2), B(2, 4), and C(3, 6). When plotted on a graph, do they lie on a single straight line?",
+      "options": [
+        "No, because y increases by 2 each time.",
+        "Yes, because joining them sequentially with a ruler forms a single straight line.",
+        "No, because they form a curve.",
+        "Yes, but only if the line passes through (0, 5)."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks a constant increase means the points do not form a line",
+        "",
+        "thinks varying coordinate values always produce a curved line",
+        "imposes an arbitrary incorrect intercept condition for collinearity"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-define-linear-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-define-linear-graph",
+      "question": "What is a linear graph?",
+      "options": [
+        "A graph made of multiple zigzag line segments joined together",
+        "A line graph that consists of a single unbroken straight line",
+        "A graph drawn with curved lines only",
+        "Any graph that uses rectangular bars"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a linear graph with a general broken-line graph",
+        "",
+        "thinks linear graphs are curved",
+        "confuses a linear graph with a bar graph"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-distinguish-line-graph-and-linear-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-distinguish-line-graph-and-linear-graph",
+      "question": "What is the difference between a general line graph and a linear graph?",
+      "options": [
+        "A line graph is always straight, while a linear graph is always curved.",
+        "A line graph only uses bars, while a linear graph uses lines.",
+        "A line graph can have multiple connected segments changing direction, while a linear graph is a single continuous straight line.",
+        "There is no difference; the two terms mean exactly the same thing."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "swaps the definitions of line graph and linear graph",
+        "confuses line graphs with bar graphs",
+        "",
+        "believes 'line graph' and 'linear graph' are completely interchangeable"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-horizontal-line-coordinates",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-horizontal-line-coordinates",
+      "question": "Which of the following sets of points all lie on the same horizontal line?",
+      "options": [
+        "(1, 4), (3, 4), (6, 4)",
+        "(2, 1), (2, 3), (2, 5)",
+        "(1, 1), (2, 2), (3, 3)",
+        "(0, 2), (3, 5), (4, 6)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "selects points with the same x-coordinate, which form a vertical line",
+        "selects points on the diagonal line y = x",
+        "selects points with no constant coordinate"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-vertical-line-coordinates",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-vertical-line-coordinates",
+      "question": "What is true about the coordinates of all points lying on a vertical line parallel to the y-axis?",
+      "options": [
+        "Their y-coordinates are all equal.",
+        "Their x-coordinates are all equal.",
+        "Their x-coordinates and y-coordinates are always equal.",
+        "The sum of their coordinates is always zero."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses vertical lines (constant x) with horizontal lines (constant y)",
+        "",
+        "confuses vertical lines with the line y = x",
+        "confuses vertical lines with points satisfying x + y = 0"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-geometric-figure-coordinates",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-geometric-figure-coordinates",
+      "question": "When you plot and join the points A(1, 1), B(4, 1), and C(1, 5) sequentially, and then join C to A, what shape is formed?",
+      "options": [
+        "A rectangle",
+        "A square",
+        "A right-angled triangle",
+        "A circle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks 3 plotted points form a 4-sided rectangle",
+        "confuses a 3-vertex shape with a 4-sided square",
+        "",
+        "thinks joining coordinate points creates a curved circle"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-find-missing-vertex-rectangle",
+      "nodeId": "class8-mathematics-introduction-to-graphs-find-missing-vertex-rectangle",
+      "question": "Three vertices of a rectangle ABCD are A(1, 2), B(5, 2), and C(5, 6). What are the coordinates of the fourth vertex D?",
+      "options": [
+        "(1, 6)",
+        "(6, 1)",
+        "(1, 2)",
+        "(5, 1)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps the x and y coordinates of the correct fourth vertex",
+        "picks vertex A again instead of finding the fourth corner",
+        "combines the x of B with the y of A"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-calculate-perimeter-from-grid",
+      "nodeId": "class8-mathematics-introduction-to-graphs-calculate-perimeter-from-grid",
+      "question": "A rectangle has vertices at (2, 1), (7, 1), (7, 5), and (2, 5). What is the perimeter of this rectangle?",
+      "options": [
+        "9 units",
+        "18 units",
+        "20 units",
+        "14 units"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds length and width (5 + 4 = 9) but forgets to multiply by 2",
+        "",
+        "calculates area (5 * 4 = 20) instead of perimeter",
+        "adds length once and width twice (5 + 4 + 5 = 14) or makes an addition error"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-calculate-area-from-grid",
+      "nodeId": "class8-mathematics-introduction-to-graphs-calculate-area-from-grid",
+      "question": "A rectangle on a grid has vertices at (1, 2), (6, 2), (6, 7), and (1, 7). What is the area of this rectangle?",
+      "options": [
+        "20 sq units",
+        "25 sq units",
+        "10 sq units",
+        "50 sq units"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "calculates perimeter (2 * (5 + 5) = 20) instead of area",
+        "",
+        "adds length and width (5 + 5 = 10) instead of multiplying them",
+        "multiplies the perimeter by 2"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-independent-variable",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-independent-variable",
+      "question": "In an experiment recording the temperature of water every minute as it heats up, which is the independent variable and on which axis is it normally plotted?",
+      "options": [
+        "Time, plotted on the x-axis",
+        "Temperature, plotted on the y-axis",
+        "Time, plotted on the y-axis",
+        "Temperature, plotted on the x-axis"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "identifies the dependent variable and places it on the y-axis",
+        "correctly identifies time as independent but assigns it to the vertical y-axis",
+        "thinks the measured outcome (temperature) is the independent variable"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-identify-dependent-variable",
+      "nodeId": "class8-mathematics-introduction-to-graphs-identify-dependent-variable",
+      "question": "A car travels at a steady speed. The distance covered depends on the time taken. Which is the dependent variable and on which axis is it usually plotted?",
+      "options": [
+        "Distance, plotted on the y-axis",
+        "Time, plotted on the x-axis",
+        "Distance, plotted on the x-axis",
+        "Time, plotted on the y-axis"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "identifies the independent variable instead of the dependent variable",
+        "correctly identifies distance as dependent but mistakenly assigns it to the x-axis",
+        "identifies time as dependent and assigns it to the y-axis"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-differentiate-independent-dependent-variables",
+      "nodeId": "class8-mathematics-introduction-to-graphs-differentiate-independent-dependent-variables",
+      "question": "The total cost of petrol depends on the number of litres purchased. Which statement correctly classifies these variables?",
+      "options": [
+        "Litres of petrol is the independent variable; cost is the dependent variable.",
+        "Cost is the independent variable; litres of petrol is the dependent variable.",
+        "Both cost and litres of petrol are independent variables.",
+        "Both cost and litres of petrol are dependent variables."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reverses independent and dependent variables",
+        "thinks both variables in a practical relationship can be independent simultaneously",
+        "thinks both variables in a practical relationship are dependent"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-tabulate-cost-quantity-data",
+      "nodeId": "class8-mathematics-introduction-to-graphs-tabulate-cost-quantity-data",
+      "question": "If 1 notebook costs Rs 20, which table correctly shows the ordered pairs (Number of notebooks, Total cost)?",
+      "options": [
+        "(1, 20), (2, 21), (3, 22), (4, 23)",
+        "(1, 20), (2, 40), (3, 60), (4, 80)",
+        "(20, 1), (40, 2), (60, 3), (80, 4)",
+        "(1, 20), (2, 40), (3, 80), (4, 160)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds 1 to cost instead of multiplying by unit price",
+        "",
+        "swaps the order of quantity and cost in the ordered pairs",
+        "doubles the cost repeatedly (exponential) instead of linear scaling"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-quantity-cost-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-quantity-cost-graph",
+      "question": "If 1 pen costs Rs 10, 2 pens cost Rs 20, and 3 pens cost Rs 30, what does the graph of Quantity (x) versus Cost (y) look like?",
+      "options": [
+        "A curved line that gets steeper and steeper",
+        "A horizontal line parallel to the x-axis",
+        "A vertical line parallel to the y-axis",
+        "A single straight line starting from the origin (0, 0)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks direct variation produces a curved graph",
+        "confuses direct variation with a constant y horizontal line",
+        "confuses direct variation with a constant x vertical line",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-cost-from-quantity-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-cost-from-quantity-graph",
+      "question": "On a linear graph of Number of Apples (x-axis) versus Cost in Rs (y-axis), the point corresponding to x = 5 has a vertical height of 40. What is the cost of 5 apples?",
+      "options": [
+        "Rs 5",
+        "Rs 8",
+        "Rs 40",
+        "Rs 45"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "reads the x-coordinate instead of the y-coordinate for cost",
+        "calculates unit cost (40 / 5 = 8) instead of the total cost for 5 apples",
+        "",
+        "adds the two numbers (5 + 40 = 45)"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-quantity-from-cost-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-quantity-from-cost-graph",
+      "question": "On a graph showing Number of Pens (x-axis) versus Total Cost (y-axis), you find Rs 60 on the y-axis and move horizontally to meet the graph at the point (4, 60). How many pens can be bought for Rs 60?",
+      "options": [
+        "4 pens",
+        "60 pens",
+        "15 pens",
+        "64 pens"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "reads the y-value as the quantity of pens",
+        "divides 60 by 4 to get unit price instead of stating quantity",
+        "adds x and y coordinates together"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-tabulate-principal-si-data",
+      "nodeId": "class8-mathematics-introduction-to-graphs-tabulate-principal-si-data",
+      "question": "At a simple interest rate of 10% per year for 1 year, what is the simple interest for principals of Rs 1000, Rs 2000, and Rs 3000?",
+      "options": [
+        "Rs 100, Rs 200, Rs 300",
+        "Rs 10, Rs 20, Rs 30",
+        "Rs 1100, Rs 2200, Rs 3300",
+        "Rs 100, Rs 100, Rs 100"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "calculates 1% instead of 10%",
+        "calculates total amount (Principal + SI) instead of simple interest alone",
+        "thinks simple interest remains identical regardless of principal"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-si-principal-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-si-principal-graph",
+      "question": "When plotting Simple Interest (y-axis) against Principal (x-axis) for a fixed rate and time, what kind of graph is formed?",
+      "options": [
+        "A horizontal line parallel to the x-axis",
+        "A curved line bending towards the x-axis",
+        "A straight line passing through the origin",
+        "A zigzag line with varying slopes"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks interest does not change with principal (flat line)",
+        "thinks simple interest growth is non-linear",
+        "",
+        "thinks simple interest fluctuates unpredictably"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-verify-graph-passes-origin",
+      "nodeId": "class8-mathematics-introduction-to-graphs-verify-graph-passes-origin",
+      "question": "Why does the graph of two directly proportional quantities (like Principal and Simple Interest) always pass through the origin (0, 0)?",
+      "options": [
+        "Because all graphs in mathematics must pass through (0, 0).",
+        "Because when the independent variable is 0, the dependent variable is also 0.",
+        "Because the graph cannot be drawn in any other quadrant.",
+        "Because the rate of interest is always zero at the start."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes all mathematical graphs universally pass through the origin",
+        "",
+        "confuses quadrant restrictions with passing through (0, 0)",
+        "thinks the rate of interest itself becomes zero"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-si-from-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-si-from-graph",
+      "question": "A graph of Simple Interest vs Principal passes through (1000, 80) and (2000, 160). Using the straight line graph, what is the simple interest on a principal of Rs 1500?",
+      "options": [
+        "Rs 240",
+        "Rs 120",
+        "Rs 100",
+        "Rs 150"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the two interest values (80 + 160 = 240)",
+        "",
+        "guesses an arbitrary round number",
+        "assumes interest equals 10% of 1500 without using the graph rate (8%)"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-principal-from-si-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-principal-from-si-graph",
+      "question": "A straight-line graph shows Simple Interest (y-axis) against Principal (x-axis). If an interest of Rs 70 corresponds to a point on the line with x-coordinate Rs 1000, what principal is needed to earn an interest of Rs 210?",
+      "options": [
+        "Rs 2100",
+        "Rs 3000",
+        "Rs 1500",
+        "Rs 7000"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "matches the interest amount directly to principal as 2100",
+        "",
+        "multiplies 1000 by 1.5 arbitrarily",
+        "multiplies 1000 by 7"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-tabulate-time-distance-uniform-speed",
+      "nodeId": "class8-mathematics-introduction-to-graphs-tabulate-time-distance-uniform-speed",
+      "question": "A car moves at a uniform speed of 40 km/h. Which table correctly represents the distance travelled at 1, 2, 3, and 4 hours?",
+      "options": [
+        "Time (h): 1, 2, 3, 4 | Distance (km): 40, 80, 120, 160",
+        "Time (h): 1, 2, 3, 4 | Distance (km): 40, 40, 40, 40",
+        "Time (h): 1, 2, 3, 4 | Distance (km): 40, 50, 60, 70",
+        "Time (h): 1, 2, 3, 4 | Distance (km): 40, 80, 160, 320"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses total distance with constant speed",
+        "adds 10 km each hour instead of 40 km",
+        "doubles the distance each hour instead of adding 40 km"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-distance-time-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-distance-time-graph",
+      "question": "What is the shape of a distance-time graph for a body moving with a constant (uniform) speed?",
+      "options": [
+        "A curved line bending upwards",
+        "A circle centered at the origin",
+        "A horizontal line parallel to the time axis",
+        "A straight line sloping upwards from the origin"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses uniform speed with accelerated motion",
+        "confuses coordinate graphs with circular shapes",
+        "confuses uniform speed with a stationary object at rest",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpolate-distance-at-given-time",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpolate-distance-at-given-time",
+      "question": "On a uniform distance-time graph, a cyclist covers 10 km in 1 hour and 20 km in 2 hours. What distance did the cyclist cover in 1.5 hours?",
+      "options": [
+        "15 km",
+        "12 km",
+        "18 km",
+        "30 km"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "underestimates the midpoint value",
+        "overestimates the midpoint value",
+        "adds 10 km and 20 km together"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpolate-time-for-given-distance",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpolate-time-for-given-distance",
+      "question": "A car travels according to a linear distance-time graph passing through (0, 0) and (2 hours, 100 km). How much time did it take to cover 75 km?",
+      "options": [
+        "1.5 hours",
+        "2.5 hours",
+        "1.0 hour",
+        "0.75 hours"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides distance incorrectly or multiplies 100/75 * 2",
+        "assumes 75 km is covered in 1 hour",
+        "treats 75 km as 0.75 hours directly"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-calculate-speed-from-graph-slope",
+      "nodeId": "class8-mathematics-introduction-to-graphs-calculate-speed-from-graph-slope",
+      "question": "On a distance-time graph, an object moves from (2 hours, 60 km) to (5 hours, 180 km). What is the speed of the object?",
+      "options": [
+        "36 km/h",
+        "60 km/h",
+        "120 km/h",
+        "40 km/h"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "divides 180 by 5 hours",
+        "divides 180 by 3 hours or reads 60 km from the first point",
+        "calculates change in distance (180 - 60 = 120) but forgets to divide by change in time (3)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-square-side-perimeter-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-square-side-perimeter-graph",
+      "question": "If you plot the side of a square (x) against its perimeter (P = 4x) on a coordinate grid, what type of graph do you get?",
+      "options": [
+        "A curve that bends upwards",
+        "A stepped bar chart",
+        "A horizontal line parallel to the x-axis",
+        "A linear graph (straight line passing through origin)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses perimeter (linear, 4x) with area (non-linear, x^2)",
+        "thinks geometric properties must be represented as bar charts",
+        "thinks perimeter does not change with side length",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-square-side-area-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-square-side-area-graph",
+      "question": "Consider the side of a square x = 1, 2, 3, 4 cm and its area A = 1, 4, 9, 16 sq cm. When these points (x, A) are plotted on a graph, what shape do they form?",
+      "options": [
+        "A single straight line",
+        "A horizontal straight line",
+        "A curved line",
+        "A vertical straight line"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes all geometric graphs form straight lines",
+        "thinks area remains constant",
+        "",
+        "confuses non-linear variation with vertical orientation"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-distinguish-linear-non-linear-relations",
+      "nodeId": "class8-mathematics-introduction-to-graphs-distinguish-linear-non-linear-relations",
+      "question": "Why is the relationship between side and perimeter of a square 'linear', while the relationship between side and area is 'non-linear'?",
+      "options": [
+        "Perimeter increases by a constant multiple of side (P = 4s), while area increases with the square of the side (A = s²).",
+        "Perimeter is measured in cm, while area is measured in sq cm.",
+        "Perimeter is always greater than area for all squares.",
+        "Side and perimeter has only 3 points, while side and area has many points."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks units determine whether a relationship is linear or non-linear",
+        "believes linearity depends on which numerical value is larger",
+        "thinks the number of plotted points determines linearity"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-extrapolate-values-from-linear-graph",
+      "nodeId": "class8-mathematics-introduction-to-graphs-extrapolate-values-from-linear-graph",
+      "question": "A straight-line graph passes through (1, 3), (2, 6), and (3, 9). If you extend (extrapolate) this straight line, what will be the y-value when x = 5?",
+      "options": [
+        "12",
+        "11",
+        "15",
+        "8"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "finds the value for x = 4 instead of x = 5",
+        "adds 2 instead of following the 3x rule",
+        "",
+        "adds x and previous y (5 + 3 = 8)"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-tabulate-from-linear-equation",
+      "nodeId": "class8-mathematics-introduction-to-graphs-tabulate-from-linear-equation",
+      "question": "For the linear relationship y = 2x + 1, which table of values is correct?",
+      "options": [
+        "x: 1, 2, 3 | y: 3, 4, 5",
+        "x: 1, 2, 3 | y: 2, 4, 6",
+        "x: 1, 2, 3 | y: 3, 5, 7",
+        "x: 1, 2, 3 | y: 1, 3, 5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "evaluates y = x + 2 instead of y = 2x + 1",
+        "evaluates y = 2x and forgets to add 1",
+        "",
+        "computes y = 2x - 1 instead of y = 2x + 1"
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-plot-graph-from-linear-relation",
+      "nodeId": "class8-mathematics-introduction-to-graphs-plot-graph-from-linear-relation",
+      "question": "Which set of points can be plotted and joined to form the straight line for y = 3x?",
+      "options": [
+        "(1, 3), (2, 5), (3, 7)",
+        "(1, 4), (2, 5), (3, 6)",
+        "(3, 1), (6, 2), (9, 3)",
+        "(1, 3), (2, 6), (3, 9)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "plots y = 2x + 1 instead of y = 3x",
+        "plots y = x + 3 instead of y = 3x",
+        "swaps x and y coordinates for each point",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-read-intersection-point",
+      "nodeId": "class8-mathematics-introduction-to-graphs-read-intersection-point",
+      "question": "Two straight lines are drawn on the same grid. Line 1 passes through (0, 0), (2, 4), (4, 8). Line 2 passes through (0, 6), (2, 4), (4, 2). What is their point of intersection?",
+      "options": [
+        "(0, 0)",
+        "(4, 8)",
+        "(0, 6)",
+        "(2, 4)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "picks the origin instead of the shared common point",
+        "picks a point that lies only on Line 1",
+        "picks the y-intercept of Line 2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class8-mathematics-introduction-to-graphs-interpret-real-world-graph-story",
+      "nodeId": "class8-mathematics-introduction-to-graphs-interpret-real-world-graph-story",
+      "question": "In a distance-time graph representing Rahul's bicycle trip, the line rises steadily for 30 minutes, stays completely horizontal for 15 minutes, and then rises steadily again. What happened during those middle 15 minutes?",
+      "options": [
+        "Rahul was cycling at his top speed.",
+        "Rahul stopped and took a rest.",
+        "Rahul was cycling backwards towards home.",
+        "Rahul was cycling uphill."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "interprets a flat horizontal section as maximum speed",
+        "",
+        "confuses a flat line (no change in distance) with returning home (decreasing distance)",
+        "interprets the graph line as the physical slope of the road"
+      ]
     }
   ]
 }

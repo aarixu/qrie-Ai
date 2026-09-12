@@ -5400,6 +5400,222 @@
         "thinks females possess YY sex chromosomes instead of XX",
         "confuses sex chromosome pairing with dominant and recessive Mendelian inheritance"
       ]
+    },
+    {
+      "id": "probe-class10-science-heredity-dihybrid-cross-f1-generation",
+      "nodeId": "class10-science-heredity-dihybrid-cross-f1-generation",
+      "question": "A pure round-yellow pea plant (RRYY) is crossed with a pure wrinkled-green one (rryy). What is the genotype and appearance of EVERY plant in the F1 generation?",
+      "options": [
+        "RRYY — round and yellow, exactly like the dominant parent",
+        "RrYy — round and yellow",
+        "rryy — wrinkled and green, exactly like the other parent",
+        "Half are RrYy round yellow and half are rryy wrinkled green"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the dominant-looking F1 must carry the dominant parent genotype unchanged",
+        "",
+        "reads the recessive parent as the one whose traits are inherited",
+        "expects segregation in the F1 rather than in the F2"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-monohybrid-ratios",
+      "nodeId": "class10-science-heredity-monohybrid-ratios",
+      "question": "In a monohybrid cross between two heterozygous tall pea plants (Tt x Tt), what are the expected phenotypic and genotypic ratios in the F2 generation?",
+      "options": [
+        "Phenotypic ratio 3:1, Genotypic ratio 1:2:1",
+        "Phenotypic ratio 1:2:1, Genotypic ratio 3:1",
+        "Phenotypic ratio 3:1, Genotypic ratio 2:1:1",
+        "Phenotypic ratio 1:1, Genotypic ratio 1:2:1"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps phenotypic and genotypic ratios, confusing observable traits with allele combinations",
+        "miscounts the heterozygous class when writing the genotypic ratio",
+        "confuses the F2 self-cross outcome with a test cross ratio"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-dihybrid-cross-gamete-formation",
+      "nodeId": "class10-science-heredity-dihybrid-cross-gamete-formation",
+      "question": "A pea plant has the genotype RrYy. What types of gametes can this plant produce?",
+      "options": [
+        "Rr and Yy only",
+        "RY and ry only",
+        "RY, Ry, rY, and ry",
+        "R, r, Y, and y"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes alleles of the same gene stay together during gamete formation",
+        "assumes dominant alleles only pair with dominant alleles and recessive with recessive",
+        "",
+        "thinks each gamete receives only one single allele instead of one allele per gene"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-dihybrid-cross-punnett-square",
+      "nodeId": "class10-science-heredity-dihybrid-cross-punnett-square",
+      "question": "When constructing a 16-box Punnett square for the cross RrYy x RrYy, how many boxes contain the completely homozygous genotype RRYY?",
+      "options": [
+        "2 boxes",
+        "1 box",
+        "4 boxes",
+        "9 boxes"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses homozygous dominant for both traits with genotypes homozygous for only one trait",
+        "",
+        "confuses the number of RRYY offspring with the total number of distinct homozygous genotypes",
+        "confuses the count of the specific RRYY genotype with the total count of the dominant phenotype"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-independent-assortment-ratio",
+      "nodeId": "class10-science-heredity-independent-assortment-ratio",
+      "question": "In the F2 generation of a dihybrid cross between round-yellow and wrinkled-green seeded pea plants, what is the expected ratio of phenotypes showing recombinant (new) combinations of traits?",
+      "options": [
+        "9 out of 16",
+        "6 out of 16",
+        "10 out of 16",
+        "1 out of 16"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "selects the proportion of double-dominant parental phenotypes instead of recombinant phenotypes",
+        "",
+        "adds the parental categories together instead of the recombinant categories",
+        "selects only the double-recessive class, mistaking it for the only new type"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-gene-as-dna-segment",
+      "nodeId": "class10-science-heredity-gene-as-dna-segment",
+      "question": "Which statement best describes what a gene is at the molecular level?",
+      "options": [
+        "An entire intact chromosome present inside the cell nucleus",
+        "A complete protein molecule that controls a specific body function",
+        "A specific section of DNA containing instructions to make a protein",
+        "A carbohydrate chain that determines inherited physical traits"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a single gene with an entire chromosome",
+        "confuses the gene itself with the protein product it codes for",
+        "",
+        "mistakes the biochemical nature of genetic material for carbohydrates"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-gene-to-enzyme-mechanism",
+      "nodeId": "class10-science-heredity-gene-to-enzyme-mechanism",
+      "question": "According to the cellular mechanism of heredity, why does an altered plant height gene result in a dwarf pea plant?",
+      "options": [
+        "The altered gene makes a less efficient enzyme, reducing growth hormone production",
+        "The plant produces an excess of growth hormone that stops stem elongation",
+        "The altered gene prevents the plant cells from undergoing cell division entirely",
+        "The plant fails to absorb water from the soil due to defective root proteins"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks dwarfism is caused by an inhibitory excess of hormone rather than hormone deficiency",
+        "believes recessive alleles completely halt basic cell processes like mitosis",
+        "attributes dwarfism to general physiological failure rather than enzyme and hormone regulation"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-paired-chromosomes-concept",
+      "nodeId": "class10-science-heredity-paired-chromosomes-concept",
+      "question": "Why do chromosomes exist in pairs in the somatic (body) cells of sexually reproducing organisms?",
+      "options": [
+        "One chromosome of each pair comes from the male parent and one from the female parent",
+        "Chromosomes duplicate right after birth to provide backup copies of genes",
+        "Each pair consists of one dominant chromosome and one recessive chromosome",
+        "Body cells merge two identical gametes produced by the same individual parent"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks paired chromosomes result from post-natal duplication rather than biparental inheritance",
+        "believes entire chromosomes are labeled dominant or recessive rather than individual alleles",
+        "thinks somatic cells are formed by fusing cells from a single parent"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-gametes-haploid-restoration",
+      "nodeId": "class10-science-heredity-gametes-haploid-restoration",
+      "question": "Why must the chromosome number be halved during the formation of gametes?",
+      "options": [
+        "To allow the zygote to receive twice the chromosome number of its parents",
+        "To ensure that all offspring develop identical genetic traits to each other",
+        "To remove all recessive genes from passing into the next generation",
+        "To keep the species chromosome number constant when fertilization occurs"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes chromosome number naturally doubles every successive generation",
+        "confuses chromosome reduction with a mechanism to make offspring clones",
+        "believes meiosis selectively eliminates recessive alleles from gametes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-sex-determination-environmental-vs-genetic",
+      "nodeId": "class10-science-heredity-sex-determination-environmental-vs-genetic",
+      "question": "How does sex determination in snails differ from sex determination in humans?",
+      "options": [
+        "In snails, sex is determined at fertilization by the egg, whereas in humans it is determined by the sperm",
+        "In snails, sex is determined strictly by sex chromosomes, whereas human sex depends on temperature",
+        "In snails, males have XX chromosomes, whereas human males have XY chromosomes",
+        "In snails, sex can change based on environmental cues, whereas in humans it is genetically fixed"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes snail sex is fixed at fertilization by maternal chromosomes rather than flexible",
+        "inverts the mechanisms, assigning environmental control to humans and genetic to snails",
+        "assumes non-human animals simply reverse the standard chromosomal systems",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-human-sex-chromosomes",
+      "nodeId": "class10-science-heredity-human-sex-chromosomes",
+      "question": "What is the correct chromosomal composition in a normal human male somatic cell?",
+      "options": [
+        "44 autosomes and one pair of XX chromosomes",
+        "22 autosomes and one pair of XY chromosomes",
+        "22 pairs of autosomes and one pair of XY chromosomes",
+        "23 pairs of autosomes and one pair of XY chromosomes"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "mistakes male sex chromosomes (XY) for female sex chromosomes (XX)",
+        "confuses 22 pairs (44 chromosomes) with 22 individual chromosomes",
+        "",
+        "thinks humans have 23 pairs of autosomes in addition to the sex chromosomes"
+      ]
+    },
+    {
+      "id": "probe-class10-science-heredity-sex-determination-cross-diagram",
+      "nodeId": "class10-science-heredity-sex-determination-cross-diagram",
+      "question": "A couple has four sons. What is the statistical probability that their next child will be a daughter?",
+      "options": [
+        "0%",
+        "50%",
+        "25%",
+        "100%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes previous male births prevent the couple from ever conceiving a female",
+        "",
+        "misapplies Mendelian monohybrid recessive ratios (1 in 4) to sex determination",
+        "falls for the gambler's fallacy, believing a female birth is now guaranteed to balance the family"
+      ]
     }
   ]
 }

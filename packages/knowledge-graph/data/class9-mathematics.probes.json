@@ -1224,6 +1224,1158 @@
         "turns 'more than' into multiplication",
         "confuses the relation between sides with their sum"
       ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-quadrilateral",
+      "nodeId": "class9-mathematics-quadrilaterals-define-quadrilateral",
+      "question": "Which of the following is the correct definition of a quadrilateral in a plane?",
+      "options": [
+        "A closed four-sided plane figure formed by joining four points in order such that no three points are collinear",
+        "Any figure formed by connecting any four points in a plane with straight lines",
+        "A four-sided polygon where all four interior angles must be less than 90°",
+        "A closed plane figure formed by joining four collinear points in order"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks open or self-intersecting figures with 4 points qualify as quadrilaterals",
+        "confuses angle constraints with the general definition of a quadrilateral",
+        "believes collinear points can form a four-sided polygon"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-vertices",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-vertices",
+      "question": "For a quadrilateral named PQRS, which set represents all of its vertices?",
+      "options": [
+        "Segments PQ, QR, RS, and SP",
+        "Angles ∠PQR, ∠QRS, ∠RSP, and ∠SPQ",
+        "Points P, Q, R, and S",
+        "Segments PR and QS"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses vertices with sides",
+        "confuses vertices with interior angles",
+        "",
+        "confuses vertices with diagonals"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-sides",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-sides",
+      "question": "Which of the following correctly lists all four sides of the quadrilateral ABCD?",
+      "options": [
+        "AB, BC, CD, AC",
+        "AB, BC, CD, DA",
+        "AC, BD, AB, CD",
+        "A, B, C, D"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "includes a diagonal AC instead of the boundary side DA",
+        "",
+        "lists both diagonals as sides of the quadrilateral",
+        "confuses sides with vertices"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-angles",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-angles",
+      "question": "Which set correctly represents the four interior angles of quadrilateral ABCD?",
+      "options": [
+        "∠AOB, ∠BOC, ∠COD, ∠DOA (where O is diagonal intersection)",
+        "∠BAC, ∠CAD, ∠CBD, ∠BDC",
+        "∠ABD, ∠DBC, ∠BCA, ∠ACD",
+        "∠ABC, ∠BCD, ∠CDA, ∠DAB"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies central angles at the intersection of diagonals as the angles of the quadrilateral",
+        "names partial angles formed by the diagonals instead of the full interior angles",
+        "confuses corner angles with angles between sides and diagonals",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-diagonals",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-diagonals",
+      "question": "In the quadrilateral ABCD, which segments represent its two diagonals?",
+      "options": [
+        "AB and CD",
+        "AC and BD",
+        "AD and BC",
+        "AC and CD"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses opposite sides with diagonals",
+        "",
+        "confuses opposite sides with diagonals",
+        "confuses one diagonal and one side as the two diagonals"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides",
+      "question": "In quadrilateral ABCD, which pair consists of opposite sides?",
+      "options": [
+        "AB and BC",
+        "DA and AB",
+        "BC and CD",
+        "AB and CD"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses adjacent sides sharing a common vertex with opposite sides",
+        "confuses consecutive sides with opposite sides",
+        "confuses adjacent sides with opposite sides",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-identify-opposite-adjacent-angles",
+      "nodeId": "class9-mathematics-quadrilaterals-identify-opposite-adjacent-angles",
+      "question": "In quadrilateral PQRS, which of the following is a pair of opposite angles?",
+      "options": [
+        "∠P and ∠Q",
+        "∠Q and ∠R",
+        "∠P and ∠R",
+        "∠S and ∠P"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses adjacent angles with opposite angles",
+        "confuses adjacent angles with opposite angles",
+        "",
+        "confuses adjacent angles with opposite angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-convex-vs-concave",
+      "nodeId": "class9-mathematics-quadrilaterals-convex-vs-concave",
+      "question": "What is the distinguishing property of a concave quadrilateral compared to a convex quadrilateral?",
+      "options": [
+        "Exactly one diagonal lies partly or completely in its exterior",
+        "All four interior angles are greater than 180°",
+        "Both diagonals lie completely in its exterior",
+        "Opposite sides are always parallel"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes all angles in a concave quadrilateral must be reflex angles",
+        "thinks both diagonals must fall outside the figure",
+        "confuses concavity with parallelism of sides"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-angle-sum-property",
+      "nodeId": "class9-mathematics-quadrilaterals-state-angle-sum-property",
+      "question": "What is the sum of the four interior angles of any quadrilateral?",
+      "options": [
+        "180°",
+        "270°",
+        "360°",
+        "540°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the angle sum of a quadrilateral with that of a triangle",
+        "incorrectly calculates angle sum as 3 right angles",
+        "",
+        "confuses the angle sum of a quadrilateral with that of a pentagon"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-angle-sum-property",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-angle-sum-property",
+      "question": "How is the angle sum property of a quadrilateral ABCD proved geometrically?",
+      "options": [
+        "By extending one side to form an exterior angle equal to 360°",
+        "By drawing both diagonals to divide the quadrilateral into 4 triangles, giving 4 × 180° = 720°",
+        "By drawing one diagonal to divide the quadrilateral into 2 triangles, giving 180° + 180° = 360°",
+        "By showing that all four interior angles must each measure 90°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses exterior angle sum with interior angle sum proof",
+        "adds the 4 inner triangles without subtracting the 360° around the central intersection",
+        "",
+        "assumes every quadrilateral is a rectangle"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-find-fourth-angle",
+      "nodeId": "class9-mathematics-quadrilaterals-find-fourth-angle",
+      "question": "Three angles of a quadrilateral are 75°, 90°, and 110°. What is the measure of the fourth angle?",
+      "options": [
+        "275°",
+        "95°",
+        "105°",
+        "85°"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the fourth angle is the sum of the first three angles",
+        "makes an arithmetic addition or subtraction error from 360°",
+        "subtracts the sum of the three angles from 380° or miscalculates 360 - 275",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-find-angles-given-ratios",
+      "nodeId": "class9-mathematics-quadrilaterals-find-angles-given-ratios",
+      "question": "The angles of a quadrilateral are in the ratio 3 : 5 : 9 : 13. What is the measure of the smallest angle?",
+      "options": [
+        "12°",
+        "36°",
+        "60°",
+        "18°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds the common ratio unit x = 12° but forgets to multiply by 3",
+        "",
+        "calculates the second angle (5x) instead of the smallest (3x)",
+        "uses 180° instead of 360° as the total sum of angles, getting x = 6° and 3x = 18°"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-solve-algebraic-angle-sum",
+      "nodeId": "class9-mathematics-quadrilaterals-solve-algebraic-angle-sum",
+      "question": "The angles of a quadrilateral are (x + 10)°, 2x°, (3x - 20)°, and (4x + 10)°. What is the value of x?",
+      "options": [
+        "35",
+        "18",
+        "40",
+        "36"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "drops the constant terms incorrectly when summing algebraic expressions",
+        "sets the total angle sum to 180° instead of 360°",
+        "fails to combine constants correctly, getting 10x - 40 = 360 instead of 10x = 360",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-trapezium",
+      "nodeId": "class9-mathematics-quadrilaterals-define-trapezium",
+      "question": "Which statement precisely defines a trapezium?",
+      "options": [
+        "A quadrilateral in which all four sides are unequal",
+        "A quadrilateral having both pairs of opposite sides equal",
+        "A quadrilateral with two pairs of perpendicular adjacent sides",
+        "A quadrilateral having at least one pair of parallel opposite sides"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks a trapezium requires all four sides to be of different lengths",
+        "confuses a trapezium with a parallelogram",
+        "confuses parallelism with perpendicularity",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-isosceles-trapezium",
+      "nodeId": "class9-mathematics-quadrilaterals-define-isosceles-trapezium",
+      "question": "What defines an isosceles trapezium?",
+      "options": [
+        "A trapezium whose non-parallel sides are equal in length",
+        "A trapezium whose parallel sides are equal in length",
+        "A trapezium having two right angles",
+        "A trapezium whose diagonals are perpendicular"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the parallel bases must be equal rather than the non-parallel legs",
+        "confuses a right trapezium with an isosceles trapezium",
+        "confuses diagonal perpendicularity with the defining property of an isosceles trapezium"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-parallelogram",
+      "nodeId": "class9-mathematics-quadrilaterals-define-parallelogram",
+      "question": "Which of the following is the definition of a parallelogram?",
+      "options": [
+        "A quadrilateral whose diagonals intersect at 90°",
+        "A quadrilateral with only one pair of parallel sides",
+        "A quadrilateral with four equal sides and four equal angles",
+        "A quadrilateral in which both pairs of opposite sides are parallel"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a parallelogram with a rhombus or kite",
+        "confuses a parallelogram with a trapezium",
+        "confuses a parallelogram with a square",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-rhombus",
+      "nodeId": "class9-mathematics-quadrilaterals-define-rhombus",
+      "question": "What is the precise definition of a rhombus?",
+      "options": [
+        "A trapezium with equal non-parallel sides",
+        "A quadrilateral with four right angles",
+        "A parallelogram with all four sides of equal length",
+        "Any four-sided figure with perpendicular diagonals"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses a rhombus with an isosceles trapezium",
+        "confuses a rhombus with a rectangle",
+        "",
+        "thinks any quadrilateral with perpendicular diagonals (like a kite) is a rhombus"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-rectangle",
+      "nodeId": "class9-mathematics-quadrilaterals-define-rectangle",
+      "question": "Which of the following defines a rectangle?",
+      "options": [
+        "A parallelogram in which all four sides are equal",
+        "A trapezium with one pair of opposite sides equal",
+        "A quadrilateral with perpendicular diagonals",
+        "A parallelogram in which each angle is a right angle"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a rectangle with a rhombus",
+        "confuses a rectangle with an isosceles trapezium",
+        "confuses rectangle diagonal properties with rhombus/kite diagonal properties",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-square",
+      "nodeId": "class9-mathematics-quadrilaterals-define-square",
+      "question": "Which statement correctly defines a square?",
+      "options": [
+        "A rectangle with all four sides of equal length",
+        "Any quadrilateral with four equal sides",
+        "Any quadrilateral with four right angles",
+        "A parallelogram with unequal adjacent sides and right angles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a square with a general rhombus (omits the right-angle requirement)",
+        "confuses a square with a general rectangle (omits the equal-sides requirement)",
+        "defines an oblong rectangle instead of a square"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-define-kite",
+      "nodeId": "class9-mathematics-quadrilaterals-define-kite",
+      "question": "What is the defining property of a kite?",
+      "options": [
+        "A quadrilateral with two distinct pairs of equal adjacent sides",
+        "A quadrilateral with two pairs of parallel opposite sides",
+        "A quadrilateral with all four sides equal and no right angles",
+        "A quadrilateral with two pairs of equal opposite sides"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses a kite with a parallelogram",
+        "confuses a kite with a rhombus",
+        "confuses adjacent equal sides with opposite equal sides"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-hierarchy-classify",
+      "nodeId": "class9-mathematics-quadrilaterals-hierarchy-classify",
+      "question": "A quadrilateral has all four sides equal and all four interior angles equal to 90°. What is its most specific classification?",
+      "options": [
+        "Parallelogram",
+        "Rhombus",
+        "Rectangle",
+        "Square"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "chooses a broader category rather than the most specific classification",
+        "identifies side property but ignores the angle constraint specificity",
+        "identifies angle property but ignores the side constraint specificity",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-evaluate-subset-statements",
+      "nodeId": "class9-mathematics-quadrilaterals-evaluate-subset-statements",
+      "question": "Which of the following statements is mathematically TRUE?",
+      "options": [
+        "Every rectangle is a square",
+        "Every square is a rhombus",
+        "Every rhombus is a square",
+        "Every trapezium is a parallelogram"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "reverses the subset relationship between squares and rectangles",
+        "",
+        "reverses the subset relationship between squares and rhombuses",
+        "assumes every trapezium satisfies the two-pair parallel condition of parallelograms"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-diagonal-divides-two-congruent-triangles",
+      "nodeId": "class9-mathematics-quadrilaterals-diagonal-divides-two-congruent-triangles",
+      "question": "In proving that diagonal AC divides parallelogram ABCD into two congruent triangles (ΔABC ≅ ΔCDA), which congruence criterion is primarily used?",
+      "options": [
+        "SSA (using two sides and a non-included angle)",
+        "RHS (using right angles and the hypotenuse)",
+        "AAA (using corresponding equal angles)",
+        "ASA (using alternate interior angles and the common diagonal)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses an invalid congruence condition (SSA)",
+        "assumes the parallelogram has right angles",
+        "thinks AAA is a valid triangle congruence criterion",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-opposite-sides-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-state-opposite-sides-equal",
+      "question": "Which statement correctly expresses Theorem 8.2 about parallelograms?",
+      "options": [
+        "In a parallelogram, adjacent sides are equal",
+        "In a parallelogram, diagonals are equal",
+        "In a parallelogram, opposite sides are equal",
+        "In a parallelogram, all four sides are equal"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses opposite sides with adjacent sides",
+        "confuses side equality with diagonal equality (which holds only in rectangles/squares)",
+        "",
+        "confuses a general parallelogram with a rhombus"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+      "question": "Why are opposite sides of a parallelogram ABCD equal (AB = CD and BC = DA)?",
+      "options": [
+        "Because they are corresponding parts of congruent triangles (CPCTC) formed by a diagonal",
+        "Because consecutive interior angles sum to 180°",
+        "Because the diagonals intersect at right angles",
+        "Because all four interior angles are equal"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses angle properties with the direct geometric justification for side lengths",
+        "assumes diagonal perpendicularity holds for all parallelograms",
+        "assumes all parallelograms have four equal angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-opposite-angles-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-state-opposite-angles-equal",
+      "question": "According to Theorem 8.4, what is true about the angles of any parallelogram ABCD?",
+      "options": [
+        "Adjacent angles are equal: ∠A = ∠B and ∠C = ∠D",
+        "Opposite angles are complementary: ∠A + ∠C = 90°",
+        "Opposite angles are equal: ∠A = ∠C and ∠B = ∠D",
+        "All four angles are equal to 90°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses adjacent angles with opposite angles",
+        "confuses angle equality with complementary relationship",
+        "",
+        "assumes every parallelogram must be a rectangle"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-opposite-angles-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-opposite-angles-equal",
+      "question": "In parallelogram ABCD, how do we prove ∠A = ∠C using consecutive interior angle properties?",
+      "options": [
+        "∠A = 90° and ∠C = 90°, hence ∠A = ∠C",
+        "∠A + ∠C = 180° and ∠B + ∠D = 180°, so ∠A = ∠C",
+        "∠A + ∠B + ∠C + ∠D = 360°, so dividing by 4 gives ∠A = ∠C",
+        "∠A + ∠B = 180° and ∠B + ∠C = 180°, so ∠A = 180° - ∠B = ∠C"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes the angles of any parallelogram are right angles",
+        "assumes opposite angles are supplementary instead of consecutive angles",
+        "assumes all four angles are equal by dividing 360° by 4",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-consecutive-angles-supplementary",
+      "nodeId": "class9-mathematics-quadrilaterals-consecutive-angles-supplementary",
+      "question": "Why are consecutive angles in a parallelogram ABCD (such as ∠A and ∠B) supplementary?",
+      "options": [
+        "They are alternate interior angles between parallel lines",
+        "They form a linear pair on a single straight line",
+        "They are consecutive interior angles on the same side of transversal AB intersecting parallel lines AD and BC",
+        "They are vertically opposite angles"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses consecutive interior angles with alternate interior angles",
+        "confuses consecutive interior angles with a linear pair",
+        "",
+        "confuses consecutive interior angles with vertically opposite angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-diagonals-bisect-each-other",
+      "nodeId": "class9-mathematics-quadrilaterals-state-diagonals-bisect-each-other",
+      "question": "Which of the following correctly states Theorem 8.6 regarding the diagonals of a parallelogram?",
+      "options": [
+        "The diagonals of a parallelogram bisect each other",
+        "The diagonals of a parallelogram are equal in length",
+        "The diagonals of a parallelogram are perpendicular to each other",
+        "The diagonals of a parallelogram bisect the corner angles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses general parallelograms with rectangles",
+        "confuses general parallelograms with rhombuses",
+        "confuses general parallelograms with rhombuses regarding angle bisectors"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other",
+      "question": "In parallelogram ABCD with diagonals intersecting at O, which triangle congruence proves that OA = OC and OB = OD?",
+      "options": [
+        "ΔAOB ≅ ΔBOC by SSS criterion",
+        "ΔAOB ≅ ΔCOD by ASA criterion",
+        "ΔABC ≅ ΔCDA by RHS criterion",
+        "ΔAOD ≅ ΔBOC by AAA criterion"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "attempts to use adjacent triangles which are not necessarily congruent in a parallelogram",
+        "",
+        "uses full-half triangles and assumes RHS without right angles",
+        "uses AAA which is not a valid congruence criterion"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-find-sides-parallelogram",
+      "nodeId": "class9-mathematics-quadrilaterals-find-sides-parallelogram",
+      "question": "In a parallelogram ABCD, AB = (3x - 4) cm and CD = (x + 6) cm. What is the length of side AB?",
+      "options": [
+        "5 cm",
+        "15 cm",
+        "11 cm",
+        "22 cm"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "finds the value of x (x = 5) but forgets to substitute it to find the side length AB",
+        "substitutes x = 5 incorrectly as 3(5) = 15 forgetting to subtract 4",
+        "",
+        "adds the two side expressions together instead of setting them equal"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-find-angles-parallelogram",
+      "nodeId": "class9-mathematics-quadrilaterals-find-angles-parallelogram",
+      "question": "In a parallelogram ABCD, ∠A = 70°. What is the measure of ∠B?",
+      "options": [
+        "70°",
+        "110°",
+        "20°",
+        "140°"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks consecutive angles are equal rather than supplementary (confuses ∠B with opposite angle ∠C)",
+        "",
+        "subtracts 70° from 90° instead of 180°",
+        "doubles the angle thinking opposite angles sum to consecutive angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-find-diagonal-segments",
+      "nodeId": "class9-mathematics-quadrilaterals-find-diagonal-segments",
+      "question": "The diagonals of a parallelogram ABCD intersect at O. If AC = 16 cm and BD = 12 cm, what is the length of OA + OB?",
+      "options": [
+        "28 cm",
+        "20 cm",
+        "7 cm",
+        "14 cm"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "adds full diagonal lengths AC + BD instead of the half segments OA + OB",
+        "averages the lengths or computes incorrectly",
+        "halves the sum a second time",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-rectangle-diagonals-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-rectangle-diagonals-equal",
+      "question": "To prove that the diagonals AC and BD of rectangle ABCD are equal, which pair of triangles is shown to be congruent using SAS?",
+      "options": [
+        "ΔABC and ΔADC",
+        "ΔAOB and ΔCOD",
+        "ΔABC and ΔDCB",
+        "ΔAOD and ΔBOC"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses triangles that share diagonal AC, which cannot prove AC = BD",
+        "uses triangles containing half-diagonals instead of full diagonals",
+        "",
+        "selects opposite diagonal sub-triangles which only prove bisection, not equality of full diagonals"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-rhombus-diagonals-perpendicular",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-rhombus-diagonals-perpendicular",
+      "question": "In a rhombus ABCD with diagonals intersecting at O, which step proves that the diagonals are perpendicular (AC ⊥ BD)?",
+      "options": [
+        "Showing ΔABC ≅ ΔCDA using SSS criterion",
+        "Showing ΔAOB ≅ ΔCOD to get ∠AOB = ∠COD",
+        "Showing ΔAOB ≅ ΔCOB to get ∠AOB = ∠COB = 90° as a linear pair",
+        "Showing ∠A + ∠B = 180°"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "proves diagonal divides rhombus into congruent triangles, which does not address diagonal angles",
+        "proves vertically opposite angles are equal, which does not prove they are 90°",
+        "",
+        "states consecutive angle property of parallelograms without proving perpendicularity"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-square-diagonals-equal-perpendicular",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-square-diagonals-equal-perpendicular",
+      "question": "Which set of properties correctly describes the diagonals of a square?",
+      "options": [
+        "Equal in length and bisect each other at right angles",
+        "Perpendicular to each other but unequal in length",
+        "Equal in length but not perpendicular",
+        "Bisect each other at 60° angles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses square diagonals with general rhombus diagonals",
+        "confuses square diagonals with non-square rectangle diagonals",
+        "incorrectly assumes an equilateral triangle angle for the diagonal intersection"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-kite-properties",
+      "nodeId": "class9-mathematics-quadrilaterals-kite-properties",
+      "question": "In a kite ABCD where AB = AD and CB = CD, which of the following is always true about its diagonals AC and BD?",
+      "options": [
+        "AC and BD are equal in length",
+        "AC is perpendicular to BD and AC bisects BD",
+        "AC and BD bisect each other",
+        "BD bisects AC and both diagonals are equal"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the diagonals of a kite must be equal",
+        "",
+        "thinks both diagonals bisect each other (confusing kite with parallelogram)",
+        "confuses which diagonal is bisected by the main diagonal of symmetry"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-converse-opposite-sides-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-converse-opposite-sides-equal",
+      "question": "What does Theorem 8.3 state?",
+      "options": [
+        "If each pair of opposite sides of a quadrilateral is equal, then it is a parallelogram",
+        "If one pair of opposite sides of a quadrilateral is equal, then it is a parallelogram",
+        "If all four sides of a quadrilateral are equal, then it is a rectangle",
+        "If diagonals of a quadrilateral are equal, then opposite sides are equal"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "omits the requirement that BOTH pairs of opposite sides must be equal",
+        "confuses equal sides with rectangle properties",
+        "confuses diagonal equality with opposite side equality"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-converse-opposite-angles-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-converse-opposite-angles-equal",
+      "question": "Theorem 8.5 states that a quadrilateral is a parallelogram if:",
+      "options": [
+        "One pair of opposite angles is equal",
+        "Each pair of opposite angles is equal",
+        "All four interior angles sum to 360°",
+        "Adjacent angles are complementary"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes a single pair of equal opposite angles is sufficient (e.g., kite)",
+        "",
+        "states the general property of all quadrilaterals rather than a condition for parallelograms",
+        "confuses supplementary adjacent angles with complementary angles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-converse-diagonals-bisect",
+      "nodeId": "class9-mathematics-quadrilaterals-converse-diagonals-bisect",
+      "question": "If the diagonals of a quadrilateral bisect each other, what can we conclude about the quadrilateral?",
+      "options": [
+        "It is always a parallelogram",
+        "It must be a rhombus",
+        "It must be a rectangle",
+        "It must be a square"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes diagonal bisection implies perpendicular diagonals (rhombus)",
+        "assumes diagonal bisection implies equal diagonals (rectangle)",
+        "assumes diagonal bisection implies all square properties"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-one-pair-equal-and-parallel",
+      "nodeId": "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel",
+      "question": "Which condition on a single pair of opposite sides AB and CD is SUFFICIENT to prove that ABCD is a parallelogram?",
+      "options": [
+        "AB is parallel to CD and AD is equal to BC",
+        "AB is parallel to CD only",
+        "AB is equal to CD and AB is parallel to CD",
+        "AB is equal to CD only"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses one pair parallel and the other pair equal (which could be an isosceles trapezium)",
+        "thinks having one pair of parallel sides alone makes it a parallelogram (which is a trapezium)",
+        "",
+        "thinks having one pair of equal sides alone makes it a parallelogram"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-test-parallelogram-conditions",
+      "nodeId": "class9-mathematics-quadrilaterals-test-parallelogram-conditions",
+      "question": "In quadrilateral ABCD, AB = 4 cm, CD = 4 cm, AD = 5 cm, and BC = 5 cm. Is ABCD a parallelogram, and why?",
+      "options": [
+        "No, because the adjacent sides are not equal",
+        "Yes, because both pairs of opposite sides are equal",
+        "Yes, but only if all four angles are 90°",
+        "No, because diagonals must be given as equal"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes adjacent sides must be equal for a quadrilateral to be a parallelogram",
+        "",
+        "confuses parallelogram condition with rectangle condition",
+        "thinks diagonal equality is necessary for a quadrilateral to be a parallelogram"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-equal-diagonals-parallelogram-rectangle",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-equal-diagonals-parallelogram-rectangle",
+      "question": "If the diagonals of a parallelogram ABCD are equal (AC = BD), how do we prove that ABCD is a rectangle?",
+      "options": [
+        "Prove ΔAOB ≅ ΔCOD by SAS, which directly shows all angles are 90°",
+        "Prove ΔABC ≅ ΔDCB by SSS, giving ∠B = ∠C; since ∠B + ∠C = 180°, each must be 90°",
+        "Use the fact that equal diagonals always intersect at right angles",
+        "Show that all four sides must become equal, making it a square"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks opposite triangle congruence at diagonal intersection proves 90° corner angles",
+        "",
+        "confuses equal diagonals with perpendicular diagonals",
+        "confuses rectangle proof with square proof"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-perp-diagonals-parallelogram-rhombus",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-perp-diagonals-parallelogram-rhombus",
+      "question": "If the diagonals of a parallelogram ABCD are perpendicular, which method proves it is a rhombus?",
+      "options": [
+        "Show AC = BD using CPCTC",
+        "Show ΔABC ≅ ΔCDA using SSS to conclude all angles are 90°",
+        "Show ΔAOB ≅ ΔAOD using SAS (OA common, OB = OD, ∠AOB = ∠AOD = 90°), proving AB = AD",
+        "Show that the perimeter equals 4 times the diagonal length"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses perpendicular diagonals with equal diagonals",
+        "confuses proving adjacent sides equal (rhombus) with proving right angles (rectangle)",
+        "",
+        "uses an incorrect formula relating perimeter directly to diagonal length"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-bisectors-form-rectangle",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-bisectors-form-rectangle",
+      "question": "Why is the quadrilateral formed by the angle bisectors of the four interior angles of a parallelogram always a rectangle?",
+      "options": [
+        "The angle bisectors are equal in length to the diagonals of the parallelogram",
+        "The bisectors of opposite angles are always perpendicular to each other",
+        "The bisectors of consecutive supplementary angles intersect at (180°/2) = 90°, making all four angles 90°",
+        "The angle bisectors create four equilateral triangles inside the parallelogram"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "assumes bisector lengths equal diagonal lengths without proof",
+        "confuses intersection of consecutive angle bisectors with opposite angle bisectors",
+        "",
+        "assumes the triangles formed inside are equilateral"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-midpoint-theorem",
+      "nodeId": "class9-mathematics-quadrilaterals-state-midpoint-theorem",
+      "question": "Which statement correctly states the Midpoint Theorem for a triangle?",
+      "options": [
+        "The line segment joining the midpoints of two sides of a triangle is equal in length to the third side",
+        "The line segment joining the midpoints of two sides of a triangle is perpendicular to the third side",
+        "The line segment joining any point on one side to the midpoint of another side bisects the area",
+        "The line segment joining the midpoints of two sides of a triangle is parallel to the third side and equal to half of it"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets the factor of 1/2 for the segment length",
+        "confuses parallel orientation with perpendicular orientation",
+        "confuses midpoint theorem with median area properties",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-midpoint-theorem",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-midpoint-theorem",
+      "question": "In the standard proof of the Midpoint Theorem for ΔABC with midpoints E of AB and F of AC, what key construction is made?",
+      "options": [
+        "Draw a perpendicular line from A to the base BC",
+        "Extend EF to D such that EF = FD, and draw CD parallel to BA",
+        "Draw the angle bisector of ∠A to meet BC at its midpoint",
+        "Connect E to C and F to B to create two medians"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the construction with an altitude construction",
+        "",
+        "confuses the construction with an angle bisector construction",
+        "confuses the construction with drawing triangle medians"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-apply-midpoint-theorem-lengths",
+      "nodeId": "class9-mathematics-quadrilaterals-apply-midpoint-theorem-lengths",
+      "question": "In ΔABC, D and E are the midpoints of sides AB and AC respectively. If BC = 14 cm, what is the length of DE?",
+      "options": [
+        "7 cm",
+        "28 cm",
+        "14 cm",
+        "3.5 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "doubles the base length instead of halving it (DE = 2 × BC)",
+        "assumes DE is equal in length to the base BC",
+        "divides BC by 4 instead of 2"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-state-converse-midpoint-theorem",
+      "nodeId": "class9-mathematics-quadrilaterals-state-converse-midpoint-theorem",
+      "question": "What is the statement of the Converse of the Midpoint Theorem?",
+      "options": [
+        "A line segment joining any vertex to the midpoint of the opposite side bisects the angle",
+        "The line joining the midpoints of two sides of a triangle is parallel to the third side",
+        "If a line divides two sides of a triangle in the same ratio, it is parallel to the third side",
+        "The line drawn through the midpoint of one side of a triangle, parallel to another side, bisects the third side"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the theorem with median/angle bisector properties",
+        "states the direct Midpoint Theorem instead of its converse",
+        "states Thales' theorem converse rather than the specific midpoint converse",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-converse-midpoint-theorem",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-converse-midpoint-theorem",
+      "question": "In proving the Converse of the Midpoint Theorem for line l passing through midpoint E of AB parallel to BC, how is it proved that l bisects AC at F?",
+      "options": [
+        "By assuming F is not the midpoint and proving the angle sum of ΔABC is not 180°",
+        "By drawing perpendiculars from E and F to BC and showing they are equal",
+        "By drawing CM || BA to meet EF extended at D, showing EBCD is a parallelogram so ΔAEF ≅ ΔCDF",
+        "By showing that ΔABC is an isosceles triangle"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "attempts a flawed proof by contradiction on angle sum",
+        "confuses the proof technique with equal distance between parallel lines",
+        "",
+        "assumes the triangle must be isosceles to prove the theorem"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-apply-converse-midpoint-theorem",
+      "nodeId": "class9-mathematics-quadrilaterals-apply-converse-midpoint-theorem",
+      "question": "In trapezium ABCD with AB || DC, E is the midpoint of AD. A line through E parallel to AB intersects BC at F. What is F?",
+      "options": [
+        "F is a point such that BF = 2 FC",
+        "F is the midpoint of BC",
+        "F is a point such that BF = (1/3) BC",
+        "F is only the midpoint if ABCD is an isosceles trapezium"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the parallel line divides the non-parallel side in a 2:1 ratio",
+        "",
+        "incorrectly applies a 1:3 ratio",
+        "believes the converse midpoint property in a trapezium requires equal legs"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+      "question": "Why is the quadrilateral PQRS formed by joining the midpoints of the sides of ANY quadrilateral ABCD always a parallelogram?",
+      "options": [
+        "Drawing diagonal AC shows both PQ and SR are parallel to AC and equal to (1/2)AC, so PQ = SR and PQ || SR",
+        "Because all four sides of PQRS are automatically equal to each other",
+        "Because the diagonals of ABCD are always perpendicular",
+        "Because joining midpoints always forms four congruent right triangles"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes the resulting figure must be a rhombus with 4 equal sides",
+        "assumes diagonal perpendicularity of the outer quadrilateral is required",
+        "assumes the corner triangles are always right triangles"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-midpoints-rectangle-is-rhombus",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-midpoints-rectangle-is-rhombus",
+      "question": "When the midpoints of the sides of a rectangle are joined in order, why is the resulting figure a rhombus?",
+      "options": [
+        "Its sides are equal to half the diagonals of the rectangle, and the rectangle's diagonals are equal",
+        "All four interior angles of the resulting figure must be 90°",
+        "The diagonals of the original rectangle are perpendicular",
+        "A rectangle has all four sides equal"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses rhombus with rectangle (thinks the inner figure has 90° angles)",
+        "incorrectly assumes rectangle diagonals are perpendicular",
+        "confuses a rectangle with a square/rhombus having equal sides"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-midpoints-rhombus-is-rectangle",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-midpoints-rhombus-is-rectangle",
+      "question": "When the midpoints of the sides of a rhombus are joined in order, why is the resulting figure a rectangle?",
+      "options": [
+        "The sides of the inner figure are parallel to the rhombus diagonals, which intersect at 90°",
+        "Because the diagonals of a rhombus are equal in length",
+        "Because the inner figure has all four sides of equal length",
+        "Because every parallelogram with midpoints joined becomes a rectangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "falsely assumes rhombus diagonals are equal in length",
+        "confuses proving a rectangle with proving a rhombus",
+        "generalizes a specific rhombus property to all parallelograms"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-midpoints-square-is-square",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-midpoints-square-is-square",
+      "question": "Why is the quadrilateral formed by joining the midpoints of the sides of a square also a square?",
+      "options": [
+        "The sides of the original square are perpendicular, which makes the inner diagonals equal only",
+        "Any quadrilateral formed inside a square is always a square",
+        "Diagonals of the original square are both equal (making sides equal) and perpendicular (making angles 90°)",
+        "Because the Midpoint Theorem applies only to squares"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "fails to identify both equal and perpendicular diagonal conditions",
+        "makes an unfounded generalization that any inscribed figure in a square is a square",
+        "",
+        "thinks the Midpoint Theorem is restricted to squares"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-midpoints-opposite-sides-bisect",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-midpoints-opposite-sides-bisect",
+      "question": "How is it proved that the line segments joining the midpoints of opposite sides of any quadrilateral bisect each other?",
+      "options": [
+        "They are equal in length to the sides of the original quadrilateral",
+        "They are the diagonals of the Varignon parallelogram formed by joining the midpoints, which bisect each other",
+        "They intersect each other at right angles in every quadrilateral",
+        "They form four equilateral triangles inside the quadrilateral"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the inner bimedians with the outer side lengths",
+        "",
+        "assumes the bimedians must be perpendicular in any quadrilateral",
+        "assumes the inner triangles are equilateral"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-diagonal-trisected-midpoints",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-diagonal-trisected-midpoints",
+      "question": "In parallelogram ABCD, E and F are the midpoints of sides AB and CD. Segments AF and CE intersect diagonal BD at P and Q. What property explains why BP = PQ = QD?",
+      "options": [
+        "Because AF and CE are perpendicular to diagonal BD",
+        "Because the diagonals of a parallelogram always divide each other in a 1:2 ratio",
+        "Because triangles ΔAPB and ΔCQD are equilateral triangles",
+        "Applying the Converse of Midpoint Theorem in ΔABP and ΔCDQ where lines are parallel since AECF is a parallelogram"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes the lines joining midpoints are perpendicular to the diagonal",
+        "confuses diagonal bisection (1:1 ratio) with trisection without geometric reasoning",
+        "assumes sub-triangles are equilateral",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-intercept-theorem-equal-intercepts",
+      "nodeId": "class9-mathematics-quadrilaterals-intercept-theorem-equal-intercepts",
+      "question": "Three parallel lines l, m, and n cut off equal intercepts AB = BC on a transversal p. If another transversal q intersects these lines at D, E, and F, what is the relation between DE and EF?",
+      "options": [
+        "DE = (1/2) EF",
+        "DE = 2 EF",
+        "DE + EF = AB",
+        "DE = EF"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the second transversal intercepts are halved",
+        "believes the intercepts on the second transversal double in length",
+        "confuses intercept equality on transversal q with the actual length of AB on transversal p",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-medial-triangle-congruence",
+      "nodeId": "class9-mathematics-quadrilaterals-medial-triangle-congruence",
+      "question": "In ΔABC, D, E, and F are the midpoints of sides BC, CA, and AB. The segments DE, EF, and FD divide ΔABC into four triangles. How are these four triangles related?",
+      "options": [
+        "Only the central triangle is congruent to the original triangle",
+        "All four triangles are congruent to each other by SSS",
+        "The three outer triangles are congruent, but the central triangle has a different area",
+        "The four triangles are similar but none are congruent"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses medial triangle with the whole triangle",
+        "",
+        "thinks the central triangle has different dimensions than the corner triangles",
+        "confuses congruence with similarity only"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-perimeter-medial-triangle",
+      "nodeId": "class9-mathematics-quadrilaterals-perimeter-medial-triangle",
+      "question": "The perimeter of ΔABC is 36 cm. D, E, and F are the midpoints of sides AB, BC, and CA. What is the perimeter of ΔDEF?",
+      "options": [
+        "18 cm",
+        "9 cm",
+        "12 cm",
+        "72 cm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "divides the perimeter by 4 (confusing perimeter ratio with area ratio 1/4)",
+        "divides the perimeter by 3 (number of sides)",
+        "doubles the perimeter instead of halving it"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-prove-trapezium-midpoints-parallel",
+      "nodeId": "class9-mathematics-quadrilaterals-prove-trapezium-midpoints-parallel",
+      "question": "In trapezium ABCD with AB || DC, E and F are the midpoints of non-parallel sides AD and BC. What is the length of EF in terms of the bases AB and CD?",
+      "options": [
+        "EF = AB - CD",
+        "EF = (1/2)(AB + CD)",
+        "EF = (1/2)(AB - CD)",
+        "EF = √(AB × CD)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the midline is the difference of the bases",
+        "",
+        "confuses the formula for the segment joining midpoints of diagonals with the midline formula",
+        "confuses the arithmetic mean of bases with the geometric mean"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-isosceles-trapezium-base-angles-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-isosceles-trapezium-base-angles-equal",
+      "question": "In an isosceles trapezium ABCD where AB || CD and AD = BC, what is the relationship between the base angles ∠A and ∠B?",
+      "options": [
+        "∠A + ∠B = 90°",
+        "∠A = ∠B",
+        "∠A + ∠B = 180°",
+        "∠A = 2 ∠B"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses base angles with complementary angles",
+        "",
+        "confuses base angles along the same base with consecutive angles between parallel lines",
+        "assumes one base angle is twice the other"
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-isosceles-trapezium-diagonals-equal",
+      "nodeId": "class9-mathematics-quadrilaterals-isosceles-trapezium-diagonals-equal",
+      "question": "In an isosceles trapezium ABCD with AB || CD and AD = BC, which triangle congruence proves that the diagonals AC and BD are equal?",
+      "options": [
+        "ΔABD ≅ ΔCDB by SSS",
+        "ΔAOB ≅ ΔCOD by AAA",
+        "ΔADC ≅ ΔBCD by RHS",
+        "ΔDAB ≅ ΔCBA by SAS (AD = BC, ∠DAB = ∠CBA, AB common)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "assumes diagonal equality (AC = BD) before it has been proved (circular reasoning for SSS)",
+        "uses AAA which cannot establish side equality / congruence",
+        "assumes right angles exist to use RHS in a general isosceles trapezium",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class9-mathematics-quadrilaterals-multi-step-geometric-proof",
+      "nodeId": "class9-mathematics-quadrilaterals-multi-step-geometric-proof",
+      "question": "In ΔABC, D, E, and F are the midpoints of AB, BC, and CA. To prove that BDEF is a parallelogram, which reasoning correctly synthesizes the theorems?",
+      "options": [
+        "By Midpoint Theorem, EF || AB (so EF || BD) and EF = BD; a quadrilateral with one pair of opposite sides equal and parallel is a parallelogram",
+        "By Midpoint Theorem, DE = EF and BD = DF, so all sides are equal making it a parallelogram",
+        "Because diagonal BE bisects ∠B, which automatically makes BDEF a parallelogram",
+        "Because ΔABC is divided into 4 congruent triangles, so any 2 triangles form a rectangle"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "falsely claims all four sides are equal without justification",
+        "assumes angle bisection of the corner angle defines a parallelogram",
+        "assumes joining two congruent triangles must always yield a rectangle"
+      ]
     }
   ]
 }

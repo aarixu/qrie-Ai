@@ -4073,6 +4073,897 @@
       ],
       "difficulty": 5,
       "topicRef": "class9-mathematics/triangles/inequalities-in-a-triangle"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-quadrilateral",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Quadrilateral",
+      "outcome": "Define a quadrilateral as a closed four-sided plane figure formed by joining four points in order such that no three points are collinear",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-vertices",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Vertices of Quadrilateral",
+      "outcome": "Identify and name the four vertices of a given quadrilateral",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-quadrilateral"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Sides of Quadrilateral",
+      "outcome": "Identify and name the four line segments that form the sides of a quadrilateral",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-quadrilateral"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Angles of Quadrilateral",
+      "outcome": "Identify and name the four interior angles of a quadrilateral",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-quadrilateral",
+        "class9-mathematics-lines-and-angles-define-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-diagonals",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Diagonals of Quadrilateral",
+      "outcome": "Identify and draw the two diagonals joining opposite vertices of a quadrilateral",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-vertices"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Opposite and Adjacent Sides",
+      "outcome": "Classify pairs of sides of a quadrilateral as opposite sides or adjacent (consecutive) sides",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-sides"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-identify-opposite-adjacent-angles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Identify Opposite and Adjacent Angles",
+      "outcome": "Classify pairs of angles of a quadrilateral as opposite angles or adjacent (consecutive) angles",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-angles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-convex-vs-concave",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Distinguish Convex and Concave Quadrilaterals",
+      "outcome": "Distinguish between convex and concave quadrilaterals based on whether all diagonals lie entirely in the interior",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-diagonals"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/introduction"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-angle-sum-property",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Angle Sum Property",
+      "outcome": "State that the sum of the four interior angles of a quadrilateral is 360°",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-angles"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/angle-sum-property-quadrilateral"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-angle-sum-property",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Angle Sum Property",
+      "outcome": "Prove that the sum of the angles of a quadrilateral is 360° by dividing it into two triangles with a diagonal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-angle-sum-property",
+        "class9-mathematics-quadrilaterals-identify-diagonals",
+        "class9-mathematics-lines-and-angles-state-angle-sum-triangle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/angle-sum-property-quadrilateral"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-find-fourth-angle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Calculate Missing Fourth Angle",
+      "outcome": "Calculate the measure of the fourth angle of a quadrilateral given the measures of the other three angles",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-angle-sum-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/angle-sum-property-quadrilateral"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-find-angles-given-ratios",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Calculate Angles in Given Ratio",
+      "outcome": "Calculate all four interior angles of a quadrilateral when given the ratio of their measures",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-angle-sum-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/angle-sum-property-quadrilateral"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-solve-algebraic-angle-sum",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Solve Algebraic Angle Equations",
+      "outcome": "Solve linear equations for an unknown variable x when the four angles of a quadrilateral are given as algebraic expressions in x",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-angle-sum-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/angle-sum-property-quadrilateral"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-trapezium",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Trapezium",
+      "outcome": "Define a trapezium as a quadrilateral with at least one pair of parallel opposite sides",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides",
+        "class9-mathematics-lines-and-angles-explain-parallel-lines"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-isosceles-trapezium",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Isosceles Trapezium",
+      "outcome": "Define an isosceles trapezium as a trapezium whose non-parallel sides are equal in length",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-trapezium"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-parallelogram",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Parallelogram",
+      "outcome": "Define a parallelogram as a quadrilateral in which both pairs of opposite sides are parallel",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides",
+        "class9-mathematics-lines-and-angles-explain-parallel-lines"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-rhombus",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Rhombus",
+      "outcome": "Define a rhombus as a parallelogram with all four sides of equal length",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-rectangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Rectangle",
+      "outcome": "Define a rectangle as a parallelogram in which each angle is a right angle",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-lines-and-angles-define-right-angle"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-square",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Square",
+      "outcome": "Define a square as a rectangle with all four sides equal, or a rhombus with each angle equal to 90°",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-rectangle",
+        "class9-mathematics-quadrilaterals-define-rhombus"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-define-kite",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Define Kite",
+      "outcome": "Define a kite as a quadrilateral with two distinct pairs of equal adjacent sides",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-identify-opposite-adjacent-sides"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-hierarchy-classify",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Classify Quadrilaterals Hierarchically",
+      "outcome": "Classify a given quadrilateral into its most specific category within the hierarchy of quadrilaterals",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-square",
+        "class9-mathematics-quadrilaterals-define-kite"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-evaluate-subset-statements",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Evaluate Category Inclusion Statements",
+      "outcome": "Evaluate whether true/false statements relating quadrilateral families (e.g., 'every square is a rhombus') are mathematically correct",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-hierarchy-classify"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-diagonal-divides-two-congruent-triangles",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Diagonal Divides Parallelogram into Congruent Triangles",
+      "outcome": "Prove Theorem 8.1: a diagonal of a parallelogram divides it into two congruent triangles using the ASA criterion",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-lines-and-angles-apply-alternate-interior-angles",
+        "class9-mathematics-triangles-apply-ASA"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-opposite-sides-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Opposite Sides of Parallelogram Equal",
+      "outcome": "State Theorem 8.2: in a parallelogram, opposite sides are equal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Opposite Sides of Parallelogram Equal",
+      "outcome": "Prove that opposite sides of a parallelogram are equal as a consequence of the diagonal dividing it into congruent triangles (CPCTC)",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-diagonal-divides-two-congruent-triangles",
+        "class9-mathematics-triangles-congruence-cpctc"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-opposite-angles-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Opposite Angles of Parallelogram Equal",
+      "outcome": "State Theorem 8.4: in a parallelogram, opposite angles are equal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-opposite-angles-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Opposite Angles of Parallelogram Equal",
+      "outcome": "Prove that opposite angles of a parallelogram are equal using congruent triangles or consecutive interior angle sums",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-diagonal-divides-two-congruent-triangles",
+        "class9-mathematics-lines-and-angles-apply-co-interior-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-consecutive-angles-supplementary",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Relate Consecutive Angles of Parallelogram",
+      "outcome": "Explain why adjacent angles of a parallelogram are supplementary using parallel lines and transversal properties",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-lines-and-angles-apply-co-interior-angles"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-diagonals-bisect-each-other",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Diagonals of Parallelogram Bisect Each Other",
+      "outcome": "State Theorem 8.6: the diagonals of a parallelogram bisect each other",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Diagonals Bisect Each Other",
+      "outcome": "Prove that the diagonals of a parallelogram bisect each other by establishing congruence of opposite triangle halves using ASA",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-diagonals-bisect-each-other",
+        "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+        "class9-mathematics-triangles-apply-ASA"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-find-sides-parallelogram",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Find Unknown Sides of Parallelogram",
+      "outcome": "Calculate unknown side lengths of a parallelogram using opposite side equalities",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-opposite-sides-equal"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-find-angles-parallelogram",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Find Unknown Angles of Parallelogram",
+      "outcome": "Calculate unknown angles of a parallelogram using opposite and consecutive angle properties",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-opposite-angles-equal",
+        "class9-mathematics-quadrilaterals-consecutive-angles-supplementary"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-find-diagonal-segments",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Find Diagonal Segments of Parallelogram",
+      "outcome": "Calculate unknown segment lengths formed by intersecting diagonals of a parallelogram",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-diagonals-bisect-each-other"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-rectangle-diagonals-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Diagonals of Rectangle are Equal",
+      "outcome": "Prove that the diagonals of a rectangle are equal in length using SAS triangle congruence",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-rectangle",
+        "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+        "class9-mathematics-triangles-apply-SAS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-rhombus-diagonals-perpendicular",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Diagonals of Rhombus are Perpendicular Bisectors",
+      "outcome": "Prove that the diagonals of a rhombus are perpendicular to each other using SSS congruence",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-rhombus",
+        "class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other",
+        "class9-mathematics-triangles-apply-SSS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-square-diagonals-equal-perpendicular",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Properties of Square Diagonals",
+      "outcome": "Prove that the diagonals of a square are equal and bisect each other at right angles",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-rectangle-diagonals-equal",
+        "class9-mathematics-quadrilaterals-prove-rhombus-diagonals-perpendicular"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-kite-properties",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Apply Properties of Kite",
+      "outcome": "State and apply that the diagonals of a kite are perpendicular and the main diagonal bisects the other diagonal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-kite",
+        "class9-mathematics-triangles-apply-SSS"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-converse-opposite-sides-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State/Prove Converse: Opposite Sides Equal",
+      "outcome": "State and prove Theorem 8.3: if each pair of opposite sides of a quadrilateral is equal, then it is a parallelogram",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-triangles-apply-SSS",
+        "class9-mathematics-lines-and-angles-converse-alternate-interior-angles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-converse-opposite-angles-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State/Prove Converse: Opposite Angles Equal",
+      "outcome": "State and prove Theorem 8.5: if in a quadrilateral, each pair of opposite angles is equal, then it is a parallelogram",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-quadrilaterals-prove-angle-sum-property",
+        "class9-mathematics-lines-and-angles-converse-co-interior-angles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-converse-diagonals-bisect",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State/Prove Converse: Diagonals Bisect Each Other",
+      "outcome": "State and prove Theorem 8.7: if the diagonals of a quadrilateral bisect each other, then it is a parallelogram",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-triangles-apply-SAS",
+        "class9-mathematics-lines-and-angles-converse-alternate-interior-angles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State/Prove One Pair Equal and Parallel Criterion",
+      "outcome": "State and prove Theorem 8.8: a quadrilateral is a parallelogram if a pair of opposite sides is equal and parallel",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-parallelogram",
+        "class9-mathematics-triangles-apply-SAS",
+        "class9-mathematics-lines-and-angles-converse-alternate-interior-angles"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-test-parallelogram-conditions",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Test if Quadrilateral is Parallelogram",
+      "outcome": "Determine whether a given quadrilateral is a parallelogram by checking side, angle, or diagonal sufficiency conditions",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-converse-opposite-sides-equal",
+        "class9-mathematics-quadrilaterals-converse-diagonals-bisect",
+        "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-equal-diagonals-parallelogram-rectangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Parallelogram with Equal Diagonals is Rectangle",
+      "outcome": "Prove that if the diagonals of a parallelogram are equal, then it is a rectangle",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-rectangle",
+        "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+        "class9-mathematics-triangles-apply-SSS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-perp-diagonals-parallelogram-rhombus",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Parallelogram with Perpendicular Diagonals is Rhombus",
+      "outcome": "Prove that if the diagonals of a parallelogram are perpendicular, then it is a rhombus",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-rhombus",
+        "class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other",
+        "class9-mathematics-triangles-apply-SAS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/condition-for-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-bisectors-form-rectangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Angle Bisectors of Parallelogram Form Rectangle",
+      "outcome": "Prove that the quadrilateral formed by the angle bisectors of the interior angles of a parallelogram is a rectangle",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-consecutive-angles-supplementary",
+        "class9-mathematics-lines-and-angles-apply-angle-sum-triangle",
+        "class9-mathematics-quadrilaterals-define-rectangle"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/properties-of-parallelogram"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-midpoint-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Midpoint Theorem",
+      "outcome": "State Theorem 8.9 (The Midpoint Theorem): the line segment joining the midpoints of two sides of a triangle is parallel to the third side and half of it",
+      "prerequisites": [
+        "class9-mathematics-triangles-define-triangle",
+        "class9-mathematics-lines-and-angles-explain-parallel-lines"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-midpoint-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Midpoint Theorem",
+      "outcome": "Prove the Midpoint Theorem by extending the segment, drawing a parallel line through the third vertex, and using parallelogram properties",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-midpoint-theorem",
+        "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel",
+        "class9-mathematics-triangles-apply-ASA"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-apply-midpoint-theorem-lengths",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Calculate Lengths via Midpoint Theorem",
+      "outcome": "Calculate lengths of segments connecting midpoints of triangle sides using the Midpoint Theorem",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-midpoint-theorem"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-state-converse-midpoint-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "State Converse of Midpoint Theorem",
+      "outcome": "State Theorem 8.10 (Converse of Midpoint Theorem): the line drawn through the midpoint of one side of a triangle, parallel to another side, bisects the third side",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-midpoint-theorem"
+      ],
+      "difficulty": 1,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-converse-midpoint-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Converse of Midpoint Theorem",
+      "outcome": "Prove the converse of the Midpoint Theorem using construction of a parallel line and parallelogram properties",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-converse-midpoint-theorem",
+        "class9-mathematics-quadrilaterals-prove-opposite-sides-equal",
+        "class9-mathematics-triangles-apply-ASA"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-apply-converse-midpoint-theorem",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Apply Converse of Midpoint Theorem",
+      "outcome": "Apply the converse of the Midpoint Theorem to prove that a given line segment bisects a triangle's side or a quadrilateral's side",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-state-converse-midpoint-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Varignon Parallelogram Theorem",
+      "outcome": "Prove that the quadrilateral formed by joining the midpoints of the sides of any quadrilateral in order is a parallelogram",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-midpoint-theorem",
+        "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-midpoints-rectangle-is-rhombus",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Midpoints of Rectangle Form Rhombus",
+      "outcome": "Prove that the figure formed by joining the midpoints of adjacent sides of a rectangle is a rhombus",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+        "class9-mathematics-quadrilaterals-prove-rectangle-diagonals-equal",
+        "class9-mathematics-quadrilaterals-define-rhombus"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-midpoints-rhombus-is-rectangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Midpoints of Rhombus Form Rectangle",
+      "outcome": "Prove that the figure formed by joining the midpoints of adjacent sides of a rhombus is a rectangle",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+        "class9-mathematics-quadrilaterals-prove-rhombus-diagonals-perpendicular",
+        "class9-mathematics-quadrilaterals-define-rectangle"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-midpoints-square-is-square",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Midpoints of Square Form Square",
+      "outcome": "Prove that the quadrilateral formed by joining the midpoints of adjacent sides of a square is itself a square",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-midpoints-rectangle-is-rhombus",
+        "class9-mathematics-quadrilaterals-prove-midpoints-rhombus-is-rectangle",
+        "class9-mathematics-quadrilaterals-define-square"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-midpoints-opposite-sides-bisect",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Segments Joining Midpoints Bisect Each Other",
+      "outcome": "Prove that the line segments joining the midpoints of opposite sides of a quadrilateral bisect each other",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-varignon-parallelogram",
+        "class9-mathematics-quadrilaterals-prove-diagonals-bisect-each-other"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-diagonal-trisected-midpoints",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Trisection of Parallelogram Diagonal",
+      "outcome": "Prove that the line segments joining vertices of a parallelogram to the midpoints of opposite sides trisect the diagonal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-apply-converse-midpoint-theorem",
+        "class9-mathematics-quadrilaterals-one-pair-equal-and-parallel"
+      ],
+      "difficulty": 5,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-intercept-theorem-equal-intercepts",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Apply Three Parallel Lines Intercept Theorem",
+      "outcome": "State and apply that if three parallel lines make equal intercepts on one transversal, they make equal intercepts on any other transversal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-apply-converse-midpoint-theorem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-medial-triangle-congruence",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Medial Triangle Congruence Partition",
+      "outcome": "Prove that the three segments joining the midpoints of the sides of a triangle divide it into four congruent triangles",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-midpoint-theorem",
+        "class9-mathematics-triangles-apply-SSS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-perimeter-medial-triangle",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Relate Perimeter of Medial Triangle",
+      "outcome": "Calculate the perimeter of the medial triangle as half the perimeter of the original triangle",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-apply-midpoint-theorem-lengths"
+      ],
+      "difficulty": 2,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-prove-trapezium-midpoints-parallel",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Trapezium Midpoint Line Parallel to Bases",
+      "outcome": "Prove that the segment joining the midpoints of the non-parallel sides of a trapezium is parallel to the bases and equal to half their sum",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-trapezium",
+        "class9-mathematics-quadrilaterals-prove-midpoint-theorem"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-isosceles-trapezium-base-angles-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Base Angles of Isosceles Trapezium Equal",
+      "outcome": "Prove that the base angles of an isosceles trapezium are equal",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-define-isosceles-trapezium",
+        "class9-mathematics-triangles-apply-angles-equal-sides",
+        "class9-mathematics-quadrilaterals-define-parallelogram"
+      ],
+      "difficulty": 4,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-isosceles-trapezium-diagonals-equal",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Prove Diagonals of Isosceles Trapezium Equal",
+      "outcome": "Prove that the diagonals of an isosceles trapezium are equal in length",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-isosceles-trapezium-base-angles-equal",
+        "class9-mathematics-triangles-apply-SAS"
+      ],
+      "difficulty": 3,
+      "topicRef": "class9-mathematics/quadrilaterals/types-of-quadrilaterals"
+    },
+    {
+      "id": "class9-mathematics-quadrilaterals-multi-step-geometric-proof",
+      "klass": 9,
+      "subject": "Mathematics",
+      "chapter": "quadrilaterals",
+      "title": "Synthesize Quadrilateral Proofs",
+      "outcome": "Synthesize multiple theorems (parallelogram conditions, midpoint theorem, triangle congruence) to construct multi-step geometric proofs",
+      "prerequisites": [
+        "class9-mathematics-quadrilaterals-prove-diagonal-trisected-midpoints",
+        "class9-mathematics-quadrilaterals-prove-bisectors-form-rectangle",
+        "class9-mathematics-quadrilaterals-prove-trapezium-midpoints-parallel"
+      ],
+      "difficulty": 5,
+      "topicRef": "class9-mathematics/quadrilaterals/midpoint-theorem"
     }
   ]
 }

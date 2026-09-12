@@ -3832,6 +3832,865 @@
       ],
       "difficulty": 3,
       "topicRef": "class8-mathematics/factorisation/finding-errors-in-algebra"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-recall-bar-graph-features",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Recall Bar Graph Features",
+      "outcome": "State the key features of a bar graph including uniform width bars and equal spacing between bars",
+      "prerequisites": [
+        "class8-mathematics-data-handling-distinguish-bar-graph-and-histogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-bar-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Bar Graph Data",
+      "outcome": "Read and compare category frequencies displayed on a single bar graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-recall-bar-graph-features"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-define-double-bar-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Define Double Bar Graph",
+      "outcome": "Identify a double bar graph as a tool to compare two sets of data simultaneously across categories",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-bar-graph"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpret-double-bar-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpret Double Bar Graph",
+      "outcome": "Compare two data sets for a given category by reading adjacent bars on a double bar graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-double-bar-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-recall-pie-graph-features",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Recall Pie Graph Features",
+      "outcome": "State that a pie graph or circle graph shows the relationship between a whole circle and its proportional parts",
+      "prerequisites": [
+        "class8-mathematics-data-handling-read-pie-chart-values"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpret-pie-graph-percentages",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpret Pie Graph Percentages",
+      "outcome": "Calculate absolute values from sector percentages or fractional proportions displayed in a pie graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-recall-pie-graph-features",
+        "class8-mathematics-data-handling-compare-pie-chart-sectors"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-recall-histogram-features",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Recall Histogram Features",
+      "outcome": "Identify a histogram as a bar representation for continuous grouped data without spaces between bars",
+      "prerequisites": [
+        "class8-mathematics-data-handling-distinguish-bar-graph-and-histogram",
+        "class8-mathematics-data-handling-plot-histogram"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-histogram-intervals",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Histogram Intervals",
+      "outcome": "Determine the number of entries in a specific continuous class interval from a histogram",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-recall-histogram-features",
+        "class8-mathematics-data-handling-read-histogram-frequencies"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-define-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Define Line Graph",
+      "outcome": "Define a line graph as a visual representation that displays data changing continuously over unbroken intervals of time",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-bar-graph"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-points-on-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Points on Line Graph",
+      "outcome": "Read the specific numerical value corresponding to a given time or point on a line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-line-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Trace Trend on Line Graph",
+      "outcome": "Identify increasing, decreasing, or constant trends across intervals on a line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-points-on-line-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-find-max-min-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Find Maximum and Minimum on Line Graph",
+      "outcome": "Identify the time or condition corresponding to the highest and lowest points on a line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-calculate-change-rate-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Calculate Interval Difference on Line Graph",
+      "outcome": "Calculate the difference or amount of change in a variable between two specified points on a line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-points-on-line-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpret-kink-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpret Kink on Line Graph Axis",
+      "outcome": "Explain the purpose of a jagged line or kink on an axis when values do not start from zero",
+      "prerequisites": [
+        "class8-mathematics-data-handling-identify-jagged-line-kink",
+        "class8-mathematics-introduction-to-graphs-read-points-on-line-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-compare-graph-types-purposes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Compare Graph Types",
+      "outcome": "Compare the distinct purposes of bar graphs, pie charts, histograms, and line graphs to select the most appropriate graph for a given dataset",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-bar-graph",
+        "class8-mathematics-introduction-to-graphs-interpret-pie-graph-percentages",
+        "class8-mathematics-introduction-to-graphs-read-histogram-intervals",
+        "class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpret-double-line-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpret Double Line Graph",
+      "outcome": "Compare two continuous trends simultaneously plotted on the same set of axes using a double line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-trace-trend-on-line-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-cartesian-axes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Cartesian Axes",
+      "outcome": "Identify the horizontal axis as the x-axis and the vertical axis as the y-axis on a coordinate grid",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-line-graph"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-origin",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Origin",
+      "outcome": "Identify the point of intersection of the x-axis and y-axis as the origin with coordinates (0, 0)",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-cartesian-axes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-define-ordered-pair",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Define Ordered Pair",
+      "outcome": "Define an ordered pair (x, y) where the first number represents horizontal position and the second vertical position",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-origin"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-x-coordinate",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify x-Coordinate",
+      "outcome": "Identify the x-coordinate (abscissa) as the perpendicular distance of a point from the y-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-ordered-pair"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-y-coordinate",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify y-Coordinate",
+      "outcome": "Identify the y-coordinate (ordinate) as the perpendicular distance of a point from the x-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-ordered-pair"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-distinguish-coordinate-order",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Distinguish Coordinate Order",
+      "outcome": "Explain why the ordered pairs (a, b) and (b, a) represent different points when a != b",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-x-coordinate",
+        "class8-mathematics-introduction-to-graphs-identify-y-coordinate"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Point with Positive Coordinates",
+      "outcome": "Plot a point on a coordinate grid given its positive coordinates (x, y)",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-distinguish-coordinate-order"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-point-on-x-axis",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Point on x-Axis",
+      "outcome": "Plot a point of the form (x, 0) directly on the x-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-point-on-y-axis",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Point on y-Axis",
+      "outcome": "Plot a point of the form (0, y) directly on the y-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Coordinates of a Point",
+      "outcome": "State the coordinates (x, y) of a point marked on a Cartesian grid by reading perpendicular projections to the axes",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-points-on-axes",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Coordinates on Axes",
+      "outcome": "Identify whether a plotted point lies on the x-axis, y-axis, or origin and write its coordinates",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-on-x-axis",
+        "class8-mathematics-introduction-to-graphs-plot-point-on-y-axis",
+        "class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-choose-axis-scale",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Choose Axis Scale",
+      "outcome": "Select a suitable scale on both x and y axes for a given set of data values",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-table-of-values",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Table of Values",
+      "outcome": "Convert a two-column data table into ordered pairs and plot each pair on a coordinate grid",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-choose-axis-scale"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-define-collinear-points",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Define Collinear Points",
+      "outcome": "Define collinear points as three or more points that lie on the same straight line",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-verify-collinearity-by-plotting",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Verify Collinearity",
+      "outcome": "Determine whether a set of given coordinate points are collinear by plotting them on graph paper and drawing a straight line",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-collinear-points"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-define-linear-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Define Linear Graph",
+      "outcome": "Define a linear graph as a line graph that consists of an unbroken single straight line",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-verify-collinearity-by-plotting"
+      ],
+      "difficulty": 1,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-distinguish-line-graph-and-linear-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Distinguish Line Graph and Linear Graph",
+      "outcome": "Differentiate between a general line graph composed of connected segments and a linear graph that is a single straight line",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-define-linear-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-horizontal-line-coordinates",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Horizontal Line Coordinates",
+      "outcome": "Identify that all points lying on a horizontal line have the same y-coordinate",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-vertical-line-coordinates",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Vertical Line Coordinates",
+      "outcome": "Identify that all points lying on a vertical line have the same x-coordinate",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-coordinates-of-plotted-point"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-geometric-figure-coordinates",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Geometric Figures on Grid",
+      "outcome": "Plot given vertices on a Cartesian plane and join them sequentially to form a polygon",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-point-in-first-quadrant",
+        "class8-mathematics-understanding-quadrilaterals-define-polygon"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-find-missing-vertex-rectangle",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Find Missing Vertex of Rectangle",
+      "outcome": "Determine the coordinates of the fourth vertex of a rectangle or square given the coordinates of three vertices",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-geometric-figure-coordinates",
+        "class8-mathematics-introduction-to-graphs-identify-horizontal-line-coordinates",
+        "class8-mathematics-introduction-to-graphs-identify-vertical-line-coordinates",
+        "class8-mathematics-understanding-quadrilaterals-rectangle-properties"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-calculate-perimeter-from-grid",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Calculate Perimeter on Grid",
+      "outcome": "Calculate the side lengths and perimeter of an axis-aligned rectangle from the coordinates of its vertices",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-find-missing-vertex-rectangle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-calculate-area-from-grid",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Calculate Area on Grid",
+      "outcome": "Calculate the area of an axis-aligned rectangle or right-angled triangle plotted on a coordinate grid",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-find-missing-vertex-rectangle"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-independent-variable",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Independent Variable",
+      "outcome": "Identify the independent variable in a practical relationship and assign it to the horizontal x-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-cartesian-axes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-identify-dependent-variable",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Identify Dependent Variable",
+      "outcome": "Identify the dependent variable in a practical relationship and assign it to the vertical y-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-independent-variable"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-differentiate-independent-dependent-variables",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Differentiate Independent and Dependent Variables",
+      "outcome": "Classify given quantities in word contexts as independent or dependent variables",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-identify-dependent-variable"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-tabulate-cost-quantity-data",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Tabulate Quantity and Cost",
+      "outcome": "Create a table of ordered pairs representing quantity purchased and total cost given the unit rate",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-solve-cost-quantity-problems"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-quantity-cost-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Quantity-Cost Graph",
+      "outcome": "Construct a linear graph representing the relationship between quantity and cost by plotting points and drawing a line through them",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-tabulate-cost-quantity-data",
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values",
+        "class8-mathematics-introduction-to-graphs-define-linear-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-cost-from-quantity-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Cost from Linear Graph",
+      "outcome": "Find the cost of a specified quantity of an item by reading the y-value from a quantity-cost linear graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-quantity-cost-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-quantity-from-cost-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Quantity from Linear Graph",
+      "outcome": "Find the quantity that can be purchased for a specified amount of money by reading the x-value from a quantity-cost graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-quantity-cost-graph"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-tabulate-principal-si-data",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Tabulate Principal and Simple Interest",
+      "outcome": "Compute and tabulate simple interest for various principal amounts at a fixed annual rate of interest",
+      "prerequisites": [
+        "class8-mathematics-comparing-quantities-differentiate-si-and-ci"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-si-principal-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot SI vs Principal Graph",
+      "outcome": "Plot a linear graph showing simple interest on the y-axis against principal on the x-axis",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-tabulate-principal-si-data",
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-verify-graph-passes-origin",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Verify Graph Passes Through Origin",
+      "outcome": "Explain why a direct proportion graph passes through the origin (0, 0)",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-si-principal-graph",
+        "class8-mathematics-direct-and-inverse-proportions-define-direct-proportion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-si-from-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Interest from Graph",
+      "outcome": "Determine the simple interest for an unlisted principal amount by interpolating on a SI-principal linear graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-si-principal-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-principal-from-si-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Principal for Given Interest",
+      "outcome": "Determine the principal required to earn a specific amount of interest by reading values from a SI-principal graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-si-principal-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-tabulate-time-distance-uniform-speed",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Tabulate Time-Distance Data",
+      "outcome": "Construct a table of values showing distance travelled at uniform speed across different time intervals",
+      "prerequisites": [
+        "class8-mathematics-direct-and-inverse-proportions-solve-distance-time-constant-speed"
+      ],
+      "difficulty": 2,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-distance-time-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Distance-Time Graph",
+      "outcome": "Plot a linear graph of distance against time for an object moving at uniform speed",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-tabulate-time-distance-uniform-speed",
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpolate-distance-at-given-time",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpolate Distance at Given Time",
+      "outcome": "Find the distance covered by a vehicle at an intermediate time by reading from a distance-time graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-distance-time-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpolate-time-for-given-distance",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpolate Time for Given Distance",
+      "outcome": "Find the time taken to cover a specific distance by reading from a distance-time graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-distance-time-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-calculate-speed-from-graph-slope",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Calculate Speed from Distance-Time Graph",
+      "outcome": "Calculate the speed of an object by finding the ratio of change in distance to change in time from a distance-time graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-interpolate-distance-at-given-time"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-square-side-perimeter-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Side vs Perimeter of Square",
+      "outcome": "Plot the graph of side of a square against its perimeter and verify that it forms a linear graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values",
+        "class8-mathematics-introduction-to-graphs-define-linear-graph",
+        "class8-mathematics-understanding-quadrilaterals-square-properties"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-square-side-area-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Side vs Area of Square",
+      "outcome": "Plot the graph of side length against area of a square from a table of values",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values",
+        "class8-mathematics-squares-and-square-roots-define-square-number"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-distinguish-linear-non-linear-relations",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Distinguish Linear and Non-Linear Relations",
+      "outcome": "Contrast the linear side-perimeter relation with the non-linear side-area curve to identify non-linear relations",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-square-side-perimeter-graph",
+        "class8-mathematics-introduction-to-graphs-plot-square-side-area-graph"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-extrapolate-values-from-linear-graph",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Extrapolate Values from Linear Graph",
+      "outcome": "Extend a straight line graph beyond plotted points to predict values of dependent or independent variables",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-read-cost-from-quantity-graph",
+        "class8-mathematics-introduction-to-graphs-interpolate-distance-at-given-time"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/introduction-to-graphs/applications-of-graphs"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-tabulate-from-linear-equation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Tabulate from Linear Relation",
+      "outcome": "Generate a table of ordered pairs from a given linear relation like y = kx or y = mx + c",
+      "prerequisites": [
+        "class8-mathematics-linear-equations-in-one-variable-identify-linear-expression",
+        "class8-mathematics-introduction-to-graphs-plot-table-of-values"
+      ],
+      "difficulty": 3,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-plot-graph-from-linear-relation",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Plot Graph from Linear Relation",
+      "outcome": "Construct a complete linear graph starting from an algebraic relationship by tabulating and plotting points",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-tabulate-from-linear-equation"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-read-intersection-point",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Read Intersection Point of Two Graphs",
+      "outcome": "Identify the point of intersection of two linear graphs plotted on the same axes and state its coordinates",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-plot-graph-from-linear-relation",
+        "class8-mathematics-introduction-to-graphs-interpret-double-line-graph"
+      ],
+      "difficulty": 4,
+      "topicRef": "class8-mathematics/introduction-to-graphs/linear-graphs-and-coordinates"
+    },
+    {
+      "id": "class8-mathematics-introduction-to-graphs-interpret-real-world-graph-story",
+      "klass": 8,
+      "subject": "Mathematics",
+      "chapter": "introduction-to-graphs",
+      "title": "Interpret Journey Graph Context",
+      "outcome": "Describe real-world events of a journey such as stops, speed changes, and returns by interpreting segments of a complex line graph",
+      "prerequisites": [
+        "class8-mathematics-introduction-to-graphs-calculate-speed-from-graph-slope",
+        "class8-mathematics-introduction-to-graphs-extrapolate-values-from-linear-graph"
+      ],
+      "difficulty": 5,
+      "topicRef": "class8-mathematics/introduction-to-graphs/types-of-graphs"
     }
   ]
 }
