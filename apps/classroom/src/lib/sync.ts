@@ -1,4 +1,4 @@
-import { registeredStores, touchedAt, writeFromCloud } from '../stores/localStore';
+import { neverSyncedKeys, registeredStores, touchedAt, writeFromCloud } from '../stores/localStore';
 
 /**
  * THE STUDENT'S WORK, ON MORE THAN ONE DEVICE.
@@ -28,6 +28,8 @@ export interface CloudBackend {
   /** Everything this account has, keyed the way the stores are. */
   pull(): Promise<Record<string, { value: unknown; updatedAt: number }>>;
   push(key: string, value: unknown, updatedAt: number): Promise<void>;
+  /** Remove a key from the cloud outright — for stores that opted out of it. */
+  forget(key: string): Promise<void>;
 }
 
 export interface MergePlan {
@@ -111,6 +113,21 @@ export function connectSync(backend: CloudBackend): () => void {
   void (async () => {
     const cloud = await backend.pull().catch(() => null);
     if (stopped || cloud === null) return;
+
+    /**
+     * Delete anything that opted out of syncing but is already up there.
+     *
+     * Opting out only stops the NEXT push. The safety flag log was synced for
+     * weeks before it opted out, so the rows exist, and leaving them while
+     * claiming the log is local would be the same false promise in a quieter
+     * form. Deletion is the only version of "it is not there" that is true.
+     */
+    for (const key of neverSyncedKeys()) {
+      if (cloud[key] === undefined) continue;
+      void backend.forget(key).catch(() => {
+        // Retried on the next connect. Nothing local depends on it.
+      });
+    }
 
     const local: Record<string, Snapshot> = {};
     for (const [key, store] of registeredStores()) {

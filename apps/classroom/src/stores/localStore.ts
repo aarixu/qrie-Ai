@@ -29,6 +29,21 @@ export function registeredStores(): ReadonlyMap<string, Store<unknown>> {
 }
 
 /**
+ * Keys that must never exist in the cloud — filled by `neverSync` below.
+ *
+ * Tracked rather than hand-listed so the two can never disagree: a store that
+ * opts out is a store sync deletes, without anybody remembering to add it to a
+ * second list. It matters because opting out only stops FUTURE pushes; a key
+ * that was synced before it opted out is still sitting in the row, and "we
+ * stopped sending it" is not the same promise as "it is not there".
+ */
+const neverSynced = new Set<string>();
+
+export function neverSyncedKeys(): ReadonlySet<string> {
+  return neverSynced;
+}
+
+/**
  * When this device last wrote a store, kept BESIDE the value rather than
  * inside it: the stored shape has to keep loading for students who already
  * have data, and a version bump on eleven stores to add one field would be a
@@ -67,7 +82,23 @@ export function writeFromCloud(key: string, value: unknown, updatedAt: number): 
   store.set(value);
 }
 
-export function createLocalStore<T>(key: string, initial: T): Store<T> {
+export interface LocalStoreOptions {
+  /**
+   * Keep this store OFF the device entirely — never registered, therefore never
+   * synced. For anything whose own reason for existing is that it does not
+   * leave the phone.
+   *
+   * This exists because `flags` had exactly that reason written at the top of
+   * its own file — "the log is LOCAL… the transcript of a child's worst moment
+   * sitting in localStorage is not something this product should own" — and was
+   * being synced to the cloud anyway, purely because registration is automatic
+   * and nobody had to opt in. A rule stated in prose next to a default that
+   * contradicts it is not a rule.
+   */
+  neverSync?: boolean;
+}
+
+export function createLocalStore<T>(key: string, initial: T, opts: LocalStoreOptions = {}): Store<T> {
   let cache: T | null = null;
   const listeners = new Set<() => void>();
 
@@ -107,7 +138,8 @@ export function createLocalStore<T>(key: string, initial: T): Store<T> {
     },
   };
 
-  stores.set(key, store as Store<unknown>);
+  if (opts.neverSync) neverSynced.add(key);
+  else stores.set(key, store as Store<unknown>);
   return store;
 }
 

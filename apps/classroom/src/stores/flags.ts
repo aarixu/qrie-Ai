@@ -54,7 +54,15 @@ export interface FlagLog {
  */
 const KEEP = 50;
 
-export const flagStore = createLocalStore<FlagLog>('flags', { flags: [] });
+/**
+ * `neverSync` is load-bearing, not decoration.
+ *
+ * Registration into the sync map is automatic, so for its first weeks this log
+ * was being pushed to `student_state` — every distress flag, and the note a
+ * student typed into a report — in flat contradiction of the paragraph above
+ * it. The rule was written down and the default quietly won.
+ */
+export const flagStore = createLocalStore<FlagLog>('flags', { flags: [] }, { neverSync: true });
 
 export function recordFlag(flag: Flag): void {
   flagStore.update((log) => ({ flags: [flag, ...log.flags].slice(0, KEEP) }));

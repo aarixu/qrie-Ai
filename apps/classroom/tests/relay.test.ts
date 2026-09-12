@@ -74,6 +74,44 @@ describe('relayFetch', () => {
     expect(auth.signInAnonymously).toHaveBeenCalledTimes(1);
   });
 
+  it('establishes the identity at start-up without a relay call', async () => {
+    // The ledger needs a student to attribute rows to. A cached class played
+    // with on-device speech makes no relay call at all, so waiting for one
+    // meant the outbox filled up reporting "no-account" and then discarded the
+    // oldest events it held.
+    auth.getSession.mockResolvedValue({ data: { session: null } });
+    auth.signInAnonymously.mockResolvedValue({
+      data: { session: { access_token: 'anon-1' } },
+      error: null,
+    });
+
+    await expect(relay.ensureIdentity()).resolves.toBe(true);
+    expect(auth.signInAnonymously).toHaveBeenCalledTimes(1);
+  });
+
+  it('still mints ONE user when start-up and a class race each other', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: null } });
+    let resolveSignIn: (v: unknown) => void = () => {};
+    auth.signInAnonymously.mockReturnValue(
+      new Promise((res) => {
+        resolveSignIn = res;
+      }),
+    );
+    vi.stubGlobal('fetch', async () => jsonResponse({}));
+
+    const racing = [relay.ensureIdentity(), relay.relayFetch('/api/llm'), relay.ensureIdentity()];
+    resolveSignIn({ data: { session: { access_token: 'anon-1' } }, error: null });
+    await Promise.all(racing);
+
+    expect(auth.signInAnonymously).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports false rather than throwing when there is no identity to be had', async () => {
+    auth.getSession.mockResolvedValue({ data: { session: null } });
+    auth.signInAnonymously.mockResolvedValue({ data: { session: null }, error: { message: 'no' } });
+    await expect(relay.ensureIdentity()).resolves.toBe(false);
+  });
+
   it('tries again on a later call when signing in failed', async () => {
     // Failing once must not pin the device to "no identity" for the session:
     // that would be one flaky moment costing every class after it.

@@ -64,3 +64,53 @@ describe('merging a device with the cloud', () => {
     expect(plan.take).toEqual(['notes']);
   });
 });
+
+describe('stores that must never reach the cloud', () => {
+  it('keeps the safety flag log off the sync registry entirely', async () => {
+    // For its first weeks this log WAS synced — every distress flag, and the
+    // note a student typed into a report — because registration is automatic
+    // and its own file only said "the log is LOCAL" in prose. A rule stated
+    // next to a default that contradicts it is not a rule.
+    const { registeredStores, neverSyncedKeys } = await import('../src/stores/localStore');
+    await import('../src/stores/flags');
+
+    expect([...registeredStores().keys()]).not.toContain('flags');
+    expect(neverSyncedKeys().has('flags')).toBe(true);
+  });
+
+  it('deletes a key that opted out but is already up there', async () => {
+    // Opting out only stops the NEXT push. Rows written before the opt-out are
+    // still sitting in student_state, and "we stopped sending it" is a
+    // different promise from "it is not there".
+    const { connectSync } = await import('../src/lib/sync');
+    await import('../src/stores/flags');
+
+    const forgotten: string[] = [];
+    const stop = connectSync({
+      pull: async () => ({ flags: { value: { flags: [] }, updatedAt: 1 } }),
+      push: async () => undefined,
+      forget: async (key) => {
+        forgotten.push(key);
+      },
+    });
+
+    await new Promise((r) => setTimeout(r, 0));
+    stop();
+    expect(forgotten).toContain('flags');
+  });
+
+  it('does not delete a key that is supposed to be there', async () => {
+    const { connectSync } = await import('../src/lib/sync');
+    const forgotten: string[] = [];
+    const stop = connectSync({
+      pull: async () => ({ progress: { value: {}, updatedAt: 1 } }),
+      push: async () => undefined,
+      forget: async (key) => {
+        forgotten.push(key);
+      },
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    stop();
+    expect(forgotten).not.toContain('progress');
+  });
+});

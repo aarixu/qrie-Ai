@@ -104,6 +104,23 @@ async function accessToken(): Promise<string | null> {
 }
 
 /**
+ * Establish the student's identity NOW, rather than on the first relay call.
+ *
+ * Lazy was fine while the only thing that needed an identity was a relay call —
+ * it arrived exactly when it was needed and cost a fresh device nothing. The
+ * interaction ledger broke that assumption: a student replaying a cached class
+ * with on-device speech makes no relay call at all, so no session was ever
+ * created, and every event they produced sat in the outbox reporting
+ * `no-account` until the cap discarded the oldest.
+ *
+ * Same dedupe as before — `accessToken` returns the in-flight promise — so
+ * calling this at start-up alongside a class opening still mints one user.
+ */
+export async function ensureIdentity(): Promise<boolean> {
+  return (await accessToken()) !== null;
+}
+
+/**
  * A relay call with the student's identity attached.
  *
  * Anything that talks to /api/llm, /api/hear or /api/class goes through this.

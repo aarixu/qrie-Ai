@@ -87,6 +87,18 @@ export function createSupabaseBackend(userId: string): CloudBackend {
         .from(TABLE)
         .upsert({ user_id: userId, key, value, updated_at: updatedAt }, { onConflict: 'user_id,key' });
     },
+
+    /**
+     * For a store that must not exist in the cloud at all.
+     *
+     * A real delete, not a write of an empty value: the promise being kept is
+     * that the row is gone, and an empty row is still a row.
+     */
+    async forget(key) {
+      const db = supabase();
+      if (!db) return;
+      await db.from(TABLE).delete().eq('user_id', userId).eq('key', key);
+    },
   };
 }
 
