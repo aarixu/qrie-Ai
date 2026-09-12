@@ -741,6 +741,9 @@
         "beat-2-the-sealed-experiment_3",
         "beat-2-the-sealed-experiment_4",
         "beat-2-the-sealed-experiment_4_line"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -780,6 +783,9 @@
         "beat-2-the-sealed-experiment_7",
         "beat-2-the-sealed-experiment_7_l1",
         "beat-2-the-sealed-experiment_7_line"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -827,6 +833,9 @@
         "beat-2-the-sealed-experiment_10",
         "beat-2-the-sealed-experiment_10_l1",
         "beat-2-the-sealed-experiment_10_line"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -878,6 +887,9 @@
         "beat-2-the-sealed-experiment_10_line",
         "beat-2-the-sealed-experiment_12",
         "beat-2-the-sealed-experiment_12_line"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -933,6 +945,9 @@
         "beat-2-the-sealed-experiment_12_line",
         "beat-2-the-sealed-experiment_14",
         "beat-2-the-sealed-experiment_15"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -979,6 +994,9 @@
         "beat-3-the-law-of-conservation_2_c0",
         "beat-3-the-law-of-conservation_2_h0",
         "beat-3-the-law-of-conservation_2_b0"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -1025,6 +1043,9 @@
         "beat-3-the-law-of-conservation_2_c0",
         "beat-3-the-law-of-conservation_2_h0",
         "beat-3-the-law-of-conservation_2_b0"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -1073,6 +1094,9 @@
         "beat-3-the-law-of-conservation_2_h0",
         "beat-3-the-law-of-conservation_2_b0",
         "beat-3-the-law-of-conservation_5"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-verify-conservation-mass"
       ]
     },
     {
@@ -1127,6 +1151,9 @@
         "beat-3-the-law-of-conservation_7_c0",
         "beat-3-the-law-of-conservation_7_h0",
         "beat-3-the-law-of-conservation_7_b0"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-verify-conservation-mass"
       ]
     },
     {
@@ -1183,6 +1210,9 @@
         "beat-3-the-law-of-conservation_7_h0",
         "beat-3-the-law-of-conservation_7_b0",
         "beat-3-the-law-of-conservation_9"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-experiment-sealed-flask"
       ]
     },
     {
@@ -1241,6 +1271,9 @@
         "beat-3-the-law-of-conservation_7_b0",
         "beat-3-the-law-of-conservation_9",
         "beat-3-the-law-of-conservation_11"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-verify-conservation-mass"
       ]
     },
     {
@@ -1493,6 +1526,9 @@
         "beat-4-dalton-explanation_9",
         "beat-4-dalton-explanation_11",
         "beat-4-dalton-explanation_12"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-verify-conservation-mass"
       ]
     }
   ],

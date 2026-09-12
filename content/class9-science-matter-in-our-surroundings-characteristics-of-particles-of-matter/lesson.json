@@ -730,6 +730,9 @@
         "beat_spaces_between_particles_13_arrow",
         "beat_spaces_between_particles_14",
         "beat_spaces_between_particles_14_l1"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -771,6 +774,9 @@
         "beat_spaces_between_particles_13_arrow",
         "beat_spaces_between_particles_14",
         "beat_spaces_between_particles_14_l1"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -902,6 +908,9 @@
         "beat_continuous_motion_7_line",
         "beat_continuous_motion_9",
         "beat_continuous_motion_9_l1"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -951,6 +960,9 @@
         "beat_continuous_motion_7_line",
         "beat_continuous_motion_9",
         "beat_continuous_motion_9_l1"
+      ],
+      "teaches": [
+        "class9-science-smell-hot-food"
       ]
     },
     {
@@ -1004,6 +1016,9 @@
         "beat_continuous_motion_9_l1",
         "beat_continuous_motion_13",
         "beat_continuous_motion_13_l1"
+      ],
+      "teaches": [
+        "class9-science-smell-hot-food"
       ]
     },
     {
@@ -1291,6 +1306,9 @@
         "beat_forces_of_attraction_11",
         "beat_forces_of_attraction_11_l1",
         "beat_forces_of_attraction_11_line"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -1362,6 +1380,9 @@
         "beat_forces_of_attraction_11_line",
         "beat_forces_of_attraction_15",
         "beat_forces_of_attraction_15_l1"
+      ],
+      "teaches": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -1421,6 +1442,9 @@
       "frame": [
         "beat_summary_notebook_0",
         "beat_summary_notebook_2"
+      ],
+      "checks": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {
@@ -1482,6 +1506,9 @@
         "beat_summary_notebook_0",
         "beat_summary_notebook_2",
         "beat_summary_notebook_4"
+      ],
+      "checks": [
+        "class9-science-three-characteristics-particles"
       ]
     },
     {

@@ -387,6 +387,9 @@
         "beat-1-nucleus-anatomy_4",
         "beat-1-nucleus-anatomy_5",
         "beat-1-nucleus-anatomy_5_line"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
       ]
     },
     {
@@ -416,6 +419,9 @@
         "beat-1-nucleus-anatomy_8_line",
         "beat-1-nucleus-anatomy_9",
         "beat-1-nucleus-anatomy_9_l1"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
       ]
     },
     {
@@ -451,6 +457,10 @@
         "beat-1-nucleus-anatomy_11",
         "beat-1-nucleus-anatomy_12",
         "beat-1-nucleus-anatomy_12_line"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure",
+        "class9-science-the-fundamental-unit-of-life-nucleolus-function"
       ]
     },
     {
@@ -498,6 +508,9 @@
         "beat-1-nucleus-anatomy_16",
         "beat-1-nucleus-anatomy_16_l1",
         "beat-1-nucleus-anatomy_17"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-structure"
       ]
     },
     {
@@ -530,6 +543,9 @@
       "frame": [
         "beat-2-chromatin-to-dna_0",
         "chromosome_structure"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-function"
       ]
     },
     {
@@ -570,6 +586,9 @@
         "beat-2-chromatin-to-dna_5",
         "beat-2-chromatin-to-dna_5_line",
         "beat-2-chromatin-to-dna_6"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-chromosomes-dna"
       ]
     },
     {
@@ -618,6 +637,9 @@
         "beat-2-chromatin-to-dna_9",
         "beat-2-chromatin-to-dna_9_line",
         "beat-2-chromatin-to-dna_10"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-chromosomes-dna"
       ]
     },
     {
@@ -674,6 +696,9 @@
         "beat-2-chromatin-to-dna_14",
         "beat-2-chromatin-to-dna_14_l1",
         "beat-2-chromatin-to-dna_15"
+      ],
+      "teaches": [
+        "class9-science-the-fundamental-unit-of-life-nucleus-function"
       ]
     }
   ],

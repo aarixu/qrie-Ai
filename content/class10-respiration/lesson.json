@@ -33,7 +33,8 @@
       "narration": "Let me start by breaking a myth. Breathing is not respiration. Breathing only moves air in and out of your lungs — that's transport. Respiration is what happens after: deep inside every one of your cells, fuel is being burned. Right now. Billions of tiny fires without a single flame.",
       "show": ["t_title", "n_hook"],
       "focus": ["n_hook"],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-respiration-vs-breathing"]
     },
     {
       "id": "equation",
@@ -41,21 +42,24 @@
       "narration": "Here is the reaction. Glucose plus oxygen gives carbon dioxide, water, and energy. Look closely — does it feel familiar? It is photosynthesis running backwards. Plants build glucose to store energy; cells break glucose to release it.",
       "show": ["f_resp", "n_resp"],
       "focus": ["f_resp"],
-      "minMs": 2500
+      "minMs": 2500,
+      "teaches": ["sci10-lp-respiration-equation"]
     },
     {
       "id": "two_paths",
       "topic": "Aerobic vs anaerobic",
       "narration": "Now, glucose can be broken two ways. With oxygen — aerobic respiration. Without oxygen — anaerobic respiration. Same starting fuel, very different results. Watch the two paths.",
       "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an"],
-      "focus": ["b_glucose"]
+      "focus": ["b_glucose"],
+      "teaches": ["sci10-lp-aerobic-vs-anaerobic"]
     },
     {
       "id": "aerobic",
       "topic": "Aerobic respiration — mitochondria",
       "narration": "The aerobic path is the efficient one. Inside the mitochondria — the powerhouse of the cell — glucose is fully broken down with oxygen, releasing a large amount of energy, plus carbon dioxide and water. This is how you are powered almost all the time.",
       "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_aerobic_out"],
-      "focus": ["b_aerobic", "n_aerobic_out"]
+      "focus": ["b_aerobic", "n_aerobic_out"],
+      "teaches": ["sci10-lp-mitochondria-role", "sci10-lp-aerobic-vs-anaerobic"]
     },
     {
       "id": "anaerobic",
@@ -63,21 +67,24 @@
       "narration": "But sprint hard for a minute and your muscles run out of oxygen. They switch to the anaerobic path — much less energy, and a leftover called lactic acid. That burning cramp in your legs after running? That's lactic acid. Now you know its name.",
       "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_aerobic_out", "n_anaerobic_out"],
       "focus": ["b_anaerobic", "n_anaerobic_out"],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-lactic-acid", "sci10-lp-aerobic-vs-anaerobic"]
     },
     {
       "id": "yeast",
       "topic": "Anaerobic respiration in yeast",
       "narration": "One more twist. In yeast, the anaerobic path produces alcohol and carbon dioxide instead. Those CO2 bubbles are exactly what makes bread rise and dosa batter puff up overnight. Think about it — your breakfast is powered by respiration too.",
       "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "x_yeast"],
-      "focus": ["x_yeast"]
+      "focus": ["x_yeast"],
+      "teaches": ["sci10-lp-yeast-fermentation"]
     },
     {
       "id": "recap",
       "topic": "Recap",
       "narration": "So remember: respiration is the cell burning glucose for energy — with oxygen when it can, without when it must. Breathing just delivers the oxygen; the real fire is in the cell. Next, we'll see how all this fuel and oxygen actually travels around the body. Doubts? Raise your hand.",
       "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_recap"],
-      "focus": ["n_recap"]
+      "focus": ["n_recap"],
+      "checks": ["sci10-lp-aerobic-vs-anaerobic", "sci10-lp-respiration-vs-breathing"]
     }
   ]
 }

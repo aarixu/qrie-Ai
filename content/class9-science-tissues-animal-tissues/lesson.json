@@ -873,6 +873,10 @@
         "beat_1_opening_10",
         "beat_1_opening_11",
         "beat_1_opening_12"
+      ],
+      "teaches": [
+        "class9-science-tissues-name-four-animal-tissues",
+        "class9-science-tissues-general-functions-animal-tissues"
       ]
     },
     {
@@ -1054,6 +1058,9 @@
         "beat_2_epithelial_14",
         "beat_2_epithelial_14_l1",
         "beat_2_epithelial_15"
+      ],
+      "checks": [
+        "class9-science-tissues-general-functions-animal-tissues"
       ]
     },
     {
@@ -1275,6 +1282,9 @@
         "beat_3_connective_14",
         "beat_3_connective_14_l1",
         "beat_3_connective_15"
+      ],
+      "checks": [
+        "class9-science-tissues-general-functions-animal-tissues"
       ]
     },
     {
@@ -1350,6 +1360,9 @@
         "beat_4_muscular_nervous_6",
         "beat_4_muscular_nervous_7",
         "neuron_structure"
+      ],
+      "teaches": [
+        "class9-science-tissues-general-functions-animal-tissues"
       ]
     },
     {
@@ -1515,6 +1528,10 @@
         "beat_4_muscular_nervous_16",
         "beat_4_muscular_nervous_17",
         "beat_4_muscular_nervous_18"
+      ],
+      "checks": [
+        "class9-science-tissues-name-four-animal-tissues",
+        "class9-science-tissues-general-functions-animal-tissues"
       ]
     }
   ],

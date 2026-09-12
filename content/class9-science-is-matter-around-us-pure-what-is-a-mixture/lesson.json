@@ -681,6 +681,9 @@
         "opening-nimbu-pani__sugar",
         "opening-nimbu-pani_6",
         "opening-nimbu-pani_7"
+      ],
+      "checks": [
+        "class9-science-is-matter-around-us-pure-mixture-variable-composition"
       ]
     },
     {
@@ -716,6 +719,10 @@
         "opening-nimbu-pani_11_c0",
         "opening-nimbu-pani_11_h0",
         "opening-nimbu-pani_11_b0"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-define-mixture",
+        "class9-science-is-matter-around-us-pure-mixture-variable-composition"
       ]
     },
     {
@@ -794,6 +801,9 @@
         "properties-of-mixture_5",
         "properties-of-mixture_5_line",
         "properties-of-mixture_7"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-define-mixture"
       ]
     },
     {
@@ -836,6 +846,9 @@
         "properties-of-mixture_5_line",
         "properties-of-mixture_7",
         "properties-of-mixture_9"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-mixture-variable-composition"
       ]
     },
     {
@@ -882,6 +895,9 @@
         "properties-of-mixture_9",
         "properties-of-mixture_11",
         "properties-of-mixture_12"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture"
       ]
     },
     {
@@ -941,6 +957,10 @@
         "properties-of-mixture_14_l1",
         "properties-of-mixture_15",
         "properties-of-mixture_15_l1"
+      ],
+      "checks": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture",
+        "class9-science-is-matter-around-us-pure-define-mixture"
       ]
     },
     {
@@ -1079,6 +1099,9 @@
         "types-of-mixtures_6",
         "types-of-mixtures_6_l1",
         "types-of-mixtures_6_l2"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-examples-mixtures"
       ]
     },
     {
@@ -1214,6 +1237,9 @@
         "mixture_types_diagram#uniform_particles",
         "mixture_types_diagram#heterogeneous_side",
         "mixture_types_diagram#separated_phases"
+      ],
+      "checks": [
+        "class9-science-is-matter-around-us-pure-examples-mixtures"
       ]
     },
     {
@@ -1271,6 +1297,9 @@
       "frame": [
         "summary-and-separation_0",
         "summary-and-separation_2"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-define-mixture"
       ]
     },
     {
@@ -1338,6 +1367,9 @@
         "summary-and-separation_4_l2",
         "summary-and-separation_4_l3",
         "summary-and-separation_4_l4"
+      ],
+      "teaches": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture"
       ]
     },
     {
@@ -1432,6 +1464,10 @@
         "summary-and-separation_7_l3",
         "summary-and-separation_7_l4",
         "summary-and-separation_8"
+      ],
+      "checks": [
+        "class9-science-is-matter-around-us-pure-distinguish-pure-mixture",
+        "class9-science-is-matter-around-us-pure-mixture-variable-composition"
       ]
     }
   ],

@@ -431,6 +431,9 @@
         "charged-particles_5_label",
         "charged-particles_7",
         "charged-particles_9"
+      ],
+      "teaches": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles"
       ]
     },
     {
@@ -456,6 +459,9 @@
         "charged-particles_7",
         "charged-particles_9",
         "charged-particles_11"
+      ],
+      "teaches": [
+        "class9-science-structure-of-the-atom-atom-neutrality"
       ]
     },
     {
@@ -821,6 +827,11 @@
         "bohr-model_7_l1",
         "bohr-model_7_l2",
         "bohr-model_9"
+      ],
+      "teaches": [
+        "class9-science-structure-of-the-atom-list-subatomic-particles",
+        "class9-science-structure-of-the-atom-proton-charge-mass",
+        "class9-science-structure-of-the-atom-electron-charge-mass"
       ]
     },
     {
@@ -875,6 +886,9 @@
         "bohr_atom#nucleus",
         "bohr_atom#k_shell",
         "bohr_atom#l_shell"
+      ],
+      "teaches": [
+        "class9-science-structure-of-the-atom-compare-proton-electron"
       ]
     }
   ],

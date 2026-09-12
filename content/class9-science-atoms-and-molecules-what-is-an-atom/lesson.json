@@ -388,6 +388,11 @@
         "beat_1_breaking_matter_8_label",
         "beat_1_breaking_matter_10",
         "beat_1_breaking_matter_11"
+      ],
+      "teaches": [
+        "class9-science-atoms-and-molecules-define-atom",
+        "class9-science-atoms-and-molecules-dalton-postulates-matter",
+        "class9-science-atoms-and-molecules-dalton-postulates-atoms-indivisible"
       ]
     },
     {

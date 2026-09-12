@@ -153,7 +153,8 @@
       ],
       "focus": [
         "n_hook"
-      ]
+      ],
+      "teaches": ["sci10-lp-excretion-why"]
     },
     {
       "id": "kidneys",
@@ -171,7 +172,8 @@
         "b_kidney_l",
         "b_kidney_r"
       ],
-      "minMs": 2500
+      "minMs": 2500,
+      "teaches": ["sci10-lp-kidney-filters"]
     },
     {
       "id": "nephron",
@@ -185,7 +187,8 @@
         "b_nephron",
         "n_nephron"
       ],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-nephron-unit"]
     },
     {
       "id": "reabsorption",
@@ -199,7 +202,8 @@
       "focus": [
         "n_reabsorb"
       ],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-selective-reabsorption"]
     },
     {
       "id": "dialysis",
@@ -213,7 +217,8 @@
       ],
       "focus": [
         "x_dialysis"
-      ]
+      ],
+      "teaches": ["sci10-lp-dialysis"]
     },
     {
       "id": "recap",
@@ -227,7 +232,8 @@
       ],
       "focus": [
         "n_recap"
-      ]
+      ],
+      "checks": ["sci10-lp-kidney-filters", "sci10-lp-nephron-unit", "sci10-lp-selective-reabsorption"]
     }
   ]
 }

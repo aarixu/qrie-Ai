@@ -190,7 +190,8 @@
         "b_wbc",
         "b_platelets"
       ],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-blood-components"]
     },
     {
       "id": "plasma_rbc",
@@ -209,7 +210,8 @@
         "b_rbc",
         "n_plasma",
         "n_rbc"
-      ]
+      ],
+      "teaches": ["sci10-lp-blood-components", "sci10-lp-haemoglobin"]
     },
     {
       "id": "wbc_platelets",
@@ -231,7 +233,8 @@
         "n_wbc",
         "n_platelets"
       ],
-      "minMs": 2000
+      "minMs": 2000,
+      "teaches": ["sci10-lp-blood-components", "sci10-lp-platelets-clot"]
     },
     {
       "id": "vessels",
@@ -248,7 +251,8 @@
         "b_artery",
         "b_vein"
       ],
-      "minMs": 2500
+      "minMs": 2500,
+      "teaches": ["sci10-lp-artery-vs-vein-direction", "sci10-lp-artery-wall-thickness", "sci10-lp-vein-valves"]
     },
     {
       "id": "recap",
@@ -264,7 +268,8 @@
       ],
       "focus": [
         "n_recap"
-      ]
+      ],
+      "checks": ["sci10-lp-blood-components", "sci10-lp-artery-vs-vein-direction"]
     }
   ]
 }

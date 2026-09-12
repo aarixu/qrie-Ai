@@ -657,6 +657,9 @@
         "beat_opening_hook__runner",
         "beat_opening_hook_4",
         "beat_opening_hook_5"
+      ],
+      "checks": [
+        "sci10-lp-heart-is-pump"
       ]
     },
     {
@@ -682,6 +685,9 @@
         "beat_opening_hook_8",
         "beat_opening_hook_8_label",
         "beat_opening_hook_9"
+      ],
+      "teaches": [
+        "sci10-lp-heart-is-pump"
       ]
     },
     {
@@ -741,6 +747,9 @@
         "beat_heart_anatomy_4",
         "beat_heart_anatomy_5",
         "beat_heart_anatomy_5_line"
+      ],
+      "teaches": [
+        "sci10-lp-four-chambers-name"
       ]
     },
     {
@@ -785,6 +794,10 @@
         "beat_heart_anatomy_9",
         "beat_heart_anatomy_10",
         "beat_heart_anatomy_10_line"
+      ],
+      "teaches": [
+        "sci10-lp-atria-receive",
+        "sci10-lp-four-chambers-name"
       ]
     },
     {
@@ -837,6 +850,9 @@
         "beat_heart_anatomy_13",
         "beat_heart_anatomy_13_line",
         "beat_heart_anatomy_14"
+      ],
+      "teaches": [
+        "sci10-lp-valves-one-way"
       ]
     },
     {
@@ -910,6 +926,9 @@
         "beat_heart_anatomy_18_l1",
         "beat_heart_anatomy_19",
         "beat_heart_anatomy_19_l1"
+      ],
+      "checks": [
+        "sci10-lp-lv-wall-thicker"
       ]
     },
     {
@@ -955,6 +974,9 @@
       ],
       "frame": [
         "double_circulation_loop"
+      ],
+      "teaches": [
+        "sci10-lp-double-circulation"
       ]
     },
     {
@@ -1000,6 +1022,9 @@
       ],
       "frame": [
         "double_circulation_loop"
+      ],
+      "teaches": [
+        "sci10-lp-pulmonary-circuit"
       ]
     },
     {
@@ -1053,6 +1078,9 @@
         "beat_double_circulation_7_c0",
         "beat_double_circulation_7_h0",
         "beat_double_circulation_7_b0"
+      ],
+      "teaches": [
+        "sci10-lp-systemic-circuit"
       ]
     },
     {
@@ -1121,6 +1149,10 @@
       "focus": [
         "double_circulation_loop#pulmonary_circuit",
         "double_circulation_loop#systemic_circuit"
+      ],
+      "checks": [
+        "sci10-lp-pulmonary-circuit",
+        "sci10-lp-artery-vs-vein-direction"
       ]
     },
     {
@@ -1188,6 +1220,9 @@
         "beat_significance_and_summary_5",
         "beat_significance_and_summary_6",
         "beat_significance_and_summary_7"
+      ],
+      "teaches": [
+        "sci10-lp-double-circulation"
       ]
     },
     {
@@ -1264,6 +1299,9 @@
         "beat_significance_and_summary_7",
         "beat_significance_and_summary_9",
         "beat_significance_and_summary_10"
+      ],
+      "checks": [
+        "sci10-lp-double-circulation"
       ]
     },
     {
@@ -1343,6 +1381,11 @@
         "beat_significance_and_summary_12_h0",
         "beat_significance_and_summary_12_b0",
         "beat_significance_and_summary_13"
+      ],
+      "checks": [
+        "sci10-lp-atria-receive",
+        "sci10-lp-valves-one-way",
+        "sci10-lp-double-circulation"
       ]
     }
   ],

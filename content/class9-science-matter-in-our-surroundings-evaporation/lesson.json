@@ -575,6 +575,9 @@
         "beat-1-hook-and-definition__clothes",
         "beat-1-hook-and-definition_4",
         "beat-1-hook-and-definition_5"
+      ],
+      "checks": [
+        "class9-science-evaporation-definition"
       ]
     },
     {
@@ -598,6 +601,9 @@
         "beat-1-hook-and-definition__sun",
         "beat-1-hook-and-definition_8",
         "beat-1-hook-and-definition_8_label"
+      ],
+      "teaches": [
+        "class9-science-evaporation-definition"
       ]
     },
     {
@@ -625,6 +631,9 @@
         "beat-1-hook-and-definition_8_label",
         "beat-1-hook-and-definition_10",
         "beat-1-hook-and-definition_11"
+      ],
+      "teaches": [
+        "class9-science-boiling-vs-evaporation"
       ]
     },
     {
@@ -658,6 +667,9 @@
         "beat-1-hook-and-definition_13_c0",
         "beat-1-hook-and-definition_13_h0",
         "beat-1-hook-and-definition_13_b0"
+      ],
+      "teaches": [
+        "class9-science-evaporation-definition"
       ]
     },
     {
@@ -733,6 +745,9 @@
       "frame": [
         "beat-2-particle-level-mechanism_0",
         "particle_surface_model"
+      ],
+      "teaches": [
+        "class9-science-evaporation-surface-phenomenon"
       ]
     },
     {
@@ -766,6 +781,9 @@
         "beat-2-particle-level-mechanism_9_l1",
         "beat-2-particle-level-mechanism_10",
         "beat-2-particle-level-mechanism_10_l1"
+      ],
+      "teaches": [
+        "class9-science-evaporation-surface-phenomenon"
       ]
     },
     {
@@ -825,6 +843,10 @@
         "particle_surface_model#bulk_particles",
         "particle_surface_model#surface_particles",
         "particle_surface_model#escaping_vapour"
+      ],
+      "checks": [
+        "class9-science-evaporation-surface-phenomenon",
+        "class9-science-boiling-vs-evaporation"
       ]
     },
     {
