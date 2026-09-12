@@ -1,0 +1,12 @@
+{
+  "name": "@ai-tutor/tutor-judge",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@ai-tutor/persona": "*",
+    "@ai-tutor/safety": "*"
+  }
+}

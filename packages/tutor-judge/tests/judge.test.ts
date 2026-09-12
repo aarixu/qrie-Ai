@@ -1,0 +1,173 @@
+import { describe, expect, it, vi } from 'vitest';
+import {
+  CLOSE_SYSTEM,
+  JUDGE_SYSTEM,
+  describeAsk,
+  judgeSpokenAnswer,
+  parseFollowUp,
+  parseVerdict,
+  resolveCrossQuestion,
+  type JudgeDeps,
+  type SpokenAsk,
+} from '../src/index';
+
+/**
+ * This decides right from wrong for every answer a student speaks aloud, and
+ * until it moved into a package its only test covered the JSON parser. The
+ * prompt itself — where all the teaching decisions actually live — was
+ * unverified, which meant any of them could be softened in a hurry and nothing
+ * would notice.
+ */
+
+const ask: SpokenAsk = {
+  question: 'Why does a resting animal still need oxygen everywhere?',
+  options: [
+    { text: 'Every cell is alive', correct: true, why: 'each cell respires on its own' },
+    { text: 'Only the brain', hint: 'think about a cut on your finger healing' },
+  ],
+};
+
+type Screened = ReturnType<JudgeDeps['screen']>;
+
+/** A judge wired to a canned reply and a screener that passes words through. */
+const deps = (reply: string, screened?: Screened) => ({
+  complete: vi.fn(async (_system: string, _user: string) => reply),
+  screen: (text: string): Screened => screened ?? { text },
+});
+
+/** A judge whose screener stops the turn — the model must never be reached. */
+const stopped = (say: string | null) => deps('', { text: null, say });
+
+describe('the pedagogy in the prompt', () => {
+  const sys = JUDGE_SYSTEM();
+
+  it('forbids praise, because praise ends the thinking', () => {
+    expect(sys).toMatch(/NEVER say "correct" or congratulate/);
+  });
+
+  it('makes a RIGHT answer earn the reason rather than receive it', () => {
+    // A right answer is not the exit: one cross-question about their own
+    // answer, then stop. The reason is what they get for thinking one step
+    // further, not for being right.
+    expect(sys).toMatch(/ask ONE cross-question about their own answer/);
+    expect(sys).toMatch(/STOP THERE/);
+    expect(sys).toMatch(/Do not give the reason yet/);
+  });
+
+  it('never lets a wrong answer be handed the answer', () => {
+    expect(sys).toMatch(/wrong: never reveal the answer/);
+  });
+
+  it('counts "I don\'t know" as WRONG, not unclear', () => {
+    // Unclear records no evidence at all. A student who says they do not know
+    // has told us something real, and filing it as noise loses it.
+    expect(sys).toMatch(/"I don't know" is wrong, not unclear/);
+  });
+
+  it('judges the idea rather than the language', () => {
+    expect(sys).toMatch(/English, Hindi or a mix/);
+    expect(sys).toMatch(/Judge the IDEA, not the wording or the language/);
+  });
+
+  it('keeps the close free of praise too', () => {
+    expect(CLOSE_SYSTEM()).toMatch(/NEVER say "correct" or congratulate/);
+    expect(CLOSE_SYSTEM()).toMatch(/never the word "wrong"/);
+  });
+});
+
+describe('describing the held question', () => {
+  it('letters the options and marks the right one', () => {
+    const out = describeAsk(ask);
+    expect(out).toContain('A. Every cell is alive [THE RIGHT ONE]');
+    expect(out).toContain('(why: each cell respires on its own)');
+    expect(out).toContain('B. Only the brain');
+    expect(out).toContain('(hint: think about a cut on your finger healing)');
+  });
+
+  it('passes the planner\'s own words through for an open question', () => {
+    // The judge's leading question should build on what the lesson already
+    // decided to say, not invent a second pedagogy at runtime.
+    const out = describeAsk({
+      question: 'What happens to the sugar?',
+      expect: 'it fits into the gaps between water particles',
+      hint: 'the level did not rise',
+    });
+    expect(out).toContain('A right answer contains: it fits into the gaps between water particles');
+    expect(out).toContain('If they are wrong, lead with this nudge: the level did not rise');
+  });
+
+  it('says so plainly when an open question has nothing authored', () => {
+    const out = describeAsk({ question: 'What do you notice?' });
+    expect(out).toContain('An open question - no options');
+  });
+});
+
+describe('a disclosure', () => {
+  it('never reaches the model at all', async () => {
+    const d = stopped('That sounds heavy. Is there someone you can tell?');
+    const out = await judgeSpokenAnswer(ask, 'something serious', d);
+    expect(d.complete).not.toHaveBeenCalled();
+    expect(out.halt).toBe(true);
+    expect(out.say).toContain('someone you can tell');
+  });
+
+  it('is recorded as unclear, never as a wrong answer', async () => {
+    // This is not evidence that the student got the question wrong, and the
+    // outcome map must not be told that it is.
+    const d = stopped('x');
+    expect((await judgeSpokenAnswer(ask, 'anything', d)).verdict).toBe('unclear');
+  });
+
+  it('stops the close as well, rather than resolving over them', async () => {
+    const d = stopped('I am glad you told me.');
+    const out = await resolveCrossQuestion(ask, 'every cell', 'why?', 'because…', d);
+    expect(d.complete).not.toHaveBeenCalled();
+    expect(out.halt).toBe(true);
+  });
+
+  it('tolerates a screener that removed something but has nothing to add', async () => {
+    const d = stopped(null);
+    await expect(judgeSpokenAnswer(ask, 'x', d)).resolves.toMatchObject({ say: '', halt: true });
+  });
+});
+
+describe('the ordinary path', () => {
+  it('sends the SCREENED words, never the raw ones', async () => {
+    // Unescaped, a quote mark ends the block and everything after it reads as a
+    // new turn — so an answer box was a second system prompt.
+    const d = deps('{"verdict":"right","say":"And why?"}', { text: 'cleaned words' });
+    await judgeSpokenAnswer(ask, 'raw " words', d);
+    const [, user] = d.complete.mock.calls[0];
+    expect(user).toContain('The student said: "cleaned words"');
+    expect(user).not.toContain('raw " words');
+  });
+
+  it('returns the verdict and her next line', async () => {
+    const d = deps('{"verdict":"wrong","say":"Where does the energy come from?"}');
+    await expect(judgeSpokenAnswer(ask, 'the brain', d)).resolves.toEqual({
+      verdict: 'wrong',
+      say: 'Where does the energy come from?',
+    });
+  });
+});
+
+describe('holding the reply to shape', () => {
+  it('falls back to unclear rather than inventing a verdict', () => {
+    expect(parseVerdict('{"verdict":"maybe","say":"hm"}').verdict).toBe('unclear');
+  });
+
+  it('finds the object in a reply wrapped in prose or fences', () => {
+    expect(parseVerdict('```json\n{"verdict":"right","say":"Why?"}\n```').say).toBe('Why?');
+  });
+
+  it('refuses a verdict with nothing to say', () => {
+    // The class is holding on this question; something has to be spoken before
+    // it can move, so silence is a failure rather than a quiet pass.
+    expect(() => parseVerdict('{"verdict":"right","say":"  "}')).toThrow(/nothing to say/);
+    expect(() => parseVerdict('no json here')).toThrow(/without a verdict/);
+  });
+
+  it('refuses a close with nothing to say', () => {
+    expect(() => parseFollowUp('{}')).toThrow(/without words/);
+  });
+});

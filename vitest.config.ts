@@ -15,6 +15,7 @@ export default defineConfig({
       '@ai-tutor/knowledge-graph': pkg('knowledge-graph'),
       '@ai-tutor/diagnostic': pkg('diagnostic'),
       '@ai-tutor/ledger': pkg('ledger'),
+      '@ai-tutor/tutor-judge': pkg('tutor-judge'),
       '@ai-tutor/persona': pkg('persona'),
       '@ai-tutor/pedagogy': pkg('pedagogy'),
       '@ai-tutor/voice': pkg('voice'),
