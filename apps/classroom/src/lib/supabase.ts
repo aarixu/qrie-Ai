@@ -130,16 +130,74 @@ export function onAccountChange(cb: (account: Account | null) => void): () => vo
 }
 
 /**
- * EMAIL OTP — the one that works with nothing else set up.
+ * WHETHER THIS STUDENT IS STILL ANONYMOUS.
  *
- * Supabase serves this itself: no SMS provider to pay, no OAuth client to
- * register. Phone and Google are better for this audience and are wired
- * below, but both wait on an external account, and a sign-in that works
- * today beats a better one that is blocked.
+ * Every install gets an anonymous identity at start-up so the ledger has
+ * somewhere to write from the first beat. That identity is real — it owns rows,
+ * it has an organization — it simply has no way back if the app is reinstalled.
+ */
+export async function isAnonymous(): Promise<boolean> {
+  const db = supabase();
+  if (!db) return false;
+  const { data } = await db.auth.getUser();
+  return data.user?.is_anonymous === true;
+}
+
+/**
+ * MAKE THE ACCOUNT PERMANENT, IN PLACE.
  *
- * The shared mailer is rate-limited on the free tier - a handful of messages
- * an hour. Fine for building; a real SMTP (Resend, Brevo) goes in Supabase
- * settings before students see it.
+ * This is the whole point of the screen, and the part that is easy to get
+ * wrong. A student has already been studying under an anonymous identity that
+ * owns their ledger, their organization and their plan. Calling `signUp` would
+ * mint a SECOND user and silently abandon the first — the work would still
+ * exist in Postgres, attached to an id nobody can sign in as.
+ *
+ * `updateUser` attaches the email and password to the identity they already
+ * have. Same user id, same rows, same history. The upgrade is invisible to
+ * every table.
+ *
+ * Only when there is no anonymous session to upgrade — a second device, a
+ * cleared browser — does this fall back to creating one.
+ */
+export async function createAccount(email: string, password: string): Promise<string | null> {
+  const db = supabase();
+  if (!db) return 'Sign-in is not set up yet.';
+
+  if (await isAnonymous()) {
+    const { error } = await db.auth.updateUser({ email, password });
+    return error?.message ?? null;
+  }
+
+  const { error } = await db.auth.signUp({ email, password });
+  return error?.message ?? null;
+}
+
+/** Sign in on a device that has no session, or a different one. */
+export async function signInWithPassword(email: string, password: string): Promise<string | null> {
+  const db = supabase();
+  if (!db) return 'Sign-in is not set up yet.';
+  const { error } = await db.auth.signInWithPassword({ email, password });
+  return error?.message ?? null;
+}
+
+/** Start the reset mail. A password a fourteen-year-old invented will be lost. */
+export async function sendPasswordReset(email: string): Promise<string | null> {
+  const db = supabase();
+  if (!db) return 'Sign-in is not set up yet.';
+  const { error } = await db.auth.resetPasswordForEmail(email);
+  return error?.message ?? null;
+}
+
+/**
+ * EMAIL OTP — kept, but no longer the way in.
+ *
+ * The sign-in screen is email and password now (decision 6). This stays because
+ * Supabase serves it with nothing else set up, and it is the fallback if the
+ * password flow ever needs one.
+ *
+ * The shared mailer is rate-limited on the free tier — a handful of messages an
+ * hour. Fine for building; a real SMTP goes in Supabase settings before
+ * students see it, and the same limit applies to password resets.
  */
 export async function sendEmailOtp(email: string): Promise<string | null> {
   const db = supabase();
