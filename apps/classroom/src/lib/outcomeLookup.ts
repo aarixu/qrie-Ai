@@ -1,7 +1,7 @@
 import { GAP_THRESHOLD, type GraphIndex } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from './diagnosticData';
 import { profileStore } from '../stores/profile';
-import { settingsStore } from '../stores/settings';
+import { currentKlass } from '../stores/settings';
 
 /**
  * WHAT THE TUTOR IS TOLD ABOUT THE OUTCOME SHE IS TEACHING.
@@ -39,7 +39,7 @@ export interface OutcomeLookup {
  * rests on even when it cannot tell her where the student is.
  */
 export function createOutcomeLookup(mastery?: Record<string, number>): OutcomeLookup {
-  const klass = settingsStore.get().klass ?? profileStore.get().klass;
+  const klass = currentKlass();
   const data = klass === null ? null : loadDiagnosticDataFor(klass, profileStore.get().subjects);
   const index: GraphIndex | null = data?.index ?? null;
 

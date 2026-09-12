@@ -6,7 +6,7 @@ import { useAsync, dataOr } from '../lib/async';
 import { InlineError } from '../ui/States';
 import { progressStore, isCompleted } from '../stores/progress';
 import { profileStore } from '../stores/profile';
-import { settingsStore } from '../stores/settings';
+import { klassOf, settingsStore } from '../stores/settings';
 import { useStore } from '../stores/localStore';
 import { Screen, EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -62,7 +62,7 @@ export function Syllabus() {
 
   // Settings holds the class every path has ever written; the profile copy is
   // the newer one and can lag. Same precedence as the Settings screen.
-  const klass = settings.klass ?? profile.klass;
+  const klass = klassOf(settings, profile);
 
   /** This student's syllabi: their class, and only subjects they chose. */
   const mine = useMemo<SubjectSyllabus[]>(() => {

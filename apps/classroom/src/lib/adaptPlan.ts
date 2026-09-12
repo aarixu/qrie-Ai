@@ -3,7 +3,7 @@ import type { Answer, GraphIndex } from '@ai-tutor/knowledge-graph';
 import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
 import { loadDiagnosticDataFor } from './diagnosticData';
-import { settingsStore } from '../stores/settings';
+import { klassOf, settingsStore } from '../stores/settings';
 import type { QuizOutcome } from './quiz';
 
 /**
@@ -61,7 +61,7 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
   const before = profile.diagnostic;
   if (!before) return null;
 
-  const klass = settingsStore.get().klass ?? profile.klass;
+  const klass = klassOf(settingsStore.get(), profile);
   if (klass === null) return null;
 
   const data = loadDiagnosticDataFor(klass, profile.subjects);

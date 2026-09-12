@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BRAND } from '../brand';
 import { version } from '../../package.json';
-import { settingsStore } from '../stores/settings';
+import { klassOf, settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
 import { preferencesStore, setPreference, type Preferences } from '../stores/preferences';
@@ -104,11 +104,7 @@ export function Settings() {
   const [pickingClass, setPickingClass] = useState(false);
   const [confirmingReset, setConfirmingReset] = useState(false);
 
-  // Both stores hold the class. Settings wins when they disagree because every
-  // path that has ever set a class writes it (onboarding, Profile, this
-  // screen), while the profile copy is only written by the newer ones — so it
-  // is the one that can be stale, never the other way round.
-  const klass = settings.klass ?? profile.klass;
+  const klass = klassOf(settings, profile);
   const available = klass !== null ? subjectsAvailable(klass) : [];
 
   const chooseClass = (next: number) => {

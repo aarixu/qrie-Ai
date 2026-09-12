@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { progressStore, computeStreak } from '../stores/progress';
 import { profileStore, hasDiagnostic } from '../stores/profile';
-import { settingsStore } from '../stores/settings';
+import { klassOf, settingsStore } from '../stores/settings';
 import { doubtLogStore } from '../stores/doubtLog';
 import { useStore } from '../stores/localStore';
 import { Screen } from '../ui/Screen';
@@ -29,7 +29,7 @@ export function Profile() {
   const doubts = useStore(doubtLogStore);
 
   // Settings is the copy every path has always written; see Settings.tsx.
-  const klass = settings.klass ?? profile.klass;
+  const klass = klassOf(settings, profile);
   const completed = Object.values(progress.lessons).filter((l) => l.completedAt).length;
   const streak = computeStreak(progress);
 

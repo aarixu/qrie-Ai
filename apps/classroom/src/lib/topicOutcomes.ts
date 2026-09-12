@@ -1,7 +1,7 @@
 import type { TopicOutcome } from '@ai-tutor/class-prep';
 import { loadDiagnosticDataFor } from './diagnosticData';
 import { profileStore } from '../stores/profile';
-import { settingsStore } from '../stores/settings';
+import { currentKlass } from '../stores/settings';
 
 /**
  * WHAT THE MAP SAYS A TOPIC IS FOR.
@@ -33,7 +33,7 @@ export const MAX_OUTCOMES = 12;
 export function outcomesForTopic(topicRef: string | undefined): TopicOutcome[] {
   if (!topicRef) return [];
 
-  const klass = settingsStore.get().klass ?? profileStore.get().klass;
+  const klass = currentKlass();
   if (klass === null) return [];
 
   const data = loadDiagnosticDataFor(klass, profileStore.get().subjects);
