@@ -100,9 +100,13 @@ try {
 
 // 6. Did the tenancy migration (0005) land? anon may select, and RLS gives it
 //    nothing, so an empty 200 is the right answer and a 404 is the wrong one.
+// `select=*` rather than `select=id`: membership's primary key is
+// (org_id, user_id) and it has no `id` column at all, so asking for one is a
+// 400 that reads exactly like a missing table. The first run of this said the
+// table was absent when it was there.
 for (const table of ['organization', 'membership', 'learning_session', 'ledger_event']) {
   try {
-    const res = await fetch(`${URL_}/rest/v1/${table}?select=id&limit=1`, {
+    const res = await fetch(`${URL_}/rest/v1/${table}?select=*&limit=1`, {
       headers: { apikey: ANON, authorization: `Bearer ${ANON}` },
     });
     const body = await res.text();
