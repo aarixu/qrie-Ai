@@ -85,14 +85,28 @@ show('the refused call, if recorded, claims no tokens',
      !llm || (llm.prompt_tokens === null && llm.status !== 200),
      llm ? `status=${llm.status} prompt_tokens=${llm.prompt_tokens}` : 'no row (refused before the meter)');
 
-// 4. The cost join, as the student sees it: unpriced until an operator prices it.
-const cost = await (await fetch(
+/**
+ * 4. The cost join is the OPERATOR'S, and a student must not reach it.
+ *
+ * This check used to read usage_cost with the student's own token and report
+ * what the sitting cost. It passed, and that was the defect: a view runs with
+ * the rights of whoever defined it unless it says security_invoker, so the
+ * student was reading every OTHER student's rows too — a brand-new anonymous
+ * account came back with five of them. The view is revoked and runs as its
+ * caller now, so being refused here is the pass, and a row coming back would
+ * mean the leak had returned.
+ */
+const costRes = await fetch(
   `${URL_}/rest/v1/usage_cost?select=relay,inr,unpriced&session_id=eq.${sittingId}`,
   { headers: as },
-)).json();
-const costRow = Array.isArray(cost) ? cost.find((r) => r.relay === 'speech') : null;
-show('the cost view answers for this sitting', Boolean(costRow),
-     costRow ? (costRow.unpriced ? 'UNPRICED (no model_price row yet — expected until tools/sql/model_price.sql is applied)' : `₹${costRow.inr}`) : 'no row');
+);
+const costBody = await costRes.text();
+let cost = null;
+try { cost = JSON.parse(costBody); } catch { /* an error body, which is the pass */ }
+const visible = Array.isArray(cost) ? cost.length : 0;
+show('the cost view is closed to the student whose sitting it is',
+     !costRes.ok || visible === 0,
+     `HTTP ${costRes.status}, ${visible} row(s) ${costBody.slice(0, 60)}`);
 
 // 5. And nobody else can see it.
 const other = await (await fetch(`${URL_}/auth/v1/signup`, {
