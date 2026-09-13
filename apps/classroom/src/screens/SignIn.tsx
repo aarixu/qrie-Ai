@@ -23,6 +23,14 @@ import { createAccount, isAnonymous, sendPasswordReset, signInWithPassword } fro
  * minting a second one. Signing up is an upgrade, not a fresh start, and the
  * copy says so — because a student who believes they are starting over will
  * hesitate before they do it.
+ *
+ * AND THE THING IT GOT WRONG. The project has "Confirm email" on, so the
+ * upgrade returns no error and attaches nothing until a link in the inbox is
+ * opened. This screen read that silence as success and sent a child home
+ * believing they had an account — one reinstall away from losing a term of
+ * work that was still owned by the anonymous identity. So `awaiting-email` is
+ * a state of this screen, not a footnote: it does not navigate, it does not
+ * congratulate, it says what has and has not happened.
  */
 
 type Mode = 'join' | 'signin';
@@ -37,6 +45,9 @@ export function SignIn() {
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
+  // The address a confirmation link was sent to, and the reason this screen
+  // stays put. Null while there is nothing waiting.
+  const [awaiting, setAwaiting] = useState<string | null>(null);
   // Whether there is work to carry across. It changes what this screen
   // PROMISES, so it is read rather than assumed.
   const [carrying, setCarrying] = useState(false);
@@ -58,13 +69,28 @@ export function SignIn() {
     setBusy(true);
     setProblem(null);
     setNote(null);
-    const failed =
-      mode === 'join'
-        ? await createAccount(address, password)
-        : await signInWithPassword(address, password);
+
+    if (mode === 'signin') {
+      const failed = await signInWithPassword(address, password);
+      setBusy(false);
+      if (failed) setProblem(failed);
+      else navigate('/', { replace: true });
+      return;
+    }
+
+    const outcome = await createAccount(address, password);
     setBusy(false);
-    if (failed) {
-      setProblem(failed);
+    if (outcome.state === 'failed') {
+      setProblem(outcome.problem);
+      return;
+    }
+    /**
+     * Leaving is the reward for an account that exists. An unconfirmed one is
+     * not one yet, and walking the student out of here is precisely how they
+     * come to believe otherwise.
+     */
+    if (outcome.state === 'awaiting-email') {
+      setAwaiting(outcome.email);
       return;
     }
     navigate('/', { replace: true });
@@ -96,91 +122,137 @@ export function SignIn() {
 
       <div className="max-w-[380px] mx-auto flex flex-col items-center text-center mt-2">
         <div className="w-[130px] h-[150px]" aria-hidden>
-          <CartoonAvatar pose="greet" className="w-full h-full" />
+          <CartoonAvatar pose={awaiting ? 'point' : 'greet'} className="w-full h-full" />
         </div>
 
-        <h1 className="font-headline-md text-headline-md font-bold text-on-background mt-2">
-          {mode === 'join' ? 'Keep your progress' : 'Welcome back'}
-        </h1>
-        <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-[32ch]">
-          {mode === 'join'
-            ? carrying
-              ? 'Everything you have already done comes with you — nothing starts over.'
-              : 'Your streak, notes and everything you have answered move with you to any device.'
-            : 'Sign in and your work comes back.'}
-        </p>
-
-        <div className="w-full mt-stack-lg flex flex-col gap-3">
-          <input
-            autoFocus
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            aria-label="Your email address"
-            className="h-14 px-4 rounded-2xl bg-surface-variant text-on-surface font-body-md text-[16px] text-center outline-none focus:ring-2 focus:ring-primary"
-          />
-
-          <input
-            type="password"
-            // The browser's own password manager is the only thing standing
-            // between a fourteen-year-old and reusing a password from somewhere
-            // else, so it is told exactly which flow this is.
-            autoComplete={mode === 'join' ? 'new-password' : 'current-password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && void submit()}
-            placeholder={mode === 'join' ? `At least ${MIN_PASSWORD} characters` : 'Your password'}
-            aria-label="Your password"
-            className="h-14 px-4 rounded-2xl bg-surface-variant text-on-surface font-body-md text-[16px] text-center outline-none focus:ring-2 focus:ring-primary"
-          />
-
-          {problem && (
-            <p role="alert" className="font-body-md text-body-md text-error">
-              {problem}
-            </p>
-          )}
-          {note && (
-            <p role="status" className="font-body-md text-body-md text-on-surface-variant">
-              {note}
-            </p>
-          )}
-
-          <button
-            onClick={() => void submit()}
-            disabled={busy}
-            className="h-14 rounded-2xl bg-primary text-on-primary font-label-md text-label-md font-bold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-60"
-          >
-            {busy ? 'One moment…' : mode === 'join' ? 'Create my account' : 'Sign in'}
-          </button>
-
-          <button
-            onClick={() => {
-              setMode(mode === 'join' ? 'signin' : 'join');
-              setProblem(null);
-              setNote(null);
-            }}
-            className="font-label-md text-label-md text-on-surface-variant py-2"
-          >
-            {mode === 'join' ? 'I already have an account' : 'I am new here'}
-          </button>
-
-          {mode === 'signin' && (
-            <button
-              onClick={() => void reset()}
-              disabled={busy}
-              className="font-label-sm text-label-sm text-on-surface-variant py-1 disabled:opacity-60"
+        {awaiting ? (
+          <>
+            <h1 className="font-headline-md text-headline-md font-bold text-on-background mt-2">
+              Check your email
+            </h1>
+            {/*
+              Every sentence here is one a twelve-year-old can act on, and none
+              of them says the account is ready. The address is repeated back
+              because the commonest reason the link never arrives is a typo in
+              it, and a student who cannot see what they typed cannot spot one.
+            */}
+            <p
+              role="status"
+              className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-[32ch]"
             >
-              I forgot my password
-            </button>
-          )}
-        </div>
+              We sent a link to <span className="text-on-background font-bold">{awaiting}</span>.
+              Open it and tap the link. That is what finishes your account.
+            </p>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-stack-lg max-w-[32ch]">
+              Until you tap it, nothing is lost and nothing has changed. Everything you have
+              done is still here on this device, and it comes with you the moment you do.
+            </p>
 
-        <p className="font-label-sm text-label-sm text-on-surface-variant mt-stack-lg max-w-[30ch]">
-          You can keep studying without signing in. Nothing here is locked.
-        </p>
+            <div className="w-full mt-stack-lg flex flex-col gap-3">
+              <button
+                onClick={() => navigate('/', { replace: true })}
+                className="h-14 rounded-2xl bg-primary text-on-primary font-label-md text-label-md font-bold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+              >
+                Back to studying
+              </button>
+              <button
+                onClick={() => {
+                  setAwaiting(null);
+                  setNote(null);
+                  setProblem(null);
+                }}
+                className="font-label-md text-label-md text-on-surface-variant py-2"
+              >
+                I typed the wrong address
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="font-headline-md text-headline-md font-bold text-on-background mt-2">
+              {mode === 'join' ? 'Keep your progress' : 'Welcome back'}
+            </h1>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-2 max-w-[32ch]">
+              {mode === 'join'
+                ? carrying
+                  ? 'Everything you have already done comes with you — nothing starts over.'
+                  : 'Your streak, notes and everything you have answered move with you to any device.'
+                : 'Sign in and your work comes back.'}
+            </p>
+
+            <div className="w-full mt-stack-lg flex flex-col gap-3">
+              <input
+                autoFocus
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                aria-label="Your email address"
+                className="h-14 px-4 rounded-2xl bg-surface-variant text-on-surface font-body-md text-[16px] text-center outline-none focus:ring-2 focus:ring-primary"
+              />
+
+              <input
+                type="password"
+                // The browser's own password manager is the only thing standing
+                // between a fourteen-year-old and reusing a password from somewhere
+                // else, so it is told exactly which flow this is.
+                autoComplete={mode === 'join' ? 'new-password' : 'current-password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && void submit()}
+                placeholder={mode === 'join' ? `At least ${MIN_PASSWORD} characters` : 'Your password'}
+                aria-label="Your password"
+                className="h-14 px-4 rounded-2xl bg-surface-variant text-on-surface font-body-md text-[16px] text-center outline-none focus:ring-2 focus:ring-primary"
+              />
+
+              {problem && (
+                <p role="alert" className="font-body-md text-body-md text-error">
+                  {problem}
+                </p>
+              )}
+              {note && (
+                <p role="status" className="font-body-md text-body-md text-on-surface-variant">
+                  {note}
+                </p>
+              )}
+
+              <button
+                onClick={() => void submit()}
+                disabled={busy}
+                className="h-14 rounded-2xl bg-primary text-on-primary font-label-md text-label-md font-bold border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all disabled:opacity-60"
+              >
+                {busy ? 'One moment…' : mode === 'join' ? 'Create my account' : 'Sign in'}
+              </button>
+
+              <button
+                onClick={() => {
+                  setMode(mode === 'join' ? 'signin' : 'join');
+                  setProblem(null);
+                  setNote(null);
+                }}
+                className="font-label-md text-label-md text-on-surface-variant py-2"
+              >
+                {mode === 'join' ? 'I already have an account' : 'I am new here'}
+              </button>
+
+              {mode === 'signin' && (
+                <button
+                  onClick={() => void reset()}
+                  disabled={busy}
+                  className="font-label-sm text-label-sm text-on-surface-variant py-1 disabled:opacity-60"
+                >
+                  I forgot my password
+                </button>
+              )}
+            </div>
+
+            <p className="font-label-sm text-label-sm text-on-surface-variant mt-stack-lg max-w-[30ch]">
+              You can keep studying without signing in. Nothing here is locked.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

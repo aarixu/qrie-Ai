@@ -1,5 +1,6 @@
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import { wipeDevice } from '../stores/localStore';
+import { forgetTicket } from './relay';
 import type { CloudBackend } from './sync';
 
 /**
@@ -164,6 +165,39 @@ export async function isAnonymous(): Promise<boolean> {
 }
 
 /**
+ * WHAT SIGNING UP ACTUALLY DID — three answers, not two.
+ *
+ * The third one is why this is a type rather than `string | null`. Measured
+ * against the deployed project on 2026-09-13: with Supabase's default "Confirm
+ * email" setting ON, `updateUser({ email, password })` answers HTTP 200 with NO
+ * error and a user that still reads `email: ""`, `is_anonymous: true`,
+ * `identities: []`, with the address parked in `new_email`. Nothing is attached
+ * until the student opens the link in their inbox.
+ *
+ * A caller that reads "no error" as "account created" therefore sends a child
+ * away believing a term of work is safe, while the only thing holding it is
+ * still the anonymous identity a reinstall destroys. Null-as-success cannot
+ * express the difference, so it is gone: every outcome now has a name, and a
+ * screen cannot accidentally treat the middle one as the good one.
+ */
+export type SignUpOutcome =
+  /** The email is on the identity now. They are signed in as it. */
+  | { state: 'signed-up' }
+  /** Sent, not attached. Nothing has changed until the link is opened. */
+  | { state: 'awaiting-email'; email: string }
+  | { state: 'failed'; problem: string };
+
+/**
+ * The address came back WEARING the email, rather than merely not complaining.
+ *
+ * Compared case-insensitively because the server lowercases what it stores and
+ * a student typing their address with a capital would otherwise be told their
+ * account is unconfirmed forever.
+ */
+const attached = (got: string | null | undefined, asked: string): boolean =>
+  typeof got === 'string' && got.length > 0 && got.toLowerCase() === asked.trim().toLowerCase();
+
+/**
  * MAKE THE ACCOUNT PERMANENT, IN PLACE.
  *
  * This is the whole point of the screen, and the part that is easy to get
@@ -179,17 +213,29 @@ export async function isAnonymous(): Promise<boolean> {
  * Only when there is no anonymous session to upgrade — a second device, a
  * cleared browser — does this fall back to creating one.
  */
-export async function createAccount(email: string, password: string): Promise<string | null> {
+export async function createAccount(email: string, password: string): Promise<SignUpOutcome> {
   const db = supabase();
-  if (!db) return 'Sign-in is not set up yet.';
+  if (!db) return { state: 'failed', problem: 'Sign-in is not set up yet.' };
 
   if (await isAnonymous()) {
-    const { error } = await db.auth.updateUser({ email, password });
-    return error?.message ?? null;
+    const { data, error } = await db.auth.updateUser({ email, password });
+    if (error) return { state: 'failed', problem: error.message };
+    return attached(data.user?.email, email)
+      ? { state: 'signed-up' }
+      : { state: 'awaiting-email', email };
   }
 
-  const { error } = await db.auth.signUp({ email, password });
-  return error?.message ?? null;
+  const { data, error } = await db.auth.signUp({ email, password });
+  if (error) return { state: 'failed', problem: error.message };
+  /**
+   * A SESSION, not a user, is the proof here.
+   *
+   * With confirmation on, `signUp` also returns a user and no error — and no
+   * session, because nobody is signed in as an account that does not exist
+   * yet. The user object alone would have this branch lie in exactly the same
+   * way the upgrade branch did.
+   */
+  return data.session ? { state: 'signed-up' } : { state: 'awaiting-email', email };
 }
 
 /** Sign in on a device that has no session, or a different one. */
@@ -291,8 +337,11 @@ export async function deleteOwnAccount(): Promise<string | null> {
   const { error } = await db.rpc('delete_own_account');
   if (error) return error.message;
   // The session is meaningless once the user is gone; without this the app
-  // would keep trying to sync for somebody who no longer exists.
-  await db.auth.signOut();
+  // would keep trying to sync for somebody who no longer exists. Through our
+  // own signOut rather than the client's, so there is ONE way a session ends
+  // and everything that has to be dropped with it cannot be dropped in one
+  // path and forgotten in the other.
+  await signOut();
   /**
    * AND THE COPY ON THIS DEVICE.
    *
@@ -317,7 +366,21 @@ export async function deleteOwnAccount(): Promise<string | null> {
  * a shared phone still owns the work they did on it, and wiping localStorage
  * here would delete a day of study to protect an account that already has it
  * safely in the cloud.
+ *
+ * THE SPEECH TICKET IS NOT LEFT ALONE. It is a signed pass naming the student
+ * who just left, it lives in memory for ten minutes, and the relay meters every
+ * line spoken against whoever it names — so on the shared phone this app is
+ * built for, the next student's voice was billed to the previous one's budget.
+ * `forgetTicket` was written for this and was called by nothing, which is worse
+ * than not existing: its comment said "called on sign-out" and made a reader
+ * stop looking. It is called here because here is the only place the app ends a
+ * session, so no future sign-out path can forget to.
+ *
+ * Dropped BEFORE the network call, not after: a sign-out that fails still has
+ * to leave no pass behind, and a ticket thrown away by mistake costs one round
+ * trip to mint another.
  */
 export async function signOut(): Promise<void> {
+  forgetTicket();
   await supabase()?.auth.signOut();
 }

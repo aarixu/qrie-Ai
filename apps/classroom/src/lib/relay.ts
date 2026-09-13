@@ -81,10 +81,25 @@ let signingIn: Promise<string | null> | null = null;
 async function startAnonymousSession(): Promise<string | null> {
   const db = supabase();
   if (!db) return null;
+  // The era `forgetTicket` moves on, read BEFORE the request. The ticket had
+  // this guard and the session — which is the thing that decides who the
+  // student IS — did not: a sign-in already on the wire when somebody signs
+  // out lands afterwards, and `signInAnonymously` writes its session straight
+  // into the Supabase client's own storage. So the person who just signed out
+  // was silently signed back in as a fresh anonymous user, and the next class
+  // was recorded under a stranger.
+  const askedIn = era;
   try {
     const { data, error } = await db.auth.signInAnonymously();
     if (error) {
       console.error('[relay] could not start an anonymous session:', error.message);
+      return null;
+    }
+    if (askedIn !== era) {
+      // Returning null is not enough on its own — the SDK has already stored
+      // the session, so the next `accessToken()` would find it and carry on.
+      // It has to be taken back out.
+      void db.auth.signOut();
       return null;
     }
     return data.session?.access_token ?? null;
@@ -173,17 +188,32 @@ export function relayError(status: number, body: { error?: { message?: string } 
 let ticket: { value: string; expiresAt: number } | null = null;
 let minting: Promise<string | null> | null = null;
 
+/**
+ * WHICH STUDENT THIS COUNTER IS ON.
+ *
+ * Dropping the ticket on sign-out is not enough on its own: a mint that was
+ * already in flight when they signed out resolves a moment later and writes the
+ * old student's pass back into the slot that was just cleared — clearing
+ * `minting` abandons the promise, it does not cancel the request. So a reply is
+ * only kept if the identity has not changed underneath it.
+ */
+let era = 0;
+
 /** Renewed a minute early, so a line never waits on the round trip. */
 const RENEW_BEFORE_MS = 60_000;
 
 const fresh = (at: number): boolean => ticket !== null && ticket.expiresAt - at > RENEW_BEFORE_MS;
 
 async function mint(): Promise<string | null> {
+  const askedIn = era;
   try {
     const res = await relayFetch('/api/ticket', { method: 'POST' });
     if (!res.ok) return null;
     const body = (await res.json()) as { ticket?: unknown; expiresAt?: unknown };
     if (typeof body.ticket !== 'string' || typeof body.expiresAt !== 'number') return null;
+    // Somebody signed out while this was on the wire. The pass names a student
+    // who has left; storing it now would undo the sign-out.
+    if (askedIn !== era) return null;
     ticket = { value: body.ticket, expiresAt: body.expiresAt };
     return ticket.value;
   } catch {
@@ -218,8 +248,23 @@ export function currentSpeechTicket(): string | null {
   return ticket?.value ?? null;
 }
 
-/** Drop the remembered ticket. Called on sign-out: it names the old student. */
+/**
+ * Drop the remembered ticket. Called by `signOut` in lib/supabase.ts, because
+ * this string names the student who has just left and the relay meters voice
+ * against whoever it names — on a shared phone the next student was spending
+ * the previous one's budget for up to ten minutes.
+ *
+ * That the two files import each other is deliberate and safe: neither one
+ * touches the other during module evaluation, only inside a function that runs
+ * long after both are loaded. The alternative was for each screen with a sign-
+ * out button to remember to call this, which is the arrangement that left it
+ * with no caller at all.
+ *
+ * The in-flight promises go with it, and the era moves on so the ones already
+ * on the wire cannot land in the slot they were just cleared from.
+ */
 export function forgetTicket(): void {
+  era += 1;
   ticket = null;
   minting = null;
   signingIn = null;
