@@ -181,6 +181,40 @@ describe('the retention migration', () => {
   it('refuses a zero or negative window', () => {
     expect(sql).toMatch(/greatest\(p_days, 1\)/i);
   });
+
+  /**
+   * The half that was missing: 0007 wrote a correct, locked-down, indexed
+   * purge and NOTHING CALLED IT. Retention was recorded as shipped in the plan
+   * while the database kept every answer a child had ever written. A window
+   * that exists only in a comment is worse than making no claim at all.
+   */
+  describe('and the schedule that actually runs it', () => {
+    const cron = sqlOf('0009_retention_schedule.sql');
+
+    it('schedules the purge daily, in the database', () => {
+      expect(cron).toMatch(/create extension if not exists pg_cron/i);
+      expect(cron).toMatch(/cron\.schedule\(/i);
+      expect(cron).toMatch(/select public\.purge_old_ledger\(90\)/i);
+    });
+
+    it('runs it at an hour no Indian student is in class', () => {
+      // 19:30 UTC is 01:00 IST.
+      expect(cron).toMatch(/'30 19 \* \* \*'/);
+    });
+
+    it('can be applied twice without racing itself', () => {
+      expect(cron).toMatch(/cron\.unschedule\('purge-old-ledger'\)/i);
+    });
+
+    /**
+     * Scheduled INSIDE Postgres on purpose. The alternative is a service_role
+     * key — which can read and delete every student's record — parked in a
+     * third-party scheduler to run one statement a day.
+     */
+    it('needs no key to leave the database', () => {
+      expect(cron).not.toMatch(/service_role_key|SUPABASE_SERVICE|curl /i);
+    });
+  });
 });
 
 describe('the usage migration', () => {
