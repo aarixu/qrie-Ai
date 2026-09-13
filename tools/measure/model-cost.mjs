@@ -101,57 +101,179 @@ const AUDIO_KB = (512 / 121.8) * NARRATION_SEC; // MEASURED 512 KB for 121.8s
 const EGRESS_INR_PER_GB = 8.6; // ESTIMATED — Supabase overage $0.09/GB
 const SERVE_AUDIO = (AUDIO_KB / 1024 / 1024) * EGRESS_INR_PER_GB; // DERIVED
 
-const CLASSES = arg('classes', 1000);
+// ------------------------------------------------------------------ scenarios
+/**
+ * THE LEVERS, AND WHO PULLS THEM.
+ *
+ * Four of them, and they are not independent: each assumes the ones above it.
+ *
+ *  1. RECORD THE NARRATION. The words never change between students, so
+ *     synthesising them per student is paying repeatedly for one answer.
+ *     tools/record-class and createRecordedTts already exist.
+ *  2. LET THE CLASS ANSWER IN ITS OWN WORDS. Every option in the probe bank
+ *     already carries an authored `why` and `hint`, and the TAP path already
+ *     speaks them with no model call at all. Only the SPOKEN path asks a model
+ *     to write fresh prose for something the lesson already said better.
+ *  3. LET THE LEARNER MODEL DECIDE. The question has four known options and a
+ *     named misconception per distractor. Asking an LLM which one a student
+ *     meant is the LLM doing the model's job — and being billed for it. Only
+ *     what local matching cannot resolve should reach a model.
+ *  4. PUT THE SPEECH ON THE DEVICE. Only the Android build can: measured on a
+ *     4 GB Mali phone, synthesis runs at 0.45-0.81x realtime with a 3-4s fixed
+ *     cost per call, so it can pre-render a class during prep but cannot hold
+ *     a live conversation. Which is fine once (2) makes the replies files.
+ */
+const MATCH_RATE = arg('match', 0.75); // ESTIMATED — never measured, see below
 const VPS_MONTHLY = arg('vps', 2000); // ESTIMATED — a 4 vCPU box, INR/month
 
-// ------------------------------------------------------------------ scenarios
-const scenarios = [
+/**
+ * MEASURED on 12 real answers through the deployed relay, 2026-09-13: asking
+ * for `reasoning_effort: 'none'` cut the judge's bill by 32% and changed no
+ * verdict. Not the 75% the thinking share suggests — a budget of zero does not
+ * stop gemini-3.7-flash thinking, it only slows it down.
+ */
+const THINKING_OFF = 0.68;
+
+const web = [
   {
-    name: 'A. Today — every line synthesised for every student',
+    name: 'W1. Today — every line synthesised for every student',
     once: PREP_LLM,
-    per: NARRATION_TTS + JUDGE_TTS + EAR_STT + JUDGE_LLM,
     parts: {
       'narration TTS': NARRATION_TTS,
-      "judge's replies TTS": JUDGE_TTS,
+      'her replies, TTS': JUDGE_TTS,
       'the ear (STT)': EAR_STT,
       'judge LLM': JUDGE_LLM,
     },
   },
   {
-    name: 'B. Record the narration once  (tools/record-class, already built)',
+    name: 'W2. + record the narration once per topic',
     once: PREP_LLM + RECORD_ON_AURA,
-    per: JUDGE_TTS + EAR_STT + JUDGE_LLM + SERVE_AUDIO,
     parts: {
       'narration TTS': SERVE_AUDIO,
-      "judge's replies TTS": JUDGE_TTS,
+      'her replies, TTS': JUDGE_TTS,
       'the ear (STT)': EAR_STT,
       'judge LLM': JUDGE_LLM,
     },
   },
   {
-    name: 'C. B, plus the live speech self-hosted on a VPS',
-    once: PREP_LLM + RECORD_ON_AURA,
-    per: JUDGE_LLM + SERVE_AUDIO,
+    name: 'W3. + she answers in the lesson’s own authored words, recorded too',
+    once: PREP_LLM + RECORD_ON_AURA * 1.4, // the why/hint lines are ~40% more audio
     parts: {
       'narration TTS': SERVE_AUDIO,
-      "judge's replies TTS": 0,
+      'her replies, TTS': 0,
+      'the ear (STT)': EAR_STT,
+      'judge LLM': JUDGE_LLM * THINKING_OFF,
+    },
+  },
+  {
+    name: `W4. + the learner model resolves the answer, LLM only for the rest (${(MATCH_RATE * 100).toFixed(0)}%)`,
+    once: PREP_LLM + RECORD_ON_AURA * 1.4,
+    parts: {
+      'narration TTS': SERVE_AUDIO,
+      'her replies, TTS': 0,
+      'the ear (STT)': EAR_STT,
+      'judge LLM': JUDGE_LLM * THINKING_OFF * (1 - MATCH_RATE),
+    },
+  },
+  {
+    /**
+     * THE BROWSER CAN HOLD THE EAR, ONCE IT NO LONGER HAS TO HOLD THE VOICE.
+     *
+     * "A browser cannot download 306 MB of speech models" has been the reason
+     * web is the expensive platform, and it counts the wrong models. 263 MB of
+     * that is Supertonic, the VOICE — and by W3 the voice is a set of files
+     * that were rendered once, so the browser never needs it. What is left is
+     * the EAR, and whisper-tiny is 39 MB: a one-time download smaller than a
+     * single app update, cached after the first visit.
+     *
+     * So the platform was never the constraint. The constraint is whether any
+     * small on-device model can hear a Class 10 student answer in Hinglish.
+     */
+    name: 'W5. + the ear runs in the browser too — only the voice was ever too big',
+    once: PREP_LLM + RECORD_ON_AURA * 1.4,
+    parts: {
+      'narration TTS': SERVE_AUDIO,
+      'her replies, TTS': 0,
+      'the ear (STT)': 0,
+      'judge LLM': JUDGE_LLM * THINKING_OFF * (1 - MATCH_RATE),
+    },
+  },
+  {
+    /**
+     * And the rung that makes the platform question disappear.
+     *
+     * If the class also carries its own cross-question per option, authored at
+     * preparation time like the `why` and the `hint` already are, then nothing
+     * at playback needs a model at all and web costs exactly what Android
+     * costs. The open question is not the money, it is whether a cross-question
+     * written before the student spoke can be as good as one written after.
+     */
+    name: 'W6. + the class carries its own cross-questions (same as A4)',
+    once: PREP_LLM * 1.3 + RECORD_ON_AURA * 1.4,
+    parts: {
+      'narration TTS': SERVE_AUDIO,
+      'her replies, TTS': 0,
+      'the ear (STT)': 0,
+      'judge LLM': 0,
+    },
+  },
+];
+
+const app = [
+  {
+    name: 'A1. The app as designed today — speech on the device, judge in the cloud',
+    once: PREP_LLM,
+    parts: {
+      'narration TTS': 0,
+      'her replies, TTS': 0,
       'the ear (STT)': 0,
       'judge LLM': JUDGE_LLM,
     },
-    monthly: VPS_MONTHLY,
+  },
+  {
+    name: 'A2. + thinking off, and she answers in the lesson’s own words',
+    once: PREP_LLM,
+    parts: {
+      'narration TTS': 0,
+      'her replies, TTS': 0,
+      'the ear (STT)': 0,
+      'judge LLM': JUDGE_LLM * THINKING_OFF,
+    },
+  },
+  {
+    name: `A3. + the learner model resolves the answer (${(MATCH_RATE * 100).toFixed(0)}%)`,
+    once: PREP_LLM,
+    parts: {
+      'narration TTS': 0,
+      'her replies, TTS': 0,
+      'the ear (STT)': 0,
+      'judge LLM': JUDGE_LLM * THINKING_OFF * (1 - MATCH_RATE),
+    },
+  },
+  {
+    name: 'A4. + the class carries its own cross-questions — no model at playback at all',
+    once: PREP_LLM * 1.3, // authoring the cross-question per option at prep time
+    parts: {
+      'narration TTS': 0,
+      'her replies, TTS': 0,
+      'the ear (STT)': 0,
+      'judge LLM': 0,
+    },
   },
 ];
 
 const rs = (n) => `₹${n.toFixed(2)}`;
 const minutes = measured.activeMs / 60000;
+const perHour = (perClass) => (perClass * 60) / minutes;
+const sum = (s) => Object.values(s.parts).reduce((a, b) => a + b, 0);
+
+const line = (label, value) => console.log(`    ${label.padEnd(46)}${rs(value).padStart(8)}`);
 
 console.log(`
 ONE CLASS — ${measured.topicRef}
   ${measured.beats} beats, ${measured.asks} asks, ~${minutes.toFixed(1)} min on task
   MEASURED against the deployed relay on 2026-09-13; ${rows.length} calls, ${rows.length} usage rows.
 `);
-
-const line = (label, value) => console.log(`    ${label.padEnd(46)}${rs(value).padStart(8)}`);
 
 console.log('  MEASURED, once per topic (then the class is cached and reused)');
 line('planner + artist, 4 LLM calls', PREP_LLM);
@@ -162,63 +284,81 @@ line('judge + cross-question, 8 LLM calls', JUDGE_LLM);
 console.log('\n  DERIVED — the classroom does this and the harness did not');
 line(`her ${JUDGE_OUT_TOKENS} reply tokens spoken aloud, ~${JUDGE_SPOKEN_CHARS} chars`, JUDGE_TTS);
 
-const today = scenarios[0];
-console.log(`\n  A COLD class   ${rs(today.once + today.per)}`);
-console.log(`  A CACHED class ${rs(today.per)}   =  ₹${((today.per * 60) / minutes).toFixed(0)} per student-hour`);
+const todayPer = sum(web[0]);
+console.log(`\n  A COLD class   ${rs(web[0].once + todayPer)}`);
+console.log(`  A CACHED class ${rs(todayPer)}   =  ₹${perHour(todayPer).toFixed(0)} per student-hour`);
 
-console.log(`\n\nWHAT CHANGES IF WE CHANGE ONE THING  (at ${CLASSES.toLocaleString('en-IN')} classes a month)\n`);
-for (const s of scenarios) {
-  const monthly = s.monthly ?? 0;
-  const perClass = s.per + monthly / CLASSES;
-  console.log(`  ${s.name}`);
-  for (const [k, v] of Object.entries(s.parts)) {
-    console.log(`      ${k.padEnd(24)} ${(v === 0 ? 'self-hosted' : rs(v)).padStart(11)}`);
+const TARGET = 2;
+const table = (title, list, note) => {
+  console.log(`\n\n${title}\n`);
+  if (note) console.log(`  ${note}\n`);
+  for (const s of list) {
+    const per = sum(s);
+    const hr = perHour(per);
+    const hit = hr <= TARGET ? '  <-- TARGET' : '';
+    console.log(`  ${s.name}`);
+    for (const [k, v] of Object.entries(s.parts)) {
+      console.log(`      ${k.padEnd(22)} ${(v === 0 ? 'free' : rs(v)).padStart(10)}`);
+    }
+    console.log(
+      `      ${'PER CACHED CLASS'.padEnd(22)} ${rs(per).padStart(10)}   ₹${hr.toFixed(0)}/student-hour` +
+        `   first class of a topic ${rs(s.once + per)}${hit}\n`,
+    );
   }
-  if (monthly) console.log(`      ${'the VPS, spread out'.padEnd(24)} ${rs(monthly / CLASSES).padStart(11)}`);
+};
+
+table(
+  'ON THE WEB',
+  web,
+  'Each rung assumes the ones above it. A VPS hosting the speech would be a fifth rung, and ' +
+    `by W4 it could save at most ${rs(EAR_STT)} a class, which is why it is not listed: ` +
+    'by then there is almost nothing left for it to host.',
+);
+
+table(
+  'ON ANDROID — the models ship inside the APK, so speech costs nothing',
+  app,
+  'MEASURED on a 4 GB Mali phone: synthesis 0.45-0.81x realtime with a 3-4s fixed cost, ' +
+    '255 MB of models cache and reload in 3-5s, memory is not the wall.\n  ' +
+    'So the app can PRE-RENDER a class during the prep it already does, but cannot hold a live\n  ' +
+    'conversation at speed. Rung A2 is what makes that stop mattering.',
+);
+
+console.log(`\nWHERE ₹${TARGET} IS CROSSED\n`);
+for (const [where, list] of [
+  ['web', web],
+  ['app', app],
+]) {
+  const rung = list.find((s) => perHour(sum(s)) <= TARGET);
   console.log(
-    `      ${'PER CACHED CLASS'.padEnd(24)} ${rs(perClass).padStart(11)}   ` +
-      `₹${((perClass * 60) / minutes).toFixed(0)}/student-hour   first class of a topic ${rs(s.once + s.per)}`,
+    rung
+      ? `  ${where}: at "${rung.name.split('.')[0]}" — ₹${perHour(sum(rung)).toFixed(2)}/student-hour`
+      : `  ${where}: NOT REACHED. The cheapest rung here is ₹${perHour(Math.min(...list.map(sum))).toFixed(2)}/student-hour.`,
   );
-  console.log('');
 }
 
-// ------------------------------------------------------------- break-even
-console.log('BREAK-EVEN\n');
-/**
- * Recording the SAME characters through the SAME vendor costs exactly what
- * speaking them once costs — so the first student pays what they pay today and
- * the second student is free. There is no volume at which this is the wrong
- * call; there is only the question of whether a topic gets a second student.
- */
+console.log(`\n\nTHE NUMBERS THAT ARE NOT MEASURED, AND DECIDE THIS\n`);
 console.log(
-  `  Recording the narration costs ${rs(RECORD_ON_AURA)} — the same characters, once. ` +
-    `The first\n  student on a topic pays what they pay today; the SECOND one is free. There is no\n` +
-    `  volume at which this loses.`,
+  `  MATCH RATE (--match, now ${(MATCH_RATE * 100).toFixed(0)}%). How often a spoken Hinglish answer can be\n` +
+    `  matched to one of four known options with no model call. Nobody has measured this.\n` +
+    `  It is the difference between ₹${perHour(sum(app[1])).toFixed(2)} and ₹${perHour(sum(app[2])).toFixed(2)} a student-hour on the app.\n`,
 );
 console.log(
-  `\n  tools/record-class defaults to Gemini TTS, which would cost ${rs(RECORD_ON_GEMINI)} for this class —\n` +
-    `  ${(RECORD_ON_GEMINI / RECORD_ON_AURA).toFixed(1)}x the same words on Aura. Worth a flag to pick the vendor, not a reason to wait.`,
+  `  ON-DEVICE HINGLISH SPEECH RECOGNITION. Measured on Aarav's own phone 2026-08-30:\n` +
+    `  Moonshine-tiny transcribed five seconds in 5.6s and returned an EMPTY STRING on real\n` +
+    `  speech, because it is English-only and these students are not. Every app figure above\n` +
+    `  assumes this gets solved. It is the one blocker between here and launching on Android.\n`,
 );
-const vpsSaves = scenarios[1].per - scenarios[2].per;
 console.log(
-  `\n  The VPS saves ${rs(vpsSaves)} a class, so a ₹${VPS_MONTHLY.toLocaleString('en-IN')}/month box pays for itself at ` +
-    `${Math.ceil(VPS_MONTHLY / vpsSaves).toLocaleString('en-IN')} classes a month ` +
-    `(~${Math.ceil(VPS_MONTHLY / vpsSaves / 30)} a day).`,
+  `  THE DOUBT TUTOR. A raised hand is a real conversation with a model and cannot be\n` +
+    `  pre-rendered or matched. It was never exercised in the measurement, so it is in none\n` +
+    `  of these figures. It is also the only place left where an LLM is doing work the\n` +
+    `  learner model could not have done instead.\n`,
 );
 
 const TOPICS = 1099;
-console.log(`\n\nTHE WHOLE CATALOGUE — ${TOPICS} topics, paid once, ever\n`);
+console.log(`\nTHE WHOLE CATALOGUE — ${TOPICS} topics, paid once, ever\n`);
 console.log(`  preparing every class            ${rs(PREP_LLM * TOPICS).padStart(12)}`);
-console.log(`  recording every narration        ${rs(RECORD_ON_AURA * TOPICS).padStart(12)}`);
-console.log(`  ${'TOTAL'.padEnd(32)} ${rs((PREP_LLM + RECORD_ON_AURA) * TOPICS).padStart(12)}`);
-console.log(
-  `  audio to store                   ${((AUDIO_KB * TOPICS) / 1024).toFixed(0).padStart(9)} MB\n`,
-);
-
-console.log(`WHAT STAYS EXPENSIVE WHATEVER WE DO\n`);
-console.log(
-  `  The judge. ${rs(JUDGE_LLM)} of LLM per class, on every student, forever — it reads a\n` +
-    `  spoken answer and decides right from wrong, and that cannot be cached because\n` +
-    `  every student says something different. Self-hosting it means running a model\n` +
-    `  good enough to mark a child's Hinglish answer, which is not a VPS question.\n`,
-);
+console.log(`  recording narration + replies    ${rs(RECORD_ON_AURA * 1.4 * TOPICS).padStart(12)}`);
+console.log(`  ${'TOTAL'.padEnd(32)} ${rs((PREP_LLM + RECORD_ON_AURA * 1.4) * TOPICS).padStart(12)}`);
+console.log(`  audio to store                   ${((AUDIO_KB * 1.4 * TOPICS) / 1024).toFixed(0).padStart(9)} MB\n`);
