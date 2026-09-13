@@ -207,6 +207,15 @@ describe('a spine that remembers a session', () => {
     'Welcome back! Ready for the next one?',
     'Remember what we looked at yesterday?',
     'Picking up from where we left off.',
+    // The same claim with the pronoun in FRONT. The guard looked for one
+    // AFTER "last class", so this — the more natural way to write it, and the
+    // one that names the topic — used to pass. A cached class is read by every
+    // later student who opens that topic, so this published one student's
+    // study history and was wrong for everybody who received it.
+    'Your last class was "Cell Structure", three days ago, so this will feel familiar.',
+    'Our last lesson was about the nucleus.',
+    // And with no pronoun anywhere.
+    'The last class was on refraction, so this builds straight on it.',
   ];
 
   it.each(claims)('is refused: "%s"', (narration) => {
@@ -220,6 +229,11 @@ describe('a spine that remembers a session', () => {
     'The nucleus is the control centre of the cell.',
     'Last week the moon was full — that is one lunar cycle.',
     'We will do this one step at a time.',
+    // "last" is an ordinary English word and the guard must stay tied to the
+    // thing that names a session. These are all teaching.
+    'This is the last lesson of the chapter on light.',
+    'The last step is to balance the equation.',
+    'The last time you saw a rainbow, you were looking at refraction.',
   ];
 
   it.each(ordinary)('leaves ordinary teaching alone: "%s"', (narration) => {

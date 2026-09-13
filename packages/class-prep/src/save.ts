@@ -184,6 +184,23 @@ const REMEMBERS_A_SESSION: RegExp[] = [
    */
   /last time[^.!?]{0,40}\bwe\b/i,
   /last (?:class|lesson)[^.!?]{0,40}\b(?:we|you|your)\b/i,
+  /**
+   * The same claim with the pronoun in FRONT, which the line above cannot see.
+   *
+   * It looks for a pronoun AFTER "last class", so "Last class we did the
+   * nucleus" was caught and "Your last class was Cell Structure, three days
+   * ago" sailed through — the more natural way for a planner to write it, and
+   * the one that names the topic. A cached class is world-readable by every
+   * later student who opens that topic, so what leaked was one student's study
+   * history, and the class was wrong for everybody who received it.
+   *
+   * "was" earns its place beside the pronouns: "The last class was on
+   * refraction" claims the shared past without a pronoun anywhere. It stays
+   * tied to "class" and "lesson", so "the last step", "the last lesson of the
+   * chapter" and "last week the moon was full" are all still ordinary teaching.
+   */
+  /\b(?:your|our)\s+last\s+(?:class|lesson)\b/i,
+  /\blast\s+(?:class|lesson)\s+(?:was|you|we)\b/i,
   /(?:when|what|remember what) we (?:did|looked at|covered|talked about)/i,
   /yesterday we /i,
   /**

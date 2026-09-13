@@ -27,6 +27,9 @@ import {
   type Gate,
   type UsageEvent,
 } from '../../packages/relay/src/index.ts';
+// The markup gate, imported from the package that defines it rather than
+// re-described here. See classWriter() for why the dev writer needs it.
+import { isAllowedClassPath, unsafeMarkup } from '../../packages/relay/src/markup.ts';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -235,6 +238,29 @@ function classWriter(): Plugin {
             };
             // A folder name is a path, and this one arrives over HTTP.
             if (!/^[a-z0-9][a-z0-9-]*$/.test(saved.id)) return fail(400, 'bad class id');
+
+            /**
+             * THE SAME MARKUP GATE THE DEPLOYED RELAY RUNS.
+             *
+             * This route is dev-only, and that made it look like the one place
+             * the gate did not matter. It is the opposite: this is the writer
+             * that actually puts lessons into content/, and those are the files
+             * that get committed and served to every student. Diagram markup
+             * travels inside assets.json and is inlined with
+             * dangerouslySetInnerHTML by everyone who later opens the topic.
+             *
+             * The gate was moved to the server precisely because a browser-side
+             * check protects only the traffic that chooses to walk through it —
+             * and then this route parsed the body itself and never walked
+             * through it at all. So the one writer anybody actually uses was
+             * the one with no gate.
+             */
+            for (const file of saved.files ?? []) {
+              if (!isAllowedClassPath(file.path)) return fail(400, `a class does not hold "${file.path}"`);
+              if (file.encoding !== 'utf8') continue;
+              const problems = unsafeMarkup(file.body);
+              if (problems.length > 0) return fail(400, `${file.path} ${problems[0]}`);
+            }
 
             const dir = path.join(root, saved.id);
             // A topic is only cold once. Refusing rather than overwriting means

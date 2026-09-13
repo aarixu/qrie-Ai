@@ -282,11 +282,22 @@ awkward one on the mobile web: the inventory is thinner, and the compliant
 are paid-only at web launch with ads waiting for the Play Store build. Finding
 that out after the pricing is set is the expensive order.
 
-**4.3 — Auth the student can actually use.** `SignIn.tsx` is **email OTP**;
-decision 6 is ordinary email and password. The screen, the flows (sign up, sign
-in, forgotten password) and the upgrade path from the durable anonymous
-identity — that last one matters most, because it is what stops a student
-losing a term's work by signing up.
+**4.3 — Auth the student can actually use.** Mostly done in Phase 1, and this
+item said otherwise for a week: `SignIn.tsx` was rewritten for ordinary email
+and password per decision 6, with sign-up, sign-in and forgotten-password all
+live. Whoever picked Phase 4 up from the old wording would have planned work
+that exists and might have rewritten a screen that already satisfies the
+decision.
+
+What is genuinely outstanding is the **upgrade path from the durable anonymous
+identity**, verified end to end on a real device — it is what stops a student
+losing a term's work by signing up, and two defects in it were only found by
+auditing: the entrance to it was unreachable (both screens read an anonymous
+student as signed in and offered only a Sign out, which ends that identity for
+good), and Supabase's default "Confirm email" makes `updateUser` return no
+error while attaching nothing until the link is clicked. The first is fixed;
+the second is still open and needs the project's own auth settings checked
+rather than a code change guessed at.
 
 **4.4 — Credits, end to end.** The balance (replacing `relay_usage`'s daily
 reset), the **free allowance for a new student** — an open decision, and the one

@@ -47,6 +47,19 @@ interface AskState {
   askedAt: number;
   attempt: number;
   hintsShown: number;
+  /**
+   * The HIGHEST rung handed over on this question so far.
+   *
+   * Kept because `helped` is told the rung and used to throw it away: only the
+   * COUNT of hints survived, and the rung for the next answer was re-derived
+   * from that count as 0, 3 or 4. So a raised hand — a whole tutor
+   * conversation about the question, recorded as rung 7 on its own event —
+   * produced an answer filed at rung 3, and the judge's leading question
+   * (rung 2) and the authored hint (rung 3) were indistinguishable once
+   * counted. The ladder was being described correctly on one event and
+   * flattened on the one that matters.
+   */
+  highestRung: AssistanceRung;
 }
 
 /**
@@ -58,10 +71,8 @@ interface AskState {
  * that answer is rung 0, and rung 0 is the only one that can ever count as
  * unassisted mastery.
  */
-const rungOf = (state: AskState | undefined): AssistanceRung => {
-  if (!state || state.hintsShown === 0) return 0;
-  return state.hintsShown === 1 ? 3 : 4;
-};
+const rungOf = (state: AskState | undefined): AssistanceRung =>
+  !state || state.hintsShown === 0 ? 0 : state.highestRung;
 
 export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean): ClassLedger {
   const asks = useRef(new Map<string, AskState>());
@@ -137,6 +148,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
           askedAt: Date.now(),
           attempt: (prior?.attempt ?? 0) + 1,
           hintsShown: prior?.hintsShown ?? 0,
+          highestRung: prior?.highestRung ?? 0,
         };
         asks.current.set(beatId, state);
         logEvent({
@@ -180,7 +192,16 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
 
       helped(beatId, rung, requested) {
         const state = asks.current.get(beatId);
-        if (state) asks.current.set(beatId, { ...state, hintsShown: state.hintsShown + 1 });
+        if (state) {
+          asks.current.set(beatId, {
+            ...state,
+            hintsShown: state.hintsShown + 1,
+            // The highest, never the latest: help already given cannot be taken
+            // back, so a small nudge after a full explanation does not return
+            // the student to a lower rung.
+            highestRung: (rung > state.highestRung ? rung : state.highestRung) as AssistanceRung,
+          });
+        }
         logEvent({
           kind: 'helped',
           surface: 'tap',

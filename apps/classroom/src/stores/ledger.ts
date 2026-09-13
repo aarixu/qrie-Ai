@@ -145,7 +145,18 @@ export function logAnswer(input: Omit<AnswerInput, 'id' | 'at'>): void {
  * Null outside a session, which is ordinary: a call from the Home screen
  * belongs to no sitting.
  */
-export const currentSessionId = (): string | null => read().session?.id ?? null;
+export const currentSessionId = (): string | null => {
+  const session = read().session;
+  // ENDED IS NOT OPEN. `endSession` keeps the session object so the sitting it
+  // describes can still be read, and this used to hand that id out forever
+  // after: on a device's second cold class, every preparation call was stamped
+  // with the PREVIOUS class's session. `session_cost` then reported one
+  // sitting carrying another sitting's ten rupees of prep, and
+  // `cost_per_student_hour` divided one session's spend by a different
+  // session's time on task — so the prep/play split this product prices a
+  // credit from was not reproducible from the app that earns it.
+  return session && !session.endedAt ? session.id : null;
+};
 
 /** Called by the drain, and only after the server has confirmed the write. */
 export function forgetSent(ids: readonly string[]): void {

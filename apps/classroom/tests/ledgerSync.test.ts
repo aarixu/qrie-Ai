@@ -425,3 +425,41 @@ describe('when the sitting cannot be written', () => {
     expect(store.ledgerOutbox.get().pending.map((e) => e.kind)).toContain('session-started');
   });
 });
+
+/**
+ * WHICH SITTING A RELAY CALL IS BILLED TO.
+ *
+ * Every model call, spoken line and transcription is stamped server-side with
+ * `currentSessionId()`, and that is what makes "cost per class" and "cost per
+ * student-hour" real numbers rather than estimates. `endSession` keeps the
+ * session object so the sitting it describes can still be read — and this
+ * getter used to hand its id out forever after. On a device's second cold
+ * class, every preparation call was billed to the FIRST class, so one sitting
+ * carried another sitting's ten rupees of prep and the per-hour figure divided
+ * one session's spend by a different session's time on task.
+ */
+describe('the sitting a relay call is attributed to', () => {
+  it('is the one that is open', () => {
+    const id = store.openSession({ source: 'class', topicRef: 'class10-science/heredity/mendel' });
+    expect(store.currentSessionId()).toBe(id);
+  });
+
+  it('is nobody once the class has ended', () => {
+    store.openSession({ source: 'class', topicRef: 'class10-science/heredity/mendel' });
+    store.closeSession({ activeMs: 240_000, completed: true });
+    expect(store.currentSessionId()).toBeNull();
+  });
+
+  it('is the NEW class, not the one before it', () => {
+    const first = store.openSession({ source: 'class', topicRef: 'a' });
+    store.closeSession({ activeMs: 1000, completed: true });
+    const second = store.openSession({ source: 'class', topicRef: 'b' });
+
+    expect(store.currentSessionId()).toBe(second);
+    expect(store.currentSessionId()).not.toBe(first);
+  });
+
+  it('is nobody at all before the first class of an install', () => {
+    expect(store.currentSessionId()).toBeNull();
+  });
+});
