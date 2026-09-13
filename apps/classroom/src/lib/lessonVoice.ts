@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { currentSpeechTicket, relayUrl, speechTicket } from './relay';
+import { currentSessionId } from '../stores/ledger';
 import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
 import {
   MANIFEST_FILE,
@@ -106,6 +107,7 @@ export function useLessonVoice(
       live = createStreamingTts({
         endpoint: relayUrl('/api/speech'),
         ticket: currentSpeechTicket,
+        session: currentSessionId,
         ...TUTOR_VOICE,
         // Her face listens in: the avatar builds the audio elements, taps
         // their loudness, and lipsyncs to the same clock the student hears.

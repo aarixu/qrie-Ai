@@ -182,3 +182,51 @@ describe('the retention migration', () => {
     expect(sql).toMatch(/greatest\(p_days, 1\)/i);
   });
 });
+
+describe('the usage migration', () => {
+  const sql = sqlOf('0008_usage.sql');
+
+  it('holds quantities, never prices', () => {
+    // A token is a fact about a call. A rupee per token is a fact about a
+    // contract that changes without telling us; it lives in its own table.
+    expect(sql).toMatch(/create table if not exists public\.model_price/i);
+    // The usage_event TABLE itself - not the file, which rightly mentions
+    // rupees in the view that joins the two - carries no price column.
+    const table = sql.match(/create table if not exists public\.usage_event \(([\s\S]*?)\n\);/i);
+    expect(table).not.toBeNull();
+    expect(table![1]).not.toMatch(/inr|price|rupee/i);
+    expect(table![1]).toMatch(/prompt_tokens integer/i);
+  });
+
+  it('keeps price history so a change re-prices only what came after', () => {
+    expect(sql).toMatch(/effective_from timestamptz not null default now\(\)/i);
+    expect(sql).toMatch(/primary key \(provider, model, unit, effective_from\)/i);
+    expect(sql).toMatch(/order by effective_from desc/i);
+  });
+
+  it('is written by the relay alone', () => {
+    // A student who could write their own usage could write their own bill.
+    expect(sql).toMatch(/revoke all on function public\.record_usage[^;]*from anon/i);
+    expect(sql).toMatch(/revoke all on function public\.record_usage[^;]*from authenticated/i);
+    expect(sql).toMatch(/grant execute on function public\.record_usage[^;]*to service_role/i);
+    expect(sql).not.toMatch(/on public\.usage_event\s+for insert/i);
+  });
+
+  it('shows an unpriced call as unpriced, never as free', () => {
+    expect(sql).toMatch(/as unpriced/i);
+    expect(sql).toMatch(/unpriced_calls/i);
+  });
+
+  it('divides by time ON TASK, not wall clock', () => {
+    // The headline number is rupees per hour of a student actually learning.
+    expect(sql).toMatch(/create or replace function public\.cost_per_student_hour/i);
+    expect(sql).toMatch(/active_ms is not null and active_ms > 0/i);
+    expect(sql).toMatch(/sum\(c\.active_ms\) \/ 3600000\.0/i);
+  });
+
+  it('does not refuse a usage row because the session row has not landed yet', () => {
+    // The drain writes learning_session after the calls that belonged to it.
+    expect(sql).toMatch(/session_id uuid,/i);
+    expect(sql).not.toMatch(/session_id uuid[^,]*references/i);
+  });
+});

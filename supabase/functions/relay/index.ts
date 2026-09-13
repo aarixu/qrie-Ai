@@ -42,6 +42,7 @@ import {
   createSupabaseVerifier,
 } from '../../../packages/relay/src/auth.ts';
 import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
+import { createSupabaseUsage } from '../../../packages/relay/src/usage.ts';
 import { handleRelay, type HandlerDeps } from '../../../packages/relay/src/handler.ts';
 import { keepClass } from '../../../packages/relay/src/classStore.ts';
 import { createTokenSource, readServiceAccount } from '../../../packages/relay/src/googleAuth.ts';
@@ -85,7 +86,11 @@ if (SERVICE_ACCOUNT_JSON) {
  */
 const CORS = {
   'access-control-allow-origin': '*',
-  'access-control-allow-headers': 'authorization, content-type',
+  // x-session-id: which learning session a call belongs to, for the usage
+  // record (0008). A header the browser is not told about here is a header the
+  // preflight refuses - and then EVERY relay call from the web app fails, not
+  // just the accounting. Adding a header to the app means adding it here.
+  'access-control-allow-headers': 'authorization, content-type, x-session-id',
   'access-control-allow-methods': 'GET, POST, OPTIONS',
   'access-control-max-age': '86400',
 };
@@ -97,6 +102,10 @@ const CORS = {
  */
 const verify = cacheVerifier(createSupabaseVerifier(SUPABASE_URL, ANON_KEY));
 const ledger = createSupabaseLedger(SUPABASE_URL, SERVICE_ROLE_KEY);
+// What each call cost, in the units the provider bills. Same door as the
+// meter: the service role, through a definer function, so a student holding
+// the anon key cannot write their own usage.
+const usage = createSupabaseUsage(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 /**
  * Typed against HandlerDeps deliberately.
@@ -119,6 +128,7 @@ const deps: HandlerDeps = {
   },
   transcribe: (model: string, contentType: string, audio: Uint8Array) =>
     transcribeViaFormData(OPENROUTER_API_KEY, model, contentType, audio),
+  usage,
   /**
    * The files go to a public Storage bucket and the catalogue row to Postgres,
    * both with the service role key. That key never leaves this function — a

@@ -114,6 +114,17 @@ export function logAnswer(input: Omit<AnswerInput, 'id' | 'at'>): void {
   write(recordAnswer(read(), { ...input, id: mint(), at: now() }));
 }
 
+/**
+ * The sitting in progress, for the relay's usage record.
+ *
+ * Every model call, spoken line and transcription made during a class is
+ * stamped with this on the server, which is what lets "cost per class" and
+ * "cost per student-hour" be computed from real rows instead of estimated.
+ * Null outside a session, which is ordinary: a call from the Home screen
+ * belongs to no sitting.
+ */
+export const currentSessionId = (): string | null => read().session?.id ?? null;
+
 /** Called by the drain, and only after the server has confirmed the write. */
 export function forgetSent(ids: readonly string[]): void {
   write(acknowledge(read(), ids));

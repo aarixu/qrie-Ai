@@ -64,6 +64,12 @@ export interface StreamingTtsOptions {
    * rather than falling silent.
    */
   ticket?: () => string | null;
+  /**
+   * The learning session each line belongs to, for the relay's usage record.
+   * An <audio src> cannot send a header, so it rides beside the ticket. Read
+   * per line for the same reason the ticket is: a class outlives both.
+   */
+  session?: () => string | null;
 }
 
 const realAudio = (src: string): SpeechElement => new Audio(src) as unknown as SpeechElement;
@@ -84,6 +90,8 @@ export function createStreamingTts(opts: StreamingTtsOptions): TtsAdapter {
     // the holder re-mints before the old one lapses.
     const pass = opts.ticket?.();
     if (pass) query.set('ticket', pass);
+    const session = opts.session?.();
+    if (session) query.set('session', session);
     return `${opts.endpoint}?${query}`;
   };
   /** Resolves the line in flight, whatever ends it. */

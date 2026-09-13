@@ -50,6 +50,18 @@ export {
 
 export { TICKET_TTL_MS, mintTicket, readTicket, type Ticket } from './ticket.ts';
 
+export {
+  createMemoryUsage,
+  createSupabaseUsage,
+  usageFromClass,
+  usageFromHear,
+  usageFromOpenRouterLlm,
+  usageFromSpeech,
+  usageFromVertex,
+  type Usage,
+  type UsageEvent,
+} from './usage.ts';
+
 export { handleRelay, handleTicket, relayFor, type HandlerDeps } from './handler.ts';
 
 export { keepClass, publicUrlFor, readSavedClass, type ClassStoreOptions } from './classStore.ts';

@@ -104,7 +104,7 @@ try {
 // (org_id, user_id) and it has no `id` column at all, so asking for one is a
 // 400 that reads exactly like a missing table. The first run of this said the
 // table was absent when it was there.
-for (const table of ['organization', 'membership', 'learning_session', 'ledger_event']) {
+for (const table of ['organization', 'membership', 'learning_session', 'ledger_event', 'usage_event', 'model_price']) {
   try {
     const res = await fetch(`${URL_}/rest/v1/${table}?select=*&limit=1`, {
       headers: { apikey: ANON, authorization: `Bearer ${ANON}` },
@@ -150,6 +150,45 @@ try {
   );
 } catch (e) {
   show('purge_old_ledger reachable', false, String(e));
+}
+
+// 8b. THE PREFLIGHT. A browser asks permission before sending a custom header,
+//     and the function answers from a fixed list. A header the app sends that
+//     is not on that list breaks every relay call from the web app with a CORS
+//     error that looks nothing like "you forgot to add it". This is the check
+//     that would have caught x-session-id going out before the list did.
+try {
+  const res = await fetch(`${RELAY}/api/llm`, {
+    method: 'OPTIONS',
+    headers: {
+      origin: 'https://example.invalid',
+      'access-control-request-method': 'POST',
+      'access-control-request-headers': 'authorization, content-type, x-session-id',
+    },
+  });
+  const allowed = (res.headers.get('access-control-allow-headers') ?? '').toLowerCase();
+  const missing = ['authorization', 'content-type', 'x-session-id'].filter((h) => !allowed.includes(h));
+  show('the preflight allows every header the app sends', res.status === 204 && missing.length === 0,
+       missing.length ? `missing: ${missing.join(', ')}` : `HTTP ${res.status} ${allowed}`);
+} catch (e) {
+  show('preflight reachable', false, String(e));
+}
+
+// 9. The accounting (0008). A student must not be able to write their own
+//    usage, nor read the operator's cost report. Both must exist and refuse.
+for (const fn of ['record_usage', 'cost_per_student_hour']) {
+  try {
+    const res = await fetch(`${URL_}/rest/v1/rpc/${fn}`, {
+      method: 'POST',
+      headers: { apikey: ANON, authorization: `Bearer ${ANON}`, 'content-type': 'application/json' },
+      body: '{}',
+    });
+    const body = await res.text();
+    show(`${fn} exists and is CLOSED to students`, res.status !== 404 && !res.ok,
+         `HTTP ${res.status} ${body.slice(0, 60)}`);
+  } catch (e) {
+    show(`${fn} reachable`, false, String(e));
+  }
 }
 
 if (failed > 0) {

@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { currentSessionId } from '../stores/ledger';
 import { isNative } from './platform';
 
 /**
@@ -131,6 +132,10 @@ export async function relayFetch(path: string, init: RequestInit = {}): Promise<
   const token = await accessToken();
   const headers = new Headers(init.headers);
   if (token) headers.set('authorization', `Bearer ${token}`);
+  // Which sitting this call belongs to, so the server can attribute what it
+  // cost. Absent outside a class, and that is fine.
+  const session = currentSessionId();
+  if (session) headers.set('x-session-id', session);
   return fetch(relayUrl(path), { ...init, headers });
 }
 

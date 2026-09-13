@@ -25,6 +25,7 @@ import {
   toRelayRequest,
   transcribeViaFormData,
   type Gate,
+  type UsageEvent,
 } from '../../packages/relay/src/index.ts';
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
@@ -86,6 +87,23 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
     ...(vertex ? { vertex } : {}),
     transcribe: (model: string, contentType: string, audio: Uint8Array) =>
       transcribeViaFormData(key, model, contentType, audio),
+    // On a laptop the accounting goes to the terminal. One line per call,
+    // the same shape Postgres receives in production, so a developer sees
+    // what a class spends while building it rather than on the bill.
+    usage: {
+      async record(e: UsageEvent) {
+        const q = [
+          e.promptTokens !== undefined ? `in=${e.promptTokens}` : '',
+          e.outputTokens !== undefined ? `out=${e.outputTokens}` : '',
+          e.thoughtTokens !== undefined ? `think=${e.thoughtTokens}` : '',
+          e.images ? `images=${e.images}` : '',
+          e.characters !== undefined ? `chars=${e.characters}` : '',
+          e.audioBytes !== undefined ? `audio=${(e.audioBytes / 32000).toFixed(1)}s` : '',
+          e.bytes !== undefined ? `bytes=${e.bytes}` : '',
+        ].filter(Boolean).join(' ');
+        console.log(`  usage: ${e.relay} ${e.model ?? '-'} ${q}${e.sessionId ? ` session=${e.sessionId.slice(0, 8)}` : ''}`);
+      },
+    },
   };
   console.log(
     vertex

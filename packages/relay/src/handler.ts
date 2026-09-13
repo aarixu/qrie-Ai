@@ -10,7 +10,16 @@ import {
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
-import { MAX_REQUEST_BYTES, completeOnVertex, type VertexOptions } from './vertex.ts';
+import { MAX_REQUEST_BYTES, completeOnVertex, type OpenAiReply, type VertexOptions } from './vertex.ts';
+import { DEFAULT_SPEECH_MODEL } from './relays.ts';
+import {
+  usageFromClass,
+  usageFromHear,
+  usageFromOpenRouterLlm,
+  usageFromSpeech,
+  usageFromVertex,
+  type Usage,
+} from './usage.ts';
 
 /**
  * ONE ROUTER, RUN BY BOTH SIDES.
@@ -65,7 +74,31 @@ export interface HandlerDeps {
    * whole preparation again, and nothing would ever show it.
    */
   keep?(saved: SavedClass): Promise<RelayResponse>;
+  /**
+   * Where what a call actually cost is written down: tokens, characters,
+   * audio bytes. Optional, like `keep` - the dev server prints, the Edge
+   * Function writes to Postgres - and absent means nothing is recorded, which
+   * the plan's Phase 2 treats as "unmeasured", never as "free".
+   *
+   * It runs AFTER the call and never in its way. A slow accounting table must
+   * not cost a student their class.
+   */
+  usage?: Usage;
   now?: () => number;
+}
+
+/**
+ * Which learning session a call belongs to, when the app said.
+ *
+ * A header for the relays a fetch reaches; a query parameter for speech, which
+ * is an <audio src> and cannot send one. Absent is ordinary: a call made from
+ * the Home screen belongs to no sitting.
+ */
+function sessionOf(req: RelayRequest, relay: RelayName): string | null {
+  if (relay === 'speech') {
+    return new URL(req.url, 'http://relay.local').searchParams.get('session');
+  }
+  return req.headers['x-session-id'] ?? req.headers['X-Session-Id'] ?? null;
 }
 
 /** The relay a path names, or null. */
@@ -149,6 +182,23 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
 
+  // Usage is recorded on the way OUT, never in the way. `void` because a
+  // slow or absent accounting sink must not delay the reply; the sink itself
+  // swallows its errors.
+  const base = { userId: admitted.userId, sessionId: sessionOf(req, relay) };
+  const note = (event: Parameters<Usage['record']>[0]): void => {
+    if (!deps.usage) return;
+    // Both a synchronous throw and a rejected promise are caught HERE, not
+    // trusted to the sink. On Deno an unhandled rejection is not a log line,
+    // it can take the isolate down mid-reply - and this was reachable: the
+    // first test of a throwing sink passed its assertion and still leaked one.
+    try {
+      void deps.usage.record(event).catch(() => undefined);
+    } catch {
+      // A sink that throws before returning a promise. Same answer.
+    }
+  };
+
   if (relay === 'llm') {
     if (deps.vertex) {
       if (req.method !== 'POST') return fail(405, 'POST only');
@@ -164,23 +214,38 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
         return fail(400, 'the request body was not JSON');
       }
       const answer = await completeOnVertex(chat as Parameters<typeof completeOnVertex>[0], deps.vertex);
+      const model = String((chat as { model?: unknown })?.model ?? '');
+      note(usageFromVertex(base, model, answer.status, answer.status === 200 ? (answer.body as OpenAiReply) : undefined));
       return {
         status: answer.status,
         headers: { 'content-type': 'application/json' },
         body: { kind: 'json', value: answer.body },
       };
     }
-    return llmRelay(req, deps.key);
+    const out = llmRelay(req, deps.key);
+    if (out.status === 200) note(usageFromOpenRouterLlm(base, req.body));
+    return out;
   }
-  if (relay === 'speech') return speechRelay(req, deps.key);
+  if (relay === 'speech') {
+    const out = speechRelay(req, deps.key);
+    if (out.status === 200) {
+      const asked = new URL(req.url, 'http://relay.local').searchParams;
+      note(usageFromSpeech(base, asked.get('model') ?? DEFAULT_SPEECH_MODEL, asked.get('text') ?? ''));
+    }
+    return out;
+  }
 
   if (relay === 'class') {
     const saved = readSavedClass(req.body);
     if (!saved.ok) return saved.response;
-    return deps.keep!(saved.value);
+    const kept = await deps.keep!(saved.value);
+    note(usageFromClass(base, kept.status, req.body.byteLength));
+    return kept;
   }
 
   const heard = hearRelay(req, deps.key);
   if (!heard.ok) return heard.response;
-  return deps.transcribe(heard.model, heard.contentType, heard.audio);
+  const transcribed = await deps.transcribe(heard.model, heard.contentType, heard.audio);
+  note(usageFromHear(base, heard.model, transcribed.status, heard.audio));
+  return transcribed;
 }
