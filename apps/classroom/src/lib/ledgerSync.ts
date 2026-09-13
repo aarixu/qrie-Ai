@@ -130,13 +130,28 @@ const rowOf = (e: LedgerEvent, userId: string, org: string) => ({
  * nothing extra is queued for it. Doing it this way means a session that opened
  * on a plane and closed on the ground still lands complete and in order.
  */
-async function writeSessions(events: LedgerEvent[], userId: string, org: string): Promise<void> {
+async function writeSessions(
+  events: LedgerEvent[],
+  userId: string,
+  org: string,
+): Promise<Set<string>> {
+  /**
+   * Event ids that must NOT be acknowledged this drain.
+   *
+   * Both writes below used to be awaited and their errors dropped on the
+   * floor, after which the events were acknowledged anyway. A transient
+   * failure on either one therefore lost the sitting — and `active_ms` with
+   * it, which is the DENOMINATOR of the one metric this whole system exists
+   * to optimise. Holding the event back instead costs one harmless repeat:
+   * the row is keyed on the client-minted id, so re-sending it is a no-op.
+   */
+  const held = new Set<string>();
   const db = supabase();
-  if (!db) return;
+  if (!db) return held;
 
   const opened = events.filter((e) => e.kind === 'session-started');
   if (opened.length > 0) {
-    await db.from('learning_session').upsert(
+    const { error } = await db.from('learning_session').upsert(
       opened.map((e) => ({
         id: e.sessionId,
         org_id: org,
@@ -147,6 +162,7 @@ async function writeSessions(events: LedgerEvent[], userId: string, org: string)
       })),
       { onConflict: 'id', ignoreDuplicates: true },
     );
+    if (error) for (const e of opened) held.add(e.id);
   }
 
   // Closing goes through the RPC rather than an update, because there is no
@@ -154,12 +170,15 @@ async function writeSessions(events: LedgerEvent[], userId: string, org: string)
   // ended_at/active_ms are the one legitimate exception.
   for (const e of events.filter((x) => x.kind === 'session-ended')) {
     const payload = e.payload as { activeMs?: number };
-    await db.rpc('close_learning_session', {
+    const { error } = await db.rpc('close_learning_session', {
       p_session: e.sessionId,
       p_ended_at: e.at,
       p_active_ms: Math.max(0, Math.round(payload.activeMs ?? 0)),
     });
+    if (error) held.add(e.id);
   }
+
+  return held;
 }
 
 export async function drainLedger(): Promise<DrainResult> {
@@ -204,8 +223,9 @@ async function run(): Promise<DrainResult> {
 
   const slice = batch(ledgerOutbox.get(), BATCH);
   let outcome: SendOutcome;
+  let held: Set<string>;
   try {
-    await writeSessions(slice, userId, org);
+    held = await writeSessions(slice, userId, org);
     outcome = await send(db, slice, userId, org);
   } catch {
     // A dead network mid-flush. The outbox is untouched, so the next drain
@@ -219,7 +239,11 @@ async function run(): Promise<DrainResult> {
     return { sent: 0, pending, dropped, refused: 0, reason: 'rejected' };
   }
 
-  forgetSent(outcome.ok);
+  // Everything that landed, EXCEPT the events whose sitting could not be
+  // written or closed. Those stay queued and are sent again; the ledger row
+  // itself is already there and the repeat is a no-op.
+  const acknowledged = outcome.ok.filter((id) => !held.has(id));
+  forgetSent(acknowledged);
   if (outcome.poison.length > 0) {
     forgetRefused(outcome.poison);
     // Loudly. A malformed event is OUR bug, and the whole reason this path
@@ -228,7 +252,7 @@ async function run(): Promise<DrainResult> {
     track('ledger_refused', { refused: outcome.poison.length, code: outcome.code ?? 'unknown' });
   }
   return {
-    sent: outcome.ok.length,
+    sent: acknowledged.length,
     pending: ledgerOutbox.get().pending.length,
     dropped,
     refused: outcome.poison.length,

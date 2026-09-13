@@ -384,3 +384,44 @@ describe('when the device changes hands', () => {
     expect(result.sent).toBe(waiting);
   });
 });
+
+/**
+ * THE SITTING ITSELF, AND THE NUMBER THE WHOLE SYSTEM IS JUDGED ON.
+ *
+ * learning_session.active_ms is the DENOMINATOR of "unassisted mastery gain
+ * per learning minute". Both writes that maintain it used to have their errors
+ * dropped, after which the events describing them were acknowledged anyway —
+ * so one transient failure lost a sitting permanently and the outbox forgot it
+ * had ever had it.
+ */
+describe('when the sitting cannot be written', () => {
+  it('keeps the session-ended event rather than losing time on task', async () => {
+    aClass();
+    store.closeSession({ activeMs: 240_000, completed: true });
+    rpc.mockResolvedValue({ error: { code: '40001', message: 'serialization failure' } });
+
+    const result = await sync.drainLedger();
+
+    const left = store.ledgerOutbox.get().pending;
+    expect(left.map((e) => e.kind)).toEqual(['session-ended']);
+    expect(result.sent).toBe(2); // the other two landed and were acknowledged
+
+    // And it goes on the next drain, harmlessly — the ledger row is already
+    // there and the id makes the repeat a no-op.
+    rpc.mockResolvedValue({ error: null });
+    await sync.drainLedger();
+    expect(store.ledgerOutbox.get().pending).toEqual([]);
+  });
+
+  it('keeps the session-started event when the sitting row will not write', async () => {
+    aClass();
+    upsert.mockImplementation((table: string) =>
+      Promise.resolve(
+        table === 'learning_session' ? { error: { code: '40001', message: 'deadlock' } } : { error: null },
+      ),
+    );
+
+    await sync.drainLedger();
+    expect(store.ledgerOutbox.get().pending.map((e) => e.kind)).toContain('session-started');
+  });
+});
