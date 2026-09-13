@@ -1,0 +1,27 @@
+{
+  "probes": 12,
+  "shapes": [
+    "plain",
+    "hinglish",
+    "letter",
+    "hedged",
+    "wrong",
+    "idk"
+  ],
+  "runs": {
+    "thinking": {
+      "right": 72,
+      "total": 72,
+      "inr": 7.374775200000002,
+      "think": 12030,
+      "misses": []
+    },
+    "off": {
+      "right": 72,
+      "total": 72,
+      "inr": 5.099375699999999,
+      "think": 5724,
+      "misses": []
+    }
+  }
+}

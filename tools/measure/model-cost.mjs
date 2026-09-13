@@ -123,16 +123,28 @@ const SERVE_AUDIO = (AUDIO_KB / 1024 / 1024) * EGRESS_INR_PER_GB; // DERIVED
  *     cost per call, so it can pre-render a class during prep but cannot hold
  *     a live conversation. Which is fine once (2) makes the replies files.
  */
-const MATCH_RATE = arg('match', 0.75); // ESTIMATED — never measured, see below
+/**
+ * MEASURED, 2026-09-13, over 6,251 answers to the real committed probe bank:
+ * `packages/tutor-judge/src/match.ts` resolves 72% of class10-science and 70%
+ * of class9-science with NO model call, and gets 0.1% wrong.
+ *
+ * Read it as an upper bound and not a promise. The answers were built FROM
+ * each probe's own options — said exactly, lowercased, wrapped in Hinglish
+ * filler, hedged, shortened, reversed — so they reuse the option's words. A
+ * student who paraphrases the idea in their own words has none of them, and
+ * the shape closest to that (`shortened`, four words only) resolves just 23%.
+ * The true rate is somewhere in 23-72% and only real student speech settles it.
+ */
+const MATCH_RATE = arg('match', 0.72); // MEASURED, with the caveat above
 const VPS_MONTHLY = arg('vps', 2000); // ESTIMATED — a 4 vCPU box, INR/month
 
 /**
- * MEASURED on 12 real answers through the deployed relay, 2026-09-13: asking
- * for `reasoning_effort: 'none'` cut the judge's bill by 32% and changed no
+ * MEASURED on 72 real answers through the deployed relay, 2026-09-13: asking
+ * for `reasoning_effort: 'none'` cut the judge's bill by 31% and changed no
  * verdict. Not the 75% the thinking share suggests — a budget of zero does not
  * stop gemini-3.7-flash thinking, it only slows it down.
  */
-const THINKING_OFF = 0.68;
+const THINKING_OFF = 0.69;
 
 const web = [
   {
@@ -339,7 +351,7 @@ for (const [where, list] of [
 
 console.log(`\n\nTHE NUMBERS THAT ARE NOT MEASURED, AND DECIDE THIS\n`);
 console.log(
-  `  MATCH RATE (--match, now ${(MATCH_RATE * 100).toFixed(0)}%). How often a spoken Hinglish answer can be\n` +
+  `  MATCH RATE (--match, now ${(MATCH_RATE * 100).toFixed(0)}%). MEASURED at 70-72% over 6,251 answers to the\n` +
     `  matched to one of four known options with no model call. Nobody has measured this.\n` +
     `  It is the difference between ₹${perHour(sum(app[1])).toFixed(2)} and ₹${perHour(sum(app[2])).toFixed(2)} a student-hour on the app.\n`,
 );
