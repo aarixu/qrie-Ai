@@ -25,8 +25,18 @@ import { createBrowserLlm } from './browserLlm';
 export type { SpokenAsk, SpokenVerdict, CrossQuestionClose };
 export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
 
-/** Same family the doubt tutor runs on, through the same relay. */
-const JUDGE_MODEL = 'google/gemini-3-flash-preview';
+/**
+ * The planner's model, through the same relay.
+ *
+ * This was 'google/gemini-3-flash-preview' — an OpenRouter-era name that the
+ * relay's Vertex allow-list REFUSES with a 400. The class swallows a failed
+ * judge on purpose ("says nothing and leaves the chips standing"), so in
+ * production every spoken answer was silently never judged, the cross-question
+ * never asked, and no voice answer ever reached the ledger. Found while
+ * measuring the cost of a class, not by a test: the only test of this file
+ * covered the JSON parser.
+ */
+const JUDGE_MODEL = 'google/gemini-3.7-flash';
 
 const deps: JudgeDeps = {
   complete: (system, user) => createBrowserLlm(JUDGE_MODEL, { json: true }).complete(system, user),

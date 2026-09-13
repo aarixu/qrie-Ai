@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ALLOWED_MODELS, bareModel } from '@ai-tutor/relay';
 import { buildDoubtSystemPrompt, parseAgentReply, createTransport, createGeminiAgent } from '../src/lib/geminiAgent';
 import type { DoubtContext } from '@ai-tutor/doubt-session';
 import type { StudentContext } from '@ai-tutor/persona';
@@ -146,7 +147,11 @@ describe('createTransport', () => {
     expect(calls[0].url).toBe('https://openrouter.ai/api/v1/chat/completions');
     expect((calls[0].init.headers as Record<string, string>).Authorization).toBe('Bearer or');
     const body = JSON.parse(calls[0].init.body as string);
-    expect(body.model).toBe('google/gemini-3-flash-preview');
+    // Not a pinned name: the name this asserted for weeks was one the relay's
+    // Vertex allow-list refuses with a 400, so the doubt tutor's relay path
+    // was broken in production and this test was green. The assertion is now
+    // the property that matters — the relay will actually serve it.
+    expect(ALLOWED_MODELS.has(bareModel(body.model))).toBe(true);
     expect(body.messages.map((m: { role: string }) => m.role)).toEqual([
       'system',
       'user',

@@ -64,10 +64,10 @@ export type Transport = (system: string, turns: readonly Turn[], signal: AbortSi
 const DEFAULT_MODEL = {
   // The relay speaks OpenRouter's shape today and Gemini's tomorrow; either
   // way the browser names a model, never a vendor account.
-  relay: 'google/gemini-3-flash-preview',
+  relay: 'google/gemini-3.7-flash',
   gemini: 'gemini-3.7-flash',
   // OpenRouter names the same family with a vendor prefix.
-  openrouter: 'google/gemini-3-flash-preview',
+  openrouter: 'google/gemini-3.7-flash',
 } as const;
 
 export function createTransport(opts: GeminiAgentOptions): Transport {
