@@ -206,6 +206,23 @@ export function handOverDevice(ownerId: string): number {
   return cleared;
 }
 
+/**
+ * Empty this device, now, whoever it belongs to.
+ *
+ * `handOverDevice` clears when the NEXT student arrives. This is the other
+ * caller: a student who asked to be deleted, who should not have to wait for a
+ * stranger to sign in before their notes leave the phone.
+ */
+export function wipeDevice(): number {
+  let cleared = 0;
+  for (const reset of resets.values()) {
+    reset();
+    cleared += 1;
+  }
+  forgetDeviceOwner();
+  return cleared;
+}
+
 /** Test seam: forget who this device belongs to. */
 export function forgetDeviceOwner(): void {
   try {

@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
+import { wipeDevice } from '../stores/localStore';
 import type { CloudBackend } from './sync';
 
 /**
@@ -292,6 +293,20 @@ export async function deleteOwnAccount(): Promise<string | null> {
   // The session is meaningless once the user is gone; without this the app
   // would keep trying to sync for somebody who no longer exists.
   await db.auth.signOut();
+  /**
+   * AND THE COPY ON THIS DEVICE.
+   *
+   * Every server-side table cascades from auth.users, so the rows really do
+   * go. The device's own copy did not: a student who asked to be deleted was
+   * left with their notes, their name, their progress and their safety flag
+   * log still in localStorage, and the next identity on this device would
+   * inherit them. Deleting an account has to mean the same thing everywhere
+   * the data is, or it means nothing anywhere.
+   *
+   * Handing the device over on the next sign-in would also clear it, but
+   * "later, when somebody else arrives" is not what the student asked for.
+   */
+  wipeDevice();
   return null;
 }
 

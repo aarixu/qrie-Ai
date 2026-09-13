@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mergePlan, type Snapshot } from '../src/lib/sync';
-import { createLocalStore, forgetDeviceOwner, handOverDevice } from '../src/stores/localStore';
+import { createLocalStore, forgetDeviceOwner, handOverDevice, wipeDevice } from '../src/stores/localStore';
 
 /**
  * WHICH SIDE WINS, PER STORE.
@@ -178,5 +178,43 @@ describe('when the device changes hands', () => {
 
     handOverDevice('student-2');
     expect(flags.get()).toEqual([]);
+  });
+});
+
+/**
+ * "DELETE MY ACCOUNT" HAS TO MEAN THE SAME THING EVERYWHERE THE DATA IS.
+ *
+ * Every server-side table cascades from auth.users, so the rows really do go.
+ * The device's own copy did not: a student who asked to be deleted was left
+ * with their notes, their name, their progress and their safety flag log still
+ * in localStorage, where the next identity on the device would inherit them.
+ */
+describe('wiping the device', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    forgetDeviceOwner();
+  });
+
+  it('clears every store, synced or not, without waiting for anyone to sign in', () => {
+    const notes = createLocalStore('wipe-test:notes', { text: '' });
+    const flags = createLocalStore('wipe-test:flags', [] as string[], { neverSync: true });
+    handOverDevice('student-1');
+    notes.set({ text: 'mine' });
+    flags.set(['cleaned']);
+
+    expect(wipeDevice()).toBeGreaterThan(0);
+
+    expect(notes.get()).toEqual({ text: '' });
+    expect(flags.get()).toEqual([]);
+    expect(localStorage.getItem('wipe-test:notes')).toBeNull();
+    expect(localStorage.getItem('wipe-test:notes:at')).toBeNull();
+  });
+
+  it('forgets who the device belonged to, so the next student is not a handover', () => {
+    createLocalStore('wipe-test:notes-2', { text: '' });
+    handOverDevice('student-1');
+    wipeDevice();
+    // Nothing left to hand over, so nothing is reported as discarded.
+    expect(handOverDevice('student-2')).toBe(0);
   });
 });
