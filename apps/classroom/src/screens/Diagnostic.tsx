@@ -103,8 +103,11 @@ export function Diagnostic({
     for (const [id, times] of Object.entries(signals.taught)) {
       if (times > 1) mastery = applyTaught(mastery, [id], times);
     }
-    mastery = applyDoubt(mastery, Object.keys(signals.confused));
-    return { ...fresh, mastery };
+    const confused = Object.keys(signals.confused);
+    mastery = applyDoubt(mastery, confused);
+    // Named, not just folded in. A belief lowered by a raised hand that the
+    // plan is not allowed to look at is a signal thrown away.
+    return { ...fresh, mastery, seeded: new Set(confused) };
   });
 
   // What this install has learned about its own questions and edges so far.

@@ -51,6 +51,28 @@ export interface DiagnosticSession {
   answers: Answer[];
   /** Nodes with direct evidence — never asked twice, never overwritten by inference. */
   askedNodeIds: Set<string>;
+  /**
+   * EVIDENCE THIS TEST DID NOT GATHER ITSELF.
+   *
+   * The classroom knows things about a student before the placement test opens
+   * — above all, which outcomes they raised a hand on. The screen folds those
+   * into the starting beliefs so the first question is already informed by
+   * their term's work, and that seeding is deliberate.
+   *
+   * Without naming the nodes it touched, that seeding is silently thrown away
+   * at the end: `buildPlan` only lets a node become a step if the test spoke
+   * about it, and "spoke about it" was derived from the ANSWERS alone. So a
+   * student could stop the class four times on the same outcome, have the
+   * belief lowered for it, and get a plan that never mentions it. The gate is
+   * right — a node nobody examined must not become a weakness by arithmetic
+   * — but a raised hand is somebody examining it.
+   *
+   * Only evidence AGAINST belongs here. Attendance (`applyTaught`) raises
+   * belief and so can never create a gap on its own; adding it would let the
+   * difficulty prior back in through the side door, which is the defect this
+   * whole gate exists to close.
+   */
+  seeded: Set<string>;
   config: DiagnosticConfig;
 }
 
@@ -63,6 +85,7 @@ export function startSession(
     mastery: initialMastery(index, { biasByDifficulty: true }),
     answers: [],
     askedNodeIds: new Set(),
+    seeded: new Set(),
     config: { ...DEFAULT_CONFIG, ...config },
   };
 }

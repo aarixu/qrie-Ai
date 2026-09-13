@@ -45,8 +45,11 @@ export function buildPlan(
     minKlass: session.config.klass - (session.config.lookBack ?? 0),
     threshold: opts.threshold,
     // Twenty questions cannot examine three hundred nodes. Only the ones this
-    // test actually spoke about are eligible to become steps.
-    evidence: evidenceFrom(index, session.answers),
+    // test actually spoke about are eligible to become steps — plus the ones
+    // the classroom spoke about before it opened, which is what `seeded`
+    // carries: an outcome the student stopped the class on is examined
+    // evidence, even though no question here asked about it.
+    evidence: new Set([...evidenceFrom(index, session.answers), ...session.seeded]),
   });
 
   return {
