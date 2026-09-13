@@ -176,12 +176,28 @@ try {
 
 // 9. The accounting (0008). A student must not be able to write their own
 //    usage, nor read the operator's cost report. Both must exist and refuse.
+//
+//    Every parameter is NAMED in the body. PostgREST resolves a function by
+//    the argument names it is sent, so `{}` finds record_usage() with no
+//    parameters — which does not exist — and answers 404 exactly as if the
+//    migration had never run. cost_per_student_hour has a default and so was
+//    found with `{}`; that asymmetry is how the first run of this reported one
+//    function missing and the other present from the same migration.
+const RPC_ARGS = {
+  record_usage: {
+    p_user: '00000000-0000-0000-0000-000000000000', p_session: null, p_relay: 'llm',
+    p_provider: 'vertex', p_model: 'probe', p_status: 0, p_prompt_tokens: null,
+    p_output_tokens: null, p_thought_tokens: null, p_images: null, p_characters: null,
+    p_audio_bytes: null, p_bytes: null,
+  },
+  cost_per_student_hour: { p_days: 30 },
+};
 for (const fn of ['record_usage', 'cost_per_student_hour']) {
   try {
     const res = await fetch(`${URL_}/rest/v1/rpc/${fn}`, {
       method: 'POST',
       headers: { apikey: ANON, authorization: `Bearer ${ANON}`, 'content-type': 'application/json' },
-      body: '{}',
+      body: JSON.stringify(RPC_ARGS[fn]),
     });
     const body = await res.text();
     show(`${fn} exists and is CLOSED to students`, res.status !== 404 && !res.ok,
