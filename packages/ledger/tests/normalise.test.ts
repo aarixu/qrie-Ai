@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_ANSWER_CHARS, normaliseAnswer } from '../src/normalise';
+import {
+  MAX_ANSWER_CHARS,
+  MAX_TUTOR_CHARS,
+  normaliseAnswer,
+  normaliseTutorText,
+} from '../src/normalise';
 
 /**
  * This function is the whole privacy boundary for a child's own words. The
@@ -63,5 +68,44 @@ describe('normaliseAnswer', () => {
 
   it('honours a tighter cap when one is asked for', () => {
     expect(normaliseAnswer('one two three four five', { maxChars: 7 })).toBe('one two…');
+  });
+});
+
+/**
+ * HER WORDS, WHICH ALSO REACH A COLUMN.
+ *
+ * `ReflectedPayload.prompt` was the one free-text field in the ledger that
+ * never passed through this file: uncapped, uncollapsed, invisible characters
+ * unstripped, straight from a model into jsonb — three lines above a
+ * `reasoningNormalised` that was doing it correctly. That is exactly the miss
+ * the header of normalise.ts predicts when a rule lives in a code review.
+ */
+describe('the tutor’s own text', () => {
+  it('is capped, because model output into an unbounded column grows until something breaks', () => {
+    const out = normaliseTutorText('why '.repeat(300));
+    expect(out.length).toBeLessThanOrEqual(MAX_TUTOR_CHARS + 1); // +1 for the ellipsis
+    expect(out.endsWith('…')).toBe(true);
+  });
+
+  it('strips the invisible characters, so a stored question is one anybody can compare', () => {
+    expect(normaliseTutorText('why\u200b does\u0000 that\u202e hold?')).toBe('why does that hold?');
+  });
+
+  it('keeps the question on a turn the safety screen stopped', () => {
+    // Decided explicitly rather than by omission. The flag is about the words
+    // the student has just spoken, and those are dropped; the question was
+    // composed a turn earlier out of an answer already screened and stored on
+    // its own row. Dropping it would leave a flagged reflection as a stub
+    // nobody could ever audit.
+    expect(normaliseTutorText('And why does that hold when it is asleep?')).toBe(
+      'And why does that hold when it is asleep?',
+    );
+  });
+
+  it('gives a string and never undefined, because the field it feeds is required', () => {
+    // An absent prompt makes the stored reasoning an answer to a question
+    // nobody kept — which is the whole reason the field exists.
+    expect(normaliseTutorText(undefined)).toBe('');
+    expect(normaliseTutorText('   ')).toBe('');
   });
 });

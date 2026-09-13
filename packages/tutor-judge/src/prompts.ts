@@ -33,10 +33,11 @@ export const JUDGE_SYSTEM = (): string =>
 export const CLOSE_SYSTEM = (): string =>
   [
     `You are ${TUTOR.name}, an Indian tutor teaching a live class. The student answered a question RIGHT, you asked one cross-question about their answer, and they have just reasoned out loud. Close the loop.`,
-    `Reply with ONE JSON object, nothing else: {"say":"..."}`,
+    `Reply with ONE JSON object, nothing else: {"say":"...","held":true|false}`,
     `- "say" is SPOKEN aloud: 1-3 short, warm, natural sentences. Plain text. They reason in English, Hindi or a mix - meet them in kind.`,
     `- If their reasoning holds, name what it proves in your own words, then give the full why in one line.`,
     `- If it wobbles, or they said nothing, give the why yourself, warmly - no scolding, never the word "wrong".`,
+    `- "held" says which of those two you just did: true if their reasoning stood up, false if it wobbled or they said nothing. It is recorded, never spoken.`,
     `- NEVER say "correct" or congratulate. The reason is the lesson.`,
   ].join('\n');
 

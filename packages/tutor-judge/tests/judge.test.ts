@@ -230,3 +230,57 @@ describe('holding the reply to shape', () => {
     expect(() => parseFollowUp('{}')).toThrow(/without words/);
   });
 });
+
+/**
+ * WHETHER THE REASONING STOOD UP, WHICH SHE DECIDES AND NEVER SAID.
+ *
+ * The cross-question exists to find out one thing: can they justify what they
+ * already produced — mastery rather than recall. `CLOSE_SYSTEM` branches on
+ * exactly that and used to return only the sentence she speaks, so the answer
+ * was reached inside the model and thrown away, and the ledger had no source
+ * for it. That is `gave` again, which went missing the same way.
+ */
+describe('what the close made of their reasoning', () => {
+  it('is asked for in so many words, and never spoken', () => {
+    const sys = CLOSE_SYSTEM();
+    expect(sys).toMatch(/"held":true\|false/);
+    expect(sys).toMatch(/recorded, never spoken/);
+  });
+
+  it('carries a verdict that held and one that wobbled', () => {
+    expect(parseFollowUp('{"say":"That is it exactly.","held":true}').held).toBe(true);
+    expect(parseFollowUp('{"say":"Here is the why.","held":false}').held).toBe(false);
+  });
+
+  /**
+   * Unlike `gave`, there is NO default here and there must not be. A wrong
+   * answer is always followed by one of two moves, so a missing `gave` can be
+   * inferred from the fact that she replied at all; the close is spoken
+   * whichever way the reasoning went, so there is nothing to infer from. A
+   * default would file "we never asked" as a judgement about the student.
+   */
+  it('stays silent rather than guessing when the model omitted it', () => {
+    expect(parseFollowUp('{"say":"Here is the why."}').held).toBeUndefined();
+    expect(parseFollowUp('{"say":"Here is the why.","held":"yes"}').held).toBeUndefined();
+  });
+
+  /**
+   * The same hole `SpokenVerdict.heard` was added to close, one turn later:
+   * this call screens the reasoning, sends the screened copy, and used to
+   * discard it — leaving the raw transcript as the caller's only handle, on
+   * the one path (`clean`) that found something and deliberately did not halt.
+   */
+  it('hands back the screened reasoning, not the raw transcript', async () => {
+    const d = deps('{"say":"That is it.","held":true}', { text: 'my number is', say: null });
+    const out = await resolveCrossQuestion(ask, 'every cell', 'why?', 'my number is 98765 43210', d);
+    expect(out.heard).toBe('my number is');
+    expect(out.heard).not.toContain('98765');
+  });
+
+  it('keeps nothing of a turn the screen stopped', async () => {
+    const out = await resolveCrossQuestion(ask, 'every cell', 'why?', 'x', stopped('Talk to someone.'));
+    expect(out.halt).toBe(true);
+    expect(out.heard).toBeUndefined();
+    expect(out.held).toBeUndefined();
+  });
+});

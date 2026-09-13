@@ -13,6 +13,7 @@ export type {
   EventSurface,
   LearningSession,
   LedgerEvent,
+  ReasoningVerdict,
   Verdict,
   SessionStartedPayload,
   SessionEndedPayload,
@@ -25,7 +26,13 @@ export type {
   ReflectedPayload,
 } from './types.ts';
 
-export { MAX_ANSWER_CHARS, normaliseAnswer, type NormaliseOptions } from './normalise.ts';
+export {
+  MAX_ANSWER_CHARS,
+  MAX_TUTOR_CHARS,
+  normaliseAnswer,
+  normaliseTutorText,
+  type NormaliseOptions,
+} from './normalise.ts';
 
 export { emptyCounters, replayCounters, type Counters } from './replay.ts';
 
@@ -34,6 +41,7 @@ export {
   emptyOutbox,
   record,
   recordAnswer,
+  recordReflection,
   startSession,
   endSession,
   batch,
@@ -43,6 +51,7 @@ export {
   type Outbox,
   type RecordInput,
   type AnswerInput,
+  type ReflectionInput,
   type StartSessionInput,
   type EndSessionInput,
 } from './outbox.ts';

@@ -7,11 +7,13 @@ import {
   endSession,
   record,
   recordAnswer,
+  recordReflection,
   startSession,
   type AnswerInput,
   type EndSessionInput,
   type Outbox,
   type RecordInput,
+  type ReflectionInput,
   type StartSessionInput,
 } from '@ai-tutor/ledger';
 
@@ -53,6 +55,7 @@ function read(): Outbox {
           pending: parsed.pending ?? [],
           dropped: parsed.dropped ?? 0,
           rejected: parsed.rejected ?? 0,
+          orphaned: parsed.orphaned ?? 0,
           ownerId: parsed.ownerId ?? null,
         }
       : emptyOutbox();
@@ -134,6 +137,10 @@ export function logEvent(input: Omit<RecordInput, 'id' | 'at'>): void {
 
 export function logAnswer(input: Omit<AnswerInput, 'id' | 'at'>): void {
   write(recordAnswer(read(), { ...input, id: mint(), at: now() }));
+}
+
+export function logReflection(input: Omit<ReflectionInput, 'id' | 'at'>): void {
+  write(recordReflection(read(), { ...input, id: mint(), at: now() }));
 }
 
 /**

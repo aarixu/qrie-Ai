@@ -29,7 +29,7 @@ describe('holding the judge to shape', () => {
 describe('holding the close to shape', () => {
   it('takes the closing line', async () => {
     const { parseFollowUp } = await import('../src/lib/judge');
-    expect(parseFollowUp('{"say":"Exactly - the gaps hold it, so the level stays."}')).toContain('gaps');
+    expect(parseFollowUp('{"say":"Exactly - the gaps hold it, so the level stays."}').say).toContain('gaps');
   });
 
   it('refuses a wordless close', async () => {

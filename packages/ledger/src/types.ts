@@ -66,6 +66,30 @@ export type AssistanceRung =
 /** What the judge made of a spoken or written answer. */
 export type Verdict = 'right' | 'wrong' | 'unclear';
 
+/**
+ * What the close made of the REASONING behind an answer that was already right.
+ *
+ * Three states and not a boolean, because saying nothing is not the same as
+ * reasoning that wobbled: one is a student who tried to justify and could not,
+ * the other is a student who did not try. Collapsing them would hide the
+ * commonest outcome of a cross-question inside the rarest.
+ */
+export type ReasoningVerdict =
+  /** They justified it. The only evidence of mastery-over-recall we ever get. */
+  | 'held'
+  /** They tried and it did not stand up. */
+  | 'wobbled'
+  /**
+   * No words came back.
+   *
+   * NOT evidence against them, which this used to claim by analogy to a
+   * skipped question. A skip is a deliberate tap; this is a grace window
+   * expiring, and at this layer a child still thinking, a noisy room and a mic
+   * the OS took away are the same signal. Replay gives it its own counter and
+   * moves no belief with it — see `silentOnProbe` in replay.ts.
+   */
+  | 'silent';
+
 export interface LedgerEvent {
   /**
    * Minted on the DEVICE when the event happens, not when it is sent. This is
@@ -177,11 +201,77 @@ export interface IntervenedPayload {
   rung?: AssistanceRung;
 }
 
+/**
+ * A CROSS-QUESTION, AND WHAT CAME BACK.
+ *
+ * A right answer is not the exit: she asks one why/how/when about the
+ * student's OWN answer, they reason out loud, and `resolveCrossQuestion`
+ * weighs it. That reasoning is the only evidence this system ever gathers
+ * about whether a student can JUSTIFY what they know rather than merely
+ * produce it — the difference between mastery and recall, and what the brief's
+ * metacognition section is built on. It is spoken, screened, sent to a model,
+ * and then dropped on the floor, because this payload had no emitter and no
+ * shape worth emitting.
+ *
+ * What it used to carry says why: `prompt`, a `selfRating` nothing in the
+ * product ever asks a student for, and `answerNormalised` — which names the
+ * answer being reflected ON rather than the reasoning, so the one call site
+ * this will ever have would have filed the answer a second time and the
+ * reasoning not at all. A reflection also carried no timing, no attempt and no
+ * rung, so a justification earned after four hints and a cold one were the
+ * same row.
+ */
 export interface ReflectedPayload {
+  /** Which question was cross-questioned. */
+  beatId?: string;
+  probeId?: string;
+  /**
+   * Her cross-question, verbatim.
+   *
+   * Composed at runtime about THEIR words, so unlike a probe it exists nowhere
+   * else — not in the bank, not in the lesson. Without it the stored reasoning
+   * is an answer to a question nobody kept, and unreadable by anyone checking
+   * whether the close weighed it fairly.
+   */
   prompt: string;
-  /** The student's own confidence, 0..1, when they were asked for it. */
-  selfRating?: number;
-  answerNormalised?: string;
+  /** Which try at the underlying question produced the answer she asked about. */
+  attempt: number;
+  /**
+   * The rung in force on that answer.
+   *
+   * Reasoning that holds after a hint is not proof of unassisted mastery, and
+   * a reflection that did not carry this would be read as if it were — the
+   * same hole the assistance ladder exists to close on `answered`.
+   */
+  assistanceRung: AssistanceRung;
+  /**
+   * WHETHER IT HELD, which the model already decides and is never asked to say.
+   *
+   * `CLOSE_SYSTEM` branches on it in so many words — "if their reasoning
+   * holds, name what it proves" against "if it wobbles, or they said nothing,
+   * give the why yourself" — and then returns only the sentence she speaks.
+   * That is exactly how `gave` was lost until a hinted answer turned out to be
+   * filing itself as unassisted.
+   *
+   * Optional because absent means NOBODY WEIGHED IT, and replay moves no
+   * belief on an unweighed reflection. It is not a synonym for 'wobbled'.
+   */
+  reasoningVerdict?: ReasoningVerdict;
+  /**
+   * Their reasoning, trimmed and capped. Built only by `normaliseAnswer`, from
+   * the SCREENED words and never the raw transcript — the close screens before
+   * it sends, and a caller reaching for the variable it screened is how a
+   * phone number a child should not have said ends up in a column.
+   */
+  reasoningNormalised?: string;
+  /**
+   * From her cross-question landing to their reasoning landing.
+   *
+   * Timed the same way an answer is, and worth as much: how long a student
+   * takes to justify something they already got right is the metacognitive
+   * signal, and a reflection with no clock on it is an anecdote.
+   */
+  ms: number;
 }
 
 export interface LearningSession {

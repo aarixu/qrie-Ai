@@ -18,6 +18,8 @@ import type {
   EventSurface,
   LearningSession,
   LedgerEvent,
+  ReasoningVerdict,
+  ReflectedPayload,
   SessionEndedPayload,
 } from './types.ts';
 
@@ -59,6 +61,25 @@ export interface Outbox {
    */
   rejected: number;
   /**
+   * How many events arrived with no OPEN sitting to hold them, ever.
+   *
+   * A third failure, and its own number for the same reason `rejected` is not
+   * folded into `dropped`: this one is always a bug in us. `dropped` means the
+   * device recorded more than it could hold and `rejected` means it recorded
+   * something malformed; this means it recorded something at a moment when
+   * there was nowhere to put it — before a sitting opened, or after one had
+   * already been closed by a backgrounding.
+   *
+   * It exists because that second case used to be invisible. `endSession`
+   * keeps the session object so the sitting it describes can still be read, so
+   * a close was invisible to every later `record` and the event was appended
+   * into the sitting that had already ended, after its own `session-ended`
+   * row — under an `active_ms` that can never include the seconds which
+   * produced it, and `active_ms` is the denominator of the one number this
+   * product is optimised for.
+   */
+  orphaned: number;
+  /**
    * WHOSE EVENTS THESE ARE.
    *
    * Null until the device has drained under an identity at least once, which
@@ -81,6 +102,7 @@ export const emptyOutbox = (): Outbox => ({
   pending: [],
   dropped: 0,
   rejected: 0,
+  orphaned: 0,
   ownerId: null,
 });
 
@@ -97,10 +119,25 @@ export interface RecordInput {
 
 /** Queue one event against the open session. */
 export function record(outbox: Outbox, input: RecordInput): Outbox {
-  if (!outbox.session) {
-    // An event with no session cannot be ordered, replayed or attributed to a
-    // sitting. Dropping it loudly beats inventing a session to hold it.
-    return outbox;
+  /**
+   * AN OPEN SITTING, OR NOWHERE.
+   *
+   * No session at all was always refused: an event with no session cannot be
+   * ordered, replayed or attributed to a sitting, and dropping it loudly beats
+   * inventing a session to hold it.
+   *
+   * A CLOSED one was not, and that was the hole. `endSession` leaves the
+   * session object in place so the finished sitting can still be described, so
+   * every later `record` happily appended into a sitting whose `session-ended`
+   * row was already behind it — a spoken answer the judge returned two seconds
+   * after the tab went hidden landed at a seq past the end marker, inside a
+   * sitting the server had already closed and whose `active_ms` can never
+   * include the seconds that produced it. Refusing here is what makes that
+   * unrepresentable; the caller's job is to open a new sitting first, which is
+   * what `useClassLedger` now does before it emits anything.
+   */
+  if (!outbox.session || outbox.session.endedAt) {
+    return { ...outbox, orphaned: outbox.orphaned + 1 };
   }
   const event: LedgerEvent = {
     id: input.id,
@@ -180,7 +217,12 @@ export interface EndSessionInput {
 }
 
 export function endSession(outbox: Outbox, input: EndSessionInput): Outbox {
-  if (!outbox.session) return outbox;
+  // Closing an already-closed sitting is not merely a wasted event: it would
+  // write a SECOND `session-ended` and overwrite `activeMs` on a sitting that
+  // has been reported, doubling its minutes in the denominator of every
+  // per-learning-minute figure. The hook guards this too; making it impossible
+  // here is what stops the next caller having to remember.
+  if (!outbox.session || outbox.session.endedAt) return outbox;
   const payload: SessionEndedPayload = { activeMs: input.activeMs, completed: input.completed };
   const closed = record(outbox, {
     id: input.id,
@@ -234,7 +276,13 @@ export function claim(outbox: Outbox, ownerId: string): { outbox: Outbox; handed
   if (outbox.ownerId === ownerId) return { outbox, handedOver: 0 };
   if (outbox.ownerId === null) return { outbox: { ...outbox, ownerId }, handedOver: 0 };
   return {
-    outbox: { ...emptyOutbox(), ownerId, dropped: outbox.dropped, rejected: outbox.rejected },
+    outbox: {
+      ...emptyOutbox(),
+      ownerId,
+      dropped: outbox.dropped,
+      rejected: outbox.rejected,
+      orphaned: outbox.orphaned,
+    },
     handedOver: outbox.pending.length,
   };
 }
@@ -307,5 +355,58 @@ export function recordAnswer(outbox: Outbox, input: AnswerInput): Outbox {
       misconceptionId: input.misconceptionId,
       answerNormalised: input.answerNormalised,
     },
+  });
+}
+
+/**
+ * The other half of the exchange: a right answer cross-questioned, and the
+ * reasoning that came back.
+ *
+ * Beside `recordAnswer` on purpose and not inside it. A reflection is a second
+ * event about the same question, never an amendment to the first — the table
+ * is append-only and the answer has already been drained by the time the
+ * student finishes reasoning about it. It is also NOT another `answered`:
+ * filing it as one would count a single right answer twice in every counter
+ * the learner model reads.
+ */
+export interface ReflectionInput {
+  id: string;
+  at: string;
+  surface: EventSurface;
+  /** What the underlying question was evidence about. The same ids as its answer. */
+  outcomeIds: string[];
+  /** Her cross-question, verbatim — it exists nowhere else. */
+  prompt: string;
+  /** From her question landing to their reasoning landing. */
+  ms: number;
+  attempt: number;
+  /** The rung in force on the answer she cross-questioned. */
+  assistanceRung: AssistanceRung;
+  reasoningVerdict?: ReasoningVerdict;
+  reasoningNormalised?: string;
+  beatId?: string;
+  probeId?: string;
+  topicRef?: string;
+}
+
+export function recordReflection(outbox: Outbox, input: ReflectionInput): Outbox {
+  const payload: ReflectedPayload = {
+    beatId: input.beatId,
+    probeId: input.probeId,
+    prompt: input.prompt,
+    attempt: input.attempt,
+    assistanceRung: input.assistanceRung,
+    reasoningVerdict: input.reasoningVerdict,
+    reasoningNormalised: input.reasoningNormalised,
+    ms: input.ms,
+  };
+  return record(outbox, {
+    id: input.id,
+    at: input.at,
+    kind: 'reflected',
+    surface: input.surface,
+    outcomeIds: input.outcomeIds,
+    topicRef: input.topicRef,
+    payload,
   });
 }

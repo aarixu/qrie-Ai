@@ -1,4 +1,4 @@
-import type { AnsweredPayload, LedgerEvent } from './types.ts';
+import type { AnsweredPayload, LedgerEvent, ReflectedPayload } from './types.ts';
 
 /**
  * REPLAY — the test that says these rows are a record rather than a log.
@@ -26,6 +26,44 @@ export interface Counters {
   confused: Record<string, number>;
   answeredRight: Record<string, number>;
   answeredWrong: Record<string, number>;
+  /**
+   * THE TWO COUNTERS `outcomes.ts` DOES NOT HAVE, and the only ones here that
+   * are not a parity check.
+   *
+   * Everything above rebuilds a counter the store already keeps, because a
+   * ledger that cannot reproduce the model it replaces is not ready to take
+   * over from it. These two rebuild something the store could never hold:
+   * whether the student could JUSTIFY a right answer when asked one why/how/
+   * when about it, which is the difference between mastery and recall.
+   *
+   * They are here rather than left for the learner model because a row nothing
+   * ever reads is how `reflected` spent its whole life as a kind with no
+   * emitter. A reflection that changes no belief anywhere is not evidence, it
+   * is a log line.
+   */
+  justified: Record<string, number>;
+  unjustified: Record<string, number>;
+  /**
+   * A CROSS-QUESTION THAT GOT NO WORDS BACK — counted, and counted against
+   * nobody.
+   *
+   * `types.ts` gives the reason `ReasoningVerdict` has three states and not
+   * two: "collapsing them would hide the commonest outcome of a cross-question
+   * inside the rarest." This function then collapsed them anyway — 'silent'
+   * and 'wobbled' both bumped `unjustified` — so the distinction survived in
+   * the row and died in the only thing that reads it.
+   *
+   * It is separate AND it is not evidence against the student, which is the
+   * part that matters. 'silent' on this path is the ear's grace window
+   * expiring: a child still thinking, a noisy room, a mic the OS handed to an
+   * incoming call and a genuine shrug are one signal at this layer, and five
+   * lines from where the class files this it treats the identical silence on
+   * an ANSWER as no evidence at all. The old comment defended the collapse by
+   * analogy to a skipped question, but a skip is a deliberate tap and this is
+   * a timeout. Until the product can tell a shrug from a dead mic, the honest
+   * place for it is its own column.
+   */
+  silentOnProbe: Record<string, number>;
 }
 
 export const emptyCounters = (): Counters => ({
@@ -33,6 +71,9 @@ export const emptyCounters = (): Counters => ({
   confused: {},
   answeredRight: {},
   answeredWrong: {},
+  justified: {},
+  unjustified: {},
+  silentOnProbe: {},
 });
 
 const bump = (into: Record<string, number>, ids: readonly string[]): void => {
@@ -60,10 +101,26 @@ export function replayCounters(events: readonly LedgerEvent[]): Counters {
         bump(correct ? out.answeredRight : out.answeredWrong, event.outcomeIds);
         break;
       }
+      case 'reflected': {
+        const { reasoningVerdict } = event.payload as ReflectedPayload;
+        // No verdict means nobody weighed the reasoning — the close came back
+        // with words to speak and nothing about whether they held. That is an
+        // absence of judgement, not a judgement of absence, and it must not be
+        // read as a failure to justify.
+        if (reasoningVerdict === undefined) break;
+        // Silence gets its own counter and moves neither of the other two —
+        // see `silentOnProbe` for why it is not filed with the wobbles.
+        if (reasoningVerdict === 'silent') {
+          bump(out.silentOnProbe, event.outcomeIds);
+          break;
+        }
+        bump(reasoningVerdict === 'held' ? out.justified : out.unjustified, event.outcomeIds);
+        break;
+      }
       default:
-        // asked, helped, intervened, reflected and the session markers move no
-        // counter. They are the half the counters could never hold, and the
-        // reason this ledger exists.
+        // asked, helped, intervened and the session markers move no counter.
+        // They are the half the counters could never hold, and the reason this
+        // ledger exists.
         break;
     }
   }

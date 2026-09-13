@@ -10,7 +10,15 @@ import {
   recordDoubtAtBeat,
   recordLessonTaught,
 } from '../src/stores/outcomes';
-import { closeSession, ledgerOutbox, logAnswer, logEvent, openSession, resetLedgerOutbox } from '../src/stores/ledger';
+import {
+  closeSession,
+  ledgerOutbox,
+  logAnswer,
+  logEvent,
+  logReflection,
+  openSession,
+  resetLedgerOutbox,
+} from '../src/stores/ledger';
 
 /**
  * THE TEST THAT SAYS THE LEDGER IS A RECORD AND NOT A LOG.
@@ -79,10 +87,30 @@ function aClassHappens(): void {
     });
   };
 
+  const reflect = (beatId: string, verdict: 'held' | 'wobbled' | 'silent'): void => {
+    // Nothing to mirror on the counter side, deliberately. A reflection is a
+    // second event about a question already answered, so a counter that moved
+    // for it would be counting one right answer twice — and this is the test
+    // that would notice.
+    logReflection({
+      surface: 'voice',
+      outcomeIds: answeredOutcomesAtBeat(lesson, beatId),
+      topicRef: lesson.topicRef,
+      beatId,
+      prompt: 'And why does that hold when the animal is asleep?',
+      ms: 5000,
+      attempt: 1,
+      assistanceRung: 0,
+      reasoningVerdict: verdict,
+    });
+  };
+
   answer('equation', false);
   doubt('equation');
   answer('equation', true);
+  reflect('equation', 'held');
   answer('recap', true);
+  reflect('recap', 'silent');
   // A hand raised during a story: neither side may attribute it to whatever
   // outcome happened to be nearby.
   doubt('aside');
@@ -146,6 +174,25 @@ describe('replaying a class', () => {
     const forwards = replayCounters(events);
     const backwards = replayCounters([...events].reverse());
     expect(backwards).toEqual(forwards);
+  });
+
+  /**
+   * The reflection is in `aClassHappens` precisely so the parity test above
+   * has to survive it. A reflection that moved `answeredRight` would count the
+   * same right answer twice, and the counters it is compared against have no
+   * such event to move — so this is where that would be caught.
+   */
+  it('counts a justification as evidence about the student, never as a second right answer', () => {
+    aClassHappens();
+    const replayed = replayCounters(ledgerOutbox.get().pending);
+    // Two right answers, two reflections about them.
+    expect(Object.values(replayed.answeredRight).reduce((a, b) => a + b, 0)).toBe(2);
+    // The held one is justification. The silence is its own counter and moves
+    // neither of the other two: it is the ear's grace window expiring, and at
+    // that layer a child still thinking and a dead mic are one signal.
+    expect(replayed.justified['sci10-lp-respiration-equation']).toBe(1);
+    expect(replayed.silentOnProbe['sci10-lp-respiration-vs-breathing']).toBe(1);
+    expect(replayed.unjustified).toEqual({});
   });
 
   it('holds what the counters never could', () => {

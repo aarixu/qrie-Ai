@@ -9,8 +9,10 @@ import {
   quarantine,
   record,
   recordAnswer,
+  recordReflection,
   startSession,
   type Outbox,
+  type ReflectionInput,
 } from '../src/outbox';
 
 /**
@@ -85,6 +87,58 @@ describe('a session', () => {
   it('will not close a session that was never opened', () => {
     const o = endSession(emptyOutbox(), { id: 'e', at: 'now', activeMs: 1, completed: false });
     expect(o.pending).toHaveLength(0);
+  });
+
+  it('will not close the same sitting twice, because that doubles its minutes', () => {
+    const once = endSession(answer(opened(), 1), {
+      id: 'end-1',
+      at: '2026-09-12T10:20:00.000Z',
+      activeMs: 600_000,
+      completed: false,
+    });
+    const twice = endSession(once, {
+      id: 'end-2',
+      at: '2026-09-12T10:30:00.000Z',
+      activeMs: 1_200_000,
+      completed: true,
+    });
+
+    // A second session-ended would put the sitting's minutes into the
+    // denominator of every per-learning-minute figure twice, and overwrite the
+    // activeMs of a sitting that has already been reported.
+    expect(twice.pending.filter((e) => e.kind === 'session-ended')).toHaveLength(1);
+    expect(twice.session?.activeMs).toBe(600_000);
+    expect(twice.session?.endedAt).toBe('2026-09-12T10:20:00.000Z');
+  });
+
+  it('refuses an event that arrives after its sitting ended, rather than filing it past the end', () => {
+    // The student speaks, the tab goes hidden while the judge round-trips, and
+    // the backgrounding closes the sitting. `endSession` keeps the session
+    // object so the finished sitting can still be described, which made the
+    // close invisible to `record` — so the answer landed at a seq past its own
+    // session's end marker, under an active_ms that can never include the
+    // seconds that produced it. The caller's job is to open a new sitting;
+    // this is what makes forgetting to do so loud rather than silent.
+    const ended = endSession(answer(opened(), 1), {
+      id: 'end-1',
+      at: '2026-09-12T10:20:00.000Z',
+      activeMs: 600_000,
+      completed: false,
+    });
+    const after = answer(ended, 2);
+
+    expect(after.pending.map((e) => e.id)).toEqual(['ev-open-1', 'a1', 'end-1']);
+    expect(after.orphaned).toBe(1);
+    // Not `dropped`: that means the device recorded more than it could hold,
+    // which is a busy student. This is a bug in us, and one number covering
+    // both would hide the second inside the first.
+    expect(after.dropped).toBe(0);
+  });
+
+  it('counts a homeless event too, because losing one quietly is the thing to avoid', () => {
+    const o = answer(emptyOutbox(), 1);
+    expect(o.pending).toHaveLength(0);
+    expect(o.orphaned).toBe(1);
   });
 });
 
@@ -194,6 +248,93 @@ describe('an answer', () => {
 });
 
 /**
+ * THE HALF OF THE EXCHANGE THAT WAS BEING THROWN AWAY.
+ *
+ * A right answer is not the exit: she cross-questions it, the student reasons
+ * aloud, the close weighs that reasoning — and every word of it was spoken,
+ * screened, sent to a model and discarded, because `reflected` was a kind with
+ * a payload and no emitter. It is the only evidence this product gathers about
+ * whether a student can JUSTIFY an answer rather than merely produce one.
+ */
+describe('a reflection', () => {
+  const reflect = (o: Outbox, over: Partial<ReflectionInput> = {}): Outbox =>
+    recordReflection(o, {
+      id: 'r1',
+      at: '2026-09-12T10:06:00.000Z',
+      surface: 'voice',
+      outcomeIds: ['sci10-lp-lactic-acid'],
+      beatId: 'equation',
+      prompt: 'Why does the muscle need to do that without oxygen?',
+      ms: 9_400,
+      attempt: 1,
+      assistanceRung: 0,
+      reasoningVerdict: 'held',
+      reasoningNormalised: 'kyunki oxygen nahi pahunch rahi thi',
+      ...over,
+    });
+
+  it('keeps the question she invented, which exists in no probe bank', () => {
+    // It is composed at runtime about the student's OWN answer. Nothing else
+    // holds it, so a reflection without it is an answer to a lost question.
+    const e = reflect(opened()).pending[1];
+    expect(e.kind).toBe('reflected');
+    expect(e.payload).toMatchObject({
+      prompt: 'Why does the muscle need to do that without oxygen?',
+      reasoningNormalised: 'kyunki oxygen nahi pahunch rahi thi',
+      reasoningVerdict: 'held',
+      ms: 9_400,
+    });
+  });
+
+  it('carries the rung the answer was given at, so justification after help is not read as mastery', () => {
+    // The reflection is about an answer that was already right. Whether that
+    // answer was unassisted is the whole question, and a reflection that did
+    // not carry the rung would be read as proof of the one rung — 0 — that the
+    // learner model treats as mastery.
+    const e = reflect(opened(), { assistanceRung: 4, attempt: 3 }).pending[1];
+    expect(e.payload).toMatchObject({ assistanceRung: 4, attempt: 3 });
+  });
+
+  it('records saying nothing as a verdict rather than as a missing one', () => {
+    // The close is told to handle "if it wobbles, OR THEY SAID NOTHING". The
+    // two are different students and the payload must be able to tell them
+    // apart; silence with no words kept is still evidence.
+    const e = reflect(opened(), {
+      reasoningVerdict: 'silent',
+      reasoningNormalised: undefined,
+    }).pending[1];
+    expect(e.payload).toMatchObject({ reasoningVerdict: 'silent' });
+    expect((e.payload as { reasoningNormalised?: string }).reasoningNormalised).toBeUndefined();
+  });
+
+  it('is a second event about the question and never an amendment to the answer', () => {
+    // The table is append-only and the answer has usually been drained by the
+    // time the student finishes reasoning. Filing the reflection as another
+    // `answered` would count one right answer twice in every counter.
+    const o = reflect(answer(opened(), 1));
+    expect(o.pending.map((e) => e.kind)).toEqual(['session-started', 'answered', 'reflected']);
+    expect(o.pending.map((e) => e.seq)).toEqual([0, 1, 2]);
+  });
+
+  it('is dropped when no session is open, like every other event', () => {
+    // An event with no session cannot be ordered, replayed or attributed to a
+    // sitting — and a reflection is the easiest one to emit late, after the
+    // class has closed the sitting on a spoken close that arrived seconds
+    // after the student left.
+    const o = reflect(emptyOutbox());
+    expect(o.pending).toHaveLength(0);
+    expect(o.session).toBeNull();
+  });
+
+  it('never mutates the outbox it was handed', () => {
+    const before = opened();
+    const snapshot = JSON.stringify(before);
+    reflect(before);
+    expect(JSON.stringify(before)).toBe(snapshot);
+  });
+});
+
+/**
  * THE SHAPE OF AN ID, WHICH NOTHING HERE USED TO LOOK AT.
  *
  * `ledger_event.id` and `session_id` are `uuid` columns. The outbox used to
@@ -243,9 +384,20 @@ describe('the ids the outbox puts on the wire', () => {
       assistanceRung: 0,
       hintsShown: 0,
     });
+    o = recordReflection(o, {
+      id: id(),
+      at: '2026-09-12T10:00:21.000Z',
+      surface: 'voice',
+      outcomeIds: [],
+      prompt: 'And why does that happen?',
+      ms: 7000,
+      attempt: 1,
+      assistanceRung: 0,
+      reasoningVerdict: 'held',
+    });
     o = endSession(o, { id: id(), at: '2026-09-12T10:04:00.000Z', activeMs: 240_000, completed: true });
 
-    expect(o.pending).toHaveLength(4);
+    expect(o.pending).toHaveLength(5);
     for (const e of o.pending) {
       expect(e.id, `${e.kind} carries ${e.id}`).toMatch(UUID);
       expect(e.sessionId, `${e.kind} names session ${e.sessionId}`).toMatch(UUID);
@@ -326,9 +478,15 @@ describe('claim', () => {
   });
 
   it('keeps the counters, because they describe the device and not the student', () => {
-    const theirs = { ...claim(answer(opened(), 1), student).outbox, dropped: 7, rejected: 2 };
+    const theirs = {
+      ...claim(answer(opened(), 1), student).outbox,
+      dropped: 7,
+      rejected: 2,
+      orphaned: 1,
+    };
     const { outbox } = claim(theirs, somebodyElse);
     expect(outbox.dropped).toBe(7);
     expect(outbox.rejected).toBe(2);
+    expect(outbox.orphaned).toBe(1);
   });
 });

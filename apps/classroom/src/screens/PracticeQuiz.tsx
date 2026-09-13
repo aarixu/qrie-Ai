@@ -7,7 +7,7 @@ import {
   type QuizQuestion,
 } from '../lib/quiz';
 import { recordAttempt } from '../stores/quizHistory';
-import { recordQuizInLedger } from '../lib/quizLedger';
+import { useQuizLedger } from '../lib/quizLedger';
 import { adaptToQuiz, type PlanChange } from '../lib/adaptPlan';
 import { EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
@@ -66,6 +66,17 @@ export function PracticeQuiz({
 }) {
   const quiz = useMemo(() => buildQuiz(lessonRef, { topicRef }), [lessonRef, topicRef]);
 
+  /**
+   * The sitting opens HERE, when the quiz does, and each answer is written as
+   * it is checked.
+   *
+   * It used to be one call from the bottom of `advance`, which meant a student
+   * who answered eight of ten and closed the tab left nothing behind — on the
+   * one surface that produces rung-0 evidence. `topicRef` goes with it, so the
+   * rows can be read per topic.
+   */
+  const ledger = useQuizLedger(quiz, topicRef);
+
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   // Answers are committed on Check, so their length IS the "already checked" flag for
@@ -123,7 +134,24 @@ export function PracticeQuiz({
 
   const check = () => {
     if (selected === null) return;
-    setAnswers([...answers, { chosenIndex: selected, ms: Date.now() - askedAt.current }]);
+    const committed: QuizAnswer = { chosenIndex: selected, ms: Date.now() - askedAt.current };
+    setAnswers([...answers, committed]);
+    /**
+     * WRITTEN DOWN THE MOMENT IT IS COMMITTED, and nowhere else.
+     *
+     * This is the only call site, which is what keeps one answer to one row:
+     * the ids are minted at record time, so a second recording of the same
+     * answer would be a second row rather than the same one again.
+     *
+     * Never allowed to cost the student their question, for the same reason
+     * the map update below is not — a ledger that cannot be written is a
+     * thinner record, not a broken quiz.
+     */
+    try {
+      ledger.answered(question, committed);
+    } catch (e) {
+      console.error('[ledger] the answer could not be recorded:', e);
+    }
   };
 
   const advance = () => {
@@ -139,18 +167,17 @@ export function PracticeQuiz({
     // signal, and it must not depend on every future integrator remembering.
     recordAttempt(outcome.lessonRef, outcome.score, outcome.total);
     /**
-     * And the full rows, which the score line throws away.
+     * The sitting is closed as finished — the answers are already in the
+     * ledger, each written as it was checked.
      *
-     * Every question here is a probe with a node id and — on a wrong answer —
-     * a named misconception. That is the most specific evidence the product
-     * ever produces, and it existed for exactly as long as this screen was
-     * mounted. Never allowed to cost the student their result, for the same
-     * reason the map update below is not.
+     * Nothing is recorded again here on purpose. Re-writing the graded rows
+     * would double every answer this student gave, because the event ids are
+     * minted at record time and the table keeps two ids as two answers.
      */
     try {
-      recordQuizInLedger(outcome);
+      ledger.finish();
     } catch (e) {
-      console.error('[ledger] the quiz could not be recorded:', e);
+      console.error('[ledger] the quiz could not be closed:', e);
     }
     /**
      * AND THE MAP HEARS ABOUT IT.

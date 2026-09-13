@@ -25,13 +25,17 @@ export function parseVerdict(raw: string): SpokenVerdict {
   return { verdict, say, gave: data.gave === 'hint' ? 'hint' : 'question' };
 }
 
-export function parseFollowUp(raw: string): string {
+export function parseFollowUp(raw: string): CrossQuestionClose {
   const match = raw.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('The close came back without words.');
-  const data = JSON.parse(match[0]) as { say?: unknown };
+  const data = JSON.parse(match[0]) as { say?: unknown; held?: unknown };
   const say = typeof data.say === 'string' ? data.say.trim() : '';
   if (!say) throw new Error('The close came back without words.');
-  return say;
+  // Unlike `gave`, a missing `held` gets NO default. There is no move she
+  // always makes here that would let one be inferred — the close is spoken
+  // either way — so guessing would file "we never asked" as a judgement about
+  // the student. Absent stays absent, and replay moves no belief on it.
+  return typeof data.held === 'boolean' ? { say, held: data.held } : { say };
 }
 
 /**
@@ -110,5 +114,9 @@ They answered: "${before.text}"
 You then asked: "${probe}"
 They reasoned: "${screened.text}"`;
 
-  return { say: parseFollowUp(await deps.complete(CLOSE_SYSTEM(), user)) };
+  // The SCREENED reasoning travels onward, never `reasoning` — the same rule
+  // and the same reason as the judge one turn earlier. This is the only copy a
+  // caller gets, so the ledger cannot store the raw transcript by reaching for
+  // the wrong variable.
+  return { ...parseFollowUp(await deps.complete(CLOSE_SYSTEM(), user)), heard: screened.text };
 }

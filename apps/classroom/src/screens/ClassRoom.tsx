@@ -299,6 +299,9 @@ export function ClassRoom({
           // standing on rung 3 rather than being mistaken for an unassisted one.
           ledger.helped(beatId, 3, false);
           await tts.speak(nudge);
+          // And the clock on the retry starts when she stops, not when they
+          // missed: the chips come back now. Same rule as the spoken path.
+          ledger.reopened(beatId, Date.now());
         }
       }
     } finally {
@@ -520,15 +523,39 @@ export function ClassRoom({
   const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
   const heldAskBeat = player.pendingAsk && !inDoubt ? (player.beat?.id ?? null) : null;
 
+  /**
+   * The beat whose question has already been filed as asked.
+   *
+   * `heldAskBeat` goes null and back on things that are not a new question:
+   * pausing cancels the held ask and resuming re-speaks the beat and reveals
+   * it again, and a raised hand blanks it for the length of the doubt. Each
+   * return filed a second `asked` for one question — inflating the count of
+   * questions put, and with it the attempt a first answer was recorded at.
+   */
+  const askFiled = useRef<string | null>(null);
+
   // The question surfacing is what starts the clock on an answer. It is its own
   // effect because the ear's effect returns early on a denied mic, and a
   // student without a microphone still answers by tapping.
   useEffect(() => {
+    // The class moved on: whatever was standing is over, and if that beat
+    // comes round again — a seek back — it is genuinely being asked afresh.
+    if (askFiled.current !== null && askFiled.current !== player.beat?.id) askFiled.current = null;
     if (!heldAskBeat) return;
+    if (askFiled.current === heldAskBeat) {
+      // The same question, back after a pause or a raised hand. No second
+      // `asked` — but the clock has to restart, or the minutes the student
+      // spent watching a doubt explained are charged to their thinking on this
+      // question. `asked` is the only other place that stamps it, and with the
+      // guard above it now runs exactly once per beat.
+      ledger.reopened(heldAskBeat, Date.now());
+      return;
+    }
+    askFiled.current = heldAskBeat;
     ledger.asked(heldAskBeat, player.pendingAsk?.options?.length);
     // Once per held question; `ledger` is memoised on the lesson.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heldAskBeat]);
+  }, [heldAskBeat, player.beat?.id]);
 
   useEffect(() => {
     if (!heldAskBeat) return;
@@ -541,13 +568,26 @@ export function ClassRoom({
        * when about their own answer, hears the reasoning, closes the loop,
        * and only then the class moves. Thinking is the point, both ways.
        */
-      let probe: { answer: string; question: string } | null = null;
+      let probe: { answer: string; question: string; askedAt: number } | null = null;
       let tries = 0;
       while (!cancelled) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
         setEar('listening');
         const heard = await listenOnce({ isCancelled: () => cancelled });
+        /**
+         * WHEN THE ANSWER LANDED — not when the judge had finished with it.
+         *
+         * `ledger.answered` is reached seconds later, on the far side of a
+         * model round trip, and it timed the answer from the moment it was
+         * called. So every spoken answer was recorded as that much slower than
+         * a tapped one, on a number the learner model weighs as evidence about
+         * the student. This is the mic closing: the judge's round trip is out
+         * of it. What is still inside is the transcription `listenOnce` does
+         * before it returns — the end-of-speech mark itself lives in the
+         * endpointer, and only `Heard` could carry it out here.
+         */
+        const heardAt = Date.now();
         if (cancelled) return;
 
         if (probe) {
@@ -562,6 +602,48 @@ export function ClassRoom({
           ).catch(() => null);
           setEar('off');
           if (cancelled) return;
+          /**
+           * THE ONLY EVIDENCE THIS SYSTEM EVER GETS THAT THEY CAN JUSTIFY IT.
+           *
+           * A right answer says they produced it; this says whether they can
+           * say why — mastery against recall, which is the whole reason the
+           * cross-question exists. It was being spoken, screened, sent to a
+           * model and then dropped on the floor.
+           *
+           * Filed BEFORE she speaks, like `helped`, and on every path that
+           * reaches here: a model that failed (`close === null`) and a turn
+           * the screen halted are both still a student who reasoned, and both
+           * are about to end this exchange early.
+           *
+           * `close.heard` is the SCREENED reasoning and the only copy this
+           * scope has — reaching for `heard.text` is how the raw transcript
+           * ends up in a column, exactly as it did on the answer path.
+           */
+          ledger.reflected({
+            beatId: heldAskBeat,
+            prompt: probe.question,
+            /**
+             * THE EAR'S REASON, not `heard.text !== null`.
+             *
+             * `listenOnce` returns `{ text: null, reason: 'error' }` when the
+             * mic will not open — the OS handed it to an incoming call, or the
+             * AudioContext was suspended by a backgrounding — and that used to
+             * be indistinguishable here from a quiet room. The class then filed
+             * `reasoningVerdict: 'silent'`, so a hardware failure was written
+             * down as a child who could not justify their own right answer.
+             * `Heard` carried the distinction one function call away.
+             */
+            reasoning:
+              heard.reason === 'heard'
+                ? { said: 'words', held: close?.held }
+                : heard.reason === 'silence'
+                  ? { said: 'nothing' }
+                  : { said: 'unheard' },
+            reasoningText: close?.heard,
+            flagged: close?.halt === true,
+            askedAt: probe.askedAt,
+            reasonedAt: heardAt,
+          });
           const spoken = close ? await speakSafely(close.say) : null;
           if (cancelled) return;
           // She has just told them to talk to somebody. Resolving the question
@@ -601,6 +683,7 @@ export function ClassRoom({
             // normaliseAnswer stores nothing for it.
             answerText: judged.heard,
             flagged: judged.halt === true,
+            answeredAt: heardAt,
           });
         }
         setEar('off');
@@ -629,9 +712,23 @@ export function ClassRoom({
           // their reasoning, and the probe branch above always resolves.
           // Screened, for the same reason: this is sent back to the model on
           // the close a turn later.
-          probe = { answer: judged.heard ?? heard.text, question: judged.say };
+          // `askedAt` is stamped HERE, after her line has finished being
+          // spoken, because that is when the mic opens and their thinking
+          // starts. Stamped before the speech it would have charged the
+          // student with however long she talked.
+          // `judged.heard` alone: it is absent only on a halt, and a halt has
+          // already returned two lines above. The `?? heard.text` fallback
+          // that stood here reached for exactly the raw transcript `heard` was
+          // added to make unreachable, on a path that can never need it.
+          probe = { answer: judged.heard ?? '', question: judged.say, askedAt: Date.now() };
           continue;
         }
+        // SHE HAS FINISHED SPEAKING THE HINT, so the retry clock starts now.
+        // `answered` above moved it to the moment their wrong answer landed;
+        // everything since is her talking, and charging the student for it
+        // would inflate attempt 2 by the length of a hint — worse than the
+        // judge round trip this whole change exists to take out.
+        ledger.reopened(heldAskBeat, Date.now());
         tries += 1;
         if (tries >= 2) return; // two misses — the hint stands, the chips wait
       }

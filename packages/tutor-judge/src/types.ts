@@ -78,6 +78,34 @@ export interface SpokenVerdict {
 /** What the close came back with, and whether the class may carry on. */
 export interface CrossQuestionClose {
   say: string;
+  /**
+   * WHETHER THEIR REASONING STOOD UP — decided here already, and never said.
+   *
+   * `CLOSE_SYSTEM` branches on exactly this ("if their reasoning holds…"
+   * against "if it wobbles, or they said nothing…") and then returned only the
+   * sentence she speaks, so the one thing this whole exchange exists to find
+   * out — can they justify what they already got right — was decided inside
+   * the model and dropped. That is `gave` again, which went missing the same
+   * way until hinted answers turned out to be filing themselves at rung 0.
+   *
+   * Optional because absent means NOBODY WEIGHED IT: a model that failed, a
+   * turn the safety screen stopped, or a reply that omitted the field. It is
+   * not a synonym for false, and the ledger moves no belief on it.
+   */
+  held?: boolean;
+  /**
+   * WHAT MAY BE KEPT OF THEIR REASONING — screened, never raw.
+   *
+   * The same hole `SpokenVerdict.heard` was added to close, one turn later.
+   * This call screens the reasoning before it sends it and then threw the
+   * screened copy away, so the only handle a caller had on what the student
+   * said was the raw transcript — and a `clean` screen deliberately does not
+   * set `halt`, so the one path that found a phone number was the path that
+   * would have written it into the ledger.
+   *
+   * Absent on a halt, which is correct: nothing of a stopped turn is kept.
+   */
+  heard?: string;
   /** Stop here. Set only by the safety screen. */
   halt?: true;
 }
