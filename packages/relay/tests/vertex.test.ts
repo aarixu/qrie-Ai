@@ -413,25 +413,73 @@ describe('what this relay will spend on', () => {
  */
 describe('how hard the model is asked to think', () => {
   const bodyFor = (chat: Parameters<typeof toVertexBody>[0]) =>
-    toVertexBody(chat).generationConfig as { thinkingConfig?: { thinkingBudget: number } };
+    toVertexBody(chat).generationConfig as {
+      thinkingConfig?: { thinkingLevel?: string; thinkingBudget?: number };
+    };
 
   it('says nothing at all when the caller did not ask', () => {
-    // The important half. A model told to think zero when nobody asked would
-    // be a silent change to every answer this relay has ever given.
+    // The important half. A model told to think MINIMAL when nobody asked
+    // would be a silent change to every answer this relay has ever given.
     expect(bodyFor({ model: 'google/gemini-3.7-flash', messages: [] }).thinkingConfig).toBeUndefined();
   });
 
-  it('turns it off for "none", which is the only setting that stops the spend', () => {
-    expect(bodyFor({ model: 'google/gemini-3.7-flash', messages: [], reasoning_effort: 'none' }).thinkingConfig)
+  /**
+   * GEMINI 3 RENAMED THE DIAL, AND SENDING BOTH IS AN ERROR.
+   *
+   * This sent `thinkingBudget`, the 2.5-era integer scale, to models that are
+   * all 3.x — and Google documents a Gemini 3 model as taking `thinkingLevel`
+   * and REFUSING a request carrying both. Which is why the one thing a budget
+   * of zero could not do here was stop the spending: measured,
+   * `thinkingBudget: 0` on gemini-3.7-flash still produced 5,724 thinking
+   * tokens across 72 answers, down from 12,030 rather than to none.
+   */
+  it('asks a Gemini 3 model for a LEVEL, which is the dial it actually has', () => {
+    expect(bodyFor({ model: 'google/gemini-3.8-flash', messages: [], reasoning_effort: 'none' }).thinkingConfig)
+      .toEqual({ thinkingLevel: 'LOW' });
+  });
+
+  /**
+   * MINIMAL IS DOCUMENTED AND IT IS NOT THERE.
+   *
+   * Google lists MINIMAL for Gemini 3 Flash. Vertex, asked for it on this
+   * project on 2026-09-14, answered 400 "Thinking level is unsupported:
+   * THINKING_LEVEL_MINIMAL" on 3.7-flash and on 3.8-flash alike. Sending it
+   * would not be a cheaper setting, it would be an outage: the class swallows
+   * a failed judge on purpose, so every spoken answer would go unjudged and
+   * silent, which is the exact defect this repo shipped once already.
+   */
+  it('never asks for MINIMAL, which Vertex refuses outright', () => {
+    for (const m of ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']) {
+      for (const e of ['none', 'low', 'medium', 'high'] as const) {
+        expect(
+          bodyFor({ model: `google/${m}`, messages: [], reasoning_effort: e }).thinkingConfig?.thinkingLevel,
+          `${m} at ${e}`,
+        ).not.toBe('MINIMAL');
+      }
+    }
+  });
+
+  it('never sends a Gemini 3 model both, because that is refused outright', () => {
+    for (const m of ['gemini-3.8-flash', 'gemini-3.7-flash', 'gemini-3.1-flash-lite']) {
+      const cfg = bodyFor({ model: `google/${m}`, messages: [], reasoning_effort: 'none' }).thinkingConfig;
+      expect(cfg, m).toHaveProperty('thinkingLevel');
+      expect(cfg, m).not.toHaveProperty('thinkingBudget');
+    }
+  });
+
+  it('keeps the integer scale for a name from before the rename', () => {
+    // Nothing in ALLOWED_MODELS is one today. It is here so pointing this
+    // relay at a 2.5-era name later does not silently send the wrong dial.
+    expect(bodyFor({ model: 'google/gemini-2.5-flash', messages: [], reasoning_effort: 'none' }).thinkingConfig)
       .toEqual({ thinkingBudget: 0 });
   });
 
   it('carries the tiers between', () => {
     const at = (e: 'low' | 'medium' | 'high') =>
-      bodyFor({ model: 'google/gemini-3.7-flash', messages: [], reasoning_effort: e }).thinkingConfig?.thinkingBudget;
-    expect(at('low')).toBe(1024);
-    expect(at('medium')).toBe(8192);
-    expect(at('high')).toBe(24576);
+      bodyFor({ model: 'google/gemini-3.8-flash', messages: [], reasoning_effort: e }).thinkingConfig?.thinkingLevel;
+    expect(at('low')).toBe('LOW');
+    expect(at('medium')).toBe('MEDIUM');
+    expect(at('high')).toBe('HIGH');
   });
 
   it('ignores a word it does not know rather than guessing a budget', () => {

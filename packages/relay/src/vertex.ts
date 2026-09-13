@@ -191,14 +191,56 @@ export function toVertexBody(chat: OpenAiChat): VertexBody {
   if (typeof chat.temperature === 'number') generationConfig.temperature = chat.temperature;
 
   /**
-   * Budgets from Google's own scale for the 2.5/3.x thinking models: 0 turns
-   * it off, and the rest are the documented tiers. Only sent when the caller
-   * asked, because a model told to think zero when nobody asked would be a
-   * silent change to every answer this relay has ever given.
+   * HOW HARD TO THINK — and Gemini 3 renamed the dial.
+   *
+   * Thinking tokens bill at the OUTPUT rate, which is five times input, and on
+   * this workload they were the bill: measured over one class, the judge spent
+   * 2,460 prompt tokens and 296 output tokens against 2,353 THINKING tokens, so
+   * three quarters of what it cost bought reasoning nobody reads and the
+   * student never hears, on a question whose right answer is committed to this
+   * repo.
+   *
+   * This sent `thinkingBudget`, which is the 2.5-era integer scale. Every model
+   * this relay serves is a 3.x, and Google's docs are explicit that a Gemini 3
+   * model takes `thinkingLevel` and **errors if both are present**. So the one
+   * thing a budget of zero could not do on a 3.x name was turn thinking off:
+   * measured, `thinkingBudget: 0` on gemini-3.7-flash still produced 5,724
+   * thinking tokens across 72 answers, down from 12,030 rather than to none.
+   *
+   * Chosen by the model's OWN name rather than by a flag, because the caller
+   * asks for an effort and should never have to know which generation is
+   * behind it. Nothing is sent unless a caller asked: a model told to think
+   * MINIMAL when nobody asked would be a silent change to every answer this
+   * relay has ever given.
    */
+  /**
+   * `none` maps to LOW, and that is a measurement rather than a compromise.
+   *
+   * Google documents MINIMAL as available on Gemini 3 Flash. Vertex, asked for
+   * it on this project on 2026-09-14, answers
+   * `400 Thinking level is unsupported: THINKING_LEVEL_MINIMAL` — on
+   * gemini-3.7-flash AND on gemini-3.8-flash. So MINIMAL is not a cheaper
+   * setting here, it is an outage: every judge call would 400, and the class
+   * swallows a failed judge on purpose, so every spoken answer would go
+   * unjudged and silent.
+   *
+   * LOW is therefore the floor this relay can actually reach, and it is a real
+   * saving: measured on the same prompt, gemini-3.8-flash went from 271
+   * thinking tokens to 150.
+   */
+  const LEVEL: Record<string, string> = {
+    none: 'LOW',
+    low: 'LOW',
+    medium: 'MEDIUM',
+    high: 'HIGH',
+  };
+  // The 2.5-era integer scale, kept for any older name this relay is ever
+  // pointed at. Sending it to a 3.x model is an error, not a fallback.
   const BUDGET: Record<string, number> = { none: 0, low: 1024, medium: 8192, high: 24576 };
-  if (chat.reasoning_effort && chat.reasoning_effort in BUDGET) {
-    generationConfig.thinkingConfig = { thinkingBudget: BUDGET[chat.reasoning_effort] };
+  if (chat.reasoning_effort && chat.reasoning_effort in LEVEL) {
+    generationConfig.thinkingConfig = /^gemini-3\./.test(model)
+      ? { thinkingLevel: LEVEL[chat.reasoning_effort] }
+      : { thinkingBudget: BUDGET[chat.reasoning_effort] };
   }
   if (isImageModel(model)) {
     generationConfig.responseModalities = ['IMAGE'];

@@ -28,13 +28,16 @@ export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
 /**
  * The planner's model, through the same relay.
  *
- * This was 'google/gemini-3-flash-preview' — an OpenRouter-era name that the
- * relay's Vertex allow-list REFUSES with a 400. The class swallows a failed
- * judge on purpose ("says nothing and leaves the chips standing"), so in
- * production every spoken answer was silently never judged, the cross-question
- * never asked, and no voice answer ever reached the ledger. Found while
- * measuring the cost of a class, not by a test: the only test of this file
- * covered the JSON parser.
+ * It was 'google/gemini-3-flash-preview' — an OpenRouter-era name the relay's
+ * allow-list REFUSES with a 400. The class swallows a failed judge on purpose
+ * ("says nothing and leaves the chips standing"), so every spoken answer in
+ * production was silently never judged. Found by measuring the cost of a class,
+ * not by a test.
+ *
+ * It is 3.8 rather than 3.7 for one reason: 3.7 does not accept MINIMAL and
+ * falls back to LOW, which is why a thinking budget of zero still bought 5,724
+ * thinking tokens across 72 answers. 3.8 costs the same per token, answers
+ * faster on this endpoint, and takes the setting that actually stops the spend.
  */
 const JUDGE_MODEL = 'google/gemini-3.7-flash';
 
