@@ -50,3 +50,7 @@ content/models/
 # The onnxruntime WASM binaries, copied out of node_modules by the same
 # script. 39 MB of build output, not source.
 content/wasm/
+
+# A throwaway anonymous token, dropped so a dead measurement run is still
+# recoverable from usage_event. Never committed.
+tools/measure/last-session.json

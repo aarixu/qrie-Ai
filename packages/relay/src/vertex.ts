@@ -247,7 +247,27 @@ export interface VertexOptions {
   tokens: TokenSource;
   fetch?: typeof globalThis.fetch;
   location?: string;
+  /** Test seam, so the backoff below can be proven without waiting for it. */
+  sleep?: (ms: number) => Promise<void>;
 }
+
+/**
+ * HOW LONG TO WAIT WHEN VERTEX SAYS "NOT NOW".
+ *
+ * A 429 from Vertex is RESOURCE_EXHAUSTED: the request never reached a model,
+ * nothing was charged, and in a second or two it will very likely succeed.
+ * Passing it through untouched is what this relay did, and it meant a class
+ * prep — about forty calls in two minutes, several of them at once — fell over
+ * whenever the project's per-minute quota was busy. That was found by
+ * measuring a class, not by a test: the run died 138 seconds in, having
+ * already spent the money for everything before it.
+ *
+ * Three attempts and no more. The caller is a student watching a spinner, and
+ * a class that starts four seconds late is very much better than one that does
+ * not start — but a class that hangs for a minute is not.
+ */
+const BUSY = new Set([408, 429, 502, 503, 504]);
+const BACKOFF_MS = [1_000, 3_000];
 
 export interface VertexAnswer {
   status: number;
@@ -285,16 +305,29 @@ export async function completeOnVertex(
     };
   }
 
-  const response = await doFetch(
-    vertexUrl(options.tokens.projectId, model, options.location ?? LOCATION),
-    {
+  const url = vertexUrl(options.tokens.projectId, model, options.location ?? LOCATION);
+  const body = JSON.stringify(toVertexBody(chat));
+  const sleep = options.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
+
+  let response: Awaited<ReturnType<typeof doFetch>>;
+  let reply: VertexReply;
+  for (let attempt = 0; ; attempt += 1) {
+    response = await doFetch(url, {
       method: 'POST',
       headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-      body: JSON.stringify(toVertexBody(chat)),
-    },
-  );
+      body,
+    });
+    reply = (await response.json().catch(() => ({}))) as VertexReply;
+    if (response.ok || !BUSY.has(response.status) || attempt >= BACKOFF_MS.length) break;
+    // Vertex's own advice first, if it gave any, clamped so a long one cannot
+    // hold a student's class open past the point they would have given up.
+    const advised = Number(response.headers?.get?.('retry-after') ?? '');
+    const wait = Number.isFinite(advised) && advised > 0
+      ? Math.min(advised * 1_000, 5_000)
+      : BACKOFF_MS[attempt];
+    await sleep(wait);
+  }
 
-  const reply = (await response.json().catch(() => ({}))) as VertexReply;
   if (!response.ok) {
     return {
       status: response.status,

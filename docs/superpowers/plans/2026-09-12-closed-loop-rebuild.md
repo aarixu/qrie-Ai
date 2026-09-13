@@ -185,11 +185,74 @@ minting a second user and orphaning a term's work.
 
 The learner model reading from the ledger is **Phase 3**.
 
-### Phase 2 — Cost, credits and ads
+### Phase 2 — Cost, credits and ads `MEASUREMENT LIVE`
 Measure cost per class and per student-hour **first**, price second. Two cost
 bases (web = cloud speech; app = on-device). **The meter already exists** —
 `claim_relay` plus `UNITS` in `packages/relay/src/gate.ts` is a per-user,
 atomic, fails-closed meter; credits are the daily reset replaced by a balance.
+
+**2.1 ✅ Measuring.** Every admitted relay call now writes what it cost, in the
+units the provider bills — tokens from Vertex's `usageMetadata`, characters for
+speech, audio bytes for the ear — to `usage_event`, attributed to the learning
+session the app names (`x-session-id`; a `session` query parameter for speech,
+which cannot send a header). Prices live apart in `model_price` so a change
+re-prices only what came after. `session_cost()` and
+`cost_per_student_hour()` are the numbers this phase was waiting for; the
+latter divides by the ledger's `active_ms`. Proven live by
+`tools/bin/usage-live-test.mjs`. Thinking tokens are billed as output on
+Gemini 3.x and are recorded separately so the split stays visible.
+
+**2.2 ⬜ Pricing.** `tools/sql/model_price.sql` holds every price with its
+source and date (3.7-flash $0.75/$3.75 per M, doubling 2027-01-01;
+3.1-flash-lite $0.25/$1.50; aura-2 $30 per M characters; nova-3 $0.0043 per
+minute; ₹95.6 per dollar). Operator data, applied by Aarav, not by a script.
+**One open question:** no page lists a per-image price for
+`gemini-3.1-flash-image`; if a picture is billed as ~1,300 output tokens the
+`image` row must stay at zero or it double-counts. The first real class
+through the deployed relay settles it.
+
+**2.3 ✅ The first measured class — 2026-09-13.** One cold Class 10 Science
+class (Mendel's rules of inheritance, 18 beats, 4 asks, 50 elements), prepared
+and played end to end through the deployed relay on the real models, every call
+attributed to one session and read back out of `usage_event`. The counts
+cross-check: 12 llm calls, 18 spoken lines, 8 transcriptions, and 38 usage rows
+for 38 calls.
+
+| | ₹ |
+|---|---|
+| Preparing the class — paid ONCE per topic, then cached | **10.20** |
+| Playing it — paid every time, on the web | **5.38** |
+| A cold class, all in | **15.58** |
+| A cached class | **5.38** |
+| Per student-hour, cached, web | **~90** |
+| Warming all 1,099 topics, one time ever | **~11,200** |
+
+The old ₹25/class estimate was 60% high and the ₹27,000 catalogue estimate
+more than double. The ₹1.41/hr figure is the ANDROID case and still untested;
+web is the launch vehicle and web is ~₹90/student-hour, because a browser
+cannot download 306 MB of speech models.
+
+Settled with it: **a generated picture is billed as 1,120 output tokens on
+`gemini-3.1-flash-image`, ₹0.215 each**, so the `image` count stays and does
+not double-count — 2.2's open question, answered by measurement. This class
+generated none: both its visuals were canvas diagrams from the artist, which is
+the cheap and preferred path, so a photo-heavy topic costs a few rupees more
+rather than a different order of magnitude.
+
+Two findings came out of the run rather than out of a test. The judge named a
+model the relay refuses, so in production every spoken answer was silently
+never judged; and the relay passed Vertex's 429 straight through with nothing
+retrying it, so the first attempt at this measurement died 138 seconds in
+having already paid for everything before the failure. Both fixed.
+
+**2.4 ⬜ Credits.** The balance replacing the daily reset, top-up and
+ad-reward events, `claim_relay` → `spend_credits`. 2.3 is now done, so the
+only thing still blocking this is two decisions that are Aarav's: the free
+allowance for a new student, and the price of a class. The floor those sit on:
+a cached class costs ₹5.38 to serve and a cold one ₹15.58.
+
+**2.5 ⬜ Ads.** Spike web rewarded video first (Phase 4.2) — the compliant
+non-personalised inventory on mobile web may not pay enough to matter.
 
 ### Phase 3 — The learner model, MVP scope
 `ConceptState` retiring `Mastery = Record<string, number>` — the shape that

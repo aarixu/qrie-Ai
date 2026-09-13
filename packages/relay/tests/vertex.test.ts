@@ -248,10 +248,92 @@ describe('completeOnVertex', () => {
       {
         tokens,
         fetch: (async () => reply({ error: { message: 'quota exceeded' } }, false, 429)) as never,
+        sleep: async () => undefined,
       },
     );
     expect(out.status).toBe(429);
     expect((out.body as { error: { message: string } }).error.message).toBe('quota exceeded');
+  });
+
+  /**
+   * WAITING OUT A BUSY QUOTA, WHICH THIS RELAY USED NOT TO DO.
+   *
+   * A 429 from Vertex is RESOURCE_EXHAUSTED — the request never reached a
+   * model and nothing was charged for it. Handing it to the student meant a
+   * class prep died on a busy minute having already paid for everything before
+   * the failure, which is exactly how the first cost measurement of this
+   * product ended.
+   */
+  describe('when Vertex is busy', () => {
+    const flaky = (failures: number, status = 429) => {
+      let calls = 0;
+      const fn = vi.fn(async () => {
+        calls += 1;
+        return calls <= failures
+          ? reply({ error: { message: 'RESOURCE_EXHAUSTED' } }, false, status)
+          : reply({ candidates: [{ content: { parts: [{ text: 'ok' }] } }] });
+      });
+      return { fn, calls: () => calls };
+    };
+
+    it('waits and tries again rather than failing the class', async () => {
+      const { fn, calls } = flaky(2);
+      const slept: number[] = [];
+      const out = await completeOnVertex(
+        { model: 'google/gemini-3.7-flash', messages: [{ role: 'user', content: 'hi' }] },
+        { tokens, fetch: fn as never, sleep: async (ms) => void slept.push(ms) },
+      );
+      expect(out.status).toBe(200);
+      expect(calls()).toBe(3);
+      // Backing off, not hammering.
+      expect(slept).toEqual([1_000, 3_000]);
+    });
+
+    it('gives up rather than holding a student on a spinner forever', async () => {
+      const { fn, calls } = flaky(99);
+      const out = await completeOnVertex(
+        { model: 'google/gemini-3.7-flash', messages: [{ role: 'user', content: 'hi' }] },
+        { tokens, fetch: fn as never, sleep: async () => undefined },
+      );
+      expect(out.status).toBe(429);
+      expect(calls()).toBe(3);
+    });
+
+    it("takes the advice Vertex gives, but not more than five seconds of it", async () => {
+      const slept: number[] = [];
+      let calls = 0;
+      const fn = vi.fn(async () => {
+        calls += 1;
+        return {
+          ok: false,
+          status: 429,
+          headers: { get: (h: string) => (h === 'retry-after' ? '60' : null) },
+          json: async () => ({ error: { message: 'slow down' } }),
+        } as unknown as Response;
+      });
+      await completeOnVertex(
+        { model: 'google/gemini-3.7-flash', messages: [{ role: 'user', content: 'hi' }] },
+        { tokens, fetch: fn as never, sleep: async (ms) => void slept.push(ms) },
+      );
+      // A minute is Vertex protecting itself; five seconds is us protecting
+      // the student, who would have closed the tab long before.
+      expect(slept).toEqual([5_000, 5_000]);
+    });
+
+    it('does not retry a refusal that would be refused again', async () => {
+      // 400 means the request is wrong. Sending it twice more is just slower.
+      let calls = 0;
+      const fn = vi.fn(async () => {
+        calls += 1;
+        return reply({ error: { message: 'bad request' } }, false, 400);
+      });
+      const out = await completeOnVertex(
+        { model: 'google/gemini-3.7-flash', messages: [{ role: 'user', content: 'hi' }] },
+        { tokens, fetch: fn as never, sleep: async () => undefined },
+      );
+      expect(out.status).toBe(400);
+      expect(calls).toBe(1);
+    });
   });
 
   it('refuses a request that named no model', async () => {
