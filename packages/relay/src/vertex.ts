@@ -104,6 +104,20 @@ export interface OpenAiChat {
   response_format?: { type?: string };
   max_tokens?: number;
   temperature?: number;
+  /**
+   * HOW HARD THE MODEL SHOULD THINK, IN OPENAI'S WORD FOR IT.
+   *
+   * Gemini's thinking tokens bill at the OUTPUT rate and they are not small.
+   * Measured over one class: the judge spent 2,460 prompt tokens, 296 output
+   * tokens and 2,353 THINKING tokens deciding whether four spoken answers
+   * matched a known option, so three quarters of that bill bought reasoning
+   * nobody reads and the student never hears.
+   *
+   * Left undefined, nothing is sent and the model does whatever it does today
+   * — so adding this changes no existing caller. 'none' maps to a budget of
+   * zero, which is the only setting that actually stops the spend.
+   */
+  reasoning_effort?: 'none' | 'low' | 'medium' | 'high';
 }
 
 interface VertexPart {
@@ -175,6 +189,17 @@ export function toVertexBody(chat: OpenAiChat): VertexBody {
     CAP_OUTPUT_TOKENS,
   );
   if (typeof chat.temperature === 'number') generationConfig.temperature = chat.temperature;
+
+  /**
+   * Budgets from Google's own scale for the 2.5/3.x thinking models: 0 turns
+   * it off, and the rest are the documented tiers. Only sent when the caller
+   * asked, because a model told to think zero when nobody asked would be a
+   * silent change to every answer this relay has ever given.
+   */
+  const BUDGET: Record<string, number> = { none: 0, low: 1024, medium: 8192, high: 24576 };
+  if (chat.reasoning_effort && chat.reasoning_effort in BUDGET) {
+    generationConfig.thinkingConfig = { thinkingBudget: BUDGET[chat.reasoning_effort] };
+  }
   if (isImageModel(model)) {
     generationConfig.responseModalities = ['IMAGE'];
     // A picture is not JSON, and asking for both gets a refusal.

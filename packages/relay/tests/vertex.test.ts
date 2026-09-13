@@ -399,3 +399,45 @@ describe('what this relay will spend on', () => {
     expect(MAX_REQUEST_BYTES).toBeGreaterThan(200_000);
   });
 });
+
+/**
+ * THINKING TOKENS BILL AT THE OUTPUT RATE, AND NOBODY READS THEM.
+ *
+ * Measured over one real class: the judge spent 2,460 prompt tokens, 296
+ * output tokens and 2,353 THINKING tokens deciding whether four spoken answers
+ * matched a known option. Three quarters of that bill bought reasoning the
+ * student never hears, on a question with four printed options.
+ *
+ * The relay had no way to say so. It does now, in OpenAI's vocabulary, because
+ * that is the shape every caller here already speaks.
+ */
+describe('how hard the model is asked to think', () => {
+  const bodyFor = (chat: Parameters<typeof toVertexBody>[0]) =>
+    toVertexBody(chat).generationConfig as { thinkingConfig?: { thinkingBudget: number } };
+
+  it('says nothing at all when the caller did not ask', () => {
+    // The important half. A model told to think zero when nobody asked would
+    // be a silent change to every answer this relay has ever given.
+    expect(bodyFor({ model: 'google/gemini-3.7-flash', messages: [] }).thinkingConfig).toBeUndefined();
+  });
+
+  it('turns it off for "none", which is the only setting that stops the spend', () => {
+    expect(bodyFor({ model: 'google/gemini-3.7-flash', messages: [], reasoning_effort: 'none' }).thinkingConfig)
+      .toEqual({ thinkingBudget: 0 });
+  });
+
+  it('carries the tiers between', () => {
+    const at = (e: 'low' | 'medium' | 'high') =>
+      bodyFor({ model: 'google/gemini-3.7-flash', messages: [], reasoning_effort: e }).thinkingConfig?.thinkingBudget;
+    expect(at('low')).toBe(1024);
+    expect(at('medium')).toBe(8192);
+    expect(at('high')).toBe(24576);
+  });
+
+  it('ignores a word it does not know rather than guessing a budget', () => {
+    expect(
+      bodyFor({ model: 'google/gemini-3.7-flash', messages: [], reasoning_effort: 'enormous' as never })
+        .thinkingConfig,
+    ).toBeUndefined();
+  });
+})
