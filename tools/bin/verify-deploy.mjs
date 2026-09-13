@@ -191,8 +191,12 @@ const RPC_ARGS = {
     p_audio_bytes: null, p_bytes: null,
   },
   cost_per_student_hour: { p_days: 30 },
+  // Named, because PostgREST resolves an RPC by its ARGUMENT NAMES: an empty
+  // body against a function that takes one is a 404, which reads like "the
+  // function is missing" and not like "you asked for it wrongly".
+  session_cost: { p_session: '00000000-0000-0000-0000-000000000000' },
 };
-for (const fn of ['record_usage', 'cost_per_student_hour']) {
+for (const fn of ['record_usage', 'cost_per_student_hour', 'session_cost']) {
   try {
     const res = await fetch(`${URL_}/rest/v1/rpc/${fn}`, {
       method: 'POST',
@@ -205,6 +209,44 @@ for (const fn of ['record_usage', 'cost_per_student_hour']) {
   } catch (e) {
     show(`${fn} reachable`, false, String(e));
   }
+}
+
+/**
+ * THE ONE A TABLE'S RLS DOES NOT COVER.
+ *
+ * usage_event has own-rows RLS and it works. usage_cost SELECTS from
+ * usage_event, and a Postgres view runs with the rights of whoever defined it
+ * unless it says otherwise — so for a while the view handed any signed-in
+ * student every other student's session ids, models and spend, while the table
+ * underneath it correctly handed them nothing. Supabase grants select on new
+ * objects in public to authenticated by default, so nothing had to go wrong
+ * for this to be reachable; it was reachable by default.
+ *
+ * This probe signs up as a real student and reads it, because that is the only
+ * version of the question that cannot be answered wrongly by reading the SQL.
+ */
+{
+  const signup = await fetch(`${URL_}/auth/v1/signup`, {
+    method: 'POST', headers: { apikey: ANON, 'content-type': 'application/json' }, body: '{}',
+  });
+  const { access_token: token } = await signup.json();
+  const asStudent = { apikey: ANON, authorization: `Bearer ${token}`, 'content-type': 'application/json' };
+
+  const view = await fetch(`${URL_}/rest/v1/usage_cost?select=user_id&limit=5`, { headers: asStudent });
+  const body = await view.text();
+  let rows = null;
+  try { rows = JSON.parse(body); } catch { /* an error body, which is the pass */ }
+  const leaked = Array.isArray(rows) ? rows.length : 0;
+  show("usage_cost does not hand a student other students' spend",
+       !view.ok || leaked === 0,
+       `HTTP ${view.status}, ${leaked} row(s) ${body.slice(0, 60)}`);
+
+  // And the table it is built on, which was always right and must stay so.
+  const table = await fetch(`${URL_}/rest/v1/usage_event?select=user_id&limit=5`, { headers: asStudent });
+  const mine = await table.json().catch(() => null);
+  show('usage_event still shows a student only their own rows',
+       table.ok && Array.isArray(mine) && mine.length === 0,
+       `HTTP ${table.status}, ${Array.isArray(mine) ? mine.length : '?'} row(s)`);
 }
 
 if (failed > 0) {

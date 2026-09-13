@@ -217,6 +217,36 @@ describe('the retention migration', () => {
   });
 });
 
+/**
+ * RLS ON A TABLE DOES NOT REACH A VIEW BUILT OVER IT.
+ *
+ * usage_event's own-rows policy worked from the day it shipped. usage_cost
+ * selects from usage_event, and a Postgres view runs with the rights of
+ * whoever DEFINED it unless it says otherwise — so the view read every
+ * student's rows, and Supabase grants select on new objects in public to
+ * authenticated by default. Measured against the deployed project: a
+ * brand-new anonymous account read five other students' rows through the
+ * view while reading none through the table.
+ */
+describe('the view that leaked every student’s spend', () => {
+  const sql = sqlOf('0010_usage_cost_rls.sql');
+
+  it('makes the view run as its caller, so row security applies to it', () => {
+    expect(sql).toMatch(/alter view public\.usage_cost set \(security_invoker = true\)/i);
+  });
+
+  it('and closes it to students outright, because it is an operator report', () => {
+    expect(sql).toMatch(/revoke all on public\.usage_cost from anon/i);
+    expect(sql).toMatch(/revoke all on public\.usage_cost from authenticated/i);
+    expect(sql).toMatch(/grant select on public\.usage_cost to service_role/i);
+  });
+
+  it('closes session_cost too, which read the same view and nobody had revoked', () => {
+    expect(sql).toMatch(/revoke all on function public\.session_cost\(uuid\) from authenticated/i);
+    expect(sql).toMatch(/grant execute on function public\.session_cost\(uuid\) to service_role/i);
+  });
+});
+
 describe('the usage migration', () => {
   const sql = sqlOf('0008_usage.sql');
 
