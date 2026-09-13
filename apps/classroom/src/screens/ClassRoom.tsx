@@ -591,7 +591,15 @@ export function ClassRoom({
             correct: judged.verdict === 'right',
             surface: 'voice',
             verdict: judged.verdict,
-            answerText: heard.text,
+            // THE SCREENED WORDS, never `heard.text`. The screen had already
+            // found and removed whatever a child should not have had to put in
+            // an answer — and then this line wrote the original down anyway,
+            // because a `clean` verdict deliberately does not stop the class
+            // and so never set `halt`. `judged.heard` is the only copy the
+            // judge hands back now, which is what makes this hard to get wrong
+            // again. Undefined means the screen stopped the turn entirely, and
+            // normaliseAnswer stores nothing for it.
+            answerText: judged.heard,
             flagged: judged.halt === true,
           });
         }
@@ -619,7 +627,9 @@ export function ClassRoom({
         if (judged.verdict === 'right') {
           // Her line just ended on the cross-question; the next listen takes
           // their reasoning, and the probe branch above always resolves.
-          probe = { answer: heard.text, question: judged.say };
+          // Screened, for the same reason: this is sent back to the model on
+          // the close a turn later.
+          probe = { answer: judged.heard ?? heard.text, question: judged.say };
           continue;
         }
         tries += 1;

@@ -148,7 +148,37 @@ describe('the ordinary path', () => {
       verdict: 'wrong',
       say: 'Where does the energy come from?',
       gave: 'question',
+      heard: 'the brain',
     });
+  });
+
+  /**
+   * THE SCREENED WORDS ARE THE ONLY ONES THAT COME BACK.
+   *
+   * One of the screen's verdicts is `clean`: it finds something a child should
+   * not have had to put in an answer, takes it out, records a flag, and
+   * deliberately does NOT stop the class over it. That cleaned text went to the
+   * model and was then discarded, and the classroom passed the RAW transcript
+   * to the ledger — so the one path that detected a phone number was also the
+   * path that wrote it down. `halt` did not save it: halt is for a redirect or
+   * a disclosure, not for a clean.
+   */
+  it('hands back what may be kept, not what was heard', async () => {
+    // A `clean` verdict: the screen took the number out and let the class run
+    // on, which is exactly the case `halt` does not cover.
+    const d = deps('{"verdict":"right","say":"Why is that?"}', { text: 'my number is', say: null });
+    const out = await judgeSpokenAnswer(ask, 'my number is 98765 43210', d);
+    expect(out.heard).toBe('my number is');
+    expect(out.heard).not.toContain('98765');
+  });
+
+  it('keeps nothing at all when the screen stopped the turn', async () => {
+    const d = deps('{"verdict":"right","say":"hi"}');
+    d.screen = () => ({ text: null, say: 'That sounds hard. Talk to someone you trust.' });
+    const out = await judgeSpokenAnswer(ask, 'something a child should not carry alone', d);
+    expect(out.halt).toBe(true);
+    expect(out.heard).toBeUndefined();
+    expect(d.complete).not.toHaveBeenCalled();
   });
 });
 

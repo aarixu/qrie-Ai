@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { mergePlan, type Snapshot } from '../src/lib/sync';
+import { createLocalStore, forgetDeviceOwner, handOverDevice } from '../src/stores/localStore';
 
 /**
  * WHICH SIDE WINS, PER STORE.
@@ -112,5 +113,70 @@ describe('stores that must never reach the cloud', () => {
     await new Promise((r) => setTimeout(r, 0));
     stop();
     expect(forgotten).not.toContain('progress');
+  });
+});
+
+/**
+ * A SHARED PHONE, AND WHAT SIGNING IN USED TO DO TO THE PERSON BEFORE YOU.
+ *
+ * Sync merges what is on the device with what is in the cloud, newest wins,
+ * and it had no idea whose work was on the device. A school tablet, a family
+ * laptop, a sibling: the first student's notes, name and progress sat in
+ * localStorage after they signed out, and the moment the next student signed
+ * in, everything of the first student's that happened to be newer was pushed
+ * up into the second student's real account.
+ */
+describe('when the device changes hands', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    forgetDeviceOwner();
+  });
+
+  it('claims a device nobody has signed in on, rather than wiping it', () => {
+    const notes = createLocalStore('handover-test:notes', { text: '' });
+    notes.set({ text: 'what I worked out in class' });
+
+    expect(handOverDevice('student-1')).toBe(0);
+    expect(notes.get()).toEqual({ text: 'what I worked out in class' });
+  });
+
+  it('leaves everything alone when the same student signs in again', () => {
+    const notes = createLocalStore('handover-test:notes-2', { text: '' });
+    handOverDevice('student-1');
+    notes.set({ text: 'mine' });
+
+    expect(handOverDevice('student-1')).toBe(0);
+    expect(notes.get()).toEqual({ text: 'mine' });
+  });
+
+  /** The upgrade path keeps the same user id, so it must not look like this. */
+  it('does not fire when an anonymous student becomes a named one', () => {
+    createLocalStore('handover-test:notes-3', { text: '' }).set({ text: 'a term of work' });
+    handOverDevice('same-id');
+    expect(handOverDevice('same-id')).toBe(0);
+  });
+
+  it('empties the device before the next student can merge over them', () => {
+    const notes = createLocalStore('handover-test:notes-4', { text: '' });
+    handOverDevice('student-1');
+    notes.set({ text: "student one's notes" });
+
+    const cleared = handOverDevice('student-2');
+
+    expect(cleared).toBeGreaterThan(0);
+    expect(notes.get()).toEqual({ text: '' });
+    expect(localStorage.getItem('handover-test:notes-4')).toBeNull();
+    // The write stamp goes too — a stamp left behind would make the empty
+    // store look newer than the cloud and push the emptiness up as an edit.
+    expect(localStorage.getItem('handover-test:notes-4:at')).toBeNull();
+  });
+
+  it('takes the safety flag log with it, which never syncs and is not theirs', () => {
+    const flags = createLocalStore('handover-test:flags', [] as string[], { neverSync: true });
+    handOverDevice('student-1');
+    flags.set(['cleaned']);
+
+    handOverDevice('student-2');
+    expect(flags.get()).toEqual([]);
   });
 });

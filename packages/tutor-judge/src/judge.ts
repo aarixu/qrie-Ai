@@ -1,4 +1,3 @@
-import { quoteForPrompt } from '@ai-tutor/safety';
 import { CLOSE_SYSTEM, JUDGE_SYSTEM, describeAsk } from './prompts.ts';
 import type { CrossQuestionClose, JudgeDeps, SpokenAsk, SpokenVerdict } from './types.ts';
 
@@ -63,7 +62,10 @@ export async function judgeSpokenAnswer(
     JUDGE_SYSTEM(),
     `${describeAsk(ask)}\n\nThe student said: "${screened.text}"`,
   );
-  return parseVerdict(reply);
+  // The SCREENED words travel onward, never `heard`. This is the only copy a
+  // caller gets, so the ledger cannot store the raw transcript by reaching for
+  // the wrong variable.
+  return { ...parseVerdict(reply), heard: screened.text };
 }
 
 /**
@@ -87,9 +89,24 @@ export async function resolveCrossQuestion(
   // and the class stops there rather than resolving the question over them.
   if (screened.text === null) return { say: screened.say ?? '', halt: true };
 
+  /**
+   * Their FIRST answer, screened too.
+   *
+   * It used to go through `quoteForPrompt` alone, which strips quotes and
+   * newlines so a child's words cannot become a second system prompt — a real
+   * defence, and not this one. It does not look at what the words ARE. So an
+   * answer the screen had cleaned on the way to the judge was sent to the
+   * model in full on the way to the close, one turn later, because this is a
+   * different call site and the rule was being enforced at each of them
+   * separately. If the first answer is what needs a person, the close says so
+   * and stops rather than resolving the question over them.
+   */
+  const before = deps.screen(answered);
+  if (before.text === null) return { say: before.say ?? '', halt: true };
+
   const user = `${describeAsk(ask)}
 
-They answered: "${quoteForPrompt(answered)}"
+They answered: "${before.text}"
 You then asked: "${probe}"
 They reasoned: "${screened.text}"`;
 

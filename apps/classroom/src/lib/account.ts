@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { handOverDevice } from '../stores/localStore';
+import { track } from './telemetry';
 import { connectSync } from './sync';
 import {
   cloudConfigured,
@@ -26,7 +28,20 @@ let detach: (() => void) | null = null;
 function follow(account: Account | null): void {
   detach?.();
   detach = null;
-  if (account) detach = connectSync(createSupabaseBackend(account.id));
+  if (!account) return;
+  /**
+   * BEFORE anything is merged, and that order is the whole safeguard.
+   *
+   * connectSync merges what is on this device with what is in this account's
+   * cloud, newest wins. If the device is still holding the previous student's
+   * notes, name and progress, that merge files them under the new student's
+   * account. Handing the device over first means the merge sees an empty
+   * device and simply takes what the account already has, which is what
+   * signing in on a shared phone is supposed to do.
+   */
+  const cleared = handOverDevice(account.id);
+  if (cleared > 0) track('device_handover', { cleared });
+  detach = connectSync(createSupabaseBackend(account.id));
 }
 
 /**

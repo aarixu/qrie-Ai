@@ -48,6 +48,23 @@ export interface SpokenVerdict {
    */
   gave?: 'question' | 'hint';
   /**
+   * WHAT MAY BE KEPT OF WHAT THEY SAID — screened, never raw.
+   *
+   * The screen ran before the model was asked, and one of its verdicts is
+   * `clean`: it found something a child should not have had to put in an
+   * answer, took it out, recorded a flag, and deliberately did NOT stop the
+   * class over it. That cleaned text went to the model and was then thrown
+   * away, while the classroom passed the RAW transcript to the ledger — so the
+   * one path that detected a phone number was also the path that wrote it
+   * down. `halt` did not save it either: halt is set for a redirect or a
+   * disclosure, not for a clean.
+   *
+   * Carrying it here means the screened form is the only form a caller has,
+   * which is the point. A rule that depends on every call site choosing the
+   * right variable is a rule that will be broken by the next call site.
+   */
+  heard?: string;
+  /**
    * Stop, and do not ask again.
    *
    * Set only by the safety screen, when a student has said something that needs

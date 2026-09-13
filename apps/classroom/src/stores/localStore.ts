@@ -24,6 +24,15 @@ export interface Store<T> {
  */
 const stores = new Map<string, Store<unknown>>();
 
+/**
+ * How to empty each store, including the ones that never sync.
+ *
+ * Kept apart from `stores` because the never-synced ones belong here too: the
+ * safety flag log is the PREVIOUS student's record and is the last thing that
+ * should follow a device to its next owner.
+ */
+const resets = new Map<string, () => void>();
+
 export function registeredStores(): ReadonlyMap<string, Store<unknown>> {
   return stores;
 }
@@ -138,9 +147,72 @@ export function createLocalStore<T>(key: string, initial: T, opts: LocalStoreOpt
     },
   };
 
+  resets.set(key, () => {
+    cache = null;
+    try {
+      localStorage.removeItem(key);
+      localStorage.removeItem(`${key}:at`);
+    } catch {
+      // Nothing to clear is the same outcome as clearing it.
+    }
+    for (const cb of [...listeners]) cb();
+  });
+
   if (opts.neverSync) neverSynced.add(key);
   else stores.set(key, store as Store<unknown>);
   return store;
+}
+
+/** Which student's work this device is currently holding. */
+const OWNER_KEY = 'ai-tutor:device-owner';
+
+/**
+ * THE DEVICE CHANGED HANDS.
+ *
+ * Sync merges what is on the device with what is in the cloud, newest wins,
+ * and it had no idea WHOSE work was on the device. So a shared phone — a
+ * school tablet, a family laptop, a sibling — worked like this: the first
+ * student's notes, their name, their progress and their safety flags sat in
+ * localStorage after they signed out, and the moment the next student signed
+ * in, everything of the first student's that happened to be newer was pushed
+ * up as the second student's own. Not a copy: a merge, into a real account,
+ * silently.
+ *
+ * Clearing is safe in the direction that matters. Work belonging to a student
+ * who was signed in is already in their cloud rows; work belonging to a
+ * student who never signed in is claimed here rather than cleared, because
+ * nobody else has a claim on it. The dangerous direction is the one this
+ * closes.
+ *
+ * Returns how many stores were emptied — zero on the ordinary paths, including
+ * the anonymous-to-email upgrade, which keeps the same id.
+ */
+export function handOverDevice(ownerId: string): number {
+  let previous: string | null = null;
+  try {
+    previous = localStorage.getItem(OWNER_KEY);
+    localStorage.setItem(OWNER_KEY, ownerId);
+  } catch {
+    // No storage means nothing persisted to hand over.
+    return 0;
+  }
+  if (previous === null || previous === ownerId) return 0;
+
+  let cleared = 0;
+  for (const reset of resets.values()) {
+    reset();
+    cleared += 1;
+  }
+  return cleared;
+}
+
+/** Test seam: forget who this device belongs to. */
+export function forgetDeviceOwner(): void {
+  try {
+    localStorage.removeItem(OWNER_KEY);
+  } catch {
+    /* nothing to forget */
+  }
 }
 
 /** React binding. Server snapshot = same getter (no SSR in this app). */
