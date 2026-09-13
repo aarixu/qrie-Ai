@@ -141,6 +141,71 @@ describe('the ledger migration', () => {
     expect(sql).toMatch(/and ended_at is null/i);
     expect(sql).toMatch(/grant execute on function public\.close_learning_session/i);
   });
+
+  /**
+   * AND THE "ONLY ONCE" ABOVE WAS NOT TRUE UNTIL 0011.
+   *
+   * `and ended_at is null` guarded a statement that wrote
+   * `ended_at = p_ended_at`. A call passing null wrote active_ms and left the
+   * sitting open, so the guard never armed and the next call was admitted as
+   * readily as the first. Measured against the deployed project: one sitting,
+   * four accepted calls, 92 000 ms then 36 000 000 then 2 147 483 647 then
+   * null — and active_ms is the denominator of the primary metric and of
+   * cost_per_student_hour, which is to say of the bill.
+   */
+  describe('and the guard on that function, which only 0011 made unwalkable', () => {
+    // With the `--` prose stripped. 0011's header quotes the statement it is
+    // replacing, and an assertion a comment can satisfy — or fail — is an
+    // assertion about prose rather than about what Postgres will run.
+    const fix = sqlOf('0011_close_session_once.sql').replace(/--[^\n]*/g, '');
+
+    it('cannot write the open state that its own guard looks for', () => {
+      // The guard's precondition is established by the statement the guard
+      // admits: every accepted call leaves ended_at non-null, so a second call
+      // finds a closed sitting whatever arguments it carries.
+      expect(fix).toMatch(/set ended_at = coalesce\(p_ended_at, now\(\)\)/i);
+      expect(fix).not.toMatch(/set ended_at = p_ended_at/i);
+      expect(fix).toMatch(/and ended_at is null/i);
+    });
+
+    it('refuses a null or negative time on task instead of counting it as none', () => {
+      // Coalescing a null to 0 would have been the quiet option and it would
+      // have written a lie into the denominator rather than rejecting a call.
+      expect(fix).toMatch(/p_active_ms is null or p_active_ms < 0/i);
+      expect(fix).toMatch(/raise exception/i);
+    });
+
+    it('leaves a repeat close a silent no-op, because the outbox replays', () => {
+      // A drain whose response was lost re-sends its batch; replay being free
+      // is what the offline outbox rests on. Raising on an already-closed
+      // sitting would hold that row and retry it for the life of the install.
+      expect(fix.match(/raise exception/gi)?.length).toBe(1);
+    });
+
+    it('keeps the definer and the pinned search_path that make it safe to be one', () => {
+      // There is no update policy on learning_session, so this function is the
+      // only writer and has to be definer; a definer function without a pinned
+      // search_path is an escalation waiting for a schema on the path.
+      expect(fix).toMatch(/security definer/i);
+      expect(fix).toMatch(/set search_path = public/i);
+      expect(fix).toMatch(/user_id = auth\.uid\(\)/i);
+    });
+
+    it('is callable by the student who owns the sitting and by nobody else', () => {
+      // `revoke from public` does not touch the grant Supabase hands anon on
+      // functions created in public. Before this migration a call carrying only
+      // the anon key — nobody signed in — returned 204, not permission denied.
+      expect(fix).toMatch(/revoke all on function public\.close_learning_session\(uuid, timestamptz, integer\) from public/i);
+      expect(fix).toMatch(/revoke all on function public\.close_learning_session\(uuid, timestamptz, integer\) from anon/i);
+      expect(fix).toMatch(/grant execute on function public\.close_learning_session\(uuid, timestamptz, integer\) to authenticated/i);
+    });
+
+    it('replaces the function instead of dropping and recreating it', () => {
+      // A drop takes the ACL with it and leaves every phone's close answered
+      // 404 for as long as the recreate takes.
+      expect(fix).not.toMatch(/drop function/i);
+    });
+  });
 });
 
 describe('the retention migration', () => {

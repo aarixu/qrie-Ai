@@ -99,6 +99,14 @@ create table if not exists public.ledger_event (
   -- classification-only ledger would make the judge permanently unauditable —
   -- a misclassification would be invisible forever and could never be retrained
   -- — which is why some of the words are kept and why the limits are tight.
+  --
+  -- A cross-question ('reflected') adds three, listed here rather than left to
+  -- be discovered in a payload: whether their reasoning held, a trimmed and
+  -- capped form of that REASONING, and the tutor's own question. The first two
+  -- are the same bargain as an answer, against words screened the same way.
+  -- The third is hers, not the child's, and is kept because without it the
+  -- stored reasoning answers a question nobody wrote down — capped and
+  -- stripped all the same, by `normaliseTutorText` in packages/ledger.
   payload jsonb not null default '{}'
 );
 
