@@ -186,7 +186,7 @@ describe('concurrency', () => {
 
   it('does nothing at all when the outbox is empty', async () => {
     const result = await sync.drainLedger();
-    expect(result).toEqual({ sent: 0, pending: 0, dropped: 0 });
+    expect(result).toEqual({ sent: 0, pending: 0, dropped: 0, refused: 0 });
     expect(upsert).not.toHaveBeenCalled();
   });
 
@@ -219,5 +219,168 @@ describe('the outbox store', () => {
     vi.resetModules();
     const reloaded = await import('../src/stores/ledger');
     expect(reloaded.ledgerOutbox.get().pending.map((e) => e.id)).toEqual(before);
+  });
+});
+
+/**
+ * THE MOCK THAT BEHAVES LIKE POSTGRES ON THE ONE THING THAT MATTERED.
+ *
+ * Every test above answers `{ error: null }` whatever it is handed, so a row
+ * the real database refuses reads as a row it accepted. That is not a
+ * hypothetical gap: the event opening every sitting carried an id of
+ * `<uuid>:0` against a `uuid` column, the real database answered
+ * `22P02 invalid input syntax for type uuid`, and because a batch is one
+ * statement it took every other event with it — on every drain, on every
+ * device, for good. This whole file was green over it.
+ *
+ * So these tests give the mock the column type. It is two lines, and it is the
+ * difference between a suite that proves the drain works and one that proves
+ * the drain sends whatever it was given.
+ */
+describe('against a database that checks its column types', () => {
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  /** What Postgres actually answered, verified against the deployed project. */
+  const likePostgres = (): void => {
+    upsert.mockImplementation((table: string, rows: { id: string; session_id?: string }[]) => {
+      if (table !== 'ledger_event') return Promise.resolve({ error: null });
+      const bad = rows.find((r) => !UUID.test(r.id) || (r.session_id && !UUID.test(r.session_id)));
+      return Promise.resolve(
+        bad
+          ? { error: { code: '22P02', message: `invalid input syntax for type uuid: "${bad.id}"` } }
+          : { error: null },
+      );
+    });
+  };
+
+  it('lands a real class — every id the app mints is one the column accepts', async () => {
+    likePostgres();
+    aClass();
+    const before = store.ledgerOutbox.get().pending.length;
+    expect(before).toBeGreaterThan(0);
+
+    const result = await sync.drainLedger();
+
+    expect(result.sent).toBe(before);
+    expect(result.refused).toBe(0);
+    expect(store.ledgerOutbox.get().pending).toHaveLength(0);
+  });
+
+  it('quarantines one malformed row instead of letting it block the queue forever', async () => {
+    likePostgres();
+    aClass();
+    // A poisoned event, the way a future bug would introduce one.
+    const outbox = store.ledgerOutbox.get();
+    const poisoned = { ...outbox.pending[0], id: `${outbox.pending[0].sessionId}:0` };
+    store.ledgerOutbox.set({ ...outbox, pending: [poisoned, ...outbox.pending.slice(1)] });
+    const total = store.ledgerOutbox.get().pending.length;
+
+    const result = await sync.drainLedger();
+
+    expect(result.refused).toBe(1);
+    expect(result.sent).toBe(total - 1);
+    // The queue MOVES. That is the whole point.
+    expect(store.ledgerOutbox.get().pending).toHaveLength(0);
+    expect(store.ledgerOutbox.get().rejected).toBe(1);
+  });
+
+  it('keeps everything when the refusal is about the moment and not the row', async () => {
+    // 42501 is an RLS decision — the org may simply not be provisioned yet.
+    upsert.mockImplementation((table: string) =>
+      Promise.resolve(
+        table === 'ledger_event' ? { error: { code: '42501', message: 'row-level security' } } : { error: null },
+      ),
+    );
+    aClass();
+    const before = store.ledgerOutbox.get().pending.length;
+
+    const result = await sync.drainLedger();
+
+    expect(result.reason).toBe('rejected');
+    expect(result.refused).toBe(0);
+    // Not one event discarded. A student's evidence is not thrown away because
+    // their token happened to expire mid-flush.
+    expect(store.ledgerOutbox.get().pending).toHaveLength(before);
+    expect(store.ledgerOutbox.get().rejected).toBe(0);
+  });
+});
+
+/**
+ * A SHARED PHONE.
+ *
+ * The row this drain writes stamps whoever is signed in NOW, while the queue
+ * was filled by whoever was using the device THEN. On a school tablet, or
+ * after 'Delete your account' — which signs out and leaves the queue standing
+ * — those are different people.
+ */
+describe('when the device changes hands', () => {
+  it('does not upload the previous student\u2019s answers under the new name', async () => {
+    aClass();
+    await sync.drainLedger(); // student-1 claims the device and their work lands
+    expect(store.ledgerOutbox.get().ownerId).toBe('student-1');
+
+    // student-1 answers more, and leaves before it drains.
+    aClass();
+    const waiting = store.ledgerOutbox.get().pending.length;
+    expect(waiting).toBeGreaterThan(0);
+
+    upsert.mockClear();
+    getUser.mockResolvedValue({ data: { user: { id: 'student-2' } } });
+    sync.resetLedgerSync();
+    const result = await sync.drainLedger();
+
+    expect(result.sent).toBe(0);
+    expect(upsert.mock.calls.filter((c) => c[0] === 'ledger_event')).toHaveLength(0);
+    expect(store.ledgerOutbox.get().pending).toEqual([]);
+    expect(store.ledgerOutbox.get().ownerId).toBe('student-2');
+  });
+
+  it('keeps the work when an anonymous student becomes a named one', async () => {
+    // The upgrade path preserves the user id, so nothing is a handover.
+    aClass();
+    await sync.drainLedger();
+    aClass();
+    const waiting = store.ledgerOutbox.get().pending.length;
+
+    sync.resetLedgerSync();
+    const result = await sync.drainLedger();
+    expect(result.sent).toBe(waiting);
+  });
+
+  it('re-resolves the organization for a new identity instead of reusing the last one', async () => {
+    aClass();
+    await sync.drainLedger();
+
+    maybeSingle.mockResolvedValue({ data: { org_id: 'org-2' }, error: null });
+    getUser.mockResolvedValue({ data: { user: { id: 'student-2' } } });
+    // student-2 takes the device and does their own work.
+    store.claimOutbox('student-2');
+    aClass();
+    await sync.drainLedger();
+
+    const rows = upsert.mock.calls.filter((c) => c[0] === 'ledger_event').at(-1)![1] as { org_id: string }[];
+    // The cached org used to be kept across identities, and RLS then refused
+    // every drain silently until the page was reloaded.
+    expect(rows.every((r) => r.org_id === 'org-2')).toBe(true);
+  });
+
+  /**
+   * The ordering that the drain alone cannot get right: ownership has to move
+   * when the IDENTITY changes, not when there is next something to send. A
+   * student who signs in on a school tablet and only then starts their first
+   * class would otherwise have that class discarded as the previous
+   * occupant's — which is a worse bug than the one being fixed.
+   */
+  it('hands the device over on sign-in, so the new student’s own first class is kept', async () => {
+    aClass();
+    await sync.drainLedger(); // student-1 owns the device
+
+    getUser.mockResolvedValue({ data: { user: { id: 'student-2' } } });
+    store.claimOutbox('student-2'); // what the account-change listener does
+    aClass(); // student-2's first class, recorded AFTER they signed in
+
+    const waiting = store.ledgerOutbox.get().pending.length;
+    const result = await sync.drainLedger();
+    expect(result.sent).toBe(waiting);
   });
 });

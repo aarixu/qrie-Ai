@@ -42,9 +42,47 @@ export interface Outbox {
    * ledger with a non-zero count here knows it is reading an incomplete story.
    */
   dropped: number;
+  /**
+   * How many events the SERVER refused outright, ever.
+   *
+   * A different failure from `dropped` and a more alarming one: `dropped`
+   * means this device recorded more than it could hold, `rejected` means it
+   * recorded something malformed. One is a busy student, the other is a bug in
+   * us, and a single number covering both would hide the second inside the
+   * first.
+   *
+   * It exists because a malformed event used to be unsurvivable. The drain
+   * sends a batch in one statement, so one row Postgres refuses fails all two
+   * hundred, the outbox is left untouched, and the next drain sends the same
+   * poisoned batch — forever. Quarantining costs one event; not quarantining
+   * cost every event the device would ever record.
+   */
+  rejected: number;
+  /**
+   * WHOSE EVENTS THESE ARE.
+   *
+   * Null until the device has drained under an identity at least once, which
+   * is ordinary: a class runs before anyone signs in, and those events belong
+   * to whoever the account turns out to be.
+   *
+   * After that it is a fence. The drain stamps `user_id` at SEND time, not at
+   * record time, so without this a queue left behind by one student is
+   * uploaded as the next student's work — on a shared phone, on a school
+   * tablet, and after 'Delete your account', which signs out and leaves the
+   * queue standing. The upgrade from anonymous to email keeps the same id, so
+   * that path is untouched, which is the one that had to keep working.
+   */
+  ownerId: string | null;
 }
 
-export const emptyOutbox = (): Outbox => ({ session: null, nextSeq: 0, pending: [], dropped: 0 });
+export const emptyOutbox = (): Outbox => ({
+  session: null,
+  nextSeq: 0,
+  pending: [],
+  dropped: 0,
+  rejected: 0,
+  ownerId: null,
+});
 
 export interface RecordInput {
   /** Minted by the caller, at the moment the event happened. */
@@ -89,7 +127,25 @@ function push(outbox: Outbox, event: LedgerEvent): Outbox {
 }
 
 export interface StartSessionInput {
+  /** The sitting's own id. Becomes `session_id` on every event in it. */
   id: string;
+  /**
+   * The session-started event's own id, minted by the caller like every other.
+   *
+   * This was DERIVED as `${id}:0` until it was measured against the real
+   * database. `ledger_event.id` is a `uuid` column; `<uuid>:0` is not a uuid;
+   * Postgres refuses the whole multi-row insert with 22P02. Since this event
+   * opens every sitting and the outbox drains oldest-first, it sat at the head
+   * of every batch forever — so not one event any student ever produced
+   * reached the table, on any device, for the life of the install.
+   *
+   * Two suites were green over it: the drain's test mocks the write and
+   * asserts the ids it queued are the ids it sent, and the live test against
+   * the real database hand-mints its own row and never calls this function.
+   * Neither ever looked at the SHAPE of an id. `idsAreUuids` in the tests
+   * beside this file now does, and the live test drives this path.
+   */
+  eventId: string;
   at: string;
   source: EventSource;
   topicRef?: string;
@@ -106,7 +162,7 @@ export function startSession(outbox: Outbox, input: StartSessionInput): Outbox {
   };
   const opened: Outbox = { ...outbox, session, nextSeq: 0 };
   return record(opened, {
-    id: `${input.id}:0`,
+    id: input.eventId,
     at: input.at,
     kind: 'session-started',
     surface: input.surface ?? 'tap',
@@ -159,6 +215,55 @@ export function acknowledge(outbox: Outbox, ids: readonly string[]): Outbox {
   if (ids.length === 0) return outbox;
   const done = new Set(ids);
   return { ...outbox, pending: outbox.pending.filter((e) => !done.has(e.id)) };
+}
+
+/**
+ * Hand the device to whoever is signed in now.
+ *
+ * Three outcomes, and only the third does anything: an unclaimed outbox is
+ * claimed, an outbox already theirs is left exactly as it is, and an outbox
+ * belonging to somebody else is EMPTIED rather than uploaded under the new
+ * name. The counters survive, because they describe the device.
+ *
+ * Losing those events is a real loss and it is the lesser one. They are a
+ * student's answers, and the alternative is filing them as a different
+ * student's answers — which corrupts two learner models instead of one, and
+ * puts one child's words in another child's record.
+ */
+export function claim(outbox: Outbox, ownerId: string): { outbox: Outbox; handedOver: number } {
+  if (outbox.ownerId === ownerId) return { outbox, handedOver: 0 };
+  if (outbox.ownerId === null) return { outbox: { ...outbox, ownerId }, handedOver: 0 };
+  return {
+    outbox: { ...emptyOutbox(), ownerId, dropped: outbox.dropped, rejected: outbox.rejected },
+    handedOver: outbox.pending.length,
+  };
+}
+
+/**
+ * Give up on events the server will never accept.
+ *
+ * The counterpart to `acknowledge`, and the harder call: these events are
+ * dropped WITHOUT having been stored. It is the right call all the same,
+ * because the alternative is what this repo actually shipped — a row Postgres
+ * refuses stays at the head of a batch that is sent as one statement, so the
+ * refusal takes all two hundred rows with it and every drain after it, on that
+ * device, for good.
+ *
+ * The caller must have established that the refusal is about the ROW and not
+ * about the moment: an expired token, an RLS decision or a dead network are
+ * all reasons to keep the event and try later. Only a malformed row belongs
+ * here, and the count is kept so a learner model built on this ledger can know
+ * it is reading an incomplete story.
+ */
+export function quarantine(outbox: Outbox, ids: readonly string[]): Outbox {
+  if (ids.length === 0) return outbox;
+  const bad = new Set(ids);
+  const pending = outbox.pending.filter((e) => !bad.has(e.id));
+  return {
+    ...outbox,
+    pending,
+    rejected: outbox.rejected + (outbox.pending.length - pending.length),
+  };
 }
 
 /** Convenience for the common case: an answer, with its rung recorded. */

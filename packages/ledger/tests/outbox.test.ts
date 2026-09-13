@@ -3,8 +3,10 @@ import {
   MAX_PENDING,
   acknowledge,
   batch,
+  claim,
   emptyOutbox,
   endSession,
+  quarantine,
   record,
   recordAnswer,
   startSession,
@@ -20,6 +22,7 @@ import {
 const opened = (): Outbox =>
   startSession(emptyOutbox(), {
     id: 'sess-1',
+    eventId: 'ev-open-1',
     at: '2026-09-12T10:00:00.000Z',
     source: 'class',
     topicRef: 'class10-science/life-processes/respiration',
@@ -187,5 +190,145 @@ describe('an answer', () => {
     // The distinction the old counter could not make: correct, but only after
     // help — which must not count as mastery.
     expect((e.payload as { assistanceRung: number }).assistanceRung).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * THE SHAPE OF AN ID, WHICH NOTHING HERE USED TO LOOK AT.
+ *
+ * `ledger_event.id` and `session_id` are `uuid` columns. The outbox used to
+ * derive the opening event's id as `${sessionId}:0`, which Postgres refuses
+ * with 22P02 — and because that event opens every sitting and a batch is sent
+ * as one statement, the refusal took every other event with it, on every
+ * drain, forever. The drain's own suite was green throughout: it mocks the
+ * write and asserts the ids it queued are the ids it sent, which is true of a
+ * broken id too.
+ */
+describe('the ids the outbox puts on the wire', () => {
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+  it('are whatever the caller minted, and nothing derived from them', () => {
+    const sessionId = '11111111-1111-4111-8111-111111111111';
+    const eventId = '22222222-2222-4222-8222-222222222222';
+    const o = startSession(emptyOutbox(), {
+      id: sessionId,
+      eventId,
+      at: '2026-09-12T10:00:00.000Z',
+      source: 'class',
+    });
+    expect(o.pending[0].id).toBe(eventId);
+    expect(o.pending[0].sessionId).toBe(sessionId);
+    // The specific thing that was shipped.
+    expect(o.pending[0].id).not.toContain(':');
+  });
+
+  it('are all uuids through a whole sitting, when uuids go in', () => {
+    const id = (): string => crypto.randomUUID();
+    const sessionId = id();
+    let o = startSession(emptyOutbox(), {
+      id: sessionId,
+      eventId: id(),
+      at: '2026-09-12T10:00:00.000Z',
+      source: 'class',
+    });
+    o = record(o, { id: id(), at: '2026-09-12T10:00:05.000Z', kind: 'asked', surface: 'tap', payload: {} });
+    o = recordAnswer(o, {
+      id: id(),
+      at: '2026-09-12T10:00:09.000Z',
+      surface: 'voice',
+      outcomeIds: [],
+      correct: true,
+      ms: 4000,
+      attempt: 1,
+      assistanceRung: 0,
+      hintsShown: 0,
+    });
+    o = endSession(o, { id: id(), at: '2026-09-12T10:04:00.000Z', activeMs: 240_000, completed: true });
+
+    expect(o.pending).toHaveLength(4);
+    for (const e of o.pending) {
+      expect(e.id, `${e.kind} carries ${e.id}`).toMatch(UUID);
+      expect(e.sessionId, `${e.kind} names session ${e.sessionId}`).toMatch(UUID);
+    }
+  });
+});
+
+describe('quarantine', () => {
+  it('drops only what the server refused, and says how many', () => {
+    let o = answer(answer(opened(), 1), 2);
+    expect(o.pending).toHaveLength(3);
+
+    o = quarantine(o, ['a1']);
+    expect(o.pending.map((e) => e.id)).toEqual(['ev-open-1', 'a2']);
+    expect(o.rejected).toBe(1);
+    // The other counter is a different failure and must not move.
+    expect(o.dropped).toBe(0);
+  });
+
+  it('counts across drains rather than reporting the last one', () => {
+    let o = quarantine(answer(answer(opened(), 1), 2), ['a1']);
+    o = quarantine(o, ['a2']);
+    expect(o.rejected).toBe(2);
+    expect(o.pending.map((e) => e.id)).toEqual(['ev-open-1']);
+  });
+
+  it('ignores ids it does not hold, so a repeated drain cannot inflate the count', () => {
+    const o = quarantine(answer(opened(), 1), ['a1']);
+    expect(quarantine(o, ['a1']).rejected).toBe(1);
+  });
+});
+
+/**
+ * WHOSE ANSWERS THESE ARE.
+ *
+ * The drain stamps `user_id` when it SENDS, not when the event was recorded.
+ * On a shared phone that is a hole rather than a detail: a queue left behind
+ * by one student is uploaded as the next student's work, which corrupts two
+ * learner models and puts one child's words in another child's record.
+ */
+describe('claim', () => {
+  const student = '11111111-1111-4111-8111-111111111111';
+  const somebodyElse = '22222222-2222-4222-8222-222222222222';
+
+  it('takes an unclaimed queue without discarding anything', () => {
+    const { outbox, handedOver } = claim(answer(opened(), 1), student);
+    expect(handedOver).toBe(0);
+    expect(outbox.ownerId).toBe(student);
+    expect(outbox.pending).toHaveLength(2);
+  });
+
+  it('leaves a queue that is already theirs exactly as it is', () => {
+    const mine = claim(answer(opened(), 1), student).outbox;
+    const again = claim(mine, student);
+    expect(again.handedOver).toBe(0);
+    expect(again.outbox).toBe(mine);
+  });
+
+  /**
+   * The upgrade path, which had to keep working: signing up with an email on
+   * an anonymous account keeps the SAME user id, so the day of work already in
+   * the queue is still theirs and must survive.
+   */
+  it('does not treat an anonymous student becoming a named one as a handover', () => {
+    const before = claim(answer(opened(), 1), student).outbox;
+    expect(claim(before, student).handedOver).toBe(0);
+    expect(claim(before, student).outbox.pending).toHaveLength(2);
+  });
+
+  it('empties a queue belonging to whoever had the device before', () => {
+    const theirs = claim(answer(answer(opened(), 1), 2), student).outbox;
+    const { outbox, handedOver } = claim(theirs, somebodyElse);
+    expect(handedOver).toBe(3);
+    expect(outbox.pending).toEqual([]);
+    expect(outbox.ownerId).toBe(somebodyElse);
+    // Their half-open session goes with them.
+    expect(outbox.session).toBeNull();
+  });
+
+  it('keeps the counters, because they describe the device and not the student', () => {
+    const theirs = { ...claim(answer(opened(), 1), student).outbox, dropped: 7, rejected: 2 };
+    const { outbox } = claim(theirs, somebodyElse);
+    expect(outbox.dropped).toBe(7);
+    expect(outbox.rejected).toBe(2);
   });
 });

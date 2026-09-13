@@ -38,6 +38,8 @@ export {
   endSession,
   batch,
   acknowledge,
+  quarantine,
+  claim,
   type Outbox,
   type RecordInput,
   type AnswerInput,

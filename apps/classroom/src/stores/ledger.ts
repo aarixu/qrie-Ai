@@ -1,7 +1,9 @@
 import { useSyncExternalStore } from 'react';
 import {
   acknowledge,
+  claim,
   emptyOutbox,
+  quarantine,
   endSession,
   record,
   recordAnswer,
@@ -50,6 +52,8 @@ function read(): Outbox {
           nextSeq: parsed.nextSeq ?? 0,
           pending: parsed.pending ?? [],
           dropped: parsed.dropped ?? 0,
+          rejected: parsed.rejected ?? 0,
+          ownerId: parsed.ownerId ?? null,
         }
       : emptyOutbox();
   } catch {
@@ -89,16 +93,34 @@ export function useLedgerOutbox(): Outbox {
  * Ids and timestamps are minted HERE rather than in the package, because a
  * package that read a clock could not be replayed in a test.
  */
-const mint = (): string =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+const mint = (): string => {
+  const c = typeof crypto !== 'undefined' ? crypto : undefined;
+  if (c && typeof c.randomUUID === 'function') return c.randomUUID();
+  // A v4 uuid by hand, because the FALLBACK has to be one too.
+  //
+  // `crypto.randomUUID` exists only in a secure context, and http-on-a-LAN is
+  // exactly how this gets opened on a school tablet or a phone pointed at a
+  // dev laptop. The fallback here used to mint `l3k2j1-a8f92bc1`, which
+  // `ledger_event.id` and `session_id` — both `uuid` columns — refuse with
+  // 22P02, so every event such a device recorded would have been rejected for
+  // the life of the install, and the drain would have retried it forever.
+  const bytes = new Uint8Array(16);
+  if (c && typeof c.getRandomValues === 'function') c.getRandomValues(bytes);
+  else for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 1
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+};
 
 const now = (): string => new Date().toISOString();
 
-export function openSession(input: Omit<StartSessionInput, 'id' | 'at'>): string {
+export function openSession(input: Omit<StartSessionInput, 'id' | 'eventId' | 'at'>): string {
   const id = mint();
-  write(startSession(read(), { ...input, id, at: now() }));
+  // Two ids, deliberately: the sitting's, and the opening event's own. They
+  // used to be one, with `:0` glued on — see StartSessionInput for what that
+  // cost.
+  write(startSession(read(), { ...input, id, eventId: mint(), at: now() }));
   return id;
 }
 
@@ -128,6 +150,28 @@ export const currentSessionId = (): string | null => read().session?.id ?? null;
 /** Called by the drain, and only after the server has confirmed the write. */
 export function forgetSent(ids: readonly string[]): void {
   write(acknowledge(read(), ids));
+}
+
+/**
+ * Called by the drain before it sends anything: whose queue is this?
+ *
+ * Returns how many events belonged to a previous occupant of this device and
+ * were therefore discarded rather than uploaded under the wrong name.
+ */
+export function claimOutbox(userId: string): number {
+  const { outbox, handedOver } = claim(read(), userId);
+  if (handedOver > 0 || outbox !== read()) write(outbox);
+  return handedOver;
+}
+
+/**
+ * Called by the drain for events the server will never accept.
+ *
+ * Unlike forgetSent, these are discarded WITHOUT having been stored — see
+ * `quarantine` in the package for why that is nonetheless the right call.
+ */
+export function forgetRefused(ids: readonly string[]): void {
+  write(quarantine(read(), ids));
 }
 
 /** Test seam. */

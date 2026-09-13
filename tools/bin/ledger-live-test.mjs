@@ -15,12 +15,25 @@
  *   4. APPEND-ONLY. There is no update or delete policy, deliberately: the
  *      learner model is rebuilt from these rows.
  *   5. A second student cannot read the first one's rows.
+ *   6. THE OUTBOX'S OWN EVENTS LAND — not a row typed out here that happens to
+ *      look like one. This is the check whose absence cost the most: the id of
+ *      the event opening every sitting was derived as `<sessionId>:0`, which
+ *      `ledger_event.id` (a `uuid` column) refuses with 22P02, and because a
+ *      batch is sent as ONE statement the refusal took every other event with
+ *      it, on every drain, for the life of the install. Checks 1-5 were all
+ *      green, because check 2 hand-minted its own id and never touched the
+ *      code the app runs.
  *
  * It mints a throwaway anonymous account, like tools/bin/live-test.mjs.
  * Run: node tools/bin/ledger-live-test.mjs
  */
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+// The real thing, not a re-description of it. Node loads this directly because
+// the package's imports carry their extensions.
+import {
+  emptyOutbox, startSession, recordAnswer, endSession, batch,
+} from '../../packages/ledger/src/outbox.ts';
 
 const env = Object.fromEntries(
   fs.readFileSync('.env.local', 'utf8').split(/\r?\n/)
@@ -133,6 +146,55 @@ const sess = await (await fetch(
 )).json();
 show('time on task is recorded by closing the session',
      sess?.[0]?.active_ms === 92000 && Boolean(sess?.[0]?.ended_at), `active_ms=${sess?.[0]?.active_ms}`);
+
+// 6. The events the OUTBOX produces, through the shape the drain sends.
+const fresh = await signUp();
+const freshOrg = (await (await fetch(
+  `${URL_}/rest/v1/membership?select=org_id`, { headers: as(fresh.token) },
+)).json())?.[0]?.org_id;
+
+const mint = () => crypto.randomUUID();
+const realSession = mint();
+let outbox = startSession(emptyOutbox(), {
+  id: realSession, eventId: mint(), at: new Date().toISOString(),
+  source: 'class', topicRef: 'class10-science/life-processes/respiration',
+});
+outbox = recordAnswer(outbox, {
+  id: mint(), at: new Date().toISOString(), surface: 'voice',
+  outcomeIds: ['sci10-lp-respiration-equation'],
+  correct: true, ms: 4200, attempt: 1, assistanceRung: 0, hintsShown: 0,
+});
+outbox = endSession(outbox, {
+  id: mint(), at: new Date().toISOString(), activeMs: 240000, completed: true,
+});
+
+// Exactly lib/ledgerSync.ts's rowOf, and the same one-statement batch.
+const rows = batch(outbox).map((e) => ({
+  id: e.id, org_id: freshOrg, user_id: fresh.id, session_id: e.sessionId, seq: e.seq,
+  at: e.at, kind: e.kind, source: e.source, surface: e.surface,
+  outcome_ids: e.outcomeIds, topic_ref: e.topicRef ?? null, payload: e.payload,
+}));
+await fetch(`${URL_}/rest/v1/learning_session`, {
+  method: 'POST', headers: as(fresh.token),
+  body: JSON.stringify({ id: realSession, org_id: freshOrg, user_id: fresh.id,
+                         source: 'class', started_at: new Date().toISOString() }),
+});
+const drain = await fetch(`${URL_}/rest/v1/ledger_event`, {
+  method: 'POST', headers: { ...as(fresh.token), prefer: 'resolution=ignore-duplicates,return=minimal' },
+  body: JSON.stringify(rows),
+});
+const drainBody = drain.ok ? '' : await drain.text();
+const landed = await (await fetch(
+  `${URL_}/rest/v1/ledger_event?select=id,kind,seq&session_id=eq.${realSession}&order=seq`,
+  { headers: as(fresh.token) },
+)).json();
+show('a whole sitting, built by the real outbox, lands in one statement',
+     drain.ok && landed.length === rows.length,
+     `HTTP ${drain.status}, ${landed.length}/${rows.length} row(s) ${drainBody.slice(0, 90)}`);
+show('the sitting opens with session-started at seq 0, in order',
+     landed?.[0]?.kind === 'session-started' && landed?.[0]?.seq === 0
+       && landed?.[landed.length - 1]?.kind === 'session-ended',
+     landed.map((r) => `${r.seq}:${r.kind}`).join(' '));
 
 if (failed > 0) {
   console.log(`\n${failed} check${failed === 1 ? '' : 's'} failed.`);
