@@ -271,8 +271,20 @@ export function ClassRoom({
     const option = ask.options?.[index];
     const correct = option ? option.correct === true : true;
     const beatId = player.beat.id;
-    recordAnswerAtBeat(lesson, beatId, correct);
-    ledger.answered({ beatId, correct, surface: 'tap', chosenIndex: index });
+    /**
+     * An OPEN ask has no options, and its button is a "carry on" — the
+     * player's gate resolution, not an answer. It used to be recorded as a
+     * correct answer at rung 0, which is the strongest evidence this system
+     * can hold, invented from a tap that said nothing about what the student
+     * knows. An open question is answered by SPEAKING, and the ear's path
+     * records that; a student with no microphone records nothing here, which
+     * is the honest outcome.
+     */
+    const isEvidence = Boolean(option);
+    if (isEvidence) {
+      recordAnswerAtBeat(lesson, beatId, correct);
+      ledger.answered({ beatId, correct, surface: 'tap', chosenIndex: index });
+    }
     setAskBusy(true);
     try {
       if (correct) {
@@ -584,6 +596,20 @@ export function ClassRoom({
           });
         }
         setEar('off');
+        /**
+         * SHE IS ABOUT TO HELP, AND THE LEDGER HAS TO KNOW.
+         *
+         * On a wrong answer `judged.say` is not commentary — the prompt tells
+         * her to "Ask ONE why/how/when question, or give the hint", and
+         * `judged.gave` says which she chose. Without this the next spoken
+         * answer was filed at rung 0, unassisted, which is the one rung the
+         * learner model treats as proof of mastery. Recorded BEFORE it is
+         * spoken, exactly as the tap path does it, so the retry is already
+         * standing on the right rung.
+         */
+        if (judged.verdict === 'wrong') {
+          ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false);
+        }
         const spoken = await speakSafely(judged.say);
         if (cancelled) return;
         // The student said something that needs a person. She has just said so;
@@ -694,6 +720,15 @@ export function ClassRoom({
     // not about the chapter it happens to sit in.
     recordDoubtAtBeat(lesson, ctx.beatId);
     ledger.confused(ctx.beatId);
+    /**
+     * A hand raised while a question is HOLDING is not the same event as a
+     * hand raised mid-explanation. The student is stuck on the question, and
+     * what follows is a whole tutor conversation about it — after which they
+     * answer, and that answer used to be recorded at rung 0 as though they had
+     * worked it out alone. It is the most assisted answer the product can
+     * produce, so it is recorded as rung 7: the full explanation, asked for.
+     */
+    if (player.pendingAsk) ledger.helped(ctx.beatId, 7, true);
 
     if (student !== null) {
       // A mic is no use without a live voice session to carry it, and that

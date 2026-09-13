@@ -143,11 +143,40 @@ describe('the ordinary path', () => {
   });
 
   it('returns the verdict and her next line', async () => {
-    const d = deps('{"verdict":"wrong","say":"Where does the energy come from?"}');
+    const d = deps('{"verdict":"wrong","say":"Where does the energy come from?","gave":"question"}');
     await expect(judgeSpokenAnswer(ask, 'the brain', d)).resolves.toEqual({
       verdict: 'wrong',
       say: 'Where does the energy come from?',
+      gave: 'question',
     });
+  });
+});
+
+/**
+ * WHICH RUNG SHE JUST STOOD ON.
+ *
+ * The classroom records the rung of assistance in force when an answer lands,
+ * and rung 0 — left alone — is the only one the learner model will ever accept
+ * as mastery. A wrong spoken answer is always followed by help, so if the
+ * judge does not say what it gave, the retry is filed as unassisted and the
+ * whole assisted/unassisted split is a fiction. Every voice-answered question
+ * in the product hit this on its first miss.
+ */
+describe('the help she gave, so the class can record it', () => {
+  it('carries the leading question as rung 2, the hint as rung 3', () => {
+    expect(parseVerdict('{"verdict":"wrong","say":"Why?","gave":"question"}').gave).toBe('question');
+    expect(parseVerdict('{"verdict":"wrong","say":"Remember the equation.","gave":"hint"}').gave).toBe('hint');
+  });
+
+  it('still records help when the model forgot to say which it gave', () => {
+    // She was told to do one or the other and her reply proves she did. The
+    // rung may be off by one; "unassisted" would be off by everything.
+    expect(parseVerdict('{"verdict":"wrong","say":"Think again about the roots."}').gave).toBe('question');
+  });
+
+  it('says nothing about help on a right or unclear answer, because none was given', () => {
+    expect(parseVerdict('{"verdict":"right","say":"Why is that?","gave":"hint"}').gave).toBeUndefined();
+    expect(parseVerdict('{"verdict":"unclear","say":"Say that again?"}').gave).toBeUndefined();
   });
 });
 

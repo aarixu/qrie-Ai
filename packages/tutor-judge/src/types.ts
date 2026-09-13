@@ -32,6 +32,22 @@ export interface SpokenVerdict {
   /** What she says out loud next — the why, the leading question, or "say it again". */
   say: string;
   /**
+   * WHICH RUNG OF THE LADDER `say` IS, when the verdict is 'wrong'.
+   *
+   * The prompt has always told her to choose — "Ask ONE why/how/when question,
+   * OR give the hint" — and she has always chosen. She was simply never asked
+   * to say which, so the class could not record it, so a student who answered
+   * wrong, was given a hint and then answered right had that second answer
+   * filed at rung 0: unassisted mastery, the one rung the whole learner model
+   * treats as proof. Every voice-answered question in the product hit this on
+   * its first miss.
+   *
+   * 'question' is rung 2 (asked a conceptual question) and 'hint' is rung 3
+   * (a small hint), matching what the tap path already records for the
+   * authored nudge.
+   */
+  gave?: 'question' | 'hint';
+  /**
    * Stop, and do not ask again.
    *
    * Set only by the safety screen, when a student has said something that needs

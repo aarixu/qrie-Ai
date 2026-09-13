@@ -11,14 +11,19 @@ import type { CrossQuestionClose, JudgeDeps, SpokenAsk, SpokenVerdict } from './
 export function parseVerdict(raw: string): SpokenVerdict {
   const match = raw.match(/\{[\s\S]*\}/);
   if (!match) throw new Error('The judge replied without a verdict.');
-  const data = JSON.parse(match[0]) as { verdict?: unknown; say?: unknown };
+  const data = JSON.parse(match[0]) as { verdict?: unknown; say?: unknown; gave?: unknown };
   const verdict =
     data.verdict === 'right' || data.verdict === 'wrong' || data.verdict === 'unclear'
       ? data.verdict
       : 'unclear';
   const say = typeof data.say === 'string' ? data.say.trim() : '';
   if (!say) throw new Error('The judge has a verdict but nothing to say.');
-  return { verdict, say };
+  if (verdict !== 'wrong') return { verdict, say };
+  // A wrong answer is ALWAYS answered with one or the other, so a model that
+  // forgot the field still gave help and the class must still record it. The
+  // default is the lower rung: it is the move the prompt lists first, and
+  // either way the point is that this answer was not unassisted.
+  return { verdict, say, gave: data.gave === 'hint' ? 'hint' : 'question' };
 }
 
 export function parseFollowUp(raw: string): string {
