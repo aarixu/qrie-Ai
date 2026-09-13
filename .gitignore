@@ -54,3 +54,10 @@ content/wasm/
 # A throwaway anonymous token, dropped so a dead measurement run is still
 # recoverable from usage_event. Never committed.
 tools/measure/last-session.json
+
+# Probe output from a live measurement run. It holds a real Supabase session
+# JWT, the project ref, the signing key id and a real user id — a credential,
+# and expiry is not a defence for any of the other three. Ignored by pattern
+# rather than by name because the next run drops a new one at the next number,
+# and one `git add .` is all it would take.
+probe*.json
