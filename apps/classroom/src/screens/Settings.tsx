@@ -136,12 +136,12 @@ export function Settings() {
       {cloudConfigured() && (
         <Section title="Your account">
           <button
-            onClick={() => (account ? void signOut() : navigate('/signin'))}
+            onClick={() => (account && !account.anonymous ? void signOut() : navigate('/signin'))}
             className={`${ROW} text-left hover:scale-[1.01] transition-transform`}
           >
-            <Icon name={account ? 'cloud_done' : 'cloud_off'} className="text-primary" />
+            <Icon name={account && !account.anonymous ? 'cloud_done' : 'cloud_off'} className="text-primary" />
             <span className="flex-1 font-body-md text-body-md text-on-surface">
-              {account ? account.label : 'Keep your progress on any device'}
+              {account && !account.anonymous ? account.label : 'Keep your progress on any device'}
             </span>
             <span className="font-label-md text-label-md text-on-surface-variant">
               {account ? 'Sign out' : 'Sign in'}

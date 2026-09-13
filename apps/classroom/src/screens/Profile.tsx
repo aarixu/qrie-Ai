@@ -71,7 +71,7 @@ export function Profile() {
           {/* Who they are SIGNED IN as, which is a different fact from who
               they are — and the one a student looks for here when they want
               to know whether their work is being kept. */}
-          {account && (
+          {account && !account.anonymous && (
             <div className="font-label-sm text-label-sm text-on-surface-variant truncate mt-0.5">
               {account.label}
             </div>
@@ -106,7 +106,7 @@ export function Profile() {
             not buried in Settings, which is where a student looks for the
             class they study, not for who they are. */}
         {cloudConfigured() &&
-          (account ? (
+          (account && !account.anonymous ? (
             <button
               onClick={() => void signOut()}
               className="flex items-center gap-4 bg-surface-container-lowest rounded-[20px] p-4 text-left hover:scale-[1.01] transition-transform"

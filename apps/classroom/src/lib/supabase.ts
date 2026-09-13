@@ -106,10 +106,29 @@ export interface Account {
   id: string;
   /** Whatever they signed in with — an email or a phone number. */
   label: string;
+  /**
+   * TRUE FOR THE IDENTITY EVERY INSTALL GETS FOR FREE.
+   *
+   * Every device signs in anonymously at start-up so the ledger has somewhere
+   * to write from the first beat, which means `account !== null` is true for
+   * every student who has never signed up — and the two screens that hold the
+   * entrance to signing up both read it as "signed in". The result was that
+   * the upgrade path built in Phase 1 was unreachable, and the only thing
+   * either screen offered was a Sign out that ends an anonymous identity with
+   * no way back to it: a student's entire history, discarded by the one button
+   * they were shown.
+   */
+  anonymous: boolean;
 }
 
 const asAccount = (user: User | null): Account | null =>
-  user ? { id: user.id, label: user.email ?? user.phone ?? 'signed in' } : null;
+  user
+    ? {
+        id: user.id,
+        label: user.email ?? user.phone ?? 'signed in',
+        anonymous: user.is_anonymous === true,
+      }
+    : null;
 
 /** Who is signed in right now, or null. Resolves immediately when unconfigured. */
 export async function currentAccount(): Promise<Account | null> {
