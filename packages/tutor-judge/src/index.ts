@@ -14,5 +14,9 @@ export { judgeSpokenAnswer, resolveCrossQuestion, parseVerdict, parseFollowUp } 
  *
  * Measured over 6,251 answers to the real probe bank: it settles about seven
  * in ten with no call at all, and refuses the rest rather than guessing.
+ *
+ * It needs OPTIONS, so it is a lever on the placement test and the quiz. Not
+ * one of the 22 asks in the fifteen committed lessons has any — deliberately,
+ * because a class ask is answered out of the student's own head. See match.ts.
  */
 export { MATCH_FLOOR, matchSpokenAnswer, type LocalMatch } from './match.ts';

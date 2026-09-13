@@ -1,14 +1,22 @@
 /**
  * WHICH OPTION DID THEY MEAN? — decided here, before any model is asked.
  *
- * The class holds on a question with four printed options, one of which is
- * marked correct in a bank of 3,242 authored probes, each distractor carrying
- * a named misconception. A student says something out loud. Sending that to a
- * language model to be told which of the four it was is the model doing the
- * learner model's job, and being billed for it on every answer of every class.
+ * WHERE THIS RUNS, AND WHERE IT DOES NOT. It needs options. The placement test
+ * and the quizzes have them: 4,494 authored probes, each with a correct index
+ * and a named misconception per distractor, and every one of those answers is
+ * weighed today by a model that did not need to be asked.
  *
- * Measured: the judge costs Rs 1.13 a class, which is Rs 19 per student-hour,
- * and it is the single largest line left once the narration is recorded.
+ * A CLASS ASK HAS NO OPTIONS. Counted across all fifteen committed lessons:
+ * 214 beats, 22 asks, ZERO carrying options. That is not an oversight, it is
+ * the pedagogy — `packages/class-prep/src/prompts.ts` says "NO OPTIONS, as a
+ * rule. A student picking from a list is recognising, not thinking; the answer
+ * must come out of their own head." A class ask carries what a right answer
+ * should contain, plus a hint, and weighing free speech against a sentence of
+ * expectation is a judgement rather than a lookup. That one keeps its model.
+ *
+ * So this is a lever on the placement test and the quiz, not on the class. It
+ * was built and measured before that was checked, and the figure below is true
+ * of the bank it was measured against and of nothing else yet.
  *
  * So this tries first. It is deliberately NOT clever: no embeddings, no
  * network, no model, nothing that has to be downloaded. Three cheap readings

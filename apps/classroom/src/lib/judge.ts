@@ -38,8 +38,24 @@ export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
  */
 const JUDGE_MODEL = 'google/gemini-3.7-flash';
 
+/**
+ * THE JUDGE DOES NOT NEED TO THINK, AND IT WAS BEING BILLED AS IF IT DID.
+ *
+ * Measured across one class: 2,460 prompt tokens, 296 output tokens and 2,353
+ * THINKING tokens to weigh four spoken answers. Thinking charges at the output
+ * rate, so three quarters of the judge's bill bought reasoning the student
+ * never hears. Measured again over 72 real answers from the committed probe
+ * bank — plain, Hinglish, the letter alone, hedged, a confident distractor and
+ * "pata nahi" — asking for 'none' scored 72/72 exactly as thinking did, and
+ * cost 31% less.
+ *
+ * Worth knowing that a budget of zero does not actually stop gemini-3.7-flash
+ * thinking: 12,030 tokens became 5,724, not none. The saving is real and it is
+ * smaller than the word suggests.
+ */
 const deps: JudgeDeps = {
-  complete: (system, user) => createBrowserLlm(JUDGE_MODEL, { json: true }).complete(system, user),
+  complete: (system, user) =>
+    createBrowserLlm(JUDGE_MODEL, { json: true, effort: 'none' }).complete(system, user),
   screen: (text) => fromStudent(text),
 };
 

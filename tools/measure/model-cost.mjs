@@ -128,12 +128,21 @@ const SERVE_AUDIO = (AUDIO_KB / 1024 / 1024) * EGRESS_INR_PER_GB; // DERIVED
  * `packages/tutor-judge/src/match.ts` resolves 72% of class10-science and 70%
  * of class9-science with NO model call, and gets 0.1% wrong.
  *
- * Read it as an upper bound and not a promise. The answers were built FROM
- * each probe's own options — said exactly, lowercased, wrapped in Hinglish
- * filler, hedged, shortened, reversed — so they reuse the option's words. A
- * student who paraphrases the idea in their own words has none of them, and
- * the shape closest to that (`shortened`, four words only) resolves just 23%.
- * The true rate is somewhere in 23-72% and only real student speech settles it.
+ * Read it as an upper bound and not a promise, for two reasons.
+ *
+ * The answers were built FROM each probe's own options, said exactly,
+ * lowercased, wrapped in Hinglish filler, hedged, shortened and reversed, so
+ * they reuse the option's words. A student paraphrasing in their own words has
+ * none of them, and the shape closest to that, four content words only,
+ * resolves just 23%.
+ *
+ * And the bank it was measured against is the PLACEMENT TEST's, not the
+ * class's. Counted across all fifteen committed lessons: 214 beats, 22 asks,
+ * ZERO carrying options, deliberately, because class-prep's own prompt says a
+ * student picking from a list is recognising rather than thinking. So this rung
+ * applies to the placement test and the quiz today, and to the class only if
+ * class asks are ever given options, which is a pedagogical decision and not a
+ * cost one.
  */
 const MATCH_RATE = arg('match', 0.72); // MEASURED, with the caveat above
 const VPS_MONTHLY = arg('vps', 2000); // ESTIMATED — a 4 vCPU box, INR/month

@@ -74,10 +74,18 @@ export interface DrainResult {
  * it costs one event with no student data in it at all.
  */
 let droppedReported = 0;
-function reportDropped(dropped: number): void {
-  if (dropped <= droppedReported) return;
-  droppedReported = dropped;
-  track('ledger_dropped', { dropped });
+let orphanedReported = 0;
+function reportLoss(dropped: number, orphaned: number): void {
+  if (dropped <= droppedReported && orphaned <= orphanedReported) return;
+  droppedReported = Math.max(droppedReported, dropped);
+  orphanedReported = Math.max(orphanedReported, orphaned);
+  // `orphaned` rides along rather than getting its own event because it
+  // answers the same question — how holed is this record — and because a
+  // counter nothing ever reads is a counter that does not exist. Unlike
+  // `dropped` it should never move at all: it counts events recorded when no
+  // sitting was open to hold them, which the classroom now makes impossible by
+  // reopening one first. A non-zero value is a bug in us, not a busy student.
+  track('ledger_dropped', { dropped, orphaned });
 }
 
 /**
@@ -196,7 +204,7 @@ async function run(): Promise<DrainResult> {
   const outbox = ledgerOutbox.get();
   const pending = outbox.pending.length;
   const dropped = outbox.dropped;
-  reportDropped(dropped);
+  reportLoss(dropped, outbox.orphaned);
   if (pending === 0) return { sent: 0, pending: 0, dropped, refused: 0 };
 
   const db = supabase();
