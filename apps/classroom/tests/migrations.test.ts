@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { MODEL_VERSION } from '@ai-tutor/learner-model';
 import { REQUESTS_PER_MINUTE, UNITS, UNITS_PER_DAY } from '@ai-tutor/relay';
 
 /**
@@ -401,5 +402,60 @@ describe('the usage migration', () => {
     // The drain writes learning_session after the calls that belonged to it.
     expect(sql).toMatch(/session_id uuid,/i);
     expect(sql).not.toMatch(/session_id uuid[^,]*references/i);
+  });
+});
+
+describe('the learner model migration', () => {
+  const sql = sqlOf('0013_learner_model.sql');
+
+  it('keys belief by the student and the outcome', () => {
+    expect(sql).toMatch(/create table if not exists public\.concept_state/i);
+    expect(sql).toMatch(/primary key \(user_id, outcome_id\)/i);
+  });
+
+  it('carries org_id, so a school can be given access without a migration', () => {
+    // Adding is_member(org_id) later is then a policy change rather than a
+    // migration across a table holding every student's beliefs.
+    expect(sql).toMatch(/org_id uuid not null references public\.organization/i);
+  });
+
+  /**
+   * THE PROPERTY THAT MAKES BELIEF EVIDENCE RATHER THAN A PREFERENCE.
+   *
+   * A student who can write their own mastery has not been measured, they have
+   * been asked. There is no insert, update or delete policy and the ABSENCE is
+   * the point: RLS denies what nothing allows, so the only writer is
+   * service_role through the fold. Deliberately stricter than student_state,
+   * whose policy is `for all`.
+   */
+  it('lets a student read their own belief and never write it', () => {
+    expect(sql).toMatch(
+      /create policy "a student reads their own concept state" on public\.concept_state\s+for select to authenticated using \(auth\.uid\(\) = user_id\)/i,
+    );
+    expect(sql).not.toMatch(/on public\.concept_state\s+for (all|insert|update|delete)/i);
+    expect(sql).toMatch(
+      /revoke insert, update, delete on public\.concept_state from authenticated/i,
+    );
+  });
+
+  it('closes both tables to anon, because Supabase opens new ones by default', () => {
+    // 0010 found this the hard way: a view handed a brand-new anonymous account
+    // five other students' spend, by default rather than by mistake.
+    expect(sql).toMatch(/revoke all on public\.concept_state from anon/i);
+    expect(sql).toMatch(/revoke all on public\.learner_model from anon/i);
+  });
+
+  it('indexes the outcome ids the inspector reads evidence by', () => {
+    // ledger_event.outcome_ids had no index of any kind, and "what evidence is
+    // behind this outcome" is the question the whole model exists to answer.
+    expect(sql).toMatch(/on public\.ledger_event using gin \(outcome_ids\)/i);
+  });
+
+  it('keeps the model version in step with the code that writes it', () => {
+    // The same drift check the day budget has, for the same reason: two places
+    // hold this number and only one of them is tested by anything else.
+    const inSql = /version integer not null default (\d+)/i.exec(sql);
+    expect(inSql).not.toBeNull();
+    expect(Number(inSql![1])).toBe(MODEL_VERSION);
   });
 });
