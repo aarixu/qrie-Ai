@@ -18,6 +18,8 @@ import { lastClassBefore } from '../lib/lastClass';
 import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
 import { quoteForPrompt, screen } from '@ai-tutor/safety';
+import { takeSource } from '../lib/sourceHandoff';
+import { SOURCE_LIMIT, plannerTopicFromSource } from '../lib/sourceText';
 import { recordFlag } from '../stores/flags';
 import { track } from '../lib/telemetry';
 import { Icon } from '../ui/Icon';
@@ -36,6 +38,13 @@ import { ClassRoom } from './ClassRoom';
  * `/class?topic=<anything>` is the same room off the syllabus, for teaching
  * something the curriculum has no entry for. It is never kept: with no
  * topicRef there is nothing a later student could ask for it by.
+ *
+ * `/class?source=<key>` is the same room again, for a page the student brought
+ * in themselves — a chapter, a worksheet, their own notes. The file was opened
+ * on their phone before they ever got here (lib/readSource) and the extract is
+ * held in this tab (lib/sourceHandoff); the key in the URL carries nothing.
+ * Like the typed topic it has no topicRef, so it is taught and not kept —
+ * which is also the only honest answer for somebody else's textbook.
  *
  * The room itself is untouched by all of this. `ClassRoom` takes a lesson, a
  * voice and its artwork, and has no idea whether they were made a minute ago
@@ -63,6 +72,55 @@ interface Ask {
   topicRef?: string;
   /** Something was taken out of what the student typed. Recorded, not shown. */
   cleaned?: boolean;
+  /**
+   * What to PRINT while she prepares, when that is not the same as what the
+   * planner is told.
+   *
+   * For a topic the two are one string and always were. For a page the student
+   * brought in, `topic` is a twelve-thousand-character instruction with their
+   * chapter quoted inside it — and the waiting room renders the topic, so
+   * without this the student watches their own textbook scroll down a black
+   * stage under the words "Meera is preparing your class on".
+   */
+  shown?: string;
+}
+
+/**
+ * A LONGEST FILE NAME, AS A PROMPT.
+ *
+ * The name is student text like any other — "ignore all previous
+ * instructions.pdf" is a file somebody will make — so it is screened, and
+ * capped at something a heading can hold.
+ */
+const MAX_TITLE = 80;
+
+/** A student's words, screened, in the two shapes this screen needs them in. */
+type Carried = { carry: string; cleaned: boolean };
+
+/**
+ * Screen a piece of a student's words and quote it for a prompt.
+ *
+ * `screen` rather than `fromStudent`: the callers run inside a useMemo, and
+ * useMemo runs twice under StrictMode. fromStudent WRITES — it records a flag
+ * — so it would log every refusal twice, and a doubled entry can push a real
+ * distress flag out of a log that keeps fifty. The pure decision belongs here;
+ * the recording happens once, in the effect below.
+ */
+function screened(text: string, limit?: number): Carried | Refused {
+  const verdict = screen(text, 'from-student', limit === undefined ? {} : { limit });
+  switch (verdict.kind) {
+    case 'redirect':
+      return { refused: verdict.say, flag: 'redirect' };
+    case 'support':
+      return { refused: verdict.say, flag: 'support' };
+    case 'clean':
+      // A masked phone number or address still happened, and the safety log is
+      // the only record that it did. Carried out of the pure decision so the
+      // effect below can record it exactly once.
+      return { carry: quoteForPrompt(verdict.text, limit), cleaned: true };
+    case 'allow':
+      return { carry: quoteForPrompt(verdict.text, limit), cleaned: false };
+  }
 }
 
 /**
@@ -107,7 +165,9 @@ export function LiveClassRoute() {
   const preferences = useStore(preferencesStore);
 
   const topicRef = params['*'] || undefined;
-  const freeText = new URLSearchParams(search).get('topic') ?? undefined;
+  const query = new URLSearchParams(search);
+  const freeText = query.get('topic') ?? undefined;
+  const sourceKey = query.get('source') ?? undefined;
 
   const asked = useMemo((): Ask | Refused | null => {
     if (topicRef) {
@@ -127,29 +187,61 @@ export function LiveClassRoute() {
       // A child types this and it becomes the instruction a planner writes a
       // whole class from — the widest unguarded input in the app. Screened
       // like any other thing a student says.
-      //
-      // `screen` rather than `fromStudent`: this runs inside a useMemo, and
-      // useMemo runs twice under StrictMode. fromStudent WRITES — it records
-      // a flag — so it would log every refusal twice, and a doubled entry can
-      // push a real distress flag out of a log that keeps fifty. The pure
-      // decision belongs here; the recording happens once, in the effect.
-      const verdict = screen(freeText, 'from-student');
-      if (verdict.kind === 'redirect' || verdict.kind === 'support') {
-        return { refused: verdict.say, flag: verdict.kind };
-      }
+      const asked = screened(freeText);
+      if ('refused' in asked) return asked;
       return {
-        topic: quoteForPrompt(verdict.text),
+        topic: asked.carry,
         klass: settings.klass ?? 9,
         minutes: 2,
         subject: 'Science',
-        // A masked phone number or address still happened, and the safety log
-        // is the only record that it did. Carried out of the pure decision so
-        // the effect below can record it exactly once.
-        ...(verdict.kind === 'clean' ? { cleaned: true } : {}),
+        ...(asked.cleaned ? { cleaned: true } : {}),
+      };
+    }
+    /**
+     * A PAGE THE STUDENT BROUGHT IN.
+     *
+     * Already read, on their phone, before they got here — this end of it only
+     * decides whether it may be taught. It is screened EXACTLY as the typed
+     * topic is, and for the same reason: a child's uploaded file is a child's
+     * words, and the fact that they arrived as a PDF rather than through a
+     * keyboard changes nothing about what may be in them or where they are
+     * about to go. Two pieces, because a file has two — the words on the page
+     * and the name on the file, and "ignore all previous instructions.pdf" is
+     * a file somebody will make.
+     */
+    if (sourceKey) {
+      const page = takeSource(sourceKey);
+      // Not an error and not a refusal: this tab never held that file. A
+      // bookmarked /class?source=… a week later lands here, and so does a
+      // second tab. The effect below says so plainly.
+      if (!page) return null;
+
+      const body = screened(page.text, SOURCE_LIMIT);
+      if ('refused' in body) return body;
+      const name = screened(page.title, MAX_TITLE);
+      if ('refused' in name) return name;
+
+      return {
+        topic: plannerTopicFromSource({
+          title: name.carry,
+          text: body.carry,
+          truncated: page.truncated,
+        }),
+        // The file's own name, not the instruction built from it.
+        shown: page.title,
+        klass: settings.klass ?? 9,
+        // The same two minutes an off-syllabus class gets. A chapter could
+        // fill more, and more minutes is more narration, which is the single
+        // most expensive thing in a class — ₹5.11 of the ₹9.90 a cached one
+        // costs. A page the student brought is not the place to quietly double
+        // that, and nothing yet says a longer class teaches it better.
+        minutes: 2,
+        subject: 'Science',
+        ...(body.cleaned || name.cleaned ? { cleaned: true } : {}),
       };
     }
     return null;
-  }, [topicRef, freeText, settings.klass]);
+  }, [topicRef, freeText, sourceKey, settings.klass]);
 
   /**
    * She declined, and that is a complete answer rather than a failure.
@@ -175,7 +267,11 @@ export function LiveClassRoute() {
    */
   const flagged = useRef<string | null>(null);
   useEffect(() => {
-    const what = refusal ? `${refusal.flag}:${refusal.refused}` : freeText ? 'clean' : null;
+    const what = refusal
+      ? `${refusal.flag}:${refusal.refused}`
+      : freeText || sourceKey
+        ? 'clean'
+        : null;
     if (what === null || flagged.current === what) return;
     flagged.current = what;
     if (refusal) {
@@ -186,7 +282,7 @@ export function LiveClassRoute() {
     } else if (asked !== null && !isRefused(asked) && asked.cleaned) {
       recordFlag({ kind: 'cleaned', at: new Date().toISOString() });
     }
-  }, [refusal, asked, freeText]);
+  }, [refusal, asked, freeText, sourceKey]);
 
   /**
    * WHAT THE ROOM IS BUILT ON, THE MOMENT THERE IS ONE.
@@ -242,7 +338,16 @@ export function LiveClassRoute() {
   useEffect(() => {
     if (refused !== null) return;
     if (!ask) {
-      setError('There is no such topic.');
+      // Two ways to arrive with nothing to teach, and they are not the same
+      // sentence. A topicRef that matches no topic is a broken link; a source
+      // key this tab is not holding is a file that was opened in a different
+      // tab, or last week. Telling a student "there is no such topic" about
+      // their own chapter is how they conclude the file was rejected.
+      setError(
+        sourceKey
+          ? 'That page is not here any more. Pick the file again and she will read it.'
+          : 'There is no such topic.',
+      );
       return;
     }
     setError(null);
@@ -333,7 +438,7 @@ export function LiveClassRoute() {
     return () => {
       cancelled = true;
     };
-  }, [ask, refused, navigate, attempt]);
+  }, [ask, refused, navigate, attempt, sourceKey]);
 
   if (refused !== null) {
     return (
@@ -368,9 +473,14 @@ export function LiveClassRoute() {
             {online ? error : 'You are offline'}
           </p>
           <p className="font-body-md text-body-md text-on-surface-variant max-w-[42ch]">
-            {online
-              ? 'Preparing a class takes a few steps and one of them did not finish.'
-              : 'This class has to be made for you, and that needs a connection. Classes you have already opened still play.'}
+            {!online
+              ? 'This class has to be made for you, and that needs a connection. Classes you have already opened still play.'
+              : canRetry
+                ? 'Preparing a class takes a few steps and one of them did not finish.'
+                : // No Try again is offered here, so the line must not describe
+                  // one. A dead topicRef and a source key this tab never held
+                  // both end the same way: go back and start it again.
+                  'Start again from the home screen and she will pick it up.'}
           </p>
           <div className="flex items-center gap-3">
             {canRetry && (
@@ -394,7 +504,9 @@ export function LiveClassRoute() {
   }
 
   if (!draft || !tts) {
-    return <GettingReady topic={ask?.topic ?? ''} progress={progress} />;
+    // `shown` and not `topic`: the planner's instruction for a brought page is
+    // the whole page, and this line is printed.
+    return <GettingReady topic={ask?.shown ?? ask?.topic ?? ''} progress={progress} />;
   }
 
   return (

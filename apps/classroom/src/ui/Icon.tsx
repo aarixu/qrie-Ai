@@ -41,6 +41,7 @@ import {
   Mic,
   MicOff,
   Notebook,
+  Paperclip,
   PartyPopper,
   Pause,
   Pencil,
@@ -90,6 +91,7 @@ import {
 const GLYPHS: Record<string, LucideIcon> = {
   arrow_back: ArrowLeft,
   arrow_forward: ArrowRight,
+  attach_file: Paperclip,
   auto_awesome: Sparkles,
   back_hand: Hand,
   book: BookOpen,

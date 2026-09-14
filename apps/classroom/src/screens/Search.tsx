@@ -89,7 +89,27 @@ export function Search() {
           onRetry={retry}
         />
       ) : hits.length === 0 ? (
-        <EmptyState icon="search_off" title="Nothing found" body={`No lessons or topics match "${query.trim()}".`} />
+        /**
+         * THE ONE PLACE A STUDENT HAS ALREADY TYPED WHAT THEY WANT.
+         *
+         * "Nothing found" was a dead end, and it was the wrong answer: the
+         * catalogue not having a lesson is a fact about the catalogue, not
+         * about whether she can teach it. The same words go to the same room
+         * the home screen's Ask box uses — off the syllabus, prepared live.
+         */
+        <EmptyState
+          icon="search_off"
+          title="No lesson on that yet"
+          body={`Nothing in your lessons or syllabus matches "${query.trim()}" — but she can still teach it.`}
+          action={
+            <button
+              onClick={() => navigate(`/class?topic=${encodeURIComponent(query.trim())}`)}
+              className="mt-1 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+            >
+              Ask her to teach it
+            </button>
+          }
+        />
       ) : (
         <div className="grid gap-3">
           {hits.map((hit) => (
