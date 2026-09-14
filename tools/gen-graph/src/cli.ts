@@ -1,7 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadGraph } from '../../../packages/knowledge-graph/src/graph.ts';
-import type { KnowledgeGraph, Probe, ProbeBank } from '../../../packages/knowledge-graph/src/types.ts';
+import type {
+  KnowledgeGraph,
+  LearningNode,
+  Probe,
+  ProbeBank,
+} from '../../../packages/knowledge-graph/src/types.ts';
 import { loadSyllabus, type SubjectSyllabus } from '../../../packages/syllabus/src/syllabus.ts';
 import type { ClassLinks } from '../../../packages/knowledge-graph/src/types.ts';
 import { createAdapterFromEnv, loadEnvFiles, type LlmAdapter } from './llm.ts';
@@ -22,6 +27,10 @@ import { assignTopics } from './topics.ts';
  * File every node under the topic that teaches it (do this after generating):
  *   node tools/gen-graph/src/cli.ts --syllabus all --map-topics
  *
+ * Topics with no outcomes at all, inside chapters that already have some — the
+ * hole the two passes above cannot see between them:
+ *   node tools/gen-graph/src/cli.ts --syllabus all --topic-gaps --probes
+ *
  * Generation EXTENDS its out-file rather than replacing it, and in all-mode a
  * chapter that already holds nodes is SKIPPED — so the run is resumable: kill
  * it at any point (or let a daily quota kill it) and the same command carries
@@ -33,6 +42,13 @@ const GRAPH_DIR = 'packages/knowledge-graph/data';
 
 /** ~158 chapters at this count is the 10k+ node map the graph was designed for. */
 const DEFAULT_COUNT = 64;
+
+/**
+ * Per TOPIC, for --topic-gaps. Not DEFAULT_COUNT, which is per chapter: a
+ * populated chapter averages nine topics, so 64 is the same number viewed from
+ * the other end, and asking for 64 nodes about one topic would produce padding.
+ */
+const DEFAULT_PER_TOPIC = 4;
 
 function usage(message: string): never {
   console.error(`${message}
@@ -46,6 +62,10 @@ Usage:
   --count      target nodes per chapter (default ${DEFAULT_COUNT})
   --probes     also write <out-basename>.probes.json
   --probes-only  skip node generation; write probes for nodes in --out that lack one
+  --topic-gaps generate outcomes for syllabus topics that hold NONE, inside
+               chapters that already have nodes — the hole --chapter all cannot
+               see, because it skips a chapter that is already started.
+               Pair with --probes. --count is per TOPIC here (default ${DEFAULT_PER_TOPIC}).
   --link-classes  connect each syllabus to the class below it; writes <out-basename>.links.json
   --map-topics file every node under the syllabus topic that teaches it, so a
                study plan step has somewhere to go; also drops lessonRefs that
@@ -53,7 +73,8 @@ Usage:
   --dry-run    print the prompts and write nothing
 
 Env (read from .env.local at the repo root, or the shell):
-  LLM_PROVIDER              "openrouter" (default) | "gemini" | "anthropic"
+  LLM_PROVIDER              "openrouter" (default) | "vertex" | "gemini" | "anthropic"
+  GOOGLE_SERVICE_ACCOUNT_FILE  for "vertex"; default .secrets/vertex-service-account.json
   OPENROUTER_API_KEY        https://openrouter.ai/keys
   OPENROUTER_MODEL          default "stealth/ox-alpha" (free)
   OPENROUTER_REASONING_EFFORT  low (default) | high | max
@@ -165,6 +186,156 @@ async function fillProbeGaps(
     }
   }
   return { added, failed };
+}
+
+/**
+ * THE TOPIC-GAP PASS — outcomes for topics inside a chapter that already has some.
+ *
+ * Node generation is a CHAPTER at a time and all-mode skips any chapter that
+ * already holds nodes, so a topic with no outcomes inside a populated chapter
+ * is invisible to it: no gap, nothing generated. 48 topics were sitting in
+ * exactly that blind spot after the 19 empty chapters were filled, and a class
+ * on one of them teaches and records nothing, because there is no outcome for
+ * the ledger to name.
+ *
+ * ONE CALL PER TOPIC, deliberately. Batching topics would generate nodes with
+ * no way to say which topic each belongs to, and a follow-up --map-topics pass
+ * could legitimately file them under a topic that is already populated — which
+ * would leave the bare topic bare and look like success. Asking per topic
+ * makes topicRef an INPUT checked against the syllabus, not a guess.
+ */
+async function fillTopicGaps(
+  syllabus: SubjectSyllabus,
+  adapter: LlmAdapter,
+  opts: Pick<RunOptions, 'out' | 'dryRun' | 'chapterArg' | 'wantProbes' | 'targetCount'>,
+): Promise<RunTally> {
+  const tally: RunTally = { added: 0, probesAdded: 0, failed: 0 };
+  let graph = readGraph(opts.out);
+  if (graph.nodes.length === 0) {
+    console.log('  no nodes yet — this pass fills holes in a map, it does not start one.');
+    return tally;
+  }
+  const probeFile = opts.out.replace(/\.json$/, '.probes.json');
+
+  for (const chapter of syllabus.chapters) {
+    if (opts.chapterArg !== 'all' && opts.chapterArg !== chapter.id) continue;
+
+    const filed = new Set(graph.nodes.map((n) => n.topicRef).filter((r): r is string => Boolean(r)));
+    const bare = chapter.topics.filter((t) => !filed.has(`${syllabus.id}/${chapter.id}/${t.id}`));
+    if (bare.length === 0) continue;
+
+    // A chapter with no nodes at all belongs to the ordinary generator, which
+    // writes the whole thing in one coherent pass. Filling it topic by topic
+    // would produce a chapter of disconnected islands.
+    const chapterNodes = graph.nodes.filter((n) => n.chapter === chapter.id);
+    if (chapterNodes.length === 0) {
+      console.log(
+        `─── ${chapter.id} — ${bare.length} bare topic(s), but the chapter is empty. Use --chapter ${chapter.id}.`,
+      );
+      continue;
+    }
+
+    console.log(
+      `\n─── ${chapter.title} (${chapter.id}) — ${bare.length} bare of ${chapter.topics.length} topics ───`,
+    );
+
+    const fresh: LearningNode[] = [];
+    for (const topic of bare) {
+      const linkable = graph.nodes
+        .filter((n) => n.chapter === chapter.id)
+        .map((n) => ({ id: n.id, outcome: n.outcome }));
+      const nodeOpts = {
+        syllabusId: syllabus.id,
+        klass: syllabus.klass,
+        subject: syllabus.subject,
+        // Collisions are checked map-wide; edges only against the chapter.
+        existingIds: graph.nodes
+          .filter((n) => n.klass === syllabus.klass && n.subject === syllabus.subject)
+          .map((n) => n.id),
+        linkable,
+        onlyTopicIds: [topic.id],
+        targetCount: opts.targetCount,
+      };
+
+      if (opts.dryRun) {
+        const { buildNodesPrompt } = await import('./prompt.ts');
+        const { system, user } = buildNodesPrompt(chapter, nodeOpts);
+        console.log(`\n=== SYSTEM (${topic.id}) ===\n${system}\n\n=== USER ===\n${user}`);
+        continue;
+      }
+
+      let result;
+      try {
+        result = await generateNodes(chapter, adapter, nodeOpts);
+      } catch (error) {
+        tally.failed += 1;
+        console.error(`  ✗ ${topic.id}: ${error instanceof Error ? error.message : String(error)}`);
+        continue;
+      }
+      if (!result.ok) {
+        tally.failed += 1;
+        console.error(`  ✗ ${topic.id}: ${result.errors.slice(0, 5).join('; ')}`);
+        continue;
+      }
+
+      // The topic was the REQUEST, so filing is arithmetic rather than a
+      // judgement — and it is still the syllabus that decides the ref is real,
+      // because `topic` came out of the loaded syllabus and nowhere else.
+      const topicRef = `${syllabus.id}/${chapter.id}/${topic.id}`;
+      for (const node of result.value) node.topicRef = topicRef;
+
+      const merged = mergeIntoGraph(graph, result.value);
+      if (!merged.ok) {
+        tally.failed += 1;
+        console.error(`  ✗ ${topic.id}: merge rejected: ${merged.errors.join('; ')}`);
+        continue;
+      }
+      graph = merged.value;
+      fresh.push(...result.value);
+      tally.added += result.value.length;
+
+      // Per topic, not per run: the unit of work is the unit of loss.
+      fs.writeFileSync(opts.out, `${JSON.stringify(graph, null, 2)}\n`);
+      console.log(`  ✓ ${topic.id}: ${result.value.length} nodes (map is now ${graph.nodes.length})`);
+    }
+
+    if (!opts.wantProbes || fresh.length === 0) continue;
+    for (let i = 0; i < fresh.length; i += PROBE_BATCH) {
+      const slice = fresh.slice(i, i + PROBE_BATCH);
+      let probes;
+      try {
+        probes = await generateProbes(slice, adapter, {
+          klass: syllabus.klass,
+          subject: syllabus.subject,
+        });
+      } catch (error) {
+        tally.failed += 1;
+        console.error(`  ! probes: ${error instanceof Error ? error.message : String(error)}`);
+        continue;
+      }
+      if (!probes.ok) {
+        // Recoverable later with --probes-only; the nodes are already on disk.
+        tally.failed += 1;
+        console.error(`  ! probes: ${probes.errors.slice(0, 3).join('; ')}`);
+        continue;
+      }
+      tally.probesAdded += probes.value.length;
+      // Straight to disk per batch. writeProbeBank re-reads and prunes, so the
+      // file is the accumulator and there is no second copy to disagree with it.
+      const total = writeProbeBank(probeFile, probes.value, graph);
+      console.log(`  ✓ ${probes.value.length} probes (bank is now ${total})`);
+    }
+  }
+
+  if (!opts.dryRun) {
+    const filed = new Set(graph.nodes.map((n) => n.topicRef).filter((r): r is string => Boolean(r)));
+    const stillBare = syllabus.chapters.flatMap((c) =>
+      c.topics.filter((t) => !filed.has(`${syllabus.id}/${c.id}/${t.id}`)).map((t) => `${c.id}/${t.id}`),
+    );
+    console.log(`  ${path.relative(process.cwd(), opts.out)}: ${stillBare.length} topic(s) still bare.`);
+    for (const t of stillBare) console.log(`      ${t}`);
+  }
+  return tally;
 }
 
 function readLinks(file: string): ClassLinks {
@@ -569,7 +740,10 @@ async function main(): Promise<void> {
   const probesOnly = argv.includes('--probes-only');
   const linkClasses = argv.includes('--link-classes');
   const wantTopics = argv.includes('--map-topics');
-  const targetCount = Number(flag(argv, '--count') ?? DEFAULT_COUNT);
+  const topicGaps = argv.includes('--topic-gaps');
+  const targetCount = Number(
+    flag(argv, '--count') ?? (topicGaps ? DEFAULT_PER_TOPIC : DEFAULT_COUNT),
+  );
 
   const availableIds = fs
     .readdirSync(SYLLABUS_DIR)
@@ -577,8 +751,8 @@ async function main(): Promise<void> {
     .map((f) => f.replace('.json', ''));
 
   if (!syllabusArg) usage(`Missing --syllabus. Available: ${availableIds.join(', ')}, all`);
-  if (!chapterArg && !linkClasses && !wantTopics) usage('Missing --chapter (or "all").');
-  if (syllabusArg === 'all' && !linkClasses && !wantTopics && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
+  if (!chapterArg && !linkClasses && !wantTopics && !topicGaps) usage('Missing --chapter (or "all").');
+  if (syllabusArg === 'all' && !linkClasses && !wantTopics && !topicGaps && chapterArg !== 'all') usage('--syllabus all requires --chapter all.');
   if (syllabusArg === 'all' && outArg) usage('--syllabus all derives each out-file; drop --out.');
 
   const syllabusIds = syllabusArg === 'all' ? availableIds : [syllabusArg];
@@ -595,7 +769,15 @@ async function main(): Promise<void> {
 
     console.log(`\n════ ${syllabus.subject} — Class ${syllabus.klass} (${id}) ════`);
     const out = path.resolve(process.cwd(), outArg ?? path.join(GRAPH_DIR, `${id}.json`));
-    const tally = wantTopics
+    const tally = topicGaps
+      ? await fillTopicGaps(syllabus, adapter, {
+          out,
+          dryRun,
+          chapterArg: chapterArg ?? 'all',
+          wantProbes,
+          targetCount,
+        })
+      : wantTopics
       ? await mapTopics(syllabus, adapter, { out, dryRun, chapterArg: chapterArg ?? 'all' })
       : linkClasses
       ? await linkSyllabus(syllabus, adapter, { out, dryRun })

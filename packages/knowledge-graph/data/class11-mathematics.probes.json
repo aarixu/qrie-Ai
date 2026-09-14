@@ -6012,6 +6012,222 @@
         "multiplies complementary probabilities (1 - 0.4)(1 - 0.5) assuming independence",
         "computes 1 - P(A ∩ B) instead of 1 - P(A ∪ B)"
       ]
+    },
+    {
+      "id": "probe-class11-mathematics-trigonometric-functions-etymology-and-meaning",
+      "nodeId": "class11-mathematics-trigonometric-functions-etymology-and-meaning",
+      "question": "What is the literal meaning of the Greek roots that form the word 'trigonometry'?",
+      "options": [
+        "Calculating the areas and perimeters of polygons",
+        "Measuring the sides and the angles of a triangle",
+        "Determining the radius and chords within a circle",
+        "Constructing three-dimensional geometric figures"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses general polygon measurement with the specific triangle-focused root 'trigonon'",
+        "",
+        "confuses the later circular model of trigonometry with its Greek etymology",
+        "misinterprets the prefix 'tri-' as referring to three spatial dimensions"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-trigonometric-functions-transition-to-circular-functions",
+      "nodeId": "class11-mathematics-trigonometric-functions-transition-to-circular-functions",
+      "question": "Why are trigonometric ratios extended from right-angled triangles to circular functions on the unit circle?",
+      "options": [
+        "To avoid using irrational numbers when finding geometric side lengths",
+        "To simplify the manual calculation of areas for non-right triangles",
+        "To define the ratios for all real numbers representing any rotation",
+        "To ensure that trigonometric outputs always stay strictly positive"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes circular functions exist to eliminate irrational numerical values",
+        "thinks the primary purpose of unit circle trigonometry is triangle area calculation",
+        "",
+        "assumes circular functions are designed to restrict outputs to positive numbers"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-trigonometric-functions-historical-development",
+      "nodeId": "class11-mathematics-trigonometric-functions-historical-development",
+      "question": "Which Indian mathematician introduced the terms 'ardha-jya' (later 'jya') and 'kotijya' (or 'kojya') in his classical treatise?",
+      "options": [
+        "Varahamihira",
+        "Brahmagupta",
+        "Bhaskara II",
+        "Aryabhata"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses Varahamihira's compendiums with Aryabhata's foundational definitions",
+        "confuses Brahmagupta's work on astronomical formulas with the introduction of jya tables",
+        "attributes the classical introduction of sine and cosine concepts to Bhaskara II",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-trigonometric-functions-real-world-applications",
+      "nodeId": "class11-mathematics-trigonometric-functions-real-world-applications",
+      "question": "Which pair of modern technical fields directly relies on trigonometric functions to model periodic waves and determine positions?",
+      "options": [
+        "Seismology and signal processing",
+        "Organic synthesis and taxonomy",
+        "Database querying and sorting",
+        "Thermodynamic phase balancing"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses mathematical wave modeling with chemical classification and synthesis",
+        "mistakes discrete data processing algorithms for continuous trigonometric modeling",
+        "confuses chemical equilibrium calculations with wave-based trigonometric applications"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-limits-and-derivatives-calculus-scope-and-origins",
+      "nodeId": "class11-mathematics-limits-and-derivatives-calculus-scope-and-origins",
+      "question": "Which statement best captures the core scope and primary purpose of calculus?",
+      "options": [
+        "It analyzes continuously varying quantities by studying dynamic rates of change and accumulation.",
+        "It focuses entirely on computing the static geometric properties of fixed polygons and circles.",
+        "It solves algebraic equations containing unknown constants by applying systematic factorization methods.",
+        "It deals exclusively with counting discrete arrangements and determining exact combinatorial possibilities."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the dynamic scope of calculus with classical static Euclidean geometry",
+        "reduces calculus to standard algebraic equation-solving techniques",
+        "confuses calculus with discrete mathematics and combinatorics"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-limits-and-derivatives-average-vs-instantaneous-rate",
+      "nodeId": "class11-mathematics-limits-and-derivatives-average-vs-instantaneous-rate",
+      "question": "A car travels $150\\text{ km}$ in $3\\text{ hours}$, but its speedometer reads $65\\text{ km/h}$ at the two-hour mark. Which statement correctly distinguishes these two values?",
+      "options": [
+        "Both values are instantaneous rates because both describe the car's motion at specific points in time.",
+        "The value $50\\text{ km/h}$ is an average rate over an interval, while $65\\text{ km/h}$ is an instantaneous rate at a moment.",
+        "The value $50\\text{ km/h}$ is an instantaneous rate at the midpoint, while $65\\text{ km/h}$ is an average rate over the trip.",
+        "Both values are average rates because no physical speedometer can measure motion without a time lapse."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks any rate computed from a journey represents an instantaneous rate of change",
+        "",
+        "inverts the definitions of average rate of change and instantaneous rate of change",
+        "believes instantaneous rates cannot exist in real physical systems and must be averages"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-limits-and-derivatives-secant-to-tangent-transition",
+      "nodeId": "class11-mathematics-limits-and-derivatives-secant-to-tangent-transition",
+      "question": "Let $P$ and $Q$ be two distinct points on a smooth curve. What happens to the secant line passing through $P$ and $Q$ as $Q$ moves along the curve toward $P$?",
+      "options": [
+        "Its slope becomes undefined because the two points eventually merge into a single static point.",
+        "The secant line bends gradually until it completely matches the curvature of the graph near $P$.",
+        "The secant line rotates continuously and approaches the tangent line to the curve at point $P$.",
+        "Its slope steadily approaches zero regardless of the original direction or shape of the curve."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes bringing points together only destroys the line rather than yielding a limiting tangent",
+        "thinks lines can curve to match a function graph rather than remaining straight geometric lines",
+        "",
+        "assumes that shrinking an interval always forces the resulting line's slope to become zero"
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-limits-and-derivatives-need-for-limiting-process",
+      "nodeId": "class11-mathematics-limits-and-derivatives-need-for-limiting-process",
+      "question": "Why does calculating the exact instantaneous speed of an object directly from the formula $\\Delta s / \\Delta t$ at a single instant require a limit?",
+      "options": [
+        "Physical instruments are incapable of recording small numbers, so a theoretical limit must replace them.",
+        "The formula $\\Delta s / \\Delta t$ is strictly reserved for average acceleration and cannot ever represent speed.",
+        "Evaluating the formula directly always produces infinity because dividing any displacement by time diverges.",
+        "Setting the elapsed time to $\\Delta t = 0$ gives $0/0$, which requires examining the behavior as $\\Delta t$ approaches zero."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "attributes the need for mathematical limits to measurement limitations rather than algebraic indeterminacy",
+        "confuses the ratio of change in position over time with the definition of acceleration",
+        "believes that setting the denominator to zero in a rate quotient automatically evaluates to infinity",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-probability-state-classical-definition",
+      "nodeId": "class11-mathematics-probability-state-classical-definition",
+      "question": "According to the classical (Laplacian) definition, what is the probability of an event $E$ in a random experiment?",
+      "options": [
+        "The ratio of the weighted likelihood of $E$ to the total measure of the entire sample space",
+        "The ratio of the number of trials where $E$ occurs to the total number of trials conducted in practice",
+        "The ratio of the number of outcomes favorable to $E$ to the number of outcomes unfavorable to $E$",
+        "The ratio of the number of outcomes favorable to $E$ to the total number of equally likely outcomes"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses the elementary classical definition with the general measure-theoretic or weighted framework.",
+        "Confuses the classical definition of probability with the empirical or statistical definition.",
+        "Confuses probability with odds in favor of the event.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-probability-state-statistical-definition",
+      "nodeId": "class11-mathematics-probability-state-statistical-definition",
+      "question": "Which of the following best states the statistical (empirical) definition of the probability of an event?",
+      "options": [
+        "The ratio of favorable elementary outcomes to total possible outcomes assuming all outcomes are equally likely",
+        "The limiting value of the relative frequency of the event as the number of identical trials increases indefinitely",
+        "The subjective measure of belief assigned by an observer based on prior evidence and logical deduction",
+        "A real-valued set function assigned to subsets of a sample space satisfying non-negativity and additivity"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Confuses the statistical definition with the classical (Laplacian) definition.",
+        "",
+        "Confuses the statistical definition with the Bayesian or subjective definition of probability.",
+        "Confuses the statistical definition with Kolmogorov's axiomatic definition."
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-probability-identify-limitations-classical-statistical",
+      "nodeId": "class11-mathematics-probability-identify-limitations-classical-statistical",
+      "question": "Which statement correctly highlights the major conceptual limitations of the classical and statistical definitions of probability?",
+      "options": [
+        "Classical probability cannot handle events with finite outcomes, while statistical probability is restricted strictly to continuous sample spaces",
+        "Classical probability is not mathematically rigorous enough for algebra, while statistical probability requires outcomes to always be symmetric",
+        "Classical probability suffers from circularity in defining 'equally likely', while statistical probability cannot perform infinite repetitions in reality",
+        "Classical probability requires empirical verification to compute odds, while statistical probability only works when all outcomes are known beforehand"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Incorrectly thinks classical probability fails for finite sample spaces rather than infinite ones.",
+        "Misunderstands the nature of classical reasoning and incorrectly attributes a symmetry requirement to empirical trials.",
+        "",
+        "Inverts the core methods of classical deduction and empirical frequency calculations."
+      ]
+    },
+    {
+      "id": "probe-class11-mathematics-probability-explain-need-for-axiomatic-approach",
+      "nodeId": "class11-mathematics-probability-explain-need-for-axiomatic-approach",
+      "question": "Why does Kolmogorov's axiomatic approach successfully resolve the foundational difficulties of earlier definitions of probability?",
+      "options": [
+        "It treats probability abstractly as a set function on subsets of a sample space without assuming equal likelihood or infinite trials",
+        "It proves mathematically that all elementary outcomes across any arbitrary experiment must always be equally likely",
+        "It replaces all theoretical probability concepts by calculating exact odds purely from past historical records",
+        "It provides a physical device to execute an infinite number of empirical trials under identical laboratory conditions"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Thinks the axiomatic approach justifies the assumption that all elementary outcomes are equally likely.",
+        "Confuses the axiomatic approach with purely frequentist or empirical data analysis.",
+        "Believes the axiomatic approach is a physical method for conducting empirical experiments infinitely."
+      ]
     }
   ]
 }

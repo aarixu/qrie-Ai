@@ -4454,6 +4454,156 @@
       ],
       "difficulty": 4,
       "topicRef": "class11-mathematics/probability/axiomatic-approach-to-probability"
+    },
+    {
+      "id": "class11-mathematics-trigonometric-functions-etymology-and-meaning",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "trigonometric-functions",
+      "title": "Etymology and Meaning of Trigonometry",
+      "outcome": "State the Greek origin of the word trigonometry as measuring the sides and angles of a triangle",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/trigonometric-functions/trigonometric-functions-introduction"
+    },
+    {
+      "id": "class11-mathematics-trigonometric-functions-transition-to-circular-functions",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "trigonometric-functions",
+      "title": "Transition to Circular Functions",
+      "outcome": "Explain why trigonometric ratios restricted to acute angles in right triangles are generalised to circular functions of real numbers",
+      "prerequisites": [
+        "class11-mathematics-trigonometric-functions-etymology-and-meaning"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/trigonometric-functions/trigonometric-functions-introduction"
+    },
+    {
+      "id": "class11-mathematics-trigonometric-functions-historical-development",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "trigonometric-functions",
+      "title": "Historical Context of Trigonometry",
+      "outcome": "Name early Indian mathematicians like Aryabhata and their contributions to the concepts of jya (sine) and kojya (cosine)",
+      "prerequisites": [
+        "class11-mathematics-trigonometric-functions-etymology-and-meaning"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/trigonometric-functions/trigonometric-functions-introduction"
+    },
+    {
+      "id": "class11-mathematics-trigonometric-functions-real-world-applications",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "trigonometric-functions",
+      "title": "Applications of Trigonometry",
+      "outcome": "List major modern domains such as navigation, surveying, astronomy, seismology, and signal processing where trigonometric functions are applied",
+      "prerequisites": [
+        "class11-mathematics-trigonometric-functions-transition-to-circular-functions"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/trigonometric-functions/trigonometric-functions-introduction"
+    },
+    {
+      "id": "class11-mathematics-limits-and-derivatives-calculus-scope-and-origins",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "limits-and-derivatives",
+      "title": "Origins and Scope of Calculus",
+      "outcome": "Describe calculus as the branch of mathematics dealing with rates of change and accumulation of quantities in dynamic physical systems",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/limits-and-derivatives/limits-and-derivatives-introduction"
+    },
+    {
+      "id": "class11-mathematics-limits-and-derivatives-average-vs-instantaneous-rate",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "limits-and-derivatives",
+      "title": "Average versus Instantaneous Rate of Change",
+      "outcome": "Distinguish between the average rate of change over a non-zero interval and the instantaneous rate of change at a single instant using physical examples like speed",
+      "prerequisites": [
+        "class11-mathematics-limits-and-derivatives-calculus-scope-and-origins"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/limits-and-derivatives/limits-and-derivatives-introduction"
+    },
+    {
+      "id": "class11-mathematics-limits-and-derivatives-secant-to-tangent-transition",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "limits-and-derivatives",
+      "title": "Secant Line Approaching Tangent Line",
+      "outcome": "Illustrate how a secant line joining two points on a curve approaches the tangent line at a point as the interval between the points shrinks toward zero",
+      "prerequisites": [
+        "class11-mathematics-limits-and-derivatives-average-vs-instantaneous-rate"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/limits-and-derivatives/limits-and-derivatives-introduction"
+    },
+    {
+      "id": "class11-mathematics-limits-and-derivatives-need-for-limiting-process",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "limits-and-derivatives",
+      "title": "Need for the Limiting Process",
+      "outcome": "Explain why determining instantaneous quantities leads to indeterminate 0/0 expressions that necessitate the formal concept of a limit",
+      "prerequisites": [
+        "class11-mathematics-limits-and-derivatives-secant-to-tangent-transition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/limits-and-derivatives/limits-and-derivatives-introduction"
+    },
+    {
+      "id": "class11-mathematics-probability-state-classical-definition",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Classical Definition of Probability",
+      "outcome": "State the classical (Laplacian) definition of probability as the ratio of favorable outcomes to total equally likely outcomes",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/probability/probability-introduction"
+    },
+    {
+      "id": "class11-mathematics-probability-state-statistical-definition",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Statistical Approach to Probability",
+      "outcome": "State the statistical (empirical) definition of probability as the limiting relative frequency of an event over large repetitions",
+      "prerequisites": [
+        "class11-mathematics-probability-state-classical-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-mathematics/probability/probability-introduction"
+    },
+    {
+      "id": "class11-mathematics-probability-identify-limitations-classical-statistical",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Limitations of Early Probability Approaches",
+      "outcome": "Identify the limitations of the classical definition (circularity in defining equally likely) and statistical definition (inability to repeat infinitely)",
+      "prerequisites": [
+        "class11-mathematics-probability-state-statistical-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/probability/probability-introduction"
+    },
+    {
+      "id": "class11-mathematics-probability-explain-need-for-axiomatic-approach",
+      "klass": 11,
+      "subject": "Mathematics",
+      "chapter": "probability",
+      "title": "Motivation for Axiomatic Approach",
+      "outcome": "Explain how Kolmogorov's axiomatic approach resolves earlier limitations by treating probability as a set function on sample space subsets",
+      "prerequisites": [
+        "class11-mathematics-probability-identify-limitations-classical-statistical"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-mathematics/probability/probability-introduction"
     }
   ]
 }

@@ -54,6 +54,28 @@ describe('committed knowledge graphs', () => {
     expect(vague.map((n) => n.id)).toEqual([]);
   });
 
+  /**
+   * TWO NODES CANNOT BE THE SAME OUTCOME.
+   *
+   * The map grows in passes that do not see each other: whole chapters at a
+   * time, then single topics inside chapters that already had nodes. Ids are
+   * checked for collision and outcomes never were, so the second pass could
+   * quietly re-say what the first pass already said under a different slug.
+   * A duplicated outcome is worse than waste — the diagnostic would ask the
+   * same thing twice and count it as two independent pieces of evidence.
+   */
+  it.each(files)('%s says each outcome once', (file) => {
+    const seen = new Map<string, string>();
+    const duplicates: string[] = [];
+    for (const node of graphOf(file).nodes) {
+      const key = node.outcome.trim().toLowerCase();
+      const first = seen.get(key);
+      if (first) duplicates.push(`${first} and ${node.id}: "${node.outcome}"`);
+      else seen.set(key, node.id);
+    }
+    expect(duplicates).toEqual([]);
+  });
+
   it.each(files)('%s has real structure, not a flat list', (file) => {
     const index = new GraphIndex(graphOf(file));
     // A map with no edges cannot infer anything — it would just be a quiz bank.

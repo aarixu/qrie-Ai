@@ -2819,6 +2819,1355 @@
       ],
       "difficulty": 4,
       "topicRef": "class11-chemistry/equilibrium/solubility-equilibria-of-sparingly-soluble-salts"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-vital-force-theory",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Vital Force Theory Disproval",
+      "outcome": "State the vital force theory and explain how Friedrich Wöhler's synthesis of urea from ammonium cyanate disproved it",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/general-introduction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-catenation-property",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Catenation in Carbon",
+      "outcome": "Define catenation and explain how high C-C bond energy enables carbon to form stable long chains and rings",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/general-introduction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-multiple-bonding",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Multiple Bonding of Carbon",
+      "outcome": "Identify the ability of carbon to form multiple bonds with itself and heteroatoms like oxygen, nitrogen, and sulphur as a reason for molecular diversity",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-catenation-property"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/general-introduction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-tetravalency-diversity",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Tetravalency and Organic Diversity",
+      "outcome": "Explain the vast number of organic compounds by combining the concepts of tetravalency, catenation, and isomerism",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-catenation-property",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-multiple-bonding"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/general-introduction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-complete-formula-utility",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Complete Structural Formula Utility",
+      "outcome": "Explain the utility and limitations of complete (Lewis-type) structural formulas in showing all covalent bonds explicitly",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/structural-representations-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-condensed-formula-utility",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Condensed Structural Formula Utility",
+      "outcome": "Explain the utility of condensed structural formulas and parentheses in simplifying repetitive or branched groups within carbon chains",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/structural-representations-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-line-formula-utility",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Bond-Line Structural Formula Utility",
+      "outcome": "Explain the utility of bond-line (skeletal) formulas in depicting complex molecular frameworks and ring systems efficiently by omitting C and H labels",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/structural-representations-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-compare-representation-methods",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Compare Structural Representation Methods",
+      "outcome": "Compare complete, condensed, and bond-line representations to select the most suitable notation for communicating a given organic molecule's structure",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-complete-formula-utility",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-condensed-formula-utility",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-line-formula-utility"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/structural-representations-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-trivial-system-origins",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Origins of Trivial Nomenclature",
+      "outcome": "State the origin of common (trivial) names based on source or properties for simple organic compounds like methane, formic acid, and acetic acid",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-vs-iupac-match",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Matching Common and IUPAC Names",
+      "outcome": "Match common names of everyday organic compounds with their corresponding IUPAC systematic names",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-trivial-system-origins",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-functional-group-identification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-branched-prefixes",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Prefixes in Common Alkyl Groups",
+      "outcome": "Identify alkyl groups containing n-, iso-, sec-, tert-, and neo- prefixes from their structural formulas",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-systematic-vs-trivial-utility",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Need for Systematic Nomenclature",
+      "outcome": "Explain why systematic IUPAC nomenclature is required over trivial naming as molecular complexity and isomer numbers increase",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-vs-iupac-match"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/nomenclature-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-word-roots",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identify IUPAC Word Roots",
+      "outcome": "State the standard IUPAC word roots (meth-, eth-, prop-, but-, pent-, hex-, hept-, oct-, non-, dec-) corresponding to carbon chain lengths from C1 to C10",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-systematic-vs-trivial-utility"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/iupac-system-of-nomenclature"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-primary-suffixes",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identify Primary Suffixes for Carbon Chains",
+      "outcome": "Identify the primary suffix (-ane, -ene, -yne) indicating the degree of saturation in a hydrocarbon chain",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-word-roots"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/iupac-system-of-nomenclature"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-name-components",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Dissect IUPAC Name Components",
+      "outcome": "Dissect a systematic IUPAC name into its prefix, word root, primary suffix, and secondary suffix components",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-primary-suffixes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/iupac-system-of-nomenclature"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-straight-chain-naming",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Name Straight-Chain Hydrocarbons",
+      "outcome": "Construct systematic IUPAC names for unbranched alkanes, alkenes, and alkynes by combining word roots and primary suffixes",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-name-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/iupac-system-of-nomenclature"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Define Isomerism and Isomers",
+      "outcome": "Define isomerism as the phenomenon where two or more compounds possess the same molecular formula but different physical or chemical properties.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-structural-representations"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/isomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-broad-classification",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Classify Primary Types of Isomerism",
+      "outcome": "Classify isomerism broadly into structural isomerism and stereoisomerism based on connectivity versus spatial orientation differences.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/isomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-structural-isomer-types",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "List Subcategories of Structural Isomerism",
+      "outcome": "List the subcategories of structural isomerism: chain isomerism, position isomerism, functional group isomerism, and metamerism.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-broad-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/isomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-stereoisomer-types",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "List Subcategories of Stereoisomerism",
+      "outcome": "List geometrical isomerism and optical isomerism as the two primary subdivisions of stereoisomerism.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-broad-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/isomerism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-mechanism-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Define Reaction Mechanism",
+      "outcome": "Define an organic reaction mechanism as a sequential, step-by-step description of electron movement, bond cleavage, bond formation, and energy changes during a transformation.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/fundamental-concepts-in-organic-reaction-mechanism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-substrate-reagent-distinction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Distinguish Substrate and Reagent",
+      "outcome": "Distinguish between the substrate (the carbon-providing reactant) and the attacking reagent in an organic chemical reaction.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-mechanism-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/fundamental-concepts-in-organic-reaction-mechanism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-intermediate-role",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identify Reaction Intermediates",
+      "outcome": "Identify short-lived reaction intermediates formed between initial reactants and final products in a multi-step reaction pathway.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-fission-intermediates",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-substrate-reagent-distinction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/fundamental-concepts-in-organic-reaction-mechanism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mechanism-energy-kinetics-outline",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Outline Mechanism Energetics and Kinetics",
+      "outcome": "Outline how reaction mechanisms account for bond energy changes and the relative rates of competing transformation pathways.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-intermediate-role"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/fundamental-concepts-in-organic-reaction-mechanism"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-vs-temporary-effects",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Permanent vs Temporary Electron Displacement",
+      "outcome": "Classify electron displacement effects in covalent bonds as either permanent (ground state) or temporary (operating only in the presence of an attacking reagent)",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-substrate-reagent-distinction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electron-displacement-effects-in-covalent-bond"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-effects-list",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Types of Permanent Displacement Effects",
+      "outcome": "Identify inductive effect, resonance (mesomeric) effect, and hyperconjugation as permanent electron displacement effects occurring in the ground state of molecules",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-vs-temporary-effects"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electron-displacement-effects-in-covalent-bond"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-temporary-effects-identify",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identify Electromeric Effect as Temporary",
+      "outcome": "Identify the electromeric effect (E-effect) as a temporary, polarisability effect involving complete transfer of a shared pi-electron pair demanded by an attacking reagent",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-vs-temporary-effects"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electron-displacement-effects-in-covalent-bond"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sigma-vs-pi-displacement",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Sigma vs Pi Electron Displacements",
+      "outcome": "Distinguish electron displacement effects by whether they involve sigma-electrons (inductive effect, hyperconjugation) or pi/unshared electrons (resonance and electromeric effects)",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-effects-list",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-temporary-effects-identify"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/electron-displacement-effects-in-covalent-bond"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-sublimation-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Sublimation Purification Principle",
+      "outcome": "Identify sublimation as the suitable purification technique for mixtures containing a sublimable solid and non-sublimable impurities",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/methods-of-purification-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-crystallisation-solvent-choice",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Solvent Selection for Crystallisation",
+      "outcome": "Select an appropriate solvent for crystallisation based on differential solubility of the organic compound at room temperature versus elevated temperature",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/methods-of-purification-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-differential-extraction-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Differential Extraction Principle",
+      "outcome": "Explain the separation of an organic compound from an aqueous solution using an immiscible organic solvent in a separating funnel",
+      "prerequisites": [],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/methods-of-purification-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-method-selection-strategy",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Purification Method Selection Strategy",
+      "outcome": "Select the optimal purification method (sublimation, crystallisation, distillation, differential extraction, or chromatography) given the physical state, solubility, thermal stability, and boiling points of components in a mixture",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-sublimation-principle",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-crystallisation-solvent-choice",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-differential-extraction-principle",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-distillation-methods",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-chromatography-rf"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/methods-of-purification-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Define Sublimation Process",
+      "outcome": "Define sublimation as the direct phase transition of a solid substance into vapour upon heating without passing through the intermediate liquid state.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/sublimation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimable-compounds-list",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Identify Sublimable Organic Compounds",
+      "outcome": "Identify common organic substances that undergo sublimation, such as camphor, naphthalene, anthracene, and benzoic acid.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/sublimation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-apparatus-setup",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Describe Sublimation Laboratory Setup",
+      "outcome": "Describe the standard laboratory apparatus for sublimation comprising a china dish, perforated filter paper, an inverted glass funnel with a plugged stem, and a heat source.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/sublimation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-separation-procedure",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Explain Separation via Sublimation",
+      "outcome": "Explain how heating a solid mixture causes the sublimable component to vaporise, pass through the perforated paper, and deposit as pure solid on the cold inner walls of an inverted funnel.",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-sublimation-principle",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-apparatus-setup"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/sublimation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Principle of Crystallisation",
+      "outcome": "State the principle of simple crystallisation based on the difference in solubilities of a compound and its impurities in a suitable solvent at different temperatures",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-crystallisation-solvent-choice"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/crystallisation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-steps-procedure",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Steps of Crystallisation",
+      "outcome": "Outline the sequential steps of crystallisation: preparing a saturated hot solution, hot filtration of insoluble impurities, cooling to form crystals, and isolating crystals by filtration",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/crystallisation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-activated-charcoal",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Decolourisation Using Activated Charcoal",
+      "outcome": "Explain the role of activated animal charcoal in adsorbing coloured impurities during the preparation of a hot saturated solution before crystallisation",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-steps-procedure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/crystallisation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-fractional-crystallisation-separation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Fractional Crystallisation Separation",
+      "outcome": "Explain how fractional crystallisation separates a mixture of two solid organic compounds having different solubilities in the same solvent through repeated selective crystallisation cycles",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-steps-procedure"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/crystallisation"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-differential-extraction-solubility-criterion",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Differential extraction solubility criterion",
+      "outcome": "State the criteria for selecting an organic solvent in differential extraction: immiscibility with water and higher solubility of the target compound in the organic layer",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-differential-extraction-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/differential-extraction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-separating-funnel-operation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Separating funnel operation",
+      "outcome": "Describe the operational steps of using a separating funnel, including shaking the mixture, venting to release vapour pressure, allowing two distinct layers to settle, and draining them separately",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-differential-extraction-solubility-criterion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/differential-extraction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-multiple-extractions-advantage",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Advantage of multiple extractions",
+      "outcome": "Explain why multiple successive extractions with smaller volumes of organic solvent recover more solute than a single extraction using the entire volume",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-separating-funnel-operation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/differential-extraction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-continuous-extraction-indication",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Continuous extraction technique",
+      "outcome": "Identify continuous extraction as the appropriate modification when an organic compound has low solubility in the organic solvent or a large volume of aqueous solution needs processing",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-multiple-extractions-advantage"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/differential-extraction"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-analysis-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Objective of Qualitative Analysis",
+      "outcome": "State the primary objective of qualitative analysis in identifying the specific elements present in an unknown organic compound",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/qualitative-analysis-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-constituent-elements-list",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Elements in Organic Compounds",
+      "outcome": "List the typical constituent elements of organic compounds detected in qualitative analysis, including carbon, hydrogen, nitrogen, sulphur, halogens, and phosphorus",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-analysis-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/qualitative-analysis-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-vs-quantitative-distinction",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Qualitative vs Quantitative Analysis",
+      "outcome": "Distinguish between qualitative analysis (detecting element identity) and quantitative analysis (determining element percentage composition) in organic chemistry",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-analysis-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/qualitative-analysis-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-covalent-to-ionic-conversion-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Covalent to Ionic Conversion Principle",
+      "outcome": "Explain why covalently bound heteroatoms in organic compounds must be converted into water-soluble ionic forms prior to qualitative chemical detection",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-constituent-elements-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/qualitative-analysis-of-organic-compounds"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-cuo-oxidation-c-h",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Oxidation of C and H using CuO",
+      "outcome": "Write balanced chemical equations for the oxidation of carbon to carbon dioxide and hydrogen to water by heating an organic compound with dry copper(II) oxide",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-constituent-elements-list"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/detection-of-carbon-and-hydrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-co2-limewater-detection",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Detection of CO2 using Lime Water",
+      "outcome": "Identify the formation of a white precipitate of calcium carbonate making lime water turbid and write the corresponding chemical equation for the detection of carbon",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-cuo-oxidation-c-h"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/detection-of-carbon-and-hydrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-h2o-cuso4-detection",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Detection of Water using Anhydrous CuSO4",
+      "outcome": "Identify the colour change of white anhydrous copper(II) sulphate to blue hydrated copper(II) sulphate for the detection of hydrogen",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-cuo-oxidation-c-h"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/detection-of-carbon-and-hydrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-excess-co2-limewater-clearing",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Effect of Excess CO2 on Lime Water",
+      "outcome": "Explain the disappearance of turbidity upon passing excess carbon dioxide through lime water due to the formation of soluble calcium hydrogen carbonate",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-co2-limewater-detection"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/detection-of-carbon-and-hydrogen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-quantitative-analysis-scope",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Scope of Quantitative Analysis",
+      "outcome": "Define quantitative elemental analysis and state how determining percentage composition leads to empirical and molecular formulas",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-vs-quantitative-distinction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-analysis"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-estimation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Phosphorus Estimation via Carius Method",
+      "outcome": "Calculate the percentage of phosphorus in an organic compound from the mass of magnesium pyrophosphate precipitate obtained after oxidation with fuming nitric acid",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-halogens-sulphur"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-analysis"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-estimation-methods",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Estimation of Oxygen Percentage",
+      "outcome": "Determine the percentage of oxygen in an organic compound either by difference or directly from the mass of carbon dioxide formed in the catalytic cracking-iodometric method",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-analysis"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-empirical-formula-from-analysis",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Empirical and Molecular Formula Calculation",
+      "outcome": "Derive the empirical and molecular formulas of an organic compound given its elemental percentage compositions and molar mass",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-quantitative-analysis-scope",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-analysis"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Carius Sulphur Estimation Principle",
+      "outcome": "State the principle of Carius method for sulphur estimation involving oxidation of sulphur to sulphuric acid by heating with fuming nitric acid",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-quantitative-analysis-scope"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-sulphur"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-precipitation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Precipitation of Sulphate as Barium Sulphate",
+      "outcome": "Identify barium chloride solution as the reagent used to precipitate sulphate ions quantitatively as insoluble barium sulphate",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-sulphur"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-formula-derivation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Sulphur Estimation Mathematical Formula",
+      "outcome": "Derive the mathematical expression for the percentage of sulphur as (32 / 233) * (mass of BaSO4 / mass of organic compound) * 100",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-precipitation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-sulphur"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-percentage-calculation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Calculate Sulphur Percentage from Carius Data",
+      "outcome": "Calculate the percentage of sulphur in an organic compound from experimental masses of the compound and barium sulphate precipitate",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-formula-derivation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-sulphur"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-oxidation-principle",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Oxidation of Phosphorus in Carius Method",
+      "outcome": "State the principle of oxidizing phosphorus in an organic compound to phosphoric acid (H3PO4) by heating with fuming nitric acid in a Carius tube",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-phosphorus"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-precipitate-forms",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Precipitation Forms for Phosphorus Estimation",
+      "outcome": "Identify ammonium phosphomolybdate ((NH4)3PO4.12MoO3) and magnesium pyrophosphate (Mg2P2O7) as the two gravimetric forms used for estimating phosphorus",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-oxidation-principle"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-phosphorus"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-ammonium-phosphomolybdate-percentage",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Phosphorus Percentage via Ammonium Phosphomolybdate",
+      "outcome": "Calculate the percentage of phosphorus from the mass of ammonium phosphomolybdate precipitate using the formula (31 / 1877) * (mass of precipitate / mass of compound) * 100",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-precipitate-forms"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-phosphorus"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-magnesium-pyrophosphate-percentage",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Phosphorus Percentage via Magnesium Pyrophosphate",
+      "outcome": "Calculate the percentage of phosphorus from the mass of magnesium pyrophosphate precipitate using the formula (62 / 222) * (mass of Mg2P2O7 / mass of compound) * 100",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-precipitate-forms",
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-estimation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-phosphorus"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-percentage-by-difference",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Oxygen Percentage by Difference",
+      "outcome": "Calculate the percentage of oxygen by subtracting the sum of percentages of all other constituent elements from 100",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-combustion-c-h-estimation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-oxygen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-reactions",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Aluise Method Chemical Reactions",
+      "outcome": "Write balanced chemical equations for the pyrolysis of an organic compound over red-hot carbon to form CO and its subsequent oxidation by iodine pentoxide (I2O5) to CO2",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-estimation-methods"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-oxygen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-stoichiometry",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Aluise Method Stoichiometric Ratio",
+      "outcome": "Derive the stoichiometric relationship showing that 1 mole of O2 (32 g oxygen) corresponds to 2 moles of CO2 (88 g CO2) or 1 mole of liberated I2 in Aluise's method",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-reactions"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-oxygen"
+    },
+    {
+      "id": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-oxygen-percentage-calculation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "organic-chemistry-some-basic-principles-and-techniques",
+      "title": "Oxygen Percentage via Aluise Method",
+      "outcome": "Calculate the percentage of oxygen in an organic compound from the measured mass of carbon dioxide formed in Aluise's method using the formula (32 / 88) * (mass of CO2 / mass of compound) * 100",
+      "prerequisites": [
+        "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-stoichiometry"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/organic-chemistry-some-basic-principles-and-techniques/quantitative-oxygen"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-general-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "General Formula of Alkanes",
+      "outcome": "State the general molecular formula of open-chain alkanes as CnH2n+2 and determine the molecular formula for an alkane given its carbon number",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-saturated-nature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Saturated Nature of Alkanes",
+      "outcome": "Identify alkanes as saturated hydrocarbons containing only single carbon-carbon and carbon-hydrogen sigma bonds with sp3-hybridised carbon atoms",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-paraffins-etymology",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Historical Name Paraffins",
+      "outcome": "Explain the origin of the term 'paraffins' (from Latin parum affinis, meaning little affinity) based on the relative chemical inertness of alkanes",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-saturated-nature"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkanes-chemical-inertness-cause",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Inertness Under Normal Conditions",
+      "outcome": "Explain why alkanes do not react with acids, bases, oxidising agents, or reducing agents under normal conditions due to strong non-polar C-C and C-H bonds",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkanes-paraffins-etymology"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkanes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-general-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "General Formula of Alkenes",
+      "outcome": "State the general molecular formula of open-chain alkenes as CnH2n and calculate the formula for a given carbon number",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-unsaturated-nature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Unsaturation in Alkenes",
+      "outcome": "Identify alkenes as unsaturated hydrocarbons containing at least one carbon-carbon double bond",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-general-formula"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-olefins-etymology",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Origin of Term Olefins",
+      "outcome": "Explain why alkenes are historically termed 'olefins' based on the Latin origin meaning 'oil-forming'",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-unsaturated-nature"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkenes-ethene-oily-products",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Oil Formation with Chlorine",
+      "outcome": "Name the reaction of ethene (ethylene) with chlorine to form an oily liquid (ethylene dichloride) as the historical basis for the name olefin",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkenes-olefins-etymology"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkenes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-definition",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Definition of Alkynes",
+      "outcome": "Identify alkynes as unsaturated acyclic hydrocarbons containing at least one carbon-carbon triple bond",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-general-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "General Formula of Alkynes",
+      "outcome": "State the general molecular formula of open-chain alkynes as CnH2n-2 and calculate the molecular formula for a given carbon number",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-ethyne-structure",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Structure of Ethyne",
+      "outcome": "Draw the Lewis structure and structural formula of ethyne (acetylene) as the simplest alkyne with the formula C2H2",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-general-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-homologous-series",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Homologous Series of Alkynes",
+      "outcome": "List the first four members of the alkyne homologous series (ethyne, propyne, butyne, pentyne) and derive their molecular formulas",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-general-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-iupac-naming-rules",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "IUPAC naming of linear alkynes",
+      "outcome": "Derive IUPAC names for straight-chain alkynes by replacing the suffix '-ane' with '-yne' and numbering the principal carbon chain to give the triple bond the lowest locant",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-homologous-series"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-branched-nomenclature",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "IUPAC naming of branched alkynes",
+      "outcome": "Construct IUPAC names for branched alkynes prioritizing the carbon-carbon triple bond over alkyl substituents when selecting and numbering the principal carbon chain",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-iupac-naming-rules"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-position-isomerism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Position isomerism in alkynes",
+      "outcome": "Draw and name position isomers of alkynes (such as but-1-yne and but-2-yne) by varying the position of the carbon-carbon triple bond along a constant carbon chain",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-iupac-naming-rules"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-chain-isomerism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Chain isomerism in alkynes",
+      "outcome": "Write structural formulas and IUPAC names of all chain and position isomers for a given alkyne molecular formula (such as C5H8)",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-branched-nomenclature",
+        "class11-chemistry-hydrocarbons-alkynes-position-isomerism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-sp-hybridisation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "sp Hybridisation in Ethyne",
+      "outcome": "Describe the sp hybridisation of carbon atoms in ethyne involving one 2s and one 2p orbital to form two linear sp hybrid orbitals",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-ethyne-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-structure-of-triple-bond"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-sigma-bond-framework",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Sigma Framework of Ethyne",
+      "outcome": "Identify the formation of one C-C sigma bond by sp-sp orbital overlap and two C-H sigma bonds by sp-1s orbital overlap in ethyne",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-sp-hybridisation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-structure-of-triple-bond"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-pi-bonds-formation",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Pi Bond Formation in Alkynes",
+      "outcome": "Explain the formation of two mutually perpendicular pi bonds via lateral overlap of unhybridised 2py and 2pz orbitals in ethyne",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-sigma-bond-framework"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-structure-of-triple-bond"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-alkynes-cylindrical-electron-cloud",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Cylindrical Pi Electron Cloud and Bond Parameters",
+      "outcome": "Describe the cylindrical symmetry of the pi electron cloud, the 180 degree bond angle, and the short C-C bond length (120 pm) in ethyne",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-alkynes-pi-bonds-formation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/alkynes-structure-of-triple-bond"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-definition-arenes",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Definition of Arenes",
+      "outcome": "Define arenes as aromatic hydrocarbons containing one or more planar, conjugated cyclic rings such as benzene",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-classification"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-etymology",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Origin of the Term Aromatic",
+      "outcome": "Explain the origin of the term 'aromatic' from the Greek word 'aroma' (meaning pleasant fragrance) based on the sweet-smelling nature of early isolated representatives",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-definition-arenes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-benzenoid-nonbenzenoid",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Benzenoid vs Non-benzenoid Compounds",
+      "outcome": "Classify aromatic hydrocarbons into benzenoid (containing benzene rings) and non-benzenoid compounds based on their ring structure",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-definition-arenes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-monocyclic-polycyclic",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Monocyclic and Polycyclic Arenes",
+      "outcome": "Distinguish between monocyclic arenes (like benzene and toluene) and polycyclic isolated or fused arenes (like diphenyl, naphthalene, and anthracene)",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-benzenoid-nonbenzenoid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-mono-substituted-benzene-naming",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Nomenclature of Mono-substituted Benzenes",
+      "outcome": "Write IUPAC and common names for mono-substituted benzene derivatives such as methylbenzene (toluene), methoxybenzene (anisole), and aminobenzene (aniline)",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-benzenoid-nonbenzenoid"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-disubstituted-benzene-locants",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Ortho, Meta, Para Prefixes and Locants",
+      "outcome": "Assign ortho (1,2-), meta (1,3-), and para (1,4-) prefixes and numerical locants to di-substituted benzene derivatives",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-mono-substituted-benzene-naming"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-disubstituted-benzene-isomerism",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Positional Isomers of Disubstituted Benzenes",
+      "outcome": "Draw and distinguish all three positional isomers (1,2-, 1,3-, and 1,4-) for a given disubstituted benzene (such as dimethylbenzene or xylene)",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-disubstituted-benzene-locants"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-polysubstituted-benzene-iupac",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "IUPAC Rules for Polysubstituted Benzenes",
+      "outcome": "Derive IUPAC names for tri- and poly-substituted benzene rings by applying the lowest locant rule and alphabetical order of substituents",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-disubstituted-benzene-locants"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-nomenclature-and-isomerism"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-benzene-discovery-formula",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Benzene Discovery and Formula",
+      "outcome": "State the molecular formula of benzene as C6H6 and recall its historical isolation by Michael Faraday.",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-definition-arenes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/structure-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-kekule-structure-proposal",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Kekule Structure of Benzene",
+      "outcome": "Draw Kekulé's cyclic hexagonal structure of benzene with alternating single and double carbon-carbon bonds.",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-benzene-discovery-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/structure-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-kekule-disubstitution-problem",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Kekule Dynamic Equilibrium Hypothesis",
+      "outcome": "Explain Kekulé's oscillating dynamic equilibrium proposal to account for the existence of only one 1,2-disubstituted isomer instead of two.",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-kekule-structure-proposal",
+        "class11-chemistry-hydrocarbons-disubstituted-benzene-isomerism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/structure-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-kekule-structure-limitations",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Limitations of Kekule Structure",
+      "outcome": "Explain the failures of Kekulé's structure in accounting for benzene's unusual chemical stability, reluctance towards addition reactions, and uniform C-C bond lengths.",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-kekule-disubstitution-problem"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/structure-of-benzene"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-physical-state-odour",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Physical State and Odour of Arenes",
+      "outcome": "State the physical states and characteristic pleasant aroma of simple aromatic hydrocarbons like benzene and naphthalene",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-definition-arenes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-physical-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-polarity-and-solubility",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Polarity and Solubility of Arenes",
+      "outcome": "Explain why aromatic hydrocarbons are non-polar molecules that are immiscible with water but readily dissolve in organic solvents",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-aromatic-definition-arenes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-physical-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-sooty-flame-combustion",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Sooty Flame of Aromatic Hydrocarbons",
+      "outcome": "Explain why aromatic hydrocarbons burn with a characteristic sooty (luminous) flame based on their high carbon-to-hydrogen ratio",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-benzene-discovery-formula"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-physical-properties"
+    },
+    {
+      "id": "class11-chemistry-hydrocarbons-aromatic-melting-boiling-trends",
+      "klass": 11,
+      "subject": "Chemistry",
+      "chapter": "hydrocarbons",
+      "title": "Melting and Boiling Trends of Arenes",
+      "outcome": "Compare the melting and boiling points of substituted aromatic hydrocarbons based on molecular mass, symmetry, and crystal lattice packing",
+      "prerequisites": [
+        "class11-chemistry-hydrocarbons-disubstituted-benzene-isomerism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-chemistry/hydrocarbons/aromatic-hydrocarbons-physical-properties"
     }
   ]
 }

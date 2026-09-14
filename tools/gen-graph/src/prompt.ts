@@ -16,11 +16,33 @@ export interface NodesPromptOptions {
   klass: number;
   subject: string;
   /**
-   * Ids already in the map for this class and subject. Generated prerequisites
-   * may point at these, which is what stops each batch becoming an island.
+   * Ids already in the map for this class and subject. A generated node may
+   * not re-use one of these, and generated prerequisites may point at them,
+   * which is what stops each batch becoming an island.
    */
   existingIds: string[];
-  /** Roughly how many nodes to produce for this chapter. */
+  /**
+   * The nodes the model is allowed to point an edge AT, with their outcomes.
+   * Defaults to every id in `existingIds`, with no outcome text.
+   *
+   * The topic-gap pass narrows this to the chapter's own nodes, and the reason
+   * is measured: an earlier whole-chapter run hung new chapters off chapter
+   * ROOTS, and the descendant closures that produced are absurd —
+   * class11-biology's "define-taxon" blocks 337 of 462 nodes, class9-science's
+   * "define-motion-relative-to-reference" blocks 279 of 725. One wrong answer
+   * about taxonomy then lowers belief across the whole of biology. Nodes added
+   * to a chapter that is already populated do not need to reach outside it, so
+   * they are not offered the chance.
+   */
+  linkable?: readonly Pick<LearningNode, 'id' | 'outcome'>[];
+  /**
+   * Decompose ONLY these topics of the chapter, leaving the rest alone. Used
+   * to fill topics that hold no outcomes inside a chapter that already does —
+   * the gap the chapter-at-a-time generator cannot see, because it skips any
+   * chapter that has nodes.
+   */
+  onlyTopicIds?: readonly string[];
+  /** Roughly how many nodes to produce for this chapter (or, scoped, per topic). */
   targetCount: number;
 }
 
@@ -63,6 +85,30 @@ is reachable. Rules:
   chemistry, not biology. Those edges are what make a diagnostic able to find
   the real cause of a gap instead of its symptom.`;
 
+/**
+ * The edge rule for a chapter that is ALREADY populated.
+ *
+ * A separate block rather than a clause on EDGES, because it says the opposite
+ * thing and the two must never appear in one prompt: EDGES exists to talk a
+ * from-scratch chapter into reaching across the subject, and this exists to
+ * stop a handful of new nodes hanging themselves off whatever node in the
+ * chapter looked most foundational. Measured on the committed maps: one
+ * class11-biology node blocks 337 of 462, one class9-science node blocks 279
+ * of 725. At that fan-out a single wrong answer condemns a whole subject.
+ */
+const EDGES_IN_CHAPTER = `PREREQUISITE EDGES
+
+"prerequisites" lists the node ids a student must already hold before this one
+is reachable. Rules:
+- Point at ids in THIS batch, or at ids from the chapter listed below. Those are
+  the only ids that exist for you; anything else is rejected.
+- The graph must stay ACYCLIC. If A lists B, then B must not reach A.
+- Prefer few, real edges. An edge means "genuinely cannot do this without that",
+  not "these are related" and not "this comes later in the textbook".
+- Most of these nodes should have ONE prerequisite or none. You are filling gaps
+  in a chapter somebody already wrote, and an edge into a node the rest of the
+  chapter already depends on makes one wrong answer condemn the chapter.`;
+
 const FIELDS = `EACH NODE IS EXACTLY THIS SHAPE:
 {
   "id": "<syllabusPrefix>-<chapter>-<short-slug>",   lowercase, hyphenated, unique
@@ -87,34 +133,72 @@ export function buildNodesPrompt(
   chapter: Chapter,
   opts: NodesPromptOptions,
 ): { system: string; user: string } {
+  const wanted = new Set(opts.onlyTopicIds ?? []);
+  const scoped = wanted.size > 0;
+  const todo = scoped ? chapter.topics.filter((t) => wanted.has(t.id)) : chapter.topics;
+  const linkable = opts.linkable ?? opts.existingIds.map((id) => ({ id, outcome: '' }));
+
   const system = [
     'You are a curriculum architect building a Learning Outcome Map for Indian school students (NCERT/CBSE). The map is a directed acyclic graph of atomic learning outcomes joined by prerequisite edges, and it is used to diagnose exactly where a student stopped understanding.',
     ATOMICITY,
-    EDGES,
+    scoped ? EDGES_IN_CHAPTER : EDGES,
     FIELDS,
     `AUDIENCE: Class ${opts.klass} ${opts.subject}. Use the vocabulary an NCERT textbook for this class would use — correct technical terms, no university-level framing.`,
     'Reply with ONLY a JSON object of the form {"nodes": [ ... ]}. No markdown fences, no commentary.',
   ].join('\n\n');
 
-  const lines = [
-    `Decompose this chapter into roughly ${opts.targetCount} atomic learning outcome nodes.`,
-    '',
-    `CHAPTER: ${chapter.title}  (id: "${chapter.id}")`,
-    'ITS TOPICS, each of which should yield SEVERAL nodes:',
-  ];
+  const lines = scoped
+    ? [
+        'The topics listed below have NO learning outcomes behind them at all. A class',
+        'taught on one of them records nothing, because there is no outcome for it to be',
+        `recorded against. Write roughly ${opts.targetCount} nodes for EACH topic listed, and nothing`,
+        'at all for any other topic.',
+        '',
+        `CHAPTER: ${chapter.title}  (id: "${chapter.id}")`,
+        'THE TOPICS TO DECOMPOSE - every node you write belongs to one of these:',
+      ]
+    : [
+        `Decompose this chapter into roughly ${opts.targetCount} atomic learning outcome nodes.`,
+        '',
+        `CHAPTER: ${chapter.title}  (id: "${chapter.id}")`,
+        'ITS TOPICS, each of which should yield SEVERAL nodes:',
+      ];
 
-  for (const topic of chapter.topics) {
+  for (const topic of todo) {
     lines.push(`\n- ${topic.title} (id: "${topic.id}")`);
     for (const objective of topic.objectives) lines.push(`    objective: ${objective}`);
   }
 
-  if (opts.existingIds.length > 0) {
+  // The rest of the chapter, by TITLE only. It is context for where the
+  // boundaries of these topics lie, and it must not be decomposed - listing
+  // its objectives too would read as more work to do, and the model would
+  // duly do it, re-creating outcomes the chapter already holds.
+  const rest = scoped ? chapter.topics.filter((t) => !wanted.has(t.id)) : [];
+  if (rest.length > 0) {
     lines.push(
       '',
-      'NODES ALREADY IN THE MAP for this class and subject. Reuse these ids in',
-      '"prerequisites" wherever this chapter genuinely builds on them, and do NOT',
-      're-create them:',
-      ...opts.existingIds.map((id) => `  ${id}`),
+      'THE REST OF THE CHAPTER, already covered. Write NOTHING for these:',
+      ...rest.map((t) => `  ${t.title}`),
+    );
+  }
+
+  if (linkable.length > 0) {
+    lines.push(
+      '',
+      ...(scoped
+        ? [
+            'NODES ALREADY IN THIS CHAPTER. These are the only ids you may point a',
+            'prerequisite at, and you must not re-create them:',
+          ]
+        : [
+            'NODES ALREADY IN THE MAP for this class and subject. Reuse these ids in',
+            '"prerequisites" wherever this chapter genuinely builds on them, and do NOT',
+            're-create them:',
+          ]),
+      // With the outcome alongside, where there is one. A bare id is enough to
+      // point an edge at, and not enough to know whether the outcome you are
+      // about to write is already there under another slug.
+      ...linkable.map((n) => (n.outcome ? `  ${n.id}: ${n.outcome}` : `  ${n.id}`)),
     );
   }
 
@@ -157,9 +241,22 @@ Example — note correctIndex is 2 here, so the BLANK is at index 2, not index 0
                    "",
                    "confuses side and chamber type together"]
 
+ALL FOUR OPTIONS MUST BE ABOUT THE SAME LENGTH.
+
+This rule used to read "no option longer than the correct answer", which is the
+instruction that produced the defect: across the 4,494 probes written under it,
+the correct answer is strictly the longest option in 36.8% of questions and 55%
+in one bank, so a student who always picks the longest without reading scores
+43.6% where guessing should buy 25%. A placement test that can be passed by
+counting words measures nothing.
+
+So: write the correct answer first, then make every distractor carry the same
+amount of detail. If the right answer needs a qualifier, give the wrong ones a
+qualifier too. A batch where the correct answer is usually the longest is
+REJECTED MECHANICALLY and sent back.
+
 BANNED: "all of the above", "none of the above", options that are obviously
-silly, options that differ only by a typo, and options longer than the correct
-answer (students learn to pick the longest).`;
+silly, and options that differ only by a typo.`;
 
 export function buildProbesPrompt(
   nodes: LearningNode[],

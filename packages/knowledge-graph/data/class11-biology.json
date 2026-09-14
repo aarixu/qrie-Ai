@@ -6132,6 +6132,374 @@
       ],
       "difficulty": 4,
       "topicRef": "class11-biology/chemical-coordination-and-integration/mechanism-of-hormone-action"
+    },
+    {
+      "id": "class11-biology-animal-kingdom-notochord-origin-structure",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "animal-kingdom",
+      "title": "Notochord Origin and Structure",
+      "outcome": "State that the notochord is a mesodermally derived, rod-like supporting structure formed on the dorsal side during embryonic development",
+      "prerequisites": [
+        "class11-biology-animal-kingdom-germ-layers-diploblastic-triploblastic"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/animal-kingdom/notochord"
+    },
+    {
+      "id": "class11-biology-animal-kingdom-notochord-dorsal-location",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "animal-kingdom",
+      "title": "Dorsal Position of Notochord",
+      "outcome": "Identify the anatomical position of the notochord as running along the dorsal midline between the digestive tract and the central nervous system",
+      "prerequisites": [
+        "class11-biology-animal-kingdom-notochord-origin-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/animal-kingdom/notochord"
+    },
+    {
+      "id": "class11-biology-animal-kingdom-classify-chordates-nonchordates",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "animal-kingdom",
+      "title": "Classify Chordates and Non-chordates",
+      "outcome": "Classify animals into chordates and non-chordates based on the presence or absence of a notochord at any stage of life",
+      "prerequisites": [
+        "class11-biology-animal-kingdom-notochord-origin-structure"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/animal-kingdom/notochord"
+    },
+    {
+      "id": "class11-biology-animal-kingdom-notochord-phyla-survey",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "animal-kingdom",
+      "title": "Identify Non-chordate Phyla",
+      "outcome": "Identify all animal phyla from Porifera to Hemichordata as non-chordates due to the complete absence of a notochord",
+      "prerequisites": [
+        "class11-biology-animal-kingdom-classify-chordates-nonchordates"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/animal-kingdom/notochord"
+    },
+    {
+      "id": "class11-biology-morphology-of-flowering-plants-seed-definition-and-origin",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "morphology-of-flowering-plants",
+      "title": "Seed Definition and Origin",
+      "outcome": "Define a seed as a mature, fertilized ovule consisting of a seed coat and an embryo",
+      "prerequisites": [
+        "class11-biology-morphology-of-flowering-plants-gynoecium-placentation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/morphology-of-flowering-plants/the-seed"
+    },
+    {
+      "id": "class11-biology-morphology-of-flowering-plants-seed-basic-components",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "morphology-of-flowering-plants",
+      "title": "Basic Components of a Seed",
+      "outcome": "Identify the basic components of a seed as the protective seed coat and the enclosed embryo comprising an embryonal axis and cotyledons",
+      "prerequisites": [
+        "class11-biology-morphology-of-flowering-plants-seed-definition-and-origin"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/morphology-of-flowering-plants/the-seed"
+    },
+    {
+      "id": "class11-biology-morphology-of-flowering-plants-endosperm-nature-and-function",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "morphology-of-flowering-plants",
+      "title": "Role of the Endosperm",
+      "outcome": "Describe the endosperm as a food-storing tissue formed as a result of double fertilization in angiosperm seeds",
+      "prerequisites": [
+        "class11-biology-morphology-of-flowering-plants-seed-basic-components"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/morphology-of-flowering-plants/the-seed"
+    },
+    {
+      "id": "class11-biology-morphology-of-flowering-plants-endospermous-vs-non-endospermous-seeds",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "morphology-of-flowering-plants",
+      "title": "Endospermous vs Non-Endospermous Seeds",
+      "outcome": "Differentiate endospermous (albuminous) seeds from non-endospermous (exalbuminous) seeds based on the persistence or complete consumption of the endosperm, citing examples like castor, pea, and bean",
+      "prerequisites": [
+        "class11-biology-morphology-of-flowering-plants-endosperm-nature-and-function"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/morphology-of-flowering-plants/the-seed"
+    },
+    {
+      "id": "class11-biology-biomolecules-energy-currency-atp",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "ATP as Cellular Energy Currency",
+      "outcome": "Identify adenosine triphosphate (ATP) as the universal chemical energy currency in living systems",
+      "prerequisites": [
+        "class11-biology-biomolecules-nucleotide-components-and-bases"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/biomolecules/metabolic-basis-for-living"
+    },
+    {
+      "id": "class11-biology-biomolecules-energy-coupling-anabolism-catabolism",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Energy Coupling via ATP",
+      "outcome": "Explain how energy released during catabolic pathways is trapped in ATP to drive anabolic processes",
+      "prerequisites": [
+        "class11-biology-biomolecules-metabolism-flux-anabolism-catabolism",
+        "class11-biology-biomolecules-energy-currency-atp"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/biomolecules/metabolic-basis-for-living"
+    },
+    {
+      "id": "class11-biology-biomolecules-glycolysis-energy-extraction",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Energy Extraction in Glycolysis",
+      "outcome": "Identify the 10-step catabolic conversion of glucose to lactic acid or pyruvic acid as an energy-releasing pathway yielding ATP",
+      "prerequisites": [
+        "class11-biology-biomolecules-energy-coupling-anabolism-catabolism"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/biomolecules/metabolic-basis-for-living"
+    },
+    {
+      "id": "class11-biology-biomolecules-metabolic-basis-work-performance",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Metabolic Energy for Biological Work",
+      "outcome": "Describe how energy derived from metabolic pathways powers cellular and physiological work such as biosynthesis and mechanical movement",
+      "prerequisites": [
+        "class11-biology-biomolecules-living-state-non-equilibrium",
+        "class11-biology-biomolecules-energy-coupling-anabolism-catabolism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-biology/biomolecules/metabolic-basis-for-living"
+    },
+    {
+      "id": "class11-biology-biomolecules-physical-vs-chemical-change",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Physical vs Chemical Transformations",
+      "outcome": "Distinguish between a physical change and a chemical reaction by identifying whether bonds are broken and new bonds are formed.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "topicRef": "class11-biology/biomolecules/chemical-reactions"
+    },
+    {
+      "id": "class11-biology-biomolecules-reaction-rate-definition",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Defining Rate of Chemical Reaction",
+      "outcome": "State the rate of a chemical or metabolic reaction as the amount of product formed per unit time (rate = delta P / delta t).",
+      "prerequisites": [
+        "class11-biology-biomolecules-physical-vs-chemical-change"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/biomolecules/chemical-reactions"
+    },
+    {
+      "id": "class11-biology-biomolecules-temperature-coefficient-q10",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Temperature Coefficient (Q10 Rule)",
+      "outcome": "Apply the general rule of thumb that reaction rate doubles or halves for every 10 degree Celsius change in temperature in either direction.",
+      "prerequisites": [
+        "class11-biology-biomolecules-reaction-rate-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/biomolecules/chemical-reactions"
+    },
+    {
+      "id": "class11-biology-biomolecules-uncatalyzed-vs-catalyzed-rate",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "biomolecules",
+      "title": "Comparing Uncatalyzed and Catalyzed Rates",
+      "outcome": "Calculate and compare the rate enhancement of an enzymatic reaction over an uncatalyzed reaction, such as carbonic anhydrase producing carbonic acid.",
+      "prerequisites": [
+        "class11-biology-biomolecules-reaction-rate-definition",
+        "class11-biology-biomolecules-enzymes-as-biocatalysts"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-biology/biomolecules/chemical-reactions"
+    },
+    {
+      "id": "class11-biology-photosynthesis-in-higher-plants-biosynthetic-phase-definition",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "photosynthesis-in-higher-plants",
+      "title": "Biosynthetic Phase Definition",
+      "outcome": "Define the dark reaction (biosynthetic phase) as the enzymatic process in the stroma that uses ATP and NADPH from light reactions to fix CO2 into sugars.",
+      "prerequisites": [
+        "class11-biology-photosynthesis-in-higher-plants-chloroplast-sites-of-reactions"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/photosynthesis-in-higher-plants/where-are-the-atp-and-nadph-used"
+    },
+    {
+      "id": "class11-biology-photosynthesis-in-higher-plants-calvin-radioactive-tracer-discovery",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "photosynthesis-in-higher-plants",
+      "title": "Discovery of the First CO2 Fixation Product",
+      "outcome": "Identify 3-phosphoglyceric acid (PGA) as the first stable CO2 fixation product identified by Melvin Calvin using radioactive 14C in algal photosynthesis.",
+      "prerequisites": [
+        "class11-biology-photosynthesis-in-higher-plants-biosynthetic-phase-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/photosynthesis-in-higher-plants/where-are-the-atp-and-nadph-used"
+    },
+    {
+      "id": "class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c3",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "photosynthesis-in-higher-plants",
+      "title": "Primary CO2 Acceptor in C3 Pathway",
+      "outcome": "Identify ribulose-1,5-bisphosphate (RuBP), a 5-carbon ketose sugar, as the primary CO2 acceptor molecule in the C3 pathway.",
+      "prerequisites": [
+        "class11-biology-photosynthesis-in-higher-plants-calvin-radioactive-tracer-discovery"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/photosynthesis-in-higher-plants/where-are-the-atp-and-nadph-used"
+    },
+    {
+      "id": "class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c4",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "photosynthesis-in-higher-plants",
+      "title": "Primary CO2 Acceptor in C4 Pathway",
+      "outcome": "Identify phosphoenolpyruvate (PEP), a 3-carbon compound, as the primary CO2 acceptor that forms the 4-carbon oxaloacetic acid (OAA) in C4 plants.",
+      "prerequisites": [
+        "class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c3"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/photosynthesis-in-higher-plants/where-are-the-atp-and-nadph-used"
+    },
+    {
+      "id": "class11-biology-plant-growth-and-development-pgr-definition-and-types",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "plant-growth-and-development",
+      "title": "Definition of Plant Growth Regulators",
+      "outcome": "Define plant growth regulators (PGRs) as small, simple molecules of diverse chemical composition that regulate plant growth and development",
+      "prerequisites": [
+        "class11-biology-plant-growth-and-development-development-pathway"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/plant-growth-and-development/plant-growth-regulators"
+    },
+    {
+      "id": "class11-biology-plant-growth-and-development-five-major-pgr-classes",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "plant-growth-and-development",
+      "title": "Five Major Classes of PGRs",
+      "outcome": "List the five major groups of plant growth regulators: auxins, gibberellins, cytokinins, abscisic acid, and ethylene",
+      "prerequisites": [
+        "class11-biology-plant-growth-and-development-pgr-definition-and-types"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/plant-growth-and-development/plant-growth-regulators"
+    },
+    {
+      "id": "class11-biology-plant-growth-and-development-promoters-vs-inhibitors-grouping",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "plant-growth-and-development",
+      "title": "Growth Promoters vs Growth Inhibitors",
+      "outcome": "Categorize the five major plant hormones into plant growth promoters (auxins, gibberellins, cytokinins) and plant growth inhibitors (abscisic acid, ethylene)",
+      "prerequisites": [
+        "class11-biology-plant-growth-and-development-five-major-pgr-classes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/plant-growth-and-development/plant-growth-regulators"
+    },
+    {
+      "id": "class11-biology-plant-growth-and-development-chemical-nature-of-pgrs",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "plant-growth-and-development",
+      "title": "Chemical Nature of Plant Hormones",
+      "outcome": "Match each major plant hormone to its chemical nature, including indole derivatives, adenine derivatives, terpenes, carotenoid derivatives, and gases",
+      "prerequisites": [
+        "class11-biology-plant-growth-and-development-five-major-pgr-classes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/plant-growth-and-development/plant-growth-regulators"
+    },
+    {
+      "id": "class11-biology-breathing-and-exchange-of-gases-blood-as-gas-transport-medium",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "breathing-and-exchange-of-gases",
+      "title": "Blood as Gas Transport Medium",
+      "outcome": "Identify blood as the common transport medium for both oxygen and carbon dioxide between the respiratory surface and tissues",
+      "prerequisites": [
+        "class11-biology-breathing-and-exchange-of-gases-partial-pressure-concept"
+      ],
+      "difficulty": 1,
+      "topicRef": "class11-biology/breathing-and-exchange-of-gases/transport-of-gases"
+    },
+    {
+      "id": "class11-biology-breathing-and-exchange-of-gases-compare-o2-co2-transport-modes",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "breathing-and-exchange-of-gases",
+      "title": "Compare O2 and CO2 Transport Modes",
+      "outcome": "Compare the percentage distributions of oxygen and carbon dioxide transported in dissolved form versus erythrocyte-bound forms",
+      "prerequisites": [
+        "class11-biology-breathing-and-exchange-of-gases-oxygen-transport-modes",
+        "class11-biology-breathing-and-exchange-of-gases-co2-transport-modes"
+      ],
+      "difficulty": 2,
+      "topicRef": "class11-biology/breathing-and-exchange-of-gases/transport-of-gases"
+    },
+    {
+      "id": "class11-biology-breathing-and-exchange-of-gases-tissue-level-gas-exchange",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "breathing-and-exchange-of-gases",
+      "title": "Tissue-Level Gas Exchange Dynamics",
+      "outcome": "Trace the simultaneous unloading of O2 and uptake of CO2 by blood capillaries at the systemic tissue level",
+      "prerequisites": [
+        "class11-biology-breathing-and-exchange-of-gases-oxygen-delivery-to-tissues",
+        "class11-biology-breathing-and-exchange-of-gases-carbonic-anhydrase-mechanism"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-biology/breathing-and-exchange-of-gases/transport-of-gases"
+    },
+    {
+      "id": "class11-biology-breathing-and-exchange-of-gases-alveolar-level-gas-exchange",
+      "klass": 11,
+      "subject": "Biology",
+      "chapter": "breathing-and-exchange-of-gases",
+      "title": "Alveolar-Level Gas Exchange Dynamics",
+      "outcome": "Trace the simultaneous loading of O2 onto hemoglobin and release of CO2 from carbamino-hemoglobin and bicarbonate at the alveolar capillaries",
+      "prerequisites": [
+        "class11-biology-breathing-and-exchange-of-gases-oxyhemoglobin-formation",
+        "class11-biology-breathing-and-exchange-of-gases-co2-delivery-to-alveoli"
+      ],
+      "difficulty": 3,
+      "topicRef": "class11-biology/breathing-and-exchange-of-gases/transport-of-gases"
     }
   ]
 }

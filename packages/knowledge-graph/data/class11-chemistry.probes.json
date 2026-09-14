@@ -3870,6 +3870,1878 @@
         "thinks precipitation starts only at exact saturation without an excess of ions",
         "thinks precipitation depends on the absolute value of Ksp being greater than 1 rather than comparing Qsp with Ksp"
       ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-vital-force-theory",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-vital-force-theory",
+      "question": "How did Friedrich Wöhler's experiment in 1828 disprove the Vital Force Theory?",
+      "options": [
+        "He extracted pure urea from animal urine without using any external living tissue.",
+        "He showed that plants produce complex carbohydrates using sunlight rather than vital forces.",
+        "He synthesized an organic compound, urea, by heating inorganic ammonium cyanate.",
+        "He synthesized inorganic salts directly by decomposing pure organic tissues in a lab."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses isolation of a natural product from biological fluids with laboratory synthesis from inorganic precursors",
+        "confuses photosynthesis discoveries with Wöhler's laboratory synthesis",
+        "",
+        "reverses the reaction direction, thinking vital force was disproved by breaking organic matter into inorganic minerals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-catenation-property",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-catenation-property",
+      "question": "Why does carbon exhibit an exceptionally strong tendency for catenation compared to silicon?",
+      "options": [
+        "The small atomic size of carbon produces a particularly strong and stable C-C single bond.",
+        "Carbon has vacant d-orbitals that allow extra bonding stability in extensive chains.",
+        "Carbon has lower electronegativity, which prevents repulsion between adjacent atoms.",
+        "Carbon forms predominantly ionic bonds that resist dissociation in ring frameworks."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes carbon possesses accessible d-orbitals for expanded valence bonding",
+        "thinks low electronegativity enhances catenation rather than bond strength resulting from small covalent radii",
+        "confuses covalent catenation with ionic lattice formation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-multiple-bonding",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carbon-multiple-bonding",
+      "question": "Which characteristic of carbon enables it to form stable multiple bonds (double and triple bonds) with itself and heteroatoms like oxygen and nitrogen?",
+      "options": [
+        "Its empty 2d subshell stabilizes electron density through back-bonding interactions.",
+        "Its high electropositive character allows complete transfer of multiple valence electrons.",
+        "Its large atomic radius minimizes nuclear repulsion between doubly bonded nuclei.",
+        "Its small atomic size allows effective sideways overlap of unhybridized 2p orbitals."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "falsely assumes second-period elements have a 2d subshell",
+        "treats organic multiple bonding as ionic electron transfer rather than covalent pi-bonding",
+        "thinks larger atomic size reduces repulsion and favors multiple bonding instead of preventing effective pi overlap",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-tetravalency-diversity",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-tetravalency-diversity",
+      "question": "Which combination of fundamental properties accounts for the existence of millions of distinct organic compounds?",
+      "options": [
+        "High ionic lattice energy, variable oxidation states, and coordinate bond formation.",
+        "Radioactive decay pathways, high electrical conductivity, and paramagnetic behavior.",
+        "High chemical inertness, d-orbital hybridization, and spontaneous dimerization tendencies.",
+        "Strong catenation ability, fixed tetravalency, and widespread occurrence of isomerism."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses transition metal characteristics with carbon's structural properties",
+        "attributes chemical diversity to nuclear and bulk physical properties rather than bonding behavior",
+        "assumes carbon compounds are diverse due to inertness and d-orbital availability",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-complete-formula-utility",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-complete-formula-utility",
+      "question": "What is the primary limitation of using a complete (Lewis-type) structural formula for large organic molecules?",
+      "options": [
+        "It fails to display the connectivity between heteroatoms and carbon atoms in the chain.",
+        "It violates IUPAC conventions by showing non-bonding valence electron lone pairs.",
+        "It cannot distinguish between single, double, and triple bonds present in the structure.",
+        "It becomes excessively cluttered and tedious by explicitly drawing every single covalent bond."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes complete structural formulas omit heteroatom connectivity",
+        "thinks drawing complete Lewis representations is forbidden under IUPAC naming guidelines",
+        "confuses complete formulas with molecular formulas that lack bond-order information",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-condensed-formula-utility",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-condensed-formula-utility",
+      "question": "How does the condensed structural formula represent six consecutive repeating -CH2- units in an unbranched alkane chain?",
+      "options": [
+        "By indicating the carbons as (CH)12 to denote the total number of carbon and hydrogen atoms.",
+        "By writing the segment as -(CH2)6- to compress the linear chain without drawing individual bonds.",
+        "By drawing a zig-zag line enclosed in parentheses with a subscript 6 at the terminal carbon.",
+        "By writing [C6H12] with brackets to show that the atoms form a discrete cyclic subunit."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses repeating functional units -(CH2)n- with an incorrect combined formula (CH)2n",
+        "",
+        "mixes skeletal zig-zag notation with condensed parenthetical notation",
+        "interprets linear chain repetition notation as representing a closed ring subunit"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-line-formula-utility",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-bond-line-formula-utility",
+      "question": "In a bond-line (skeletal) structural representation of an organic molecule, how are carbon and hydrogen atoms depicted?",
+      "options": [
+        "Carbon atoms are represented at line vertices/ends, while attached hydrogens are omitted implicitly.",
+        "Carbon atoms are drawn as solid dots, and all hydrogen atoms are written with explicit 'H' symbols.",
+        "Every carbon atom must be written as 'C', but attached hydrogen bonds are omitted entirely.",
+        "Carbon atoms are omitted entirely, but all attached hydrogen atoms must be explicitly labeled."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks bond-line formulas still require explicit lettering for all hydrogen atoms",
+        "confuses partially condensed structures with bond-line skeletal notation",
+        "reverses the skeletal rule, thinking carbon is hidden while hydrogen letters are explicitly written"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-compare-representation-methods",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-compare-representation-methods",
+      "question": "Which structural representation is most practical for clearly displaying the framework of a complex, polycyclic steroid molecule?",
+      "options": [
+        "A complete Lewis formula that displays every individual C-H bond line across all rings.",
+        "A molecular formula that lists only the overall counts of carbon, hydrogen, and oxygen atoms.",
+        "A bond-line (skeletal) formula that depicts the ring vertices without cluttering C and H text.",
+        "A purely empirical formula that expresses the smallest whole-number ratio of constituent atoms."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "underestimates the severe visual clutter of drawing dozens of explicit C-H bonds in polycyclic systems",
+        "fails to realize that molecular formulas convey zero connectivity or stereochemical framework information",
+        "",
+        "confuses simplest stoichiometric ratios with structural communication tools"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-trivial-system-origins",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-trivial-system-origins",
+      "question": "What is the historical origin of the common name 'formic acid' for HCOOH?",
+      "options": [
+        "It was named after 'formetum', referring to the sour milk in which it was first detected.",
+        "It was derived from the Latin word 'formica', referring to red ants from which it was distilled.",
+        "It was named from the Greek word 'formos', meaning strong pungent odor and skin irritation.",
+        "It was derived from 'acetum', which was the Latin term for fermented fruit vinegar residues."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the origin of lactic acid (sour milk) with formic acid",
+        "",
+        "thinks the trivial name was derived from a sensory descriptive property rather than its biological source",
+        "confuses the etymological origin of acetic acid (acetum) with formic acid"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-vs-iupac-match",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-vs-iupac-match",
+      "question": "Which pair correctly matches a common (trivial) name with its systematic IUPAC name?",
+      "options": [
+        "Acetone — Propan-2-one",
+        "Formic acid — Ethanoic acid",
+        "Acetaldehyde — Methanal",
+        "Acetic acid — Methanoic acid"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses one-carbon formic acid (methanoic acid) with two-carbon ethanoic acid",
+        "confuses two-carbon acetaldehyde (ethanal) with one-carbon formaldehyde (methanal)",
+        "confuses two-carbon acetic acid (ethanoic acid) with one-carbon methanoic acid"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-branched-prefixes",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-common-branched-prefixes",
+      "question": "Which alkyl group structure corresponds to an 'isopropyl' group?",
+      "options": [
+        "-CH2-CH2-CH3",
+        "-C(CH3)3",
+        "-CH(CH3)2",
+        "-CH2-C(CH3)3"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses branched isopropyl with straight-chain n-propyl",
+        "confuses isopropyl (3 carbons) with tert-butyl (4 carbons)",
+        "",
+        "confuses isopropyl (3 carbons) with neopentyl (5 carbons)"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-systematic-vs-trivial-utility",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-systematic-vs-trivial-utility",
+      "question": "Why did the systematic IUPAC nomenclature become essential as organic chemistry developed?",
+      "options": [
+        "Trivial names could not be translated into languages other than English, Latin, and German.",
+        "Trivial naming relied on memory of isolated sources and could not uniquely name vast numbers of isomers.",
+        "Common names gave exact physical boiling points, which altered when lab measurement techniques changed.",
+        "Common names became legally restricted by international patent laws for industrial chemical production."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the limitation was linguistic translation rather than structural ambiguity and sheer scale",
+        "",
+        "believes common names were tied to numeric physical constants rather than source/history",
+        "confuses nomenclature standardization with modern patent and copyright laws"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-word-roots",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-word-roots",
+      "question": "Which IUPAC word root correctly represents an unbranched chain containing four carbon atoms?",
+      "options": [
+        "Prop-",
+        "Meth-",
+        "Pent-",
+        "But-"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the word root for 3 carbons with that for 4 carbons",
+        "confuses the word root for 1 carbon with that for 4 carbons",
+        "confuses the word root for 5 carbons with that for 4 carbons",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-primary-suffixes",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-primary-suffixes",
+      "question": "Which primary suffix is used in IUPAC nomenclature to indicate the presence of a carbon-carbon triple bond?",
+      "options": [
+        "-ol",
+        "-ene",
+        "-ane",
+        "-yne"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses secondary functional group suffixes with primary saturation suffixes",
+        "thinks -ene indicates a triple bond rather than a double bond",
+        "thinks -ane indicates unsaturation rather than complete saturation",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-name-components",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-name-components",
+      "question": "In the IUPAC name 'butan-2-ol', which part represents the primary suffix?",
+      "options": [
+        "butan",
+        "ol",
+        "an",
+        "but"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the combination of word root and primary suffix as a single primary suffix",
+        "confuses the secondary suffix for the functional group with the primary suffix",
+        "",
+        "confuses the basic carbon chain word root with the primary suffix"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-straight-chain-naming",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-iupac-straight-chain-naming",
+      "question": "What is the systematic IUPAC name for a straight-chain hydrocarbon containing five carbon atoms and only single bonds?",
+      "options": [
+        "Pentane",
+        "Butane",
+        "Pentene",
+        "Hexane"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses the word root for four carbons instead of five carbons",
+        "assigns an alkene primary suffix to a fully saturated hydrocarbon chain",
+        "uses the word root for six carbons instead of five carbons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-definition",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-definition",
+      "question": "Which statement precisely defines the phenomenon of isomerism in organic chemistry?",
+      "options": [
+        "Compounds having the same empirical formula but different total numbers of shared electrons.",
+        "Compounds having identical structural formulas but different elemental percentages by mass.",
+        "Compounds having identical molecular formulas but distinct physical or chemical properties.",
+        "Compounds having the same physical state but completely different molecular weights."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses isomers with polymers or compounds sharing only an empirical formula",
+        "thinks isomers can share structural formulas while differing in elemental mass composition",
+        "",
+        "believes sharing physical state defines isomerism regardless of molecular weight"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-broad-classification",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-isomerism-broad-classification",
+      "question": "What is the fundamental basis for dividing isomerism into structural isomerism and stereoisomerism?",
+      "options": [
+        "Differences in functional group identity versus differences in chain length.",
+        "Differences in total molecular weight versus differences in state of matter.",
+        "Differences in overall optical activity versus differences in chemical reactivity.",
+        "Differences in atom connectivity versus differences in spatial 3D orientation."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses specific sub-types of structural isomerism with the broad two-class division",
+        "thinks structural isomers and stereoisomers differ in their molecular weights",
+        "views optical activity as the main dividing line for all broad isomerism classes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-structural-isomer-types",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-structural-isomer-types",
+      "question": "Which set contains exclusively subcategories of structural isomerism?",
+      "options": [
+        "Chain isomerism, position isomerism, and geometrical isomerism.",
+        "Chain isomerism, position isomerism, and functional group isomerism.",
+        "Geometrical isomerism, optical isomerism, and conformational isomerism.",
+        "Optical isomerism, functional group isomerism, and metamerism."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "includes geometrical isomerism as a type of structural isomerism",
+        "",
+        "lists stereochemical subdivisions instead of structural isomerism categories",
+        "includes optical isomerism as a subtype of structural isomerism"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-stereoisomer-types",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-list-stereoisomer-types",
+      "question": "Which two classes represent the primary subdivisions of stereoisomerism?",
+      "options": [
+        "Chain isomerism and position isomerism.",
+        "Geometrical isomerism and optical isomerism.",
+        "Functional group isomerism and metamerism.",
+        "Geometrical isomerism and tautomerism."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses primary structural isomer categories with stereoisomer subdivisions",
+        "",
+        "mistakes structural isomerism subdivisions for the two main types of stereoisomers",
+        "classifies tautomerism as a primary category of stereoisomerism"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-mechanism-definition",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-mechanism-definition",
+      "question": "What is the complete definition of an organic reaction mechanism?",
+      "options": [
+        "A step-by-step description of electron movement, bond breaking, bond making, and energy changes.",
+        "A balanced chemical equation that simply lists the starting reactants alongside the final products.",
+        "A quantitative statement of the maximum theoretical yield obtained from given reactant quantities.",
+        "A laboratory protocol specifying the exact temperature, solvent volume, and catalyst used."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the stoichiometric overall equation with the detailed reaction mechanism",
+        "confuses reaction stoichiometry and yield calculations with the reaction mechanism",
+        "thinks an experimental procedure or recipe constitutes the chemical reaction mechanism"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-substrate-reagent-distinction",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-substrate-reagent-distinction",
+      "question": "In an organic reaction, how is the substrate typically distinguished from the attacking reagent?",
+      "options": [
+        "The substrate is always added in excess, while the reagent is the limiting compound.",
+        "The substrate is the molecule supplying carbon, while the reagent attacks that carbon center.",
+        "The substrate is always an inorganic salt, while the attacking reagent is an organic molecule.",
+        "The substrate speeds up the rate, while the attacking reagent supplies all necessary energy."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses stoichiometric excess with the formal definition of organic substrate",
+        "",
+        "reverses the roles, assuming substrate must be inorganic and reagent organic",
+        "confuses the substrate's role with that of a reaction catalyst"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-intermediate-role",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-reaction-intermediate-role",
+      "question": "Which statement accurately describes a reaction intermediate in a multi-step organic reaction?",
+      "options": [
+        "A stable initial reactant that provides activation energy directly to surrounding solvent molecules.",
+        "A permanent chemical species that remains completely unreacted at the conclusion of the transformation.",
+        "A short-lived, high-energy species formed during an intermediate step and consumed before products form.",
+        "A transition state that cannot possess any measurable lifetime or distinct chemical bonds."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks intermediates are stable starting materials rather than generated transient species",
+        "confuses a reactive intermediate with a spectator species or unreacted starting material",
+        "",
+        "confuses a reaction intermediate with an activated transition state complex"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mechanism-energy-kinetics-outline",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-mechanism-energy-kinetics-outline",
+      "question": "How do mechanistic energy profiles explain why one product forms faster than another in competing pathways?",
+      "options": [
+        "The pathway possessing the lowest activation energy barrier proceeds at the fastest rate.",
+        "The pathway with the most endothermic overall energy change always reacts most rapidly.",
+        "The pathway that generates the highest number of intermediate steps proceeds fastest.",
+        "The pathway involving only homolytic cleavage occurs faster regardless of barrier height."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses overall thermodynamic enthalpy change with the kinetic activation barrier",
+        "believes having more intermediate steps automatically increases the reaction velocity",
+        "assumes the type of bond cleavage dictates speed independent of activation energy"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-vs-temporary-effects",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-vs-temporary-effects",
+      "question": "Which of the following electron displacement effects exists in a molecule only during an attack by an external reagent?",
+      "options": [
+        "Inductive effect",
+        "Electromeric effect",
+        "Hyperconjugation effect",
+        "Resonance effect"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Thinks the inductive effect requires an attacking reagent to create a permanent dipole",
+        "",
+        "Believes hyperconjugation occurs only when an attacking species draws out the sigma bond",
+        "Confuses dynamic resonance stabilization with temporary polarizability caused by an external reagent"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-effects-list",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-permanent-effects-list",
+      "question": "Which set contains only permanent electron displacement effects present in the ground state of organic molecules?",
+      "options": [
+        "Inductive effect, resonance effect, and hyperconjugation",
+        "Inductive effect, electromeric effect, and resonance effect",
+        "Electromeric effect, hyperconjugation, and mesomeric effect",
+        "Electromeric effect, inductomeric effect, and resonance effect"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Believes that the electromeric effect is a permanent ground-state property of molecules",
+        "Thinks the electromeric effect persists in the absence of an attacking reagent",
+        "Confuses temporary polarization effects like electromeric and inductomeric with permanent effects"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-temporary-effects-identify",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-temporary-effects-identify",
+      "question": "What is the primary defining characteristic of the electromeric effect (E-effect)?",
+      "options": [
+        "Permanent polarization of a sigma bond due to electronegativity differences",
+        "Permanent shift of pi-electrons resulting in multiple equivalent resonance structures",
+        "Delocalization of sigma electrons into an adjacent empty or partially filled p-orbital",
+        "Complete transfer of a shared pi-electron pair demanded by an attacking reagent"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses the electromeric effect with the permanent inductive effect operating in sigma bonds",
+        "Confuses the electromeric effect with the permanent resonance or mesomeric effect",
+        "Confuses the electromeric effect with hyperconjugation involving sigma-p orbital overlap",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sigma-vs-pi-displacement",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sigma-vs-pi-displacement",
+      "question": "Which pair of electron displacement effects both involve the displacement or delocalization of sigma-electrons?",
+      "options": [
+        "Resonance effect and inductive effect",
+        "Inductive effect and hyperconjugation",
+        "Electromeric effect and resonance effect",
+        "Hyperconjugation and electromeric effect"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Believes that the resonance effect operates through sigma-electron shifting rather than pi-electrons",
+        "",
+        "Thinks that both the electromeric effect and resonance operate entirely via sigma bonds",
+        "Thinks the electromeric effect involves the displacement of sigma-bond electrons"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-sublimation-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-sublimation-principle",
+      "question": "Under what condition is sublimation used as the primary technique to purify an organic solid?",
+      "options": [
+        "The compound sublimes on heating while the associated impurities do not",
+        "The compound is miscible with water but insoluble in non-polar organic solvents",
+        "The compound has a high boiling point and decomposes near its boiling point",
+        "The compound shows a large difference in solubility between hot and cold solvents"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Confuses the principle of differential solvent extraction with sublimation",
+        "Confuses the principle of vacuum distillation with the principle of sublimation",
+        "Confuses the criteria required for fractional crystallisation with sublimation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-crystallisation-solvent-choice",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-crystallisation-solvent-choice",
+      "question": "Which solubility profile makes a solvent ideal for purifying an organic solid by crystallisation?",
+      "options": [
+        "Highly soluble at room temperature and completely insoluble at elevated temperatures",
+        "Sparingly soluble at room temperature but highly soluble at elevated temperatures",
+        "Equally highly soluble in the solvent at both room temperature and high temperatures",
+        "Completely insoluble in the solvent at room temperature and at boiling temperatures"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Thinks solubility must decrease with increasing temperature to allow precipitation",
+        "",
+        "Believes constant high solubility across all temperatures allows efficient crystal recovery",
+        "Thinks a totally insoluble solvent can dissolve and re-precipitate crystals upon cooling"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-differential-extraction-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-differential-extraction-principle",
+      "question": "How does differential extraction recover an organic compound from an aqueous solution?",
+      "options": [
+        "By shaking with an immiscible organic solvent in which the compound is much more soluble",
+        "By selectively evaporating the aqueous layer leaving the organic solid behind in the vessel",
+        "By passing the mixture through a column where the organic compound adsorbs preferentially",
+        "By cooling the aqueous mixture until the organic compound precipitates out as crystals"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Confuses differential extraction with simple evaporation of a solvent mixture",
+        "Confuses liquid-liquid differential extraction with column chromatography separation",
+        "Confuses differential extraction with fractional crystallisation from aqueous solution"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-method-selection-strategy",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-purification-method-selection-strategy",
+      "question": "Which method is best suited to purify a liquid that decomposes at its normal boiling point?",
+      "options": [
+        "Simple distillation at normal pressure",
+        "Purification by direct sublimation",
+        "Distillation under reduced pressure",
+        "Differential extraction with ether"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Overlooks thermal decomposition occurring during normal distillation at standard atmospheric pressure",
+        "Suggests sublimation for a liquid substance rather than for a sublimable solid",
+        "",
+        "Selects extraction for a single thermally sensitive pure liquid instead of vacuum distillation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-definition",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-definition",
+      "question": "What phase transition takes place during the process of sublimation?",
+      "options": [
+        "Melting of a solid into a liquid followed immediately by boiling into a gas",
+        "Conversion of a liquid into vapour followed by condensation back into a solid",
+        "Direct transition of a solid into vapour without passing through a liquid state",
+        "Transition of a gas directly into a dense liquid under high external pressure"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Believes melting is a mandatory intermediate step that happens too quickly to see",
+        "Thinks sublimation involves a very rapid intermediate liquid phase during heating",
+        "",
+        "Confuses the term sublimation with condensation or liquefaction of gases"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimable-compounds-list",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimable-compounds-list",
+      "question": "Which of the following organic compounds readily undergoes sublimation upon heating?",
+      "options": [
+        "Glycerol",
+        "Sucrose",
+        "Urea",
+        "Naphthalene"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses viscous high-boiling liquids with typical sublimable organic solids",
+        "Thinks common crystalline solids like sugars undergo sublimation instead of caramelization/melting",
+        "Believes that urea sublimes rather than melting and thermally decomposing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-apparatus-setup",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-apparatus-setup",
+      "question": "In a standard laboratory sublimation setup, why is the stem of the inverted glass funnel plugged with cotton?",
+      "options": [
+        "To prevent atmospheric air from reacting chemically with the heated sample",
+        "To absorb any non-sublimable liquid impurities that splash during heating",
+        "To prevent the escaped vapours of the sublimable solid from leaving the funnel",
+        "To filter solid particles before they reach the inner surface of the funnel"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Believes the cotton plug creates an airtight barrier to stop oxidation",
+        "Thinks the cotton plug acts as an absorbent for liquid splashes from the dish",
+        "",
+        "Confuses the cotton plug at the stem top with the perforated filter paper at the base"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-separation-procedure",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-sublimation-separation-procedure",
+      "question": "During the purification of benzoic acid by sublimation, where is the pure product collected?",
+      "options": [
+        "Retained on top of the perforated filter paper as an unevaporated dry cake",
+        "Left behind at the bottom of the china dish after non-sublimable vapours escape",
+        "Collected as a condensed liquid dripping into a beaker placed below the dish",
+        "Deposited on the cooled inner walls of the inverted funnel as a solid"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Thinks the purified product stays behind on the filter paper while impurities vaporize",
+        "Confuses the residue of non-sublimable impurities in the dish with the purified product",
+        "Believes the vapour condenses to a liquid and drips down rather than depositing as solid",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-principle",
+      "question": "What is the underlying principle of purifying an organic solid by simple crystallisation?",
+      "options": [
+        "The compound and its impurities differ significantly in their boiling points at atmospheric pressure.",
+        "The compound undergoes sublimation upon heating while the impurities remain unchanged in the solid residue.",
+        "The compound is sparingly soluble at low temperature but highly soluble at high temperature in the chosen solvent.",
+        "The compound exhibits a significantly higher partition coefficient between two immiscible liquid solvents."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses crystallisation with distillation",
+        "confuses crystallisation with sublimation",
+        "",
+        "confuses crystallisation with differential solvent extraction"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-steps-procedure",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-steps-procedure",
+      "question": "What is the correct sequential order of steps carried out during the crystallisation of an impure solid?",
+      "options": [
+        "Dissolving in hot solvent, hot filtration of insoluble matter, cooling the filtrate, and filtering crystals.",
+        "Dissolving in hot solvent, cooling slowly to form crystals, hot filtration, and separating by suction.",
+        "Cooling the solution, filtering off insoluble matter, heating to dissolve, and drying the crystals.",
+        "Filtering insoluble matter cold, boiling down to total dryness, washing with solvent, and collecting solid."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks insoluble impurities are filtered out only after crystal formation",
+        "thinks crystallisation starts with cooling before dissolution",
+        "confuses crystallisation with complete evaporation to dryness"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-activated-charcoal",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-crystallisation-activated-charcoal",
+      "question": "Why is a small amount of activated animal charcoal added during the preparation of a hot solution for crystallisation?",
+      "options": [
+        "It acts as a reducing agent to convert colored impurities into colorless soluble products.",
+        "It provides a large surface area to selectively adsorb colored impurities from the hot solution.",
+        "It neutralizes trace acidic impurities and raises the boiling temperature of the organic solvent.",
+        "It acts as a seeding material that speeds up the growth of large pure solute crystals upon cooling."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks charcoal bleaches impurities by chemical reduction",
+        "",
+        "thinks charcoal acts as a base or alters boiling point",
+        "confuses activated charcoal with crystal seed nuclei"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-fractional-crystallisation-separation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-fractional-crystallisation-separation",
+      "question": "How does fractional crystallisation separate two solid compounds dissolved in the same solvent?",
+      "options": [
+        "The more soluble compound crystallises out first upon cooling, leaving the less soluble one dissolved.",
+        "Both compounds crystallise simultaneously, and their crystals are separated mechanically by mesh filtration.",
+        "One compound reacts chemically with the hot solvent to form an insoluble precipitate while the other stays intact.",
+        "The less soluble compound crystallises out first upon cooling, while the more soluble one remains dissolved."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the more soluble compound precipitates first upon cooling",
+        "thinks fractional crystallisation yields mixed crystals that require manual physical sorting",
+        "thinks separation relies on chemical reaction with solvent rather than differential solubility",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-differential-extraction-solubility-criterion",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-differential-extraction-solubility-criterion",
+      "question": "Which set of criteria must an organic solvent satisfy for successful differential extraction from an aqueous solution?",
+      "options": [
+        "It must be completely miscible with water and have a lower boiling point than the organic solute.",
+        "It must form a homogenous single layer with water and have a significantly higher density than water.",
+        "It must react reversibly with the organic compound and be completely immiscible with all organic solvents.",
+        "It must be immiscible with water and dissolve the target organic compound much better than water does."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the extraction solvent must mix homogenously with water",
+        "confuses immiscibility requirements, believing a single phase should be formed",
+        "thinks extraction involves a chemical reaction rather than physical partitioning",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-separating-funnel-operation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-separating-funnel-operation",
+      "question": "Why is the stopcock of a separating funnel periodically opened while inverting it during liquid-liquid extraction?",
+      "options": [
+        "To release the internal pressure generated by volatile solvent vapours and dissolved gases.",
+        "To allow air to enter so that the two liquids can mix thoroughly and form an emulsion.",
+        "To drain out tiny amounts of insoluble solid impurities before settling the two layers.",
+        "To ensure atmospheric pressure forces the denser liquid layer to settle down rapidly."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks venting is done to suck air in to enhance mixing",
+        "thinks opening the stopcock while inverted drains solid particulates",
+        "thinks venting is used to accelerate gravitational layer separation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-multiple-extractions-advantage",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-multiple-extractions-advantage",
+      "question": "Why is performing multiple extractions with smaller portions of solvent more efficient than a single extraction with the total volume?",
+      "options": [
+        "Smaller volumes prevent the organic solvent from evaporating rapidly during shaking inside the separating funnel.",
+        "Smaller volumes of organic solvent increase the partition coefficient of the solute in favor of the organic layer.",
+        "Successive extractions continually shift the equilibrium, leaving less total solute behind in the aqueous layer.",
+        "Each successive extraction creates smaller emulsion droplets that increase the chemical reactivity of the solute."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks multiple extractions are used primarily to minimize solvent evaporation losses",
+        "thinks the partition coefficient changes with solvent volume rather than being a constant at a given temperature",
+        "",
+        "thinks extraction efficiency depends on emulsion formation and chemical reactivity"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-continuous-extraction-indication",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-continuous-extraction-indication",
+      "question": "Under which condition is continuous extraction preferred over simple batch extraction using a separating funnel?",
+      "options": [
+        "When the organic compound has an extremely high solubility in the organic extracting solvent.",
+        "When the organic compound has a very low distribution coefficient in the extracting solvent.",
+        "When the organic compound is highly volatile and decomposes near room temperature.",
+        "When the organic compound reacts rapidly with water to form an insoluble solid salt."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks continuous extraction is needed for compounds that partition very readily into the organic phase",
+        "",
+        "thinks continuous extraction is designed to prevent thermal decomposition of volatile solutes",
+        "thinks continuous extraction is used for water-reactive compounds rather than low-partitioning solutes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-analysis-definition",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-analysis-definition",
+      "question": "What is the primary objective of qualitative analysis of an unknown organic compound?",
+      "options": [
+        "To calculate the exact percentage by mass of each constituent element present.",
+        "To determine the identity of the specific elements present in the compound.",
+        "To determine the molecular mass and 3D crystal geometry of the compound.",
+        "To measure the standard enthalpy of combustion of the organic substance."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses qualitative analysis with quantitative analysis",
+        "",
+        "confuses elemental qualitative detection with molecular structure determination",
+        "confuses qualitative analysis with thermochemical measurement"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-constituent-elements-list",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-constituent-elements-list",
+      "question": "Which of the following groups contains only the elements typically tested during elemental analysis of organic compounds?",
+      "options": [
+        "Nitrogen, oxygen, magnesium, iron, and copper.",
+        "Carbon, silicon, aluminium, calcium, and sodium.",
+        "Hydrogen, helium, boron, carbon, and potassium.",
+        "Carbon, hydrogen, nitrogen, sulphur, and halogens."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "includes transition metals and alkali earth metals instead of typical organic non-metallic heteroatoms",
+        "confuses typical organic heteroatoms with abundant inorganic earth elements",
+        "includes inert noble gases and light main-group elements not typically found in organic testing",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-vs-quantitative-distinction",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-qualitative-vs-quantitative-distinction",
+      "question": "How does qualitative organic analysis fundamentally differ from quantitative organic analysis?",
+      "options": [
+        "Qualitative identifies which elements are present, while quantitative determines their numerical percentages.",
+        "Qualitative measures the numerical mass of elements, while quantitative determines functional group classes.",
+        "Qualitative is performed on liquid samples, while quantitative analysis is performed exclusively on solid samples.",
+        "Qualitative requires instrumental spectroscopy, while quantitative uses only wet chemical precipitation methods."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "swaps the definitions of qualitative and quantitative analysis",
+        "thinks the distinction is based on the physical state of matter",
+        "thinks qualitative analysis requires instruments while quantitative uses only wet tests"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-covalent-to-ionic-conversion-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-covalent-to-ionic-conversion-principle",
+      "question": "Why must organic compounds be fused with sodium metal (Lassaigne's test) before testing for nitrogen, sulphur, or halogens?",
+      "options": [
+        "To oxidize the heteroatoms into volatile covalent oxides that can easily bubble through test reagents.",
+        "To lower the melting point of the organic compound so that it dissolves completely in cold concentrated acids.",
+        "To convert covalently bound heteroatoms into water-soluble ionic sodium salts suitable for inorganic ionic tests.",
+        "To remove all carbon and hydrogen as gaseous products so they do not interfere with colorimetric tests."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks fusion oxidizes heteroatoms to covalent gases rather than reducing them to ionic salts",
+        "thinks sodium fusion is used merely to alter physical melting points and acid solubility",
+        "",
+        "thinks sodium fusion completely combusts carbon and hydrogen into gases"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-cuo-oxidation-c-h",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-cuo-oxidation-c-h",
+      "question": "Which pair of balanced chemical equations correctly represents the oxidation of carbon and hydrogen present in an organic compound when heated with dry copper(II) oxide?",
+      "options": [
+        "C + 2CuO -> CO2 + Cu2O and 2H + 2CuO -> H2O + Cu2O",
+        "C + CuO -> CO + Cu and H2 + CuO -> H2O + Cu",
+        "C + 2CuO -> CO2 + 2Cu and 2H + CuO -> H2O + Cu",
+        "C + 4CuO -> CO2 + 2Cu2O and 4H + 2CuO -> 2H2O + Cu2"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks copper(II) oxide is reduced to copper(I) oxide instead of elemental copper",
+        "thinks carbon is oxidised only to carbon monoxide rather than carbon dioxide by copper(II) oxide",
+        "",
+        "balances the reaction incorrectly with unreduced or improperly formulated copper species"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-co2-limewater-detection",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-co2-limewater-detection",
+      "question": "In the qualitative detection of carbon, the evolved carbon dioxide turns lime water milky. Which balanced equation accounts for this turbidity?",
+      "options": [
+        "Ca(OH)2 + CO2 -> CaHCO3 + H2O",
+        "Ca(OH)2 + 2CO2 -> Ca(HCO3)2",
+        "CaO + CO2 -> CaCO3",
+        "Ca(OH)2 + CO2 -> CaCO3 + H2O"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses calcium carbonate with a monovalent hydrogen carbonate formula",
+        "confuses the initial milky precipitate with the soluble hydrogen carbonate formed in excess CO2",
+        "confuses slaked lime in solution with solid quicklime",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-h2o-cuso4-detection",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-h2o-cuso4-detection",
+      "question": "How is the water produced during the copper(II) oxide test for hydrogen in an organic compound experimentally confirmed?",
+      "options": [
+        "It turns blue anhydrous copper(II) sulphate to a white hydrated salt.",
+        "It turns colourless liquid copper(II) sulphate into a green precipitate.",
+        "It turns pink anhydrous cobalt(II) chloride to a bright blue solution.",
+        "It turns white anhydrous copper(II) sulphate to blue pentahydrate crystals."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "inverts the colours of anhydrous and hydrated copper(II) sulphate",
+        "thinks copper(II) sulphate starts as a liquid and precipitates green",
+        "confuses the colour change direction of cobalt chloride paper",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-excess-co2-limewater-clearing",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-excess-co2-limewater-clearing",
+      "question": "Why does the milky turbidity of lime water clear up when excess carbon dioxide gas is bubbled through it?",
+      "options": [
+        "Insoluble calcium carbonate decomposes back into soluble calcium hydroxide and water.",
+        "Insoluble calcium carbonate dissolves by converting into soluble calcium hydrogen carbonate.",
+        "The excess carbon dioxide lowers the solution pH, converting calcium carbonate to calcium oxide.",
+        "The precipitate settles rapidly at the bottom because calcium carbonate forms a denser crystalline phase."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the precipitation reaction simply reverses back to the original reactants",
+        "",
+        "thinks acidification of the solution produces calcium oxide rather than a soluble hydrogen carbonate",
+        "thinks the clearing is purely a physical settling process rather than a chemical reaction"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-quantitative-analysis-scope",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-quantitative-analysis-scope",
+      "question": "What is the primary objective of quantitative elemental analysis in determining the chemical formula of an unknown organic compound?",
+      "options": [
+        "To measure the percentage by mass of each element to determine empirical and molecular formulas.",
+        "To identify which functional groups and heteroatoms are present in the sample.",
+        "To measure the boiling point and refractive index to verify the purity of the sample.",
+        "To isolate individual atoms by mass spectrometry to establish the 3D stereochemistry."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses qualitative functional group detection with quantitative elemental analysis",
+        "confuses physical purity criteria with quantitative elemental determination",
+        "confuses stereochemical analysis with elemental composition analysis"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-estimation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-estimation",
+      "question": "In a Carius estimation of phosphorus, 0.25 g of an organic compound yields 0.222 g of magnesium pyrophosphate (Mg2P2O7, molar mass = 222 g/mol). What is the percentage of phosphorus in the compound? (Atomic mass of P = 31)",
+      "options": [
+        "12.4%",
+        "31.0%",
+        "24.8%",
+        "49.6%"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses 31 instead of 62 for phosphorus in Mg2P2O7, forgetting there are two phosphorus atoms per formula unit",
+        "assumes the ratio of P to Mg2P2O7 is directly 31/222 without accounting for compound sample mass correctly",
+        "",
+        "doubles the correct percentage by multiplying stoichiometry incorrectly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-estimation-methods",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-estimation-methods",
+      "question": "In the direct estimation of oxygen by the Unterzaucher method, how is the oxygen present in the organic compound quantitatively determined?",
+      "options": [
+        "It is converted to CO over heated carbon, then oxidised to CO2 and titrated iodometrically.",
+        "It is converted to H2O over heated copper oxide, absorbed in anhydrous CaCl2, and weighed directly.",
+        "It is reacted directly with excess iodine pentoxide to form I2 and measured spectrophotometrically.",
+        "It is oxidized to ozone over platinum catalyst and estimated by titration with sodium thiosulphate."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses direct oxygen estimation with hydrogen estimation using copper oxide",
+        "thinks oxygen reacts directly with I2O5 without first being converted to carbon monoxide over hot carbon",
+        "invents a reaction pathway involving catalytic oxidation to ozone"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-empirical-formula-from-analysis",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-empirical-formula-from-analysis",
+      "question": "An organic compound contains 40.0% carbon, 6.7% hydrogen, and 53.3% oxygen by mass. If its molar mass is 60 g/mol, what are its empirical and molecular formulas? (Atomic masses: C = 12, H = 1, O = 16)",
+      "options": [
+        "Empirical formula is CH2O; molecular formula is CH2O.",
+        "Empirical formula is CH2O; molecular formula is C2H4O2.",
+        "Empirical formula is C2H4O2; molecular formula is C2H4O2.",
+        "Empirical formula is CHO; molecular formula is C2H2O2."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "finds the correct empirical formula but forgets to multiply by the factor n = 60/30 = 2 for the molecular formula",
+        "",
+        "fails to reduce the mole ratio to the simplest whole-number ratio for the empirical formula",
+        "calculates the mole ratio incorrectly by dividing mass percentages incorrectly"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-principle",
+      "question": "What is the key chemical principle underlying the estimation of sulphur by the Carius method?",
+      "options": [
+        "Sulphur is oxidised to sulphuric acid by heating with fuming nitric acid in a sealed tube.",
+        "Sulphur is reduced to hydrogen sulphide gas by heating with concentrated hydrochloric acid.",
+        "Sulphur is converted to sulphur dioxide gas by heating in a continuous stream of pure oxygen.",
+        "Sulphur is precipitated directly as elemental sulphur by adding concentrated sulphuric acid."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks the Carius method involves reduction to H2S rather than oxidation",
+        "confuses Carius method with combustion tube methods that produce gaseous SO2",
+        "thinks elemental sulphur is precipitated rather than being oxidised to sulphate ions"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-precipitation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-precipitation",
+      "question": "After oxidising the sulphur in an organic compound to sulphuric acid in the Carius method, which reagent is added to precipitate the sulphate ions quantitatively?",
+      "options": [
+        "Silver nitrate solution, forming insoluble silver sulphate.",
+        "Lead acetate solution, forming insoluble lead sulphate.",
+        "Barium chloride solution, forming insoluble barium sulphate.",
+        "Calcium chloride solution, forming insoluble calcium sulphate."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses halide precipitation using AgNO3 with sulphate precipitation",
+        "selects lead acetate, which is used for qualitative testing of H2S rather than quantitative Carius analysis",
+        "",
+        "thinks calcium chloride is used because calcium sulphate is sparingly soluble"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-formula-derivation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-formula-derivation",
+      "question": "Which mathematical expression gives the percentage of sulphur in an organic compound of mass m g yielding m1 g of BaSO4? (Molar masses: S = 32 g/mol, BaSO4 = 233 g/mol)",
+      "options": [
+        "% S = (16 / 233) * (m1 / m) * 100",
+        "% S = (233 / 32) * (m1 / m) * 100",
+        "% S = (32 / 233) * (m / m1) * 100",
+        "% S = (32 / 233) * (m1 / m) * 100"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses the atomic mass of oxygen (16) instead of sulphur (32) in the gravimetric factor",
+        "inverts the molar mass gravimetric factor of sulphur to barium sulphate",
+        "inverts the ratio of precipitate mass to organic compound mass",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-percentage-calculation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-sulphur-percentage-calculation",
+      "question": "In a Carius determination, 0.466 g of an organic compound gave 0.233 g of barium sulphate (molar mass = 233 g/mol). What is the percentage of sulphur in the compound? (Atomic mass of S = 32)",
+      "options": [
+        "3.43%",
+        "6.87%",
+        "13.73%",
+        "27.46%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "divides by the mass of BaSO4 twice or makes an arithmetic factor-of-two error",
+        "",
+        "forgets to divide the mass of sulphur (0.032 g) by the compound mass (0.466 g), computing (0.032/0.233)*100",
+        "multiplies by an extra factor of 2 during the gravimetric calculation"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-oxidation-principle",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-carius-phosphorus-oxidation-principle",
+      "question": "In the Carius method for the estimation of phosphorus, what is the chemical transformation that the phosphorus in the organic compound undergoes?",
+      "options": [
+        "Phosphorus is reduced to phosphine gas (PH3) by heating with concentrated hydrochloric acid.",
+        "Phosphorus is oxidized to phosphoric acid (H3PO4) by heating with fuming nitric acid.",
+        "Phosphorus is oxidized directly to phosphorus pentoxide (P2O5) by heating in a stream of pure dry air.",
+        "Phosphorus is converted to phosphorous acid (H3PO3) by heating with a mixture of nitric and sulfuric acids."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the Carius digestion is a reduction process yielding volatile phosphine gas",
+        "",
+        "confuses digestion in a liquid oxidizing acid with direct dry combustion in oxygen",
+        "thinks phosphorus is partially oxidized to phosphorous acid rather than fully oxidized to phosphoric acid"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-precipitate-forms",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-precipitate-forms",
+      "question": "Which pair of chemical compounds represents the two standard gravimetric precipitates used to determine phosphorus quantitatively?",
+      "options": [
+        "Ammonium phosphomolybdate ((NH4)3PO4·12MoO3) and magnesium pyrophosphate (Mg2P2O7)",
+        "Ammonium phosphate ((NH4)3PO4) and magnesium ammonium phosphate (MgNH4PO4·6H2O)",
+        "Phosphorus pentoxide (P2O5) and magnesium hydrogen phosphate (MgHPO4)",
+        "Bismuth phosphate (BiPO4) and magnesium metaphosphate (Mg(PO3)2)"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the unignited intermediate magnesium ammonium phosphate with the final weighed pyrophosphate form",
+        "mistakes oxide or acid phosphate intermediates for the final stable gravimetric weighing forms",
+        "selects incorrect phosphate salts not standardly used in quantitative organic analysis"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-ammonium-phosphomolybdate-percentage",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-ammonium-phosphomolybdate-percentage",
+      "question": "A sample of 0.50 g of an organic compound yielded 1.877 g of ammonium phosphomolybdate ((NH4)3PO4·12MoO3, molar mass = 1877 g/mol). What is the percentage of phosphorus (atomic mass = 31 g/mol) in the compound?",
+      "options": [
+        "3.10%",
+        "12.40%",
+        "9.30%",
+        "6.20%"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets to divide by the sample mass (0.50 g) and only computes the mass percentage contribution in 1 g",
+        "multiplies by 2 assuming phosphorus occurs as diatomic P2 in the stoichiometric ratio",
+        "uses 3 phosphorus atoms instead of 1 in the formula of ammonium phosphomolybdate",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-magnesium-pyrophosphate-percentage",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-phosphorus-magnesium-pyrophosphate-percentage",
+      "question": "In the estimation of phosphorus, 0.25 g of an organic compound gave 0.222 g of magnesium pyrophosphate (Mg2P2O7, molar mass = 222 g/mol). What is the percentage of phosphorus (atomic mass = 31 g/mol) in the compound?",
+      "options": [
+        "12.4%",
+        "49.6%",
+        "24.8%",
+        "6.2%"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses 31 instead of 62 in the numerator, forgetting that Mg2P2O7 contains two phosphorus atoms per mole",
+        "doubles the percentage mistakenly by counting 4 phosphorus atoms",
+        "",
+        "divides by the mass of compound incorrectly or halves the stoichiometric factor"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-percentage-by-difference",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-oxygen-percentage-by-difference",
+      "question": "An organic compound containing only carbon, hydrogen, nitrogen, and oxygen gives 40.0% carbon, 6.7% hydrogen, and 18.7% nitrogen on elemental analysis. What is the percentage of oxygen in this compound?",
+      "options": [
+        "65.4%",
+        "34.6%",
+        "45.4%",
+        "24.6%"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "adds the percentages of C, H, and N together without subtracting the total from 100%",
+        "",
+        "subtracts only carbon and hydrogen from 100%, forgetting to include nitrogen",
+        "makes an arithmetic error by subtracting the nitrogen percentage twice"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-reactions",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-reactions",
+      "question": "In Aluise's method for the direct determination of oxygen, what are the two main chemical reactions involved?",
+      "options": [
+        "Pyrolysis over red-hot copper gives CO, which is then oxidized by potassium permanganate: 2CO + KMnO4 -> K2CO3 + MnO2.",
+        "Combustion in excess oxygen gives CO2, which is then reduced over red-hot carbon: CO2 + C -> 2CO.",
+        "Pyrolysis over red-hot carbon gives CO, which is then oxidized by iodine pentoxide: 5CO + I2O5 -> 5CO2 + I2.",
+        "Pyrolysis over hot platinum gives O2, which reacts with iodine: 2O2 + I2 -> 2IO2."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the carbon-catalyzed reduction and I2O5 oxidation with a copper/permanganate redox system",
+        "inverts the sequence of reactions, thinking oxygen directly produces CO2 which is then reduced to CO",
+        "",
+        "thinks oxygen gas is directly liberated on platinum and oxidized by elemental iodine"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-stoichiometry",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-method-stoichiometry",
+      "question": "Based on the reactions in Aluise's method (Organic O -> CO, and 5CO + I2O5 -> 5CO2 + I2), what is the stoichiometric relationship between oxygen atoms/molecules and the produced CO2?",
+      "options": [
+        "1 mole of O atoms (16 g) corresponds to 1 mole of CO2 (44 g), so 1 mole of O2 (32 g) yields 2 moles of CO2 (88 g).",
+        "1 mole of O atoms (16 g) corresponds to 2 moles of CO2 (88 g), so 1 mole of O2 (32 g) yields 4 moles of CO2 (176 g).",
+        "2 moles of O atoms (32 g) correspond to 1 mole of CO2 (44 g) because carbon dioxide contains two oxygen atoms.",
+        "5 moles of O atoms (80 g) correspond to 2 moles of CO2 (88 g) due to the stoichiometric factor 5CO/I2O5."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "doubles the CO2 yield incorrectly by assuming one oxygen atom generates two carbon monoxide molecules",
+        "confuses the formula of CO2 with the reaction stoichiometry, assuming one CO2 mole comes directly from two oxygen atoms of the compound",
+        "confuses the reaction coefficient of CO (5) in the second step with the direct atomic conversion ratio of oxygen"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-oxygen-percentage-calculation",
+      "nodeId": "class11-chemistry-organic-chemistry-some-basic-principles-and-techniques-aluise-oxygen-percentage-calculation",
+      "question": "In Aluise's method, 0.44 g of an organic compound produced 0.22 g of carbon dioxide. What is the percentage of oxygen in the compound?",
+      "options": [
+        "9.09%",
+        "72.72%",
+        "36.36%",
+        "18.18%"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "uses 16/88 instead of 32/88 in the gravimetric factor, halving the actual oxygen percentage",
+        "uses 64/88 or doubles the result by misapplying molecular vs atomic oxygen mass ratios",
+        "uses 32/44 instead of 32/88, forgetting that 1 mole of O2 (32 g) corresponds to 2 moles of CO2 (88 g)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-general-formula",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-general-formula",
+      "question": "What is the molecular formula of an open-chain alkane containing 7 carbon atoms?",
+      "options": [
+        "C7H12",
+        "C7H14",
+        "C7H16",
+        "C7H18"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "applies the alkyne formula CnH2n-2 instead of the alkane formula",
+        "applies the alkene formula CnH2n instead of the alkane formula",
+        "",
+        "adds 4 instead of 2 to 2n when calculating hydrogen count"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-saturated-nature",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-saturated-nature",
+      "question": "Which set of features correctly describes the bonding and hybridisation in open-chain alkanes?",
+      "options": [
+        "Contains only single sigma bonds with sp2-hybridised carbon atoms",
+        "Contains both sigma and pi bonds with sp2-hybridised carbon atoms",
+        "Contains alternating single and double bonds with sp2-hybridised carbon atoms",
+        "Contains only single sigma bonds with sp3-hybridised carbon atoms"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "identifies single bonds correctly but confuses sp3 hybridisation with sp2",
+        "confuses saturated alkanes with unsaturated alkenes containing pi bonds",
+        "confuses saturated alkanes with conjugated unsaturated systems",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-paraffins-etymology",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-paraffins-etymology",
+      "question": "Why were alkanes historically referred to as 'paraffins'?",
+      "options": [
+        "The Latin phrase 'parum affinis' means that they have little chemical affinity.",
+        "The Latin word 'paraffina' refers to their ability to form solid waxes readily.",
+        "The Greek root 'para-affinis' describes their parallel chain-like arrangements.",
+        "The Latin phrase 'purum affinis' indicates high reactivity with strong oxidants."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "associates the name with paraffin wax rather than the Latin etymology meaning little reactivity",
+        "invents an etymological origin based on structural chain alignment",
+        "mistranslates 'parum' as 'pure/high' affinity, predicting high reactivity"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkanes-chemical-inertness-cause",
+      "nodeId": "class11-chemistry-hydrocarbons-alkanes-chemical-inertness-cause",
+      "question": "What primary factor accounts for the chemical inertness of alkanes toward acids and bases under normal conditions?",
+      "options": [
+        "Presence of completely non-polar, strong carbon-carbon and carbon-hydrogen sigma bonds",
+        "Steric hindrance from highly packed hydrogen atoms preventing any reagent approach",
+        "Delocalisation of valence electrons across the entire carbon framework of the molecule",
+        "Formation of a protective oxide coating on the outer surface of hydrocarbon chains"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes physical bulk of hydrogens rather than bond strength and non-polarity causes inertness",
+        "confuses alkanes with conjugated aromatic systems possessing delocalised electrons",
+        "applies the passivation concept of metals to organic hydrocarbon molecules"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-general-formula",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-general-formula",
+      "question": "What is the molecular formula of an open-chain mono-alkene containing 6 carbon atoms?",
+      "options": [
+        "C6H10",
+        "C6H12",
+        "C6H14",
+        "C6H16"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "applies the alkyne formula CnH2n-2 instead of the alkene formula",
+        "",
+        "applies the alkane formula CnH2n+2 instead of the alkene formula",
+        "adds extra hydrogens by confusing with fully branched saturated structures"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-unsaturated-nature",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-unsaturated-nature",
+      "question": "What structural characteristic defines acyclic alkenes as unsaturated hydrocarbons?",
+      "options": [
+        "They contain at least one carbon-carbon triple bond in the parent chain.",
+        "They contain only single covalent bonds between all adjacent carbon atoms.",
+        "They contain a closed ring of carbon atoms with only single sigma bonds.",
+        "They contain at least one carbon-carbon double bond in the parent chain."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses alkenes with alkynes which possess triple bonds",
+        "describes saturated hydrocarbons (alkanes) rather than unsaturated alkenes",
+        "describes cycloalkanes rather than acyclic unsaturated alkenes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-olefins-etymology",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-olefins-etymology",
+      "question": "Why are alkenes commonly referred to by the historical name 'olefins'?",
+      "options": [
+        "The name comes from Latin words meaning 'oil-forming' due to the products of early reactions.",
+        "The name comes from Greek words meaning 'odor-bearing' due to their sweet aromatic smell.",
+        "The name comes from Latin words meaning 'easily-flowing' due to their low liquid viscosity.",
+        "The name comes from French words meaning 'oil-dissolving' due to their non-polar solvent nature."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "guesses that the etymology relates to scent rather than oil formation",
+        "guesses that the name derives from physical flow properties of liquid alkenes",
+        "thinks 'olefin' refers to the ability to dissolve oils rather than to produce an oily substance"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkenes-ethene-oily-products",
+      "nodeId": "class11-chemistry-hydrocarbons-alkenes-ethene-oily-products",
+      "question": "Which specific reaction historically led to naming ethene (ethylene) an 'oil-forming gas'?",
+      "options": [
+        "Reaction with oxygen to form an oily liquid named ethylene oxide",
+        "Reaction with water to form an oily liquid named ethylene glycol",
+        "Reaction with chlorine to form an oily liquid named ethylene dichloride",
+        "Reaction with hydrogen to form an oily liquid named ethane"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the chlorination reaction with oxidation to form epoxide",
+        "confuses chlorination with hydration and misidentifies glycol as the historical oily product",
+        "",
+        "confuses halogenation with hydrogenation and incorrectly assumes ethane is an oily liquid"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-definition",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-definition",
+      "question": "Which statement precisely defines an acyclic alkyne?",
+      "options": [
+        "An open-chain saturated hydrocarbon containing only single covalent bonds",
+        "An open-chain unsaturated hydrocarbon containing at least one carbon-carbon triple bond",
+        "An open-chain unsaturated hydrocarbon containing two carbon-carbon double bonds",
+        "A cyclic hydrocarbon containing alternating single and double carbon-carbon bonds"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "defines alkanes instead of alkynes",
+        "",
+        "defines alkadienes instead of alkynes",
+        "defines aromatic or conjugated cyclic hydrocarbons instead of acyclic alkynes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-general-formula",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-general-formula",
+      "question": "What is the molecular formula of an open-chain alkyne with 5 carbon atoms?",
+      "options": [
+        "C5H6",
+        "C5H10",
+        "C5H12",
+        "C5H8"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "subtracts 4 instead of 2 from 2n when calculating hydrogen count",
+        "applies the alkene formula CnH2n instead of CnH2n-2",
+        "applies the alkane formula CnH2n+2 instead of CnH2n-2",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-ethyne-structure",
+      "nodeId": "class11-chemistry-hydrocarbons-ethyne-structure",
+      "question": "Which statement correctly describes the Lewis structure and formula of ethyne?",
+      "options": [
+        "It has the formula C2H4 with a double bond between the two carbon atoms.",
+        "It has the formula C2H6 with a single bond between the two carbon atoms.",
+        "It has the formula C2H2 with a triple bond between the two carbon atoms.",
+        "It has the formula C2H2 with two single bonds and one unshared pair on each carbon."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses ethyne with ethene (ethylene)",
+        "confuses ethyne with ethane",
+        "",
+        "draws a non-octet Lewis structure with single bonds and lone pairs instead of a triple bond"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-homologous-series",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-homologous-series",
+      "question": "Which list correctly gives the first four members of the alkyne homologous series?",
+      "options": [
+        "Methyne (CH), Ethyne (C2H2), Propyne (C3H4), Butyne (C4H6)",
+        "Ethyne (C2H2), Propyne (C3H4), Butyne (C4H6), Pentyne (C5H8)",
+        "Ethyne (C2H4), Propyne (C3H6), Butyne (C4H8), Pentyne (C5H10)",
+        "Ethyne (C2H2), Propyne (C3H6), Butyne (C4H10), Pentyne (C5H14)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes a one-carbon alkyne ('methyne') exists as the first member of the series",
+        "",
+        "assigns alkene molecular formulas to the alkyne series names",
+        "mixes formulas across different homologous series instead of using CnH2n-2"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-iupac-naming-rules",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-iupac-naming-rules",
+      "question": "What is the correct IUPAC name for the straight-chain alkyne with the structure CH3-CH2-C#C-CH3?",
+      "options": [
+        "Pent-3-yne",
+        "Pent-2-yne",
+        "Pentyne-2",
+        "Pent-2-ene"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "numbers the carbon chain from left to right instead of giving the triple bond the lowest possible locant",
+        "",
+        "uses outdated nomenclature formatting where the locant is placed as a suffix",
+        "confuses the alkyne suffix -yne with the alkene suffix -ene"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-branched-nomenclature",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-branched-nomenclature",
+      "question": "What is the correct IUPAC name for the compound HC#C-CH(CH3)-CH2-CH3?",
+      "options": [
+        "3-Methylpent-4-yne",
+        "3-Ethylbut-1-yne",
+        "2-Ethylbut-3-yne",
+        "3-Methylpent-1-yne"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "numbers the principal chain from the end closer to the substituent rather than giving priority to the triple bond",
+        "fails to identify the longest continuous carbon chain containing the triple bond, choosing a 4-carbon parent chain",
+        "selects a shorter 4-carbon chain and numbers from the wrong end instead of finding the longest continuous chain containing the triple bond",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-position-isomerism",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-position-isomerism",
+      "question": "Which pair of molecules represents a set of position isomers?",
+      "options": [
+        "Pent-1-yne and pent-2-yne",
+        "Pent-1-yne and 3-methylbut-1-yne",
+        "Pent-1-yne and penta-1,3-diene",
+        "Pent-1-yne and cyclopentene"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses chain isomerism (differing carbon skeletons) with position isomerism",
+        "confuses functional group isomerism with position isomerism",
+        "confuses ring-chain isomerism with position isomerism"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-chain-isomerism",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-chain-isomerism",
+      "question": "How many total acyclic alkyne isomers (including both chain and position isomers) exist for the molecular formula C5H8?",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "5"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "counts only the straight-chain position isomers (pent-1-yne and pent-2-yne) and misses the branched chain isomer (3-methylbut-1-yne)",
+        "includes cyclic isomers or impossible branched structures like 2-methylbut-2-yne that violate carbon valency",
+        "",
+        "counts dienes or cyclic constitutional isomers rather than restricting the count to alkynes"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-sp-hybridisation",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-sp-hybridisation",
+      "question": "How are the hybrid orbitals formed at each carbon atom in an ethyne (HC#CH) molecule?",
+      "options": [
+        "One 2s and two 2p orbitals mix to produce three planar hybrid orbitals.",
+        "One 2s and three 2p orbitals mix to produce four tetrahedral hybrid orbitals.",
+        "One 2s and one 2p orbital mix to produce two linear hybrid orbitals.",
+        "Two 2s and one 2p orbital mix to produce two linear hybrid orbitals."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses sp hybridisation with sp2 hybridisation found in alkenes",
+        "confuses sp hybridisation with sp3 hybridisation found in alkanes",
+        "",
+        "thinks multiple s orbitals can participate in hybridisation within a single valence shell"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-sigma-bond-framework",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-sigma-bond-framework",
+      "question": "Which types of orbital overlaps form the sigma bond framework in an ethyne (HC#CH) molecule?",
+      "options": [
+        "One C-C sigma bond by sp-sp overlap and two C-H sigma bonds by sp-1s overlap",
+        "One C-C sigma bond by sp2-sp2 overlap and two C-H sigma bonds by sp2-1s overlap",
+        "One C-C sigma bond by 2p-2p overlap and two C-H sigma bonds by sp-1s overlap",
+        "One C-C sigma bond by sp-sp overlap and two C-H sigma bonds by 2p-1s overlap"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes the carbon atoms in ethyne are sp2 hybridised instead of sp hybridised",
+        "thinks the carbon-carbon sigma bond is formed by unhybridised 2p orbitals rather than hybridised sp orbitals",
+        "thinks hydrogen bonds with unhybridised 2p orbitals of carbon rather than sp hybrid orbitals"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-pi-bonds-formation",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-pi-bonds-formation",
+      "question": "How are the two pi bonds in an ethyne molecule formed between the two carbon atoms?",
+      "options": [
+        "By lateral overlap of unhybridised 2py and 2pz orbitals that are mutually perpendicular",
+        "By head-on overlap of sp hybrid orbitals along the internuclear axis",
+        "By lateral overlap of two parallel 2px orbitals lying directly along the internuclear axis",
+        "By head-on overlap of one unhybridised 2py orbital and one hybridised sp orbital"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses pi bond formation via lateral overlap with sigma bond formation via head-on overlap of hybrid orbitals",
+        "believes the pi bonds form along the internuclear axis rather than perpendicularly from py and pz orbitals",
+        "thinks a pi bond can form by head-on overlap between a hybrid orbital and an unhybridised orbital"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-alkynes-cylindrical-electron-cloud",
+      "nodeId": "class11-chemistry-hydrocarbons-alkynes-cylindrical-electron-cloud",
+      "question": "Which statement accurately describes the geometry, pi electron cloud, and carbon-carbon bond length of ethyne?",
+      "options": [
+        "It is planar with a trigonal electron cloud, 120 degree bond angles, and a C-C bond length of 134 pm.",
+        "It is bent with a spherical pi electron cloud, 109.5 degree bond angles, and a C-C bond length of 120 pm.",
+        "It is linear with two separate planar electron clouds, 180 degree bond angles, and a C-C bond length of 154 pm.",
+        "It is linear with a cylindrical pi electron cloud, 180 degree bond angles, and a C-C bond length of 120 pm."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses the structural parameters of ethyne with those of ethene (sp2 planar, 134 pm)",
+        "confuses the linear 180 degree geometry of sp carbons with bent/tetrahedral geometry",
+        "fails to recognize that merging mutually perpendicular pi orbitals creates a single cylindrical cloud, and assigns the alkane single bond length (154 pm)",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-aromatic-definition-arenes",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-definition-arenes",
+      "question": "Which statement best defines an arene?",
+      "options": [
+        "An open-chain unsaturated hydrocarbon that contains alternating double and single bonds.",
+        "Any saturated open-chain hydrocarbon that undergoes substitution reactions readily.",
+        "Any cyclic aliphatic hydrocarbon that possesses at least one isolated double bond.",
+        "An aromatic hydrocarbon that contains one or more planar, conjugated cyclic rings."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks conjugation alone in an acyclic chain (like 1,3-butadiene) makes a compound an arene",
+        "confuses aromatic hydrocarbons (arenes) with saturated open-chain alkanes",
+        "confuses arenes with non-aromatic cycloalkenes",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-aromatic-etymology",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-etymology",
+      "question": "Historically, why was the term 'aromatic' first applied to compounds like benzene and its derivatives?",
+      "options": [
+        "They were uniquely unreactive compared to typical open-chain alkenes.",
+        "They produced distinctive bright colours when burned in air with a smoky flame.",
+        "They were originally isolated from plants that had a sweet or pleasant smell.",
+        "They exclusively possessed a cyclic ring of six carbon atoms with delocalised electrons."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the chemical stability meaning of modern aromaticity with the historical etymology",
+        "confuses sootiness of aromatic combustion with the origin of the name 'aromatic'",
+        "",
+        "confuses the modern electronic definition of aromaticity with its historical etymological root"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-aromatic-benzenoid-nonbenzenoid",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-benzenoid-nonbenzenoid",
+      "question": "Which of the following compounds is classified as a non-benzenoid aromatic compound?",
+      "options": [
+        "Naphthalene",
+        "Tropone",
+        "Toluene",
+        "Anthracene"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks fused bicyclic aromatic systems with benzene rings are non-benzenoid",
+        "",
+        "thinks a substituted single benzene ring is non-benzenoid",
+        "thinks tricyclic fused benzene systems are non-benzenoid"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-aromatic-monocyclic-polycyclic",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-monocyclic-polycyclic",
+      "question": "Which set of compounds contains one monocyclic arene and one polycyclic fused arene, respectively?",
+      "options": [
+        "Benzene and toluene",
+        "Toluene and naphthalene",
+        "Naphthalene and anthracene",
+        "Biphenyl and diphenylmethane"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "selects two monocyclic arenes instead of one monocyclic and one polycyclic fused arene",
+        "",
+        "selects two polycyclic fused arenes instead of one monocyclic and one polycyclic fused arene",
+        "selects isolated polycyclic arenes rather than a monocyclic arene and a fused polycyclic arene"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-mono-substituted-benzene-naming",
+      "nodeId": "class11-chemistry-hydrocarbons-mono-substituted-benzene-naming",
+      "question": "What is the accepted IUPAC name for the compound commonly known as anisole?",
+      "options": [
+        "Methoxybenzene",
+        "Phenoxybenzene",
+        "Hydroxybenzene",
+        "Aminobenzene"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses the methoxy substituent on anisole with a phenyl ether group",
+        "confuses anisole with phenol which contains a hydroxyl group",
+        "confuses anisole with aniline which contains an amino group"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-disubstituted-benzene-locants",
+      "nodeId": "class11-chemistry-hydrocarbons-disubstituted-benzene-locants",
+      "question": "Which prefix corresponds directly to a 1,3-relationship between two substituents on a benzene ring?",
+      "options": [
+        "meta-",
+        "para-",
+        "ortho-",
+        "meso-"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks para corresponds to 1,3-positions rather than 1,4-positions",
+        "thinks ortho corresponds to 1,3-positions rather than 1,2-positions",
+        "confuses the aromatic positional prefix meta with the stereochemical term meso"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-disubstituted-benzene-isomerism",
+      "nodeId": "class11-chemistry-hydrocarbons-disubstituted-benzene-isomerism",
+      "question": "How many distinct positional isomers exist for dichlorobenzene?",
+      "options": [
+        "Two isomers (1,2- and 1,4-)",
+        "Six isomers corresponding to each ring carbon",
+        "Four isomers (1,2-, 1,3-, 1,4-, and 1,5-)",
+        "Three isomers (1,2-, 1,3-, and 1,4-)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "forgets the meta (1,3-) isomer exists between ortho and para forms",
+        "assumes every carbon position on the ring generates a unique positional isomer",
+        "counts the 1,5-position as unique, not realizing it is identical to 1,3-",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-polysubstituted-benzene-iupac",
+      "nodeId": "class11-chemistry-hydrocarbons-polysubstituted-benzene-iupac",
+      "question": "What is the correct IUPAC name for a benzene ring carrying a methyl group at position 1, a chlorine atom at position 2, and a nitro group at position 4?",
+      "options": [
+        "4-Nitro-2-chloro-1-methylbenzene",
+        "1-Chloro-2-methyl-5-nitrobenzene",
+        "2-Chloro-1-methyl-4-nitrobenzene",
+        "2-Chloro-4-nitro-1-methylbenzene"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "lists substituents in reverse order rather than alphabetical order",
+        "numbers the ring from chlorine instead of giving the lowest locant set",
+        "",
+        "orders substituent names by ring number rather than alphabetical priority"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-benzene-discovery-formula",
+      "nodeId": "class11-chemistry-hydrocarbons-benzene-discovery-formula",
+      "question": "What is the molecular formula of benzene, and who first isolated it in 1825?",
+      "options": [
+        "C6H12, isolated by August Kekule",
+        "C6H6, isolated by Michael Faraday",
+        "C6H6, isolated by Joseph Priestley",
+        "C6H8, isolated by Antoine Lavoisier"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses benzene with cyclohexane and attributes isolation to Kekule",
+        "",
+        "knows the correct formula but misattributes discovery to Priestley",
+        "recalls an incorrect hydrogen count and misattributes discovery to Lavoisier"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-kekule-structure-proposal",
+      "nodeId": "class11-chemistry-hydrocarbons-kekule-structure-proposal",
+      "question": "What was August Kekule's proposed structural model for a benzene molecule?",
+      "options": [
+        "An open-chain hexatriene containing alternating single and double bonds",
+        "A cyclic planar ring with three pairs of alternating single and double bonds",
+        "A planar hexagonal ring with six completely identical delocalized bonds",
+        "A three-dimensional prism-like ring structure containing only single bonds"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes Kekule proposed an open-chain aliphatic system instead of a ring",
+        "",
+        "confuses Kekule's localized alternating model with the modern delocalized model",
+        "confuses Kekule's structure with the historic prism model proposed by Ladenburg"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-kekule-disubstitution-problem",
+      "nodeId": "class11-chemistry-hydrocarbons-kekule-disubstitution-problem",
+      "question": "Why did Kekule propose that double bonds oscillate rapidly between adjacent carbon atoms in benzene?",
+      "options": [
+        "To show why all carbon-carbon bonds have exactly the same bond length",
+        "To explain why benzene undergoes electrophilic substitution instead of addition",
+        "To explain why only one 1,2-disubstituted isomer is observed instead of two",
+        "To explain why benzene has extraordinary thermodynamic resonance energy"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes oscillating equilibrium was proposed specifically to explain bond lengths",
+        "confuses the disubstitution isomer issue with benzene's chemical reactivity",
+        "",
+        "confuses Kekule's classical oscillation hypothesis with quantum mechanical resonance"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-kekule-structure-limitations",
+      "nodeId": "class11-chemistry-hydrocarbons-kekule-structure-limitations",
+      "question": "Which experimental observation directly exposed a major limitation of Kekule's static structure for benzene?",
+      "options": [
+        "Benzene completely burns in excess oxygen to produce carbon dioxide and water",
+        "Benzene resists addition reactions and exhibits equal carbon-carbon bond lengths",
+        "Benzene has a much lower boiling point than open-chain saturated hydrocarbons",
+        "Benzene readily reacts with bromine in the dark without needing any catalyst"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "cites a standard combustion property that does not contradict Kekule's structure",
+        "",
+        "makes an incorrect claim about boiling points that does not relate to Kekule's model",
+        "incorrectly claims benzene undergoes rapid addition with bromine like an alkene"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-aromatic-physical-state-odour",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-physical-state-odour",
+      "question": "What are the typical physical states at room temperature and the characteristic odour of simple arenes like benzene and naphthalene?",
+      "options": [
+        "Colourless liquids or solids having a characteristic sweet or pleasant aroma",
+        "Pungent gases that possess a sharp, irritating, and foul chemical odour",
+        "Highly viscous liquids that are completely odourless under standard conditions",
+        "Dense coloured solids having a strong choking smell similar to rotten eggs"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes low molecular weight aromatic hydrocarbons are pungent gases",
+        "thinks aromatic hydrocarbons are viscous and lack any distinct aroma",
+        "confuses arenes with foul-smelling inorganic sulfur compounds"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-aromatic-polarity-and-solubility",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-polarity-and-solubility",
+      "question": "Why is benzene insoluble in water but readily soluble in organic solvents like ether?",
+      "options": [
+        "Benzene forms strong hydrogen bonds that prevent it from dissolving in water",
+        "Benzene ionizes in water to form insoluble positively charged phenyl cations",
+        "Benzene is a non-polar compound unable to form hydrogen bonds with water molecules",
+        "Benzene is denser than water and therefore cannot mix with polar liquid phases"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks benzene forms hydrogen bonds with itself rather than lacking polarity",
+        "believes benzene undergoes ionic dissociation in aqueous solution",
+        "",
+        "confuses liquid density differences with the fundamental thermodynamic cause of solubility"
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-aromatic-sooty-flame-combustion",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-sooty-flame-combustion",
+      "question": "Why do aromatic hydrocarbons burn with a characteristic luminous, sooty flame compared to alkanes?",
+      "options": [
+        "They produce large volumes of hydrogen gas that burns with black soot",
+        "They contain oxygen atoms in their ring that prevent complete thermal oxidation",
+        "They possess unusually weak carbon-carbon bonds that decompose instantly",
+        "They have a high carbon-to-hydrogen ratio, leaving unburnt carbon particles"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks soot is formed from hydrogen gas rather than unburnt carbon",
+        "wrongly assumes aromatic hydrocarbons contain oxygen in their skeletal structures",
+        "believes aromatic rings are thermally unstable due to weak chemical bonds",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-chemistry-hydrocarbons-aromatic-melting-boiling-trends",
+      "nodeId": "class11-chemistry-hydrocarbons-aromatic-melting-boiling-trends",
+      "question": "Why does para-dichlorobenzene have a significantly higher melting point than its ortho- and meta-isomers?",
+      "options": [
+        "Its greater permanent dipole moment creates stronger dipole-dipole attractions",
+        "Its chlorine atoms form intramolecular hydrogen bonds that stabilize the crystal",
+        "Its bulky shape produces weaker intermolecular van der Waals dispersion forces",
+        "Its symmetrical structure allows more effective packing in the crystal lattice"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the para isomer has the highest dipole moment, whereas its net dipole is zero",
+        "claims chlorine forms intramolecular hydrogen bonds that raise the melting point",
+        "thinks weaker dispersion forces lead to higher melting points in solids",
+        ""
+      ]
     }
   ]
 }

@@ -4128,6 +4128,787 @@
       ],
       "difficulty": 2,
       "topicRef": "class10-science/our-environment/managing-garbage"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-write-formulae-reactants-products",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Write Formulae in Equations",
+      "outcome": "Write the correct chemical formulae for given reactants and products in a word equation",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-state-symbols",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Physical State Symbols",
+      "outcome": "Identify the state symbols (s), (l), (g), and (aq) used for physical states in a chemical equation",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-assign-state-symbols",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Assign State Symbols to Substances",
+      "outcome": "Assign the appropriate physical state symbol to common reactants and products in a chemical equation",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-identify-state-symbols"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-indicate-reaction-conditions",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Indicate Reaction Conditions",
+      "outcome": "State reaction conditions such as temperature, pressure, or catalyst above or below the reaction arrow",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-combination-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Combination Reaction",
+      "outcome": "Define a combination reaction as a reaction in which two or more substances combine to form a single product",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-represent-combination-general-form",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "General Form of Combination Reactions",
+      "outcome": "State the general chemical representation A + B -> AB for a combination reaction",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-combination-reaction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-combination-examples",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Combination Reactions",
+      "outcome": "Classify given chemical equations (such as burning of coal and formation of water) as combination reactions",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-combination-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-write-quicklime-water-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Reaction of Quicklime with Water",
+      "outcome": "Write the balanced chemical equation for the reaction of calcium oxide (quicklime) with water to form calcium hydroxide (slaked lime)",
+      "prerequisites": [
+        "sci10-chem-balance-equation",
+        "class10-science-chemical-reactions-and-equations-write-formulae-reactants-products",
+        "class10-science-chemical-reactions-and-equations-define-combination-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-observe-quicklime-water-exothermic",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Thermal Observation of Slaking of Lime",
+      "outcome": "Describe the rise in temperature when quicklime reacts with water as an indicator of an exothermic combination reaction",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-write-quicklime-water-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-decomposition-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Decomposition Reaction",
+      "outcome": "Define a decomposition reaction as a reaction in which a single reactant breaks down to give two or more simpler products",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-represent-decomposition-general-form",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "General Form of Decomposition",
+      "outcome": "State the general chemical equation AB -> A + B to represent a decomposition reaction",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-decomposition-reaction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-thermal-decomposition-examples",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain Thermal Decomposition",
+      "outcome": "Explain thermal decomposition as a reaction carried out by heating, using the breakdown of calcium carbonate into calcium oxide and carbon dioxide as an example",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-decomposition-reaction",
+        "class10-science-chemical-reactions-and-equations-indicate-reaction-conditions"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-electrolytic-decomposition-water",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain Electrolytic Decomposition",
+      "outcome": "Explain electrolytic decomposition as a reaction driven by passing electric current, using the electrolysis of acidified water into hydrogen and oxygen gases as an example",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-decomposition-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-photolytic-decomposition-silver-salts",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain Photolytic Decomposition",
+      "outcome": "Explain photolytic decomposition as a reaction triggered by sunlight, using the breakdown of silver chloride into silver and chlorine as an example",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-decomposition-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-compare-decomposition-types",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Compare Types of Decomposition",
+      "outcome": "Compare thermal, electrolytic, and photolytic decomposition reactions on the basis of the form of energy supplied (heat, electricity, or light)",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-thermal-decomposition-examples",
+        "class10-science-chemical-reactions-and-equations-electrolytic-decomposition-water",
+        "class10-science-chemical-reactions-and-equations-photolytic-decomposition-silver-salts"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/chemical-reactions-and-equations/decomposition-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-displacement-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Displacement Reaction",
+      "outcome": "Define a displacement reaction as a chemical reaction in which a more reactive element displaces a less reactive element from its compound",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-iron-copper-sulphate-observations",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Observe Iron in Copper Sulphate",
+      "outcome": "Describe the colour change of copper sulphate solution from blue to light green and the brown coating on an iron nail when placed in copper sulphate solution",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-displacement-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-write-iron-copper-sulphate-equation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Write Iron-Copper Sulphate Equation",
+      "outcome": "Write the balanced chemical equation Fe(s) + CuSO4(aq) -> FeSO4(aq) + Cu(s) for the reaction of iron with copper sulphate solution",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-iron-copper-sulphate-observations",
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-predict-displacement-products",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Predict Displacement Products",
+      "outcome": "Predict the products formed and write the chemical equations when zinc or lead reacts with copper solutions (such as Zn + CuSO4 and Pb + CuCl2)",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-write-iron-copper-sulphate-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-double-displacement",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Double Displacement Reaction",
+      "outcome": "Define a double displacement reaction as a reaction in which there is an exchange of ions between the reactants",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-displacement-reaction"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-precipitation-reaction",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Precipitation Reaction",
+      "outcome": "Define a precipitation reaction as any reaction that produces an insoluble solid precipitate",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-identify-state-symbols"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-barium-sulphate-precipitate",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Barium Sulphate Precipitate",
+      "outcome": "Identify white barium sulphate as the insoluble precipitate formed when sodium sulphate reacts with barium chloride",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-precipitation-reaction"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-write-sodium-sulphate-barium-chloride-equation",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Write Double Displacement Equation",
+      "outcome": "Write the balanced chemical equation Na2SO4(aq) + BaCl2(aq) -> BaSO4(s) + 2NaCl(aq) for the reaction between sodium sulphate and barium chloride",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-double-displacement",
+        "class10-science-chemical-reactions-and-equations-identify-barium-sulphate-precipitate",
+        "sci10-chem-balance-equation"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-oxidation-oxygen",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Oxidation by Oxygen",
+      "outcome": "Define oxidation as the gain of oxygen or loss of hydrogen by a substance during a chemical reaction",
+      "prerequisites": [
+        "sci10-chem-read-equation"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/oxidation-and-reduction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-reduction-oxygen",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Reduction by Oxygen",
+      "outcome": "Define reduction as the loss of oxygen or gain of hydrogen by a substance during a chemical reaction",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-oxidation-oxygen"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/oxidation-and-reduction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-oxidized-reduced-substances",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Oxidized and Reduced Species",
+      "outcome": "Identify the substance oxidized and the substance reduced in a given redox reaction such as CuO + H2 -> Cu + H2O",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-reduction-oxygen"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/oxidation-and-reduction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-oxidizing-reducing-agents",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Oxidizing and Reducing Agents",
+      "outcome": "Identify the oxidizing agent and the reducing agent in a given chemical reaction",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-identify-oxidized-reduced-substances"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/chemical-reactions-and-equations/oxidation-and-reduction"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-corrosion",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Corrosion",
+      "outcome": "Define corrosion as the slow deterioration of a metal when it is attacked by substances around it such as moisture and acids",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-oxidation-oxygen"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/corrosion"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-describe-rusting-iron",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Describe Rusting of Iron",
+      "outcome": "Describe the formation of a reddish-brown powdery coating on iron when exposed to moist air for a long time as rusting",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-corrosion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/corrosion"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-identify-silver-copper-corrosion",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Identify Corrosion in Silver and Copper",
+      "outcome": "Identify the black coating on silver articles and the green coating on copper objects as examples of corrosion",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-corrosion"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/corrosion"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-explain-corrosion-as-redox",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain Corrosion as Oxidation",
+      "outcome": "Explain corrosion as an everyday oxidation process where metal atoms lose electrons and react with environmental agents",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-corrosion",
+        "class10-science-chemical-reactions-and-equations-identify-oxidized-reduced-substances"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/chemical-reactions-and-equations/corrosion"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-define-rancidity",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Define Rancidity",
+      "outcome": "Define rancidity as the condition produced by the oxidation of fats and oils in food, characterized by unpleasant smell and taste",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-oxidation-oxygen"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/chemical-reactions-and-equations/rancidity"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-explain-cause-of-rancidity",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain the Cause of Rancidity",
+      "outcome": "Explain that rancidity is caused by the oxidation of unsaturated fats and oils upon prolonged exposure to air and moisture",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-define-rancidity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/rancidity"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-explain-antioxidants-airtight-containers",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Role of Antioxidants and Airtight Storage",
+      "outcome": "Explain how adding antioxidants and storing food in airtight containers prevents or slows down the oxidation of fats",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-explain-cause-of-rancidity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/rancidity"
+    },
+    {
+      "id": "class10-science-chemical-reactions-and-equations-explain-nitrogen-flushing-chips",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "chemical-reactions-and-equations",
+      "title": "Explain Nitrogen Gas Flushing in Food Packaging",
+      "outcome": "Explain why potato chip bags are flushed with unreactive nitrogen gas to prevent rancidity by creating an oxygen-free environment",
+      "prerequisites": [
+        "class10-science-chemical-reactions-and-equations-explain-cause-of-rancidity"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/chemical-reactions-and-equations/rancidity"
+    },
+    {
+      "id": "class10-science-life-processes-heterotroph-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Define Heterotrophic Nutrition",
+      "outcome": "State that heterotrophic nutrition is the mode where organisms depend directly or indirectly on autotrophs for carbon and energy",
+      "prerequisites": [
+        "sci10-lp-nutrition-two-modes"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-saprophytic-nutrition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Explain Saprophytic Nutrition",
+      "outcome": "Describe saprophytic nutrition as breaking down food materials outside the body and absorbing the nutrients, giving fungi like bread mould or yeast as examples",
+      "prerequisites": [
+        "class10-science-life-processes-heterotroph-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-parasitic-nutrition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Explain Parasitic Nutrition",
+      "outcome": "Describe parasitic nutrition as deriving nutrition from plants or animals without killing them, giving examples such as Cuscuta, ticks, lice, or tapeworms",
+      "prerequisites": [
+        "class10-science-life-processes-heterotroph-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-holozoic-nutrition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Define Holozoic Nutrition",
+      "outcome": "Define holozoic nutrition as the intake of complex solid or liquid organic material that is subsequently digested and absorbed inside the body",
+      "prerequisites": [
+        "class10-science-life-processes-heterotroph-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-amoeba-ingestion-pseudopodia",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Describe Ingestion in Amoeba",
+      "outcome": "Describe how Amoeba extends temporary finger-like extensions called pseudopodia to fuse over food particles and form a food vacuole",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit",
+        "class10-science-life-processes-holozoic-nutrition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-amoeba-digestion-vacuole",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Trace Digestion in Amoeba",
+      "outcome": "Trace the breakdown of complex substances into simpler ones inside the food vacuole and their subsequent diffusion into the cytoplasm",
+      "prerequisites": [
+        "class10-science-life-processes-amoeba-ingestion-pseudopodia"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-amoeba-egestion",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Explain Egestion in Amoeba",
+      "outcome": "State that remaining undigested material in Amoeba is moved to the surface of the cell and thrown out",
+      "prerequisites": [
+        "class10-science-life-processes-amoeba-digestion-vacuole"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-paramoecium-nutrition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Describe Nutrition in Paramoecium",
+      "outcome": "Explain how Paramoecium takes in food at a specific spot using the movement of cilia covering the entire cell surface",
+      "prerequisites": [
+        "class10-science-life-processes-holozoic-nutrition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/heterotrophic-nutrition"
+    },
+    {
+      "id": "class10-science-life-processes-xylem-vessels-tracheids",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Xylem Conducting Elements",
+      "outcome": "Identify vessels and tracheids in xylem tissue of roots, stems, and leaves as forming a continuous water-conducting channel",
+      "prerequisites": [
+        "sci10-lp-diffusion-limit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-root-pressure-water-entry",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Root Pressure Mechanism",
+      "outcome": "Explain that active ion uptake by root cells creates an osmotic gradient that moves water into root xylem, generating root pressure",
+      "prerequisites": [
+        "class10-science-life-processes-xylem-vessels-tracheids"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-transpiration-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Transpiration Definition",
+      "outcome": "Define transpiration as the loss of water in the form of vapour from the aerial parts of a plant, primarily through stomata",
+      "prerequisites": [
+        "sci10-lp-stomata-guard-cells"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-transpiration-pull-ascent",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Transpirational Pull Mechanism",
+      "outcome": "Explain how transpiration creates a suction pull that draws water and dissolved minerals upward through xylem to the leaves during daytime",
+      "prerequisites": [
+        "class10-science-life-processes-transpiration-definition",
+        "class10-science-life-processes-xylem-vessels-tracheids"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-translocation-definition",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Translocation Definition",
+      "outcome": "Define translocation as the transport of soluble products of photosynthesis, amino acids, and other substances through phloem tissue",
+      "prerequisites": [
+        "sci10-lp-photo-outputs"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-phloem-sieve-tubes-bidirectional",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Phloem Sieve Tubes and Direction",
+      "outcome": "State that phloem moves substances in both upward and downward directions using sieve tubes and companion cells",
+      "prerequisites": [
+        "class10-science-life-processes-translocation-definition"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-translocation-atp-osmosis",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Energy-Driven Translocation Mechanism",
+      "outcome": "Explain that sucrose is loaded into phloem using ATP energy, causing water to enter by osmosis and creating pressure that moves material to tissues with lower pressure",
+      "prerequisites": [
+        "class10-science-life-processes-phloem-sieve-tubes-bidirectional"
+      ],
+      "difficulty": 4,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-xylem-vs-phloem-transport",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Compare Xylem and Phloem Transport",
+      "outcome": "Compare xylem and phloem transport in terms of materials carried, direction of flow, and requirement of metabolic energy (ATP)",
+      "prerequisites": [
+        "class10-science-life-processes-transpiration-pull-ascent",
+        "class10-science-life-processes-translocation-atp-osmosis"
+      ],
+      "difficulty": 3,
+      "topicRef": "class10-science/life-processes/transportation-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-plant-gaseous-waste-stomata",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Gaseous Waste Excretion in Plants",
+      "outcome": "Identify oxygen produced during photosynthesis and carbon dioxide produced during respiration as gaseous wastes eliminated through stomata and lenticels",
+      "prerequisites": [
+        "sci10-lp-stomata-function",
+        "sci10-lp-photo-outputs"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/excretion-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-plant-excess-water-transpiration",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Elimination of Excess Water",
+      "outcome": "Explain that plants eliminate excess water through transpiration via stomata",
+      "prerequisites": [
+        "class10-science-life-processes-transpiration-definition"
+      ],
+      "difficulty": 1,
+      "topicRef": "class10-science/life-processes/excretion-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-plant-waste-storage-cellular-vacuoles",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Waste Storage in Vacuoles and Falling Leaves",
+      "outcome": "Describe how plants store metabolic waste products in cellular vacuoles and eliminate them when aging leaves or parts fall off",
+      "prerequisites": [
+        "sci10-lp-cell-is-unit"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/excretion-in-plants"
+    },
+    {
+      "id": "class10-science-life-processes-plant-resins-gums-soil-excretion",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "life-processes",
+      "title": "Excretion via Resins, Gums, and Roots",
+      "outcome": "State that plants store waste products as resins and gums in old xylem and can also excrete some waste substances directly into the surrounding soil",
+      "prerequisites": [
+        "class10-science-life-processes-xylem-vessels-tracheids"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/life-processes/excretion-in-plants"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-convex-lens-real-image-properties",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Properties of Convex Lens Real Images",
+      "outcome": "Describe the position, nature, and relative size of real, inverted images formed by a convex lens when an object is placed at infinity, beyond 2F1, at 2F1, and between F1 and 2F1",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-convex-lens-ray-diagrams"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-by-lenses"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-convex-lens-virtual-image-properties",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Convex Lens Virtual Image Formation",
+      "outcome": "Explain why placing an object between the focus F1 and optical center O of a convex lens produces an erect, magnified, and virtual image on the same side as the object",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-convex-lens-ray-diagrams"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-by-lenses"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-concave-lens-image-characteristics",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Concave Lens Image Characteristics",
+      "outcome": "Describe the nature, size, and position of images formed by a concave lens when the object is at infinity versus at a finite distance from the lens",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-concave-lens-ray-diagrams"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-by-lenses"
+    },
+    {
+      "id": "class10-science-light-reflection-and-refraction-lens-practical-applications",
+      "klass": 10,
+      "subject": "Science",
+      "chapter": "light-reflection-and-refraction",
+      "title": "Optical Instruments Using Lenses",
+      "outcome": "Identify optical instruments such as magnifying glasses, cameras, microscopes, telescopes, and spectacles that use convex or concave lenses based on their image formation properties",
+      "prerequisites": [
+        "class10-science-light-reflection-and-refraction-convex-lens-real-image-properties",
+        "class10-science-light-reflection-and-refraction-concave-lens-image-characteristics"
+      ],
+      "difficulty": 2,
+      "topicRef": "class10-science/light-reflection-and-refraction/image-formation-by-lenses"
     }
   ]
 }

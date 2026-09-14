@@ -5616,6 +5616,1068 @@
         "misapplies Mendelian monohybrid recessive ratios (1 in 4) to sex determination",
         "falls for the gambler's fallacy, believing a female birth is now guaranteed to balance the family"
       ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-write-formulae-reactants-products",
+      "nodeId": "class10-science-chemical-reactions-and-equations-write-formulae-reactants-products",
+      "question": "Which set of chemical formulae correctly represents the reaction: 'Hydrogen + Chlorine → Hydrogen chloride'?",
+      "options": [
+        "H + Cl → HCl",
+        "H2 + Cl2 → H2Cl2",
+        "H2 + Cl2 → 2HCl",
+        "2H + 2Cl → 2HCl"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks elemental hydrogen and chlorine exist as monoatomic species rather than diatomic molecules",
+        "combines molecular formulae into a single unsimplified molecular unit instead of writing the correct molecular formula with a stoichiometric coefficient",
+        "",
+        "confuses stoichiometric balancing numbers with the molecular formulas of free diatomic elements"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-state-symbols",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-state-symbols",
+      "question": "What physical state is indicated by the symbol '(aq)' in a chemical equation?",
+      "options": [
+        "A pure substance present in the liquid state",
+        "A solid substance dissolved in water as a solution",
+        "A gas that has been compressed under pressure",
+        "An insoluble solid formed as a settled precipitate"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses an aqueous solution (aq) with a pure liquid (l)",
+        "",
+        "confuses aqueous state with a compressed gas",
+        "confuses an aqueous solution with an insoluble solid precipitate"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-assign-state-symbols",
+      "nodeId": "class10-science-chemical-reactions-and-equations-assign-state-symbols",
+      "question": "When dilute hydrochloric acid is mixed with an aqueous solution of sodium hydroxide, which state symbol correctly describes the water that forms?",
+      "options": [
+        "(aq)",
+        "(l)",
+        "(s)",
+        "(g)"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes water formed in an aqueous reaction should be labeled as aqueous rather than a pure liquid",
+        "",
+        "thinks the resulting neutral product forms a solid precipitate",
+        "confuses the release of reaction heat with the complete vaporization of water to gas"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-indicate-reaction-conditions",
+      "nodeId": "class10-science-chemical-reactions-and-equations-indicate-reaction-conditions",
+      "question": "Where are specific reaction conditions, such as temperature, pressure, or a catalyst, written in a chemical equation?",
+      "options": [
+        "Directly above or below the reaction arrow",
+        "Inside brackets immediately after the products",
+        "As stoichiometric coefficients before reactants",
+        "At the bottom of the page in a separate key"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses reaction conditions with physical state symbols placed in brackets after formulas",
+        "confuses reaction conditions with balancing coefficients",
+        "thinks standard chemical notation requires placing reaction conditions in footnotes rather than on the arrow"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-combination-reaction",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-combination-reaction",
+      "question": "Which statement best defines a combination reaction?",
+      "options": [
+        "A reaction in which one compound splits into two or more elements",
+        "A reaction in which an element replaces another element from its chemical solution",
+        "A reaction in which two compounds exchange their ions to form two new compounds",
+        "A reaction in which two or more substances combine to form a single product"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses a combination reaction with a decomposition reaction",
+        "confuses a combination reaction with a single displacement reaction",
+        "confuses a combination reaction with a double displacement reaction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-represent-combination-general-form",
+      "nodeId": "class10-science-chemical-reactions-and-equations-represent-combination-general-form",
+      "question": "Which general equation correctly represents a combination reaction?",
+      "options": [
+        "AB → A + B",
+        "A + BC → AC + B",
+        "A + B → AB",
+        "AB + CD → AD + CB"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies the general form of decomposition instead of combination",
+        "identifies the general form of displacement instead of combination",
+        "",
+        "identifies the general form of double displacement instead of combination"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-combination-examples",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-combination-examples",
+      "question": "Which of the following chemical equations represents a combination reaction?",
+      "options": [
+        "AgNO3(aq) + NaCl(aq) → AgCl(s) + NaNO3(aq)",
+        "CaCO3(s) → CaO(s) + CO2(g)",
+        "Zn(s) + CuSO4(aq) → ZnSO4(aq) + Cu(s)",
+        "2H2(g) + O2(g) → 2H2O(l)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses double displacement precipitation with a combination reaction",
+        "confuses decomposition of a single reactant with a combination reaction",
+        "confuses single displacement with a combination reaction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-write-quicklime-water-reaction",
+      "nodeId": "class10-science-chemical-reactions-and-equations-write-quicklime-water-reaction",
+      "question": "Which balanced equation correctly represents the reaction of quicklime with water?",
+      "options": [
+        "CaO + H2O → Ca(OH)2",
+        "CaO + 2H2O → Ca(OH)2 + H2",
+        "CaCO3 + H2O → Ca(OH)2 + CO2",
+        "Ca + 2H2O → Ca(OH)2 + H2"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes hydrogen gas is liberated when quicklime reacts with water",
+        "confuses limestone (calcium carbonate) with quicklime (calcium oxide)",
+        "confuses calcium metal reacting with water with calcium oxide reacting with water"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-observe-quicklime-water-exothermic",
+      "nodeId": "class10-science-chemical-reactions-and-equations-observe-quicklime-water-exothermic",
+      "question": "When water is slowly added to quicklime in a beaker, what temperature change is observed and what does it indicate?",
+      "options": [
+        "The temperature decreases because heat energy is absorbed from the surroundings",
+        "The temperature remains unchanged because no energy change occurs in combination",
+        "The temperature fluctuates randomly because the reaction constantly reverses",
+        "The temperature increases because a large amount of heat energy is released"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the slaking of lime is an endothermic process that cools the container",
+        "assumes combination reactions do not involve any heat exchange",
+        "believes chemical reactions produce random temperature swings due to reversibility",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-decomposition-reaction",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-decomposition-reaction",
+      "question": "Which statement correctly defines a decomposition reaction?",
+      "options": [
+        "Two substances react together to form one compound",
+        "A single compound breaks down into simpler substances",
+        "One element displaces another element from a compound",
+        "Two compounds exchange constituent ions in solution"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses decomposition with combination by reversing the roles of reactants and products",
+        "",
+        "confuses decomposition with single displacement",
+        "confuses decomposition with double displacement"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-represent-decomposition-general-form",
+      "nodeId": "class10-science-chemical-reactions-and-equations-represent-decomposition-general-form",
+      "question": "Which general equation correctly represents a decomposition reaction?",
+      "options": [
+        "AB → A + B",
+        "A + B → AB",
+        "A + BC → AC + B",
+        "AB + CD → AD + CB"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses decomposition with combination",
+        "confuses decomposition with single displacement",
+        "confuses decomposition with double displacement"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-thermal-decomposition-examples",
+      "nodeId": "class10-science-chemical-reactions-and-equations-thermal-decomposition-examples",
+      "question": "What type of reaction occurs when solid limestone (CaCO3) is strongly heated to produce quicklime (CaO) and carbon dioxide (CO2)?",
+      "options": [
+        "Photochemical decomposition, because light triggers the breakdown of limestone",
+        "Electrolytic decomposition, because electric current splits the chemical bonds",
+        "Thermal decomposition, because heat energy causes a single reactant to break down",
+        "Exothermic combination, because two distinct oxide products are synthesized"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses thermal energy (heat) with radiant energy (light) as the decomposition driver",
+        "confuses heating with electrolysis as the method of decomposition",
+        "",
+        "confuses decomposition into two products with combination, misidentifying the heat input as an exothermic release"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-electrolytic-decomposition-water",
+      "nodeId": "class10-science-chemical-reactions-and-equations-electrolytic-decomposition-water",
+      "question": "During the electrolysis of acidified water, what gases are collected at the cathode and anode, and in what volume ratio?",
+      "options": [
+        "Hydrogen at cathode and oxygen at anode in a 2:1 volume ratio",
+        "Oxygen at cathode and hydrogen at anode in a 2:1 volume ratio",
+        "Hydrogen at cathode and oxygen at anode in a 1:2 volume ratio",
+        "Oxygen at cathode and hydrogen at anode in a 1:1 volume ratio"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks oxygen is liberated at the negative cathode instead of hydrogen",
+        "inverts the volume ratio thinking oxygen has double the volume of hydrogen",
+        "thinks hydrogen and oxygen gases are produced in equal volumes at both electrodes"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-photolytic-decomposition-silver-salts",
+      "nodeId": "class10-science-chemical-reactions-and-equations-photolytic-decomposition-silver-salts",
+      "question": "What happens when white silver chloride powder is exposed to sunlight for some time?",
+      "options": [
+        "It turns deep blue due to absorbing moisture from the surrounding air",
+        "It turns grey due to decomposition into metallic silver and chlorine",
+        "It turns dark black due to rapid chemical reaction with atmospheric oxygen",
+        "It turns bright yellow due to melting into a liquid without decomposing"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses silver chloride with anhydrous copper sulphate reacting with moisture",
+        "",
+        "thinks silver chloride reacts with oxygen in air to form silver oxide",
+        "confuses photolytic decomposition with a physical change of melting"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-compare-decomposition-types",
+      "nodeId": "class10-science-chemical-reactions-and-equations-compare-decomposition-types",
+      "question": "Which set correctly matches each decomposition reaction with the primary form of energy required?",
+      "options": [
+        "CaCO3: electrical energy; H2O: light energy; AgBr: thermal energy",
+        "CaCO3: light energy; H2O: thermal energy; AgBr: electrical energy",
+        "CaCO3: thermal energy; H2O: electrical energy; AgBr: light energy",
+        "CaCO3: thermal energy; H2O: light energy; AgBr: electrical energy"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "swaps thermal decomposition with electrolysis and photolysis",
+        "thinks limestone breaks down by sunlight and water breaks down by heat alone",
+        "",
+        "confuses the energy sources for water electrolysis and silver bromide breakdown"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-displacement-reaction",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-displacement-reaction",
+      "question": "Which statement best defines a chemical displacement reaction?",
+      "options": [
+        "A single compound breaks down into two or more simpler substances",
+        "Two different compounds exchange ions to form two new compounds",
+        "Two or more distinct elements combine directly to form a single compound",
+        "A more reactive element replaces a less reactive element in a compound"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "defines a decomposition reaction instead of a displacement reaction",
+        "defines a double displacement reaction instead of a single displacement reaction",
+        "defines a combination reaction instead of a displacement reaction",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-iron-copper-sulphate-observations",
+      "nodeId": "class10-science-chemical-reactions-and-equations-iron-copper-sulphate-observations",
+      "question": "What visible changes occur when clean iron nails are left in blue copper sulphate solution?",
+      "options": [
+        "The solution becomes colourless and a shiny silver coating forms on nails",
+        "The solution turns light green and a reddish-brown coating forms on nails",
+        "The solution turns bright yellow and a thick black coating forms on nails",
+        "The solution remains deep blue and many bubbles of gas form around nails"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the colour of iron(II) sulphate solution with colourless zinc sulphate",
+        "",
+        "thinks iron(III) compounds form and copper deposits as black powder",
+        "assumes no displacement occurs and mistakes the reaction for gas evolution"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-write-iron-copper-sulphate-equation",
+      "nodeId": "class10-science-chemical-reactions-and-equations-write-iron-copper-sulphate-equation",
+      "question": "Which balanced chemical equation represents the reaction between iron and copper sulphate solution?",
+      "options": [
+        "Fe(s) + Cu2SO4(aq) -> FeSO4(aq) + 2Cu(s)",
+        "2Fe(s) + 3CuSO4(aq) -> Fe2(SO4)3(aq) + 3Cu(s)",
+        "Fe(s) + CuSO4(aq) -> FeSO4(aq) + Cu(s)",
+        "FeSO4(aq) + Cu(s) -> CuSO4(aq) + Fe(s)"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "uses an incorrect chemical formula for copper(II) sulphate",
+        "thinks iron forms iron(III) sulphate instead of iron(II) sulphate in this reaction",
+        "",
+        "writes the reaction in the reverse, non-spontaneous direction"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-predict-displacement-products",
+      "nodeId": "class10-science-chemical-reactions-and-equations-predict-displacement-products",
+      "question": "What are the products formed when solid lead (Pb) is added to copper(II) chloride solution (CuCl2)?",
+      "options": [
+        "PbCl2(aq) and Cu(s)",
+        "PbCl(aq) and CuCl(s)",
+        "PbCu(s) and Cl2(g)",
+        "No reaction takes place"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "uses incorrect valencies of 1 for both lead and copper ions",
+        "thinks the metals combine into an alloy and release chlorine gas",
+        "believes lead is less reactive than copper and cannot displace it"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-double-displacement",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-double-displacement",
+      "question": "What is the defining characteristic of a double displacement reaction?",
+      "options": [
+        "A more reactive metal displaces a less reactive non-metal",
+        "Two elements share electrons to form strong covalent bonds",
+        "There is a mutual exchange of ions between reacting compounds",
+        "A single compound decomposes into simpler individual ions"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses double displacement with single displacement involving non-metals",
+        "confuses ionic exchange with covalent bond formation",
+        "",
+        "confuses double displacement with thermal decomposition"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-precipitation-reaction",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-precipitation-reaction",
+      "question": "Which of the following describes a precipitation reaction?",
+      "options": [
+        "Any chemical reaction that results in the formation of an insoluble solid",
+        "Any chemical reaction that releases heat energy into the surroundings",
+        "Any reaction where an acidic solution neutralises a basic solution completely",
+        "Any reaction that involves the rapid evolution of an insoluble gas"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "defines an exothermic reaction instead of a precipitation reaction",
+        "defines an acid-base neutralisation reaction instead of a precipitation reaction",
+        "confuses a solid precipitate with gas evolution (effervescence)"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-barium-sulphate-precipitate",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-barium-sulphate-precipitate",
+      "question": "When sodium sulphate solution is mixed with barium chloride solution, what is the insoluble white precipitate formed?",
+      "options": [
+        "Sodium chloride precipitate",
+        "Barium sulphate precipitate",
+        "Sodium sulphide precipitate",
+        "Barium sulphite precipitate"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the highly soluble sodium chloride is the precipitate",
+        "",
+        "thinks sulphate ions are reduced to sulphide ions during the reaction",
+        "confuses the sulphate radical with the sulphite radical"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-write-sodium-sulphate-barium-chloride-equation",
+      "nodeId": "class10-science-chemical-reactions-and-equations-write-sodium-sulphate-barium-chloride-equation",
+      "question": "Which chemical equation correctly represents the reaction between sodium sulphate and barium chloride?",
+      "options": [
+        "NaSO4(aq) + BaCl(aq) -> BaSO4(s) + NaCl(aq)",
+        "2NaSO4(aq) + BaCl2(aq) -> Ba(SO4)2(s) + 2NaCl(aq)",
+        "Na2SO4(aq) + BaCl2(aq) -> BaSO4(aq) + Na2Cl2(s)",
+        "Na2SO4(aq) + BaCl2(aq) -> BaSO4(s) + 2NaCl(aq)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "writes incorrect chemical formulas ignoring the valencies of sodium and barium",
+        "uses incorrect valency combinations yielding Ba(SO4)2 and NaSO4",
+        "marks barium sulphate as aqueous and writes sodium chloride as Na2Cl2 solid",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-oxidation-oxygen",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-oxidation-oxygen",
+      "question": "In terms of oxygen and hydrogen transfer, what is oxidation?",
+      "options": [
+        "The loss of oxygen or the gain of hydrogen by a chemical substance",
+        "The gain of oxygen or the gain of hydrogen by a chemical substance",
+        "The loss of oxygen or the loss of hydrogen by a chemical substance",
+        "The gain of oxygen or the loss of hydrogen by a chemical substance"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "defines reduction instead of oxidation",
+        "thinks oxidation involves gaining both oxygen and hydrogen",
+        "thinks oxidation involves losing both oxygen and hydrogen",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-reduction-oxygen",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-reduction-oxygen",
+      "question": "In terms of oxygen and hydrogen transfer, what is meant by reduction?",
+      "options": [
+        "A substance gains oxygen or loses hydrogen during a chemical reaction.",
+        "A substance loses oxygen or loses hydrogen during a chemical reaction.",
+        "A substance gains oxygen or gains hydrogen during a chemical reaction.",
+        "A substance loses oxygen or gains hydrogen during a chemical reaction."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses reduction with oxidation",
+        "believes reduction involves losing both oxygen and hydrogen",
+        "believes reduction involves gaining both oxygen and hydrogen",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-oxidized-reduced-substances",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-oxidized-reduced-substances",
+      "question": "In the reaction CuO + H2 -> Cu + H2O, which substance is oxidized and which is reduced?",
+      "options": [
+        "Cu is oxidized and H2O is reduced.",
+        "CuO is oxidized and H2 is reduced.",
+        "H2 is oxidized and CuO is reduced.",
+        "H2O is oxidized and Cu is reduced."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies products instead of reactants as the oxidized and reduced substances",
+        "swaps the oxidized and reduced substances by confusing gaining and losing oxygen",
+        "",
+        "identifies the products and also reverses their oxidation-reduction roles"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-oxidizing-reducing-agents",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-oxidizing-reducing-agents",
+      "question": "In the reaction ZnO + C -> Zn + CO, which substance acts as the oxidizing agent?",
+      "options": [
+        "Zn",
+        "CO",
+        "ZnO",
+        "C"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "identifies the reduced product instead of the reactant supplying oxygen",
+        "identifies the oxidized product as the agent",
+        "",
+        "confuses oxidizing agent with reducing agent by picking the substance that undergoes oxidation"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-corrosion",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-corrosion",
+      "question": "What is corrosion in chemistry?",
+      "options": [
+        "The gradual deterioration of a metal caused by moisture, air, or acids.",
+        "The physical breaking down of a metal into pieces under heavy pressure.",
+        "The fast reaction between two different metals in a vacuum.",
+        "The intentional coating of a reactive metal with a protective layer of paint."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses chemical corrosion with mechanical stress or physical deformation",
+        "thinks corrosion is a rapid reaction occurring without environmental air or moisture",
+        "confuses corrosion with anti-corrosion prevention methods like painting"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-describe-rusting-iron",
+      "nodeId": "class10-science-chemical-reactions-and-equations-describe-rusting-iron",
+      "question": "What happens when an iron nail is left exposed to moist air for a long period?",
+      "options": [
+        "It gets covered with a black coating of iron sulfide.",
+        "It develops a reddish-brown powdery coating called rust.",
+        "It forms a smooth green layer of basic iron carbonate.",
+        "It turns shiny and silver-white due to loss of surface atoms."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses iron rusting with the black sulfide tarnish seen on silver",
+        "",
+        "confuses the reddish-brown coating of iron with the green coating of copper",
+        "thinks exposure to moist air polishes or refines the metal surface"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-identify-silver-copper-corrosion",
+      "nodeId": "class10-science-chemical-reactions-and-equations-identify-silver-copper-corrosion",
+      "question": "Which of the following correctly pairs the metal with the color of the coating formed on its surface during corrosion?",
+      "options": [
+        "Silver forms a green coating, while copper forms a black coating.",
+        "Silver forms a black coating, while copper forms a green coating.",
+        "Silver forms a red coating, while copper forms a white coating.",
+        "Silver forms a blue coating, while copper forms a yellow coating."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "swaps the tarnish colors formed on silver and copper",
+        "",
+        "confuses the colors of silver and copper corrosion with iron rust and zinc compounds",
+        "guesses arbitrary primary and secondary colors for tarnished metals"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-explain-corrosion-as-redox",
+      "nodeId": "class10-science-chemical-reactions-and-equations-explain-corrosion-as-redox",
+      "question": "Why is the corrosion of a metal considered an oxidation process in redox chemistry?",
+      "options": [
+        "Neutral metal atoms gain electrons to form stable non-metal anions.",
+        "The metal shares pairs of electrons equally with surrounding acid molecules.",
+        "Moisture and atmospheric gases lose electrons to the metal surface.",
+        "Neutral metal atoms lose electrons to form positively charged metal ions."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks oxidation involves metals gaining electrons to become anions",
+        "views corrosion as a covalent bonding process rather than an electron transfer oxidation",
+        "believes environmental oxidizing agents lose electrons instead of gaining them",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-define-rancidity",
+      "nodeId": "class10-science-chemical-reactions-and-equations-define-rancidity",
+      "question": "What is rancidity in food science?",
+      "options": [
+        "The oxidation of fats and oils leading to an unpleasant smell and bad taste.",
+        "The rapid evaporation of water from food causing it to become dry and brittle.",
+        "The reduction of carbohydrates in food resulting in a sweet and sour odor.",
+        "The growth of visible green mold spores on sugary items kept in the dark."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses rancidity with simple dehydration or loss of moisture in food",
+        "thinks rancidity involves chemical reduction of carbohydrates rather than oxidation of fats",
+        "confuses chemical rancidity with biological fungal or bacterial decomposition"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-explain-cause-of-rancidity",
+      "nodeId": "class10-science-chemical-reactions-and-equations-explain-cause-of-rancidity",
+      "question": "What is the primary chemical cause of rancidity in stored food items?",
+      "options": [
+        "Thermal breakdown of dietary fibers due to low atmospheric pressure.",
+        "Reduction of mineral salts caused by exposure to direct sunlight and heat.",
+        "Oxidation of unsaturated fats and oils after prolonged exposure to air.",
+        "Neutralization of food acids caused by contact with glass packaging."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "attributes rancidity to physical pressure and fiber degradation rather than fat oxidation",
+        "thinks rancidity is driven by the chemical reduction of minerals rather than oxidation of fats",
+        "",
+        "believes rancidity is caused by an acid-base neutralization reaction with containers"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-explain-antioxidants-airtight-containers",
+      "nodeId": "class10-science-chemical-reactions-and-equations-explain-antioxidants-airtight-containers",
+      "question": "How do antioxidants and airtight containers help in preserving fat-containing foods?",
+      "options": [
+        "They speed up the evaporation of moisture from within the food cells.",
+        "They slow down or prevent the oxidation reactions that spoil the fats.",
+        "They supply excess oxygen to complete the chemical breakdown of the oils.",
+        "They react with proteins to produce extra moisture inside the container."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "believes preservation works primarily by removing all water through rapid drying",
+        "",
+        "thinks antioxidants provide oxygen rather than preventing oxygen from reacting with fats",
+        "thinks antioxidants stimulate moisture production from proteins to protect food"
+      ]
+    },
+    {
+      "id": "probe-class10-science-chemical-reactions-and-equations-explain-nitrogen-flushing-chips",
+      "nodeId": "class10-science-chemical-reactions-and-equations-explain-nitrogen-flushing-chips",
+      "question": "Why are packets of potato chips flushed with nitrogen gas before being sealed?",
+      "options": [
+        "Nitrogen creates an unreactive, oxygen-free environment to prevent oxidation.",
+        "Nitrogen reacts chemically with the potato starch to enhance its salty flavor.",
+        "Nitrogen adds moisture to the packet to keep the fried chips soft and chewy.",
+        "Nitrogen acts as a strong oxidizing agent to break down excess cooking oil."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes nitrogen is added as a flavoring agent that reacts with starch",
+        "thinks nitrogen is meant to add moisture and soften crispy snacks",
+        "confuses nitrogen with an oxidizing agent that actively consumes oil"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-heterotroph-definition",
+      "nodeId": "class10-science-life-processes-heterotroph-definition",
+      "question": "Which statement correctly describes heterotrophic nutrition?",
+      "options": [
+        "Depending directly or indirectly on autotrophic organisms for food and energy",
+        "Synthesizing energy-rich sugars from atmospheric carbon dioxide using sunlight",
+        "Absorbing only inorganic minerals directly from dry soil to build body tissues",
+        "Producing complex organic molecules from water and trapped ambient heat alone"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses heterotrophic nutrition with autotrophic photosynthesis",
+        "thinks heterotrophic nutrition involves synthesizing organic mass directly from soil minerals",
+        "believes heterotrophs make their own food using thermal energy rather than relying on autotrophs"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-saprophytic-nutrition",
+      "nodeId": "class10-science-life-processes-saprophytic-nutrition",
+      "question": "How do saprophytic organisms like bread mould obtain their nutrition?",
+      "options": [
+        "They trap sunlight with specialized pigments to synthesize sugars from moisture",
+        "They engulf whole solid prey alive and complete digestion within internal vacuoles",
+        "They extract liquid nourishment from a living host body without causing its death",
+        "They break down dead food material externally and absorb the resulting nutrients"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks fungi synthesize food autotrophically like green plants",
+        "confuses saprophytic nutrition with internal holozoic digestion",
+        "confuses saprophytic nutrition with parasitic nutrition",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-parasitic-nutrition",
+      "nodeId": "class10-science-life-processes-parasitic-nutrition",
+      "question": "What is the key feature of parasitic nutrition seen in organisms like Cuscuta and ticks?",
+      "options": [
+        "Entering a mutually beneficial partnership where both organisms provide food",
+        "Decomposing dead organic matter into soluble minerals outside of the body",
+        "Ingesting complex solid food items to digest them inside specialized internal organs",
+        "Deriving essential nutrients from a host organism without immediately killing it"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses parasitism with symbiotic mutualism",
+        "confuses parasitic nutrition with saprophytic breakdown of dead matter",
+        "confuses parasitic feeding with holozoic ingestion",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-holozoic-nutrition",
+      "nodeId": "class10-science-life-processes-holozoic-nutrition",
+      "question": "What defines the holozoic mode of nutrition found in animals like humans?",
+      "options": [
+        "Secreting digestive enzymes externally to absorb pre-digested liquid molecules",
+        "Taking in complex solid or liquid food that is digested and absorbed inside the body",
+        "Absorbing simple organic nutrients directly across the skin from a living host",
+        "Synthesizing complex carbohydrates internally using inorganic carbon and light"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses holozoic nutrition with external saprophytic digestion",
+        "",
+        "confuses holozoic nutrition with parasitic nutrient absorption",
+        "confuses holozoic nutrition with autotrophic synthesis"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-amoeba-ingestion-pseudopodia",
+      "nodeId": "class10-science-life-processes-amoeba-ingestion-pseudopodia",
+      "question": "How does an Amoeba capture its food during the process of ingestion?",
+      "options": [
+        "It uses beating surface cilia to push food into a fixed, permanent oral groove",
+        "It secretes sticky mucus across its entire membrane to dissolve prey externally",
+        "It extends temporary finger-like pseudopodia that fuse over the food particle",
+        "It opens a rigid muscular mouth pore to swallow passing microscopic particles"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the feeding mechanism of Amoeba with that of Paramoecium",
+        "thinks Amoeba captures food by external chemical entrapment without changing shape",
+        "",
+        "assumes single-celled Amoeba possesses specialized permanent organ structures like a mouth"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-amoeba-digestion-vacuole",
+      "nodeId": "class10-science-life-processes-amoeba-digestion-vacuole",
+      "question": "What happens to the engulfed food inside the food vacuole of an Amoeba?",
+      "options": [
+        "Digested nutrients are pumped directly out of the cell wall into the environment",
+        "Food particles are stored permanently in the vacuole until the cell undergoes division",
+        "Complex food substances are broken down into simpler ones and diffuse into cytoplasm",
+        "Enzymes transport intact complex molecules directly into the nucleus for storage"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses internal nutrient assimilation with excretion across the cell boundary",
+        "thinks the food vacuole is merely a long-term storage unit rather than a digestive site",
+        "",
+        "believes digestion occurs inside the nucleus rather than the vacuole diffusing into cytoplasm"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-amoeba-egestion",
+      "nodeId": "class10-science-life-processes-amoeba-egestion",
+      "question": "How does an Amoeba remove undigested waste material from its single cell?",
+      "options": [
+        "Waste is permanently retained in specialized storage crystals near the nucleus",
+        "Waste is moved to the surface of the cell and thrown out by membrane rupture",
+        "Waste is broken down into atmospheric gases that pass out through respiration",
+        "Waste is discharged through a fixed, permanent anal pore located at the rear"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks single-celled organisms retain waste indefinitely instead of egesting it",
+        "",
+        "confuses solid egestion with respiratory gas exchange",
+        "assumes Amoeba has fixed anatomical structures like the anal pore of Paramoecium"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-paramoecium-nutrition",
+      "nodeId": "class10-science-life-processes-paramoecium-nutrition",
+      "question": "How does a Paramoecium take in its food?",
+      "options": [
+        "By extending temporary pseudopodia from any part of the cell surface",
+        "By secreting enzymes into water and absorbing nutrients over the entire body",
+        "By moving cilia covering the cell to sweep food toward a specific spot",
+        "By engulfing large particles through random pinching of the cell membrane"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses Paramoecium feeding with Amoeba pseudopodial engulfment",
+        "thinks Paramoecium performs external saprophytic digestion in open water",
+        "",
+        "believes Paramoecium lacks a dedicated intake site and ingests food anywhere"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-xylem-vessels-tracheids",
+      "nodeId": "class10-science-life-processes-xylem-vessels-tracheids",
+      "question": "What is the primary role of vessels and tracheids in plant xylem tissue?",
+      "options": [
+        "Forming a continuous non-living pipeline for transporting water and minerals",
+        "Translocating manufactured sucrose and amino acids from mature leaves to roots",
+        "Providing an impermeable barrier that prevents water from entering the stem",
+        "Storing large volumes of starch and oils inside the central pith of stems"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses xylem transport of water with phloem translocation of sugars",
+        "thinks xylem elements function as protective barriers rather than conducting tubes",
+        "confuses xylem conducting elements with storage parenchyma"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-root-pressure-water-entry",
+      "nodeId": "class10-science-life-processes-root-pressure-water-entry",
+      "question": "How do plant roots take up water from the soil to generate root pressure?",
+      "options": [
+        "Roots actively absorb ions, creating a concentration difference that pulls water in",
+        "Roots pump liquid water directly into xylem vessels using mechanical valve cells",
+        "Roots rely entirely on gravitational pull to drain surface soil water into the stem",
+        "Roots lose minerals to the soil, causing water to rush inside to balance mass"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks water is pumped mechanically by cellular contraction rather than osmotic flow",
+        "believes gravity drives upward movement of water into the roots",
+        "thinks roots release ions outward to attract water rather than taking them up actively"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-transpiration-definition",
+      "nodeId": "class10-science-life-processes-transpiration-definition",
+      "question": "What is transpiration in plants?",
+      "options": [
+        "The uptake of dissolved mineral ions from moist soil by root hair cells",
+        "The transport of synthesized food from green leaves to underground storage",
+        "The release of carbon dioxide gas during the breakdown of glucose in leaves",
+        "The loss of water in the form of vapour from aerial parts, mainly via stomata"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses transpiration with root absorption of water and minerals",
+        "confuses transpiration with phloem translocation of photosynthates",
+        "confuses water vapour loss in transpiration with gaseous respiration",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-transpiration-pull-ascent",
+      "nodeId": "class10-science-life-processes-transpiration-pull-ascent",
+      "question": "How does daytime transpiration aid the upward movement of water in tall trees?",
+      "options": [
+        "It increases air pressure inside leaf cells to force sap downward into the roots",
+        "It creates a suction pull that draws a continuous water column up xylem tubes",
+        "It produces energy molecules that mechanically push water upward through stems",
+        "It breaks water molecules apart to release light gases that float to the canopy"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks transpiration pushes water downward by building positive pressure in leaves",
+        "",
+        "believes transpiration generates metabolic energy that acts as a mechanical pump",
+        "thinks water rises because it is chemically split into lighter floating components"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-translocation-definition",
+      "nodeId": "class10-science-life-processes-translocation-definition",
+      "question": "What is meant by translocation in plants?",
+      "options": [
+        "Movement of water and dissolved soil minerals upward through xylem vessels",
+        "Loss of excess water vapor into the air through microscopic leaf stomata",
+        "Transport of soluble products of photosynthesis and amino acids via phloem",
+        "Diffusion of respiratory gases like carbon dioxide and oxygen across leaves"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses translocation in phloem with the ascent of sap through xylem",
+        "confuses translocation of food with the process of transpiration",
+        "",
+        "confuses translocation of nutrients with gaseous exchange"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-phloem-sieve-tubes-bidirectional",
+      "nodeId": "class10-science-life-processes-phloem-sieve-tubes-bidirectional",
+      "question": "How does the transport of food in phloem tissue take place?",
+      "options": [
+        "In an upward direction only, using non-living xylem vessels and tracheids",
+        "In a downward direction only, moving purely under the pull of gravity",
+        "In both upward and downward directions, utilizing sieve tubes and companion cells",
+        "In a lateral direction only, moving across parenchyma cells by simple diffusion"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "believes phloem transport is unidirectional upward like xylem sap",
+        "thinks food only moves downward from leaves to roots due to gravity",
+        "",
+        "believes transport occurs only sideways between adjacent tissue layers"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-translocation-atp-osmosis",
+      "nodeId": "class10-science-life-processes-translocation-atp-osmosis",
+      "question": "What mechanism drives the movement of sucrose through the phloem?",
+      "options": [
+        "Transpirational pull creates strong negative tension that draws sucrose upward",
+        "Sucrose enters phloem using ATP, drawing water by osmosis to generate high pressure",
+        "Root pressure actively pumps sucrose along with soil water into sieve elements",
+        "Capillary action forces sucrose solution through narrow sieve tube pores passively"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "attributes phloem translocation to the transpirational pull mechanism of xylem",
+        "",
+        "thinks root pressure is the main driving force for food transport in phloem",
+        "believes food moves purely passively by physical capillary action"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-xylem-vs-phloem-transport",
+      "nodeId": "class10-science-life-processes-xylem-vs-phloem-transport",
+      "question": "Which statement correctly compares transport in xylem and phloem?",
+      "options": [
+        "Xylem requires ATP energy for flow, whereas phloem relies solely on physical forces",
+        "Xylem moves food downward passively, whereas phloem moves water upward using ATP energy",
+        "Xylem transports food in two directions, whereas phloem transports minerals in one direction",
+        "Xylem moves water upward passively, whereas phloem moves food bidirectionally using ATP"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "reverses the energy requirements of xylem and phloem transport",
+        "swaps both the transported substances and the operational mechanisms",
+        "swaps the substances transported and flow directions between xylem and phloem",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-plant-gaseous-waste-stomata",
+      "nodeId": "class10-science-life-processes-plant-gaseous-waste-stomata",
+      "question": "How do plants primarily eliminate their gaseous waste products?",
+      "options": [
+        "Oxygen and carbon dioxide are excreted through leaf stomata and stem lenticels",
+        "Carbon dioxide is converted to solid crystals and stored inside root hair cells",
+        "Gaseous wastes are dissolved in sap and permanently stored inside old xylem",
+        "Excess gases are pumped into surrounding soil through specialized root channels"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks gaseous wastes are solidified and stored within root tissues",
+        "confuses gaseous waste removal with internal waste storage in dead xylem",
+        "believes gases are primarily eliminated into the soil via roots"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-plant-excess-water-transpiration",
+      "nodeId": "class10-science-life-processes-plant-excess-water-transpiration",
+      "question": "How do plants get rid of excess water taken up from the soil?",
+      "options": [
+        "By breaking down water molecules into metabolic gases inside vacuoles",
+        "By evaporating water vapor through stomata in the process of transpiration",
+        "By converting liquid water into solid resins and gums within old bark",
+        "By releasing water continuously into the soil through active root pumping"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks excess water is chemically dismantled during excretion",
+        "",
+        "confuses water elimination with the accumulation of resins and gums",
+        "believes excess water is pushed back down into soil by roots"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-plant-waste-storage-cellular-vacuoles",
+      "nodeId": "class10-science-life-processes-plant-waste-storage-cellular-vacuoles",
+      "question": "How do plants manage solid cellular wastes using aging leaves?",
+      "options": [
+        "They store wastes in cellular vacuoles of leaves that eventually fall off",
+        "They break down wastes into mineral nutrients that are reabsorbed by stems",
+        "They excrete wastes across the leaf epidermis directly into atmospheric air",
+        "They convert wastes into protective cuticle wax coating younger leaves"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "believes stored waste substances are digested and reused as plant food",
+        "thinks cellular solid wastes diffuse directly through leaf surfaces into the air",
+        "confuses waste accumulation in vacuoles with structural leaf wax formation"
+      ]
+    },
+    {
+      "id": "probe-class10-science-life-processes-plant-resins-gums-soil-excretion",
+      "nodeId": "class10-science-life-processes-plant-resins-gums-soil-excretion",
+      "question": "Where are waste products like resins and gums stored in plants?",
+      "options": [
+        "They are actively secreted into young growing fruits and flower petals",
+        "They are stored in root caps and released continuously into atmosphere",
+        "They are held temporarily in active phloem sieve tubes before excretion",
+        "They are stored in old, non-functional xylem vessels of woody stems"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "believes wastes are concentrated in reproductive structures like flowers and fruits",
+        "thinks resins and gums are vaporized into the air from root tips",
+        "confuses storage in non-functional xylem with transport in active phloem",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class10-science-light-reflection-and-refraction-convex-lens-real-image-properties",
+      "nodeId": "class10-science-light-reflection-and-refraction-convex-lens-real-image-properties",
+      "question": "An object is placed at a distance of 2F1 in front of a convex lens. What are the characteristics of the image formed?",
+      "options": [
+        "Real, inverted, and diminished compared to the object, formed between F2 and 2F2",
+        "Real, inverted, and magnified compared to the object, formed beyond 2F2",
+        "Real, inverted, and the same size as the object, formed at 2F2",
+        "Virtual, erect, and the same size as the object, formed at 2F1"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the image properties of an object at 2F1 with an object placed beyond 2F1",
+        "confuses the image properties of an object at 2F1 with an object placed between F1 and 2F1",
+        "",
+        "believes a convex lens always forms a virtual and erect image whenever the object is placed at an integer multiple of the focal length"
+      ]
+    },
+    {
+      "id": "probe-class10-science-light-reflection-and-refraction-convex-lens-virtual-image-properties",
+      "nodeId": "class10-science-light-reflection-and-refraction-convex-lens-virtual-image-properties",
+      "question": "Why does a convex lens form a virtual, magnified, and erect image when an object is placed between its principal focus F1 and optical centre O?",
+      "options": [
+        "The refracted rays converge to a single focal point on the opposite side before reaching the eye.",
+        "The refracted rays diverge after passing through the lens and appear to meet behind the object.",
+        "The refracted rays travel completely parallel to one another and intersect only at infinite distance.",
+        "The refracted rays reflect entirely back from the lens surface without any transmission through it."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "thinks the rays still converge on the opposite side to produce a real image when placed inside the focal length",
+        "",
+        "confuses the condition of placing the object between F1 and O with placing the object exactly at the principal focus F1",
+        "thinks virtual image formation in lenses occurs via total internal reflection instead of refraction of diverging rays"
+      ]
+    },
+    {
+      "id": "probe-class10-science-light-reflection-and-refraction-concave-lens-image-characteristics",
+      "nodeId": "class10-science-light-reflection-and-refraction-concave-lens-image-characteristics",
+      "question": "An object is placed at a finite distance in front of a concave lens. What are the nature, size, and position of the image formed?",
+      "options": [
+        "Virtual, erect, diminished, and formed between the focus F1 and optical centre O",
+        "Real, inverted, magnified, and formed beyond 2F2 on the opposite side of the lens",
+        "Real, inverted, diminished, and formed between the focus F2 and 2F2 on the other side",
+        "Virtual, erect, magnified, and formed beyond the focus F1 on the same side of the lens"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "assumes a concave lens behaves like a convex lens when an object is placed close to the focus",
+        "confuses the image formed by a concave lens with the diminished real image formed by a convex lens",
+        "thinks a concave lens magnifies objects like a magnifying glass when kept at a finite distance"
+      ]
+    },
+    {
+      "id": "probe-class10-science-light-reflection-and-refraction-lens-practical-applications",
+      "nodeId": "class10-science-light-reflection-and-refraction-lens-practical-applications",
+      "question": "Which optical instrument uses a single convex lens specifically to produce an erect, enlarged, and virtual image of an object?",
+      "options": [
+        "A photographic camera capturing a landscape scene",
+        "A peephole installed in a front entrance door",
+        "Spectacles used for correcting short-sightedness",
+        "A simple magnifying glass held close to an object"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks cameras produce virtual and enlarged images rather than real, inverted, and diminished images on a sensor",
+        "thinks door peepholes use convex lenses rather than concave lenses to provide a wide-angle diminished view",
+        "confuses the converging lens used for hypermetropia with diverging concave lenses used for correcting short-sightedness (myopia)",
+        ""
+      ]
     }
   ]
 }

@@ -8316,6 +8316,510 @@
         "thinks all hormones share identical intracellular pathways and kinetics",
         ""
       ]
+    },
+    {
+      "id": "probe-class11-biology-animal-kingdom-notochord-origin-structure",
+      "nodeId": "class11-biology-animal-kingdom-notochord-origin-structure",
+      "question": "Which statement correctly describes the embryonic origin and structure of the notochord in animals?",
+      "options": [
+        "It is an ectodermally derived, hollow tubular canal formed on the ventral side.",
+        "It is an endodermally derived, flexible muscular band formed on the lateral side.",
+        "It is an ectodermally derived, solid fluid-filled sac formed along the ventral body.",
+        "It is a mesodermally derived, solid rod-like supporting structure on the dorsal side."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks the notochord shares the ectodermal origin and hollow structure of the nerve cord",
+        "thinks the notochord develops from the endoderm because it lies close to the gut",
+        "confuses the notochord with an ectodermal fluid-filled body cavity or coelom",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-animal-kingdom-notochord-dorsal-location",
+      "nodeId": "class11-biology-animal-kingdom-notochord-dorsal-location",
+      "question": "What is the precise anatomical position of the notochord relative to other body systems in chordate embryos?",
+      "options": [
+        "Lateral body wall located directly between the body wall and coelom",
+        "Ventral midline situated entirely underneath the main digestive tract",
+        "Dorsal midline between the central nervous system and the digestive tract",
+        "Dorsal midline positioned entirely above the central nervous system"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "thinks the notochord runs along the lateral margins rather than the dorsal midline",
+        "confuses the invertebrate ventral nerve cord position with chordate axial anatomy",
+        "",
+        "thinks the notochord lies outermost on the dorsal surface, above the nerve cord"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-animal-kingdom-classify-chordates-nonchordates",
+      "nodeId": "class11-biology-animal-kingdom-classify-chordates-nonchordates",
+      "question": "What fundamental criterion is used to classify animals into chordates and non-chordates?",
+      "options": [
+        "Presence or absence of a segmented bony vertebral column during adulthood",
+        "Presence or absence of a rod-like notochord at any stage of the life cycle",
+        "Presence or absence of an open or closed blood circulatory system in the body",
+        "Presence or absence of a true coelomic cavity lined completely by mesoderm"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the defining feature of chordates with the vertebral column of vertebrates",
+        "",
+        "believes circulatory system type is the primary diagnostic criterion for chordate classification",
+        "thinks the presence of a true coelom separates chordates from non-chordates"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-animal-kingdom-notochord-phyla-survey",
+      "nodeId": "class11-biology-animal-kingdom-notochord-phyla-survey",
+      "question": "Why are all animal phyla spanning from Porifera to Hemichordata grouped together as non-chordates?",
+      "options": [
+        "They completely lack a true notochord at every stage of their life cycle.",
+        "They do not possess true tissues or organs at any point in development.",
+        "They all possess a completely open and unbranched blood circulatory system.",
+        "They consistently exhibit radial body symmetry throughout their adult forms."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "generalises the primitive tissue grade of Porifera to all non-chordate phyla",
+        "assumes all non-chordate invertebrates share an open circulatory system",
+        "assumes all non-chordates possess radial symmetry, confusing bilateral and radial groups"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-morphology-of-flowering-plants-seed-definition-and-origin",
+      "nodeId": "class11-biology-morphology-of-flowering-plants-seed-definition-and-origin",
+      "question": "Which of the following correctly defines a seed in angiosperms based on its developmental origin?",
+      "options": [
+        "A mature, fertilized ovule consisting of a seed coat and an embryo",
+        "A ripened ovary containing developed pericarp layers and floral remains",
+        "A fused female gametophyte containing only diploid nutritive tissue",
+        "A fertilized carpel containing an unspecialized mass of storage cells"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Confuses the origin of a fruit (ripened ovary) with the origin of a seed (mature ovule).",
+        "Thinks the seed is solely a modified gametophyte rather than the entire transformed ovule containing an embryo.",
+        "Confuses the entire carpel organ with the specific ovule structure that develops into a seed."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-morphology-of-flowering-plants-seed-basic-components",
+      "nodeId": "class11-biology-morphology-of-flowering-plants-seed-basic-components",
+      "question": "What are the essential fundamental components present in every typical angiosperm seed?",
+      "options": [
+        "A fleshy pericarp surrounding a central diploid endosperm tissue",
+        "An outer protective seed coat enclosing an embryo with an axis and cotyledons",
+        "A single protective aleurone layer enclosing an undifferentiated zygote mass",
+        "A persistent nucellar layer surrounding a pair of photosynthetic true leaves"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Confuses fruit wall layers (pericarp) with the structural components of a seed.",
+        "",
+        "Believes the embryo remains an undifferentiated single-celled zygote within the seed.",
+        "Mistakes post-germination structures like true leaves for the primary components inside a seed."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-morphology-of-flowering-plants-endosperm-nature-and-function",
+      "nodeId": "class11-biology-morphology-of-flowering-plants-endosperm-nature-and-function",
+      "question": "What is the primary nature and function of the endosperm in developing angiosperm seeds?",
+      "options": [
+        "A diploid protective tissue that develops directly from integuments to prevent mechanical damage",
+        "A haploid gametophytic tissue that acts as a structural anchor for the emerging radicle",
+        "A specialized embryonic layer that carries out active photosynthesis before seed germination",
+        "A triploid food-storing tissue formed by double fertilization that nourishes the embryo"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses endosperm with the seed coat formed from the ovular integuments.",
+        "Confuses angiosperm endosperm with gymnosperm endosperm, which is haploid female gametophytic tissue.",
+        "Believes the storage tissue is photosynthetic inside the sealed seed.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-morphology-of-flowering-plants-endospermous-vs-non-endospermous-seeds",
+      "nodeId": "class11-biology-morphology-of-flowering-plants-endospermous-vs-non-endospermous-seeds",
+      "question": "Which statement accurately distinguishes endospermous (albuminous) seeds from non-endospermous (exalbuminous) seeds?",
+      "options": [
+        "Endospermous seeds completely consume their endosperm during development, as seen in peas and beans.",
+        "Non-endospermous seeds retain a persistent endosperm to nourish the seedling, as seen in castor seeds.",
+        "Endospermous seeds retain persistent endosperm tissue at maturity, as seen in castor and maize.",
+        "Non-endospermous seeds completely lack cotyledons because food is stored directly in the pericarp."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Reverses the definition by attributing complete consumption of endosperm to endospermous seeds.",
+        "Confuses exalbuminous seeds with albuminous seeds regarding endosperm retention and examples.",
+        "",
+        "Incorrectly assumes that non-endospermous seeds lack cotyledons rather than relying on cotyledons for storage."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-energy-currency-atp",
+      "nodeId": "class11-biology-biomolecules-energy-currency-atp",
+      "question": "Which molecule acts as the primary, universal chemical energy currency transferred directly across cellular reactions?",
+      "options": [
+        "Nicotinamide dinucleotide (NAD+)",
+        "Ribonucleic acid polymer (RNA)",
+        "Adenosine triphosphate (ATP)",
+        "Glucose-6-phosphate intermediate"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses electron-carrier coenzymes with direct universal chemical energy currency",
+        "confuses informational genetic polymers with cellular energy-transfer currency molecules",
+        "",
+        "confuses a specific phosphorylated glycolytic sugar with universal energy currency"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-energy-coupling-anabolism-catabolism",
+      "nodeId": "class11-biology-biomolecules-energy-coupling-anabolism-catabolism",
+      "question": "How is the energy released during catabolic reactions utilized by living cells to support anabolic pathways?",
+      "options": [
+        "It is captured via ATP synthesis and then hydrolyzed to drive biosynthesis.",
+        "It is released purely as thermal energy to heat the enzyme active sites.",
+        "It is converted directly into structural carbohydrates without intermediate carriers.",
+        "It is used immediately to break down excess ribosomal proteins for storage."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks metabolic energy release serves only to maintain cellular heat rather than chemical coupling",
+        "believes catabolic energy transfers directly into new complex structures without an ATP intermediate",
+        "confuses anabolic building processes with catabolic protein degradation"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-glycolysis-energy-extraction",
+      "nodeId": "class11-biology-biomolecules-glycolysis-energy-extraction",
+      "question": "Which statement accurately describes the energy-yielding catabolic pathway of glycolysis?",
+      "options": [
+        "A 5-step anabolic pathway that uses up cellular ATP to synthesize glucose molecules.",
+        "A 10-step cyclic pathway that completely oxidizes pyruvic acid into water molecules.",
+        "A 10-step catabolic pathway converting glucose to pyruvic acid that yields ATP.",
+        "A single-step digestive cleavage that consumes metabolic energy without producing ATP."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses catabolic glycolysis with anabolic gluconeogenesis and misstates the step count",
+        "confuses linear glycolysis with the cyclic Krebs cycle and its terminal oxidation",
+        "",
+        "believes glycolysis is an uncatalyzed single-step breakdown that requires net energy expenditure"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-metabolic-basis-work-performance",
+      "nodeId": "class11-biology-biomolecules-metabolic-basis-work-performance",
+      "question": "How does chemical energy derived from cellular metabolism enable physical work like muscle contraction?",
+      "options": [
+        "It passively diffuses across sarcomeres to mechanically push actin fibers apart.",
+        "It reduces intracellular temperature to condense structural muscle proteins together.",
+        "It is converted directly into electrical voltage without involving any proteins.",
+        "It provides ATP whose hydrolysis powers conformational changes in motor proteins."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks chemical energy performs mechanical work via simple passive diffusion pressure",
+        "believes mechanical movement relies on thermal cooling rather than chemical hydrolysis",
+        "confuses biochemical energy coupling with protein-free electrical transmission",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-physical-vs-chemical-change",
+      "nodeId": "class11-biology-biomolecules-physical-vs-chemical-change",
+      "question": "Which of the following processes represents a true chemical reaction rather than just a physical change?",
+      "options": [
+        "The melting of solid ice into liquid water at elevated ambient temperatures.",
+        "The cleavage of peptide bonds in a polypeptide chain to form free amino acids.",
+        "The evaporation of liquid water into atmospheric water vapor during heating.",
+        "The dissolution of solid sodium chloride crystals into an aqueous liquid solution."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses a physical state transition (solid to liquid) with chemical bond rearrangement",
+        "",
+        "confuses a change of physical phase (liquid to gas) with a chemical reaction",
+        "thinks dissolving a solute involves breaking and reforming covalent chemical bonds"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-reaction-rate-definition",
+      "nodeId": "class11-biology-biomolecules-reaction-rate-definition",
+      "question": "In metabolic and chemical processes, how is the reaction rate formally defined and expressed?",
+      "options": [
+        "The amount of product formed per unit time, mathematically expressed as delta P / delta t.",
+        "The change in total thermal energy of the reaction system per degree temperature shift.",
+        "The total time required for an enzyme to undergo irreversible thermal denaturation.",
+        "The total concentration of substrate remaining unchanged inside the reaction chamber."
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "confuses reaction rate with heat capacity or enthalpy change per degree of temperature",
+        "confuses the rate of product formation with enzyme denaturation time",
+        "confuses remaining unreacted substrate with the time-dependent velocity of a reaction"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-temperature-coefficient-q10",
+      "nodeId": "class11-biology-biomolecules-temperature-coefficient-q10",
+      "question": "According to the general rule of thumb for temperature coefficients (Q10), what happens to the rate of a chemical reaction when the temperature decreases by 10 °C?",
+      "options": [
+        "The reaction rate completely drops to zero immediately.",
+        "The reaction rate is reduced by half of its original value.",
+        "The reaction rate doubles compared to its previous level.",
+        "The reaction rate remains completely constant and unchanged."
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "assumes any 10 °C drop entirely arrests the biochemical reaction",
+        "",
+        "inverts the temperature effect, thinking a cooling step doubles the velocity",
+        "believes reaction rate is entirely insensitive to a 10 °C change in temperature"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-biomolecules-uncatalyzed-vs-catalyzed-rate",
+      "nodeId": "class11-biology-biomolecules-uncatalyzed-vs-catalyzed-rate",
+      "question": "Uncatalyzed hydration of carbon dioxide forms about 200 H2CO3 molecules per hour, whereas carbonic anhydrase forms 600,000 molecules per second. What does this demonstrate?",
+      "options": [
+        "Enzymes change the final chemical equilibrium point to favor reactants over products.",
+        "Enzymes operate at a slower per-second rate than uncatalyzed reactions over long times.",
+        "Enzymes supply extra heat energy into the medium to raise the overall kinetic energy.",
+        "Enzymes dramatically enhance the reaction rate by a factor of roughly 10 million times."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "thinks enzymes alter the chemical equilibrium rather than accelerating the approach to equilibrium",
+        "fails to compare identical time units and incorrectly concludes the uncatalyzed rate is faster",
+        "believes catalysts work by adding thermal energy rather than lowering activation energy",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-photosynthesis-in-higher-plants-biosynthetic-phase-definition",
+      "nodeId": "class11-biology-photosynthesis-in-higher-plants-biosynthetic-phase-definition",
+      "question": "Which of the following statements best describes the biosynthetic phase (dark reaction) of photosynthesis?",
+      "options": [
+        "It occurs in the thylakoid lumen directly generating ATP and NADPH by splitting water molecules.",
+        "It occurs in the grana strictly at night to break down stored carbohydrates and release energy.",
+        "It occurs in the stroma using ATP and NADPH from light reactions to assimilate CO2 into sugars.",
+        "It occurs in the outer chloroplast membrane to absorb photons and transfer energy to pigments."
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "Confuses the dark reaction with the light-dependent photochemical phase in the thylakoid.",
+        "Takes the term 'dark reaction' literally to mean a process that only occurs at night without light products.",
+        "",
+        "Misidentifies the site and function of carbon fixation as photon absorption in the outer membrane."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-photosynthesis-in-higher-plants-calvin-radioactive-tracer-discovery",
+      "nodeId": "class11-biology-photosynthesis-in-higher-plants-calvin-radioactive-tracer-discovery",
+      "question": "Which compound was identified by Melvin Calvin as the first stable product of carbon dioxide fixation using radioactive 14C in algal photosynthesis?",
+      "options": [
+        "Ribulose-1,5-bisphosphate (RuBP)",
+        "Phosphoenolpyruvate (PEP)",
+        "Oxaloacetic acid (OAA)",
+        "3-phosphoglyceric acid (PGA)"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "Confuses the initial CO2 acceptor molecule with the first stable synthesized product.",
+        "Confuses the primary CO2 acceptor of C4 plants with the first stable product of the Calvin cycle.",
+        "Confuses the first stable product of the C4 pathway with that of the C3 Calvin cycle.",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c3",
+      "nodeId": "class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c3",
+      "question": "What is the nature and identity of the primary CO2 acceptor molecule in the C3 photosynthetic pathway?",
+      "options": [
+        "A 5-carbon ketose sugar called ribulose-1,5-bisphosphate",
+        "A 2-carbon aldose sugar called glycolate-2-phosphate",
+        "A 3-carbon carboxylic acid called 3-phosphoglycerate",
+        "A 3-carbon keto acid called phosphoenolpyruvate"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "Believes the acceptor must be a 2-carbon compound because the first stable product is a 3-carbon compound.",
+        "Confuses the first product of carbon fixation with the primary acceptor molecule.",
+        "Confuses the C3 pathway acceptor with the primary acceptor used in the C4 pathway."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c4",
+      "nodeId": "class11-biology-photosynthesis-in-higher-plants-primary-co2-acceptor-c4",
+      "question": "In the mesophyll cells of C4 plants, which molecule acts as the primary CO2 acceptor to yield the initial 4-carbon acid?",
+      "options": [
+        "Oxaloacetic acid (OAA), a 4-carbon dicarboxylic acid",
+        "Phosphoenolpyruvate (PEP), a 3-carbon compound",
+        "Malic acid (malate), a 4-carbon organic intermediate",
+        "Ribulose-1,5-bisphosphate (RuBP), a 5-carbon ketose"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "Confuses the first stable reaction product (OAA) with the starting primary CO2 acceptor.",
+        "",
+        "Confuses a transported organic acid intermediate with the primary CO2 acceptor molecule.",
+        "Assumes C4 plants use the same primary CO2 acceptor as C3 plants in the initial mesophyll step."
+      ]
+    },
+    {
+      "id": "probe-class11-biology-plant-growth-and-development-pgr-definition-and-types",
+      "nodeId": "class11-biology-plant-growth-and-development-pgr-definition-and-types",
+      "question": "Which statement best describes the chemical nature and primary role of plant growth regulators (PGRs)?",
+      "options": [
+        "They are high-energy carbohydrate molecules synthesized exclusively to supply fuel for respiration.",
+        "They are large, complex protein molecules of uniform structure that catalyze all metabolic reactions.",
+        "They are simple inorganic minerals absorbed from the soil to provide structural support to cells.",
+        "They are small, simple molecules of diverse chemical composition that control growth and development."
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses plant growth regulators with primary storage carbohydrates like sucrose or starch",
+        "thinks plant growth regulators are enzymatic proteins rather than small diverse chemical signaling molecules",
+        "confuses plant growth regulators with inorganic essential mineral nutrients",
+        ""
+      ]
+    },
+    {
+      "id": "probe-class11-biology-plant-growth-and-development-five-major-pgr-classes",
+      "nodeId": "class11-biology-plant-growth-and-development-five-major-pgr-classes",
+      "question": "Which of the following sets contains all five major groups of naturally occurring plant growth regulators?",
+      "options": [
+        "Auxins, gibberellins, cytokinins, abscisic acid, and ethylene",
+        "Auxins, gibberellins, cytokinins, jasmonates, and brassinosteroids",
+        "Auxins, gibberellins, salicylic acid, abscisic acid, and phytochrome",
+        "Auxins, cytokinins, florigen, abscisic acid, and morphactin"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "substitutes secondary plant signaling molecules (jasmonates, brassinosteroids) for the classic five major groups",
+        "confuses the light receptor phytochrome with a major classical plant growth regulator class",
+        "confuses hypothetical flowering stimuli like florigen with the classical five major hormone classes"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-plant-growth-and-development-promoters-vs-inhibitors-grouping",
+      "nodeId": "class11-biology-plant-growth-and-development-promoters-vs-inhibitors-grouping",
+      "question": "Based on their broad physiological activities, how are the five major plant hormones grouped into promoters and inhibitors?",
+      "options": [
+        "Promoters: auxins, abscisic acid, cytokinins; Inhibitors: gibberellins, ethylene",
+        "Promoters: auxins, gibberellins, ethylene; Inhibitors: cytokinins, abscisic acid",
+        "Promoters: auxins, gibberellins, cytokinins; Inhibitors: abscisic acid, ethylene",
+        "Promoters: gibberellins, cytokinins; Inhibitors: auxins, abscisic acid, ethylene"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses the inhibitor role of abscisic acid with the growth-promoting action of gibberellins",
+        "classifies ethylene as a promoter and cytokinins as an inhibitor based on fruit ripening activity",
+        "",
+        "misclassifies auxins as primarily growth-inhibiting rather than growth-promoting hormones"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-plant-growth-and-development-chemical-nature-of-pgrs",
+      "nodeId": "class11-biology-plant-growth-and-development-chemical-nature-of-pgrs",
+      "question": "Which pair correctly matches a major plant growth regulator with its specific chemical nature?",
+      "options": [
+        "Cytokinins — Terpenes",
+        "Abscisic acid — Carotenoid derivatives",
+        "Gibberellins — Indole derivatives",
+        "Auxins — Adenine derivatives"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "confuses the adenine derivative structure of cytokinins with terpenes",
+        "",
+        "confuses the terpene structure of gibberellins with indole derivatives",
+        "confuses the indole structure of auxins with adenine purine derivatives"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-breathing-and-exchange-of-gases-blood-as-gas-transport-medium",
+      "nodeId": "class11-biology-breathing-and-exchange-of-gases-blood-as-gas-transport-medium",
+      "question": "Which bodily fluid serves as the primary medium to carry both oxygen and carbon dioxide between the lungs and body tissues?",
+      "options": [
+        "Circulating whole blood",
+        "Interstitial tissue fluid",
+        "Lymphatic system fluid",
+        "Intracellular cytoplasm"
+      ],
+      "correctIndex": 0,
+      "misconceptions": [
+        "",
+        "thinks tissue fluid transports respiratory gases long-distance rather than just mediating local diffusion",
+        "confuses lipid transport in lymph with respiratory gas transport in the vascular system",
+        "confuses intracellular metabolic fluid with the systemic convective transport medium"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-breathing-and-exchange-of-gases-compare-o2-co2-transport-modes",
+      "nodeId": "class11-biology-breathing-and-exchange-of-gases-compare-o2-co2-transport-modes",
+      "question": "How do the transport proportions of oxygen and carbon dioxide in physical solution (dissolved in plasma) compare?",
+      "options": [
+        "Oxygen dissolved is about 20%, whereas carbon dioxide dissolved is about 70%",
+        "Oxygen dissolved is about 7%, whereas carbon dioxide dissolved is about 3%",
+        "Oxygen dissolved is about 3%, whereas carbon dioxide dissolved is about 7%",
+        "Oxygen dissolved is about 97%, whereas carbon dioxide dissolved is about 23%"
+      ],
+      "correctIndex": 2,
+      "misconceptions": [
+        "confuses dissolved fractions with erythrocyte-bound and bicarbonate fractions",
+        "swaps the dissolved percentages of oxygen and carbon dioxide in plasma",
+        "",
+        "mistakes the erythrocyte-bound percentage of oxygen for its dissolved percentage"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-breathing-and-exchange-of-gases-tissue-level-gas-exchange",
+      "nodeId": "class11-biology-breathing-and-exchange-of-gases-tissue-level-gas-exchange",
+      "question": "At the systemic tissue level, what driven events occur simultaneously across the capillary membrane?",
+      "options": [
+        "Oxygen enters blood due to high tissue pO2, while carbon dioxide exits blood due to low tissue pCO2",
+        "Oxygen dissociates from hemoglobin due to low tissue pO2, while carbon dioxide diffuses into blood due to high tissue pCO2",
+        "Oxygen binds to hemoglobin due to low tissue pO2, while carbon dioxide is released from blood due to high tissue pCO2",
+        "Oxygen diffuses into tissue fluid due to high tissue pO2, while carbon dioxide enters red blood cells due to low tissue pCO2"
+      ],
+      "correctIndex": 1,
+      "misconceptions": [
+        "inverts the partial pressure gradients between systemic tissues and incoming capillary blood",
+        "",
+        "believes low tissue oxygen tension promotes binding rather than dissociation of oxyhemoglobin",
+        "thinks active tissues maintain higher oxygen partial pressures than oxygenated blood"
+      ]
+    },
+    {
+      "id": "probe-class11-biology-breathing-and-exchange-of-gases-alveolar-level-gas-exchange",
+      "nodeId": "class11-biology-breathing-and-exchange-of-gases-alveolar-level-gas-exchange",
+      "question": "What happens simultaneously in pulmonary capillaries at the alveolar surface to enable proper gas exchange?",
+      "options": [
+        "O2 dissociates from hemoglobin, while CO2 binds to deoxyhemoglobin forming carbamino compounds",
+        "O2 converts bicarbonate into carbonic acid, while CO2 remains bound firmly to plasma proteins",
+        "O2 diffuses into alveolar air spaces, while CO2 is converted into bicarbonate inside red blood cells",
+        "O2 binds to deoxyhemoglobin, while CO2 is released from carbamino-hemoglobin and bicarbonate"
+      ],
+      "correctIndex": 3,
+      "misconceptions": [
+        "confuses tissue-level gas exchange events with alveolar-level gas exchange events",
+        "thinks oxygen directly reacts with bicarbonate in plasma rather than binding to hemoglobin",
+        "inverts the diffusion directions of oxygen and carbon dioxide across the respiratory membrane",
+        ""
+      ]
     }
   ]
 }

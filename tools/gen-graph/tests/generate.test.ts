@@ -78,6 +78,44 @@ describe('buildNodesPrompt', () => {
   });
 });
 
+/**
+ * Filling a bare topic inside a chapter that already has nodes is the opposite
+ * job to writing a chapter from scratch, and the prompt has to say so — the
+ * defect it guards against is a handful of new nodes being hung off a chapter
+ * root, which is how one committed node came to block 337 of 462.
+ */
+describe('buildNodesPrompt scoped to bare topics', () => {
+  const twoTopics: Chapter = {
+    ...chapter,
+    topics: [
+      ...chapter.topics,
+      { id: 'respiration', title: 'Respiration', objectives: ['Student can name the gas released'] },
+    ],
+  };
+  const { system, user } = buildNodesPrompt(twoTopics, {
+    ...nodeOpts,
+    onlyTopicIds: ['respiration'],
+    linkable: [{ id: 'sci10-lp-cell-is-unit', outcome: 'State that the cell is the unit of life' }],
+  });
+
+  it('asks for the bare topic and forbids the rest of the chapter', () => {
+    expect(user).toContain('Student can name the gas released');
+    expect(user).not.toContain('Student can explain photosynthesis');
+    expect(user).toMatch(/Write NOTHING for these/);
+    expect(user).toContain('Nutrition'); // named, so the boundary is visible
+  });
+
+  it('replaces the cross-chapter invitation with a stay-in-chapter rule', () => {
+    expect(system).not.toMatch(/CROSS-CHAPTER edges are valuable/);
+    expect(system).toMatch(/ONE prerequisite or none/);
+  });
+
+  it('offers only the chapter, with outcomes, and not the wider map', () => {
+    expect(user).toContain('sci10-lp-cell-is-unit: State that the cell is the unit of life');
+    expect(user).not.toContain('sci10-chem-balance-equation');
+  });
+});
+
 describe('buildProbesPrompt', () => {
   const { system, user } = buildProbesPrompt([node('a'), node('b')], { klass: 10, subject: 'Science' });
 
@@ -136,6 +174,25 @@ describe('generateNodes', () => {
     const out = await generateNodes(chapter, fakeAdapter(bad, bad), nodeOpts);
     expect(out.ok).toBe(false);
     if (!out.ok) expect(out.errors.join(' ')).toMatch(/"ghost" is not in this batch/);
+  });
+
+  it('rejects an edge to a node outside what was offered, while still refusing its id', async () => {
+    // `linkable` narrows what may be pointed AT; `existingIds` still says what
+    // may not be re-created. A node reaching for a map-wide hub it was not
+    // shown is the model reaching past the fence, not a typo worth accepting.
+    const scoped = {
+      ...nodeOpts,
+      linkable: [{ id: 'sci10-lp-cell-is-unit', outcome: 'State that the cell is the unit of life' }],
+    };
+    const reply = nodesReply([node('fresh', ['sci10-chem-balance-equation'])]);
+    const out = await generateNodes(chapter, fakeAdapter(reply, reply), scoped);
+    expect(out.ok).toBe(false);
+    if (!out.ok) expect(out.errors.join(' ')).toMatch(/not in this batch or in the nodes you were offered/);
+
+    const collide = nodesReply([node('sci10-chem-balance-equation')]);
+    const taken = await generateNodes(chapter, fakeAdapter(collide, collide), scoped);
+    expect(taken.ok).toBe(false);
+    if (!taken.ok) expect(taken.errors.join(' ')).toMatch(/already exists in the map/);
   });
 
   it('rejects an id that already exists in the map', async () => {
@@ -218,6 +275,52 @@ describe('generateProbes', () => {
     const out = await generateProbes(nodes, fakeAdapter(bad, bad), { klass: 10, subject: 'Science' });
     expect(out.ok).toBe(false);
     if (!out.ok) expect(out.errors.join(' ')).toMatch(/no probe was written for: b/);
+  });
+
+  /**
+   * Length is the second way a bank hands its answers over, and unlike
+   * position it cannot be repaired after the fact — only the model can make
+   * the right answer shorter. So it is asserted on the BATCH, which is the
+   * unit that gets sent back.
+   */
+  describe('the answer must not be the longest option', () => {
+    const eight = Array.from({ length: 8 }, (_, i) => node(`n${i}`));
+    /** `long` makes the correct option the longest; otherwise all four match. */
+    const sized = (nodeId: string, long: boolean) =>
+      probe(nodeId, {
+        options: long
+          ? ['because the pressure is higher on that side of the circuit', 'ww1', 'ww2', 'ww3']
+          : ['rgt', 'ww1', 'ww2', 'ww3'],
+      });
+
+    it('rejects a batch where it usually is', async () => {
+      const bad = reply(eight.map((n, i) => sized(n.id, i < 5)));
+      const out = await generateProbes(eight, fakeAdapter(bad, bad), {
+        klass: 10,
+        subject: 'Science',
+      });
+      expect(out.ok).toBe(false);
+      if (!out.ok) expect(out.errors.join(' ')).toMatch(/longest option in 5 of 8/);
+    });
+
+    it('accepts a batch where it sometimes is, because one long answer is a fact', async () => {
+      const out = await generateProbes(
+        eight,
+        fakeAdapter(reply(eight.map((n, i) => sized(n.id, i < 3)))),
+        { klass: 10, subject: 'Science' },
+      );
+      expect(out.ok).toBe(true);
+    });
+
+    it('says nothing about a batch too small to show a habit', async () => {
+      const two = [node('x'), node('y')];
+      const out = await generateProbes(
+        two,
+        fakeAdapter(reply(two.map((n) => sized(n.id, true)))),
+        { klass: 10, subject: 'Science' },
+      );
+      expect(out.ok).toBe(true);
+    });
   });
 });
 

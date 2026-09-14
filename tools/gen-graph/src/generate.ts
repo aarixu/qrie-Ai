@@ -34,7 +34,7 @@ const isStr = (v: unknown): v is string => typeof v === 'string' && v.length > 0
 
 function validateNodes(
   raw: unknown,
-  opts: Pick<NodesPromptOptions, 'klass' | 'subject' | 'existingIds'>,
+  opts: Pick<NodesPromptOptions, 'klass' | 'subject' | 'existingIds' | 'linkable'>,
   chapterId: string,
 ): { value: LearningNode[] | null; errors: string[] } {
   const errors: string[] = [];
@@ -93,13 +93,19 @@ function validateNodes(
     batch.set(node.id, clean as unknown as LearningNode);
   });
 
-  // Edges resolve against the batch plus what is already committed.
-  const known = new Set([...batch.keys(), ...opts.existingIds]);
+  // Edges resolve against the batch plus what the model was OFFERED, which is
+  // not always everything that is committed: the topic-gap pass offers only
+  // the chapter's own nodes, so an edge to anything else is the model reaching
+  // for a hub it was told not to use, not a typo worth accepting. Collisions
+  // are still checked against the whole map above, because an id it may not
+  // point at is still an id it may not take.
+  const offered = opts.linkable?.map((n) => n.id) ?? opts.existingIds;
+  const known = new Set([...batch.keys(), ...offered]);
   for (const node of batch.values()) {
     for (const prerequisite of node.prerequisites) {
       if (!known.has(prerequisite)) {
         errors.push(
-          `node "${node.id}": prerequisite "${prerequisite}" is not in this batch or the existing map`,
+          `node "${node.id}": prerequisite "${prerequisite}" is not in this batch or in the nodes you were offered`,
         );
       }
       if (prerequisite === node.id) errors.push(`node "${node.id}": cannot be its own prerequisite`);
@@ -251,7 +257,54 @@ function validateProbes(raw: unknown, nodes: LearningNode[]): { value: Probe[] |
   const missing = nodes.filter((n) => !seen.has(n.id)).map((n) => n.id);
   if (missing.length > 0) errors.push(`no probe was written for: ${missing.join(', ')}`);
 
+  const leak = lengthLeak(probes);
+  if (leak !== null) errors.push(leak);
+
   return errors.length > 0 ? { value: null, errors } : { value: probes, errors: [] };
+}
+
+/**
+ * THE OTHER WAY A BANK LEAKS ITS ANSWERS.
+ *
+ * `balanceAnswerPositions` fixes position, because position can be moved after
+ * the fact. LENGTH cannot: making the right answer shorter means rewriting it,
+ * which only the model can do — so this has to be caught here, where the batch
+ * can be sent back with the complaint.
+ *
+ * It was not caught anywhere, and the 4,494 probes written before this rule
+ * show the cost: the correct option is STRICTLY the longest in 36.8% of them
+ * and 55% in class8-science, so a student who always picks the longest option
+ * without reading scores 43.6% — against the 25% that guessing should buy. A
+ * placement test that can be passed by counting words measures nothing. The
+ * prompt rule that caused it ("no option longer than the correct answer") is
+ * fixed in prompt.ts; this is the guard that stops it coming back. The 203
+ * probes written after both changes sit at 21.2%, a guesser score of 26.5%.
+ *
+ * Judged per BATCH, not per probe: one long correct answer is a fact about one
+ * question, and only the rate over a batch says the writer has a habit. The
+ * threshold is half, generous against the 25% chance rate, because a batch is
+ * twelve questions and a fair writer will sometimes land at five of them.
+ */
+const LENGTH_LEAK_SHARE = 0.5;
+/** Below this many questions the share is noise, not a habit. */
+const LENGTH_LEAK_MIN_BATCH = 6;
+
+function lengthLeak(probes: readonly Probe[]): string | null {
+  if (probes.length < LENGTH_LEAK_MIN_BATCH) return null;
+  // STRICTLY longer, not tied for longest: four options of the same length is
+  // the shape being asked for, and counting a tie as a leak would reject it.
+  const longest = probes.filter((p) => {
+    const lengths = p.options.map((o) => o.trim().length);
+    const correct = lengths[p.correctIndex];
+    return lengths.every((n, i) => i === p.correctIndex || n < correct);
+  });
+  if (longest.length <= probes.length * LENGTH_LEAK_SHARE) return null;
+  return (
+    `the correct answer is the longest option in ${longest.length} of ${probes.length} questions ` +
+    '(chance is 1 in 4). A student can score by picking the longest without reading. ' +
+    'Rewrite the distractors of these so every option carries the same amount of detail: ' +
+    `${longest.map((p) => p.nodeId).join(', ')}`
+  );
 }
 
 /**
