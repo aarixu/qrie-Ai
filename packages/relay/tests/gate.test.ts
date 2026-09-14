@@ -1,17 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
+  HEARD_BYTES_PER_SECOND,
   REQUESTS_PER_MINUTE,
   UNITS,
   UNITS_PER_DAY,
   admit,
   createMemoryLedger,
   createSupabaseLedger,
+  unitsFor,
   type Gate,
   type Ledger,
+  type RelayName,
 } from '../src/gate';
 import { handleRelay, handleTicket, relayFor } from '../src/handler';
 import { mintTicket, readTicket, TICKET_TTL_MS } from '../src/ticket';
-import type { RelayRequest, RelayResponse } from '../src/relays';
+import {
+  DEFAULT_HEAR_MODEL,
+  HEAR_LANGUAGE,
+  type HeardAudio,
+  type RelayRequest,
+  type RelayResponse,
+} from '../src/relays';
 import type { Verifier } from '../src/auth';
 
 /**
@@ -197,7 +206,10 @@ describe('admit', () => {
     expect(!out.ok && out.response.status).toBe(401);
   });
 
-  it('charges the ledger the relay’s own weight', async () => {
+  it('charges the ledger what THIS call costs, not what its relay costs on average', async () => {
+    // The old meter handed `UNITS[relay]` straight through, so one character
+    // of speech and a paragraph of it were the same price. What goes to the
+    // ledger now has to be the priced request.
     const charged: { relay: string; units: number }[] = [];
     const ledger: Ledger = {
       async claim(_user, relay, units) {
@@ -205,13 +217,20 @@ describe('admit', () => {
         return { allowed: true };
       },
     };
+    const long = 'क'.repeat(500);
 
     await admit(req(), 'llm', gate({ ledger }));
     await admit(req({ method: 'GET', url: '/api/speech?text=hi' }), 'speech', gate({ ledger }));
+    await admit(
+      req({ method: 'GET', url: `/api/speech?text=${encodeURIComponent(long)}` }),
+      'speech',
+      gate({ ledger }),
+    );
 
     expect(charged).toEqual([
-      { relay: 'llm', units: UNITS.llm },
-      { relay: 'speech', units: UNITS.speech },
+      { relay: 'llm', units: 85 },
+      { relay: 'speech', units: 1 },
+      { relay: 'speech', units: Math.ceil(500 * 0.29) },
     ]);
   });
 
@@ -239,6 +258,203 @@ describe('admit', () => {
     const out = await admit(req(), 'llm', gate({ ledger }));
 
     expect(!out.ok && out.response.status).toBe(503);
+  });
+});
+
+// --------------------------------------------------------------- pricing ---
+
+/**
+ * WHAT THE VENDORS ACTUALLY CHARGED FOR ONE CLASS, in paise.
+ *
+ * tools/measure/last-class.json, 2026-09-13: the committed Class 10 heredity
+ * topic, 18 beats, 4 asks, 38 calls against the deployed relay. Copied here
+ * rather than read, because a package touches no files — but they are the
+ * same figures tools/measure/model-cost.mjs prints, and the whole point of
+ * this block is that the meter and the bill agree.
+ *
+ * Speech counts the eight replies the harness did not speak and the classroom
+ * does: ₹5.11 of narration plus ₹3.40 of her answers.
+ */
+const MEASURED = {
+  speechCharacters: 2964,
+  speechPaise: 851,
+  heardSeconds: 40.01,
+  heardPaise: 27.4,
+  llmCalls: 12,
+  llmPaise: 1021, // ₹9.08 preparing the class + ₹1.13 judging four answers
+};
+
+/** The same class, call by call, in the shape the classroom makes them. */
+const CLASS = {
+  beats: 18,
+  narrationCharacters: 99, // 1,780 characters over 18 beats
+  judgeCalls: 8, // a verdict and a cross-question for each of four asks
+  replyCharacters: 148, // 1,184 characters over 8 spoken replies
+  answerSeconds: 5, // 40 seconds of microphone over 8 answers
+};
+
+const speechReq = (characters: number): RelayRequest =>
+  req({ method: 'GET', url: `/api/speech?text=${'a'.repeat(characters)}` });
+
+const hearReq = (seconds: number): RelayRequest =>
+  req({
+    url: '/api/hear',
+    headers: { authorization: 'Bearer good-token', 'content-type': 'audio/wav' },
+    body: new Uint8Array(Math.round(seconds * HEARD_BYTES_PER_SECOND)),
+  });
+
+/**
+ * Every call one class makes, in order. `cold` adds what only the first
+ * student of a topic pays: the planner and the artist, and the save.
+ */
+const aClass = (cold: boolean): { relay: RelayName; req: RelayRequest }[] => {
+  const calls: { relay: RelayName; req: RelayRequest }[] = [];
+  if (cold) {
+    for (let i = 0; i < 4; i += 1) calls.push({ relay: 'llm', req: req() });
+    calls.push({ relay: 'class', req: req({ url: '/api/class' }) });
+  }
+  calls.push({ relay: 'icons', req: req({ url: '/api/icons' }) });
+  for (let i = 0; i < CLASS.beats; i += 1) {
+    calls.push({ relay: 'speech', req: speechReq(CLASS.narrationCharacters) });
+  }
+  for (let i = 0; i < CLASS.judgeCalls; i += 1) {
+    calls.push({ relay: 'hear', req: hearReq(CLASS.answerSeconds) });
+    calls.push({ relay: 'llm', req: req() });
+    calls.push({ relay: 'speech', req: speechReq(CLASS.replyCharacters) });
+  }
+  return calls;
+};
+
+const costOf = (calls: { relay: RelayName; req: RelayRequest }[]): number =>
+  calls.reduce((sum, c) => sum + unitsFor(c.relay, c.req), 0);
+
+describe('what a unit is worth', () => {
+  /**
+   * THE INVARIANT THE OLD TABLE BROKE: one unit is one paisa.
+   *
+   * Asserted against the rates rather than against a rounded-up call, because
+   * this is about the prices and not about integer arithmetic — a five-second
+   * answer rounds 3.45 up to 4, and that is a separate question, below.
+   *
+   * `llm: 10, hear: 4, speech: 1` failed this by 30x in one direction and 6x
+   * in the other, and nothing in this file noticed.
+   */
+  it('prices every relay within 2% of what the vendor charged for a measured class', () => {
+    const within2 = (charged: number, paise: number) =>
+      expect(Math.abs(charged - paise) / paise).toBeLessThan(0.02);
+
+    within2(MEASURED.speechCharacters * UNITS.speech.units, MEASURED.speechPaise);
+    within2(MEASURED.heardSeconds * UNITS.hear.units, MEASURED.heardPaise);
+    within2(MEASURED.llmCalls * UNITS.llm.units, MEASURED.llmPaise);
+  });
+
+  it('charges most for speech, because speech is what a class actually costs', () => {
+    // The symptom that started this: 86% of the bill is her voice, and the
+    // old meter charged 26 units for it against 80 for the models.
+    const calls = aClass(false);
+    const spentOn = (relay: RelayName) => costOf(calls.filter((c) => c.relay === relay));
+
+    expect(spentOn('speech')).toBeGreaterThan(spentOn('llm'));
+    expect(spentOn('speech')).toBeGreaterThan(spentOn('hear') * 20);
+  });
+
+  it('charges speech by the character, so a paste is not the price of a word', () => {
+    const word = unitsFor('speech', speechReq(4));
+    const paste = unitsFor('speech', speechReq(8_000));
+
+    expect(word).toBe(2);
+    expect(paste).toBe(2_320);
+    // Under a flat unit per call these were equal, which is what let one
+    // account spend tens of thousands of rupees inside a 3,000-unit day.
+    expect(paste / word).toBeGreaterThan(1_000);
+  });
+
+  it('charges the ear by the second of audio it was handed', () => {
+    expect(unitsFor('hear', hearReq(1))).toBe(1);
+    expect(unitsFor('hear', hearReq(60))).toBe(Math.ceil(60 * 0.69));
+    expect(unitsFor('hear', hearReq(600))).toBe(Math.ceil(600 * 0.69));
+  });
+
+  it('never prices a call at nothing', () => {
+    // A free call is a call worth making a million times, and the per-minute
+    // ceiling alone would happily let one run all day.
+    expect(unitsFor('speech', req({ method: 'GET', url: '/api/speech' }))).toBe(1);
+    expect(unitsFor('hear', req({ url: '/api/hear', body: new Uint8Array() }))).toBe(1);
+    for (const relay of ['llm', 'speech', 'hear', 'class', 'icons'] as RelayName[]) {
+      expect(unitsFor(relay, req())).toBeGreaterThan(0);
+    }
+  });
+
+  it('counts a character, not a byte', () => {
+    // usage.ts bills `[...text].length`, and a meter counting UTF-8 bytes
+    // would charge a Devanagari class three times what it invoices.
+    const devanagari = req({
+      method: 'GET',
+      url: `/api/speech?text=${encodeURIComponent('क'.repeat(100))}`,
+    });
+
+    expect(unitsFor('speech', devanagari)).toBe(unitsFor('speech', speechReq(100)));
+  });
+});
+
+describe('a day', () => {
+  /**
+   * THE FAILURE THAT WOULD SHIP SILENTLY.
+   *
+   * Re-pricing the units without moving UNITS_PER_DAY cuts every student off
+   * partway through their first class, and nothing else in this suite would
+   * say so: each individual claim is allowed, and the refusal only arrives
+   * once enough of them have added up.
+   */
+  it('lets a real class run start to finish, cold and cached', async () => {
+    let at = 0;
+    const ledger = createMemoryLedger(() => at);
+
+    for (const cold of [true, false]) {
+      at += 61_000; // a fresh rate-limit window, so only the budget can refuse
+      for (const call of aClass(cold)) {
+        const out = await admit(call.req, call.relay, gate({ ledger }));
+        expect(out.ok).toBe(true);
+      }
+    }
+  });
+
+  it('is worth seven classes — one new topic and six already prepared', async () => {
+    let at = 0;
+    const ledger = createMemoryLedger(() => at);
+    let finished = 0;
+    let refused = false;
+
+    for (let attempt = 0; attempt < 12 && !refused; attempt += 1) {
+      at += 61_000;
+      for (const call of aClass(attempt === 0)) {
+        const out = await admit(call.req, call.relay, gate({ ledger }));
+        if (!out.ok) {
+          expect(out.response.status).toBe(429);
+          expect(bodyOf(out.response).error).toMatchObject({ reason: 'budget' });
+          refused = true;
+          break;
+        }
+      }
+      if (!refused) finished += 1;
+    }
+
+    expect(finished).toBe(7);
+  });
+
+  it('costs what the docblock on UNITS_PER_DAY says it costs', () => {
+    // The arithmetic in that comment is the only justification for the
+    // number, so it is asserted rather than trusted.
+    expect(costOf(aClass(false))).toBe(1_579);
+    expect(costOf(aClass(true))).toBe(1_929);
+    expect(costOf(aClass(true)) + 6 * costOf(aClass(false))).toBeLessThanOrEqual(UNITS_PER_DAY);
+    expect(costOf(aClass(true)) + 7 * costOf(aClass(false))).toBeGreaterThan(UNITS_PER_DAY);
+
+    // The headline's own number. The docblock says seven classes weigh 11,403
+    // units, that the meter prices those at ₹114, and that the vendor bills
+    // about ₹78 for them — three figures a reader is entitled to check, and the
+    // first is the one the other two are computed from.
+    expect(costOf(aClass(true)) + 6 * costOf(aClass(false))).toBe(11_403);
   });
 });
 
@@ -273,14 +489,14 @@ describe('the in-memory ledger', () => {
     const ledger = createMemoryLedger(() => at);
     let spent = 0;
     // Spread across minutes so the rate limit is never what stops it.
-    while (spent + UNITS.llm <= UNITS_PER_DAY) {
+    while (spent + UNITS.llm.units <= UNITS_PER_DAY) {
       at += 61_000;
-      expect((await ledger.claim(USER, 'llm', UNITS.llm)).allowed).toBe(true);
-      spent += UNITS.llm;
+      expect((await ledger.claim(USER, 'llm', UNITS.llm.units)).allowed).toBe(true);
+      spent += UNITS.llm.units;
     }
 
     at += 61_000;
-    const over = await ledger.claim(USER, 'llm', UNITS.llm);
+    const over = await ledger.claim(USER, 'llm', UNITS.llm.units);
 
     expect(over.allowed).toBe(false);
     expect(!over.allowed && over.reason).toBe('budget');
@@ -290,16 +506,16 @@ describe('the in-memory ledger', () => {
     let at = 0;
     const ledger = createMemoryLedger(() => at);
     let spent = 0;
-    while (spent + UNITS.llm <= UNITS_PER_DAY) {
+    while (spent + UNITS.llm.units <= UNITS_PER_DAY) {
       at += 61_000;
-      await ledger.claim(USER, 'llm', UNITS.llm);
-      spent += UNITS.llm;
+      await ledger.claim(USER, 'llm', UNITS.llm.units);
+      spent += UNITS.llm.units;
     }
-    expect((await ledger.claim(USER, 'llm', UNITS.llm)).allowed).toBe(false);
+    expect((await ledger.claim(USER, 'llm', UNITS.llm.units)).allowed).toBe(false);
 
     at = 86_400_000 * 2;
 
-    expect((await ledger.claim(USER, 'llm', UNITS.llm)).allowed).toBe(true);
+    expect((await ledger.claim(USER, 'llm', UNITS.llm.units)).allowed).toBe(true);
   });
 
   it('meters each student separately', async () => {
@@ -381,14 +597,26 @@ describe('relayFor', () => {
 });
 
 describe('handleRelay', () => {
-  const deps = (over: Partial<Gate> = {}) => ({
+  /**
+   * The host's transcriber, RECORDING WHAT IT WAS HANDED.
+   *
+   * It used to take no arguments at all, so the one thing this router has to
+   * get right about the ear — what the transcriber is actually told — was
+   * asserted nowhere between the request and the host. That is the same gap
+   * that let a form carrying no language at all pass every test for months:
+   * every stub agreed with the code instead of with the vendor.
+   */
+  const deps = (over: Partial<Gate> = {}, told: HeardAudio[] = []) => ({
     key: 'sk-test',
     gate: gate(over),
-    transcribe: async (): Promise<RelayResponse> => ({
-      status: 200,
-      headers: {},
-      body: { kind: 'json' as const, value: { text: 'heard it' } },
-    }),
+    transcribe: async (call: HeardAudio): Promise<RelayResponse> => {
+      told.push(call);
+      return {
+        status: 200,
+        headers: {},
+        body: { kind: 'json' as const, value: { text: 'heard it' } },
+      };
+    },
   });
 
   it('reaches OpenRouter only after the caller is admitted', async () => {
@@ -424,6 +652,34 @@ describe('handleRelay', () => {
 
     expect(out.status).toBe(200);
     expect(out.body.kind === 'json' && out.body.value).toEqual({ text: 'heard it' });
+  });
+
+  it('tells the transcriber to listen in Hinglish, whatever the caller asked for', async () => {
+    /**
+     * End to end through the router, not around it: a POST to /api/hear that
+     * asks for Hindi, and the whole value the host is handed.
+     *
+     * Asserted as one object rather than field by field, because the failure
+     * being guarded is a REORDER — `language` holding 'audio/wav' typechecked
+     * clean while the seam was three bare strings, and sent the vendor a
+     * language it would ignore in favour of English. `HeardAudio` made that
+     * unspellable; this is what proves the router fills it correctly.
+     */
+    const told: HeardAudio[] = [];
+    const audio = new Uint8Array([1, 2, 3]);
+    const out = await handleRelay(
+      req({
+        url: '/api/hear?language=hi',
+        headers: { authorization: 'Bearer good-token', 'content-type': 'audio/wav' },
+        body: audio,
+      }),
+      deps({}, told),
+    );
+
+    expect(out.status).toBe(200);
+    expect(told).toEqual([
+      { model: DEFAULT_HEAR_MODEL, language: HEAR_LANGUAGE, contentType: 'audio/wav', audio },
+    ]);
   });
 
   it('says plainly that icons and class are not hosted here yet', async () => {

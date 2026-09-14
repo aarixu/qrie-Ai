@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { REQUESTS_PER_MINUTE, UNITS, UNITS_PER_DAY } from '@ai-tutor/relay';
 
 /**
  * THE POLICY MUST EXIST AS A MIGRATION, NOT AS A COMMENT.
@@ -205,6 +206,49 @@ describe('the ledger migration', () => {
       // 404 for as long as the recreate takes.
       expect(fix).not.toMatch(/drop function/i);
     });
+  });
+});
+
+/**
+ * THE DAY'S BUDGET LIVES IN TWO FILES, AND ONLY A COMMENT KEPT THEM IN STEP.
+ *
+ * `admit` prices a call in gate.ts and hands the number to `claim_relay`, which
+ * holds the ceiling itself — so the prices can move alone but the CEILING
+ * cannot. 0012's own header says what happens if it does: a measured class now
+ * weighs about 1,579 units against the old ceiling of 3,000, so shipping the
+ * repriced units with the old budget refuses a student partway through their
+ * second class, and the refusal reads "You have used up today's classes."
+ *
+ * That is exactly the drift this file exists to catch, and it was the one pair
+ * nothing checked.
+ */
+describe('the day budget, which is written down twice', () => {
+  const sql = sqlOf('0012_reprice_relay_units.sql').replace(/--[^\n]*/g, '');
+
+  it('is the same number in the database as in the code that spends against it', () => {
+    const inSql = /units_per_day\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+    expect(inSql).not.toBeNull();
+    expect(Number(inSql![1])).toBe(UNITS_PER_DAY);
+  });
+
+  it('and so is the per-minute ceiling, for the same reason', () => {
+    const inSql = /requests_per_minute\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+    expect(inSql).not.toBeNull();
+    expect(Number(inSql![1])).toBe(REQUESTS_PER_MINUTE);
+  });
+
+  it('still lets a whole cached class through, which is the failure that ships silently', () => {
+    // Every claim in a class is allowed; a budget too small shows up only once
+    // enough of them have added up, which is to say mid-lesson.
+    const cachedClass =
+      Math.max(1, Math.ceil(2_964 * UNITS.speech.units)) + 8 * UNITS.llm.units + 32 + UNITS.icons.units;
+    expect(cachedClass).toBeLessThan(UNITS_PER_DAY);
+  });
+
+  it('leaves the claim atomic and closed to students, because replace takes the whole body', () => {
+    expect(sql).toMatch(/insert into public\.relay_usage[\s\S]*on conflict \(user_id\) do update/i);
+    expect(sql).toMatch(/grant execute on function public\.claim_relay\(uuid, text, integer\) to service_role/i);
+    expect(sql).toMatch(/revoke all on function public\.claim_relay\(uuid, text, integer\) from authenticated/i);
   });
 });
 

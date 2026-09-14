@@ -38,6 +38,7 @@ export {
 } from './auth.ts';
 
 export {
+  HEARD_BYTES_PER_SECOND,
   REQUESTS_PER_MINUTE,
   UNITS,
   UNITS_PER_DAY,

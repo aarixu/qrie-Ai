@@ -34,10 +34,22 @@ export { parseVerdict, parseFollowUp } from '@ai-tutor/tutor-judge';
  * production was silently never judged. Found by measuring the cost of a class,
  * not by a test.
  *
- * It is 3.8 rather than 3.7 for one reason: 3.7 does not accept MINIMAL and
- * falls back to LOW, which is why a thinking budget of zero still bought 5,724
- * thinking tokens across 72 answers. 3.8 costs the same per token, answers
- * faster on this endpoint, and takes the setting that actually stops the spend.
+ * IT IS 3.7 AND NOT 3.8, WHICH IS THE OPPOSITE OF WHAT THIS PARAGRAPH SAID.
+ *
+ * A revision of this docblock argued for 3.8 on the grounds that only 3.8
+ * accepts MINIMAL, and the constant below never moved — so the file recommended
+ * a change to itself that the same day's measurement had already refused. Left
+ * standing it is worse than no comment: the next reader's obvious tidy-up is to
+ * make the code agree with the prose.
+ *
+ * Both halves of that argument are dead. Vertex answers
+ * `400 Thinking level is unsupported: THINKING_LEVEL_MINIMAL` on 3.7-flash AND
+ * on 3.8-flash, so MINIMAL is nobody's setting here and `none` maps to LOW —
+ * see the thinkingConfig block in packages/relay/src/vertex.ts. And the reason
+ * to stay on 3.7 is a verdict, not a price: on a real class ask with a correct
+ * Hinglish answer, 3.8-flash returned "unclear" at low, at medium and at its
+ * default, while 3.7-flash and 3.1-flash-lite both returned "right". Cheaper is
+ * worthless if it tells a child who was right that they were not.
  */
 const JUDGE_MODEL = 'google/gemini-3.7-flash';
 

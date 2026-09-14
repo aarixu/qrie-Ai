@@ -30,23 +30,106 @@ export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons';
 /**
  * WHAT EACH CALL COSTS AGAINST THE DAILY BUDGET.
  *
- * Deliberately request-shaped, not token-shaped. The relays stream upstream
- * responses straight through to the student — that is what makes the voice
- * start in a third of a second — so nothing here ever sees a token count. A
- * weight per call is the honest approximation, and the number it protects is
- * a ceiling, not an invoice.
+ * ONE UNIT IS ONE PAISA OF VENDOR SPEND. That is the whole rule, and it is
+ * written down because the first table broke it: `llm: 10, hear: 4,
+ * speech: 1` was the exact inverse of the bill. Speech is 86% of what a class
+ * costs and was the cheapest line in the meter; the judge call that costs
+ * fourteen paise was the most expensive. A measurement run on 2026-09-14 was
+ * cut off mid-way after about 120 model calls while the speech beside it —
+ * far more money — barely moved the counter.
  *
- * Rough sizes from a real prepared class: ten model calls, thirty spoken
- * lines, one icon fetch, one save. That is about 140 units, so the daily cap
- * below is roughly twenty classes.
+ * MEASURED, tools/measure/last-class.json, 2026-09-13: one class of the
+ * committed Class 10 heredity topic, 18 beats, 4 asks, 38 calls.
+ *
+ *   relay    what one call actually costs           priced here
+ *   ------   ------------------------------------   -----------------------
+ *   llm      ₹0.14 a judge call (8 of them)          85 units per call
+ *            ₹2.27 a prep call (4 of them)             — the 12-call mean
+ *   speech   ₹0.00287 a character                     0.29 units a character
+ *            deepgram/aura-2, $30/M characters
+ *   hear     ₹0.00685 a second of audio               0.69 units a second
+ *            deepgram/nova-3, $0.0043/minute
+ *   class    ≤₹0.10 — one Storage write, capped       10 units per call
+ *            at MAX_CLASS_BYTES = 12 MB
+ *   icons    ₹0 — a public icon, no vendor             1 unit per call
+ *
+ * Prices from tools/sql/model_price.sql at ₹95.6/USD — the same constants
+ * tools/measure/model-cost.mjs prices a class with. If those move, these move.
+ *
+ * SPEECH AND HEAR ARE SIZED, NOT FLAT, and that cost no machinery: the words
+ * are already in `?text=` and the audio is already the request body, so
+ * `admit` can read the exact billable quantity before a paisa is spent. A
+ * flat unit per call would have been a lie worth two orders of magnitude —
+ * a one-word "haan" and an eight-thousand-character paste both charged one
+ * unit, which is the hole the old table left open.
+ *
+ * LLM IS FLAT, AND IT IS AN APPROXIMATION. 87% of an llm bill is output and
+ * thinking tokens — 24,836 of them against 18,141 in — and none of that
+ * exists when `admit` runs. Nothing in the request predicts it, either: the
+ * artist's calls send 650 prompt tokens and get 5,000 back, so body size says
+ * the opposite of the truth. So every llm call is charged the mean of the
+ * measured class, which OVERCHARGES a judge call 6x and UNDERCHARGES a prep
+ * call 2.7x, and is right to within 0.1% across a whole class.
+ *
+ * The exact fix is known and is not this file's. `usage.record` already
+ * receives the real token counts after every call, so a settlement pass could
+ * charge the difference to the next day. Until somebody builds it, this stays
+ * a ceiling and not an invoice.
  */
-export const UNITS: Record<RelayName, number> = {
-  llm: 10,
-  hear: 4,
-  speech: 1,
-  class: 5,
-  icons: 1,
+
+/**
+ * How a relay's price is expressed.
+ *
+ * A bare number could not say whether it meant a call or a character, and the
+ * two differ by two orders of magnitude here — so it does not get to be a
+ * bare number.
+ */
+export type Price =
+  | { per: 'call'; units: number }
+  | { per: 'character'; units: number }
+  | { per: 'second'; units: number };
+
+export const UNITS: Record<RelayName, Price> = {
+  llm: { per: 'call', units: 85 },
+  hear: { per: 'second', units: 0.69 },
+  speech: { per: 'character', units: 0.29 },
+  class: { per: 'call', units: 10 },
+  icons: { per: 'call', units: 1 },
 };
+
+/**
+ * 16 kHz, 16-bit, mono — MIC_SAMPLE_RATE in packages/voice/src/audio.ts, and
+ * what apps/classroom/src/lib/ear.ts wraps in a WAV header. The same divisor
+ * tools/measure/model-cost.mjs turns recorded bytes into billed seconds with.
+ *
+ * The vendor bills by DURATION, so a body encoded denser than raw PCM is
+ * undercharged. Bounded rather than decoded: the ear posts what ear.ts built,
+ * and a caller who posts something else is still held by REQUESTS_PER_MINUTE.
+ */
+export const HEARD_BYTES_PER_SECOND = 32_000;
+
+/**
+ * What THIS call costs, decided before it is made.
+ *
+ * Never zero. A call that costs nothing is a call worth making a million
+ * times, and the per-minute ceiling alone would happily let one run all day.
+ */
+export function unitsFor(relay: RelayName, req: RelayRequest): number {
+  const price = UNITS[relay];
+  switch (price.per) {
+    case 'call':
+      return price.units;
+    case 'character': {
+      // Code points, exactly as usage.ts counts them for the invoice. A meter
+      // and a bill that count the same text differently are two numbers
+      // nobody can reconcile afterwards.
+      const text = new URL(req.url, 'http://relay.local').searchParams.get('text') ?? '';
+      return Math.max(1, Math.ceil([...text].length * price.units));
+    }
+    case 'second':
+      return Math.max(1, Math.ceil((req.body.byteLength / HEARD_BYTES_PER_SECOND) * price.units));
+  }
+}
 
 export type ClaimResult =
   | { allowed: true }
@@ -139,7 +222,7 @@ export async function admit(
     userId = verified.user.userId;
   }
 
-  const claim = await gate.ledger.claim(userId, relay, UNITS[relay]);
+  const claim = await gate.ledger.claim(userId, relay, unitsFor(relay, req));
   if (!claim.allowed) return { ok: false, response: refuse(claim) };
 
   return { ok: true, userId };
@@ -157,8 +240,46 @@ export async function admit(
  */
 export const REQUESTS_PER_MINUTE = 120;
 
-/** About twenty prepared classes. Nobody studies that much; a script does. */
-export const UNITS_PER_DAY = 3000;
+/**
+ * TWELVE THOUSAND UNITS A DAY, WHICH IS SEVEN CLASSES.
+ *
+ * Those are two different measurements and the headline used to run them
+ * together, so both are written out. 12,000 is what the METER allows. Seven
+ * classes is what fits under it: they weigh 11,403 units, which the meter
+ * prices at ₹114 — and which the vendor actually bills at about ₹78, being
+ * ₹18.98 for the cold one and ₹9.90 each for six cached
+ * (tools/measure/model-cost.mjs, the same measured class as above). The gap
+ * between ₹114 and ₹78 is the flat llm charge overcharging the eight judge
+ * calls sixfold, exactly as the table above says it does. A CEILING ON ABUSE,
+ * NOT AN INVOICE — so it is deliberately the larger of the two numbers.
+ *
+ * Derived from the class above, not chosen. Priced in the new units, and
+ * counting the eight spoken replies the harness did not make but the
+ * classroom does:
+ *
+ *   speech   26 calls, 2,964 characters           866 units
+ *   llm       8 judge calls                       680 units
+ *   hear      8 calls, 40 seconds of audio         32 units
+ *   icons     1 fetch                               1 unit
+ *   ----------------------------------------------------------
+ *   a CACHED class                             1,579 units
+ *   a COLD one, + 4 prep calls and one save    1,929 units
+ *
+ * So 12,000 buys one topic nobody has prepared before plus six cached ones,
+ * with 597 to spare. Eight classes in a day is not a student, it is a script.
+ * `a day` in the tests walks exactly these calls through the real ledger,
+ * because a budget that cuts a child off partway through their first class is
+ * the failure that ships silently — every single claim is allowed, and the
+ * refusal only appears once enough of them have added up.
+ *
+ * The old 3,000 was not a tighter budget, only a differently shaped one. The
+ * same class weighed 139 old units, so it allowed twenty-one classes — about
+ * ₹214 of real spend — and a speech call cost one unit however long the text,
+ * so an account posting 8,000 characters at a time could spend roughly
+ * ₹69,000 in a day and never touch the limit. That same account now runs out
+ * after five of those calls.
+ */
+export const UNITS_PER_DAY = 12_000;
 
 /**
  * A ledger that counts in memory.

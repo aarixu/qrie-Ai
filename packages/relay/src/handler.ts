@@ -3,6 +3,7 @@ import {
   hearRelay,
   llmRelay,
   speechRelay,
+  type HeardAudio,
   type RelayRequest,
   type RelayResponse,
   type SavedClass,
@@ -73,8 +74,18 @@ export interface HandlerDeps {
    * Hand raw audio to a transcriber. Left to the host because it is the one
    * place a platform's FormData shows through; `transcribeViaFormData` in
    * web.ts is the implementation both hosts use.
+   *
+   * `language` is passed IN rather than chosen by the host: it is the
+   * difference between hearing a Hinglish answer and being told a fluent
+   * English one that the student never said. See HEAR_LANGUAGE in relays.ts.
+   *
+   * It arrives as ONE `HeardAudio`, handed on exactly as hearRelay built it.
+   * As four positional arguments — three of them bare `string` — a host that
+   * swapped two typechecked clean and sent `language=audio/wav`, which is the
+   * same defect as sending no language at all and just as invisible. Both
+   * hosts now forward a value they cannot reorder.
    */
-  transcribe(model: string, contentType: string, audio: Uint8Array): Promise<RelayResponse>;
+  transcribe(call: HeardAudio): Promise<RelayResponse>;
   /**
    * Keep a class the tutor just made, so the next student gets it free.
    *
@@ -183,7 +194,9 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
 
   // Refusals that cost nothing come BEFORE the meter. A request this host was
   // never going to serve should not spend a student's daily budget on being
-  // told so — five units is a fortieth of a prepared class.
+  // told so. The class relay costs ten units; preparing the class it would
+  // have kept costs some hundreds of times that, and the exact weights live in
+  // one place only — the docblock on UNITS_PER_DAY in gate.ts.
   if (relay === 'class') {
     if (req.method !== 'POST') return fail(405, 'POST only');
     if (!deps.keep) return fail(501, 'this host cannot keep a class');
@@ -255,7 +268,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
 
   const heard = hearRelay(req, deps.key);
   if (!heard.ok) return heard.response;
-  const transcribed = await deps.transcribe(heard.model, heard.contentType, heard.audio);
+  const { model, language, contentType, audio } = heard;
+  const transcribed = await deps.transcribe({ model, language, contentType, audio });
   note(usageFromHear(base, heard.model, transcribed.status, heard.audio));
   return transcribed;
 }

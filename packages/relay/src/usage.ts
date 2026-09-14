@@ -4,11 +4,17 @@ import type { OpenAiReply } from './vertex.ts';
 /**
  * WHAT A CALL ACTUALLY COST, IN THE UNITS THE PROVIDER BILLS.
  *
- * The meter in gate.ts answers "may this student make another call". It counts
- * in made-up units — llm 10, hear 4, speech 1 — chosen so that twenty prepared
- * classes fit a day. It cannot answer "what did that class cost in rupees",
- * and the plan's Phase 2 refuses to price a credit until that question has a
- * measured answer rather than an estimated one.
+ * The meter in gate.ts answers "may this student make another call", and
+ * nothing more. Its units are now pegged to money — one unit is one paisa of
+ * vendor spend — but they are still a CEILING: llm is charged flat because
+ * nothing in a request predicts the tokens it will come back with, which
+ * overcharges a judge call sixfold and undercharges a prep call 2.7x. So the
+ * meter cannot answer "what did that class cost in rupees". This file can.
+ *
+ * (It once counted llm 10, hear 4, speech 1 — the exact inverse of a bill that
+ * is 86% speech — and that table is gone. The correction is in the docblock on
+ * UNITS in gate.ts; it is named here only so this paragraph is not read as
+ * describing the meter as it stands.)
  *
  * Vertex already tells us: every reply carries usageMetadata with the token
  * counts, and vertex.ts has been forwarding it to the browser and forgetting it
