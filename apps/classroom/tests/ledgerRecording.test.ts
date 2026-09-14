@@ -88,6 +88,9 @@ afterEach(() => {
   host?.remove();
   root = null;
   host = null;
+  // The hook listens on the DOCUMENT, so a screen left standing would answer
+  // the next test's visibilitychange and write to its outbox.
+  visibility = 'visible';
   vi.useRealTimers();
 });
 
@@ -109,10 +112,48 @@ const open = (props: { lessonRef?: string; topicRef?: string } = {}): void => {
   );
 };
 
-/** What closing the tab does: the screen goes away with no result reached. */
+/**
+ * Leaving the QUIZ — the close button, the back button, a route change. React
+ * runs a cleanup for all of those.
+ *
+ * NOT what closing the tab does, which this used to be called. A swiped-away
+ * app, a killed process and a reload unmount nothing; `swipedAway` and `hidden`
+ * below are those, and they are separate for the reason the naming hid.
+ */
 const leave = (): void => {
   act(() => root!.unmount());
   root = null;
+};
+
+/**
+ * The tab goes away, or comes back.
+ *
+ * jsdom's visibilityState is a getter with no setter, and one event covers both
+ * directions — the hook has to ask the document which way it went, so a test
+ * that only dispatched the event would be testing nothing.
+ */
+let visibility: DocumentVisibilityState = 'visible';
+Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => visibility });
+
+const seen = (state: DocumentVisibilityState): void => {
+  visibility = state;
+  act(() => {
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+};
+
+/** What a real tab close or an app swiped away fires. */
+const swipedAway = (): void => {
+  act(() => {
+    window.dispatchEvent(new Event('pagehide'));
+  });
+};
+
+/** The one event a back/forward-cache restore is guaranteed to fire. */
+const restored = (): void => {
+  act(() => {
+    window.dispatchEvent(new Event('pageshow'));
+  });
 };
 
 const press = (matches: (button: HTMLButtonElement) => boolean): void => {
@@ -137,6 +178,10 @@ const wrongFor = (question: QuizQuestion): number =>
 const events = () => ledgerOutbox.get().pending;
 const answered = () => events().filter((e) => e.kind === 'answered');
 const payloads = () => answered().map((e) => e.payload as Record<string, unknown>);
+const ofKind = (kind: string): Record<string, unknown>[] =>
+  events()
+    .filter((e) => e.kind === kind)
+    .map((e) => e.payload as Record<string, unknown>);
 
 describe('a quiz reaching the ledger as it is taken', () => {
   it('keeps the answers of a student who left before the results screen', () => {
@@ -255,6 +300,104 @@ describe('a quiz reaching the ledger as it is taken', () => {
     // 20s on the first question, 25s on the second. Time on task is the sum of
     // the questions worked, never the wall clock of an abandoned tab.
     expect(ended.payload).toMatchObject({ activeMs: 45_000, completed: false });
+  });
+
+  /**
+   * THE EXIT A REACT CLEANUP NEVER SEES — and the quiz shipped without it on
+   * the same day the classroom got it.
+   *
+   * Every test above leaves by unmounting, which is the close button and the
+   * back button. A fourteen-year-old abandons a quiz by swiping the app away,
+   * and that unmounts nothing: no `session-ended` was queued, so the sitting's
+   * `active_ms` stayed NULL for good while its answers drained and counted.
+   * `cost_per_student_hour` and every per-learning-minute figure divide by that
+   * column, so those answers landed in the numerator with nothing underneath.
+   */
+  describe('a quiz the browser takes away without telling React', () => {
+    it('closes the sitting when the tab is hidden, carrying the questions worked', () => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      const opened = new Date('2026-09-13T09:00:00.000Z');
+      vi.setSystemTime(opened);
+
+      open();
+      vi.setSystemTime(new Date(opened.getTime() + 20_000));
+      answer(quiz[0], quiz[0].correctIndex);
+      seen('hidden');
+
+      expect(ofKind('session-ended')).toEqual([{ activeMs: 20_000, completed: false }]);
+    });
+
+    it('closes it on pagehide too, for the browsers that fire that and nothing else', () => {
+      open();
+      answer(quiz[0], quiz[0].correctIndex);
+      swipedAway();
+
+      expect(ofKind('session-ended')).toHaveLength(1);
+      expect(ofKind('session-ended')[0]).toMatchObject({ completed: false });
+    });
+
+    it('closes it exactly once, however many of those exits the browser announces', () => {
+      open();
+      answer(quiz[0], quiz[0].correctIndex);
+      // What one real tab close looks like from in here.
+      seen('hidden');
+      swipedAway();
+      leave();
+
+      // Two session-ended rows for one sitting would count its minutes twice in
+      // the denominator of every per-learning-minute figure.
+      expect(ofKind('session-ended')).toHaveLength(1);
+    });
+
+    it('gives an answer checked after the student comes back a sitting that can hold it', () => {
+      open();
+      answer(quiz[0], quiz[0].correctIndex);
+      nextQuestion();
+      seen('hidden'); // a glance at a notification
+      seen('visible');
+      answer(quiz[1], quiz[1].correctIndex);
+      leave();
+
+      const opened = events().filter((e) => e.kind === 'session-started');
+      expect(opened).toHaveLength(2);
+      // The package refuses an event whose sitting has ended, so an answer that
+      // found no open sitting would be counted here and thrown away — on the
+      // only surface that produces rung-0 evidence.
+      expect(ledgerOutbox.get().orphaned).toBe(0);
+      expect(answered()[1].sessionId).toBe(opened[1].sessionId);
+    });
+
+    it('reopens on pageshow, which is the one event a bfcache restore always fires', () => {
+      open();
+      answer(quiz[0], quiz[0].correctIndex);
+      nextQuestion();
+      swipedAway();
+      restored();
+      answer(quiz[1], quiz[1].correctIndex);
+      leave();
+
+      expect(ledgerOutbox.get().orphaned).toBe(0);
+      expect(events().filter((e) => e.kind === 'session-started')).toHaveLength(2);
+    });
+
+    it('still files a finished quiz as finished when the last gap was a backgrounding', () => {
+      open();
+      for (const [i, question] of quiz.entries()) {
+        answer(question, question.correctIndex);
+        if (i < quiz.length - 1) nextQuestion();
+      }
+      // They background the app between the last Check and "See results".
+      seen('hidden');
+      seen('visible');
+      nextQuestion(); // See results
+
+      const ended = ofKind('session-ended');
+      expect(ended[ended.length - 1]).toMatchObject({ completed: true });
+      // And coming back to the results screen does not open a third sitting.
+      seen('hidden');
+      seen('visible');
+      expect(events().filter((e) => e.kind === 'session-started')).toHaveLength(2);
+    });
   });
 
   it('opens no sitting for a lesson that has no quiz behind it', () => {
