@@ -87,6 +87,15 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
   const deps = {
     key,
     gate,
+    /**
+     * Her voice, from `tools/speech`, when it is running.
+     *
+     * Set CURIE_SPEECH_URL=http://127.0.0.1:8123 and every spoken line in
+     * development comes from Piper on this machine instead of costing money.
+     * Measured here: 10.4x realtime, first audio at 0.25-0.37s, against the
+     * vendor's measured 0.36s. Unset, nothing changes.
+     */
+    ...(process.env.CURIE_SPEECH_URL ? { speechUrl: process.env.CURIE_SPEECH_URL } : {}),
     ...(vertex ? { vertex } : {}),
     transcribe: (model: string, contentType: string, audio: Uint8Array) =>
       transcribeViaFormData(key, model, contentType, audio),

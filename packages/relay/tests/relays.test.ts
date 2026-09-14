@@ -206,3 +206,60 @@ describe('what a browser is allowed to write', () => {
     expect(checkSavedClass({ ...good, files: [{ ...good.files[0], encoding: 'hex' }] }).ok).toBe(false);
   });
 });
+
+/**
+ * HER VOICE, FROM A BOX WE RENT.
+ *
+ * 86% of what a class costs is speech, and every rupee of it is cash to a
+ * vendor while the models run on credits. `tools/speech` serves the same thing
+ * from our own machine — measured on an ordinary laptop, Piper runs at 10.4x
+ * realtime with the first audio at 0.25-0.37s, against the vendor's measured
+ * 0.36s time-to-first-byte. So this is not a cheaper-but-slower trade; it is
+ * the same latency for rent instead of per character.
+ */
+describe('speaking through our own service', () => {
+  const url = (r: ReturnType<typeof speechRelay>) =>
+    r.body && typeof r.body === 'object' && 'from' in r.body
+      ? (r.body as { from: { url: string; method: string; headers: Record<string, string> } }).from
+      : null;
+
+  const asked = (qs: string) => ({ url: `/api/speech?${qs}`, method: 'GET', headers: {}, body: new Uint8Array() });
+
+  it('goes to our box when one is configured, and carries no credential', () => {
+    const out = speechRelay(asked('text=Har%20cell%20zinda%20hai'), 'sk-vendor-key', 'http://127.0.0.1:8123');
+    const from = url(out);
+    expect(from?.url).toContain('http://127.0.0.1:8123/speak?');
+    expect(from?.url).toContain('text=Har+cell+zinda+hai');
+    expect(from?.method).toBe('GET');
+    // There is no key to send, which is the whole point of the service being
+    // ours. A vendor key leaking into a request that does not need one is how
+    // a credential ends up somewhere nobody audits.
+    expect(JSON.stringify(from?.headers ?? {})).not.toContain('sk-vendor-key');
+  });
+
+  it('passes the voice through, and leaves it out when nobody asked', () => {
+    expect(url(speechRelay(asked('text=hi&voice=hi_IN-pratham-medium'), '', 'http://box'))?.url)
+      .toContain('voice=hi_IN-pratham-medium');
+    expect(url(speechRelay(asked('text=hi'), '', 'http://box'))?.url).not.toContain('voice=');
+  });
+
+  it('needs no vendor key at all, which a laptop with no account still has to work without', () => {
+    expect(speechRelay(asked('text=hi'), '', 'http://box').status).toBe(200);
+    // And without a box, the vendor key is back to being required.
+    expect(speechRelay(asked('text=hi'), '').status).toBe(503);
+  });
+
+  it('still refuses an empty line, whoever is speaking it', () => {
+    expect(speechRelay(asked('text=%20%20'), '', 'http://box').status).toBe(400);
+  });
+
+  it('goes to the vendor exactly as before when no box is configured', () => {
+    const from = url(speechRelay(asked('text=hi'), 'sk-vendor-key'));
+    expect(from?.url).toContain('openrouter.ai');
+    expect(JSON.stringify(from?.headers)).toContain('sk-vendor-key');
+  });
+
+  it('does not let a trailing slash produce a double one', () => {
+    expect(url(speechRelay(asked('text=hi'), '', 'http://box/'))?.url).toContain('http://box/speak?');
+  });
+});

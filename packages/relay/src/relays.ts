@@ -122,11 +122,44 @@ export const DEFAULT_SPEECH_VOICE = 'aura-2-thalia-en';
  * playing on the first chunk — the whole reason a class does not pause
  * between sentences.
  */
-export function speechRelay(req: RelayRequest, key: string): RelayResponse {
-  if (!key) return fail(503, 'The server has no OpenRouter key configured.');
+export function speechRelay(req: RelayRequest, key: string, own?: string): RelayResponse {
   const asked = new URL(req.url, 'http://relay.local');
   const text = asked.searchParams.get('text')?.trim();
   if (!text) return fail(400, 'nothing to say');
+
+  /**
+   * OUR OWN VOICE, WHEN THERE IS ONE.
+   *
+   * Her voice is 86% of what a class costs and every rupee of it is cash to a
+   * vendor. `tools/speech` serves the same thing from a box we rent: measured
+   * on an ordinary laptop, Piper runs at 10.4x realtime with the first audio
+   * at 0.25-0.37s — as fast as the vendor it replaces, whose measured
+   * time-to-first-byte was 0.36s.
+   *
+   * A GET with no credential, because there is none: the whole point of the
+   * relay is that the browser never holds a vendor key, and a service of ours
+   * has no key to hold. Absent, everything below is exactly as it was.
+   */
+  if (own) {
+    const q = new URLSearchParams({ text });
+    const voice = asked.searchParams.get('voice');
+    if (voice) q.set('voice', voice);
+    return {
+      status: 200,
+      headers: {},
+      body: {
+        kind: 'stream',
+        from: {
+          url: `${own.replace(/\/$/, '')}/speak?${q}`,
+          method: 'GET',
+          headers: {},
+          fallbackContentType: 'audio/wav',
+        },
+      },
+    };
+  }
+
+  if (!key) return fail(503, 'The server has no OpenRouter key configured.');
 
   // Named, and never absent: an unnamed voice picks a new speaker per call —
   // and this provider now refuses the request outright rather than choosing.

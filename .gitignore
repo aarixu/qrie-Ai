@@ -61,3 +61,8 @@ tools/measure/last-session.json
 # rather than by name because the next run drops a new one at the next number,
 # and one `git add .` is all it would take.
 probe*.json
+
+# Piper voices and the samples made from them. Each voice is 63 MB and one
+# line of `piper.download_voices` brings it back; see tools/speech/README.md.
+tools/speech/voices/
+tools/speech/samples/

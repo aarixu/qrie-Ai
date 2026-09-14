@@ -117,6 +117,15 @@ const usage = createSupabaseUsage(SUPABASE_URL, SERVICE_ROLE_KEY);
  */
 const deps: HandlerDeps = {
   key: OPENROUTER_API_KEY,
+  /**
+   * Her voice, from our own box, when one is configured.
+   *
+   * 86% of what a class costs is speech and all of it is cash. Point this at a
+   * host running `tools/speech` and that line becomes rent instead. It must be
+   * reachable from the edge, so a laptop will not do — this is the VPS switch.
+   * Unset, speech goes to the vendor exactly as before.
+   */
+  ...(Deno.env.get('CURIE_SPEECH_URL') ? { speechUrl: Deno.env.get('CURIE_SPEECH_URL') } : {}),
   ...(vertex ? { vertex } : {}),
   gate: {
     verify,

@@ -44,6 +44,16 @@ export interface HandlerDeps {
    * moving it now would be work spent on something being replaced.
    */
   key: string;
+  /**
+   * OUR OWN SPEECH SERVICE, WHEN THERE IS ONE.
+   *
+   * The base URL of `tools/speech` — a box running Piper. Her voice is 86% of
+   * what a class costs and all of it is cash; this is the line that turns it
+   * into rent. Absent, speech goes to the vendor exactly as it did.
+   *
+   * No credential travels with it, because there is none to travel.
+   */
+  speechUrl?: string;
   gate: Gate;
   /**
    * Google Cloud, for everything that thinks or draws.
@@ -227,7 +237,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return out;
   }
   if (relay === 'speech') {
-    const out = speechRelay(req, deps.key);
+    const out = speechRelay(req, deps.key, deps.speechUrl);
     if (out.status === 200) {
       const asked = new URL(req.url, 'http://relay.local').searchParams;
       note(usageFromSpeech(base, asked.get('model') ?? DEFAULT_SPEECH_MODEL, asked.get('text') ?? ''));
