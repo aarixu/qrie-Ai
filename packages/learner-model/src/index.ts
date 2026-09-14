@@ -16,3 +16,5 @@ export {
 } from './types.ts';
 
 export { evidenceSet, masteryView } from './project.ts';
+
+export { deriveRung } from './rung.ts';
