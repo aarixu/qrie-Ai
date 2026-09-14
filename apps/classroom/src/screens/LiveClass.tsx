@@ -12,6 +12,7 @@ import { profileStore } from '../stores/profile';
 import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
+import { masteryFromModel } from '../lib/learnerModel';
 import { studentLinesForPlanner } from '../lib/student';
 import { outcomesForTopic } from '../lib/topicOutcomes';
 import { lastClassBefore } from '../lib/lastClass';
@@ -387,6 +388,7 @@ export function LiveClassRoute() {
       if (cancelled) return;
 
       const studentLines = studentLinesForPlanner({
+        mastery: masteryFromModel(),
         profile: profileStore.get(),
         progress: progressStore.get(),
         outcomes: outcomeStore.get(),

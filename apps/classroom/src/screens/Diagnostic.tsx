@@ -99,9 +99,19 @@ export function Diagnostic({
     // on. Starting the test from those beliefs rather than from the prior
     // means their first question is already informed by their term's work.
     const signals = outcomeStore.get();
-    let mastery = applyTaught(fresh.mastery, Object.keys(signals.taught));
+    /**
+     * ATTENDANCE IS APPLIED ONCE, WITH ITS REAL COUNT.
+     *
+     * This used to apply it twice — once for every taught id at `times = 1`,
+     * and then again per id with the true count — so a node taught three times
+     * landed at 0.733 instead of the 0.675 a single call gives, and attendance
+     * alone could carry an outcome from the prior to nearly settled on zero
+     * answered questions. `applyTaught` saturates on the count precisely so
+     * that cannot happen; calling it twice defeats the saturation it exists for.
+     */
+    let mastery = fresh.mastery;
     for (const [id, times] of Object.entries(signals.taught)) {
-      if (times > 1) mastery = applyTaught(mastery, [id], times);
+      mastery = applyTaught(mastery, [id], times);
     }
     const confused = Object.keys(signals.confused);
     mastery = applyDoubt(mastery, confused);

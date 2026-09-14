@@ -1,3 +1,4 @@
+import type { Mastery } from '@ai-tutor/knowledge-graph';
 import type { Klass, StudentContext } from '@ai-tutor/persona';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import type { StudentProfile } from '../stores/profile';
@@ -82,6 +83,12 @@ export function studentLinesForPlanner(input: {
   };
   statement: (outcomeId: string) => string | undefined;
   /**
+   * What we believe about each outcome, from the learner model. Used to be read
+   * off `profile.diagnostic.mastery` in here — the last placement test's stored
+   * result, which knew nothing about the term of classes and quizzes since.
+   */
+  mastery: Mastery;
+  /**
    * The class they last finished, if any — the one thing the app can honestly
    * say it remembers about the last time these two met.
    */
@@ -111,17 +118,28 @@ export function studentLinesForPlanner(input: {
   const right = worded(input.outcomes.answeredRight, 3);
   if (right.length > 0) lines.push(`They answered correctly on: ${right.join('; ')}.`);
 
-  // Placement beliefs: only the settled ends, in the persona's own bands.
-  const diagnostic = input.profile.diagnostic;
-  if (diagnostic) {
-    const strong = Object.entries(diagnostic.mastery)
+  /**
+   * WHAT WE BELIEVE, from the learner model rather than from the last placement
+   * test's stored result. Only the settled ends, in the persona's own bands.
+   *
+   * SORTED, which it was not. These two lines are the only personalisation any
+   * class receives, and they used to name three ARBITRARY outcomes — whichever
+   * three `Object.entries` happened to yield first. A tutor told about the
+   * student's third-worst and eleventh-worst ground is being told less than she
+   * appears to be.
+   */
+  const beliefs = Object.entries(input.mastery);
+  if (beliefs.length > 0) {
+    const strong = beliefs
       .filter(([, b]) => b >= 0.75)
+      .sort((a, b) => b[1] - a[1])
       .map(([id]) => input.statement(id))
       .filter((s): s is string => s !== undefined)
       .slice(0, 3);
     if (strong.length > 0) lines.push(`They hold securely: ${strong.join('; ')}.`);
-    const shaky = Object.entries(diagnostic.mastery)
+    const shaky = beliefs
       .filter(([, b]) => b <= 0.4)
+      .sort((a, b) => a[1] - b[1])
       .map(([id]) => input.statement(id))
       .filter((s): s is string => s !== undefined)
       .slice(0, 3);

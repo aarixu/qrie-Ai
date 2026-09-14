@@ -34,6 +34,8 @@ import {
  * appends rather than overwrites.
  */
 
+import { recordLocally } from '../lib/learnerModel';
+
 const KEY = 'ai-tutor:ledger-outbox';
 
 let cache: Outbox | null = null;
@@ -65,7 +67,38 @@ function read(): Outbox {
   return cache;
 }
 
+/**
+ * BELIEF IS FOLDED WHERE THE EVENT IS RECORDED, AND NOWHERE ELSE.
+ *
+ * One call site rather than a second pass somewhere else, because two would
+ * eventually disagree about what happened and the disagreement would be
+ * invisible — the record saying one thing and the model another, with nothing
+ * to say which was right.
+ *
+ * Only APPENDED events are folded. A drain removes acknowledged rows and hands
+ * this the same outbox minus them; nothing there is new, so nothing is folded
+ * twice. `foldSession`'s cursor would catch a repeat anyway, and this is the
+ * cheaper half of that guarantee.
+ *
+ * It never throws into the caller. A class in progress must not stop because a
+ * derived cache could not be updated: the ledger is the record, this is a view
+ * of it, and a view can always be rebuilt.
+ */
+function foldAppended(prev: Outbox, next: Outbox): void {
+  const session = next.session;
+  if (!session) return;
+  const had = new Set(prev.pending.map((e) => e.id));
+  const fresh = next.pending.filter((e) => !had.has(e.id));
+  if (fresh.length === 0) return;
+  try {
+    recordLocally(session, fresh);
+  } catch {
+    // Deliberately swallowed. See above.
+  }
+}
+
 function write(next: Outbox): void {
+  const prev = cache;
   cache = next;
   try {
     localStorage.setItem(KEY, JSON.stringify(next));
@@ -74,6 +107,7 @@ function write(next: Outbox): void {
     // session, which is the common case; what is lost is only a reload. Every
     // other store here makes the same trade rather than crashing a class.
   }
+  if (prev !== null) foldAppended(prev, next);
   for (const cb of [...listeners]) cb();
 }
 

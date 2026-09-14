@@ -30,6 +30,7 @@ describe('what the planner is told', () => {
         profile: profile(),
         progress: { lessons: {}, lastLessonId: null },
         outcomes: none,
+        mastery: {},
         statement: () => undefined,
       }),
     ).toEqual([]);
@@ -40,6 +41,7 @@ describe('what the planner is told', () => {
       profile: profile({ name: 'Ananya' }),
       progress: { lessons: {}, lastLessonId: null },
       outcomes: { ...none, answeredWrong: { 'out.valves': 2 } },
+      mastery: {},
       statement: (id) => statements[id],
     });
     expect(lines.some((l) => l.includes('Ananya'))).toBe(true);
@@ -52,24 +54,41 @@ describe('what the planner is told', () => {
       profile: profile(),
       progress: { lessons: {}, lastLessonId: null },
       outcomes: { ...none, answeredWrong: { 'out.unknown': 1 } },
+      mastery: {},
       statement: () => undefined,
     });
     expect(lines).toEqual([]);
   });
 
-  it('splits placement beliefs into held and shaky, and ignores the middle', () => {
+  it('splits beliefs into held and shaky, and ignores the middle', () => {
     const lines = studentLinesForPlanner({
-      profile: profile({
-        diagnostic: {
-          mastery: { 'out.chambers': 0.9, 'out.valves': 0.2, 'out.middling': 0.6 },
-        } as never,
-      }),
+      profile: profile(),
       progress: { lessons: {}, lastLessonId: null },
       outcomes: none,
+      mastery: { 'out.chambers': 0.9, 'out.valves': 0.2, 'out.middling': 0.6 },
       statement: (id) => statements[id] ?? (id === 'out.middling' ? 'something middling' : undefined),
     });
     expect(lines.some((l) => l.startsWith('They hold securely') && l.includes('four chambers'))).toBe(true);
     expect(lines.some((l) => l.startsWith('The ground is shaky') && l.includes('valves'))).toBe(true);
     expect(lines.join(' ')).not.toContain('middling');
+  });
+
+  /**
+   * These two lines are the only personalisation a class receives, and they
+   * used to name three ARBITRARY outcomes — whatever `Object.entries` yielded
+   * first. A tutor told about the student's fourth-worst ground instead of
+   * their worst is being told less than she appears to be.
+   */
+  it('names the WORST three, not the first three it happens to see', () => {
+    const lines = studentLinesForPlanner({
+      profile: profile(),
+      progress: { lessons: {}, lastLessonId: null },
+      outcomes: none,
+      mastery: { fourth: 0.35, third: 0.3, second: 0.25, worst: 0.05 },
+      statement: (id) => id,
+    });
+    const shaky = lines.find((l) => l.startsWith('The ground is shaky'));
+    // The three lowest, and in that order. Not whichever three came first.
+    expect(shaky).toBe('The ground is shaky under: worst; second; third.');
   });
 });
