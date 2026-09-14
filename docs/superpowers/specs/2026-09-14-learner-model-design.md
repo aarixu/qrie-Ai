@@ -332,12 +332,41 @@ what it said it would:
    `unassistedObservations > 0`** — ask about what we have reason to doubt.
 2. If none has unassisted evidence, take the lowest `observations` — the
    information-value move, asking where we know least.
-3. **The rung**, as a condition and not a feeling: open at rung 1 (a hint) when
-   `unassistedObservations > 0 && unassistedMastery < GAP_THRESHOLD` — we have
-   asked them cold about this and they could not do it. Rung 0 otherwise,
-   including the common case of no evidence at all. Per decision 7 the class
-   keeps its current helpful feel: the ladder measures before it withholds, so
-   nothing is taken away here, only started one step further along.
+3. **The rung.** `chooseAsk` reports one, and **the class does not yet use it.**
+
+**CORRECTED 2026-09-14, and the correction matters more than the rule it
+replaces.** This section first said: open at rung 1 (a hint) where
+`unassistedObservations > 0 && unassistedMastery < GAP_THRESHOLD` — we asked
+them cold and they could not do it. Two things are wrong with that.
+
+The smaller one is that rung 1 does not exist as content. The only help a beat
+carries before an answer is its authored `ask.hint`, and the ladder calls that
+**rung 3**. Recording rung 1 while handing over rung 3 — or recording rung 1
+while handing over nothing at all — is the same class of lie the rest of this
+phase exists to stop.
+
+The larger one is that **it destroys the evidence it most needs.** Rung 0 is the
+only rung that can prove a student did something alone. Opening with help on
+exactly the outcomes they have already failed cold means those outcomes never
+produce another rung-0 observation — so `unassistedMastery` freezes at its worst
+reading, and the primary metric can never record that the student got better at
+the thing they were worst at. A model that pre-empts its own measurement is
+worse than no model.
+
+**The rule that replaces it:** the ask opens at rung 0, always. Let them try
+cold, because that attempt IS the evidence. What the model gets to decide is
+what happens AFTER a wrong answer — whether to let them try again cold, or to
+escalate to the authored hint now, because struggling here has not paid off
+before.
+
+That decision lives in the class's ask machinery, which is also where "which
+outcome does this beat ask about" lives — and Aarav moved that to Phase 6 on
+2026-09-14, because it needs the spine to carry more than one ask per beat.
+Both halves of the asks layer therefore move together, rather than splitting one
+change to the classroom across two phases.
+
+`chooseAsk` ships now, tested, with no caller. It is the policy, waiting for the
+machinery.
 
 **Model cost: zero.** This changes which outcome id goes into a prompt that is
 already being sent.

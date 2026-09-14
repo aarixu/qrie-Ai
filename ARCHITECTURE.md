@@ -147,7 +147,11 @@ observe, diagnose, teach, test, update the learner model, choose the next
 action, revisit later — optimising for *unassisted mastery gain per learning
 minute*. Measured against that, this repo was a delivery pipeline with a
 measurement stub attached: the adaptive brain was about **7% of the code**, and
-`packages/pedagogy` was imported by nothing at all.
+`packages/pedagogy` was imported only by the offline authoring tool. It shapes
+every lesson before that lesson ships, and nothing under `apps/` imports it at
+all — so no part of it reaches a student while a class is running. (This read
+"imported by nothing at all" until 2026-09-14, which was wrong on the day it
+was written; `tools/design-lesson` has called into it since 2026-08-26.)
 
 The delivery stack survives intact. What it gains is a controller above it:
 
