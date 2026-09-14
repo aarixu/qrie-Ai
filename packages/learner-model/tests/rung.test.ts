@@ -28,8 +28,20 @@ describe('deriveRung', () => {
     expect(deriveRung([4, 1], 0)).toBe(4);
   });
 
-  it('never returns a rung outside the ladder', () => {
+  it('reaches the top of the ladder and stays there', () => {
+    // Both witnesses at the top, and one at the top against a cold record.
+    // There is no clamp here and there must not be one: an out-of-range rung
+    // would mean the LEDGER is wrong, and quietly folding it to 8 would hide
+    // that from the only place it could be noticed.
     expect(deriveRung([8], 8)).toBe(8);
+    expect(deriveRung([8], 0)).toBe(8);
     expect(deriveRung([], 8)).toBe(8);
+  });
+
+  it('is the maximum, so no ordering of the same help changes it', () => {
+    // The device may fold help in any batching. The answer must not depend on
+    // which call each hint arrived in.
+    expect(deriveRung([1, 4, 2], 0)).toBe(deriveRung([2, 1, 4], 0));
+    expect(deriveRung([4], deriveRung([1], 0))).toBe(deriveRung([1, 4], 0));
   });
 });

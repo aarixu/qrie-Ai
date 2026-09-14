@@ -24,11 +24,20 @@ export function masteryView(model: LearnerModel): Mastery {
  * read as a measurement and a flawless student was handed a twelve-step
  * remedial plan.
  *
- * DELIBERATELY WIDER than the `evidenceFrom(index, answers)` it replaces. A
- * node the student sat through being taught and still looks weak on is a real
- * gap; today it cannot become one until somebody asks about it. That is a
- * behaviour change and it is the intended one — the point of a learner model is
- * that it remembers across sittings what a single session's answers cannot.
+ * WIDER than the `evidenceFrom(index, answers)` it replaces, in exactly one
+ * way: a node the student SAT THROUGH BEING TAUGHT counts. Today a gap can only
+ * come from a node an answer spoke about, so a lesson the student attended and
+ * still looks weak on cannot become one. That is the intended change — the
+ * point of a learner model is that it remembers across sittings what one
+ * session's answers cannot.
+ *
+ * A RAISED HAND IS NOT IN IT. `confused` moves belief and is counted in
+ * `doubtCount`, deliberately not here. Measured: one raised hand on an
+ * otherwise-untouched outcome puts it at 0.39, and `gapsFrom` would then return
+ * it as a gap at confidence 0.61 — a remedial plan step earned by asking a
+ * question. That contradicts applyDoubt's own rule (mastery.ts:250-252), "a
+ * hand is a nudge rather than a verdict, and a student who asks a lot must
+ * never be modelled as a student who knows nothing".
  */
 export function evidenceSet(model: LearnerModel): Set<string> {
   const out = new Set<string>();
