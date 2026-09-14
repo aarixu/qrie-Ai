@@ -46,6 +46,7 @@ export {
   evidenceFrom,
   applyDoubt,
   applyTaught,
+  clampMastery,
   decayMastery,
   gapsFrom,
   informationValue,

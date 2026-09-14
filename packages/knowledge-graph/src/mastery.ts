@@ -49,6 +49,16 @@ const SKIP_STRENGTH = 0.3;
 
 const clamp = (v: number): number => Math.min(CEILING, Math.max(FLOOR, v));
 
+/**
+ * The same bounds, for anything outside this file that composes a belief.
+ *
+ * Exported rather than copied: 0.02 and 0.98 written down twice is the drift
+ * defect this repo keeps finding, and a second clamp that let a belief reach 0
+ * or 1 would make it unmovable by any later evidence — certainty is the one
+ * state no amount of being wrong can escape.
+ */
+export const clampMastery = clamp;
+
 /** Move `belief` a fraction of the way toward `target`. */
 const pull = (belief: number, target: number, strength: number): number =>
   clamp(belief + (target - belief) * strength);
