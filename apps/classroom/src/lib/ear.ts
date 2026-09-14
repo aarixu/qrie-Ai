@@ -1,6 +1,5 @@
 import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE } from '@ai-tutor/voice';
 import { relayFetch } from './relay';
-import { hearOnDevice } from './onDeviceSpeech';
 
 /**
  * THE EAR - the mic that turns itself on when she asks.
@@ -173,27 +172,35 @@ export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Pr
   }
 
   /**
-   * HEARD ON THE PHONE FIRST.
+   * IT USED TO BE HEARD ON THE PHONE FIRST, AND THAT WAS WRONG.
    *
-   * Whisper tiny, 43 MB, about a second for five seconds of speech. The
-   * student's voice does not leave the device at all — which is the whole
-   * reason to do it here rather than the forty milliseconds it saves.
+   * `onnx-community/whisper-tiny.en` ran here before the relay and any
+   * non-empty string it returned was taken as the student's answer. The `.en`
+   * is the whole problem: it is an ENGLISH-ONLY model, and these students
+   * answer in Hinglish.
    *
-   * The relay is still behind it. On-device is an improvement on sending the
-   * audio away, not a requirement for being heard: a phone that cannot load
-   * the model, or a line it makes nothing of, still gets an answer rather than
-   * a shrug. A student who spoke and was not heard is the one outcome this
-   * whole path exists to prevent.
+   * An English-only model given Hindi does not go quiet. It invents fluent
+   * English. Seen here, from this model in this browser: "Har cell apne aap
+   * zinda hai isliye oxygen chahiye" came back as "her celibnate arps in the
+   * high-islii oxygen-chehi-ai" — confidently, with no error and nothing
+   * downstream able to tell. The benched version of the same failure is in
+   * `tools/speech/README.md`, where faster-whisper called Hinglish English and
+   * returned garbage at avg logprob −0.79 against −0.22 for the same sentence
+   * in English. Those words went to the judge as the child's
+   * answer and to the ledger as the child's own words, so a correct Hinglish
+   * answer could be marked wrong for free, offline, with no model behind it to
+   * catch the mistake. That is the one failure this product must never make,
+   * and it cost about a second of latency to make it.
+   *
+   * Moonshine hid it before: it returned an EMPTY string on real speech, so
+   * the fall-through ran and nothing was harmed. Swapping in a model that
+   * always answers turned a harmless failure into a silent one.
+   *
+   * So the relay hears everything. When an on-device ear returns — and it
+   * needs to be multilingual, and to expose a confidence the caller can refuse
+   * on, because `tools/speech` measured the same family at 0.30x realtime and
+   * hopeless on Hinglish — it goes back in FRONT of this, not instead of it.
    */
-  try {
-    const samples = new Float32Array(pcm.length);
-    for (let i = 0; i < pcm.length; i += 1) samples[i] = pcm[i] / 32768;
-    const local = await hearOnDevice(samples);
-    if (local) return { text: local, reason: 'heard' };
-  } catch {
-    // Fall through to the relay, which is exactly what it is for.
-  }
-
   try {
     const res = await relayFetch('/api/hear', {
       method: 'POST',

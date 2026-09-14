@@ -130,9 +130,25 @@ export function onDeviceSynth(): Synthesiser {
 /**
  * Transcribe what the student said, on the phone.
  *
- * Null when the model is not there, so `ear.ts` can fall through to the relay
- * rather than lose the answer — a student who spoke and was not heard is worse
- * than a student whose words went to a server.
+ * NO CALLER, DELIBERATELY, SINCE 2026-09-14. `ear.ts` ran this ahead of the
+ * relay and took any non-empty string as the student's answer. The model above
+ * is `whisper-tiny.en` — English only — and these students answer in Hinglish.
+ * An English-only model given Hindi does not go quiet, it invents fluent
+ * English: "Har cell apne aap zinda hai isliye oxygen chahiye" came back as
+ * "her celibnate arps in the high-islii oxygen-chehi-ai", and those words went
+ * to the judge as the child's answer and to the ledger as the child's own
+ * words. A correct answer could be marked wrong for free, offline, with
+ * nothing behind it to catch the mistake.
+ *
+ * Kept rather than deleted because an on-device ear is still the right
+ * destination — the student's voice never leaving the phone is worth more than
+ * the latency. What it needs before it is wired back in: a MULTILINGUAL model,
+ * and a confidence this can return so the caller can refuse rather than guess.
+ * `tools/speech` measured the same family at 0.30x realtime and hopeless on
+ * Hinglish, so the model is the open question, not the plumbing.
+ *
+ * Null when the model is not there, which is how the caller told the relay to
+ * take over.
  */
 export async function hearOnDevice(samples: Float32Array): Promise<string | null> {
   const stt = await loadOnDeviceEar();

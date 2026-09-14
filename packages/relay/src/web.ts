@@ -1,4 +1,4 @@
-import type { RelayRequest, RelayResponse } from './relays.ts';
+import type { HeardAudio, RelayRequest, RelayResponse } from './relays.ts';
 
 /**
  * THE WEB-STANDARD ADAPTER — Deno, Workers, and anything else that speaks
@@ -84,6 +84,8 @@ export async function toResponse(
   }
 }
 
+const TRANSCRIPTIONS = 'https://openrouter.ai/api/v1/audio/transcriptions';
+
 /**
  * Raw audio to a transcript, as multipart.
  *
@@ -92,20 +94,47 @@ export async function toResponse(
  * Blob and fetch are all web standards that Deno and Node both have now, so
  * one implementation serves both hosts — which is the whole reason this is
  * here rather than copied into each adapter.
+ *
+ * `language` is decided in relays.ts and only carried here. The adapter does
+ * not get to choose it: the moment two hosts pick their own, one of them is
+ * transcribing Hinglish with an English model and nothing says so. It arrives
+ * inside `HeardAudio`, exactly as hearRelay built it, so no host can put it in
+ * the wrong position — see that type for the swap this shape forbids.
+ *
+ * WHAT IS NOT ASKED FOR, AND WHY IT IS NOT. Not `response_format:
+ * verbose_json`. Without a response_format the vendor returns `{ text }` alone
+ * and every confidence it computed is dropped at the wire, and a confidence is
+ * worth having precisely here: `tools/speech/README.md` measured the signal
+ * separating an English sentence (−0.22, exact) from Hinglish (−0.79, garbage)
+ * cleanly, on a model that reported no error either time. It is still not
+ * asked for, because the parameter is unmeasured against `deepgram/nova-3`
+ * through OpenRouter and nothing reads the fields yet. An unrecognised
+ * parameter on a transcription endpoint does not degrade politely — it can
+ * come back as a refusal, or as a 200 in a shape whose missing `text` becomes
+ * `reason: 'silence'` in `apps/classroom/src/lib/ear.ts`, filing a child who
+ * spoke as a child who said nothing. That is the exact defect this file was
+ * opened to fix, and it is not worth re-opening for fields no code reads. It
+ * goes in after one live call has shown what comes back, together with the
+ * code that reads it.
+ *
+ * AND NOTHING IS RETRIED WITHOUT THE LANGUAGE. If the vendor refuses `multi`,
+ * this call fails and the room says it could not hear. It must NOT fall back
+ * to the plain form: the plain form is the English ear, and its answer is a
+ * confident invention that nothing downstream can tell from the truth.
+ * Unheard and loud beats heard-wrong and silent.
  */
 export async function transcribeViaFormData(
   key: string,
-  model: string,
-  contentType: string,
-  audio: Uint8Array,
+  call: HeardAudio,
   fetchImpl: typeof fetch = fetch,
 ): Promise<RelayResponse> {
   const form = new FormData();
-  form.append('model', model);
-  form.append('file', new Blob([audio as BlobPart], { type: contentType }), 'answer.wav');
+  form.append('model', call.model);
+  form.append('language', call.language);
+  form.append('file', new Blob([call.audio as BlobPart], { type: call.contentType }), 'answer.wav');
 
   try {
-    const upstream = await fetchImpl('https://openrouter.ai/api/v1/audio/transcriptions', {
+    const upstream = await fetchImpl(TRANSCRIPTIONS, {
       method: 'POST',
       headers: { authorization: `Bearer ${key}` },
       body: form,

@@ -139,11 +139,30 @@ export function speechRelay(req: RelayRequest, key: string, own?: string): Relay
    * A GET with no credential, because there is none: the whole point of the
    * relay is that the browser never holds a vendor key, and a service of ours
    * has no key to hold. Absent, everything below is exactly as it was.
+   *
+   * AND `voice` DOES NOT TRAVEL, which is a fix and not a simplification.
+   *
+   * A voice name only means anything next to the model that has it — the same
+   * argument HEAR_LANGUAGE makes below. This forwarded `?voice=` verbatim, and
+   * the app has exactly one setting for it: `TUTOR_VOICE` in
+   * apps/classroom/src/lib/lessonVoice.ts sends `aura-2-thalia-en` on EVERY
+   * line, and AvatarLab sends the same. `tools/speech` looks a voice up as
+   * `<name>.onnx` on disk, so our own box answers 404 'no voice at
+   * .../aura-2-thalia-en.onnx' to every line of every class. The audio element
+   * fails, `createStreamingTts` falls back, and a student whose relay has
+   * CURIE_SPEECH_URL set hears the browser's robot voice for the whole lesson
+   * — the one failure the box was built to be indistinguishable from the
+   * vendor on. The test that shipped with it passed `hi_IN-pratham-medium`,
+   * which is a name nothing in this product can ask for.
+   *
+   * The box picks its own speaker from `CURIE_VOICE`, which is where a Piper
+   * voice can be named by somebody who knows Piper's names. Choosing among its
+   * three Hindi voices from the app needs the app to know they exist, and that
+   * is a real decision with a student in front of it — not a query parameter
+   * forwarded on the chance the two vocabularies happen to agree.
    */
   if (own) {
     const q = new URLSearchParams({ text });
-    const voice = asked.searchParams.get('voice');
-    if (voice) q.set('voice', voice);
     return {
       status: 200,
       headers: {},
@@ -190,23 +209,127 @@ export function speechRelay(req: RelayRequest, key: string, own?: string): Relay
 export const DEFAULT_HEAR_MODEL = 'deepgram/nova-3';
 
 /**
+ * The longest answer this relay will carry, in bytes.
+ *
+ * A minute of the 16 kHz 16-bit mono `ear.ts` posts. The endpointer stops a
+ * spoken answer at ten seconds, so this is three times the longest thing the
+ * room can produce — wide enough that no student meets it, narrow enough that
+ * the meter's bytes-to-seconds arithmetic stays true.
+ */
+export const MAX_HEAR_BYTES = 2_000_000;
+
+/**
+ * THE EAR WAS LISTENING IN ENGLISH, AND NOBODY HAD TOLD IT OTHERWISE.
+ *
+ * The multipart form went out carrying `model` and `file` and nothing else, so
+ * the vendor used its default language — English — on a Class 10 student
+ * saying "har cell ko oxygen chahiye". A transcriber pointed at a language it
+ * was not configured for does not go quiet; it produces fluent text in the
+ * language it knows. The measurement this project actually recorded is in
+ * `tools/speech/README.md`: faster-whisper given Hinglish reported the
+ * language as `en` and returned garbage at avg logprob −0.79, with no error —
+ * the same English sentence came back exact at −0.22. Those invented words
+ * then reach the judge as the child's answer and the ledger as the child's own
+ * words. It is the same defect that on 2026-09-14 took the on-device ear out
+ * of `apps/classroom/src/lib/ear.ts`, and with that one gone this is now the
+ * ONLY ear, so nothing is behind it.
+ *
+ * `multi`, and specifically NOT `hi`. Two reasons, either one sufficient:
+ *  - `hi` is a single-language mode. Deepgram documents code-switching as
+ *    requiring `multi`, and a Class 10 science answer is Hinglish by default:
+ *    Hindi grammar carrying English nouns, in one sentence.
+ *  - Deepgram's Hindi emits DEVANAGARI. Every English term a student says —
+ *    "cell", "oxygen", "reflex action" — would come back in Devanagari, and
+ *    the 133 romanised entries in `packages/tutor-judge/src/match.ts` are
+ *    compared as Latin text, so Devanagari would miss all of them.
+ *    `matchSpokenAnswer` has no production caller YET — it is wired in with
+ *    the learner model — which is precisely why the language has to be settled
+ *    here and now: pick `hi` today and the matcher resolves nothing on the day
+ *    it is finally called, with every answer going to a model instead and
+ *    nothing in either file saying why.
+ *
+ * A CONSTANT AND NOT A QUERY PARAMETER, deliberately, and that is the guard.
+ * `model` is overridable because there is a real reason to try a different
+ * transcriber. There is no setting of THIS one that is not a defect: anything
+ * narrower than `multi` is either the English-only ear that was just deleted
+ * or Devanagari that breaks the matcher downstream. A knob whose every
+ * position is a bug is cheaper to remove than to validate, so a caller cannot
+ * ask for a language at all — `?language=` is ignored.
+ *
+ * It does travel WITH the model, because it only means anything next to one: a
+ * caller who overrides `model` away from nova-3 owes the same two properties —
+ * understands `multi`, answers in Latin script — and nothing here can check
+ * that for them.
+ */
+export const HEAR_LANGUAGE = 'multi';
+
+/**
+ * Everything the transcriber is told, in one value.
+ *
+ * ONE OBJECT AND NOT FOUR ARGUMENTS, deliberately. The seam used to be
+ * `transcribe(model, language, contentType, audio)` — three consecutive bare
+ * strings, forwarded positionally by both hosts. Swapping two of them at
+ * either call site typechecks clean and sends `language=audio/wav`, which is
+ * the missing-language defect again wearing types that call it correct. Named
+ * fields make that swap unspellable instead of something a reviewer has to
+ * catch.
+ */
+export interface HeardAudio {
+  model: string;
+  language: string;
+  contentType: string;
+  audio: Uint8Array;
+}
+
+/**
  * Her ear. Raw audio in the body, handed to a transcriber as multipart.
  *
  * The multipart assembly is left to the adapter: FormData is a platform
  * thing, and this package refuses to depend on one. What is decided here is
- * the model, and that the request is well-formed at all.
+ * the model and the language, and that the request is well-formed at all.
  */
 export function hearRelay(
   req: RelayRequest,
   key: string,
-): { ok: true; model: string; contentType: string; audio: Uint8Array } | { ok: false; response: RelayResponse } {
+): ({ ok: true } & HeardAudio) | { ok: false; response: RelayResponse } {
   if (req.method !== 'POST') return { ok: false, response: fail(405, 'POST only') };
   if (!key) return { ok: false, response: fail(503, 'The server has no OpenRouter key configured.') };
   if (req.body.byteLength === 0) return { ok: false, response: fail(400, 'no audio') };
+
+  /**
+   * WHAT THE METER IS ABLE TO PRICE.
+   *
+   * The vendor bills by the SECOND, and the meter turns bytes into seconds by
+   * dividing by `HEARD_BYTES_PER_SECOND` — which is only true of the raw
+   * 16 kHz mono PCM `ear.ts` actually posts. A compressed body of the same
+   * duration is a fraction of the bytes, so it would be charged a fraction of
+   * the units: 16 kbps opus is about 2,000 bytes a second against 32,000, and
+   * a day's budget would then buy something like seventy-seven hours of
+   * transcription. Nothing else stops it — the per-minute request limit is
+   * nowhere near binding on a body that large.
+   *
+   * So rather than pricing a body the meter cannot read, refuse it. `ear.ts`
+   * posts `audio/wav` and nothing else, which makes this a guard on a state
+   * that should never occur rather than a restriction on a caller.
+   *
+   * The cap is generous against the same source: `EAR_DEFAULTS.maxSpeechMs` is
+   * ten seconds and the endpointer's hard stop is the longest answer taken
+   * whole, so a minute of 16 kHz 16-bit mono — under 2 MB — is already three
+   * times the longest thing the room can send.
+   */
+  const type = (req.headers['content-type'] ?? 'audio/wav').split(';')[0].trim().toLowerCase();
+  if (type !== 'audio/wav' && type !== 'audio/wave' && type !== 'audio/x-wav') {
+    return { ok: false, response: fail(415, `this relay hears audio/wav, not ${type}`) };
+  }
+  if (req.body.byteLength > MAX_HEAR_BYTES) {
+    return { ok: false, response: fail(413, 'that answer is longer than this relay takes') };
+  }
+
   const asked = new URL(req.url, 'http://relay.local');
   return {
     ok: true,
     model: asked.searchParams.get('model') ?? DEFAULT_HEAR_MODEL,
+    language: HEAR_LANGUAGE,
     contentType: req.headers['content-type'] ?? 'audio/wav',
     audio: req.body,
   };

@@ -11,6 +11,8 @@
 export {
   CAP_MAX_TOKENS,
   DEFAULT_HEAR_MODEL,
+  HEAR_LANGUAGE,
+  MAX_HEAR_BYTES,
   DEFAULT_SPEECH_MODEL,
   DEFAULT_SPEECH_VOICE,
   capMaxTokens,
@@ -19,6 +21,7 @@ export {
   hearRelay,
   llmRelay,
   speechRelay,
+  type HeardAudio,
   type RelayRequest,
   type RelayResponse,
   type SavedClass,
@@ -41,10 +44,12 @@ export {
   admit,
   createMemoryLedger,
   createSupabaseLedger,
+  unitsFor,
   type Admission,
   type ClaimResult,
   type Gate,
   type Ledger,
+  type Price,
   type RelayName,
 } from './gate.ts';
 

@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   CAP_MAX_TOKENS,
   DEFAULT_SPEECH_VOICE,
+  HEAR_LANGUAGE,
+  MAX_HEAR_BYTES,
   capMaxTokens,
   checkSavedClass,
   hearRelay,
@@ -98,6 +100,29 @@ describe('the ear', () => {
     if (!out.ok) return;
     expect(out.model).toBe('deepgram/nova-3');
     expect(out.audio.byteLength).toBe(3);
+  });
+
+  it('says which language it is listening in, because the vendor defaults to English', () => {
+    // Nothing said so until 2026-09-14, so the only ear this product has left
+    // was an English model transcribing Class 10 Hinglish — and a transcriber
+    // in the wrong language does not go quiet, it invents fluent words that
+    // then reach the judge as the child's answer.
+    const out = hearRelay(req({ url: '/api/hear', body: new Uint8Array([1]) }), KEY);
+    if (!out.ok) throw new Error('expected the audio to be accepted');
+    expect(out.language).toBe(HEAR_LANGUAGE);
+    expect(out.language).toBe('multi');
+  });
+
+  it('ignores a caller asking for Hindi, which would arrive in Devanagari', () => {
+    // `hi` is single-language — Deepgram documents code-switching as needing
+    // `multi` — and its output is Devanagari, which would Devanagari-ise every
+    // English science term and strand the 133 romanised entries in
+    // `packages/tutor-judge/src/match.ts`. The model stays overridable; this
+    // does not, because no value of it is an improvement on `multi`.
+    const out = hearRelay(req({ url: '/api/hear?language=hi&model=deepgram/nova-2', body: new Uint8Array([1]) }), KEY);
+    if (!out.ok) throw new Error('expected the audio to be accepted');
+    expect(out.language).toBe('multi');
+    expect(out.model).toBe('deepgram/nova-2');
   });
 });
 
@@ -220,7 +245,7 @@ describe('what a browser is allowed to write', () => {
 describe('speaking through our own service', () => {
   const url = (r: ReturnType<typeof speechRelay>) =>
     r.body && typeof r.body === 'object' && 'from' in r.body
-      ? (r.body as { from: { url: string; method: string; headers: Record<string, string> } }).from
+      ? (r.body as { from: { url: string; method: string; headers: Record<string, string>; body?: string } }).from
       : null;
 
   const asked = (qs: string) => ({ url: `/api/speech?${qs}`, method: 'GET', headers: {}, body: new Uint8Array() });
@@ -237,10 +262,24 @@ describe('speaking through our own service', () => {
     expect(JSON.stringify(from?.headers ?? {})).not.toContain('sk-vendor-key');
   });
 
-  it('passes the voice through, and leaves it out when nobody asked', () => {
-    expect(url(speechRelay(asked('text=hi&voice=hi_IN-pratham-medium'), '', 'http://box'))?.url)
-      .toContain('voice=hi_IN-pratham-medium');
-    expect(url(speechRelay(asked('text=hi'), '', 'http://box'))?.url).not.toContain('voice=');
+  it('never sends our box a voice name, because every name the app has is the vendor’s', () => {
+    /**
+     * THE REQUEST THE CLASSROOM ACTUALLY MAKES, not one a test invented.
+     *
+     * `TUTOR_VOICE` in apps/classroom/src/lib/lessonVoice.ts is the only voice
+     * this product asks for and it is this constant — a Deepgram name. Our box
+     * resolves a voice as `<name>.onnx` on disk, so forwarding it answered 404
+     * to every line of every class and the room fell back to the browser's
+     * robot voice for the whole lesson. The test this replaces passed
+     * `hi_IN-pratham-medium`, a name nothing in this product can produce, so
+     * it proved the forwarding worked and never that it was survivable.
+     */
+    const from = url(speechRelay(asked(`text=hi&voice=${DEFAULT_SPEECH_VOICE}`), '', 'http://box'));
+    expect(from?.url).not.toContain('voice=');
+    expect(from?.url).not.toContain(DEFAULT_SPEECH_VOICE);
+    // And the vendor path still names one on every call, because an unnamed
+    // voice there is a tutor who changes speaker between sentences.
+    expect(url(speechRelay(asked('text=hi'), 'sk-vendor-key'))?.body).toContain(DEFAULT_SPEECH_VOICE);
   });
 
   it('needs no vendor key at all, which a laptop with no account still has to work without', () => {
@@ -261,5 +300,59 @@ describe('speaking through our own service', () => {
 
   it('does not let a trailing slash produce a double one', () => {
     expect(url(speechRelay(asked('text=hi'), '', 'http://box/'))?.url).toContain('http://box/speak?');
+  });
+});
+
+/**
+ * WHAT THE METER IS ABLE TO PRICE.
+ *
+ * `unitsFor` turns a hear body into seconds by dividing by 32,000 — the bytes
+ * a second of the raw 16 kHz mono `ear.ts` posts. That arithmetic is only true
+ * of that format. A compressed body of the same duration is a fraction of the
+ * bytes and would be charged a fraction of the units: 16 kbps opus is about
+ * 2,000 bytes a second, sixteen times under, and a day's budget would buy
+ * something like seventy-seven hours of transcription. The per-minute request
+ * limit is nowhere near binding on a body that large.
+ *
+ * So the bad state is refused rather than priced.
+ */
+describe('the ear takes only what the meter can read', () => {
+  const post = (bytes: number, contentType = 'audio/wav') => ({
+    method: 'POST',
+    url: '/api/hear',
+    headers: { 'content-type': contentType },
+    body: new Uint8Array(bytes),
+  });
+
+  it('takes a real answer', () => {
+    // Ten seconds at 16 kHz 16-bit mono, which is the endpointer's hard stop.
+    expect(hearRelay(post(320_000), 'k').ok).toBe(true);
+  });
+
+  it('refuses a body longer than any answer the room can make', () => {
+    const out = hearRelay(post(MAX_HEAR_BYTES + 1), 'k');
+    expect(out.ok).toBe(false);
+    if (!out.ok) expect(out.response.status).toBe(413);
+  });
+
+  it('refuses a format whose bytes do not mean seconds', () => {
+    // The sixteen-times hole, closed at the door rather than in the meter.
+    for (const type of ['audio/webm', 'audio/ogg;codecs=opus', 'audio/mpeg', 'application/json']) {
+      const out = hearRelay(post(1_000, type), 'k');
+      expect(out.ok, type).toBe(false);
+      if (!out.ok) expect(out.response.status, type).toBe(415);
+    }
+  });
+
+  it('accepts the spellings of wav a browser may send, and ignores a charset', () => {
+    for (const type of ['audio/wav', 'AUDIO/WAV', 'audio/wave', 'audio/x-wav', 'audio/wav; codecs=1']) {
+      expect(hearRelay(post(1_000, type), 'k').ok, type).toBe(true);
+    }
+  });
+
+  it('still refuses an empty body before anything else', () => {
+    const out = hearRelay(post(0), 'k');
+    expect(out.ok).toBe(false);
+    if (!out.ok) expect(out.response.status).toBe(400);
   });
 });

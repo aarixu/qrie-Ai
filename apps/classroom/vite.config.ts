@@ -25,6 +25,7 @@ import {
   toRelayRequest,
   transcribeViaFormData,
   type Gate,
+  type HeardAudio,
   type UsageEvent,
 } from '../../packages/relay/src/index.ts';
 // The markup gate, imported from the package that defines it rather than
@@ -97,8 +98,7 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
      */
     ...(process.env.CURIE_SPEECH_URL ? { speechUrl: process.env.CURIE_SPEECH_URL } : {}),
     ...(vertex ? { vertex } : {}),
-    transcribe: (model: string, contentType: string, audio: Uint8Array) =>
-      transcribeViaFormData(key, model, contentType, audio),
+    transcribe: (call: HeardAudio) => transcribeViaFormData(key, call),
     // On a laptop the accounting goes to the terminal. One line per call,
     // the same shape Postgres receives in production, so a developer sees
     // what a class spends while building it rather than on the bill.

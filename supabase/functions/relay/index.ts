@@ -135,8 +135,7 @@ const deps: HandlerDeps = {
     // never degrade to no check.
     ...(TICKET_SECRET ? { ticketSecret: TICKET_SECRET } : {}),
   },
-  transcribe: (model: string, contentType: string, audio: Uint8Array) =>
-    transcribeViaFormData(OPENROUTER_API_KEY, model, contentType, audio),
+  transcribe: (call) => transcribeViaFormData(OPENROUTER_API_KEY, call),
   usage,
   /**
    * The files go to a public Storage bucket and the catalogue row to Postgres,
