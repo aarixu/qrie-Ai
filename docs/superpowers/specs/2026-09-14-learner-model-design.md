@@ -307,12 +307,25 @@ as unassisted evidence at all.
 
 ### Evidence-gated study plan
 
-`gapsFrom` already takes an optional `evidence` set and skips any node outside it
-— but the option is optional, and `confidenceCoverage`, the placement test's
-stopping signal, has **no evidence parameter at all**, so coverage is computed
-over nodes nobody examined. Phase 3 makes the gate non-optional at the call sites
-that build a plan, sourcing the evidence set from `observations > 0` on
-`ConceptState` rather than from one session's answers.
+`gapsFrom` already takes an optional `evidence` set and skips any node outside
+it. What Phase 3 changes is where that set comes from: `observations > 0` on
+`ConceptState`, a fact about the STUDENT, rather than `evidenceFrom(index,
+answers)`, a fact about one sitting. The two are unioned at the call site, so a
+session's own answers can never be lost to a fold that has not run yet.
+
+**CORRECTED 2026-09-14.** This section also said `confidenceCoverage` — the
+placement test's stopping signal — needed the same gate, because it computes
+over nodes nobody examined. Gating it would be a serious regression: `total`
+would then count only examined nodes, so after one settled answer coverage would
+read 1.0 and the test would stop on its first question. Unexamined nodes
+counting toward `total` and not toward `settled` is exactly what keeps the test
+going, and it is correct.
+
+The seeded-prior worry behind that claim does not survive arithmetic either:
+`initialMastery` seeds difficulty 1 at 0.58 and difficulty 5 at 0.42, both
+inside the 0.25-0.75 band that `confidenceCoverage` calls unsettled, so the
+difficulty bias never inflates coverage at all. `confidenceCoverage` is left
+alone.
 
 ---
 

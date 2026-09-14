@@ -10,6 +10,8 @@ import {
 } from '@ai-tutor/diagnostic';
 import { applyDoubt, applyTaught, type DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from '../lib/diagnosticData';
+import { evidenceSet } from '@ai-tutor/learner-model';
+import { loadModel } from '../lib/learnerModel';
 import { modelStore, trainOnSession } from '../stores/model';
 import { useDiagnosticLedger } from '../lib/diagnosticLedger';
 import { outcomeStore } from '../stores/outcomes';
@@ -165,7 +167,14 @@ export function Diagnostic({
       beliefsAfter: session.mastery,
     });
     ledger.finish();
-    onComplete(buildPlan(session, data.index));
+    onComplete(
+      buildPlan(session, data.index, {
+        // Everything the model has seen of this student before today, so the
+        // plan can name a break the classroom found last week and this test
+        // never asked about.
+        knownEvidence: evidenceSet(loadModel()),
+      }),
+    );
   }, [data, session, probe, onComplete, beliefsBefore, ledger]);
 
   if (!data || !session) {

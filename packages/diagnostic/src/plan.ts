@@ -25,6 +25,20 @@ export interface PlanOptions {
   maxSteps?: number;
   /** Below this belief a node counts as a gap. */
   threshold?: number;
+  /**
+   * WHAT THE MODEL HAS ALREADY SEEN OF THIS STUDENT, beyond this sitting.
+   *
+   * Unioned with the evidence this session produced, never replacing it. The
+   * gate's job is to stop a node NOBODY examined from becoming a gap by
+   * arithmetic alone — the 0.46 defect — and a node examined in a class last
+   * week was examined. Without this, a placement test can only ever reason
+   * about the twenty questions it just asked, which is precisely the
+   * one-sitting memory a learner model exists to replace.
+   *
+   * Optional, because every hand-written fixture in these tests passes none and
+   * must keep working.
+   */
+  knownEvidence?: ReadonlySet<string>;
 }
 
 const DEFAULT_MAX_STEPS = 12;
@@ -49,7 +63,11 @@ export function buildPlan(
     // the classroom spoke about before it opened, which is what `seeded`
     // carries: an outcome the student stopped the class on is examined
     // evidence, even though no question here asked about it.
-    evidence: new Set([...evidenceFrom(index, session.answers), ...session.seeded]),
+    evidence: new Set([
+      ...evidenceFrom(index, session.answers),
+      ...session.seeded,
+      ...(opts.knownEvidence ?? []),
+    ]),
   });
 
   return {

@@ -1,5 +1,7 @@
 import { learnFromQuiz } from '@ai-tutor/diagnostic';
 import type { Answer, GraphIndex } from '@ai-tutor/knowledge-graph';
+import { evidenceSet } from '@ai-tutor/learner-model';
+import { loadModel } from './learnerModel';
 import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
 import { loadDiagnosticDataFor } from './diagnosticData';
@@ -73,6 +75,9 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
   // calibration here meant ignoring it almost everywhere.
   const adapted = learnFromQuiz(before, answersFrom(outcome), index, {
     params: modelStore.get(),
+    // What the model has seen of this student beyond this quiz, so a break
+    // found in a class is eligible to become a step here.
+    knownEvidence: evidenceSet(loadModel()),
   });
 
   /**

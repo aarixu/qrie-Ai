@@ -59,6 +59,14 @@ export const MAX_PLAN_STEPS = 12;
 export interface AdaptOptions {
   /** Below this belief a node counts as a gap. */
   threshold?: number;
+  /**
+   * WHAT THE MODEL HAS ALREADY SEEN OF THIS STUDENT, beyond this quiz.
+   *
+   * Unioned with the evidence this sitting produced, never replacing it. The
+   * gate stops a node NOBODY examined from becoming a gap by arithmetic alone
+   * — the 0.46 defect — and a node examined in a class last week was examined.
+   */
+  knownEvidence?: ReadonlySet<string>;
   /** Most steps to add from one test. */
   maxNewSteps?: number;
   /** Most steps the plan may hold in total. */
@@ -144,7 +152,10 @@ export function learnFromQuiz(
   // as a phantom gap for the life of the profile.
   const gaps = gapsFrom(mastery, index, {
     threshold,
-    evidence: evidenceFrom(index, [...before.answers, ...usable]),
+    evidence: new Set([
+      ...evidenceFrom(index, [...before.answers, ...usable]),
+      ...(options.knownEvidence ?? []),
+    ]),
   });
 
   /**
