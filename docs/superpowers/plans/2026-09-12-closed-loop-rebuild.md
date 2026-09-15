@@ -392,7 +392,31 @@ inside their first class, and nothing else would have said so.
 **⚠️ NOT YET APPLIED to the deployed project.** Until it is, the code and the
 database disagree and the database wins.
 
-### Phase 3 — The learner model, MVP scope `IN PROGRESS`
+### Phase 3 — The learner model, MVP scope `DONE, except the asks layer`
+
+**Landed 2026-09-15 at `9032484`.** `packages/learner-model` holds the belief
+the product is built on: per outcome, what we think they know, whether they did
+it ALONE, when they last practised, how many times taught. `foldSession` builds
+it from the ledger and is pure, so a session replays. `0013_learner_model.sql`
+is the table a student can read and cannot write. The inspector at `/model`
+rebuilds from the server's ledger and diffs — the replay check, as a live tool.
+The metric, `unassistedGain` per learning minute, is computable.
+
+Detail and the ten tasks: `docs/superpowers/plans/2026-09-14-learner-model.md`.
+
+**The asks layer moved to Phase 6**, both halves. `chooseAsk` ships tested with
+no caller. *Which outcome* needs the spine to carry more than one ask per beat
+(Aarav's call, 2026-09-15). *At what rung* turned out to be a mistake in the
+rule itself: opening with help on the outcomes a student has already failed cold
+means those outcomes never produce another rung-0 observation, so the primary
+metric can never record them improving. A model that pre-empts its own
+measurement is worse than no model.
+
+**Two adversarial reads found seven defects between them, two critical.** Both
+are in the commit log with their measurements; the worst was that a right answer
+said OUT LOUD folded as silence, because a spoken answer carries no
+`chosenIndex` and `applyEvidence` reads a null one as a skip.
+
 
 One line here was not a scope. Broken out 2026-09-14, ordered by what unblocks
 what. Scope was decision 12 and nothing wider: **concept state + the
@@ -574,9 +598,15 @@ to refuse into a top-up rather than into a wall.
 entitlement check the relay enforces, and receipts. Blocked on 4.2's answer and
 on Aarav's price.
 
-**4.6 — Hosting.** There is **no git remote at all** — `ci.yml` has never run.
-A remote, a Vercel project, environment variables, a domain. The secret scrub
-must land before the first push.
+**4.6 — Hosting.** *Half done, 2026-09-15.* This read "there is no git remote at
+all" until the repo was pushed to **https://github.com/aarixu/curie** (private,
+212 commits at the time). A secret scan ran before the push: `.gitignore`
+covers `.env` and `.env.*`, and the two files that tripped a pattern search were
+both harmless — a test that generates a real keypair at run time, and a tool
+that READS secrets rather than holding them.
+
+Still to do: a Vercel project, environment variables, a domain, and `ci.yml`
+has still never run.
 
 **4.7 — Legal.** **There is not one legal page in the app today.** A privacy
 policy, terms, the DPDP notice, and a refund policy — the last because payment
