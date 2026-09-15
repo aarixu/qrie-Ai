@@ -77,7 +77,20 @@ function docxSaying(...paragraphs: string[]): Uint8Array {
   });
 }
 
-describe('a PDF, read on the phone it was picked on', () => {
+/**
+ * TWENTY SECONDS, NOT FIVE.
+ *
+ * These load pdf.js for real rather than mocking it, which is the point — the
+ * defects this file exists to catch are a scan with no text in it, a locked
+ * PDF, and a JPEG wearing a .pdf, and none of them reproduce against a mock.
+ * The cost is that the first one pays for pdf.js starting up: about three
+ * seconds idle, and past the 5s default whenever the machine is busy.
+ *
+ * It was failing roughly one run in three and passing alone, which is the worst
+ * kind of test — it teaches whoever runs the suite to read red as noise, and
+ * the next real failure gets the same shrug.
+ */
+describe('a PDF, read on the phone it was picked on', { timeout: 20_000 }, () => {
   it('becomes the words that were in it', async () => {
     const result = await readSource(file(pdfSaying('Photosynthesis is how a green plant makes food.'), 'ch6.pdf'));
     expect(result.ok).toBe(true);

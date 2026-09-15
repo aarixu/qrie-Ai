@@ -58,6 +58,7 @@ import { Home } from './screens/Home';
 import { LessonRoute } from './screens/ClassRoom';
 import { ActionLab } from './screens/ActionLab';
 import { CanvasLab } from './screens/CanvasLab';
+import { ModelInspector } from './screens/ModelInspector';
 import { AvatarLab } from './screens/AvatarLab';
 
 /**
@@ -240,6 +241,7 @@ function Gate({ children }: { children: React.ReactNode }) {
     import.meta.env.DEV &&
     (location.pathname === '/canvas-lab' ||
       location.pathname === '/avatar-lab' ||
+      location.pathname === '/model' ||
       location.pathname.startsWith('/action-lab/'));
 
   if (booting && !isBench) return <Splash />;
@@ -356,6 +358,10 @@ export default function App() {
                 <Route path="/action-lab/:lessonId" element={<ActionLab />} />
                 <Route path="/canvas-lab" element={<CanvasLab />} />
                 <Route path="/avatar-lab" element={<AvatarLab />} />
+                {/* What the model actually learned. Aarav's tool, not a
+                  product surface — he asked to see whether it is learning
+                  before anything is shown to a student. */}
+                <Route path="/model" element={<ModelInspector />} />
               </>
             )}
             <Route path="/complete/:lessonId" element={<LessonComplete />} />
