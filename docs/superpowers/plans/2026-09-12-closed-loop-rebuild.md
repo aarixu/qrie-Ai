@@ -389,8 +389,11 @@ ceiling on abuse, not an invoice, and it says so.
 `migrations.test.ts` now asserts the SQL and the code hold the same number —
 shipping the repriced units against the old ceiling cuts every student off
 inside their first class, and nothing else would have said so.
-**⚠️ NOT YET APPLIED to the deployed project.** Until it is, the code and the
-database disagree and the database wins.
+**✅ APPLIED 2026-09-15**, by Aarav — the harness refuses a production deploy to
+me. Verified after, not assumed: `db push --dry-run` reports `upToDate: true`
+and `npm run relay:verify` is 24 OK, which is the check that matters here
+because this migration replaced `claim_relay`. Until it landed the code and the
+database disagreed about the day's budget, and the database won.
 
 ### Phase 3 — The learner model, MVP scope `DONE, except the asks layer`
 

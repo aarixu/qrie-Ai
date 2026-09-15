@@ -63,11 +63,15 @@ is Phase 6 work:
   model decides what happens AFTER a wrong answer. That lives in the same
   machinery, so it travels with the other half.
 
-**Two things are pending against the deployed project and both are Aarav's:**
-migrations `0012` and `0013`. `0012` matters more — the live database still
-enforces the old 3,000 daily budget against the repriced one-paisa units, so a
-student is cut off inside their first class. `npm run model:verify` stops and
-says so rather than pretending.
+**`0012` and `0013` are APPLIED, 2026-09-15.** Aarav ran `npx supabase db push`;
+the harness refuses a production deploy to me. Verified after rather than
+assumed — `db push --dry-run` reports `upToDate: true`, `npm run model:verify`
+is 11/11 with writes to `concept_state` answering **403** where they answered
+404 before, `npm run relay:verify` is 24 OK (the check that matters for `0012`,
+which replaced `claim_relay`), and `ledger-live-test` still lands an answer end
+to end. Until this the deployed database enforced the old 3,000-unit day against
+repriced one-paisa units, and a real student would have been cut off partway
+through their first class.
 
 **Corrections to this plan's own text,** made while executing it, so a reader
 does not follow the original into the same holes:
