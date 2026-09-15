@@ -109,6 +109,9 @@ layer (the asks); Phase 6 builds the rest.
 
 ## THE SHAPE
 
+**As shipped.** This block is the code, not a sketch of it — three things below
+were added while building and each carries the reason it exists.
+
 ```ts
 interface ConceptState {
   outcomeId: string;
@@ -120,13 +123,17 @@ interface ConceptState {
   /** How they perform WITH help. High-with-low-unassisted is the signal. */
   assistedPerformance: number;
 
+  /** EVIDENCE events: answers and attendance. A raised hand is not one. */
   observations: number;
+  /** Raised hands. Moves belief; never entitles an outcome to become a gap. */
+  doubtCount: number;
   /**
    * Counted apart, because without it "unassisted mastery 0.5" and "nobody has
-   * ever asked them unassisted" are the same number, and they are not the same
-   * fact. Every read of unassistedMastery must check this first.
+   * ever asked them cold" are the same number, and they are not the same fact.
    */
   unassistedObservations: number;
+  /** Times taught. `applyTaught` saturates on this, so it must be durable. */
+  taughtCount: number;
 
   lastPracticedAt: string | null;
   lastUnassistedSuccessAt: string | null;
@@ -140,35 +147,85 @@ interface ConceptState {
 
 interface LearnerModel {
   states: Record<string, ConceptState>;
-  /**
-   * How far the fold has consumed the ledger. Makes a fold incremental AND
-   * idempotent: re-folding an event already behind the cursor is a no-op, so a
-   * retried request cannot double-count a quiz.
-   */
-  foldedThrough: { at: string; seq: number } | null;
-  /** Of the model's own shape, so a later change can migrate rather than guess. */
+  /** (session start, session id, seq). See below for why all three. */
+  foldedThrough: { at: string; sessionId: string; seq: number } | null;
+  /** The help handed over in the sitting being folded, per ask. */
+  helpInFlight: { sessionId: string; byAsk: Record<string, number> } | null;
   version: number;
 }
 ```
 
+### Three fields the first draft did not have
+
+**`doubtCount`.** A raised hand was landing in `observations`, and `evidenceSet`
+reads that field to decide what may become a gap — so one hand on an otherwise
+untouched outcome put it at 0.39 and `gapsFrom` returned it as a gap at
+confidence 0.61. A remedial plan step earned by asking a question. That
+contradicts `applyDoubt`'s own rule (`mastery.ts:250-252`): *"a hand is a nudge
+rather than a verdict, and a student who asks a lot must never be modelled as a
+student who knows nothing."*
+
+**`taughtCount`.** `applyTaught` saturates on how many times a thing was taught,
+so that count has to survive between sittings. Without it the fold repeats the
+defect it was meant to avoid — `Diagnostic.tsx:102-105` applied attendance twice
+and could carry a node from the prior to nearly settled on zero answered
+questions.
+
+**`helpInFlight`.** The only in-flight state the model carries, and it is here
+rather than in a local because **the device folds a session in many calls** — one
+per event, as the class happens. Held in a local, a `helped` folded in one call
+was invisible to the answer folded in the next, and that answer was then scored
+as UNASSISTED. It manufactured mastery a child does not have, which is the one
+error `deriveRung` says nothing downstream can correct.
+
+### The cursor is `(session start, session id, seq)`
+
+Three parts, each earning its place:
+
+- **`at` is the SESSION's `started_at`** — a server clock — and **not** the
+  event's own `at`, which is the phone's. The ledger says so itself
+  (`packages/ledger/src/types.ts:102-108`): *"Ordering must not depend on `at`,
+  because `at` is a phone's clock and phones lie."* The first implementation used
+  the event clock, and a single NTP correction mid-session then put the rest of
+  that session permanently behind the cursor — lost for the student's whole life,
+  and **not recoverable by a rebuild**, because the rebuild replays the same
+  events and re-poisons the same cursor.
+- **`sessionId`** breaks a tie between two sittings that began in the same
+  millisecond, which `seq` cannot: `seq` restarts at 0 per session.
+- **`seq`** orders within one session, which is the only thing it can do.
+
+Compared as parsed time, never as strings. The device renders an instant as
+`…T10:00:00.000Z` and PostgREST may render the same instant as
+`…T10:00:00+00:00`, which sorts LATER as text and is EQUAL as time; an offset
+form like `+05:30` sorts later still while being four and a half hours earlier.
+One implementation on two runtimes is the whole design, and they have to agree
+about which events are new.
+
 ### One pure function, run in two places
 
 ```ts
-export function fold(
+export function foldSession(
   model: LearnerModel,
-  event: LedgerEvent,
+  session: { id: string; startedAt: string },
+  events: readonly LedgerEvent[],
   index: GraphIndex,
   params: ModelParams,
 ): LearnerModel;
 ```
 
-No clock — the event carries `at`. No I/O. No React. Same inputs, same output,
-always.
+**A SESSION, not a single event** — because the assistance rung is a fact about
+what came BEFORE an answer in `seq` order, and a one-event signature cannot see
+the `helped` rows. It does not require the whole session at once: the device
+calls it per event and the server per batch, which is exactly why everything
+that must survive between calls lives in the model rather than in a local.
+
+No clock — every event carries its own `at`. No I/O. No React. Same inputs, same
+output, always.
 
 It runs on the device in TypeScript for instant feedback, and in the Edge
-Function on Deno over the ledger in `seq` order for the authoritative answer.
-**When they disagree the server wins.** This is not a new pattern: it is exactly
-how `packages/relay` already runs the same modules under the Vite dev server and
+Function on Deno over the ledger for the authoritative answer. **When they
+disagree the server wins.** This is not a new pattern: it is exactly how
+`packages/relay` already runs the same modules under the Vite dev server and
 under Deno.
 
 ### The bare float becomes a projection, not a deletion

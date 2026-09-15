@@ -19,6 +19,74 @@ RLS, a Deno Edge Function. No new runtime dependencies.
 
 **Spec:** `docs/superpowers/specs/2026-09-14-learner-model-design.md`
 
+## Where this landed — 2026-09-15
+
+Nine of the ten tasks are done and committed. Read this before the tasks below:
+several of them describe code that has since been corrected, and the commits are
+the truth.
+
+| task | | commit |
+|---|---|---|
+| 1 | `ConceptState`, `masteryView`, `evidenceSet` | `5d9074f` |
+| 2 | `deriveRung` | `7c74267` |
+| 3 | `foldSession` | `1eb889c` |
+| — | **five defects an adversarial read found, two critical** | `7f4fd84` |
+| 4 | `0013_learner_model.sql` | `3eb1498` |
+| 5 | `chooseAsk` | `c7c5478` |
+| 6 | **the asks layer — MOVED TO PHASE 6, see below** | — |
+| 7 | the inspector, `rebuildFromLedger`, `model-live-test.mjs` | `e996eaa` |
+| 8 | the model becomes the store | `769cbca` |
+| 9 | the evidence gate reads the model | `e504fd5` |
+| 10 | the metric | `83036a1` |
+
+**Task 6 moved to Phase 6, and it was Aarav's call on the bigger half.**
+`chooseAsk` reports which outcome to ask about and at what rung, and **nothing
+calls it.** Both halves turned out to need the classroom's ask machinery, which
+is Phase 6 work:
+
+- *Which outcome* — the ask's text is authored into the beat at prep time and is
+  part of the cached spine, so the class never chooses an outcome at runtime. For
+  the layer to choose one, the spine has to carry more than one ask per beat,
+  each tagged with what it probes. That is a planner-prompt and `lesson-format`
+  change, and the content has to be regenerated. Prep is paid once per topic, so
+  the per-student cost stays zero. **Aarav deferred this to Phase 6 on
+  2026-09-15.**
+- *At what rung* — the first rule here was "open with a hint where they have
+  already failed cold", and it is wrong twice over. Rung 1 does not exist as
+  content; the only pre-answer help a beat carries is its authored `ask.hint`,
+  which the ladder calls rung 3. And opening with help on exactly the outcomes
+  they have failed cold means those outcomes never produce another rung-0
+  observation, so `unassistedMastery` freezes at its worst reading and the
+  primary metric can never record that they got better at the thing they were
+  worst at. **A model that pre-empts its own measurement is worse than no
+  model.** The rule that replaces it: the ask opens at rung 0 always, and the
+  model decides what happens AFTER a wrong answer. That lives in the same
+  machinery, so it travels with the other half.
+
+**Two things are pending against the deployed project and both are Aarav's:**
+migrations `0012` and `0013`. `0012` matters more — the live database still
+enforces the old 3,000 daily budget against the repriced one-paisa units, so a
+student is cut off inside their first class. `npm run model:verify` stops and
+says so rather than pretending.
+
+**Corrections to this plan's own text,** made while executing it, so a reader
+does not follow the original into the same holes:
+
+- Task 3's code coerced a null `chosenIndex` to 0, turning every SKIPPED
+  question into "they confidently chose the first option" — a stronger claim
+  than silence supports, propagated across the whole evidence region.
+- Task 3's attendance rule called `applyTaught` incrementally. That function
+  measures from the PRIOR and is written to be called once with a total, so
+  calling it again on a moved value compounds instead of saturating: the second
+  viewing counted for MORE than the first, +0.125 against +0.09.
+- Task 9 said `confidenceCoverage` needed an evidence gate. Gating it would stop
+  the placement test on its first question — unexamined nodes counting toward
+  `total` and not toward `settled` is what keeps the test going. The seeded-prior
+  worry behind it does not survive arithmetic either: seeds run 0.42 to 0.58,
+  inside the band `confidenceCoverage` already calls unsettled.
+
+---
+
 ## Global Constraints
 
 - **The package is pure.** No I/O, no `Date.now()`, no `Math.random()`, no
