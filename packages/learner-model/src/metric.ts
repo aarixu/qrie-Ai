@@ -18,7 +18,13 @@ export function unassistedGain(before: LearnerModel, after: LearnerModel): numbe
   for (const state of Object.values(after.states)) {
     const was = before.states[state.outcomeId];
     if (state.unassistedObservations <= (was?.unassistedObservations ?? 0)) continue;
-    total += state.unassistedMastery - (was?.unassistedMastery ?? state.unassistedMastery);
+    const delta = state.unassistedMastery - (was?.unassistedMastery ?? state.unassistedMastery);
+    // A corrupted belief must not poison the whole figure. This file already
+    // refuses to divide by zero for that reason, and then let NaN in through
+    // the numerator by the same door — a NaN spreads further than an Infinity
+    // and is harder to notice, because it survives every later sum silently.
+    if (!Number.isFinite(delta)) continue;
+    total += delta;
   }
   return total;
 }

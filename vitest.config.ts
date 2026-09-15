@@ -32,6 +32,23 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    /**
+     * THIRTY SECONDS, NOT FIVE.
+     *
+     * The default failed four different files in one afternoon — the PDF
+     * reader, the sign-up screen, and two others — every one of which passed
+     * in seconds when run alone. None of them was a real failure; the suite
+     * runs 194 files under jsdom and several load something genuinely heavy
+     * (pdf.js, the syllabus maps), so under load a five-second budget is a
+     * coin toss.
+     *
+     * A suite that goes red on a busy machine is worse than a slow one: it
+     * teaches whoever runs it to read red as noise, and then the next REAL
+     * failure gets the same shrug. Raising the ceiling costs nothing — a test
+     * that genuinely hangs still fails, thirty seconds later.
+     */
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     include: [
       'packages/*/tests/**/*.test.{ts,tsx}',
       'apps/*/tests/**/*.test.{ts,tsx}',

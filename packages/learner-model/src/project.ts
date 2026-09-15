@@ -24,25 +24,30 @@ export function masteryView(model: LearnerModel): Mastery {
  * read as a measurement and a flawless student was handed a twelve-step
  * remedial plan.
  *
- * WIDER than the `evidenceFrom(index, answers)` it replaces, in exactly one
- * way: a node the student SAT THROUGH BEING TAUGHT counts. Today a gap can only
- * come from a node an answer spoke about, so a lesson the student attended and
- * still looks weak on cannot become one. That is the intended change — the
- * point of a learner model is that it remembers across sittings what one
- * session's answers cannot.
+ * ONLY EVIDENCE THAT COULD HAVE LOWERED BELIEF COUNTS. That means answers, and
+ * it does not mean attendance. `packages/diagnostic/src/session.ts` states the
+ * rule this file has to obey, in the repo, before any of this was written:
  *
- * A RAISED HAND IS NOT IN IT. `confused` moves belief and is counted in
- * `doubtCount`, deliberately not here. Measured: one raised hand on an
- * otherwise-untouched outcome puts it at 0.39, and `gapsFrom` would then return
- * it as a gap at confidence 0.61 — a remedial plan step earned by asking a
- * question. That contradicts applyDoubt's own rule (mastery.ts:250-252), "a
- * hand is a nudge rather than a verdict, and a student who asks a lot must
- * never be modelled as a student who knows nothing".
+ *   "Attendance (applyTaught) raises belief and so can never create a gap on
+ *    its own; adding it would let the difficulty prior back in through the side
+ *    door, which is the defect this whole gate exists to close."
+ *
+ * An earlier version of this function counted every `observations` and so
+ * admitted attendance. Measured on the real class10-science map: one `taught`
+ * event on a difficulty-4 node put it into the gate, and `buildPlan` then
+ * returned it as a remedial step — scored at 0.46, the seeded prior, which
+ * nothing had measured. The side door, exactly as named.
+ *
+ * WIDER than `evidenceFrom(index, answers)` in one way that is still safe: a
+ * raised hand counts, because `applyDoubt` LOWERS belief. It is deliberately
+ * not counted in `observations` for other reasons — see `ConceptState` — but a
+ * student who stopped the class on an outcome has given us the kind of evidence
+ * that may legitimately make it a gap.
  */
 export function evidenceSet(model: LearnerModel): Set<string> {
   const out = new Set<string>();
   for (const state of Object.values(model.states)) {
-    if (state.observations > 0) out.add(state.outcomeId);
+    if (state.answerObservations > 0 || state.doubtCount > 0) out.add(state.outcomeId);
   }
   return out;
 }

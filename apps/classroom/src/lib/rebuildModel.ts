@@ -26,6 +26,13 @@ import { supabase } from './supabase';
  * are the same computation on the same input.
  */
 
+/**
+ * One page. Asked for with one extra row so a full page can be told from a
+ * truncated one — the check that matters, since a silent truncation here looks
+ * exactly like a broken model.
+ */
+const PAGE = 1000;
+
 export interface FieldDiff {
   outcomeId: string;
   field: string;
@@ -39,6 +46,8 @@ export interface Rebuild {
   events: number;
   /** Where the stored model and the rebuild disagree. Empty is the good case. */
   diffs: FieldDiff[];
+  /** Events on the server whose sitting row is missing, so nothing folded them. */
+  orphanedEvents: number;
   /** Outcomes the rebuild produced that the stored model never had, and vice versa. */
   onlyStored: string[];
   onlyRebuilt: string[];
@@ -90,7 +99,12 @@ const FIELDS: readonly (keyof ConceptState)[] = [
   'lastUnassistedSuccessAt',
 ];
 
-/** Floats do not survive a round trip through Postgres `real` exactly. */
+/**
+ * Both sides are doubles computed locally, so this tolerance is for accumulated
+ * float error and nothing else. If `concept_state` is ever read here instead,
+ * 1e-9 is roughly ten times too tight for a Postgres `real` and every row would
+ * read as a disagreement.
+ */
 const same = (a: unknown, b: unknown): boolean => {
   if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 1e-9;
   return (a ?? null) === (b ?? null);
@@ -103,17 +117,35 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
   const index = currentIndex();
   if (!index) return 'No map loaded for this student, so there is nothing to fold against.';
 
+  /**
+   * A CAPPED READ WOULD BE WORSE THAN A SHORT ONE, so it is refused rather than
+   * folded.
+   *
+   * PostgREST caps a response server-side. This query orders by `seq`, which
+   * restarts at 0 for every session — so a capped page is the first few events
+   * of EVERY sitting, not the first N in time. Folding that would drop every
+   * session's tail and then report the difference as the model's fault, which
+   * is the one thing this tool must never do: it exists to be believed.
+   */
   const { data: sessionRows, error: sErr } = await db
     .from('learning_session')
     .select('id, started_at')
-    .order('started_at', { ascending: true });
+    .order('started_at', { ascending: true })
+    .limit(PAGE + 1);
   if (sErr) return `Could not read sessions: ${sErr.message}`;
+  if ((sessionRows?.length ?? 0) > PAGE) {
+    return `More than ${PAGE} sittings. This tool reads one page and will not fold a partial history.`;
+  }
 
   const { data: eventRows, error: eErr } = await db
     .from('ledger_event')
     .select('id, session_id, seq, at, kind, source, surface, outcome_ids, topic_ref, payload')
-    .order('seq', { ascending: true });
+    .order('seq', { ascending: true })
+    .limit(PAGE + 1);
   if (eErr) return `Could not read events: ${eErr.message}`;
+  if ((eventRows?.length ?? 0) > PAGE) {
+    return `More than ${PAGE} events. This tool reads one page and will not fold a partial history.`;
+  }
 
   const sessions = (sessionRows ?? []) as SessionRow[];
   const events = (eventRows ?? []) as EventRow[];
@@ -124,6 +156,19 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
     list.push(toEvent(row));
     bySession.set(row.session_id, list);
   }
+
+  /**
+   * EVENTS WHOSE SITTING IS MISSING ARE COUNTED, NOT DROPPED.
+   *
+   * `ledger_event.session_id` has no foreign key (0006 says why: rows arrive
+   * out of order from an offline outbox and must never be refused for it), and
+   * `ledgerSync` holds back only the `session-started` event when a session
+   * upsert fails — the answers in that same batch are acknowledged and land
+   * anyway. So real evidence can exist with no sitting to fold it against, and
+   * silently skipping it would show up below as the model's fault.
+   */
+  const known = new Set(sessions.map((row) => row.id));
+  const orphanedEvents = events.filter((row) => !known.has(row.session_id)).length;
 
   const params = currentParams();
   let model = emptyModel();
@@ -157,6 +202,7 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
     sessions: sessions.length,
     events: events.length,
     diffs,
+    orphanedEvents,
     onlyStored: [...storedIds].filter((id) => !rebuiltIds.has(id)),
     onlyRebuilt: [...rebuiltIds].filter((id) => !storedIds.has(id)),
   };

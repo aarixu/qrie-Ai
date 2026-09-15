@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { ConceptState } from '@ai-tutor/learner-model';
 import type { LedgerEvent } from '@ai-tutor/ledger';
-import { loadModel } from '../lib/learnerModel';
+import { loadModel, unfoldedCount } from '../lib/learnerModel';
 import { evidenceFor, rebuildFromLedger, type Rebuild } from '../lib/rebuildModel';
 
 /**
@@ -84,6 +84,22 @@ export function ModelInspector() {
           stored here. Disagreement means the model is not reproducible from its own evidence.
         </span>
       </div>
+
+      {/*
+        SAID BEFORE THE REBUILD, NOT AFTER IT. Events this device recorded and
+        never folded are the commonest reason a rebuild disagrees, and without
+        this line the report below blames the ledger for it — "belief exists
+        here that no surviving event accounts for" — about a model that is
+        simply behind.
+      */}
+      {unfoldedCount() > 0 && (
+        <p style={S.bad}>
+          This device recorded {unfoldedCount()} event(s) it never folded — no class was set, or
+          the map would not load. They are on their way to the server, so the belief is not lost;
+          this copy is behind, and the rebuild below will say so. That is the model&apos;s fault,
+          not the ledger&apos;s.
+        </p>
+      )}
 
       {rebuild !== null && <RebuildReport rebuild={rebuild} />}
 
@@ -223,6 +239,13 @@ function RebuildReport({ rebuild }: { rebuild: Rebuild | string }) {
       <span style={S.muted}>
         {rebuild.events} events across {rebuild.sessions} sittings, folded from zero.
       </span>
+      {rebuild.orphanedEvents > 0 && (
+        <p style={S.bad}>
+          {rebuild.orphanedEvents} event(s) on the server have no sitting row to be folded
+          against, so nothing could read them. That is a gap in the LEDGER, not in the model —
+          a session upsert failed while its answers landed anyway.
+        </p>
+      )}
       {!clean && (
         <>
           {rebuild.onlyStored.length > 0 && (

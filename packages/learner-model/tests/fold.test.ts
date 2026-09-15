@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { GraphIndex, emptyParams } from '@ai-tutor/knowledge-graph';
 import type { LedgerEvent } from '@ai-tutor/ledger';
-import { emptyModel, foldSession } from '../src/index';
+import { emptyModel, evidenceSet, foldSession } from '../src/index';
 
 /**
  * Two nodes, `b` resting on `a` — the smallest graph with an edge in it.
@@ -26,7 +26,13 @@ const S1 = { id: 's1', startedAt: '2026-09-14T10:00:00.000Z' };
 const S2 = { id: 's2', startedAt: '2026-09-15T10:00:00.000Z' };
 
 let seq = 0;
-const ev = (kind: string, outcomeIds: string[], payload: unknown, at?: string): LedgerEvent =>
+const ev = (
+  kind: string,
+  outcomeIds: string[],
+  payload: unknown,
+  at?: string,
+  surface = 'tap',
+): LedgerEvent =>
   ({
     id: `e${seq}`,
     sessionId: 's1',
@@ -34,7 +40,7 @@ const ev = (kind: string, outcomeIds: string[], payload: unknown, at?: string): 
     at: at ?? '2026-09-14T10:00:00.000Z',
     kind,
     source: 'quiz',
-    surface: 'tap',
+    surface,
     outcomeIds,
     payload,
   }) as unknown as LedgerEvent;
@@ -293,6 +299,101 @@ describe('foldSession', () => {
     expect(m.states.b.mastery).toBeLessThan(0.5);
     // A skip says nothing about anything else, so `a` is never even created.
     expect(m.states.a).toBeUndefined();
+  });
+
+
+  /**
+   * THE WORST BUG THIS FILE HAS HELD. A spoken answer carries no
+   * `chosenIndex` — there are no options to index — and an earlier version
+   * passed `payload.chosenIndex ?? null`, which `applyEvidence` reads as a
+   * SKIP: belief pulled toward 0, `correct` never read, no propagation.
+   *
+   * So a correct answer said OUT LOUD was numerically identical to saying
+   * nothing, on a product whose primary loop is a tutor who asks out loud and
+   * listens. Measured on the real map: 0.350 spoken against 0.783 tapped.
+   */
+  it('folds a spoken right answer as an answer, not as silence', () => {
+    seq = 0;
+    const spoken = ev(
+      'answered',
+      ['b'],
+      { correct: true, ms: 4000, attempt: 1, assistanceRung: 0, hintsShown: 0, verdict: 'right' },
+      undefined,
+      'voice',
+    );
+    const m = foldSession(emptyModel(), S1, [spoken], index, params);
+    expect(m.states.b.mastery).toBeGreaterThan(0.5);
+    expect(m.states.b.unassistedMastery).toBeGreaterThan(0.5);
+    // And it propagates, the way a tapped answer does: `a` is `b`'s prerequisite.
+    expect(m.states.a).toBeDefined();
+  });
+
+  it('folds a spoken WRONG answer as a wrong answer', () => {
+    seq = 0;
+    const spoken = ev(
+      'answered',
+      ['b'],
+      { correct: false, ms: 4000, attempt: 1, assistanceRung: 0, hintsShown: 0, verdict: 'wrong' },
+      undefined,
+      'voice',
+    );
+    const m = foldSession(emptyModel(), S1, [spoken], index, params);
+    // The magnitude is what separates the two readings. A skip pulls to 0.350
+    // by SKIP_STRENGTH; a wrong answer takes the BKT posterior and lands near
+    // 0.118. Nothing but a real wrong answer can get this low.
+    expect(m.states.b.mastery).toBeLessThan(0.2);
+  });
+
+  it('reaches the same belief whether the right answer was tapped or spoken', () => {
+    seq = 0;
+    const base = { correct: true, ms: 4000, attempt: 1, assistanceRung: 0, hintsShown: 0 };
+    const tapped = foldSession(
+      emptyModel(), S1, [ev('answered', ['b'], { ...base, chosenIndex: 0 })], index, params);
+    seq = 0;
+    const spoken = foldSession(
+      emptyModel(), S1, [ev('answered', ['b'], base, undefined, 'voice')], index, params);
+    expect(spoken.states.b.mastery).toBeCloseTo(tapped.states.b.mastery, 10);
+  });
+
+  /**
+   * A TAP WITH NO INDEX IS STILL A SKIP. Only a surface that offered options
+   * can produce one, and that meaning has to survive the fix above.
+   */
+  it('still reads a tapped answer with no index as a skip', () => {
+    seq = 0;
+    const skipped = ev('answered', ['b'], {
+      correct: false, ms: 2000, attempt: 1, assistanceRung: 0, hintsShown: 0, chosenIndex: null,
+    });
+    const m = foldSession(emptyModel(), S1, [skipped], index, params);
+    expect(m.states.b.mastery).toBeLessThan(0.5);
+    // Silence says nothing about the rest of the map.
+    expect(m.states.a).toBeUndefined();
+  });
+
+  /**
+   * THE SIDE DOOR. `packages/diagnostic/src/session.ts` states the rule:
+   * attendance raises belief and so can never create a gap on its own, because
+   * that lets the difficulty prior back in. Measured on the real class10-science
+   * map, one `taught` on a difficulty-4 node was enough to return it as a
+   * remedial step at 0.46 — a prior nothing had measured.
+   */
+  it('does not let attendance alone open the evidence gate', () => {
+    seq = 0;
+    const m = foldSession(emptyModel(), S1, [ev('taught', ['a'], {})], index, params);
+    expect(m.states.a.observations).toBe(1);
+    expect(m.states.a.answerObservations).toBe(0);
+    expect([...evidenceSet(m)]).toEqual([]);
+  });
+
+  it('lets an answer open it, and a raised hand too', () => {
+    seq = 0;
+    const answered0 = foldSession(emptyModel(), S1, [answered(0)], index, params);
+    expect([...evidenceSet(answered0)]).toContain('b');
+    seq = 0;
+    const hand = foldSession(emptyModel(), S1, [ev('confused', ['a'], {})], index, params);
+    // applyDoubt LOWERS belief, so a hand is the kind of evidence that may
+    // legitimately make an outcome a gap.
+    expect([...evidenceSet(hand)]).toEqual(['a']);
   });
 
   /**

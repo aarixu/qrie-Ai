@@ -32,7 +32,24 @@ export interface ConceptState {
    * because `evidenceSet` reads this field to decide what may become a gap.
    */
   observations: number;
-  /** Raised hands. Moves belief; never entitles the outcome to become a gap. */
+  /**
+   * ANSWERS ONLY. The subset of `observations` that could have LOWERED belief.
+   *
+   * `evidenceSet` reads this rather than `observations`, because
+   * `packages/diagnostic/src/session.ts` states the rule: "Attendance
+   * (applyTaught) raises belief and so can never create a gap on its own;
+   * adding it would let the difficulty prior back in through the side door,
+   * which is the defect this whole gate exists to close." Measured: one `taught`
+   * on a difficulty-4 node was enough to return it as a remedial step at 0.46,
+   * a prior nothing had measured.
+   */
+  answerObservations: number;
+  /**
+   * Raised hands. Counted apart from `observations` so a hand cannot be read as
+   * evidence the student was examined — but it DOES open the gate, because
+   * `applyDoubt` lowers belief, and a student who stopped the class on an
+   * outcome has told us something that may legitimately make it a gap.
+   */
   doubtCount: number;
   /**
    * Rung-0 answers only, counted apart — because without it "unassisted
@@ -127,6 +144,7 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   unassistedMastery: PRIOR,
   assistedPerformance: PRIOR,
   observations: 0,
+  answerObservations: 0,
   doubtCount: 0,
   unassistedObservations: 0,
   taughtCount: 0,

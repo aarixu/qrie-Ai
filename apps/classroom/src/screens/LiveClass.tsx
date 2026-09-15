@@ -12,7 +12,7 @@ import { profileStore } from '../stores/profile';
 import { progressStore } from '../stores/progress';
 import { outcomeStore } from '../stores/outcomes';
 import { createOutcomeLookup } from '../lib/outcomeLookup';
-import { masteryFromModel } from '../lib/learnerModel';
+import { masteryFromModel, settled } from '../lib/learnerModel';
 import { studentLinesForPlanner } from '../lib/student';
 import { outcomesForTopic } from '../lib/topicOutcomes';
 import { lastClassBefore } from '../lib/lastClass';
@@ -387,6 +387,10 @@ export function LiveClassRoute() {
       const lastClass = await lastClassBefore().catch(() => null);
       if (cancelled) return;
 
+      // The fold that turns this class's own answers into belief takes seconds,
+      // not a tick — see recordLocally. Without this the planner is handed a
+      // model that has not seen the session it is planning around.
+      await settled();
       const studentLines = studentLinesForPlanner({
         mastery: masteryFromModel(),
         profile: profileStore.get(),

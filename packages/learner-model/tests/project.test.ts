@@ -20,11 +20,30 @@ describe('evidenceSet', () => {
    * arithmetic alone — the 0.46 defect, which shipped a twelve-step remedial
    * plan for a flawless student.
    */
-  it('holds only outcomes something has actually touched', () => {
+  it('holds only outcomes an ANSWER has spoken about', () => {
     const model = emptyModel();
-    model.states.seen = { ...emptyConceptState('seen'), observations: 1 };
+    model.states.answered = { ...emptyConceptState('answered'), observations: 1, answerObservations: 1 };
     model.states.untouched = emptyConceptState('untouched');
-    expect([...evidenceSet(model)]).toEqual(['seen']);
+    expect([...evidenceSet(model)]).toEqual(['answered']);
+  });
+
+  /**
+   * packages/diagnostic/src/session.ts states the rule: attendance raises
+   * belief and so can never create a gap on its own, because that lets the
+   * difficulty prior back in through the side door. Measured on the real map,
+   * one taught event on a difficulty-4 node was enough to return it as a
+   * remedial step at 0.46 — a prior nothing had measured.
+   */
+  it('refuses an outcome that has only been taught', () => {
+    const model = emptyModel();
+    model.states.satThrough = { ...emptyConceptState('satThrough'), observations: 3, taughtCount: 3 };
+    expect([...evidenceSet(model)]).toEqual([]);
+  });
+
+  it('accepts a raised hand, because a hand LOWERS belief', () => {
+    const model = emptyModel();
+    model.states.stopped = { ...emptyConceptState('stopped'), doubtCount: 1 };
+    expect([...evidenceSet(model)]).toEqual(['stopped']);
   });
 });
 

@@ -146,6 +146,44 @@ function askKey(
   return beatId ?? probeId ?? ids.join(',');
 }
 
+/**
+ * A number `applyEvidence` will read as an ANSWER rather than as a skip. Never
+ * an option index — no surface has one — and never used for anything but the
+ * null test at mastery.ts:157.
+ */
+const ANSWERED_WITHOUT_OPTIONS = -1;
+
+/**
+ * "THEY CHOSE NOTHING" AND "THERE WAS NOTHING TO CHOOSE" ARE DIFFERENT FACTS.
+ *
+ * `applyEvidence` reads `chosenIndex === null` as a SKIP: it pulls belief
+ * toward 0, returns before it ever looks at `correct`, and deliberately does
+ * not propagate, because silence says nothing about the rest of the map.
+ *
+ * An earlier version of this file passed `payload.chosenIndex ?? null` to
+ * protect that meaning, and in doing so destroyed it. A SPOKEN answer carries
+ * no `chosenIndex` — there are no options to index (`ClassRoom.tsx:671` files
+ * one with a verdict and nothing else, while the tap path at `:286` sends
+ * `chosenIndex: index`). So every spoken answer folded as a skip, and a
+ * correct one said out loud came out at 0.350 where the same answer tapped
+ * came out at 0.783, touching one node instead of six. Numerically identical
+ * to saying nothing at all.
+ *
+ * That is the product's primary loop — a tutor who asks out loud and listens —
+ * and `unassistedGain`, this phase's whole definition of done, is computed from
+ * the number that moved the wrong way. The row contradicted itself too:
+ * `lastUnassistedSuccessAt` was stamped from `correct` while the belief it
+ * described fell.
+ *
+ * ONLY A SURFACE THAT OFFERED OPTIONS CAN PRODUCE A SKIP. Voice and text have
+ * none, so a missing index there means "they answered, without options", and
+ * the judge's verdict in `correct` is the evidence.
+ */
+function chosenIndexFor(event: LedgerEvent, payload: AnsweredPayload): number | null {
+  if (typeof payload.chosenIndex === 'number') return payload.chosenIndex;
+  return event.surface === 'tap' ? null : ANSWERED_WITHOUT_OPTIONS;
+}
+
 function foldAnswer(
   model: LearnerModel,
   event: LedgerEvent,
@@ -174,18 +212,11 @@ function foldAnswer(
    * checking got no belief, no observation and no date.
    */
   for (const nodeId of event.outcomeIds) {
-    /**
-     * `chosenIndex` STAYS NULL WHEN IT IS NULL. `applyEvidence` reads null as a
-     * SKIP — a soft "probably not" that moves the node alone and deliberately
-     * does not propagate. Coercing it to 0 would turn every skipped question
-     * into "they confidently chose the first option", a much stronger claim,
-     * and then spread it across the whole evidence region.
-     */
     const answer = {
       probeId: payload.probeId ?? `${event.id}:${nodeId}`,
       nodeId,
       correct: payload.correct,
-      chosenIndex: payload.chosenIndex ?? null,
+      chosenIndex: chosenIndexFor(event, payload),
       ms: payload.ms,
     };
 
@@ -218,6 +249,9 @@ function foldAnswer(
     const updated: ConceptState = {
       ...prev,
       observations: counted.has(nodeId) ? prev.observations : prev.observations + 1,
+      // Answers only, and always the asked node — this is what opens the
+      // evidence gate, and attendance must never reach it.
+      answerObservations: prev.answerObservations + 1,
       lastPracticedAt: event.at,
     };
 
