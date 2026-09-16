@@ -51,6 +51,13 @@ export interface Rebuild {
   /** Outcomes the rebuild produced that the stored model never had, and vice versa. */
   onlyStored: string[];
   onlyRebuilt: string[];
+  /**
+   * The folded events, in the (started_at, seq) order they were folded — what
+   * the 3.7 projections (assistance score, hint abuse, wheel-spinning) read.
+   * The same rows as the fold, never a second query that could drift from it;
+   * orphans are excluded here exactly as they were excluded there.
+   */
+  ledger: LedgerEvent[];
 }
 
 interface SessionRow {
@@ -185,11 +192,13 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
 
   const params = currentParams();
   let model = emptyModel();
+  const folded: LedgerEvent[] = [];
   for (const session of sessions) {
     const own = bySession.get(session.id);
     if (!own || own.length === 0) continue;
     own.sort((a, b) => a.seq - b.seq);
     model = foldSession(model, { id: session.id, startedAt: session.started_at }, own, index, params);
+    folded.push(...own);
   }
 
   const diffs: FieldDiff[] = [];
@@ -218,6 +227,7 @@ export async function rebuildFromLedger(stored: LearnerModel): Promise<Rebuild |
     orphanedEvents,
     onlyStored: [...storedIds].filter((id) => !rebuiltIds.has(id)),
     onlyRebuilt: [...rebuiltIds].filter((id) => !storedIds.has(id)),
+    ledger: folded,
   };
 }
 

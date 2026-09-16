@@ -1,5 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { ConceptState } from '@ai-tutor/learner-model';
+import {
+  assistanceScore,
+  hintAbuse,
+  wheelSpinning,
+  type ConceptState,
+  type WheelSpinReading,
+} from '@ai-tutor/learner-model';
 import type { LedgerEvent } from '@ai-tutor/ledger';
 import { loadModel, unfoldedCount } from '../lib/learnerModel';
 import { evidenceFor, rebuildFromLedger, type Rebuild } from '../lib/rebuildModel';
@@ -58,6 +64,22 @@ export function ModelInspector() {
     setRebuild(await rebuildFromLedger(loadModel()));
     setBusy(false);
   }, []);
+
+  /**
+   * The 3.7 projections, computed over the SAME events the rebuild folded —
+   * never a second query. Null until a rebuild has run: the device outbox
+   * deletes acknowledged events, so the server's ledger is the only evidence
+   * these can honestly read, and "—" in the columns below means exactly
+   * "rebuild first", not zero.
+   */
+  const signals = useMemo(() => {
+    if (rebuild === null || typeof rebuild === 'string') return null;
+    return {
+      assist: assistanceScore(rebuild.ledger),
+      abuse: hintAbuse(rebuild.ledger),
+      spin: wheelSpinning(rebuild.ledger),
+    };
+  }, [rebuild]);
 
   return (
     <main style={S.page}>
@@ -132,6 +154,24 @@ export function ModelInspector() {
               <th style={S.thn} title="Hands raised — moves belief, never makes it a gap">
                 hands
               </th>
+              <th
+                style={S.thn}
+                title="Correct answers, discounted by the help each one needed (ASSISTments). Rebuild first."
+              >
+                assist
+              </th>
+              <th
+                style={S.thn}
+                title="Share of asks where help was pulled before a real attempt. Rebuild first."
+              >
+                abuse
+              </th>
+              <th
+                style={S.thn}
+                title="Cold attempts with no progress — quiz and placement only; · means a help-saturated surface where this is not measurable. Rebuild first."
+              >
+                spin
+              </th>
               <th style={S.th}>last practised</th>
             </tr>
           </thead>
@@ -142,6 +182,9 @@ export function ModelInspector() {
                 state={s}
                 open={open === s.outcomeId}
                 evidence={open === s.outcomeId ? evidence : null}
+                assist={signals?.assist[s.outcomeId]}
+                abuse={signals?.abuse[s.outcomeId]}
+                spin={signals?.spin[s.outcomeId]}
                 onClick={() => void examine(s.outcomeId)}
               />
             ))}
@@ -156,11 +199,17 @@ function Row({
   state,
   open,
   evidence,
+  assist,
+  abuse,
+  spin,
   onClick,
 }: {
   state: ConceptState;
   open: boolean;
   evidence: LedgerEvent[] | string | null;
+  assist: number | undefined;
+  abuse: number | undefined;
+  spin: WheelSpinReading | undefined;
   onClick: () => void;
 }) {
   return (
@@ -194,11 +243,32 @@ function Row({
         <td style={S.tdn}>{state.unassistedObservations}</td>
         <td style={S.tdn}>{state.taughtCount}</td>
         <td style={S.tdn}>{state.doubtCount}</td>
+        <td style={S.tdn}>
+          {assist === undefined ? <span style={S.muted}>—</span> : pct(assist)}
+        </td>
+        <td style={S.tdn}>
+          {abuse === undefined ? <span style={S.muted}>—</span> : pct(abuse)}
+        </td>
+        <td style={S.tdn}>
+          {spin === undefined ? (
+            <span style={S.muted}>—</span>
+          ) : !spin.measurable ? (
+            <span style={S.muted} title="help-saturated surface — not measurable in class">
+              ·
+            </span>
+          ) : spin.spinning ? (
+            <span style={{ color: '#b91c1c' }} title={`${spin.coldAttempts} cold attempts, no progress`}>
+              ⚠ {spin.coldAttempts}
+            </span>
+          ) : (
+            'no'
+          )}
+        </td>
         <td style={S.td}>{when(state.lastPracticedAt)}</td>
       </tr>
       {open && (
         <tr>
-          <td colSpan={9} style={S.evidence}>
+          <td colSpan={12} style={S.evidence}>
             {evidence === null && <span style={S.muted}>reading the ledger…</span>}
             {typeof evidence === 'string' && <span style={S.bad}>{evidence}</span>}
             {Array.isArray(evidence) &&

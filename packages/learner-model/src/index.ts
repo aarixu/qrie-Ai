@@ -24,3 +24,14 @@ export { foldSession } from './fold.ts';
 export { chooseAsk, type AskChoice } from './ask.ts';
 
 export { gainPerLearningMinute, unassistedGain } from './metric.ts';
+
+// The 3.7 projections: pure functions over ledger events, shown only in the
+// inspector. Assistance-blended score (ASSISTments), hint abuse, and
+// wheel-spinning — the last computable only on the surfaces that ask cold.
+export { assistanceScore, defaultCredit } from './assistance.ts';
+export { hintAbuse, type HintAbuseOptions } from './hintAbuse.ts';
+export {
+  wheelSpinning,
+  type WheelSpinOptions,
+  type WheelSpinReading,
+} from './wheelSpin.ts';

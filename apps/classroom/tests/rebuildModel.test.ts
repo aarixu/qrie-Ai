@@ -136,6 +136,9 @@ describe('rebuildFromLedger', () => {
     expect(out.sessions).toBe(2);
     expect(out.events).toBe(4);
     expect(out.orphanedEvents).toBe(0);
+    // The folded events ride along in fold order, so the 3.7 projections read
+    // exactly the evidence the rebuild read — never a second, drifting query.
+    expect(out.ledger.map((e) => e.id)).toEqual(['s1-e0', 's1-e1', 's2-e0', 's2-e1']);
   });
 
   it('reports a divergence in the evidence-gate field instead of skipping it', async () => {
@@ -186,6 +189,9 @@ describe('rebuildFromLedger', () => {
     expect(out.orphanedEvents).toBe(1);
     // The known history still folds clean around the orphan.
     expect(out.diffs).toEqual([]);
+    // And the orphan stays out of the projections' evidence, exactly as it
+    // stayed out of the fold's.
+    expect(out.ledger).toHaveLength(4);
   });
 
   it('names the outcomes only one side holds, in both directions', async () => {
