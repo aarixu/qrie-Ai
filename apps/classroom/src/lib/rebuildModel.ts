@@ -86,17 +86,30 @@ const toEvent = (row: EventRow): LedgerEvent =>
     payload: row.payload,
   }) as LedgerEvent;
 
-/** Every number a ConceptState holds, so a diff cannot quietly skip one. */
+/**
+ * Every number a ConceptState holds, so a diff cannot quietly skip one. This
+ * list broke its own promise once: it shipped without `answerObservations` —
+ * the field `evidenceSet` gates the study plan on, and so the ONE divergence
+ * this tool most exists to catch (2026-09-16 audit). The undriven Phase 5–6
+ * fields are here too, deliberately: they cost one comparison of a default
+ * against a default today, and the day something starts driving them is
+ * exactly the day their divergence starts mattering.
+ */
 const FIELDS: readonly (keyof ConceptState)[] = [
   'mastery',
   'unassistedMastery',
   'assistedPerformance',
   'observations',
+  'answerObservations',
   'unassistedObservations',
   'taughtCount',
   'doubtCount',
   'lastPracticedAt',
   'lastUnassistedSuccessAt',
+  'memoryStrength',
+  'nextReviewAt',
+  'retrievalCount',
+  'retrievalAccuracy',
 ];
 
 /**
