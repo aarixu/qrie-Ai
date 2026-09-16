@@ -30,6 +30,9 @@ import { ledgerOutbox, resetLedgerOutbox } from '../src/stores/ledger';
 
 beforeEach(() => {
   localStorage.clear();
+  // Ask memory lives in sessionStorage so it can survive a remount — which is
+  // exactly why it must not survive from one test into the next.
+  sessionStorage.clear();
   resetLedgerOutbox();
   vi.useFakeTimers();
   vi.setSystemTime(new Date('2026-09-13T09:00:00Z'));
@@ -636,6 +639,46 @@ describe('a second lesson taken in the same mount', () => {
     ]);
     expect(ofKind('taught').map((p) => p.lessonId)).toEqual(['l1', 'l2']);
     room.unmount();
+  });
+
+  it('a remount mid-question cannot launder help into rung 0', () => {
+    // The back button mid-question, then a return to the class: a fresh mount
+    // AND a fresh sitting. The ask ref died with the mount, the helped row
+    // stayed in the old sitting, and the fold scopes help to one sitting by
+    // design — so every carrier of "this answer was helped" died at once, and
+    // the answered row filed rung 0: manufactured unassisted mastery, in the
+    // one direction deriveRung says nothing downstream can correct.
+    const first = mount({ playing: true });
+    first.ledger().asked('b1', 4);
+    first.ledger().helped('b1', 7, true);
+    first.unmount();
+
+    const second = mount({ playing: true });
+    second.ledger().asked('b1', 4);
+    second.ledger().answered({ beatId: 'b1', correct: true, surface: 'tap', chosenIndex: 1 });
+
+    // The row itself must carry the truth — the new sitting has no helped row
+    // for deriveRung to recover it from.
+    expect(answersIn().at(-1)).toMatchObject({ assistanceRung: 7, hintsShown: 1, attempt: 2 });
+    second.unmount();
+  });
+
+  it('a finished class clears the memory, so a rewatch re-earns rung 0', () => {
+    const first = mount({ playing: true });
+    first.ledger().asked('b1', 4);
+    first.ledger().helped('b1', 7, true);
+    first.render({ ended: true });
+    first.unmount();
+
+    // Watching the class again next week is a new question, not a resumed one:
+    // inheriting last time's rung would mean no outcome could ever produce a
+    // rung-0 observation again, and the model would pre-empt its own metric.
+    const again = mount({ playing: true });
+    again.ledger().asked('b1', 4);
+    again.ledger().answered({ beatId: 'b1', correct: true, surface: 'tap', chosenIndex: 1 });
+
+    expect(answersIn().at(-1)).toMatchObject({ assistanceRung: 0, hintsShown: 0, attempt: 1 });
+    again.unmount();
   });
 
   it('does not carry the first lesson’s questions into the second', () => {

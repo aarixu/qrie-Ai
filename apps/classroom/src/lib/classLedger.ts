@@ -157,6 +157,56 @@ const rungOf = (state: AskState | undefined): AssistanceRung =>
   !state || state.hintsShown === 0 ? 0 : state.highestRung;
 
 /**
+ * ASK STATE THAT SURVIVES THE MOUNT, because the mount is not the question.
+ *
+ * A remount mid-question — the back button and a return, a bfcache miss, a
+ * process restart on a cheap phone — kills BOTH carriers of "this answer was
+ * helped" at once: the ask ref dies with the mount, and the fresh mount opens
+ * a fresh sitting, so the durable helped row sits in a sitting the fold's
+ * per-session help scoping will never read from. The answered row then filed
+ * rung 0, and rung 0 is the only rung that mints unassisted mastery — the one
+ * error deriveRung documents as uncorrectable downstream (2026-09-16 audit).
+ *
+ * sessionStorage, not localStorage: the tab is the scope this belongs to. A
+ * COMPLETED class clears it (the `ended` effect), so a rewatch next week
+ * re-earns rung 0 rather than inheriting a rung that would stop the outcome
+ * ever producing an unassisted observation again.
+ */
+const ASK_MEMORY_KEY = 'ai-tutor:ask-memory';
+
+const loadAskMemory = (lessonId: string): Map<string, AskState> => {
+  try {
+    const raw = sessionStorage.getItem(ASK_MEMORY_KEY);
+    if (raw) {
+      const kept = JSON.parse(raw) as { lessonId: string; asks: [string, AskState][] };
+      if (kept.lessonId === lessonId) return new Map(kept.asks);
+    }
+  } catch {
+    // Unreadable storage is a cold start, never a crash in a classroom.
+  }
+  return new Map();
+};
+
+const saveAskMemory = (lessonId: string, asks: Map<string, AskState>): void => {
+  try {
+    sessionStorage.setItem(ASK_MEMORY_KEY, JSON.stringify({ lessonId, asks: [...asks] }));
+  } catch {
+    // A blocked store loses the remount safety net, never the class.
+  }
+};
+
+const clearAskMemory = (lessonId: string): void => {
+  try {
+    const raw = sessionStorage.getItem(ASK_MEMORY_KEY);
+    if (!raw) return;
+    if ((JSON.parse(raw) as { lessonId?: string }).lessonId !== lessonId) return;
+    sessionStorage.removeItem(ASK_MEMORY_KEY);
+  } catch {
+    // Nothing readable, nothing to clear.
+  }
+};
+
+/**
  * WHAT A CROSS-QUESTION CAME TO.
  *
  * Silence is decided HERE and outranks the model, because the model is not
@@ -269,13 +319,21 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
     if (closed.current) openSitting();
   }, [openSitting]);
 
+  /** Persist the ask state a remount would otherwise lose. Called after every mutation of `asks`. */
+  const remember = useCallback((): void => {
+    saveAskMemory(lesson.id, asks.current);
+  }, [lesson.id]);
+
   useEffect(() => {
     // Per LESSON, unlike the three above: a question standing when the student
     // switched apps is the same question when they come back, and resetting
     // this would hand its rung and its attempt count back to zero — filing an
     // answer that had already been helped as unassisted. Beat ids are only
     // unique within a lesson, so a new lesson must not see the old one's.
-    asks.current = new Map();
+    // Loaded from the ask memory rather than started empty, so a REMOUNT of
+    // the same lesson mid-question keeps its rung too — the memory answers
+    // only for this lesson's id and is empty for any other.
+    asks.current = loadAskMemory(lesson.id);
     taughtFiled.current = false;
     openSitting();
 
@@ -380,6 +438,10 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
     }
     // After the taught event, so the sitting's last event is the one that ends it.
     closeSitting(true);
+    // A finished class is a closed question. Clearing here — and only on the
+    // COMPLETED close — is what lets a rewatch re-earn rung 0 while an
+    // interrupted question keeps its rung across a remount.
+    clearAskMemory(lesson.id);
   }, [ended, lesson, ensureOpen]);
 
   return useMemo<ClassLedger>(
@@ -412,6 +474,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
           highestRung: prior?.highestRung ?? 0,
         };
         asks.current.set(beatId, state);
+        remember();
         logEvent({
           kind: 'asked',
           surface: 'tap',
@@ -464,6 +527,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
             askedAt: input.answeredAt ?? Date.now(),
             attempt: state.attempt + 1,
           });
+          remember();
         }
       },
 
@@ -472,7 +536,10 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
         // No event: this moves the clock and says nothing about the student.
         // A beat with no ask state is one nobody has asked, and there is
         // nothing to restart.
-        if (state) asks.current.set(beatId, { ...state, askedAt: at });
+        if (state) {
+          asks.current.set(beatId, { ...state, askedAt: at });
+          remember();
+        }
       },
 
       reflected(input) {
@@ -519,6 +586,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
             // the student to a lower rung.
             highestRung: (rung > state.highestRung ? rung : state.highestRung) as AssistanceRung,
           });
+          remember();
         }
         logEvent({
           kind: 'helped',
@@ -540,6 +608,6 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
         });
       },
     }),
-    [lesson, ensureOpen],
+    [lesson, ensureOpen, remember],
   );
 }
