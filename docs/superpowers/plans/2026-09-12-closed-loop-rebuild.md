@@ -395,7 +395,25 @@ and `npm run relay:verify` is 24 OK, which is the check that matters here
 because this migration replaced `claim_relay`. Until it landed the code and the
 database disagreed about the day's budget, and the database won.
 
-### Phase 3 — The learner model, MVP scope `DONE, except the asks layer`
+### Phase 3 — The learner model, MVP scope `DONE — completed and reinforced 2026-09-16`
+
+**Completed and reinforced 2026-09-16** on branch `phase3-completion`, against
+the 2026-09-16 audit (spec: `2026-09-16-phase3-completion-design.md`). Both
+"done when" criteria are now met with evidence rather than claimed: a
+byte-for-byte replay test (incremental fold == from-zero rebuild == a frozen
+known state) and `npm run model:metric`, which folded a seeded student's
+server rows and printed a real gain-per-learning-minute
+(`docs/verify/2026-09-16-phase3-live.md`, beside model:verify 11/11 and
+relay:verify 24 OK — 0012/0013 confirmed applied, no longer commit-message
+lore). 3.7 is built: assistance score, hint abuse, wheel-spinning,
+inspector-only. The model is the only belief store — the quiz persists plan
+changes without rewriting the placement's mastery, and the persona, the doubt
+rail and both doubt transports read `masteryFromModel()`. Two defects found
+and fixed on the way: a remount mid-question laundered help into rung 0 (ask
+memory in sessionStorage carries it now), and `unassistedGain` zeroed the
+first unassisted success an outcome ever had. `0014` adds the two
+evidence-gate columns `concept_state` was missing; **applying it to the
+deployed project is Aarav's**.
 
 **Landed 2026-09-15 at `9032484`.** `packages/learner-model` holds the belief
 the product is built on: per outcome, what we think they know, whether they did
