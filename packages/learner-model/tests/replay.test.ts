@@ -1,0 +1,200 @@
+import { describe, expect, it } from 'vitest';
+import { GraphIndex, emptyParams } from '@ai-tutor/knowledge-graph';
+import type { LedgerEvent } from '@ai-tutor/ledger';
+import { emptyModel, foldSession, type LearnerModel } from '../src/index';
+
+/**
+ * THE PHASE'S OWN DEFINITION OF DONE, ASSERTED RATHER THAN IMPLIED.
+ *
+ * "A replayed session reproduces the model exactly." Until 2026-09-16 the suite
+ * proved determinism (the same input twice gives the same output) and cursor
+ * idempotency (the same event twice folds once) — necessary, and strictly
+ * weaker than what the phase promises. The device folds ONE EVENT AT A TIME as
+ * the class happens; the rebuild folds a whole session in one call. Those are
+ * different code paths through `foldSession`, and nothing asserted they land
+ * on the same bytes. These tests do.
+ */
+
+const node = (id: string, prerequisites: string[]) => ({
+  id,
+  klass: 10,
+  subject: 'Science',
+  chapter: 'ch1',
+  title: id.toUpperCase(),
+  outcome: `can do ${id}`,
+  prerequisites,
+  difficulty: 2,
+  topicRef: 'class10-science/ch1/t1',
+});
+
+const index = new GraphIndex({ version: 1, nodes: [node('a', []), node('b', ['a'])] } as never);
+const params = emptyParams();
+
+const S1 = { id: 's1', startedAt: '2026-09-14T10:00:00.000Z' };
+const S2 = { id: 's2', startedAt: '2026-09-15T10:00:00.000Z' };
+
+const ev = (
+  session: { id: string; startedAt: string },
+  seq: number,
+  kind: string,
+  outcomeIds: string[],
+  payload: unknown,
+  surface = 'tap',
+): LedgerEvent =>
+  ({
+    id: `${session.id}-e${seq}`,
+    sessionId: session.id,
+    seq,
+    at: session.startedAt,
+    kind,
+    source: 'quiz',
+    surface,
+    outcomeIds,
+    payload,
+  }) as unknown as LedgerEvent;
+
+/**
+ * One ledger, exercising every fold path at once: attendance, help arriving
+ * before an answer, a cold multi-outcome answer, a raised hand, a SPOKEN
+ * answer (no chosenIndex — the silence defect's shape), a cold wrong answer.
+ * Seq restarts at 0 per session, exactly as the real ledger's does.
+ */
+const SESSION_1: LedgerEvent[] = [
+  ev(S1, 0, 'taught', ['a'], { beatId: 'T1' }),
+  ev(S1, 1, 'helped', ['b'], { beatId: 'B1', rung: 3, requested: false }),
+  ev(S1, 2, 'answered', ['b'], {
+    beatId: 'B1',
+    correct: true,
+    ms: 4000,
+    attempt: 1,
+    assistanceRung: 0, // the recorded rung LIES here; the helped row above is the truth
+    hintsShown: 1,
+    chosenIndex: 0,
+  }),
+  ev(S1, 3, 'answered', ['a', 'b'], {
+    beatId: 'B2',
+    correct: true,
+    ms: 5000,
+    attempt: 1,
+    assistanceRung: 0,
+    hintsShown: 0,
+    chosenIndex: 1,
+  }),
+  ev(S1, 4, 'confused', ['b'], { beatId: 'B2' }),
+];
+
+const SESSION_2: LedgerEvent[] = [
+  ev(
+    S2,
+    0,
+    'answered',
+    ['b'],
+    {
+      beatId: 'B3',
+      correct: true,
+      ms: 6000,
+      attempt: 1,
+      assistanceRung: 0,
+      hintsShown: 0,
+      verdict: 'right', // spoken: no chosenIndex on purpose
+    },
+    'voice',
+  ),
+  ev(S2, 1, 'answered', ['a'], {
+    beatId: 'B4',
+    correct: false,
+    ms: 3000,
+    attempt: 1,
+    assistanceRung: 0,
+    hintsShown: 0,
+    chosenIndex: 2,
+  }),
+  ev(S2, 2, 'session-ended', [], { activeMs: 300_000, completed: true }),
+];
+
+/** The device path: one foldSession call per event, as a live class folds. */
+function foldIncrementally(): LearnerModel {
+  let m = emptyModel();
+  for (const e of SESSION_1) m = foldSession(m, S1, [e], index, params);
+  for (const e of SESSION_2) m = foldSession(m, S2, [e], index, params);
+  return m;
+}
+
+/** The rebuild path: whole sessions at once, as rebuildFromLedger folds. */
+function foldFromZero(): LearnerModel {
+  let m = emptyModel();
+  m = foldSession(m, S1, SESSION_1, index, params);
+  m = foldSession(m, S2, SESSION_2, index, params);
+  return m;
+}
+
+describe('replay', () => {
+  it('folds to the same bytes one event at a time and a session at a time', () => {
+    expect(foldIncrementally()).toEqual(foldFromZero());
+  });
+
+  it('re-folding the whole history into the finished model changes nothing', () => {
+    // The rebuild's own idempotency: a retried batch, a second Rebuild click.
+    const once = foldFromZero();
+    let twice = foldSession(once, S1, SESSION_1, index, params);
+    twice = foldSession(twice, S2, SESSION_2, index, params);
+    expect(twice).toEqual(once);
+  });
+
+  /**
+   * THE KNOWN STATE, FROZEN. Authored by running the 2026-09-16 fold once and
+   * writing down every byte it produced — the spec's "reproduces a known state
+   * byte for byte", and a tripwire: any change to the fold's arithmetic, the
+   * propagation, the cursor or the help tracking breaks this test LOUDLY
+   * instead of silently reshaping every student's belief.
+   *
+   * The numbers themselves tell the design's story, which is why toEqual runs
+   * against all of them and not a rounded few: `b.unassistedMastery` (0.928)
+   * sits far ABOVE `b.mastery` (0.361) because unassisted belief is folded in
+   * isolation while overall belief hears the failed prerequisite `a` through
+   * the graph — the assisted/unassisted split doing exactly what it is for.
+   */
+  it('reproduces the known state byte for byte', () => {
+    expect(foldFromZero()).toEqual({
+      states: {
+        a: {
+          outcomeId: 'a',
+          mastery: 0.8672566371681415,
+          unassistedMastery: 0.32432432432432434,
+          assistedPerformance: 0.5,
+          observations: 6,
+          answerObservations: 2,
+          doubtCount: 0,
+          unassistedObservations: 2,
+          taughtCount: 1,
+          lastPracticedAt: '2026-09-15T10:00:00.000Z',
+          lastUnassistedSuccessAt: '2026-09-14T10:00:00.000Z',
+          memoryStrength: 0,
+          nextReviewAt: null,
+          retrievalCount: 0,
+          retrievalAccuracy: 0,
+        },
+        b: {
+          outcomeId: 'b',
+          mastery: 0.3617204335276203,
+          unassistedMastery: 0.9283667621776505,
+          assistedPerformance: 0.782608695652174,
+          observations: 4,
+          answerObservations: 3,
+          doubtCount: 1,
+          unassistedObservations: 2,
+          taughtCount: 0,
+          lastPracticedAt: '2026-09-15T10:00:00.000Z',
+          lastUnassistedSuccessAt: '2026-09-15T10:00:00.000Z',
+          memoryStrength: 0,
+          nextReviewAt: null,
+          retrievalCount: 0,
+          retrievalAccuracy: 0,
+        },
+      },
+      foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
+      helpInFlight: { sessionId: 's2', byAsk: {} },
+      version: 1,
+    });
+  });
+});
