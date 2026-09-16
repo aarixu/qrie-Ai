@@ -445,6 +445,20 @@ describe('the learner model migration', () => {
     expect(sql).toMatch(/revoke all on public\.learner_model from anon/i);
   });
 
+  it('locks learner_model down exactly as hard as concept_state', () => {
+    // The 2026-09-16 audit found this table's write-deny asserted less strictly
+    // than its sibling's: the cursor row is as much a measurement as the belief
+    // rows are, and a student who can move their own fold cursor can replay
+    // events into double-counted belief.
+    expect(sql).toMatch(
+      /create policy "a student reads their own model row" on public\.learner_model\s+for select to authenticated using \(auth\.uid\(\) = user_id\)/i,
+    );
+    expect(sql).not.toMatch(/on public\.learner_model\s+for (all|insert|update|delete)/i);
+    expect(sql).toMatch(
+      /revoke insert, update, delete on public\.learner_model from authenticated/i,
+    );
+  });
+
   it('indexes the outcome ids the inspector reads evidence by', () => {
     // ledger_event.outcome_ids had no index of any kind, and "what evidence is
     // behind this outcome" is the question the whole model exists to answer.
@@ -457,5 +471,21 @@ describe('the learner model migration', () => {
     const inSql = /version integer not null default (\d+)/i.exec(sql);
     expect(inSql).not.toBeNull();
     expect(Number(inSql![1])).toBe(MODEL_VERSION);
+  });
+});
+
+describe('the evidence-columns migration', () => {
+  const sql = sqlOf('0014_concept_state_evidence_columns.sql');
+
+  it('adds the two columns the evidence gate reads', () => {
+    // evidenceSet (packages/learner-model/src/project.ts) decides which
+    // outcomes the model may hold an opinion about by reading
+    // answerObservations and doubtCount. 0013 shipped without either column,
+    // so a server fold persisting through concept_state and reloading would
+    // silently drop the gate — the 0.46 defect back in through a round-trip.
+    expect(sql).toMatch(
+      /add column if not exists answer_observations integer not null default 0/i,
+    );
+    expect(sql).toMatch(/add column if not exists doubt_count integer not null default 0/i);
   });
 });
