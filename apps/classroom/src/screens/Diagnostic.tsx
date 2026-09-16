@@ -38,6 +38,35 @@ import { Icon } from '../ui/Icon';
  * answer is the whole point.
  */
 
+/**
+ * ATTENDANCE IS APPLIED ONCE, WITH ITS REAL COUNT.
+ *
+ * This used to apply it twice — once for every taught id at `times = 1`,
+ * and then again per id with the true count — so a node taught three times
+ * landed at 0.733 instead of the 0.675 a single call gives, and attendance
+ * alone could carry an outcome from the prior to nearly settled on zero
+ * answered questions. `applyTaught` saturates on the count precisely so
+ * that cannot happen; calling it twice defeats the saturation it exists for.
+ *
+ * Exported, and pure, so the regression test can pin the arithmetic without
+ * mounting the screen — the fix lived unguarded inside a useState initializer
+ * until the 2026-09-16 audit found it had no test.
+ */
+export function seedFromClassroom(
+  fresh: DiagnosticSession,
+  signals: { taught: Record<string, number>; confused: Record<string, number> },
+): DiagnosticSession {
+  let mastery = fresh.mastery;
+  for (const [id, times] of Object.entries(signals.taught)) {
+    mastery = applyTaught(mastery, [id], times);
+  }
+  const confused = Object.keys(signals.confused);
+  mastery = applyDoubt(mastery, confused);
+  // Named, not just folded in. A belief lowered by a raised hand that the
+  // plan is not allowed to look at is a signal thrown away.
+  return { ...fresh, mastery, seeded: new Set(confused) };
+}
+
 const LETTERS = ['A', 'B', 'C', 'D'];
 
 /**
@@ -100,26 +129,7 @@ export function Diagnostic({
     // outcomes they have been taught, and which ones they stopped the class
     // on. Starting the test from those beliefs rather than from the prior
     // means their first question is already informed by their term's work.
-    const signals = outcomeStore.get();
-    /**
-     * ATTENDANCE IS APPLIED ONCE, WITH ITS REAL COUNT.
-     *
-     * This used to apply it twice — once for every taught id at `times = 1`,
-     * and then again per id with the true count — so a node taught three times
-     * landed at 0.733 instead of the 0.675 a single call gives, and attendance
-     * alone could carry an outcome from the prior to nearly settled on zero
-     * answered questions. `applyTaught` saturates on the count precisely so
-     * that cannot happen; calling it twice defeats the saturation it exists for.
-     */
-    let mastery = fresh.mastery;
-    for (const [id, times] of Object.entries(signals.taught)) {
-      mastery = applyTaught(mastery, [id], times);
-    }
-    const confused = Object.keys(signals.confused);
-    mastery = applyDoubt(mastery, confused);
-    // Named, not just folded in. A belief lowered by a raised hand that the
-    // plan is not allowed to look at is a signal thrown away.
-    return { ...fresh, mastery, seeded: new Set(confused) };
+    return seedFromClassroom(fresh, outcomeStore.get());
   });
 
   // What this install has learned about its own questions and edges so far.

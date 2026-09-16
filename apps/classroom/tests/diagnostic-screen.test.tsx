@@ -1,8 +1,9 @@
 import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { selectNextProbe, startSession } from '@ai-tutor/diagnostic';
+import { applyTaught } from '@ai-tutor/knowledge-graph';
 import { LOOK_BACK, loadDiagnosticDataFor } from '../src/lib/diagnosticData';
-import { Diagnostic } from '../src/screens/Diagnostic';
+import { Diagnostic, seedFromClassroom } from '../src/screens/Diagnostic';
 import { BRAND } from '../src/brand';
 
 /**
@@ -145,5 +146,41 @@ describe('the merged map the screen is given', () => {
     for (const probe of data.bank.probes) {
       expect(data.index.node(probe.nodeId), probe.id).toBeTruthy();
     }
+  });
+});
+
+describe('seedFromClassroom', () => {
+  const fresh = startSession(data.index, data.bank, {
+    klass: KLASS,
+    subjects: data.subjects,
+    lookBack: data.lookBack,
+  });
+  const id = Object.keys(fresh.mastery)[0];
+
+  it('applies attendance once, with its real count', () => {
+    // The screen used to apply it twice — once per taught id at times = 1 and
+    // again with the true count — so a node taught three times landed at 0.733
+    // instead of 0.675, and attendance alone could carry an outcome from the
+    // prior to nearly settled on zero answered questions. The fix is in the
+    // tree; this is the test that keeps it there.
+    const seeded = seedFromClassroom(fresh, { taught: { [id]: 3 }, confused: {} });
+    expect(seeded.mastery[id]).toBe(applyTaught(fresh.mastery, [id], 3)[id]);
+
+    const doubled = applyTaught(applyTaught(fresh.mastery, [id], 1), [id], 3)[id];
+    expect(seeded.mastery[id]).not.toBe(doubled);
+  });
+
+  it('a raised hand lowers the seed and is named, not just folded in', () => {
+    const seeded = seedFromClassroom(fresh, { taught: {}, confused: { [id]: 1 } });
+    expect(seeded.mastery[id]).toBeLessThan(fresh.mastery[id]);
+    // Named: a belief lowered by a hand the plan may not look at is a signal
+    // thrown away.
+    expect(seeded.seeded.has(id)).toBe(true);
+  });
+
+  it('leaves an unsignalled student exactly where the engine started them', () => {
+    const seeded = seedFromClassroom(fresh, { taught: {}, confused: {} });
+    expect(seeded.mastery).toEqual(fresh.mastery);
+    expect(seeded.seeded.size).toBe(0);
   });
 });
