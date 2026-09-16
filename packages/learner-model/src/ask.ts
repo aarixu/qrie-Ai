@@ -21,6 +21,16 @@ export interface AskChoice {
  * and should be, because it is a fact about the topic rather than about the
  * student. What this changes is which outcome id goes into a prompt that was
  * being sent anyway, which is why it costs nothing to run.
+ *
+ * PHASE 6, BEFORE WIRING A CALLER: the rung-1 opening below is the rule the
+ * settled spec (2026-09-14, "at what rung") RETIRED — rung 1 does not exist as
+ * content, and opening with help on an outcome already failed cold means it
+ * never produces another rung-0 observation, so the primary metric can never
+ * record it improving. The correction is "open at rung 0 always; the model
+ * decides only what happens after a wrong answer." Left un-fixed here because
+ * this function has NO CALLER and changing behaviour nobody runs would dress a
+ * doc correction up as a feature; whoever wires the asks layer in Phase 6 must
+ * change `belowTheLine ? 1 : 0` to `0` and update ask.test.ts to match.
  */
 export function chooseAsk(model: LearnerModel, candidates: readonly string[]): AskChoice {
   const first = candidates[0];

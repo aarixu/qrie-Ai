@@ -465,15 +465,22 @@ fields wider than the list that stood here until 2026-09-14: `mastery`,
 `retrievalAccuracy`. Each of the three closes a hole a shorter list would have
 shipped with. Without `unassistedObservations`, "unassisted mastery 0.5" and
 "nobody has ever asked them cold" are the same number, and they are not the same
-fact. `doubtCount` keeps a raised hand out of the evidence count, so one raised
-hand cannot put an otherwise-untouched outcome onto the remedial plan.
+fact. `doubtCount` keeps a raised hand out of the ANSWER count while still letting it
+open the evidence gate — a hand may legitimately make a gap (`applyDoubt`
+lowers belief), but it must never be mistaken for an answer.
 `taughtCount` has to survive across sittings because `applyTaught` saturates on
 it — the placement screen applies attendance twice today
 (`Diagnostic.tsx:102-105`) for want of exactly that. The bare float is not
 deleted but projected (`project.ts`), so the call sites in `knowledge-graph` and
-`diagnostic` keep working untouched. `nextReviewAt` and `MisconceptionState` are
-in the schema from day one and **not driven**, so switching them on in Phases
-5–6 is wiring rather than a migration.
+`diagnostic` keep working untouched. `nextReviewAt`, `memoryStrength` and the
+retrieval counters are in the schema from day one and **not driven**, so
+switching spaced retrieval on in Phase 6 is wiring rather than a migration.
+`MisconceptionState` is **not** in the schema — the settled spec (2026-09-14)
+defers it to Phase 5, the 2026-09-16 audit confirmed no such type or column
+exists anywhere, and this line claimed otherwise until that audit. The same
+audit surfaced one field the docs never named: `answerObservations`
+(`types.ts`), the field the evidence gate actually reads (`project.ts:50`),
+added to `concept_state` by `0014`.
 
 **3.2 — The assisted/unassisted split.** A rung is recorded on every answer, so
 the arithmetic is over rows that exist — but **the rung as recorded cannot be

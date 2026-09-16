@@ -329,10 +329,10 @@ function foldConfused(model: LearnerModel, event: LedgerEvent): LearnerModel {
        * A HAND COUNTS HERE AND NOT IN `observations`. applyDoubt's own rule
        * (mastery.ts:250-252): "a hand is a nudge rather than a verdict, and a
        * student who asks a lot must never be modelled as a student who knows
-       * nothing". `evidenceSet` reads `observations` to decide what may become
-       * a gap, so counting a raised hand there would put an otherwise
-       * untouched outcome on the remedial plan at confidence 0.61 — on the
-       * strength of the student having asked about it.
+       * nothing". `evidenceSet` reads `answerObservations` and `doubtCount`:
+       * a hand may open the evidence gate — it lowered belief, so a gap it
+       * produces is legitimate — but it must never inflate the ANSWER counts
+       * that `chooseAsk` ranks on and the fold's arithmetic leans on.
        */
       doubtCount: prev.doubtCount + 1,
       lastPracticedAt: event.at,
