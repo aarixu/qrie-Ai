@@ -27,6 +27,24 @@ describe('unassistedGain', () => {
     expect(unassistedGain(modelWith('n', 0.5, 2), modelWith('n', 0.9, 2))).toBe(0);
   });
 
+  /**
+   * FOUND BY RUNNING model:metric AGAINST THE REAL PROJECT, 2026-09-16: a
+   * synthetic student's first sitting held a genuine cold success and printed
+   * 0.0000, because an outcome with no prior state fell back to its own after
+   * value as the baseline. The baseline of an outcome nobody has touched is
+   * not unknown — every ConceptState begins at the PRIOR — and a first sitting
+   * is where most of a young product's learning happens. A metric that reads
+   * a perfect first class as zero is measuring tenure, not learning.
+   */
+  it('counts the first unassisted success an outcome ever had', () => {
+    const gained = unassistedGain(emptyModel(), modelWith('n', 0.78, 1));
+    expect(gained).toBeCloseTo(0.28, 10);
+  });
+
+  it('counts a first cold FAILURE as a loss from the prior, symmetrically', () => {
+    expect(unassistedGain(emptyModel(), modelWith('n', 0.32, 1))).toBeCloseTo(-0.18, 10);
+  });
+
   it('counts a real cold gain', () => {
     expect(unassistedGain(modelWith('n', 0.5, 1), modelWith('n', 0.8, 2))).toBeCloseTo(0.3);
   });
@@ -35,10 +53,26 @@ describe('unassistedGain', () => {
     expect(unassistedGain(modelWith('n', 0.8, 1), modelWith('n', 0.5, 2))).toBeCloseTo(-0.3);
   });
 
-  it('counts an outcome that did not exist before from its own starting point', () => {
-    // First time anyone asked about it. The gain is measured from where the
-    // model now says it is, not from the prior it was never at.
-    expect(unassistedGain(emptyModel(), modelWith('fresh', 0.78, 1))).toBe(0);
+  /**
+   * REVERSED 2026-09-16, and the old rule's own words are why. It said the
+   * prior was a starting point the outcome "was never at" — but
+   * emptyConceptState BEGINS unassistedMastery at the prior and the fold
+   * computes the first movement from exactly there; and an outcome whose
+   * state a neighbour's propagation had already created (unassisted fields
+   * untouched, i.e. AT the prior) always counted its first cold answer from
+   * the prior anyway. Two identical first cold answers, different gains,
+   * decided by whether a neighbour moved first — an implementation artifact
+   * wearing an epistemic argument. The observation guard is what keeps
+   * propagation out; the baseline is the prior, for every outcome, always.
+   */
+  it('counts an outcome that did not exist before from the prior, like every other', () => {
+    expect(unassistedGain(emptyModel(), modelWith('fresh', 0.78, 1))).toBeCloseTo(0.28, 10);
+
+    // The same first cold answer, but a neighbour's propagation created the
+    // state object first: identical evidence, and now an identical gain.
+    const touched = emptyModel();
+    touched.states.fresh = { ...emptyConceptState('fresh'), mastery: 0.62 };
+    expect(unassistedGain(touched, modelWith('fresh', 0.78, 1))).toBeCloseTo(0.28, 10);
   });
 
   it('adds up across outcomes', () => {

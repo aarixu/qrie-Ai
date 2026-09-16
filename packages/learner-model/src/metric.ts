@@ -1,3 +1,4 @@
+import { PRIOR } from '@ai-tutor/knowledge-graph';
 import type { LearnerModel } from './types.ts';
 
 /**
@@ -18,7 +19,16 @@ export function unassistedGain(before: LearnerModel, after: LearnerModel): numbe
   for (const state of Object.values(after.states)) {
     const was = before.states[state.outcomeId];
     if (state.unassistedObservations <= (was?.unassistedObservations ?? 0)) continue;
-    const delta = state.unassistedMastery - (was?.unassistedMastery ?? state.unassistedMastery);
+    /**
+     * AN OUTCOME NOBODY HAD TOUCHED STARTS AT THE PRIOR, and that IS its
+     * baseline. This read `?? state.unassistedMastery` until 2026-09-16 —
+     * baseline equal to the after value, delta zero — so the first unassisted
+     * success an outcome ever had counted as nothing, and a student's whole
+     * first sitting printed 0.0000 when model:metric first ran against real
+     * rows. The observation guard above already ensures somebody asked cold;
+     * zeroing the movement it stands behind measured tenure, not learning.
+     */
+    const delta = state.unassistedMastery - (was?.unassistedMastery ?? PRIOR);
     // A corrupted belief must not poison the whole figure. This file already
     // refuses to divide by zero for that reason, and then let NaN in through
     // the numerator by the same door — a NaN spreads further than an Infinity

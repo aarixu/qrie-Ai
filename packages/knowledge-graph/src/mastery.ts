@@ -1,7 +1,7 @@
-import type { Answer, Gap, Mastery } from './types';
-import { GAP_THRESHOLD, PRIOR } from './types';
-import type { GraphIndex } from './graph';
-import { edgeSupport, emptyParams, itemParams, posterior, type ModelParams } from './params';
+import type { Answer, Gap, Mastery } from './types.ts';
+import { GAP_THRESHOLD, PRIOR } from './types.ts';
+import type { GraphIndex } from './graph.ts';
+import { edgeSupport, emptyParams, itemParams, posterior, type ModelParams } from './params.ts';
 
 /**
  * Belief propagation over the Learning Outcome Map — the machinery that turns

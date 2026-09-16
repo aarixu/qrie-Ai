@@ -1,4 +1,4 @@
-import type { KnowledgeGraph, LearningNode } from './types';
+import type { KnowledgeGraph, LearningNode } from './types.ts';
 
 /**
  * Loading and traversing the Learning Outcome Map.

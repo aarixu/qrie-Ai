@@ -1,6 +1,6 @@
-import type { GraphIndex } from './graph';
-import type { Answer, Mastery } from './types';
-import { PRIOR } from './types';
+import type { GraphIndex } from './graph.ts';
+import type { Answer, Mastery } from './types.ts';
+import { PRIOR } from './types.ts';
 import {
   DEFAULT_GUESS,
   DEFAULT_SLIP,
@@ -12,7 +12,7 @@ import {
   type EdgeParams,
   type ItemParams,
   type ModelParams,
-} from './params';
+} from './params.ts';
 
 /**
  * SELF-TRAINING — the part of the model that gets better without anyone

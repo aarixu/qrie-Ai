@@ -11,8 +11,8 @@ export type {
   Gap,
   PlanStep,
   DiagnosticResult,
-} from './types';
-export { GAP_THRESHOLD, PRIOR } from './types';
+} from './types.ts';
+export { GAP_THRESHOLD, PRIOR } from './types.ts';
 
 // The measured half of the model: what students taught it, and how it learns.
 export {
@@ -26,7 +26,7 @@ export {
   type EdgeParams,
   type ItemParams,
   type ModelParams,
-} from './params';
+} from './params.ts';
 export {
   observationsFrom,
   suspectEdges,
@@ -35,9 +35,9 @@ export {
   type Observation,
   type SuspectEdge,
   type SuspectItem,
-} from './calibration';
+} from './calibration.ts';
 
-export { loadGraph, GraphIndex, type FilterOptions } from './graph';
+export { loadGraph, GraphIndex, type FilterOptions } from './graph.ts';
 
 export {
   initialMastery,
@@ -54,4 +54,4 @@ export {
   type InitialMasteryOptions,
   type ApplyEvidenceOptions,
   type GapOptions,
-} from './mastery';
+} from './mastery.ts';
