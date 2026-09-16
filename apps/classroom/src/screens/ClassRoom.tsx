@@ -26,7 +26,13 @@ import { listenOnce } from '../lib/ear';
 import { judgeSpokenAnswer, resolveCrossQuestion } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
-import { recordAnswerAtBeat, recordDoubtAtBeat, recordLessonTaught } from '../stores/outcomes';
+import {
+  outcomesOf,
+  recordAnswerAtBeat,
+  recordDoubtAtBeat,
+  recordLessonTaught,
+} from '../stores/outcomes';
+import { masteryFromModel } from '../lib/learnerModel';
 import { useClassLedger } from '../lib/classLedger';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
@@ -408,6 +414,12 @@ export function ClassRoom({
         progress: progressStore.get(),
         doubts,
         lessonId: lesson.id,
+        // The lesson's own outcomes against the MODEL's belief — the first
+        // time this signal has been real: nodeIds were never passed, so the
+        // persona's mastery line was structurally absent while the code that
+        // would have fed it read the stale placement blob.
+        nodeIds: outcomesOf(lesson),
+        mastery: masteryFromModel(),
       }),
     [profile, settings.klass, doubts, lesson.id],
   );

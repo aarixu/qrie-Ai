@@ -375,7 +375,10 @@ export function LiveClassRoute() {
        * same topic opens differently for different students. Nothing known,
        * nothing said: the anonymous class is the honest default.
        */
-      const lookup = createOutcomeLookup(profileStore.get().diagnostic?.mastery);
+      // The MODEL's belief, not the placement blob: the doubt tutor marks a
+      // prerequisite "secure" from what every class and quiz since has shown,
+      // not from what one test found the day the student installed the app.
+      const lookup = createOutcomeLookup(masteryFromModel());
       /**
        * What they did last time, so she can open where they left off.
        *

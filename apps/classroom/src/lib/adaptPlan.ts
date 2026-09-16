@@ -1,7 +1,7 @@
 import { learnFromQuiz } from '@ai-tutor/diagnostic';
 import type { Answer, GraphIndex } from '@ai-tutor/knowledge-graph';
 import { evidenceSet } from '@ai-tutor/learner-model';
-import { loadModel } from './learnerModel';
+import { loadModel, masteryFromModel } from './learnerModel';
 import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
 import { loadDiagnosticDataFor } from './diagnosticData';
@@ -70,10 +70,20 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
   if (!data) return null;
 
   const index = data.index as GraphIndex;
+  /**
+   * BELIEF COMES FROM THE MODEL. `before.mastery` is the PLACEMENT's record —
+   * one day's snapshot — and it used to be both the seed here and the thing
+   * this function overwrote, so it drifted into a hybrid that was neither the
+   * placement's finding nor the model's belief, while two surfaces still read
+   * it as live. The model has folded every class, quiz and placement answer
+   * since; a stale 0.99 from test day must not veto a gap the student just
+   * demonstrated, and a stale 0.30 must not resurrect one they have closed.
+   */
+  const belief = { ...before, mastery: masteryFromModel() };
   // The same trained slip/guess and edge trust the placement test uses. A
   // topic test is the more frequent evidence source of the two; ignoring the
   // calibration here meant ignoring it almost everywhere.
-  const adapted = learnFromQuiz(before, answersFrom(outcome), index, {
+  const adapted = learnFromQuiz(belief, answersFrom(outcome), index, {
     params: modelStore.get(),
     // What the model has seen of this student beyond this quiz, so a break
     // found in a class is eligible to become a step here.
@@ -99,10 +109,21 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
     dropped: adapted.dropped.map(named),
   };
 
-  // Nothing moved. Writing anyway would rewrite the profile — and with it the
-  // sync stamp — on every quiz a student passes.
-  if (adapted.after !== before) {
-    profileStore.update((p) => ({ ...p, diagnostic: adapted.after }));
+  /**
+   * ONLY THE PLAN IS PERSISTED. The stored mastery stays the placement's own
+   * record byte for byte — the model is the belief store now, and writing the
+   * quiz-evolved numbers back here is exactly the "writes belief directly"
+   * that task 3.4 exists to end. Gaps ride along because they explain the
+   * plan; mastery does not, because two surfaces read it as the student.
+   *
+   * And only when the plan actually moved: writing on every passed quiz would
+   * churn the profile's sync stamp for a no-op.
+   */
+  if (adapted.added.length > 0 || adapted.dropped.length > 0) {
+    profileStore.update((p) => ({
+      ...p,
+      diagnostic: { ...adapted.after, mastery: before.mastery },
+    }));
   }
   return change;
 }

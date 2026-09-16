@@ -1,6 +1,5 @@
 import type { Mastery } from '@ai-tutor/knowledge-graph';
 import type { Klass, StudentContext } from '@ai-tutor/persona';
-import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
 import type { StudentProfile } from '../stores/profile';
 import type { DoubtEntry } from '../stores/doubtLog';
 import { computeStreak, type Progress } from '../stores/progress';
@@ -22,14 +21,19 @@ import { computeStreak, type Progress } from '../stores/progress';
 
 const isKlass = (n: number | null): n is Klass => n !== null && n >= 6 && n <= 12;
 
-/** Mean belief across the nodes this lesson teaches, or absent if none were probed. */
+/**
+ * Mean belief across the nodes this lesson teaches, or absent if none were
+ * probed. Takes the belief MAP — the learner model's projection — and never a
+ * DiagnosticResult: the stored placement is one day's record, and the persona
+ * used to read it as the student's present (2026-09-16 audit, task 3.4).
+ */
 export function masteryForLesson(
-  diagnostic: DiagnosticResult | null,
+  mastery: Mastery | null,
   lessonRefs: readonly string[],
 ): number | undefined {
-  if (diagnostic === null || lessonRefs.length === 0) return undefined;
+  if (mastery === null || lessonRefs.length === 0) return undefined;
   const beliefs = lessonRefs
-    .map((nodeId) => diagnostic.mastery[nodeId])
+    .map((nodeId) => mastery[nodeId])
     .filter((b): b is number => typeof b === 'number' && Number.isFinite(b));
   if (beliefs.length === 0) return undefined;
   return beliefs.reduce((sum, b) => sum + b, 0) / beliefs.length;
@@ -43,6 +47,12 @@ export function buildStudentContext(input: {
   lessonId: string;
   /** Graph node ids this lesson teaches, for the mastery reading. */
   nodeIds?: readonly string[];
+  /**
+   * What we believe per outcome, from the LEARNER MODEL. Injected like the
+   * planner's, and for the same reason: this file must not know where belief
+   * lives, only that it is never the stored placement blob.
+   */
+  mastery?: Mastery;
   today?: Date;
 }): StudentContext | null {
   const klass = input.klass ?? input.profile.klass;
@@ -59,7 +69,7 @@ export function buildStudentContext(input: {
   const streak = computeStreak(input.progress, input.today);
   if (streak > 0) ctx.attendance = { kind: 'streak', days: streak };
 
-  const mastery = masteryForLesson(input.profile.diagnostic, input.nodeIds ?? []);
+  const mastery = masteryForLesson(input.mastery ?? null, input.nodeIds ?? []);
   if (mastery !== undefined) ctx.mastery = mastery;
 
   return ctx;

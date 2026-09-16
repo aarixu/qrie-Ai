@@ -9,6 +9,7 @@ import {
 import type { StudentContext } from '@ai-tutor/persona';
 import { relayFetch } from './relay';
 import { createOutcomeLookup } from './outcomeLookup';
+import { masteryFromModel } from './learnerModel';
 
 /**
  * The real TYPED doubt tutor, behind the same AgentAdapter the stub
@@ -189,7 +190,9 @@ export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContex
       moment: 'answering',
       surface: 'text',
       // She is told the outcome this beat is for, and what it rests on.
-      outcomes: createOutcomeLookup(),
+      // With the MODEL's belief, so the foundations she names carry a real
+      // secure/shaky marking instead of arriving unmarked.
+      outcomes: createOutcomeLookup(masteryFromModel()),
     }),
     '',
     'Respond with ONLY a JSON object: {"say": string, "recallBeatId": string | null, "done": boolean}',

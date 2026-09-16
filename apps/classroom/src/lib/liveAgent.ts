@@ -7,6 +7,7 @@ import {
 } from '@ai-tutor/doubt-session';
 import { TUTOR, type StudentContext } from '@ai-tutor/persona';
 import { createOutcomeLookup } from './outcomeLookup';
+import { masteryFromModel } from './learnerModel';
 import {
   MIC_SAMPLE_RATE,
   createAudioPlayer,
@@ -179,7 +180,9 @@ export function buildLiveSystemInstruction(ctx: DoubtContext, student: StudentCo
       moment: 'opening',
       surface: 'voice',
       // She is told the outcome this beat is for, and what it rests on.
-      outcomes: createOutcomeLookup(),
+      // With the MODEL's belief, so the foundations she names carry a real
+      // secure/shaky marking instead of arriving unmarked.
+      outcomes: createOutcomeLookup(masteryFromModel()),
     });
 }
 
