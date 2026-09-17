@@ -274,7 +274,7 @@ export function PracticeQuiz({
             {onAskTutor && (
               <button
                 onClick={() => onAskTutor(question)}
-                className="inline-flex items-center gap-2 self-start text-primary hover:text-primary-container font-label-md text-label-md transition-colors mt-2"
+                className="inline-flex items-center gap-2 self-start text-primary hover:text-secondary font-label-md text-label-md transition-colors mt-2"
               >
                 <Icon name="front_hand" className="text-lg" />
                 Ask the tutor

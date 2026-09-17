@@ -21,7 +21,7 @@ function stubOs(prefersDark: boolean, listeners: { fn?: (e: unknown) => void } =
 
 beforeEach(() => {
   document.documentElement.className = '';
-  document.head.innerHTML = '<meta name="theme-color" content="#f7f9fb" />';
+  document.head.innerHTML = '<meta name="theme-color" content="#faf7f0" />';
 });
 afterEach(() => vi.unstubAllGlobals());
 
@@ -49,11 +49,11 @@ describe('applyTheme', () => {
     applyTheme('dark');
     expect(document.documentElement.classList.contains('dark')).toBe(true);
     // An app that goes dark while the address bar stays white looks broken.
-    expect(chrome()).toBe('#101418');
+    expect(chrome()).toBe('#141318');
 
     applyTheme('light');
     expect(document.documentElement.classList.contains('dark')).toBe(false);
-    expect(chrome()).toBe('#f7f9fb');
+    expect(chrome()).toBe('#faf7f0');
   });
 });
 

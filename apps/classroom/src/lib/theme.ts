@@ -12,8 +12,15 @@
 
 export type Theme = 'system' | 'light' | 'dark';
 
-/** The chrome colours, matching --c-background in theme.css exactly. */
-const CHROME = { light: '#f7f9fb', dark: '#101418' } as const;
+/**
+ * The chrome colours, matching --c-background in theme.css EXACTLY — Riso
+ * paper #FAF7F0 in the light room, #141318 in the dark. These predated even
+ * the amber palette once (#f7f9fb/#101418), and because applyTheme re-stamps
+ * the theme-color meta on every load, the stale pair silently overwrote the
+ * correct values index.html and the manifest carried. If theme.css moves,
+ * this moves in the same commit or the address bar disagrees with the page.
+ */
+const CHROME = { light: '#faf7f0', dark: '#141318' } as const;
 
 export const isDark = (theme: Theme): boolean =>
   theme === 'dark' ||

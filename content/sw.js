@@ -11,7 +11,7 @@
  * served the OLD index.html out of the cache — which points at the old
  * hashed assets, so the update quietly did not apply.
  */
-const CACHE = 'ai-tutor-v2';
+const CACHE = 'ai-tutor-v3'; // bumped for the Riso re-brand: the activate handler clears v2, so installed clients stop serving amber-era icons
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/'])));
