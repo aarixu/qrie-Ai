@@ -462,9 +462,19 @@ export function ClassRoom({
    * It matters most exactly where a model is most likely to go wrong —
    * repeating a child's disclosure back at them as if it were teaching — so
    * this is on the path from a MODEL's words to the student's ears, and
-   * nowhere else. The lesson's own narration does not come through here; it is
-   * screened once at preparation, where it is written, rather than re-checked
-   * on every beat of a fixed recording forever.
+   * nowhere else. The lesson's own narration does not come through here: it is
+   * screened once on the SERVER when the class is kept
+   * (`relay/src/relays.ts`, `checkSavedClass`), rather than re-checked on every
+   * beat of a fixed recording forever. That is where it belongs, because a
+   * class is served to every later student and a browser-side gate protects
+   * only the traffic that chooses to walk through it.
+   *
+   * THE ONE STUDENT IT DOES NOT COVER, written down rather than hidden: a
+   * cold topic starts teaching at about fourteen seconds, and is kept when the
+   * class ends. So the FIRST student on a new topic hears narration the gate
+   * has not seen yet. Every student after them is covered. Closing that needs
+   * the screen to run inside `class-prep` as well, and it is a real gap until
+   * it does.
    *
    * IT SITS ABOVE THE HANDOFF ON PURPOSE. It used to be declared fifty lines
    * BELOW it, and the handoff was therefore built with a raw

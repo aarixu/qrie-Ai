@@ -1,4 +1,9 @@
 import { isAllowedClassPath, unsafeMarkup } from './markup.ts';
+// By relative path with the extension, the way the Edge Function reaches every
+// other module here: Deno resolves files, not package names, and this gate has
+// to run in production or it is not a gate. `packages/safety` is pure — no
+// imports of its own, no DOM, no node — so it travels.
+import { screen } from '../../safety/src/screen.ts';
 /**
  * THE FIVE RELAYS, WITHOUT A SERVER AROUND THEM.
  *
@@ -465,6 +470,33 @@ export function checkSavedClass(saved: unknown): { ok: true; value: SavedClass }
       const problems = unsafeMarkup(file.body);
       if (problems.length > 0) {
         return { ok: false, why: `${file.path} ${problems[0]}` };
+      }
+      /**
+       * AND THE OTHER THING A KEPT CLASS CARRIES TO EVERY LATER STUDENT.
+       *
+       * Every word of the markup argument above applies to what she SAYS, and
+       * the words had no gate at all. `ClassRoom.tsx` justified not screening
+       * narration on its way to the speaker with "it came through prep, which
+       * screens what it plans" — and `packages/class-prep` imports
+       * `@ai-tutor/safety` nowhere. Its own `safety.ts` is a re-export of THIS
+       * file's markup gate: script tags and `@import`, not children. The claim
+       * was load-bearing and false, which is how a gap survives a review.
+       *
+       * Narration is written by a model, kept permanently (`topic_ref` is
+       * unique and a 409 is treated as success) and read aloud to every later
+       * student by a tutor they trust. Refused, never cleaned: masking a line
+       * out of a lesson would leave a class nobody understood, and preparing
+       * another costs about Rs 30.
+       *
+       * THE LIMIT IS THE FILE'S OWN LENGTH. `screen` truncates at 1,200 words
+       * by default, which is shorter than a class — so the default would have
+       * checked the first few beats and waved the rest through, which is worse
+       * than no gate because it reads like one. No word is shorter than a
+       * character, so this covers the file exactly.
+       */
+      const verdict = screen(file.body, 'to-student', { limit: file.body.length });
+      if (verdict.kind === 'support') {
+        return { ok: false, why: `${file.path} carries a line that reads as distress` };
       }
     }
   }

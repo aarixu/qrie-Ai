@@ -162,3 +162,81 @@ describe('the gate itself', () => {
     ]);
   });
 });
+
+/**
+ * AND THE SECOND THING A KEPT CLASS CARRIES TO EVERY LATER STUDENT: WORDS.
+ *
+ * The markup gate above moved to the server for one reason -- a class prepared
+ * in a browser is POSTed here and then served to everyone, so a gate that ran
+ * only during preparation protected only the traffic that chose to walk
+ * through it. Every word of that argument applies to what she SAYS, and the
+ * words had no gate at all.
+ *
+ * `ClassRoom.tsx` justified not screening narration on the way to the speaker
+ * with "it came through prep, which screens what it plans". `packages/class-prep`
+ * imports `@ai-tutor/safety` nowhere, and its own `safety.ts` is a re-export of
+ * the MARKUP gate -- script tags and `@import`, not children. So the claim was
+ * load-bearing and false, which is how a gap survives a review: somebody reads
+ * the comment instead of the code.
+ *
+ * Narration is written by a model, kept permanently (`topic_ref` is unique and
+ * a 409 is treated as success), and read aloud to every later student by a
+ * tutor they trust. Refused, never cleaned: a class we do not fully understand
+ * is one we do not keep, and preparing another costs Rs 30.
+ */
+describe('the words in a kept class', () => {
+  const withLesson = (lesson: unknown) =>
+    refused(
+      post({}, [
+        { path: 'lesson.json', body: JSON.stringify(lesson), encoding: 'utf8' },
+        { path: 'assets.json', body: JSON.stringify({ d1: svgWith('<circle r="2"/>') }), encoding: 'utf8' },
+      ]),
+    );
+
+  it('refuses a class whose narration reads as distress', () => {
+    const why = withLesson({
+      id: 'kidney-cross-section',
+      beats: [{ id: 'b1', narration: 'Sometimes I want to kill myself when I think about it.' }],
+    });
+
+    expect(why).toMatch(/lesson\.json/);
+  });
+
+  it('refuses it wherever in the class it hides, not only in the first beat', () => {
+    const why = withLesson({
+      id: 'kidney-cross-section',
+      beats: [
+        { id: 'b1', narration: 'The kidney filters blood.' },
+        { id: 'b2', narration: 'The nephron is the unit.' },
+        { id: 'b3', narration: 'i want to kill myself' },
+      ],
+    });
+
+    expect(why).not.toBeNull();
+  });
+
+  /**
+   * THE COUNTER-TEST, WHICH MATTERS MORE THAN THE OTHERS.
+   *
+   * This is Class 10 Science. Blood, death, failure, attack and organs that
+   * stop working are the SUBJECT. A gate that refuses a biology lesson for
+   * saying "the heart stops" is not a safety feature, it is an outage that
+   * only fires on the syllabus.
+   */
+  it('keeps an ordinary biology class that is full of blood and dying', () => {
+    const why = withLesson({
+      id: 'kidney-cross-section',
+      beats: [
+        { id: 'b1', narration: 'Agar kidney fail ho jaaye, toh blood mein waste jama hota hai.' },
+        { id: 'b2', narration: 'A heart attack happens when blood cannot reach the heart muscle, and that tissue dies.' },
+        { id: 'b3', narration: 'Red blood cells die after about 120 days and the spleen breaks them down.' },
+      ],
+    });
+
+    expect(why).toBeNull();
+  });
+
+  it('still keeps the plain class the rest of this file posts', () => {
+    expect(checkSavedClass(post()).ok).toBe(true);
+  });
+});
