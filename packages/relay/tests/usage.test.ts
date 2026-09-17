@@ -138,6 +138,28 @@ describe('the handler records every admitted call', () => {
     });
   });
 
+  it('records the model under the name model_price knows, not the one the browser sent', async () => {
+    // THE BOOKS WENT QUIETLY EMPTY ON THIS. The browser speaks OpenAI, so every
+    // caller asks for `google/gemini-3.7-flash` (apps/classroom/src/lib/judge.ts,
+    // geminiAgent.ts). `tools/sql/model_price.sql` stores the Vertex name,
+    // `gemini-3.7-flash`. price_at() joins on model, missed every row, and
+    // cost_per_student_hour reported a floor of speech and hear with every LLM
+    // call priced at nothing. completeOnVertex already strips the prefix before
+    // it dispatches; the usage record did not.
+    const { usage, deps: d } = deps(createMemoryUsage(), {
+      vertex: {
+        tokens: { token: async () => 't', projectId: 'p' },
+        fetch: async () => vertexReply({ promptTokenCount: 10, candidatesTokenCount: 5 }),
+      },
+    });
+    const body = new TextEncoder().encode(
+      JSON.stringify({ model: 'google/gemini-3.7-flash', messages: [] }),
+    );
+    const out = await handleRelay(req({ body }), d);
+    expect(out.status).toBe(200);
+    expect(usage.events[0]).toMatchObject({ provider: 'vertex', model: 'gemini-3.7-flash' });
+  });
+
   it('a spoken line, with the session carried as a query parameter', async () => {
     // An <audio src> cannot send a header, so the session rides beside the ticket.
     const { usage, deps: d } = deps();

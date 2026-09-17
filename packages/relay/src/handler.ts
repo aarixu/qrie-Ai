@@ -11,7 +11,13 @@ import {
 import { admit, type Gate, type RelayName } from './gate.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
-import { MAX_REQUEST_BYTES, completeOnVertex, type OpenAiReply, type VertexOptions } from './vertex.ts';
+import {
+  MAX_REQUEST_BYTES,
+  bareModel,
+  completeOnVertex,
+  type OpenAiReply,
+  type VertexOptions,
+} from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
 import {
   usageFromClass,
@@ -237,7 +243,11 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
         return fail(400, 'the request body was not JSON');
       }
       const answer = await completeOnVertex(chat as Parameters<typeof completeOnVertex>[0], deps.vertex);
-      const model = String((chat as { model?: unknown })?.model ?? '');
+      // The name the BOOKS know, not the name the browser sent. Callers speak
+      // OpenAI and ask for `google/gemini-3.7-flash`; model_price stores the
+      // Vertex name. Recording the prefixed one made price_at() miss every row
+      // and every LLM call read as free. completeOnVertex already strips it.
+      const model = bareModel(String((chat as { model?: unknown })?.model ?? ''));
       note(usageFromVertex(base, model, answer.status, answer.status === 200 ? (answer.body as OpenAiReply) : undefined));
       return {
         status: answer.status,
