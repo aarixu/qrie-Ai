@@ -31,15 +31,46 @@ beforeEach(() => {
 
 afterEach(() => vi.unstubAllGlobals());
 
+/**
+ * WHETHER IT IS ON IS A PROPERTY OF THE ENVIRONMENT, SO THE TEST OWNS THE
+ * ENVIRONMENT.
+ *
+ * These read `import.meta.env` at module scope, so the only way to check both
+ * states is to stub the variables and import the module again. They used to
+ * assert `telemetryConfigured() === false` against whatever the developer
+ * happened to have in `.env.local`, with a comment saying so — "the state every
+ * test runs in". That tested the machine rather than the code, it never
+ * exercised the configured branch at all, and it was guaranteed to go red the
+ * first time anybody actually switched telemetry on. It did, on 2026-09-17.
+ */
+const freshTelemetry = async (env: Record<string, string>) => {
+  vi.resetModules();
+  vi.stubEnv('VITE_SENTRY_DSN', env.VITE_SENTRY_DSN ?? '');
+  vi.stubEnv('VITE_POSTHOG_KEY', env.VITE_POSTHOG_KEY ?? '');
+  vi.stubEnv('VITE_POSTHOG_HOST', env.VITE_POSTHOG_HOST ?? '');
+  return import('../src/lib/telemetry');
+};
+
+const REAL_LOOKING = {
+  VITE_SENTRY_DSN: 'https://abc123@o42.ingest.sentry.io/7654321',
+  VITE_POSTHOG_KEY: 'phc_0123456789abcdefghijklmnopqrstuvwxyzABCD',
+  VITE_POSTHOG_HOST: 'https://eu.i.posthog.com',
+};
+
 describe('unset is a complete no-op', () => {
-  it('is not configured in a repo with no DSN and no key', () => {
-    // The state the app ships in today, and the state every test runs in.
-    expect(telemetryConfigured()).toBe(false);
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('is not configured when neither the DSN nor the key is set', async () => {
+    const t = await freshTelemetry({});
+
+    expect(t.telemetryConfigured()).toBe(false);
   });
 
-  it('sends nothing at all', () => {
-    reportCrash(new Error('boom'));
-    track('lesson_started', { lessonId: 'class10-blood' });
+  it('sends nothing at all', async () => {
+    const t = await freshTelemetry({});
+
+    t.reportCrash(new Error('boom'));
+    t.track('lesson_started', { lessonId: 'class10-blood' });
 
     expect(posted).toEqual([]);
   });
@@ -48,6 +79,24 @@ describe('unset is a complete no-op', () => {
     // The ErrorBoundary calls this from inside componentDidCatch. A reporter
     // that throws would replace the error it was reporting.
     expect(() => reportCrash(new Error('boom'))).not.toThrow();
+  });
+});
+
+describe('configured is the branch that was never exercised', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('is configured once a DSN and a key are present', async () => {
+    const t = await freshTelemetry(REAL_LOOKING);
+
+    expect(t.telemetryConfigured()).toBe(true);
+  });
+
+  it('a malformed DSN leaves it unconfigured rather than booting a broken reporter', async () => {
+    // A mistyped line in an environment file must not be the thing that stops
+    // the app, and it must not be the thing that silently half-starts it.
+    const t = await freshTelemetry({ ...REAL_LOOKING, VITE_SENTRY_DSN: 'not a dsn' });
+
+    expect(t.parseDsn('not a dsn')).toBeNull();
   });
 });
 

@@ -33,6 +33,23 @@ const PUBLIC_BY_DESIGN = new Set([
   'VITE_SUPABASE_URL',
   'VITE_SUPABASE_ANON_KEY',
   'VITE_RELAY_URL',
+  // The two telemetry credentials are WRITE-ONLY INGEST endpoints, which is a
+  // different kind of thing from a key. Both vendors publish them in their own
+  // client snippets: a Sentry DSN names a project to send events TO and cannot
+  // read one, and a PostHog project key beginning `phc_` can capture and cannot
+  // query. Neither reaches a report, a session replay or another project.
+  //
+  // The exposure they DO carry is quota: anybody who reads the bundle can post
+  // junk events and spend our monthly allowance. That is a bill, not a breach,
+  // and it is answered on the vendor's side -- Sentry inbound filters and
+  // allowed domains, PostHog's own rate limits -- not by hiding a string that
+  // has to be in the browser to do its job.
+  //
+  // The personal-api-key forms (`sntrys_`, `phx_`) are a different matter
+  // entirely and must never appear here or in a bundle.
+  'VITE_SENTRY_DSN',
+  'VITE_POSTHOG_KEY',
+  'VITE_POSTHOG_HOST',
 ]);
 
 /** Shapes of the credentials this project uses, for a CI run with no .env. */
@@ -40,6 +57,13 @@ const SHAPES = [
   { name: 'OpenRouter key', re: /sk-or-v1-[A-Za-z0-9]{16,}/ },
   { name: 'Google API key', re: /AIza[A-Za-z0-9_-]{20,}/ },
   { name: 'RunPod key', re: /\brpa_[A-Za-z0-9]{24,}/ },
+  // The counterweight to allowing the DSN and the project key above. These are
+  // the PERSONAL tokens of the same two vendors -- they read projects, issues
+  // and events, and one in a bundle is a real breach rather than a quota bill.
+  // Allowing the write-only pair by name is only defensible while the readable
+  // pair is refused by shape.
+  { name: 'Sentry auth token', re: /\bsntrys_[A-Za-z0-9+/=]{20,}/ },
+  { name: 'PostHog personal key', re: /\bphx_[A-Za-z0-9]{20,}/ },
   { name: 'ElevenLabs key', re: /\bsk_[a-f0-9]{40,}/ },
   // Any PEM private key at all. Nothing in a browser bundle has a reason to
   // carry one, whoever issued it.
