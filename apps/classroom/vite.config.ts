@@ -97,6 +97,12 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
      * vendor's measured 0.36s. Unset, nothing changes.
      */
     ...(process.env.CURIE_SPEECH_URL ? { speechUrl: process.env.CURIE_SPEECH_URL } : {}),
+    /**
+     * The same switch production has, so it can be rehearsed here. Run
+     * `RELAY_DISABLED=1 npm run dev` and every relay answers 503, which is the
+     * only way to find out what the app does when they all do.
+     */
+    ...(process.env.RELAY_DISABLED ? { disabled: true } : {}),
     ...(vertex ? { vertex } : {}),
     transcribe: (call: HeardAudio) => transcribeViaFormData(key, call),
     // On a laptop the accounting goes to the terminal. One line per call,

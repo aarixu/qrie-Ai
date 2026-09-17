@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MODEL_VERSION } from '@ai-tutor/learner-model';
-import { REQUESTS_PER_MINUTE, UNITS, UNITS_PER_DAY } from '@ai-tutor/relay';
+import { REQUESTS_PER_MINUTE, UNITS, UNITS_PER_DAY, UNITS_PER_DAY_PROJECT } from '@ai-tutor/relay';
 
 /**
  * THE POLICY MUST EXIST AS A MIGRATION, NOT AS A COMMENT.
@@ -487,5 +487,55 @@ describe('the evidence-columns migration', () => {
       /add column if not exists answer_observations integer not null default 0/i,
     );
     expect(sql).toMatch(/add column if not exists doubt_count integer not null default 0/i);
+  });
+});
+
+/**
+ * THE CEILING ON OUR SPENDING, WHICH IS A DIFFERENT QUESTION FROM THEIRS.
+ *
+ * Every limit 0012 holds is keyed on one user, and a user costs nothing to
+ * create: the app signs in anonymously at boot with no captcha anywhere near
+ * it. So the ceiling a script meets is Rs 120 a day multiplied by however many
+ * accounts it mints, which is not a ceiling. 0015 puts a line under the whole
+ * project, and it has to be claimed in the same function and the same
+ * transaction as the per-user one, or two Edge Function instances can both
+ * read the last unit.
+ */
+describe('the project-wide ceiling', () => {
+  const sql = sqlOf('0015_project_spend_cap.sql').replace(/--[^\n]*/g, '');
+
+  it('is the same number in the database as in the code that spends against it', () => {
+    const inSql = /units_per_day_project\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+    expect(inSql).not.toBeNull();
+    expect(Number(inSql![1])).toBe(UNITS_PER_DAY_PROJECT);
+  });
+
+  it('sits above the per-student ceiling, so one student can never trip it', () => {
+    expect(UNITS_PER_DAY_PROJECT).toBeGreaterThan(UNITS_PER_DAY);
+  });
+
+  it('claims the day in ONE guarded statement, so the last unit cannot go twice', () => {
+    // An insert that reads, then an update that writes, is two statements and a
+    // race. The guard has to be the WHERE of the upsert itself: if the row that
+    // comes back is missing, the day is spent.
+    expect(sql).toMatch(
+      /insert into public\.relay_budget_day[\s\S]*on conflict \(day\) do update[\s\S]*where[\s\S]*units_per_day_project/i,
+    );
+  });
+
+  it('refuses with its own reason, because the student did not do this', () => {
+    expect(sql).toMatch(/'capped'/);
+  });
+
+  it('is closed to students, like every other privileged function', () => {
+    expect(sql).toMatch(/alter table public\.relay_budget_day enable row level security/i);
+    expect(sql).toMatch(
+      /grant execute on function public\.claim_relay\(uuid, text, integer\) to service_role/i,
+    );
+  });
+
+  it('replaces claim_relay rather than dropping it, so the grant survives', () => {
+    expect(sql).toMatch(/create or replace function public\.claim_relay/i);
+    expect(sql).not.toMatch(/drop function/i);
   });
 });

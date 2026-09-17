@@ -131,9 +131,32 @@ export function unitsFor(relay: RelayName, req: RelayRequest): number {
   }
 }
 
+/**
+ * THE CEILING ON OUR SPENDING, NOT ON THEIRS.
+ *
+ * `UNITS_PER_DAY` is a ceiling per identity, and an identity is free: the app
+ * calls `signInAnonymously` at boot and nothing stands in front of it. So what
+ * a script actually faces is not Rs 120 a day, it is Rs 120 times however many
+ * accounts it cares to mint. This is the line under all of them — one unit is
+ * one paisa, so 50,000 is Rs 500 of vendor spend in a UTC day, across everyone.
+ *
+ * Kept deliberately well above `UNITS_PER_DAY`, so that a single student can
+ * never be the one who trips it. A cap a student can reach alone is not a cap
+ * on us; it is a second, worse cap on them.
+ *
+ * Written down twice, here and as a plpgsql constant inside `claim_relay`,
+ * because the check has to be atomic and the price has to be readable.
+ * `apps/classroom/tests/migrations.test.ts` asserts the two are equal.
+ */
+export const UNITS_PER_DAY_PROJECT = 50_000;
+
 export type ClaimResult =
   | { allowed: true }
-  | { allowed: false; reason: 'rate' | 'budget' | 'unavailable'; retryAfterSeconds: number };
+  | {
+      allowed: false;
+      reason: 'rate' | 'budget' | 'capped' | 'unavailable';
+      retryAfterSeconds: number;
+    };
 
 export interface Ledger {
   claim(userId: string, relay: RelayName, units: number): Promise<ClaimResult>;
@@ -172,6 +195,14 @@ const REFUSALS: Record<Extract<ClaimResult, { allowed: false }>['reason'], { sta
     status: 429,
     message: 'You have used up today’s classes. This resets tomorrow.',
   },
+  // WE have spent our day, not them. They did nothing, they have no budget to
+  // check, and there is nothing they can do differently — so the message says
+  // what is true and does not hand them a fault they do not have. 503 rather
+  // than 429 for the same reason: this is our capacity, not their rate.
+  capped: {
+    status: 503,
+    message: 'Curie has taught a lot of classes today. Please come back tomorrow.',
+  },
   // The meter is down, which is ours to fix and not the student's fault. It is
   // still a refusal: a limit that disappears during an outage is not a limit,
   // and an outage is exactly when a runaway would go unnoticed.
@@ -180,6 +211,11 @@ const REFUSALS: Record<Extract<ClaimResult, { allowed: false }>['reason'], { sta
     message: 'We cannot start a class this second. Try again in a moment.',
   },
 };
+
+type ClaimRefusal = Extract<ClaimResult, { allowed: false }>['reason'];
+
+/** The reasons `claim_relay` may give. Anything else is read as a rate limit. */
+const REASONS = new Set<string>(Object.keys(REFUSALS));
 
 function refuse(claim: Extract<ClaimResult, { allowed: false }>): RelayResponse {
   const { status, message } = REFUSALS[claim.reason];
@@ -396,9 +432,16 @@ export function createSupabaseLedger(
       if (!row || typeof row.allowed !== 'boolean') return down();
       if (row.allowed) return { allowed: true };
 
+      // Read against the known set rather than against one name. This used to
+      // be `row.reason === 'budget' ? 'budget' : 'rate'`, which silently turned
+      // every reason it had not heard of into "you are asking too fast" — so
+      // adding a reason in SQL would have shipped the wrong message to a
+      // student, with nothing failing anywhere to say so.
+      const said = String(row.reason ?? '');
+      const reason = REASONS.has(said) ? (said as ClaimRefusal) : 'rate';
       return {
         allowed: false,
-        reason: row.reason === 'budget' ? 'budget' : 'rate',
+        reason,
         retryAfterSeconds:
           typeof row.retry_after === 'number' && row.retry_after > 0 ? row.retry_after : 60,
       };

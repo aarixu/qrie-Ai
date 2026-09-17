@@ -4,6 +4,7 @@ import {
   REQUESTS_PER_MINUTE,
   UNITS,
   UNITS_PER_DAY,
+  UNITS_PER_DAY_PROJECT,
   admit,
   createMemoryLedger,
   createSupabaseLedger,
@@ -691,5 +692,130 @@ describe('handleRelay', () => {
 
   it('has nothing for a path it does not serve', async () => {
     expect((await handleRelay(req({ url: '/api/whatever' }), deps())).status).toBe(404);
+  });
+});
+
+// -------------------------------------------- the ceiling on OUR spending ---
+
+/**
+ * THE METER MEASURED ONE STUDENT, AND THE BILL IS OURS.
+ *
+ * `UNITS_PER_DAY` is a ceiling per identity, and an identity is free: the app
+ * calls `signInAnonymously` at boot with no captcha in front of it. So the
+ * ceiling a script faces is not Rs 120 a day, it is Rs 120 multiplied by
+ * however many accounts it can mint, which is a number nobody has written
+ * down. `UNITS_PER_DAY_PROJECT` is the line under all of them.
+ *
+ * It refuses with its own reason rather than 'budget'. A student who has used
+ * up their own day did something; a student who arrives after we have spent
+ * ours did nothing, and the message must not tell them otherwise.
+ */
+describe('the project-wide ceiling', () => {
+  it('is a real number that a single student cannot reach alone', () => {
+    // Otherwise the cap is not a cap on us, it is a second cap on them.
+    expect(UNITS_PER_DAY_PROJECT).toBeGreaterThan(UNITS_PER_DAY);
+  });
+
+  it('refuses with capped, and does not blame the student for it', async () => {
+    const out = await admit(
+      req(),
+      'llm',
+      gate({
+        ledger: {
+          async claim() {
+            return { allowed: false, reason: 'capped', retryAfterSeconds: 3600 };
+          },
+        },
+      }),
+    );
+    expect(out.ok).toBe(false);
+    if (out.ok) return;
+    expect(out.response.status).toBe(503);
+    expect(out.response.headers['retry-after']).toBe('3600');
+    const body = bodyOf(out.response).error as { message: string; reason: string };
+    expect(body.reason).toBe('capped');
+    // The student's own budget is untouched, so nothing about "your classes".
+    expect(body.message).not.toMatch(/you have used up/i);
+  });
+
+  it('survives the trip back from Postgres instead of being read as a rate limit', async () => {
+    // createSupabaseLedger used to map every non-'budget' reason to 'rate',
+    // which would have turned a spend ceiling into "you are asking too fast".
+    const ledger = createSupabaseLedger(
+      'https://example.supabase.co',
+      'service-key',
+      async () =>
+        new Response(JSON.stringify([{ allowed: false, reason: 'capped', retry_after: 1800 }]), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+    );
+    const claim = await ledger.claim(USER, 'llm', 85);
+    expect(claim).toEqual({ allowed: false, reason: 'capped', retryAfterSeconds: 1800 });
+  });
+});
+
+// ----------------------------------------------------------- the switch ----
+
+/**
+ * THE THING YOU REACH FOR AT 2AM.
+ *
+ * A ceiling stops a slow leak. It does not stop a bug that is spending inside
+ * the ceiling as fast as the ceiling allows, and it does not stop a key that
+ * has leaked. Both of those want one thing: off, now, without a deploy and
+ * without editing a table.
+ *
+ * `RELAY_DISABLED` is read by each host and handed in as `deps.disabled`. It is
+ * checked before anything else in the handler, so nothing is verified, nothing
+ * is metered and nothing is dispatched -- flipping it costs one environment
+ * variable and a restart.
+ */
+describe('the kill switch', () => {
+  const explodes: Gate = {
+    verify: () => {
+      throw new Error('the gate must not be reached when the relay is off');
+    },
+    ledger: {
+      claim: () => {
+        throw new Error('the meter must not be reached when the relay is off');
+      },
+    },
+    ticketSecret: SECRET,
+  };
+
+  const deadDeps = {
+    key: 'sk-test',
+    disabled: true,
+    gate: explodes,
+    transcribe: async () => {
+      throw new Error('no upstream when the relay is off');
+    },
+    keep: async () => {
+      throw new Error('no upstream when the relay is off');
+    },
+  };
+
+  it('refuses every relay without verifying, metering or dispatching', async () => {
+    const out = await handleRelay(req(), deadDeps);
+    expect(out.status).toBe(503);
+    expect(out.headers['retry-after']).toBeDefined();
+  });
+
+  it('refuses the ticket too, so nothing can be minted while it is off', async () => {
+    // A ticket outlives the switch by its whole ten minutes, so minting one
+    // during an incident hands out access that survives the fix.
+    const out = await handleRelay(req({ method: 'POST', url: '/api/ticket' }), deadDeps);
+    expect(out.status).toBe(503);
+  });
+
+  it('says it is us, not them', async () => {
+    const out = await handleRelay(req(), deadDeps);
+    const body = bodyOf(out).error as { message: string };
+    expect(body.message).not.toMatch(/you /i);
+  });
+
+  it('is off by default, so forgetting the variable does not close the relay', async () => {
+    const out = await handleRelay(req(), { ...deadDeps, disabled: undefined, gate: gate() });
+    expect(out.status).not.toBe(503);
   });
 });

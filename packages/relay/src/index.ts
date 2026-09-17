@@ -42,6 +42,7 @@ export {
   REQUESTS_PER_MINUTE,
   UNITS,
   UNITS_PER_DAY,
+  UNITS_PER_DAY_PROJECT,
   admit,
   createMemoryLedger,
   createSupabaseLedger,

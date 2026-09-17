@@ -118,6 +118,13 @@ const usage = createSupabaseUsage(SUPABASE_URL, SERVICE_ROLE_KEY);
 const deps: HandlerDeps = {
   key: OPENROUTER_API_KEY,
   /**
+   * The switch. `supabase secrets set RELAY_DISABLED=1` and every relay answers
+   * 503 within a restart — no deploy, no migration, no table edited by hand.
+   * Anything but the empty string is on, because the mistake to avoid at two in
+   * the morning is typing `true` and having it read as false.
+   */
+  ...(Deno.env.get('RELAY_DISABLED') ? { disabled: true } : {}),
+  /**
    * Her voice, from our own box, when one is configured.
    *
    * 86% of what a class costs is speech and all of it is cash. Point this at a

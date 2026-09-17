@@ -61,6 +61,20 @@ export interface HandlerDeps {
    * No credential travels with it, because there is none to travel.
    */
   speechUrl?: string;
+  /**
+   * OFF, NOW, WITHOUT A DEPLOY.
+   *
+   * The ceilings stop a slow leak. They do not stop a bug spending inside the
+   * ceiling as fast as the ceiling allows, and they do not stop a key that has
+   * leaked -- and both of those want the same thing at two in the morning. Each
+   * host reads `RELAY_DISABLED` and hands the answer in here; the handler
+   * checks it before it checks anything else, so nothing is verified, nothing
+   * is metered, and nothing is dispatched.
+   *
+   * Absent means running. A switch that closes the relay when somebody forgets
+   * to set a variable is an outage waiting for a Friday.
+   */
+  disabled?: boolean;
   gate: Gate;
   /**
    * Google Cloud, for everything that thinks or draws.
@@ -183,6 +197,25 @@ export async function handleTicket(req: RelayRequest, gate: Gate): Promise<Relay
  * limit at all.
  */
 export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise<RelayResponse> {
+  // Before everything, including the ticket. A ticket outlives the switch by
+  // its whole ten minutes, so minting one during an incident hands out access
+  // that survives the fix.
+  if (deps.disabled === true) {
+    return {
+      status: 503,
+      headers: { 'content-type': 'application/json', 'retry-after': '900' },
+      body: {
+        kind: 'json',
+        value: {
+          error: {
+            message: 'Curie is having a rest. Classes are paused for a few minutes.',
+            reason: 'disabled',
+          },
+        },
+      },
+    };
+  }
+
   const path = new URL(req.url, 'http://relay.local').pathname;
   if (path.split('/').filter(Boolean).pop() === 'ticket') {
     return handleTicket(req, deps.gate);
