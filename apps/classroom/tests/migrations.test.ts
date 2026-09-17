@@ -504,10 +504,17 @@ describe('the evidence-columns migration', () => {
 describe('the project-wide ceiling', () => {
   const sql = sqlOf('0015_project_spend_cap.sql').replace(/--[^\n]*/g, '');
 
-  it('is the same number in the database as in the code that spends against it', () => {
+  it('still carries the number it shipped with, which 0016 then took over', () => {
+    // FROZEN, not mirrored. 0015 held the ceiling in a plpgsql constant and
+    // 0016 replaced that with `relay_control.global_units_per_day`, so this
+    // migration no longer decides anything. Asserting it against the live
+    // `UNITS_PER_DAY_PROJECT` would mean that raising the ceiling turns a
+    // superseded migration red, and whoever raised it would spend ten minutes
+    // reading a file that is only history. The live assertion is 0016's, on
+    // the column DEFAULT.
     const inSql = /units_per_day_project\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
     expect(inSql).not.toBeNull();
-    expect(Number(inSql![1])).toBe(UNITS_PER_DAY_PROJECT);
+    expect(Number(inSql![1])).toBe(50_000);
   });
 
   it('sits above the per-student ceiling, so one student can never trip it', () => {
@@ -537,5 +544,59 @@ describe('the project-wide ceiling', () => {
   it('replaces claim_relay rather than dropping it, so the grant survives', () => {
     expect(sql).toMatch(/create or replace function public\.claim_relay/i);
     expect(sql).not.toMatch(/drop function/i);
+  });
+});
+
+/**
+ * THE CEILING MOVES WITHOUT A MIGRATION, OR IT TAKES THE PILOT DOWN WITH IT.
+ *
+ * 0015 put the project ceiling in a plpgsql constant, so raising it is a
+ * migration and a deploy. Rs 500 a day is right for a self-serve MVP and wrong
+ * for the school pilot by roughly four times: 500 bound students at about ten
+ * minutes each is around 83 student-hours a day, which at MVP-1 rates is about
+ * Rs 2,158. The pilot would halt at breakfast on its first morning and the fix
+ * would be a migration written in a hurry.
+ *
+ * So the number becomes a row, and the constant becomes that row's DEFAULT.
+ * `halted` sits beside it: the same stop as `RELAY_DISABLED`, inside the
+ * database, where an alarm can set it with nobody awake to deploy.
+ */
+describe('relay_control, so the ceiling is a row and not a migration', () => {
+  const sql = sqlOf('0016_relay_control.sql').replace(/--[^\n]*/g, '');
+
+  it('defaults to exactly the ceiling the code still names', () => {
+    const inSql = /global_units_per_day\s+integer\s+not null\s+default\s+(\d+)/i.exec(sql);
+    expect(inSql).not.toBeNull();
+    expect(Number(inSql![1])).toBe(UNITS_PER_DAY_PROJECT);
+  });
+
+  it('can only ever hold one row', () => {
+    // A control table with two rows is a control table nobody can reason about.
+    expect(sql).toMatch(/id\s+boolean\s+primary key\s+default\s+true\s+check\s*\(\s*id\s*\)/i);
+  });
+
+  it('starts with that row already in it', () => {
+    // A missing row must not be the thing that decides whether the relay runs.
+    expect(sql).toMatch(/insert into public\.relay_control[\s\S]*on conflict[\s\S]*do nothing/i);
+  });
+
+  it('reads the row instead of the constant it replaces', () => {
+    expect(sql).toMatch(/create or replace function public\.claim_relay/i);
+    expect(sql).toMatch(/from public\.relay_control/i);
+    // The 0015 constant is gone from the body, or the row changes nothing.
+    expect(sql).not.toMatch(/units_per_day_project\s+constant/i);
+  });
+
+  it('answers halted with its own reason, not as a spent budget', () => {
+    expect(sql).toMatch(/'halted'/);
+  });
+
+  it('is closed to students, like every other control surface', () => {
+    expect(sql).toMatch(/alter table public\.relay_control enable row level security/i);
+    expect(sql).toMatch(/revoke all on table public\.relay_control from/i);
+  });
+
+  it('carries the concurrency ceiling the prep lock will need', () => {
+    expect(sql).toMatch(/max_concurrent_preps\s+integer\s+not null\s+default\s+\d+/i);
   });
 });

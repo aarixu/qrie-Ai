@@ -154,7 +154,7 @@ export type ClaimResult =
   | { allowed: true }
   | {
       allowed: false;
-      reason: 'rate' | 'budget' | 'capped' | 'unavailable';
+      reason: 'rate' | 'budget' | 'capped' | 'halted' | 'unavailable';
       retryAfterSeconds: number;
     };
 
@@ -194,6 +194,14 @@ const REFUSALS: Record<Extract<ClaimResult, { allowed: false }>['reason'], { sta
   budget: {
     status: 429,
     message: 'You have used up today’s classes. This resets tomorrow.',
+  },
+  // Somebody, or an alarm, stopped this on purpose. Same stop as
+  // `RELAY_DISABLED` and the same words, but held in `relay_control` where it
+  // can be set without a deploy and without anybody being awake. Minutes, not a
+  // day, so it must not say "tomorrow".
+  halted: {
+    status: 503,
+    message: 'Curie is having a rest. Classes are paused for a few minutes.',
   },
   // WE have spent our day, not them. They did nothing, they have no budget to
   // check, and there is nothing they can do differently — so the message says

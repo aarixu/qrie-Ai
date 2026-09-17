@@ -819,3 +819,60 @@ describe('the kill switch', () => {
     expect(out.status).not.toBe(503);
   });
 });
+
+/**
+ * A CEILING YOU CANNOT MOVE IS A CEILING THAT TAKES THE PRODUCT DOWN WITH IT.
+ *
+ * `UNITS_PER_DAY_PROJECT` is a plpgsql constant, so raising it is a migration
+ * and a deploy. Rs 500 a day is right for a self-serve MVP and WRONG for the
+ * school pilot by a factor of four: 500 bound students at roughly ten minutes
+ * each is about 83 student-hours a day, which at MVP-1 rates is around
+ * Rs 2,158. The first day of the pilot would halt the product at breakfast, and
+ * the fix would be a migration written in a hurry.
+ *
+ * So the number moves to a one-row `relay_control` table and the constant
+ * becomes its DEFAULT. `halted` sits beside it: the same stop as
+ * `RELAY_DISABLED`, but inside the database, where an alarm can set it without
+ * anybody being awake to deploy.
+ */
+describe('halted, the stop that lives in the database', () => {
+  it('reads as its own refusal and not as a spent budget', async () => {
+    // Different things: a spent day is "come back tomorrow", a halt is "we
+    // stopped this ourselves and it is minutes, not a day".
+    const out = await admit(
+      req(),
+      'llm',
+      gate({
+        ledger: {
+          async claim() {
+            return { allowed: false, reason: 'halted', retryAfterSeconds: 300 };
+          },
+        },
+      }),
+    );
+    expect(out.ok).toBe(false);
+    if (out.ok) return;
+    expect(out.response.status).toBe(503);
+    const body = bodyOf(out.response).error as { message: string; reason: string };
+    expect(body.reason).toBe('halted');
+    expect(body.message).not.toMatch(/tomorrow/i);
+  });
+
+  it('survives the trip back from Postgres', async () => {
+    const ledger = createSupabaseLedger(
+      'https://example.supabase.co',
+      'service-key',
+      async () =>
+        new Response(JSON.stringify([{ allowed: false, reason: 'halted', retry_after: 300 }]), {
+          status: 200,
+          headers: { 'content-type': 'application/json' },
+        }),
+    );
+
+    expect(await ledger.claim(USER, 'llm', 85)).toEqual({
+      allowed: false,
+      reason: 'halted',
+      retryAfterSeconds: 300,
+    });
+  });
+});
