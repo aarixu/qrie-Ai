@@ -600,3 +600,58 @@ describe('relay_control, so the ceiling is a row and not a migration', () => {
     expect(sql).toMatch(/max_concurrent_preps\s+integer\s+not null\s+default\s+\d+/i);
   });
 });
+
+/**
+ * S IS THE WHOLE COST MODEL, AND WITHOUT A LOCK IT IS ONE.
+ *
+ * Preparation contributes `16.55 x Rs 30 / S` to the student-hour, where S is
+ * the number of students sharing a topic. At S = 1 that is Rs 496.5 a
+ * student-hour, ninety-nine times the ceiling, and it is the DEFAULT state of a
+ * self-serve student on a cold topic: preparation runs in the student's own
+ * browser, every limit is keyed on one user, and nothing anywhere holds a
+ * semaphore. N students opening one cold topic run N preparations and throw
+ * N-1 of the results away, which is the arithmetic running backwards.
+ *
+ * It is also what breaks first: roughly forty relay calls per preparation, no
+ * queue, and a burst of simultaneous cold preps against one project ceiling.
+ */
+describe('the per-topic prep lock', () => {
+  const sql = sqlOf('0017_prep_lock.sql').replace(/--[^\n]*/g, '');
+
+  it('is keyed on the topic, never on a derived class id', () => {
+    // Two students reaching one topic by different derivations must take ONE
+    // lock. A key derived per client is two locks and no lock.
+    expect(sql).toMatch(/create table[\s\S]*public\.prep_lock[\s\S]*topic_ref\s+text\s+primary key/i);
+  });
+
+  it('expires, because a browser that closed mid-prep releases nothing', () => {
+    expect(sql).toMatch(/expires_at\s+timestamptz\s+not null/i);
+    expect(sql).toMatch(/delete from public\.prep_lock[\s\S]*expires_at\s*<\s*/i);
+  });
+
+  it('wins or loses in one statement, so two students cannot both win', () => {
+    expect(sql).toMatch(/insert into public\.prep_lock[\s\S]*on conflict \(topic_ref\) do nothing/i);
+  });
+
+  it('refuses with busy when too many preparations are already running', () => {
+    expect(sql).toMatch(/'busy'/);
+    expect(sql).toMatch(/max_concurrent_preps/i);
+  });
+
+  it('reads its concurrency ceiling from the row, not from a constant', () => {
+    expect(sql).toMatch(/from public\.relay_control/i);
+  });
+
+  it('can be released by its holder and nobody else', () => {
+    expect(sql).toMatch(/create or replace function public\.release_prep_lock/i);
+    expect(sql).toMatch(/where[\s\S]*topic_ref\s*=\s*p_topic[\s\S]*user_id\s*=\s*p_user/i);
+  });
+
+  it('is closed to students, who reach it only through the relay', () => {
+    expect(sql).toMatch(/alter table public\.prep_lock enable row level security/i);
+    expect(sql).toMatch(
+      /grant execute on function public\.take_prep_lock\([^)]*\) to service_role/i,
+    );
+    expect(sql).toMatch(/revoke all on function public\.take_prep_lock\([^)]*\) from/i);
+  });
+});
