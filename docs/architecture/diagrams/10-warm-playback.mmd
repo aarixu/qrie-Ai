@@ -1,0 +1,44 @@
+%% Curie — Playing a class that already exists. A cache hit is a download: ₹9.90, no planner, no artist.
+sequenceDiagram
+    autonumber
+    actor S as Student
+    participant LR as LessonRoute
+    participant CT as lib/content.ts
+    participant PG as Postgres prepared_class
+    participant ST as Storage bucket 'classes'
+    participant PL as PlayerController
+    participant SC as packages/stage Scene
+    participant VO as packages/voice
+
+    S->>LR: opens a topic
+    LR->>CT: fetchCatalog()
+    par authored lessons
+        CT->>CT: GET /index.json (served from content/ as publicDir)
+    and kept classes
+        CT->>PG: select id, topic_ref, title, klass, subject<br/>WHERE klass BETWEEN mine-2 AND mine
+        Note over CT,PG: anon key + RLS 'anyone may read prepared classes'.<br/>BYPASSES THE RELAY ENTIRELY.
+        alt query stalls
+            CT-->>CT: 4s Promise.race → [] → authored lessons only<br/>(a prepared topic looks cold and is prepared again)
+        end
+    end
+    CT-->>LR: CatalogEntry[] — isAbsolute(path) tells kept from authored
+
+    LR->>ST: GET /storage/v1/object/public/classes/&lt;id&gt;/lesson.json
+    Note over LR,ST: public bucket, NO session at all
+    ST-->>LR: lesson.json
+    LR->>LR: validateLesson() → pointAtItsOwnFolder()<br/>rewrites element.src to the Storage folder
+    alt validateLesson fails
+        LR-->>S: "Lesson &lt;title&gt; is not available right now."<br/>errors go to console for the author only
+    end
+
+    LR->>ST: GET assets.json (else per-file SVGs)
+    Note over LR,ST: a reply not starting with '&lt;svg' is REJECTED —<br/>the SPA fallback returns index.html with a 200
+    LR->>VO: useLessonVoice(entry, lesson)
+    VO->>ST: GET &lt;folder&gt;/narration.json (NarrationManifest)
+    Note over VO: absent for every lesson but class10-blood ⇒<br/>ladder starts at on-device, then relay, then robot
+
+    loop each beat
+        PL->>VO: speak(fill[beatId].say + beat.narration) as ONE utterance<br/>(fill is an ARRAY looked up by beatId;<br/>no match means the bare narration)
+        PL->>VO: prime(next beat's exact string)
+        PL->>SC: beatchange → render diagram / image / graphic
+    end

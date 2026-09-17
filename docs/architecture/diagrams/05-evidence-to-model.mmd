@@ -1,0 +1,53 @@
+%% Curie — Evidence → record → model. The closed loop's data path, and where it stops.
+flowchart TB
+    subgraph SENSE["SENSE — the recorders"]
+        CLH["classLedger<br/>source 'class'"]
+        QZ["quizLedger<br/>source 'quiz'"]
+        DG["diagnosticLedger<br/>source 'diagnostic'"]
+        DOUBT["source 'doubt'<br/>LEGAL, NEVER EMITTED"]
+    end
+
+    subgraph RECORD["RECORD — packages/ledger (pure)"]
+        REC["record() — builds the envelope<br/>seq = nextSeq++, per session, from 0"]
+        OB[("ai-tutor:ledger-outbox<br/>MAX_PENDING 5000, oldest dropped")]
+        ORPH{{"no OPEN sitting?<br/>REFUSED → orphaned++"}}
+    end
+
+    subgraph DRAIN["DRAIN — lib/ledgerSync.ts"]
+        TRIG["triggers: boot · online ·<br/>visibilitychange→visible · account change"]
+        WS["writeSessions() FIRST<br/>learning_session upsert + close rpc"]
+        SEND["send() batches of 200<br/>upsert onConflict id, ignoreDuplicates"]
+        BISECT{{"22xxx/23xxx? → BISECT<br/>poison row quarantined, rejected++<br/>anything else = transient, keep ALL"}}
+    end
+
+    subgraph SERVER["Postgres — append-only by absence of policy"]
+        LE[("ledger_event<br/>unique (session_id, seq)<br/>GIN (outcome_ids) · 90d retention")]
+        LSS[("learning_session<br/>active_ms via close_learning_session ONLY")]
+    end
+
+    subgraph MODEL["MODEL — the fold"]
+        FOLD["foldSession()<br/>packages/learner-model/src/fold.ts"]
+        LM[("ai-tutor:learner-model<br/>localStorage — THE ONLY LIVE MODEL")]
+        SS[("student_state<br/>opaque jsonb blob, last-write-wins")]
+        CS[("concept_state + learner_model<br/>TABLES EXIST, NO READER, NO WRITER")]
+    end
+
+    CLH & QZ & DG --> REC
+    DOUBT -.-> REC
+    REC --> ORPH
+    ORPH -->|open| OB
+    OB --> TRIG --> WS --> SEND --> BISECT
+    BISECT -->|settled ok| LE
+    WS --> LSS
+    OB -->|"foldAppended: only events NEW to the outbox"| FOLD
+    FOLD --> LM
+    LM -->|"createLocalStore ⇒ registered with sync"| SS
+    LE -.->|"rebuildFromLedger — DEV-ONLY /model route"| FOLD
+    FOLD -.->|"NO SERVER FOLD EXISTS"| CS
+
+    classDef ok fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef warn fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    classDef dead fill:#ece7dc,stroke:#7c7565,color:#231e16,stroke-dasharray:4 3
+    class CLH,QZ,DG,REC,OB,TRIG,WS,SEND,LE,LSS,FOLD,LM ok
+    class SS,ORPH,BISECT warn
+    class DOUBT,CS dead

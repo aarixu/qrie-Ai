@@ -1,0 +1,59 @@
+%% Curie — System context: every component and every wire that crosses a process boundary.
+%% Solid = shipping path. Dotted = dev-only or unwired. Verified against the tree 2026-09-16.
+flowchart TB
+    subgraph DEVICE["📱 Student device — holds NO vendor key"]
+        PWA["apps/classroom<br/>React 19 + Vite PWA<br/>~17.6k lines"]
+        SW["sw.js<br/>offline shell"]
+        LS[("localStorage<br/>ai-tutor:*<br/>outbox · learner-model · stores")]
+        ONDEV["on-device voice<br/>Supertonic 263MB<br/>(absent in checkout)"]
+    end
+
+    subgraph EDGE["☁️ Supabase Edge Function 'relay' — the ONLY key holder"]
+        HR["handleRelay<br/>packages/relay/src/handler.ts:179"]
+        ADMIT["admit()<br/>verify identity → claim_relay<br/>gate.ts:204"]
+        HR --> ADMIT
+    end
+
+    subgraph PG["🗄️ Supabase Postgres + Storage"]
+        GOTRUE["GoTrue /auth/v1<br/>anonymous + email/password"]
+        TBL[("14 migrations<br/>ledger_event · learning_session<br/>usage_event · prepared_class<br/>student_state · relay_usage")]
+        UNWIRED[("concept_state · learner_model<br/>PROVISIONED, NO READER/WRITER")]
+        BUCKET[("Storage bucket 'classes'<br/>public, 12MB cap")]
+        CRON["pg_cron 'purge-old-ledger'<br/>19:30 UTC daily, 90d"]
+    end
+
+    subgraph VENDOR["🌐 External providers"]
+        VERTEX["Vertex AI · Gemini 3.x<br/>planner · artist · vision · image"]
+        OR["OpenRouter<br/>chat · aura-2 TTS · nova-3 STT"]
+        PIPER["tools/speech · Piper<br/>BUILT, NOT SWITCHED ON"]
+        COMMONS["Wikimedia Commons<br/>image search"]
+    end
+
+    PWA -->|"POST /api/llm · /api/hear · /api/class<br/>Bearer + x-session-id"| HR
+    PWA -->|"POST /api/ticket → signed HMAC pass"| HR
+    PWA -.->|"GET /api/speech?text=&ticket=<br/>an audio src cannot send a header"| HR
+    PWA -->|"signInAnonymously at boot"| GOTRUE
+    PWA -->|"BYPASSES RELAY: anon key + RLS<br/>prepared_class · student_state<br/>ledger_event · learning_session"| TBL
+    PWA -->|"BYPASSES RELAY: public URL, no session"| BUCKET
+    PWA --- LS
+    PWA --- SW
+    PWA -.-> ONDEV
+
+    ADMIT -->|"GET /auth/v1/user (30s cache)"| GOTRUE
+    ADMIT -->|"rpc claim_relay — FAILS CLOSED"| TBL
+    HR -->|"rpc record_usage — FAILS OPEN"| TBL
+    HR -->|"primary"| VERTEX
+    HR -->|"fallback when no service account"| OR
+    HR -.->|"only if CURIE_SPEECH_URL set"| PIPER
+    HR -->|"keepClass: files FIRST, row LAST"| BUCKET
+    HR -->|"prepared_class row"| TBL
+    PWA -->|"image search during class prep"| COMMONS
+    CRON --> TBL
+    TBL -.->|"no code path"| UNWIRED
+
+    classDef built fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef partial fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    classDef dead fill:#ece7dc,stroke:#7c7565,color:#231e16,stroke-dasharray:4 3
+    class PWA,SW,LS,HR,ADMIT,GOTRUE,TBL,BUCKET,CRON,VERTEX,OR,COMMONS built
+    class ONDEV partial
+    class PIPER,UNWIRED dead

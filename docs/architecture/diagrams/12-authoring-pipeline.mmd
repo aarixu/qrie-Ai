@@ -1,0 +1,42 @@
+%% Curie — The OFFLINE authoring pipeline. Runs on a laptop, before any student exists.
+%% Distinct from the live prepareClass path: this one writes into the repo, not into Storage.
+flowchart TB
+    subgraph LLMB["tools/llm — the ONE provider boundary"]
+        ADP["createAdapterFromEnv()<br/>LLM_PROVIDER defaults to 'openrouter'<br/>(three READMEs claim 'gemini' — CODE WINS)<br/>accepts: openrouter | gemini | anthropic | vertex"]
+        RETRY["shared retry/backoff<br/>lives here because the same 429 once killed<br/>two tools and was survived by the third"]
+        ADP --- RETRY
+    end
+
+    subgraph SYL["tools/pull-syllabus"]
+        PS["CLI"] --> PSD[("packages/syllabus/data/*.json<br/>13 NCERT syllabi")]
+    end
+
+    subgraph GG["tools/gen-graph — grows the Learning Outcome Map"]
+        G1["default pass<br/>--chapter all"] --> GD[("knowledge-graph/data/&lt;id&gt;.json<br/>5,079 nodes")]
+        G2["--probes"] --> GP[("&lt;id&gt;.probes.json<br/>4,697 probes + tagged distractors")]
+        G3["--topic-gaps<br/>ONE call per topic; new nodes may only point<br/>INSIDE their chapter (EDGES_IN_CHAPTER)"] --> GD
+        G4["--map-topics / --link-classes"] --> GD
+        STRIP{{"lessonRef + topicRef are STRIPPED from every reply —<br/>the model once invented 175 slugs pointing at lessons that never existed"}}
+        G1 --- STRIP
+    end
+
+    subgraph DL["tools/design-lesson — the lesson factory"]
+        P1["planBeats (packages/pedagogy)<br/>builds the arc"] --> P2["prompt → complete → JSON.parse"]
+        P2 --> P3["validateLesson + pedagogyIssues<br/>required = every planned `teaches`"]
+        P3 -->|"fails"| P4["ONE repair retry, fuelled by the<br/>validator's verbatim errors"]
+        P4 -->|"fails twice"| REJ[("&lt;out&gt;/lesson.rejected.json<br/>{errors, raw} — for human review")]
+        P3 -->|"passes"| OUT[("content/&lt;lesson&gt;/lesson.json")]
+    end
+
+    ADP --> PS & G1 & G2 & G3 & G4 & P2
+    PSD --> G1
+    GD --> P1
+    GD -->|"import.meta.glob eager — 406 kB chunk 'outcome-maps'"| APP["apps/classroom at runtime"]
+    OUT -->|"served as publicDir"| APP
+
+    LIVE["LIVE path: prepareClass in the browser<br/>→ dev /api/class writer → content/"] -.->|"14 of 15 committed lessons came THIS way,<br/>not from design-lesson"| OUT
+
+    classDef ok fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef warn fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    class ADP,RETRY,PS,PSD,G1,G2,G3,G4,GD,GP,P1,P2,P3,OUT,APP ok
+    class STRIP,P4,REJ,LIVE warn

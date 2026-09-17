@@ -1,0 +1,49 @@
+%% Curie — Internal import DAG. Four roots, no cycles. NO package has a build step:
+%% every packages/*/package.json points "main" and "types" straight at src/index.ts.
+%% Numbers are import counts BY PACKAGE NAME. Tools reach packages by RELATIVE PATH
+%% instead, so a "0" here does not mean dead — see pedagogy and graphics.
+flowchart BT
+    subgraph LEAVES["Roots — zero internal dependencies"]
+        LF["lesson-format<br/>75 imports"]
+        KG["knowledge-graph<br/>42"]
+        PE["persona<br/>21"]
+        LD["ledger<br/>20"]
+        SY["syllabus 6"]
+        SA["safety 6"]
+        RE["relay 3 (tests only)"]
+        LM["learner-model 8"]
+        GX["graphics<br/>0 by package name —<br/>only a relative require in<br/>the dev icon relay"]
+        PD["pedagogy<br/>0 by package name —<br/>imported by RELATIVE PATH<br/>from tools/design-lesson"]
+    end
+
+    PLY["player 13"] --> LF
+    STG["stage 5"] --> LF
+    BL["board-layout 5"] --> LF
+    DIA["diagnostic 4"] --> KG
+    DS["doubt-session 7"] --> LF
+    DS --> PE
+    TJ["tutor-judge 5"] --> PE
+    TJ -.->|"declared in package.json,<br/>NEVER imported"| SA
+    VC["voice 8"] --> PE
+    VC --> PLY
+
+    AP["action-player 5"] --> LF
+    AP --> PLY
+    AP --> OM(["@openmaic/dsl@0.10.1<br/>exact pin"])
+    CP["class-prep 9"] --> LF
+    CP --> BL
+    CP --> PE
+    TC["teacher-clone 6"] -.->|"declared, NEVER imported —<br/>its manifest type is a deliberate mirror"| VC
+    MA["maic-adapter 1"] --> AP
+    MA --> LF
+    MA --> OM
+
+    APP["apps/classroom<br/>~17.6k lines"] --> CP & STG & VC & PLY & DIA & KG & LD & LM & TJ & SA & DS & BL & LF & SY
+    APP -.->|"deep subpath into the OTHER app:<br/>@ai-tutor/agent/src/messages.ts"| AG["apps/agent"]
+
+    classDef leaf fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef mid fill:#fbf9f4,stroke:#cfc5b2,color:#231e16
+    classDef dead fill:#ece7dc,stroke:#7c7565,color:#231e16,stroke-dasharray:4 3
+    class LF,KG,PE,LD,SY,SA,RE,LM leaf
+    class PLY,STG,BL,DIA,DS,TJ,VC,AP,CP,TC,MA,APP,OM mid
+    class GX,PD,AG dead

@@ -1,0 +1,703 @@
+<title>Curie Colour Directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+  :root {
+    --paper:      #F1F0EA;
+    --paper-2:    #FBFAF6;
+    --paper-3:    #E7E5DC;
+    --ink:        #17171B;
+    --ink-2:      #4C4C54;
+    --ink-3:      #8B8B93;
+    --rule:       #D8D5CB;
+    --rule-soft:  #E3E0D6;
+    --shadow:     0 1px 2px rgba(23,23,27,.05), 0 8px 24px -12px rgba(23,23,27,.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #111217;
+      --paper-2:   #191A20;
+      --paper-3:   #22242B;
+      --ink:       #ECEBE4;
+      --ink-2:     #A6A6AF;
+      --ink-3:     #72727C;
+      --rule:      #2B2D35;
+      --rule-soft: #24262D;
+      --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #111217;
+    --paper-2:   #191A20;
+    --paper-3:   #22242B;
+    --ink:       #ECEBE4;
+    --ink-2:     #A6A6AF;
+    --ink-3:     #72727C;
+    --rule:      #2B2D35;
+    --rule-soft: #24262D;
+    --shadow:    0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding-block: 0 72px;
+    padding-inline: 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1080px; margin-inline: auto; }
+
+  h1, h2, h3, .disp {
+    font-family: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+  .eyebrow {
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ---------- masthead ---------- */
+  header.top {
+    border-bottom: 1.5px solid var(--ink);
+    padding-block: 40px 20px;
+    margin-bottom: 36px;
+  }
+  header.top h1 { font-size: clamp(34px, 6.2vw, 58px); line-height: 1.02; }
+  header.top .sub {
+    color: var(--ink-2);
+    max-width: 62ch;
+    margin-top: 14px;
+    font-size: 17px;
+  }
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 8px 22px;
+    margin-top: 20px;
+  }
+  .meta-row span { font-size: 12px; }
+
+  /* ---------- the conflict panel ---------- */
+  .conflict {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 24px;
+    margin-bottom: 52px;
+    box-shadow: var(--shadow);
+  }
+  .conflict h2 { font-size: 20px; margin-bottom: 6px; }
+  .conflict p { color: var(--ink-2); font-size: 15px; margin: 0 0 18px; max-width: 68ch; }
+  .three {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+  }
+  .three > div {
+    border-top: 3px solid var(--c);
+    padding-top: 10px;
+  }
+  .three strong { font-family: "Bricolage Grotesque", Arial, sans-serif; font-size: 13px; display: block; }
+  .three code { font-size: 12px; color: var(--ink-3); }
+  .three em { font-style: normal; color: var(--ink-2); font-size: 13px; display: block; margin-top: 4px; }
+
+  /* ---------- direction ---------- */
+  .dir {
+    border-top: 1.5px solid var(--ink);
+    padding-top: 26px;
+    margin-bottom: 64px;
+  }
+  .dir-head {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .dir-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px; font-weight: 700;
+    color: var(--ink-3);
+  }
+  .dir h2 { font-size: clamp(26px, 4.4vw, 36px); }
+  .pick {
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+    font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    background: var(--ink); color: var(--paper);
+    padding: 4px 9px; border-radius: 2px;
+  }
+  .thesis {
+    font-size: 19px; line-height: 1.45; color: var(--ink);
+    max-width: 60ch; margin: 0 0 26px;
+  }
+
+  /* palette strip */
+  .swatches { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 26px; border: 1px solid var(--rule); }
+  .sw { flex: 1 1 108px; min-width: 96px; }
+  .sw-chip { height: 76px; }
+  .sw-label { padding: 8px 9px 10px; background: var(--paper-2); border-top: 1px solid var(--rule); }
+  .sw-label b { display: block; font-family: "Bricolage Grotesque", Arial, sans-serif; font-size: 12px; font-weight: 700; }
+  .sw-label span { font-size: 10.5px; color: var(--ink-3); }
+
+  /* preview grid */
+  .preview {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+  @media (max-width: 720px) { .preview { grid-template-columns: 1fr; } }
+
+  .plate {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+  .plate-cap {
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .plate-body { padding: 22px; display: flex; align-items: center; justify-content: center; min-height: 236px; }
+
+  /* the mark */
+  .mark-set { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center; }
+  .mark-tile {
+    width: 92px; height: 92px; border-radius: 20px;
+    display: grid; place-items: center;
+    flex: 0 0 auto;
+  }
+  .wordmark {
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+    font-weight: 800; font-size: 34px; letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .wordmark small {
+    display: block; font-size: 10px; font-weight: 700;
+    letter-spacing: .18em; text-transform: uppercase;
+    margin-top: 6px; opacity: .72;
+  }
+
+  /* phone mock */
+  .phone {
+    width: 186px; border-radius: 22px; overflow: hidden;
+    border: 1px solid rgba(0,0,0,.18);
+    box-shadow: 0 10px 30px -14px rgba(0,0,0,.45);
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+  }
+  .ph-bar { display: flex; align-items: center; gap: 6px; padding: 9px 11px; font-size: 9.5px; font-weight: 700; }
+  .ph-dot { width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto; }
+  .ph-board { padding: 14px 12px 12px; min-height: 104px; }
+  .ph-fig { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .ph-circ { width: 34px; height: 34px; border-radius: 50%; flex: 0 0 auto; }
+  .ph-lines { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+  .ph-line { height: 5px; border-radius: 3px; }
+  .ph-say { font-size: 9px; line-height: 1.45; font-weight: 500; }
+  .ph-chips { display: flex; gap: 5px; padding: 0 12px 14px; }
+  .ph-chip { font-size: 8.5px; font-weight: 700; padding: 5px 8px; border-radius: 20px; }
+
+  /* case / risk */
+  .cols {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px; margin-bottom: 22px;
+  }
+  .cols h3 { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; margin-bottom: 8px; }
+  .cols ul { margin: 0; padding-left: 17px; }
+  .cols li { margin-bottom: 7px; font-size: 15px; color: var(--ink-2); }
+  .cols li b { color: var(--ink); font-weight: 600; }
+
+  /* refs */
+  .refs { border-top: 1px solid var(--rule-soft); padding-top: 16px; }
+  .refs .eyebrow { display: block; margin-bottom: 10px; }
+  .ref-list { display: flex; flex-wrap: wrap; gap: 7px; }
+  .ref-list a {
+    font-family: "Bricolage Grotesque", Arial, sans-serif;
+    font-size: 12.5px; font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid var(--rule);
+    background: var(--paper-2);
+    border-radius: 2px;
+    padding: 6px 11px;
+    transition: background .14s ease, border-color .14s ease;
+  }
+  .ref-list a::after { content: " ↗"; color: var(--ink-3); font-size: 10px; }
+  .ref-list a:hover { background: var(--paper-3); border-color: var(--ink-3); }
+  .ref-list a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  /* closing */
+  .close {
+    border-top: 1.5px solid var(--ink);
+    padding-top: 28px;
+  }
+  .close h2 { font-size: 26px; margin-bottom: 12px; }
+  .close p { color: var(--ink-2); max-width: 66ch; }
+  .close p b { color: var(--ink); font-weight: 600; }
+  .asks { margin-top: 22px; padding: 18px 20px; background: var(--paper-2); border: 1px solid var(--rule); border-radius: 3px; }
+  .asks h3 { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; margin-bottom: 10px; }
+  .asks ol { margin: 0; padding-left: 20px; }
+  .asks li { margin-bottom: 8px; font-size: 15px; }
+
+  .avoid-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">Brand direction &middot; pick one before anything is drawn</div>
+    <h1>Four colour worlds<br>for Curie</h1>
+    <p class="sub">A live AI tutor for Class&nbsp;6&ndash;12 in India. Hinglish narration, studied at&nbsp;9pm on a shared phone, mostly on Android hardware under &#8377;12,000. Every direction below is judged against <em>those</em> constraints, not against how it looks on a desktop monitor.</p>
+    <div class="meta-row eyebrow">
+      <span>16 Sept 2026</span>
+      <span>4 directions</span>
+      <span>17 Dribbble references, all live links</span>
+    </div>
+  </header>
+
+  <section class="conflict">
+    <h2 class="disp">You currently have three brands, not one</h2>
+    <p>Before choosing a new direction, this is what ships today. Three files, three unrelated stories. Whichever way we go, this gets resolved to one.</p>
+    <div class="three">
+      <div style="--c:#F3B84D">
+        <strong>The app palette</strong>
+        <code class="mono">theme.css</code>
+        <em>Amber #F3B84D on cream #FDF6EA, warm near-black buttons. Contrast-tested: amber carries dark text at 9:1.</em>
+      </div>
+      <div style="--c:#4648D4">
+        <strong>The logo</strong>
+        <code class="mono">content/icon.svg</code>
+        <em>Indigo #4648D4 atom mark, white orbits. Shares nothing with the app it launches.</em>
+      </div>
+      <div style="--c:#F7F9FB">
+        <strong>The install theme</strong>
+        <code class="mono">manifest.webmanifest</code>
+        <em>Near-white #F7F9FB. Neutral by default rather than by decision.</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 01 ══════════════ -->
+  <section class="dir" style="--a:#E8992A; --b:#262A78; --c:#C1492A; --d:#4C7A47; --pap:#FBF4E6; --ink0:#1E1B14;">
+    <div class="dir-head">
+      <span class="dir-num">01</span>
+      <h2>Marigold &amp; Indigo</h2>
+      <span class="pick">Recommended</span>
+    </div>
+    <p class="thesis">The only direction here you could actually own. Indian colour without costume &mdash; and it settles the amber-versus-indigo fight instead of throwing one of them away.</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:#E8992A"></div><div class="sw-label"><b>Marigold</b><span class="mono">#E8992A</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#262A78"></div><div class="sw-label"><b>Indigo</b><span class="mono">#262A78</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#C1492A"></div><div class="sw-label"><b>Terracotta</b><span class="mono">#C1492A</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#4C7A47"></div><div class="sw-label"><b>Neem</b><span class="mono">#4C7A47</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FBF4E6"></div><div class="sw-label"><b>Paper</b><span class="mono">#FBF4E6</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#1E1B14"></div><div class="sw-label"><b>Ink</b><span class="mono">#1E1B14</span></div></div>
+    </div>
+
+    <div class="preview">
+      <div class="plate">
+        <div class="plate-cap">The mark</div>
+        <div class="plate-body" style="background:#FBF4E6">
+          <div class="mark-set">
+            <div class="mark-tile" style="background:#262A78">
+              <svg width="56" height="56" viewBox="-16 -16 32 32" role="img" aria-label="Curie mark in marigold on indigo">
+                <g fill="none" stroke="#E8992A" stroke-width="2.4">
+                  <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
+                  <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+                </g>
+                <circle r="4" fill="#E8992A"/>
+                <circle cx="9.9" cy="-9.9" r="2.2" fill="#C1492A"/>
+              </svg>
+            </div>
+            <div class="wordmark" style="color:#262A78">curie<small style="color:#C1492A">Padhai, apni bhasha mein</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="plate">
+        <div class="plate-cap">In the room</div>
+        <div class="plate-body" style="background:#EFE7D4">
+          <div class="phone" style="background:#FBF4E6">
+            <div class="ph-bar" style="background:#262A78;color:#FBF4E6">
+              <div class="ph-dot" style="background:#E8992A"></div>Life Processes &middot; Beat 4
+            </div>
+            <div class="ph-board">
+              <div class="ph-fig">
+                <div class="ph-circ" style="background:#C1492A"></div>
+                <div class="ph-lines">
+                  <div class="ph-line" style="background:#E8992A;width:88%"></div>
+                  <div class="ph-line" style="background:#4C7A47;width:62%"></div>
+                  <div class="ph-line" style="background:#DCD2BB;width:74%"></div>
+                </div>
+              </div>
+              <div class="ph-say" style="color:#1E1B14">&ldquo;Dekho &mdash; heart ke do side hain. Left side mein oxygen wala blood&hellip;&rdquo;</div>
+            </div>
+            <div class="ph-chips">
+              <div class="ph-chip" style="background:#262A78;color:#FBF4E6">Left</div>
+              <div class="ph-chip" style="background:#F2E4C6;color:#1E1B14">Right</div>
+              <div class="ph-chip" style="background:#E8992A;color:#1E1B14">&#9995; Doubt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Why this one</h3>
+        <ul>
+          <li><b>It is ownable.</b> Every Indian edtech app is blue or purple, copied from Western SaaS. Marigold and indigo are read instantly as Indian by the parent paying, without a single paisley.</li>
+          <li><b>It keeps work you already paid for.</b> The amber in <span class="mono">theme.css</span> was contrast-tested at 9:1 with dark text; the indigo is your existing logo. Nothing is discarded.</li>
+          <li><b>It survives cheap screens.</b> Saturated warm hues hold up on low-grade LCD panels, where dark greys band and neons blow out.</li>
+          <li><b>Warmth reads as trustworthy</b> to the buyer, which for Class 6&ndash;12 in India is almost always a parent.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The risk</h3>
+        <ul>
+          <li><b>Warmth can read young.</b> A Class 11 student must not feel handed a toy. The type has to carry the seriousness the colour will not &mdash; tight, confident grotesque, never rounded.</li>
+          <li><b>Marigold is close to the festival palette</b> everything in India uses in October. Restraint on how much of it appears at once is what keeps it a brand rather than a season.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="refs">
+      <span class="eyebrow">References &mdash; warm-Indian palettes that stay premium</span>
+      <div class="ref-list">
+        <a href="https://dribbble.com/shots/27709429-Aartin-Lighting-Brand-Brand-Identity" target="_blank" rel="noopener">Aartin &mdash; lighting brand identity</a>
+        <a href="https://dribbble.com/shots/27578960-Centre-for-Budget-and-Policy-Studies-Branding-Website" target="_blank" rel="noopener">Centre for Budget &amp; Policy Studies</a>
+        <a href="https://dribbble.com/shots/27551595-HDFC-Tru-Responsive-Website-Wealth-Services" target="_blank" rel="noopener">HDFC Tru</a>
+        <a href="https://dribbble.com/shots/27265108-WILD-ORCHARD-Wild-Harvest-Pure-Joy-by-Up-Brands" target="_blank" rel="noopener">Wild Orchard</a>
+        <a href="https://dribbble.com/shots/27679434-4-The-Foodies-Playful-Food-Brand-Identity" target="_blank" rel="noopener">4 The Foodies</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 02 ══════════════ -->
+  <section class="dir">
+    <div class="dir-head">
+      <span class="dir-num">02</span>
+      <h2>Slate &amp; Signal</h2>
+    </div>
+    <p class="thesis">Class happens at nine at night, on a phone, in a room with other people in it. Design for that, not for a classroom at eleven in the morning.</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:#0F1319"></div><div class="sw-label"><b>Slate</b><span class="mono">#0F1319</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#1B212B"></div><div class="sw-label"><b>Board</b><span class="mono">#1B212B</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#C6F24E"></div><div class="sw-label"><b>Signal</b><span class="mono">#C6F24E</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FF6B3D"></div><div class="sw-label"><b>Ember</b><span class="mono">#FF6B3D</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#7E8FA6"></div><div class="sw-label"><b>Haze</b><span class="mono">#7E8FA6</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#EDEEE8"></div><div class="sw-label"><b>Chalk</b><span class="mono">#EDEEE8</span></div></div>
+    </div>
+
+    <div class="preview">
+      <div class="plate">
+        <div class="plate-cap">The mark</div>
+        <div class="plate-body" style="background:#0F1319">
+          <div class="mark-set">
+            <div class="mark-tile" style="background:#C6F24E">
+              <svg width="56" height="56" viewBox="-16 -16 32 32" role="img" aria-label="Curie mark in slate on signal lime">
+                <g fill="none" stroke="#0F1319" stroke-width="2.6">
+                  <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
+                  <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+                </g>
+                <circle r="4" fill="#0F1319"/>
+                <circle cx="9.9" cy="-9.9" r="2.2" fill="#FF6B3D"/>
+              </svg>
+            </div>
+            <div class="wordmark" style="color:#EDEEE8">curie<small style="color:#C6F24E">Ask anything. Any time.</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="plate">
+        <div class="plate-cap">In the room</div>
+        <div class="plate-body" style="background:#070A0E">
+          <div class="phone" style="background:#0F1319; border-color:rgba(255,255,255,.14)">
+            <div class="ph-bar" style="background:#1B212B;color:#EDEEE8">
+              <div class="ph-dot" style="background:#C6F24E"></div>Life Processes &middot; Beat 4
+            </div>
+            <div class="ph-board">
+              <div class="ph-fig">
+                <div class="ph-circ" style="background:#FF6B3D"></div>
+                <div class="ph-lines">
+                  <div class="ph-line" style="background:#C6F24E;width:88%"></div>
+                  <div class="ph-line" style="background:#7E8FA6;width:62%"></div>
+                  <div class="ph-line" style="background:#2A323E;width:74%"></div>
+                </div>
+              </div>
+              <div class="ph-say" style="color:#EDEEE8">&ldquo;Dekho &mdash; heart ke do side hain. Left side mein oxygen wala blood&hellip;&rdquo;</div>
+            </div>
+            <div class="ph-chips">
+              <div class="ph-chip" style="background:#C6F24E;color:#0F1319">Left</div>
+              <div class="ph-chip" style="background:#1B212B;color:#EDEEE8">Right</div>
+              <div class="ph-chip" style="background:#FF6B3D;color:#0F1319">&#9995; Doubt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Why it could win</h3>
+        <ul>
+          <li><b>It matches when the product is used.</b> Evening study, low light, one hand on the phone.</li>
+          <li><b>Lime on slate is genuinely unused</b> in Indian K&ndash;12. It would be the most eye-catching thing in the Play Store category by a distance.</li>
+          <li><b>It does not look like school</b>, which is the single loudest thing a fifteen-year-old cares about.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The risk &mdash; and it is real</h3>
+        <ul>
+          <li><b>Your target phones are mostly LCD, not OLED.</b> So there is no battery saving, and near-black greys band and go muddy on cheap panels. The main technical argument for dark-first does not apply to your hardware.</li>
+          <li><b>It fights your existing artwork.</b> Every generated diagram and every Wikimedia Commons image was fetched for a light board. Going dark means re-verifying the whole picture ladder.</li>
+          <li><b>Parents are the buyers</b>, and a black app with acid green is not what reassures a parent deciding on a subscription.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="refs">
+      <span class="eyebrow">References &mdash; dark grounds with one hot signal</span>
+      <div class="ref-list">
+        <a href="https://dribbble.com/shots/27496864-Blackfish-Brand-Identity" target="_blank" rel="noopener">Blackfish identity</a>
+        <a href="https://dribbble.com/shots/27716792-Cubee-Solar-Energy-App-Redesign-Brand-Identity" target="_blank" rel="noopener">Cubee &mdash; solar app rebrand</a>
+        <a href="https://dribbble.com/shots/27594533-Independent-Editorial-Platform-UX-UI-Design-Art-Direction" target="_blank" rel="noopener">Independent editorial platform</a>
+        <a href="https://dribbble.com/shots/23757309-Neo-brutalism-learning-web-design" target="_blank" rel="noopener">Neo-brutalist learning web</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 03 ══════════════ -->
+  <section class="dir">
+    <div class="dir-head">
+      <span class="dir-num">03</span>
+      <h2>Riso Pop</h2>
+    </div>
+    <p class="thesis">Two flat fluorescent inks, overprinted, on newsprint. It is the cheapest thing on this page to render and the loudest thing on this page to look at.</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:#FF48A0"></div><div class="sw-label"><b>Fluoro pink</b><span class="mono">#FF48A0</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#0B5FD9"></div><div class="sw-label"><b>Riso blue</b><span class="mono">#0B5FD9</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FFD21E"></div><div class="sw-label"><b>Riso yellow</b><span class="mono">#FFD21E</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#2F9E6B"></div><div class="sw-label"><b>Overprint</b><span class="mono">#2F9E6B</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FAF7F0"></div><div class="sw-label"><b>Newsprint</b><span class="mono">#FAF7F0</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#17171D"></div><div class="sw-label"><b>Ink</b><span class="mono">#17171D</span></div></div>
+    </div>
+
+    <div class="preview">
+      <div class="plate">
+        <div class="plate-cap">The mark</div>
+        <div class="plate-body" style="background:#FAF7F0">
+          <div class="mark-set">
+            <div class="mark-tile" style="background:#FFD21E; border-radius:0">
+              <svg width="56" height="56" viewBox="-16 -16 32 32" role="img" aria-label="Curie mark overprinted in riso blue and fluoro pink">
+                <g fill="none" stroke-width="2.8">
+                  <ellipse rx="14" ry="6.2" transform="rotate(45)" stroke="#0B5FD9"/>
+                  <ellipse rx="14" ry="6.2" transform="rotate(-45)" stroke="#FF48A0"/>
+                </g>
+                <circle r="4" fill="#17171D"/>
+                <circle cx="9.9" cy="-9.9" r="2.2" fill="#FF48A0"/>
+              </svg>
+            </div>
+            <div class="wordmark" style="color:#0B5FD9">curie<small style="color:#FF48A0">One class. One doubt. Done.</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="plate">
+        <div class="plate-cap">In the room</div>
+        <div class="plate-body" style="background:#EDE8DC">
+          <div class="phone" style="background:#FAF7F0; border-radius:4px; border:2px solid #17171D">
+            <div class="ph-bar" style="background:#FFD21E;color:#17171D;border-bottom:2px solid #17171D">
+              <div class="ph-dot" style="background:#FF48A0;border:1.5px solid #17171D"></div>Life Processes &middot; Beat 4
+            </div>
+            <div class="ph-board">
+              <div class="ph-fig">
+                <div class="ph-circ" style="background:#FF48A0;border:2px solid #17171D"></div>
+                <div class="ph-lines">
+                  <div class="ph-line" style="background:#0B5FD9;width:88%"></div>
+                  <div class="ph-line" style="background:#2F9E6B;width:62%"></div>
+                  <div class="ph-line" style="background:#DFD8C8;width:74%"></div>
+                </div>
+              </div>
+              <div class="ph-say" style="color:#17171D">&ldquo;Dekho &mdash; heart ke do side hain. Left side mein oxygen wala blood&hellip;&rdquo;</div>
+            </div>
+            <div class="ph-chips">
+              <div class="ph-chip" style="background:#0B5FD9;color:#FAF7F0;border-radius:3px">Left</div>
+              <div class="ph-chip" style="background:#FAF7F0;color:#17171D;border:2px solid #17171D;border-radius:3px">Right</div>
+              <div class="ph-chip" style="background:#FF48A0;color:#17171D;border-radius:3px">&#9995; Doubt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Why it could win</h3>
+        <ul>
+          <li><b>Flat colour is nearly free to render.</b> No gradients, no shadows &mdash; tiny SVGs, small downloads, fast paint on a slow phone. Colour choice is a performance decision here, not only an aesthetic one.</li>
+          <li><b>It rescues machine-made artwork.</b> Your diagrams are planned and drawn by a model. In a riso system, flat and slightly crude reads as <em>style</em> rather than as a limitation.</li>
+          <li><b>Nobody in the category is near it.</b></li>
+        </ul>
+      </div>
+      <div>
+        <h3>The risk</h3>
+        <ul>
+          <li><b>Fluorescents fail contrast fast.</b> Pink on newsprint will not clear 4.5:1 for body text, so the palette has to be policed constantly &mdash; the opposite of the amber decision you already made carefully.</li>
+          <li><b>It reads as a zine, not as a tutor.</b> Charming to a designer, harder to justify to a parent paying every month.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="refs">
+      <span class="eyebrow">References &mdash; flat inks, overprint, print energy</span>
+      <div class="ref-list">
+        <a href="https://dribbble.com/shots/26518002-kitten-glow-milky-skincare" target="_blank" rel="noopener">Kitten Glow</a>
+        <a href="https://dribbble.com/shots/27416957-SERAPH-The-Banknote-Was-Always-a-Design-Object" target="_blank" rel="noopener">Seraph &mdash; banknote as object</a>
+        <a href="https://dribbble.com/shots/27601184-Kudamono-Fruit-Snack-Brand-Identity-Packaging-Design" target="_blank" rel="noopener">Kudamono packaging</a>
+        <a href="https://dribbble.com/shots/27225200-KALEIDOSCOPE-Magical-Realism-for-Your-Mind-by-Up-Brands" target="_blank" rel="noopener">Kaleidoscope</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ 04 ══════════════ -->
+  <section class="dir">
+    <div class="dir-head">
+      <span class="dir-num">04</span>
+      <h2>Neo-Brutal Classroom</h2>
+    </div>
+    <p class="thesis">Thick black outlines, hard shadows, no gradient anywhere. Confident, cheap to draw, and unmistakably not a corporate learning platform.</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="sw-chip" style="background:#FFE44D"></div><div class="sw-label"><b>Acid</b><span class="mono">#FFE44D</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#2B57FF"></div><div class="sw-label"><b>True blue</b><span class="mono">#2B57FF</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FF3B30"></div><div class="sw-label"><b>Signal red</b><span class="mono">#FF3B30</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#00C98D"></div><div class="sw-label"><b>Mint</b><span class="mono">#00C98D</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#FFFDF5"></div><div class="sw-label"><b>Bone</b><span class="mono">#FFFDF5</span></div></div>
+      <div class="sw"><div class="sw-chip" style="background:#0A0A0A"></div><div class="sw-label"><b>Black</b><span class="mono">#0A0A0A</span></div></div>
+    </div>
+
+    <div class="preview">
+      <div class="plate">
+        <div class="plate-cap">The mark</div>
+        <div class="plate-body" style="background:#FFFDF5">
+          <div class="mark-set">
+            <div class="mark-tile" style="background:#2B57FF; border-radius:8px; border:3px solid #0A0A0A; box-shadow:5px 5px 0 #0A0A0A">
+              <svg width="54" height="54" viewBox="-16 -16 32 32" role="img" aria-label="Curie mark outlined in black on true blue">
+                <g fill="none" stroke="#0A0A0A" stroke-width="3.2">
+                  <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
+                  <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+                </g>
+                <circle r="4.4" fill="#FFE44D" stroke="#0A0A0A" stroke-width="2"/>
+                <circle cx="9.9" cy="-9.9" r="2.6" fill="#FF3B30" stroke="#0A0A0A" stroke-width="1.6"/>
+              </svg>
+            </div>
+            <div class="wordmark" style="color:#0A0A0A">curie<small style="color:#2B57FF">Hand up. Answer down.</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="plate">
+        <div class="plate-cap">In the room</div>
+        <div class="plate-body" style="background:#F0EDE0">
+          <div class="phone" style="background:#FFFDF5; border-radius:6px; border:3px solid #0A0A0A; box-shadow:6px 6px 0 #0A0A0A">
+            <div class="ph-bar" style="background:#FFE44D;color:#0A0A0A;border-bottom:3px solid #0A0A0A">
+              <div class="ph-dot" style="background:#FF3B30;border:2px solid #0A0A0A"></div>Life Processes &middot; Beat 4
+            </div>
+            <div class="ph-board">
+              <div class="ph-fig">
+                <div class="ph-circ" style="background:#00C98D;border:2.5px solid #0A0A0A"></div>
+                <div class="ph-lines">
+                  <div class="ph-line" style="background:#2B57FF;width:88%"></div>
+                  <div class="ph-line" style="background:#FF3B30;width:62%"></div>
+                  <div class="ph-line" style="background:#E2DECB;width:74%"></div>
+                </div>
+              </div>
+              <div class="ph-say" style="color:#0A0A0A">&ldquo;Dekho &mdash; heart ke do side hain. Left side mein oxygen wala blood&hellip;&rdquo;</div>
+            </div>
+            <div class="ph-chips">
+              <div class="ph-chip" style="background:#2B57FF;color:#FFFDF5;border:2px solid #0A0A0A;border-radius:4px">Left</div>
+              <div class="ph-chip" style="background:#FFFDF5;color:#0A0A0A;border:2px solid #0A0A0A;border-radius:4px">Right</div>
+              <div class="ph-chip" style="background:#FF3B30;color:#FFFDF5;border:2px solid #0A0A0A;border-radius:4px">&#9995; Doubt</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <h3>Why it could win</h3>
+        <ul>
+          <li><b>Maximum legibility on a small screen.</b> Thick outlines and hard edges survive a 5-inch display and a cracked screen protector better than anything else here.</li>
+          <li><b>It hides weak artwork</b> the same way riso does &mdash; an outline system makes everything inside the outline look intentional.</li>
+          <li><b>It is the cheapest to build.</b> No shadows to tune, no gradients to test, two border widths and you have a design system.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The risk</h3>
+        <ul>
+          <li><b>It reads as a toy to the person paying.</b> Of the four, this is the hardest to put in front of a parent or a school principal.</li>
+          <li><b>The trend has peaked.</b> It is already dated in 2026, and a brand you hope to run for a decade should not be timestamped this precisely.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="refs">
+      <span class="eyebrow">References &mdash; outline systems, hard shadow, flat colour</span>
+      <div class="ref-list">
+        <a href="https://dribbble.com/shots/25034809-Dynamic-Branding-in-NeoBrutalism-A-Bold-Identity-for-a-Startup" target="_blank" rel="noopener">Dynamic branding in neo-brutalism</a>
+        <a href="https://dribbble.com/shots/19938319-Neo-Brutalism-UI-trend-Gojek" target="_blank" rel="noopener">Gojek neo-brutalist UI</a>
+        <a href="https://dribbble.com/shots/21939925-This-is-Neo-Brutalism" target="_blank" rel="noopener">This is Neo-Brutalism</a>
+        <a href="https://dribbble.com/shots/25484234-Neo-brutalism-mobile-app-concept" target="_blank" rel="noopener">Neo-brutalist mobile concept</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════ close ══════════════ -->
+  <section class="close">
+    <h2 class="disp">Where I land</h2>
+    <p><b>01, Marigold &amp; Indigo</b> &mdash; with the confidence of 04 borrowed for the mark and the chips, and none of its outlines in the lesson itself.</p>
+    <p style="margin-top:14px">It is the only one of the four that is <em>ownable</em> rather than borrowed from a trend, it is the only one that keeps the contrast work already done in <span class="mono">theme.css</span>, and it is the only one that makes a parent and a fifteen-year-old both comfortable &mdash; which matters because one of them chooses and the other uses.</p>
+    <p style="margin-top:14px">02 is the most exciting and the most wrong for your hardware. 03 and 04 are both real options if you want to be loud, and both cost you the accessibility discipline you have already built.</p>
+
+    <div class="asks">
+      <h3>To finish this, I need two things from you</h3>
+      <ol>
+        <li><b>The Vercel URL</b> of the site you already have, so the redesign replaces it rather than competing with it. It is not referenced anywhere in the repo.</li>
+        <li><b>The logo file</b> if you have a version beyond <span class="mono">content/icon.svg</span> &mdash; an original vector, any wordmark, anything you paid for.</li>
+      </ol>
+    </div>
+
+    <div style="margin-top:28px; padding-top:18px; border-top:1px solid var(--rule-soft)">
+      <span class="eyebrow">For contrast &mdash; the look every AI edtech brand currently has, which none of the four above is</span>
+      <div class="ref-list avoid-list">
+        <a href="https://dribbble.com/shots/26348058-Education-Logo-Branding-BrightPath-AI" target="_blank" rel="noopener">BrightPath AI</a>
+        <a href="https://dribbble.com/shots/27518212-Brand-Identity-Design-Logo-Design-for-AI-EdTech-Startups" target="_blank" rel="noopener">AI EdTech startup identities</a>
+        <a href="https://dribbble.com/shots/26800149-AI-Powered-Education-App-Branding-Scalora" target="_blank" rel="noopener">Scalora</a>
+        <a href="https://dribbble.com/shots/27594840-Brand-Identity-Design-Blomind-App" target="_blank" rel="noopener">Blomind</a>
+      </div>
+    </div>
+  </section>
+
+</div>

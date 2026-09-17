@@ -1,0 +1,48 @@
+%% Curie — Preparing a COLD class live. ~14s to first frame, ~96s full (measured 2026-09-13, ₹18.98).
+%% Every LLM hop goes through the relay; the browser never holds a vendor key.
+sequenceDiagram
+    autonumber
+    actor S as Student
+    participant LC as LiveClassRoute
+    participant PC as packages/class-prep<br/>prepareClass
+    participant RL as relay /api/llm
+    participant VX as Vertex AI
+    participant WC as Wikimedia Commons
+    participant API as relay /api/class
+    participant PGS as Postgres + Storage
+
+    S->>LC: taps a cold topic
+    LC->>PC: prepareLiveClass(topicRef, outcomes, studentLines)
+    PC->>RL: planner call (gemini-3.7-flash, json_object)
+    RL->>VX: generateContent
+    VX-->>RL: blueprint JSON
+    RL-->>PC: OpenAiReply
+    Note over PC: parsePlan → unreadable JSON?<br/>ONE re-ask, then throw
+    PC->>PC: dropInventedOutcomes (invented id = dropped, never repaired)
+    PC->>PC: assemble → layoutBeat → validateLesson
+    alt validation or classMustAsk fails
+        PC->>RL: ONE repair round with up to 10 NAMED problems
+    end
+    PC-->>LC: onDraft(lesson) — THE ROOM OPENS HERE (~14s)
+    LC-->>S: class starts; artwork streams in behind
+
+    par picture ladder (cheapest first)
+        PC->>WC: search
+        WC-->>PC: candidates
+        PC->>PC: mayReuse — ABSENT licence = refusal (fails closed)
+        PC->>RL: eyes.look (vision verify, max 3 tries)
+    and generated fallback
+        PC->>RL: imageArtist.draw → data:image
+        PC->>RL: eyes.look → ONE redraw only if a NAMED fault
+    end
+    PC->>PC: verifySvg → unsafeMarkup (REJECT, never sanitise)
+    PC-->>LC: onAsset per landed picture
+    PC->>PC: assemble (re-fit with real art)
+
+    Note over LC: class ends
+    LC->>LC: saveable() — 4 refusals: personal name,<br/>shared-past phrase, incomplete, failed visual
+    LC->>API: POST SavedClass
+    API->>API: checkSavedClass (id slug, ≤24 files, ≤12MB, markup gate)
+    API->>PGS: files to Storage FIRST
+    API->>PGS: prepared_class row LAST (ignore-duplicates)
+    Note over PGS: row last ⇒ a partial failure leaves<br/>invisible files, never a broken catalogue entry

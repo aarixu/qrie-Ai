@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Curie — System Architecture Diagram</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f4f1ea;color:#231e16;
+       font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
+  .wrap{max-width:1700px;margin:0 auto;padding:18px}
+  svg{width:100%;height:auto;display:block;background:#fbf9f4;
+      border:1px solid #d8d0c2;border-radius:10px}
+  .hint{font-size:13px;color:#6b6455;margin:10px 2px 0}
+  @media print{body{background:#fff}.hint{display:none}svg{border:none}@page{size:A3 landscape;margin:8mm}}
+</style></head><body><div class="wrap">
+<svg viewBox="0 0 1660 1180" role="img" aria-label="Curie system architecture: device, relay, providers and Supabase, with every data flow labelled">
+<defs>
+  <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3.4" orient="auto">
+    <path d="M0,0 L8,3.4 L0,6.8 Z" fill="#5d5648"/></marker>
+  <marker id="ab" markerWidth="10" markerHeight="10" refX="8" refY="3.4" orient="auto">
+    <path d="M0,0 L8,3.4 L0,6.8 Z" fill="#b3261e"/></marker>
+  <marker id="ag" markerWidth="10" markerHeight="10" refX="8" refY="3.4" orient="auto">
+    <path d="M0,0 L8,3.4 L0,6.8 Z" fill="#2c7a54"/></marker>
+</defs>
+<style>
+  .t{font-family:"Segoe UI",system-ui,sans-serif}
+  .m{font-family:"JetBrains Mono",Consolas,monospace}
+  .h1{font-size:30px;font-weight:800;fill:#231e16}
+  .h2{font-size:13px;font-weight:700;fill:#0e6e6e;letter-spacing:2.2px}
+  .sub{font-size:14px;fill:#5d5648}
+  .bx{font-size:14px;font-weight:700;fill:#231e16}
+  .sm{font-size:11.5px;fill:#5d5648}
+  .lbl{font-size:11px;fill:#5d5648}
+  .lblb{font-size:11px;fill:#b3261e;font-weight:700}
+  .grp{fill:none;stroke:#cfc5b2;stroke-width:1.5;rx:14}
+  .live{fill:#e3efe7;stroke:#2c7a54;stroke-width:1.6;rx:9}
+  .warn{fill:#f6e9d2;stroke:#a9660f;stroke-width:1.6;rx:9}
+  .dead{fill:#ece7dc;stroke:#7c7565;stroke-width:1.5;stroke-dasharray:5 4;rx:9}
+  .store{fill:#fbf9f4;stroke:#8a8271;stroke-width:1.5;rx:7}
+  .key{fill:#dceae8;stroke:#0e6e6e;stroke-width:2;rx:9}
+  .ln{stroke:#5d5648;stroke-width:1.7;fill:none}
+  .lnb{stroke:#b3261e;stroke-width:2.2;fill:none}
+  .lng{stroke:#2c7a54;stroke-width:1.7;fill:none}
+  .lnd{stroke:#7c7565;stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+</style>
+
+<text class="t h1" x="34" y="46">Curie — System Architecture</text>
+<text class="t sub" x="34" y="70">A pre-recorded class on a phone with a live AI tutor one tap away. Verified against the tree, 2026-09-16.</text>
+
+<rect x="1170" y="22" width="458" height="86" fill="#fbf9f4" stroke="#cfc5b2" stroke-width="1.2" rx="9"/>
+<rect x="1186" y="38" width="15" height="12" class="live"/><text class="t sm" x="1208" y="49">live in production</text>
+<rect x="1186" y="58" width="15" height="12" class="warn"/><text class="t sm" x="1208" y="69">built, not switched on</text>
+<rect x="1186" y="78" width="15" height="12" class="dead"/><text class="t sm" x="1208" y="89">written, unwired / dev-only</text>
+<line x1="1392" y1="44" x2="1424" y2="44" class="lnb" marker-end="url(#ab)"/>
+<text class="t sm" x="1432" y="48">bypasses the relay</text>
+<line x1="1392" y1="70" x2="1424" y2="70" class="ln" marker-end="url(#a)"/>
+<text class="t sm" x="1432" y="74">through the relay</text>
+<rect class="grp" x="30" y="125" width="520" height="470"/>
+<text class="t h2" x="48" y="152">STUDENT DEVICE — browser / installed PWA</text>
+<text class="t sm" x="48" y="170">Holds no vendor key. localStorage is the source of truth; the cloud is a copy.</text>
+
+<rect class="live" x="48" y="182" width="484" height="50"/>
+<text class="t bx" x="62" y="203">apps/classroom</text>
+<text class="m sm" x="62" y="220">React 19 + Vite PWA · ~17,600 lines · 14 screens · "the app is wiring"</text>
+
+<rect class="live" x="48" y="246" width="232" height="52"/>
+<text class="t bx" x="60" y="266">PlayerController + Scene</text>
+<text class="m sm" x="60" y="283">beat → canvas draws itself</text>
+
+<rect class="live" x="300" y="246" width="232" height="52"/>
+<text class="t bx" x="312" y="266">ear.ts + voice ladder</text>
+<text class="m sm" x="312" y="283">mic · endpointer · 4-rung TTS</text>
+
+<text class="m h2" x="48" y="327">LOCALSTORAGE</text>
+<rect class="store" x="48" y="336" width="155" height="54"/>
+<text class="m bx" x="58" y="356">ledger-outbox</text>
+<text class="t sm" x="58" y="372">append-only queue</text>
+<text class="t sm" x="58" y="384">max 5,000 events</text>
+
+<rect class="store" x="211" y="336" width="155" height="54"/>
+<text class="m bx" x="221" y="356">learner-model</text>
+<text class="t sm" x="221" y="372">THE only live model</text>
+<text class="t sm" x="221" y="384">folded on device</text>
+
+<rect class="store" x="374" y="336" width="158" height="54"/>
+<text class="m bx" x="384" y="356">stores/*</text>
+<text class="t sm" x="384" y="372">profile · settings</text>
+<text class="t sm" x="384" y="384">progress · outcomes</text>
+
+<rect class="warn" x="48" y="404" width="232" height="50"/>
+<text class="t bx" x="60" y="424">on-device Supertonic</text>
+<text class="m sm" x="60" y="441">263 MB model — absent in repo</text>
+
+<rect class="live" x="300" y="404" width="232" height="50"/>
+<text class="t bx" x="312" y="424">sw.js — offline shell</text>
+<text class="m sm" x="312" y="441">content/ served as publicDir</text>
+
+<rect class="dead" x="48" y="468" width="484" height="46"/>
+<text class="t bx" x="60" y="487">DEV ONLY — Gemini Live WebSocket, geminiAgent direct providers</text>
+<text class="m sm" x="60" y="503">vendor key in the browser · bypasses admit, the meter and usage entirely</text>
+<text class="t sm" x="48" y="540">A raised hand in a production build never reaches live voice —</text>
+<text class="t sm" x="48" y="556">it falls to the typed tutor, then to a scripted stub.</text>
+<rect class="grp" x="580" y="125" width="420" height="470"/>
+<text class="t h2" x="598" y="152">THE RELAY — Supabase Edge Function (Deno)</text>
+<text class="t sm" x="598" y="170">The only thing that ever holds a vendor key.</text>
+
+<rect class="key" x="598" y="182" width="384" height="48"/>
+<text class="t bx" x="612" y="202">handleRelay</text>
+<text class="m sm" x="612" y="219">one implementation, two hosts (vite dev + edge)</text>
+
+<rect class="key" x="598" y="244" width="384" height="62"/>
+<text class="t bx" x="612" y="264">admit() — the lock and the meter</text>
+<text class="m sm" x="612" y="281">1. verify identity → GoTrue (30s cache)</text>
+<text class="m sm" x="612" y="296">2. claim_relay → FAILS CLOSED on any error</text>
+
+<rect class="live" x="598" y="322" width="72" height="44"/><text class="m bx" x="608" y="341">/llm</text><text class="t sm" x="608" y="357">85 u</text>
+<rect class="live" x="676" y="322" width="80" height="44"/><text class="m bx" x="684" y="341">/speech</text><text class="t sm" x="684" y="357">0.29/char</text>
+<rect class="live" x="762" y="322" width="72" height="44"/><text class="m bx" x="770" y="341">/hear</text><text class="t sm" x="770" y="357">0.69/s</text>
+<rect class="live" x="840" y="322" width="72" height="44"/><text class="m bx" x="848" y="341">/class</text><text class="t sm" x="848" y="357">10 u</text>
+<rect class="live" x="918" y="322" width="64" height="44"/><text class="m bx" x="924" y="341">/ticket</text><text class="t sm" x="924" y="357">free</text>
+
+<rect class="live" x="598" y="382" width="384" height="46"/>
+<text class="t bx" x="612" y="401">markup gate — reject, never sanitise</text>
+<text class="m sm" x="612" y="418">runs SERVER-side; the browser is the wrong side of the wall</text>
+
+<rect class="dead" x="598" y="442" width="384" height="44"/>
+<text class="t bx" x="612" y="461">/icons → hard 501 in production</text>
+<text class="m sm" x="612" y="477">every graphic renders as a dashed placeholder</text>
+
+<text class="t sm" x="598" y="512">One unit = one paisa of vendor spend.</text>
+<text class="t sm" x="598" y="528">Ceilings: 120 req/min, 12,000 units/day (~7 classes).</text>
+<text class="t sm" x="598" y="544">The meter fails CLOSED. The books fail OPEN.</text>
+<rect class="grp" x="1030" y="125" width="600" height="470"/>
+<text class="t h2" x="1048" y="152">EXTERNAL PROVIDERS</text>
+<text class="t sm" x="1048" y="170">Reached only by the relay. Models run on cloud credits; speech is the only line paid in cash.</text>
+
+<rect class="live" x="1048" y="182" width="564" height="58"/>
+<text class="t bx" x="1062" y="202">Vertex AI — Gemini 3.x</text>
+<text class="m sm" x="1062" y="219">planner · artist · vision · image generation</text>
+<text class="m sm" x="1062" y="234">retry on 408/429/502/503/504 → backoff [1s, 3s] → 3 attempts total</text>
+
+<rect class="live" x="1048" y="252" width="564" height="58"/>
+<text class="t bx" x="1062" y="272">OpenRouter</text>
+<text class="m sm" x="1062" y="289">aura-2 TTS · nova-3 STT (language=multi, a constant)</text>
+<text class="m sm" x="1062" y="304">also the LLM fallback when no Google service account is present</text>
+
+<rect class="live" x="1048" y="322" width="564" height="46"/>
+<text class="t bx" x="1062" y="341">Wikimedia Commons</text>
+<text class="m sm" x="1062" y="358">image search — an ABSENT licence is treated as a refusal</text>
+
+<rect class="warn" x="1048" y="380" width="564" height="58"/>
+<text class="t bx" x="1062" y="400">tools/speech — self-hosted Piper</text>
+<text class="m sm" x="1062" y="417">built &amp; benched at 10.8× realtime, saves ₹8.51 a class</text>
+<text class="m sm" x="1062" y="432">NOT SWITCHED ON — CURIE_SPEECH_URL unset, no VPS provisioned</text>
+
+<rect x="1048" y="454" width="564" height="120" fill="#fbf9f4" stroke="#cfc5b2" stroke-width="1.2" rx="9"/>
+<text class="t h2" x="1062" y="476">MEASURED, NOT ESTIMATED</text>
+<text class="t sm" x="1062" y="497">A cached class  ₹9.90      ·  A cold class  ₹18.98</text>
+<text class="t sm" x="1062" y="515">Per student-hour (web)  ₹164  →  ~₹23 once the voice self-hosts</text>
+<text class="t sm" x="1062" y="533">Room opens in ~14 s; a full cold prep took ~96 s</text>
+<text class="t sm" x="1062" y="551">86% of a class is speech — the only part paid in cash</text>
+<text class="t sm" x="1062" y="569">5,079 outcome nodes · 4,697 probes · 21 packages</text>
+<rect class="grp" x="30" y="642" width="1600" height="398"/>
+
+<rect class="live" x="48" y="700" width="250" height="64"/>
+<text class="t bx" x="60" y="720">GoTrue — identity</text>
+<text class="m sm" x="60" y="737">anonymous at boot, upgraded</text>
+<text class="m sm" x="60" y="752">in place by email + password</text>
+
+<rect class="live" x="318" y="700" width="250" height="64"/>
+<text class="t bx" x="330" y="720">Storage bucket "classes"</text>
+<text class="m sm" x="330" y="737">PUBLIC — lesson.json + art</text>
+<text class="m sm" x="330" y="752">read with no session at all</text>
+
+<rect class="live" x="588" y="700" width="230" height="64"/>
+<text class="t bx" x="600" y="720">pg_cron</text>
+<text class="m sm" x="600" y="737">purge-old-ledger, 19:30 UTC</text>
+<text class="m sm" x="600" y="752">90-day retention, by received_at</text>
+
+<rect class="dead" x="838" y="700" width="380" height="64"/>
+<text class="t bx" x="852" y="720">concept_state · learner_model</text>
+<text class="m sm" x="852" y="737">tables exist, RLS'd, migration 0013 —</text>
+<text class="m sm" x="852" y="752">NO PRODUCT READER, NO WRITER. No server fold exists.</text>
+
+<rect class="warn" x="1238" y="700" width="374" height="64"/>
+<text class="t bx" x="1250" y="720">0014 — written, NOT applied</text>
+<text class="m sm" x="1250" y="737">adds answer_observations + doubt_count</text>
+<text class="m sm" x="1250" y="752">to concept_state</text>
+
+<text class="m h2" x="48" y="800">TABLES THE PRODUCT ACTUALLY USES</text>
+
+<rect class="store" x="48" y="812" width="246" height="70"/>
+<text class="m bx" x="60" y="832">ledger_event</text>
+<text class="t sm" x="60" y="849">the system of record</text>
+<text class="t sm" x="60" y="864">unique(session_id, seq) · GIN(outcome_ids)</text>
+
+<rect class="store" x="306" y="812" width="246" height="70"/>
+<text class="m bx" x="318" y="832">learning_session</text>
+<text class="t sm" x="318" y="849">active_ms = the metric's denominator</text>
+<text class="t sm" x="318" y="864">closed only via close_learning_session()</text>
+
+<rect class="store" x="564" y="812" width="246" height="70"/>
+<text class="m bx" x="576" y="832">usage_event</text>
+<text class="t sm" x="576" y="849">quantities only, never prices</text>
+<text class="t sm" x="576" y="864">joined to model_price at READ time</text>
+
+<rect class="store" x="822" y="812" width="246" height="70"/>
+<text class="m bx" x="834" y="832">relay_usage</text>
+<text class="t sm" x="834" y="849">the meter — RLS on, ZERO policies</text>
+<text class="t sm" x="834" y="864">reachable only via claim_relay()</text>
+
+<rect class="store" x="1080" y="812" width="246" height="70"/>
+<text class="m bx" x="1092" y="832">prepared_class</text>
+<text class="t sm" x="1092" y="849">the catalogue of kept classes</text>
+<text class="t sm" x="1092" y="864">written LAST, after the files</text>
+
+<rect class="store" x="1338" y="812" width="274" height="70"/>
+<text class="m bx" x="1350" y="832">student_state</text>
+<text class="t sm" x="1350" y="849">every localStorage blob, per key</text>
+<text class="t sm" x="1350" y="864">whole-blob last-write-wins</text>
+
+<rect class="store" x="48" y="898" width="246" height="56"/>
+<text class="m bx" x="60" y="918">organization · membership</text>
+<text class="t sm" x="60" y="936">tenancy shipped, only 'student' used</text>
+
+<rect class="store" x="306" y="898" width="246" height="56"/>
+<text class="m bx" x="318" y="918">model_price</text>
+<text class="t h2" x="48" y="1000">SUPABASE — Postgres · Storage · GoTrue</text>
+<text class="t sm" x="48" y="1022">Append-only is enforced by the ABSENCE of an update/delete policy.</text>
+
+<text class="t sm" x="318" y="936">pasted by an operator, by hand</text>
+
+<text class="t sm" x="588" y="918">The learner model never reaches concept_state. It rides to Postgres as one opaque</text>
+<text class="t sm" x="588" y="936">jsonb blob inside student_state — under a policy the student can also DELETE.</text>
+<text class="t sm" x="588" y="962">spend_credits does not exist. It is a plan item only — do not draw it.</text>
+<line x1="552" y1="200" x2="594" y2="200" class="ln" marker-end="url(#a)"/>
+<circle cx="573" cy="182" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="573" y="186" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">1</text>
+
+<line x1="552" y1="262" x2="594" y2="262" class="lnd" marker-end="url(#a)"/>
+<circle cx="573" cy="244" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="573" y="248" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">2</text>
+
+<line x1="552" y1="324" x2="594" y2="324" class="ln" marker-end="url(#a)"/>
+<circle cx="573" cy="306" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="573" y="310" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">3</text>
+
+<line x1="986" y1="208" x2="1044" y2="208" class="ln" marker-end="url(#a)"/>
+<circle cx="1015" cy="190" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="1015" y="194" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">4</text>
+
+<line x1="986" y1="278" x2="1044" y2="278" class="ln" marker-end="url(#a)"/>
+<circle cx="1015" cy="260" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="1015" y="264" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">5</text>
+
+<path d="M620,596 L620,626 L222,626 L222,696" class="ln" marker-end="url(#a)"/>
+<circle cx="420" cy="626" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="420" y="630" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">6</text>
+
+<path d="M830,596 L830,806" class="ln" marker-end="url(#a)"/>
+<circle cx="830" cy="700" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="830" y="704" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">7</text>
+
+<path d="M960,596 L960,620 L1228,620 L1228,806" class="ln" marker-end="url(#a)"/>
+<circle cx="1228" cy="700" r="10" fill="#fbf9f4" stroke="#5d5648" stroke-width="1.4"/>
+<text class="m" x="1228" y="704" text-anchor="middle" font-size="11" font-weight="700" fill="#231e16">8</text>
+
+<path d="M170,596 L170,696" class="lnb" marker-end="url(#ab)"/>
+<circle cx="170" cy="648" r="10" fill="#fbf9f4" stroke="#b3261e" stroke-width="1.6"/>
+<text class="m" x="170" y="652" text-anchor="middle" font-size="11" font-weight="700" fill="#b3261e">9</text>
+
+<path d="M306,596 L306,806" class="lnb" marker-end="url(#ab)"/>
+<circle cx="306" cy="660" r="10" fill="#fbf9f4" stroke="#b3261e" stroke-width="1.6"/>
+<text class="m" x="306" y="664" text-anchor="middle" font-size="10" font-weight="700" fill="#b3261e">10</text>
+
+<path d="M500,596 L500,696" class="lnb" marker-end="url(#ab)"/>
+<circle cx="500" cy="648" r="10" fill="#fbf9f4" stroke="#b3261e" stroke-width="1.6"/>
+<text class="m" x="500" y="652" text-anchor="middle" font-size="10" font-weight="700" fill="#b3261e">11</text>
+
+<path d="M540,596 L540,632 L1622,632 L1622,352 L1618,352" class="lnb" marker-end="url(#ab)"/>
+<circle cx="1300" cy="632" r="10" fill="#fbf9f4" stroke="#b3261e" stroke-width="1.6"/>
+<text class="m" x="1300" y="636" text-anchor="middle" font-size="10" font-weight="700" fill="#b3261e">12</text>
+
+<path d="M660,766 L660,790 L170,790 L170,808" class="lng" marker-end="url(#ag)"/>
+<circle cx="420" cy="790" r="10" fill="#fbf9f4" stroke="#2c7a54" stroke-width="1.6"/>
+<text class="m" x="420" y="794" text-anchor="middle" font-size="10" font-weight="700" fill="#2c7a54">13</text>
+<text class="t h2" x="34" y="1068">DATA FLOWS</text>
+
+<text class="m" x="34" y="1092" font-size="12" fill="#231e16"><tspan font-weight="700">1</tspan>  POST /api/llm · /api/hear · /api/class — Authorization: Bearer + x-session-id</text>
+<text class="m" x="34" y="1111" font-size="12" fill="#231e16"><tspan font-weight="700">2</tspan>  GET /api/speech?text=&amp;ticket= — an &lt;audio src&gt; cannot send a header</text>
+<text class="m" x="34" y="1130" font-size="12" fill="#231e16"><tspan font-weight="700">3</tspan>  POST /api/ticket → HMAC pass, 10 min TTL. Runs before admit, so it is NOT metered</text>
+<text class="m" x="34" y="1149" font-size="12" fill="#231e16"><tspan font-weight="700">4</tspan>  Vertex generateContent — planner, artist, vision, image</text>
+<text class="m" x="34" y="1168" font-size="12" fill="#231e16"><tspan font-weight="700">5</tspan>  OpenRouter — TTS, transcription, and the LLM fallback</text>
+
+<text class="m" x="700" y="1092" font-size="12" fill="#231e16"><tspan font-weight="700">6</tspan>  GET /auth/v1/user — verify the caller (successes cached 30 s)</text>
+<text class="m" x="700" y="1111" font-size="12" fill="#231e16"><tspan font-weight="700">7</tspan>  rpc claim_relay BEFORE spending · rpc record_usage AFTER, fire-and-forget</text>
+<text class="m" x="700" y="1130" font-size="12" fill="#231e16"><tspan font-weight="700">8</tspan>  keepClass — every file to Storage FIRST, the catalogue row LAST</text>
+<text class="m" x="700" y="1149" font-size="12" fill="#b3261e"><tspan font-weight="700">9</tspan>  signInAnonymously at boot — fires the org + membership trigger</text>
+<text class="m" x="700" y="1168" font-size="12" fill="#b3261e"><tspan font-weight="700">10</tspan> ledger drain + every store — anon key under RLS, straight to Postgres</text>
+
+<text class="m" x="1230" y="1092" font-size="12" fill="#b3261e"><tspan font-weight="700">11</tspan> lesson.json + art — public URL, no session at all</text>
+<text class="m" x="1230" y="1111" font-size="12" fill="#b3261e"><tspan font-weight="700">12</tspan> Commons image search — from the BROWSER during class prep</text>
+<text class="m" x="1230" y="1130" font-size="12" fill="#2c7a54"><tspan font-weight="700">13</tspan> pg_cron purge, 90 days, aged by received_at</text>
+<text class="t" x="1230" y="1156" font-size="12" fill="#5d5648">Red = does not pass through the relay.</text>
+<text class="t" x="1230" y="1172" font-size="12" fill="#5d5648">The relay is for vendor calls, not data access.</text>
+</svg>
+<p class="hint">One page. Print or Ctrl/Cmd+P → Save as PDF for an A3 landscape copy. Detail per subsystem lives in <code>docs/architecture/README.md</code>.</p>
+</div></body></html>

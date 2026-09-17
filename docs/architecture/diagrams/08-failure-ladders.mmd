@@ -1,0 +1,61 @@
+%% Curie — Every degradation ladder. Each rung falls to the next; nothing is announced to the student.
+%% The house rule: "a stuck beat is a dead class" — a rejected promise counts as finished speech.
+flowchart TB
+    subgraph V["🔊 VOICE — packages/voice"]
+        V1["recorded take (.m4a)"] -->|"hash mismatch · unsafe file · 404 · decode fail"| V2["on-device Supertonic"]
+        V2 -->|"263MB model absent / OOM<br/>(EVERY line in this checkout)"| V3["streaming relay /api/speech"]
+        V3 -->|"401 no ticket · 429 · 503 · dead net<br/>NO retry, NO backoff"| V4["browser speechSynthesis"]
+        V4 -->|"missing (old WebView)"| V5["timer TTS — silent, still advances"]
+    end
+
+    subgraph E["🎤 EAR — lib/ear.ts"]
+        E1["mic + endpointer"] -->|"denied / OS took it"| E4
+        E1 -->|"silence 7s — nothing billed"| E4
+        E1 --> E2["POST /api/hear (WAV only, ≤2MB)"]
+        E2 -->|"401·413·415·429·503<br/>NO on-device fallback — deliberately removed"| E4["tapped chips — the only remaining path"]
+        E2 -->|"200 with empty text"| E5["filed as SILENCE<br/>a child who spoke is recorded as silent"]
+    end
+
+    subgraph P["🖼️ PICTURES — packages/class-prep"]
+        P1["Wikimedia Commons search"] -->|"unreachable · no reusable licence<br/>ABSENT licence = refusal (fails closed)"| P4
+        P1 --> P2["vision verify, max 3 tries"]
+        P2 -->|"unparseable verdict = NO<br/>(the one parse failure that does not degrade)"| P4
+        P2 -->|"wrong subject / printed text"| P4["generate with imageArtist"]
+        P4 -->|"ONE redraw, only on a NAMED fault"| P5["dashed frame + alt text"]
+    end
+
+    subgraph PL["📝 PLANNER — prepare.ts"]
+        PL1["planner reply"] -->|"unreadable JSON"| PL2["brace-slice → ONE re-ask"]
+        PL2 -->|"fails twice"| PLX["THROW: 'did not return readable JSON, twice'"]
+        PL1 --> PL3["validateLesson + classMustAsk"]
+        PL3 -->|"ONE repair round, ≤10 NAMED problems"| PL4["invented outcome id → DROPPED, never repaired"]
+        PL3 -->|"still invalid"| PLX
+    end
+
+    subgraph VX["⚡ VERTEX — vertex.ts"]
+        X1["call"] -->|"408·429·502·503·504"| X2["backoff [1000ms, 3000ms]<br/>3 attempts total"]
+        X2 -->|"still failing"| X3["pass the status through as OpenAI-shaped error"]
+        X4["bad service account JSON"] -->|"caught at module scope"| X5["WHOLE relay falls back to OpenRouter"]
+    end
+
+    subgraph L["📒 LEDGER — ledgerSync.ts"]
+        L1["send batch of 200"] -->|"22xxx / 23xxx"| L2["BISECT recursively (~16 requests)"]
+        L2 --> L3["single poison row → quarantine, rejected++"]
+        L1 -->|"anything else: 42501 RLS, expired token, gateway"| L4["TRANSIENT — acknowledge NOTHING,<br/>keep the whole outbox, retry next drain"]
+        L5["offline"] --> L6["queue in localStorage → drain on online"]
+        L7["outbox > 5000"] --> L8["OLDEST discarded, dropped++"]
+    end
+
+    subgraph D["🙋 DOUBT — the raised hand"]
+        D1["Gemini Live WebSocket"] -->|"DEV BUILDS ONLY — absent in production"| D2
+        D1 -->|"setup timeout / socket error"| D1b["failover to 2nd LIVE_MODEL, only if she has not spoken"]
+        D2["typed doubt agent via /api/llm"] -->|"call fails or error body"| D3["scripted stub — same persona, from the lesson"]
+        D4["settings.klass unset"] --> D3
+    end
+
+    classDef top fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef mid fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    classDef floor fill:#ece7dc,stroke:#7c7565,color:#231e16
+    class V1,E1,P1,PL1,X1,L1,D1 top
+    class V2,V3,E2,P2,PL2,X2,L2,D2,D1b mid
+    class V4,V5,E4,E5,P4,P5,PL4,PLX,X3,X5,L3,L4,L6,L8,D3 floor

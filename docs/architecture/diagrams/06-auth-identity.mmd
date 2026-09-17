@@ -1,0 +1,33 @@
+%% Curie — Identity, the speech ticket, and tenancy. The student never types anything to get an id.
+sequenceDiagram
+    autonumber
+    participant APP as apps/classroom
+    participant GT as Supabase GoTrue
+    participant TRG as trigger on_auth_user_created
+    participant RLY as relay
+    participant AUD as &lt;audio&gt; element
+
+    Note over APP: boot — before React renders
+    APP->>GT: signInAnonymously()
+    GT-->>APP: durable anonymous user + JWT
+    GT->>TRG: INSERT auth.users
+    TRG->>TRG: provision_solo_org()<br/>organization(kind='solo') + membership(role='student')
+
+    Note over APP,RLY: every fetch-based relay call
+    APP->>RLY: Authorization: Bearer &lt;JWT&gt; + x-session-id
+    RLY->>GT: GET /auth/v1/user (apikey=anon)
+    GT-->>RLY: {id} — memoised 30s, SUCCESSES only
+
+    Note over APP,AUD: speech cannot send a header
+    APP->>RLY: POST /api/ticket (NOT metered — runs before admit)
+    RLY-->>APP: base64url(userId).&lt;expiresAt&gt;.&lt;HMAC-SHA256&gt;<br/>TTL 10 min, renewed 60s early
+    APP->>AUD: src = /api/speech?text=…&ticket=…&session=…
+    AUD->>RLY: GET (no Authorization header possible)
+    RLY->>RLY: readTicket → else fall through to header → else 401
+
+    Note over APP,GT: sign-up UPGRADES the same identity
+    APP->>GT: auth.updateUser({email, password})
+    Note right of GT: user id UNCHANGED ⇒ student_state,<br/>ledger_event, membership all stay put.<br/>Fallback branch signUp() mints a SECOND<br/>user and a SECOND solo org.
+
+    Note over APP,GT: sign-out on a shared phone
+    APP->>APP: forgetTicket() bumps `era`,<br/>claimOutbox() EMPTIES a foreign queue

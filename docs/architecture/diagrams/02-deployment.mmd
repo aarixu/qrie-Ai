@@ -1,0 +1,41 @@
+%% Curie — Deployment & infrastructure topology, with honest status.
+%% GREEN = deployed. AMBER = configured but not deployed / built but not switched on. GREY = absent.
+flowchart LR
+    subgraph LOCAL["💻 Local development"]
+        VITE["vite dev server :5173<br/>apps/classroom/vite.config.ts"]
+        VMOUNT["openRouterRelays plugin<br/>mounts handleRelay on ONLY<br/>/api/llm /api/speech /api/hear /api/ticket"]
+        VCLASS["classWriter plugin → content/<br/>NO auth · NO meter · partial validation"]
+        VICON["iconRelay plugin → @iconify/json<br/>443MB, dev only"]
+        MEM[("createMemoryLedger<br/>a Map — NOT usable in prod")]
+        VITE --> VMOUNT & VCLASS & VICON
+        VMOUNT --- MEM
+    end
+
+    subgraph PROD["🌍 Production"]
+        CDN["Static origin — Vercel<br/>vercel.json: build + SPA rewrite<br/>NO .vercel project linked"]
+        EF["Edge Function 'relay' (Deno)<br/>project ref ueemqirxyrltdmqgnidy<br/>deployed --no-verify-jwt"]
+        DB[("Postgres — migrations 0001→0013 APPLIED<br/>0014 written, NOT applied")]
+        ST[("Storage bucket 'classes'")]
+        VPS["VPS for tools/speech<br/>NEVER PROVISIONED"]
+    end
+
+    subgraph CI["⚙️ Automation"]
+        KEEP["keepalive.yml<br/>every 3 days — stops Supabase pausing"]
+        CIYML["ci.yml<br/>HAS NEVER RUN"]
+    end
+
+    DEV["Developer laptop"] -->|"npm run relay:deploy<br/>secrets → db push → functions deploy"| EF
+    DEV -->|"supabase db push"| DB
+    DEV -.->|"npx vercel deploy --prod (never run)"| CDN
+    CDN --> EF
+    EF --> DB & ST
+    EF -.->|"CURIE_SPEECH_URL unset"| VPS
+    KEEP --> DB
+    KEEP --> EF
+
+    classDef ok fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef warn fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    classDef gone fill:#ece7dc,stroke:#7c7565,color:#231e16,stroke-dasharray:4 3
+    class VITE,VMOUNT,VCLASS,VICON,MEM,EF,DB,ST,KEEP,DEV ok
+    class CDN warn
+    class VPS,CIYML gone

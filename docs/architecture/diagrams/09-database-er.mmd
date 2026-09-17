@@ -1,0 +1,118 @@
+%% Curie — Postgres schema after migrations 0001→0013 (0014 written, NOT applied).
+%% Append-only tables are append-only BY THE ABSENCE of an update/delete policy, not by a rule.
+erDiagram
+    AUTH_USERS ||--o{ MEMBERSHIP : "cascade"
+    AUTH_USERS ||--o| RELAY_USAGE : "cascade"
+    AUTH_USERS ||--o{ STUDENT_STATE : "cascade"
+    AUTH_USERS ||--o{ LEARNING_SESSION : "cascade"
+    AUTH_USERS ||--o{ LEDGER_EVENT : "cascade"
+    AUTH_USERS ||--o{ USAGE_EVENT : "cascade"
+    AUTH_USERS ||--o{ CONCEPT_STATE : "cascade"
+    AUTH_USERS ||--o| LEARNER_MODEL : "cascade"
+    ORGANIZATION ||--o{ MEMBERSHIP : "has"
+    ORGANIZATION ||--o{ LEARNING_SESSION : "org_id"
+    ORGANIZATION ||--o{ LEDGER_EVENT : "org_id"
+    LEARNING_SESSION ||..o{ LEDGER_EVENT : "session_id — NO FK (outbox may land first)"
+    LEARNING_SESSION ||..o{ USAGE_EVENT : "session_id — NO FK"
+    USAGE_EVENT }o--|| MODEL_PRICE : "priced at read time by price_at()"
+
+    AUTH_USERS {
+        uuid id PK "INSERT fires provision_solo_org()"
+    }
+    ORGANIZATION {
+        uuid id PK
+        text kind "solo | school — only 'solo' is ever written"
+        text name
+    }
+    MEMBERSHIP {
+        uuid org_id PK
+        uuid user_id PK "NO id column — bites select=id probes"
+        text role "admin|teacher|student — only 'student' populated"
+    }
+    STUDENT_STATE {
+        uuid user_id PK
+        text key PK "ai-tutor:profile, :settings, :learner-model, …"
+        jsonb value "WHOLE-BLOB last-write-wins"
+        bigint updated_at
+    }
+    RELAY_USAGE {
+        uuid user_id PK
+        date day
+        int day_units "ceiling 12000/day"
+        timestamptz window_start
+        int window_count "ceiling 120/min"
+    }
+    PREPARED_CLASS {
+        text id PK "slugified topicRef"
+        text topic_ref UK
+        text title
+        text subtitle
+        int klass
+        text subject
+    }
+    LEARNING_SESSION {
+        uuid id PK "client-minted"
+        uuid org_id FK
+        uuid user_id FK
+        text source "class|quiz|diagnostic|doubt"
+        text topic_ref
+        timestamptz started_at "device clock"
+        timestamptz ended_at "only via close_learning_session()"
+        int active_ms "denominator of the primary metric"
+        timestamptz received_at "server clock — retention ages on THIS"
+    }
+    LEDGER_EVENT {
+        uuid id PK "device-minted idempotency key"
+        uuid org_id FK
+        uuid user_id FK
+        uuid session_id "no FK"
+        int seq "per session, from 0 — unique(session_id,seq)"
+        timestamptz at "device clock, UNTRUSTED"
+        timestamptz received_at
+        text kind "session-started|session-ended|asked|answered|helped|taught|confused|intervened|reflected"
+        text source
+        text surface "tap|voice|text"
+        text_array outcome_ids "GIN indexed"
+        text topic_ref
+        jsonb payload "shape typed ONLY in TypeScript"
+    }
+    USAGE_EVENT {
+        uuid id PK
+        uuid user_id FK
+        uuid session_id "joins via x-session-id header"
+        text relay
+        text provider "vertex|openrouter|storage"
+        text model
+        int status "0 = dispatched, outcome unknown"
+        int prompt_tokens
+        int output_tokens
+        int thought_tokens
+        int characters
+        int audio_bytes
+    }
+    MODEL_PRICE {
+        text provider PK
+        text model PK
+        text unit PK
+        timestamptz effective_from PK "a change is a NEW row"
+        numeric inr_per_unit
+    }
+    CONCEPT_STATE {
+        uuid user_id PK "NO WRITER, NO READER IN THE PRODUCT"
+        text outcome_id PK
+        real mastery
+        real unassisted_mastery
+        real assisted_performance
+        int observations
+        int unassisted_observations
+        int taught_count
+        timestamptz next_review_at "not driven"
+        int answer_observations "0014 — NOT APPLIED"
+        int doubt_count "0014 — NOT APPLIED"
+    }
+    LEARNER_MODEL {
+        uuid user_id PK "NO WRITER, NO READER"
+        timestamptz folded_through_at
+        int folded_through_seq "TS FoldCursor also has sessionId — NO COLUMN"
+        int version
+    }

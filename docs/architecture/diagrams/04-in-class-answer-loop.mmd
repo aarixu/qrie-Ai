@@ -1,0 +1,52 @@
+%% Curie — The in-class answer loop: how one spoken answer becomes evidence.
+%% This is the SENSE → VERIFY → RECORD path of the control plane.
+sequenceDiagram
+    autonumber
+    participant PL as PlayerController
+    participant CR as ClassRoom.tsx
+    participant TTS as packages/voice<br/>4-layer ladder
+    participant EAR as lib/ear.ts
+    participant RH as relay /api/hear
+    participant JG as packages/tutor-judge
+    participant CL as lib/classLedger.ts
+    participant OB as outbox<br/>localStorage
+
+    PL->>TTS: speak(fill.say + beat.narration) as ONE utterance
+    TTS-->>PL: resolved (a REJECTION is treated as finished — anti-stall)
+    PL->>CR: pendingAsk revealed only AFTER onSpeechDone
+    CR->>CL: asked() — guarded by askFiled so a pause files no second ask
+    CL->>OB: {kind:'asked', assistanceRung, attempt, optionCount}
+
+    alt spoken answer
+        CR->>EAR: open mic (endpointer, graceMs 7000)
+        alt silence 7s
+            EAR-->>CR: {text:null, reason:'silence'} — nothing billed
+        else mic denied / unavailable
+            EAR-->>CR: {text:null, reason:'error'} → chips are the only path
+        else heard
+            EAR->>RH: POST 16kHz mono WAV (audio/wav only, ≤2MB)
+            RH-->>EAR: {text} via nova-3, language=multi (CONSTANT)
+            EAR-->>CR: transcript
+            CR->>JG: judgeSpokenAnswer(ask, heard)
+            alt judge fails or verdict 'unclear'
+                JG-->>CR: null / unclear → NOTHING recorded
+            else verdict right|wrong
+                JG-->>CR: {verdict, say, gave, heard}
+                opt wrong
+                    CR->>CL: helped(beatId, rung 2 or 3, requested=false)
+                    CL->>OB: {kind:'helped', rung, requested}
+                end
+                CR->>CL: answered({correct, surface:'voice', verdict,<br/>answerText = judged.heard — the SCREENED text})
+            end
+        end
+    else tapped chip
+        CR->>CL: answered({correct, surface:'tap', chosenIndex})
+    end
+
+    CL->>OB: {kind:'answered', outcomeIds, chosenIndex, correct,<br/>ms, attempt, assistanceRung, hintsShown, verdict,<br/>misconceptionId, answerNormalised}
+    Note over CL,OB: rungOf(state) is derived from the AskState map;<br/>highestRung is monotonic per beat
+
+    opt raise hand
+        CR->>CL: confused(beatId) + helped(beatId, rung 7, requested=true)
+    end
+    Note over CR,OB: class ends → taught event over outcomesOf(lesson),<br/>then closeSitting(true)

@@ -1,0 +1,331 @@
+<title>Curie MVP Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400;62..125,600;62..125,900&family=Anek+Latin:wght@300..700&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+  :root {
+    --paper:#FAF7F0; --paper-warm:#FFFBF2; --surf-high:#EAE7E1; --surf-top:#E1DED9;
+    --ink:#17171D; --ink-soft:#4A4A55; --outline:#4A4A55; --outline-v:#C8C6C2;
+    --blue:#0B5FD9; --fluoro:#FF48A0; --pink:#D6117A; --pink-cont:#FBDBE3;
+    --yellow:#FFD21E; --green:#196B46; --green-cont:#D2DED1; --red:#C5321E;
+    --on-blue:#FAF7F0; --on-fluoro:#17171D; --on-yellow:#17171D;
+    --key:2.5px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#141318; --paper-warm:#1E1D24; --surf-high:#2A292D; --surf-top:#333235;
+      --ink:#F2EFE7; --ink-soft:#B6B2A8; --outline:#7C7788; --outline-v:#403F41;
+      --blue:#8FB4FF; --fluoro:#FF7FC0; --pink:#FF9FCC; --pink-cont:#5C0033;
+      --yellow:#FFD21E; --green:#6FD9A4; --green-cont:#0C3A24; --red:#FF9E8C;
+      --on-blue:#0A1730; --on-fluoro:#2B0016;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#141318; --paper-warm:#1E1D24; --surf-high:#2A292D; --surf-top:#333235;
+    --ink:#F2EFE7; --ink-soft:#B6B2A8; --outline:#7C7788; --outline-v:#403F41;
+    --blue:#8FB4FF; --fluoro:#FF7FC0; --pink:#FF9FCC; --pink-cont:#5C0033;
+    --yellow:#FFD21E; --green:#6FD9A4; --green-cont:#0C3A24; --red:#FF9E8C;
+    --on-blue:#0A1730; --on-fluoro:#2B0016;
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    background:var(--paper); color:var(--ink);
+    font-family:"Anek Latin","Segoe UI",system-ui,sans-serif;
+    font-size:16px; line-height:1.6; margin:0;
+    padding-block:0 80px; padding-inline:20px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap { max-width:1060px; margin-inline:auto; }
+  h1,h2,h3,h4,.disp { font-family:"Archivo","Arial Black",sans-serif; font-variation-settings:"wdth" 112; font-weight:900; letter-spacing:-.025em; text-wrap:balance; margin:0; }
+  .mono { font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow { font-family:"Archivo",Arial,sans-serif; font-variation-settings:"wdth" 88; font-weight:600; font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink-soft); }
+
+  header.top { padding-block:44px 0; margin-bottom:40px; }
+  .badge { display:inline-block; background:var(--yellow); color:var(--on-yellow); border:var(--key) solid var(--ink); padding:5px 12px; margin-bottom:18px; font-family:"Archivo",sans-serif; font-weight:900; font-size:11px; letter-spacing:.14em; text-transform:uppercase; }
+  header.top h1 { font-size:clamp(40px,9vw,84px); line-height:.9; font-variation-settings:"wdth" 125; }
+  header.top h1 em { font-style:normal; color:var(--pink); }
+  header.top .sub { color:var(--ink-soft); max-width:62ch; margin-top:16px; font-size:17px; }
+
+  /* now-state */
+  .now { border:var(--key) solid var(--ink); background:var(--paper-warm); padding:22px; margin-bottom:44px; }
+  .now h2 { font-size:21px; margin-bottom:14px; }
+  .facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(186px,1fr)); gap:14px; }
+  .fact { border-left:var(--key) solid var(--c,var(--ink)); padding-left:11px; }
+  .fact b { display:block; font-family:"JetBrains Mono",monospace; font-size:21px; font-weight:700; line-height:1.15; }
+  .fact span { font-size:12.5px; color:var(--ink-soft); display:block; margin-top:3px; line-height:1.4; }
+
+  /* phases */
+  .phase { border:var(--key) solid var(--ink); margin-bottom:26px; }
+  .ph-head { display:flex; align-items:center; gap:13px; flex-wrap:wrap; padding:14px 18px; border-bottom:var(--key) solid var(--ink); }
+  .ph-n { font-family:"JetBrains Mono",monospace; font-weight:700; font-size:12px; border:2px solid currentColor; padding:2px 8px; }
+  .ph-head h2 { font-size:clamp(20px,3.6vw,28px); }
+  .ph-when { margin-left:auto; font-family:"Archivo",sans-serif; font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+  .ph-body { padding:18px; }
+  .ph-goal { font-size:16.5px; margin:0 0 16px; max-width:70ch; }
+  .ph-goal b { font-weight:600; }
+
+  .ws { border-top:1px solid var(--outline-v); padding-top:13px; margin-top:13px; }
+  .ws:first-of-type { border-top:none; padding-top:0; margin-top:0; }
+  .ws-head { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:5px; }
+  .ws-head h4 { font-size:15.5px; font-weight:600; font-variation-settings:"wdth" 100; }
+  .tag { font-family:"Archivo",sans-serif; font-weight:700; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; padding:3px 7px; border:2px solid var(--ink); }
+  .t-par { background:var(--green-cont); color:var(--green); border-color:var(--green); }
+  .t-seq { background:var(--pink-cont); color:var(--pink); border-color:var(--pink); }
+  .t-block { background:var(--fluoro); color:var(--on-fluoro); }
+  .sz { margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--ink-soft); }
+  .ws p { margin:0; font-size:14.5px; color:var(--ink-soft); max-width:76ch; }
+  .ws p b { color:var(--ink); font-weight:600; }
+  .ws code { font-family:"JetBrains Mono",monospace; font-size:12px; background:var(--surf-high); padding:1px 4px; border:1px solid var(--outline-v); }
+
+  .cost-note { margin-top:16px; background:var(--yellow); color:var(--on-yellow); border:var(--key) solid var(--ink); padding:11px 14px; font-size:14px; }
+  .cost-note b { font-family:"Archivo",sans-serif; font-weight:900; }
+
+  /* legend + close */
+  .legend { display:flex; gap:9px; flex-wrap:wrap; margin-bottom:26px; align-items:center; }
+  .legend span.eyebrow { margin-right:4px; }
+  section { margin-bottom:46px; }
+  .sec-head { border-bottom:var(--key) solid var(--ink); padding-bottom:8px; margin-bottom:22px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .sec-head h2 { font-size:clamp(23px,4.4vw,32px); }
+  .sec-head .eyebrow { margin-left:auto; }
+
+  .tbl-wrap { overflow-x:auto; border:var(--key) solid var(--ink); }
+  table { border-collapse:collapse; width:100%; min-width:520px; font-size:14px; }
+  th { font-family:"Archivo",sans-serif; font-weight:600; font-size:11px; letter-spacing:.1em; text-transform:uppercase; text-align:left; background:var(--ink); color:var(--paper); padding:9px 12px; }
+  td { padding:9px 12px; border-top:1px solid var(--outline-v); }
+  tbody tr:nth-child(even) { background:var(--surf-high); }
+  td.n { font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .risk { border:var(--key) solid var(--ink); background:var(--paper-warm); padding:20px; }
+  .risk li { margin-bottom:10px; font-size:15px; }
+  .risk li b { font-family:"Archivo",sans-serif; font-weight:600; }
+  :focus-visible { outline:3px solid var(--fluoro); outline-offset:2px; }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="badge">Plan &middot; 16 Sept 2026 &middot; web first</div>
+    <h1>Road to<br><em>MVP</em></h1>
+    <p class="sub">Web app ships first and takes real users. Android and the LMS follow, because an uploadable Play Store build does not exist yet and will not for weeks. Every number below was measured against the tree or the live Supabase project, not read off a document.</p>
+  </header>
+
+  <div class="now">
+    <h2 class="disp">Where we actually are</h2>
+    <div class="facts">
+      <div class="fact" style="--c:var(--green)"><b>0</b><span>real students. Every metric so far is from a seeded synthetic ledger.</span></div>
+      <div class="fact" style="--c:var(--red)"><b>~&#8377;158</b><span>per student-hour on web today. Target for the app phase is &#8377;5.</span></div>
+      <div class="fact" style="--c:var(--red)"><b>~&#8377;158</b><span>per student-hour on Android <em>today too</em> &mdash; the models are not in the APK.</span></div>
+      <div class="fact" style="--c:var(--blue)"><b>15</b><span>lessons live, all Class 9&ndash;10 science, against 1,099 mapped topics.</span></div>
+      <div class="fact" style="--c:var(--blue)"><b>5,079</b><span>outcome nodes, 6,546 edges, 4,697 probes. Counted, not quoted.</span></div>
+      <div class="fact" style="--c:var(--red)"><b>0</b><span>websites. No landing page exists anywhere in the repo.</span></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="eyebrow">Legend</span>
+    <span class="tag t-block">Blocker</span>
+    <span class="tag t-par">Parallel-safe</span>
+    <span class="tag t-seq">Sequenced</span>
+  </div>
+
+  <!-- ─────────── PHASE 0 ─────────── -->
+  <div class="phase">
+    <div class="ph-head" style="background:var(--fluoro); color:var(--on-fluoro)">
+      <span class="ph-n">P0</span>
+      <h2>Stop the bleeding</h2>
+      <span class="ph-when">before any public URL</span>
+    </div>
+    <div class="ph-body">
+      <p class="ph-goal">Nothing here is a feature. These are the five things that make it <b>safe to have users at all</b>. Today the app is invisible when it breaks, unlimited when it is abused, and has never been deployed to its own front end.</p>
+
+      <div class="ws">
+        <div class="ws-head"><h4>1. Global spend cap, kill switch, alerting</h4><span class="tag t-block">Blocker</span><span class="sz">S</span></div>
+        <p>Every limit is <b>per user</b>, and anonymous sign-in is free and un-captcha'd. One script minting accounts multiplies the &#8377;114/day ceiling without limit. There is no project-wide cap, no way to turn the relay off, and no alarm &mdash; the relay's own docblock admits it. Add a daily project ceiling inside <code>claim_relay</code>, a <code>RELAY_DISABLED</code> env kill switch, and an alert when spend crosses a threshold.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>2. Turn the lights on</h4><span class="tag t-block">Blocker</span><span class="sz">XS</span></div>
+        <p><code>lib/telemetry.ts</code> is a complete no-op with no Sentry DSN and no PostHog key, so a white screen on a &#8377;10,000 Android is an uninstall nobody hears about. Both are free. This is a 10-minute task that has been open for weeks and it gates every decision after launch.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>3. Make CI actually run</h4><span class="tag t-par">Parallel-safe</span><span class="sz">XS</span></div>
+        <p><code>.github/workflows/ci.yml</code> exists and <b>has never run once</b>. 2,800 tests that only execute on one laptop are not a safety net. Same job, plus <code>check-bundle-secrets</code>.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>4. Apply 0014, and add <code>org_id</code> while the tables are empty</h4><span class="tag t-seq">Sequenced</span><span class="sz">S</span></div>
+        <p>Verified live: <code>concept_state.answer_observations</code> returns <span class="mono">42703</span> &mdash; <b>0014 is written but not applied</b>. And <code>student_state</code>, <code>relay_usage</code>, <code>prepared_class</code> and <code>usage_event</code> have no tenancy column at all. Right now that migration backfills <b>zero rows</b>. After launch it is the migration nobody wants to run, on tables full of children's answers.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>5. Actually deploy the front end</h4><span class="tag t-block">Blocker</span><span class="sz">XS</span></div>
+        <p><code>vercel.json</code> is configured and <code>npx vercel deploy --prod</code> has <b>never been run</b>. There is no linked Vercel project. The Edge Function is live; the thing students open is not.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────── PHASE 1 ─────────── -->
+  <div class="phase">
+    <div class="ph-head" style="background:var(--blue); color:var(--on-blue)">
+      <span class="ph-n">P1</span>
+      <h2>Web MVP &mdash; take users</h2>
+      <span class="ph-when">the launch</span>
+    </div>
+    <div class="ph-body">
+      <p class="ph-goal">A student finds Curie, understands what it is in ten seconds, signs up, and has a class. Everything here is <b>web-only</b> and none of it waits on Play Store, on-device models, or the STT research.</p>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Riso Pop re-skin &mdash; one brand instead of three</h4><span class="tag t-par">Parallel-safe</span><span class="sz">S</span></div>
+        <p>The audit found the UI system is <b>better than the docs claim</b> &mdash; real tokens, a type scale, a tested icon set, a four-state vocabulary. The problem is brand, not UI: two unrelated marks (an atom logo and a penguin mascot) across three palettes, with a leftover Google-Stitch indigo still owning the first thing a student sees. Generated token files are ready; class names are unchanged, so <b>no screen has to be rewritten</b>.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>The website that does not exist</h4><span class="tag t-par">Parallel-safe</span><span class="sz">M</span></div>
+        <p>There is no landing page anywhere in the repo. For a D2C product where the <b>parent is the buyer and the teenager is the user</b>, one page has to convince both. Plus privacy policy and terms, which the DPDP work needs anyway.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Pre-render the narration &mdash; the big cost lever</h4><span class="tag t-seq">Sequenced</span><span class="sz">M</span></div>
+        <p>Narration is re-synthesised for <b>every student, every play</b>. Render it once at prep time and store it beside <code>lesson.json</code>. <code>tools/record-class</code> already exists and <code>NarrationManifest</code> is a supported rung of the voice ladder &mdash; it is populated for <b>one lesson out of fifteen</b>. This works on the web with no on-device anything.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Authored replies in the lesson format</h4><span class="tag t-seq">Sequenced</span><span class="sz">M</span></div>
+        <p>Her spoken answers are generated and synthesised live on every judged answer. If the class carries its own replies, they get recorded with the narration and cost nothing per play. Needs a <code>lesson-format</code> change and a re-author pass over the committed lessons.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Doubt tutor: through the relay, screened, capped</h4><span class="tag t-seq">Sequenced</span><span class="sz">M</span></div>
+        <p>Your headline feature is dev-only today, puts a <b>real vendor key in browser code</b>, bypasses the meter entirely, and its replies reach a child <b>unscreened</b>. Route it through the relay, screen the output with <code>speakSafely</code> like every other path, meter it, and cap raised hands per student per day so it is a known cost rather than an open one.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>DPDP consent and the age gate</h4><span class="tag t-block">Blocker</span><span class="sz">M</span></div>
+        <p>India's DPDP Act requires verifiable parental consent for under-18s. Identity is anonymous-at-boot with no age gate beyond a class setting. This was meant to be decided <b>before</b> auth was built; it was not, so it now costs a change to a screen that exists. It blocks the public launch and every school conversation after it.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Content: past Class 9&ndash;10 science</h4><span class="tag t-par">Parallel-safe</span><span class="sz">M</span></div>
+        <p>15 lessons against 1,099 mapped topics, all one subject band. Preparing the entire catalogue costs about <b>&#8377;17,800 once, ever</b> &mdash; money is not the constraint. Quality review is: there is no quality score, no version, no rollback, and a wrong cached class is permanent and invisible.</p>
+      </div>
+
+      <div class="cost-note"><b>Cost at the end of P1:</b> roughly &#8377;17&ndash;30 per student-hour on web, down from ~&#8377;158. Not &#8377;5 &mdash; &#8377;5 is an Android number and always was. Ship with a per-student daily cap so the worst case is bounded and known.</div>
+    </div>
+  </div>
+
+  <!-- ─────────── PHASE 2 ─────────── -->
+  <div class="phase">
+    <div class="ph-head" style="background:var(--yellow); color:var(--on-yellow)">
+      <span class="ph-n">P2</span>
+      <h2>Android &mdash; and the &#8377;5 target</h2>
+      <span class="ph-when">starts during P1</span>
+    </div>
+    <div class="ph-body">
+      <p class="ph-goal">This phase <b>starts in parallel with P1</b>, because Play review is a queue you want to be standing in early. But it cannot finish first &mdash; the build cannot even be uploaded today.</p>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Make an uploadable build exist</h4><span class="tag t-block">Blocker</span><span class="sz">M</span></div>
+        <p>There is no release signing config, no keystore, <code>minifyEnabled false</code>, <code>versionCode 1</code>. <code>npx cap sync android</code> runs clean, but <code>assembleDebug</code> was never verified in CI and the last known-good build predates the 23.5&nbsp;MB onnxruntime wasm entering the bundle. <b>No AAB can be produced right now.</b></p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Get the models into the app at all</h4><span class="tag t-block">Blocker</span><span class="sz">L</span></div>
+        <p>This is the finding that changes the plan. <code>content/models/</code> is <b>gitignored and absent</b>, <code>fetch-speech-models.mjs</code> is in no build script, and <code>allowRemoteModels</code> is false &mdash; so on-device synthesis returns <code>null</code> and every line falls through to cloud Aura. <b>Android costs exactly what web costs today.</b> The ~306&nbsp;MB also exceeds Play's 200&nbsp;MB limit, so it must be a download-on-first-run, which is its own install-conversion problem on cheap phones.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>On-device Hinglish speech recognition</h4><span class="tag t-par">Parallel-safe</span><span class="sz">L</span></div>
+        <p>You chose to solve this properly, and it is the right end state &mdash; cloud STT alone is about <b>&#8377;4.5 of the &#8377;5 budget</b>. Moonshine-tiny is English-only and returned an empty string on real Hinglish. Candidates to evaluate on a 4&nbsp;GB Mali phone: IndicWhisper, AI4Bharat IndicConformer, Whisper-small multilingual. <b>Run this as its own workstream, not on the launch critical path</b> &mdash; the web MVP uses the cloud ear regardless.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Play Console, store listing, review</h4><span class="tag t-seq">Sequenced</span><span class="sz">S</span></div>
+        <p>&#36;25 one-off, plus privacy policy, data-safety declaration and the DPDP children's-data answer from P1. Start the account now; the queue does not care that the build is not ready.</p>
+      </div>
+
+      <div class="cost-note"><b>Cost at the end of P2:</b> about &#8377;17/student-hour with models shipped and the ear still in the cloud, then <b>&#8377;5 or below</b> once on-device STT lands. Note the repo's &#8377;4 route assumed the learner model resolving 72% of answers &mdash; that route does not work as drawn, because <b>no committed lesson's ask carries options</b>.</p></div>
+    </div>
+  </div>
+
+  <!-- ─────────── PHASE 3 ─────────── -->
+  <div class="phase">
+    <div class="ph-head" style="background:var(--green); color:#FAF7F0">
+      <span class="ph-n">P3</span>
+      <h2>LMS &mdash; the second person</h2>
+      <span class="ph-when">after users exist</span>
+    </div>
+    <div class="ph-body">
+      <p class="ph-goal">Curie already has a <b>real single-player LMS</b> &mdash; placement test, study plan, quiz, plan adaptation, streaks, achievements, history, notes. It works. What it has is <b>no second seat of any kind</b>, proven three ways: no screen addresses anyone but the student, no RLS policy grants a read to another user, and no tool reads learning data with the service key.</p>
+
+      <div class="ws">
+        <div class="ws-head"><h4>The server-side fold</h4><span class="tag t-block">Blocker</span><span class="sz">L</span></div>
+        <p>Everything in P3 depends on this one thing. The learner model lives <b>only in localStorage</b> and reaches Postgres as one opaque jsonb blob under last-write-wins, in a table the student can also delete. <code>concept_state</code> and <code>learner_model</code> have no reader and no writer. <b>A parent cannot be shown a model that lives on their child's phone.</b> This also unlocks cross-device continuity and cohort signal.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Parent view first, then teacher</h4><span class="tag t-seq">Sequenced</span><span class="sz">M</span></div>
+        <p>For Indian K&ndash;12 the parent is the buyer, so the parent view is a <b>revenue feature, not a reporting one</b>. Tenancy (0005) exists and is genuinely load-bearing &mdash; every ledger insert depends on it &mdash; but it cannot express a guardian today. Once the fold is server-side, a parent view is a policy change rather than a migration.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Close the loop in the classroom</h4><span class="tag t-par">Parallel-safe</span><span class="sz">L</span></div>
+        <p>The brain is two-thirds real: a working BKT posterior with slip/guess over 5,079 nodes, and a fold that reaches the persona, the doubt tutor and the planner. What is missing is the controller &mdash; <code>ClassRoom.tsx</code> still decides every ask, every rung and every hint, <code>chooseAsk</code> has <b>no caller</b>, and asks carry no options so the advance gate always opens. This is what turns a very well instrumented lesson player into an adaptive tutor.</p>
+      </div>
+
+      <div class="ws">
+        <div class="ws-head"><h4>Entitlement and payments</h4><span class="tag t-seq">Sequenced</span><span class="sz">M</span></div>
+        <p>There is <b>no plan, tier, credit, entitlement or payment code anywhere</b> in the repo. Monetisation is not "add Razorpay" &mdash; it is that the gate deciding who may spend does not know who is paying. That is a relay and schema change, and it is cheapest before payments exist.</p>
+      </div>
+    </div>
+  </div>
+
+  <section style="margin-top:46px">
+    <div class="sec-head"><h2>What runs at the same time</h2><span class="eyebrow">nothing here shares a file</span></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Track</th><th>Owns</th><th>Runs during</th></tr></thead>
+        <tbody>
+          <tr><td><b>Safety &amp; ops</b></td><td class="mono">gate.ts &middot; telemetry.ts &middot; ci.yml &middot; migrations</td><td>P0, then standing</td></tr>
+          <tr><td><b>Brand &amp; web</b></td><td class="mono">theme.css &middot; index.css &middot; icon.svg &middot; new site repo</td><td>P0 &rarr; P1</td></tr>
+          <tr><td><b>Cost ladder</b></td><td class="mono">tools/record-class &middot; packages/voice &middot; lesson-format</td><td>P1</td></tr>
+          <tr><td><b>Android</b></td><td class="mono">apps/classroom/android &middot; build scripts</td><td>starts in P1, lands in P2</td></tr>
+          <tr><td><b>Speech research</b></td><td class="mono">a spike repo &mdash; touches nothing shipping</td><td>P1 &rarr; P2, never blocking</td></tr>
+          <tr><td><b>Content</b></td><td class="mono">content/ &middot; tools/design-lesson</td><td>P1 onward, standing</td></tr>
+          <tr><td><b>The brain</b></td><td class="mono">packages/learner-model &middot; supabase/functions</td><td>P3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14px; color:var(--ink-soft); margin-top:12px">The one real collision is <code class="mono">apps/classroom/src/screens/ClassRoom.tsx</code>, which the doubt-tutor work, the cost ladder and the controller all need. Whoever lands first extracts the shared piece; the others build against that interface.</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Where this can still go wrong</h2><span class="eyebrow">ranked</span></div>
+    <div class="risk">
+      <ol>
+        <li><b>The models never fit.</b> 306&nbsp;MB against Play's 200&nbsp;MB cap, on phones where a 300&nbsp;MB download is a real decision. If download-on-first-run converts badly, the &#8377;5 target goes with it and Android is just a web app in a shell.</li>
+        <li><b>Hinglish STT stays unsolved.</b> It is the only item on this plan that is a research question, not an engineering task, and roughly &#8377;4.5 of the &#8377;5 depends on it.</li>
+        <li><b>A wrong class is permanent.</b> No quality score, no version, no rollback. <code>saveable()</code> refuses four things and none of them is "is this correct".</li>
+        <li><b>The public bucket is the library.</b> Every kept class is fetchable with no session and no meter. It is simultaneously your moat and an unpriced egress bill.</li>
+        <li><b>Prices were never pasted.</b> <code>tools/sql/model_price.sql</code> is applied by no script, by design. It is <b>not verified</b> that anyone ever ran it &mdash; so the cost reports may quietly read unpriced.</li>
+        <li><b>Building for a buyer nobody has met.</b> Zero students so far. Every number in this plan except the costs is an assumption until P1 ships.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section style="margin-bottom:0">
+    <div class="sec-head"><h2>This week</h2><span class="eyebrow">in order</span></div>
+    <div class="risk">
+      <ol>
+        <li><b>Global spend cap + kill switch.</b> Nothing else matters if one script can drain the account.</li>
+        <li><b>Sentry DSN + PostHog key.</b> Ten minutes, both free, and every later decision depends on seeing.</li>
+        <li><b>Apply 0014 and the <code>org_id</code> migration</b> while every table still holds zero rows.</li>
+        <li><b>Deploy to Vercel.</b> It has genuinely never been done.</li>
+        <li><b>Riso Pop swap</b> &mdash; the token files are generated and waiting, and no screen changes.</li>
+      </ol>
+    </div>
+  </section>
+
+</div>

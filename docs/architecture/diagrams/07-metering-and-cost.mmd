@@ -1,0 +1,29 @@
+%% Curie — The meter (fails closed) and the books (fail open). One unit = one paisa of vendor spend.
+flowchart TB
+    CALL["any relay call"] --> ADMIT["admit()"]
+    ADMIT --> VERIFY{"identity verified?"}
+    VERIFY -->|no| R401["401 / 503<br/>identity service unreachable"]
+    VERIFY -->|yes| UNITS["unitsFor(relay, req)<br/>llm 85/call · speech 0.29/char<br/>hear 0.69/sec · class 10/call"]
+    UNITS --> CLAIM["rpc claim_relay(p_user, p_relay, p_units)"]
+    CLAIM --> RU[("relay_usage<br/>RLS ON, ZERO POLICIES<br/>one atomic upsert")]
+    RU --> DEC{"allowed?"}
+    DEC -->|"rate ≥120/min"| R429R["429 'That is a lot of asking at once'<br/>retry-after = window edge"]
+    DEC -->|"budget >12000/day ≈7 classes"| R429B["429 'You have used up today's classes'<br/>retry-after = midnight UTC"]
+    DEC -->|"RPC unreachable / unparseable"| R503["503 FAILS CLOSED<br/>reason 'unavailable', retry 5s"]
+    DEC -->|yes| UP["dispatch upstream"]
+
+    UP --> PROV["Vertex / OpenRouter / Piper / Storage"]
+    PROV --> NOTE["note() — fire-and-forget<br/>void + try/catch + .catch()"]
+    NOTE --> RECU["rpc record_usage (13 params)<br/>SWALLOWS EVERY ERROR — fails open"]
+    RECU --> UE[("usage_event<br/>quantities only, never prices<br/>status 0 = 'dispatched, outcome unknown'")]
+
+    UE --> VIEW["usage_cost view<br/>security_invoker = true<br/>(before 0010 it LEAKED across students)"]
+    MP[("model_price<br/>hand-pasted by an operator<br/>tools/sql/model_price.sql — NOT a migration")] --> VIEW
+    VIEW --> SC["session_cost(uuid)<br/>no app caller"]
+    VIEW --> CPH["cost_per_student_hour(days)<br/>÷ learning_session.active_ms"]
+    CPH --> REPORT["tools/bin/cost-report.mjs<br/>refuses to run on the anon key"]
+
+    classDef ok fill:#e3efe7,stroke:#2c7a54,color:#231e16
+    classDef bad fill:#f6e9d2,stroke:#a9660f,color:#231e16
+    class CALL,ADMIT,UNITS,CLAIM,RU,UP,PROV,NOTE,RECU,UE,VIEW,MP,SC,CPH,REPORT ok
+    class R401,R429R,R429B,R503 bad
