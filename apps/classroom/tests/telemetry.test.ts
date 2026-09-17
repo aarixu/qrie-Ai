@@ -6,7 +6,6 @@ import {
   framesFrom,
   parseDsn,
   reportCrash,
-  telemetryConfigured,
   track,
 } from '../src/lib/telemetry';
 

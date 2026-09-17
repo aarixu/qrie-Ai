@@ -200,7 +200,7 @@ function foldAnswer(
   const rung = deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung);
   const unassisted = rung === 0;
 
-  let states = { ...model.states };
+  const states = { ...model.states };
 
   /**
    * EVERY OUTCOME THE BEAT SAID IT WAS CHECKING, not just the first.
@@ -210,7 +210,41 @@ function foldAnswer(
    * name more than one, and one names seven. Taking `outcomeIds[0]` silently
    * threw the rest away — six outcomes the beat explicitly claimed to be
    * checking got no belief, no observation and no date.
+   *
+   * ONE ANSWER IS ONE PIECE OF EVIDENCE, HOWEVER MANY OUTCOMES IT NAMED.
+   *
+   * This loop used to rebuild `before` from the states the PREVIOUS iteration
+   * had already moved, so propagation ran once per named outcome and compounded
+   * on everything they share. Measured on a seven-node chain: one CORRECT
+   * answer left the whole chain above the 0.75 settled line at 0.96/0.96/0.96/
+   * 0.95/0.94/0.91, where the honest single-outcome reading is 0.52/0.55/0.59/
+   * 0.67/0.80. One WRONG answer pinned four nodes exactly on the 0.02 floor
+   * against an honest 0.41/0.45/0.48. `mastery` is what `masteryView` hands the
+   * persona, the doubt tutor's secure/shaky marking and `learnFromQuiz`'s gap
+   * detection — so a single misheard Hinglish answer on a five-outcome ask
+   * could floor five outcomes and put a child on a remedial plan for things
+   * they can already do.
+   *
+   * So: freeze the prior ONCE, apply each outcome's evidence against that same
+   * frozen prior, and merge by taking, per node, whichever result moved it
+   * furthest from where it started. Compounding needs a moved prior to compound
+   * on, and there no longer is one.
    */
+  const before: Mastery = {};
+  for (const state of Object.values(states)) before[state.outcomeId] = state.mastery;
+
+  /**
+   * What this answer is DIRECT evidence about, so no outcome it names is
+   * overwritten by belief propagating from another one beside it. The rule and
+   * these words are `diagnostic/src/session.ts`'s, which has always folded a
+   * list of answers this way; this was the one place folding a list that did
+   * not. The merge below would usually pick the direct posterior anyway —
+   * usually is not a guarantee, and a heuristic pull talking over an answer the
+   * student actually gave is exactly what the rule exists to stop.
+   */
+  const asked = new Set(event.outcomeIds);
+
+  const merged: Mastery = {};
   for (const nodeId of event.outcomeIds) {
     const answer = {
       probeId: payload.probeId ?? `${event.id}:${nodeId}`,
@@ -223,22 +257,42 @@ function foldAnswer(
     // The arithmetic stays where it already lives and is already tested. This
     // function decides WHICH belief each result lands in, not what the numbers
     // are.
-    const before: Mastery = {};
-    for (const state of Object.values(states)) before[state.outcomeId] = state.mastery;
-    const after = applyEvidence(before, index, answer, { params });
+    const after = applyEvidence(before, index, answer, { probed: asked, params });
 
-    const counted = new Set<string>();
     for (const [id, value] of Object.entries(after)) {
-      if (before[id] === value) continue;
-      const prev = states[id] ?? emptyConceptState(id);
-      states[id] = { ...prev, mastery: value, observations: prev.observations + 1 };
-      counted.add(id);
+      // `before` is sparse: a node nobody has met yet is absent from it, and
+      // absent means PRIOR, not "did not move". Reading it as "did not move" is
+      // how the first version of this merge silently dropped every result on a
+      // fresh model, which is every first answer a student ever gives.
+      const prior = before[id] ?? PRIOR;
+      if (value === prior) continue;
+      const best = merged[id];
+      if (best === undefined || Math.abs(value - prior) > Math.abs(best - prior)) {
+        merged[id] = value;
+      }
     }
+  }
+
+  // Belief lands everywhere the evidence reached. Observations do not: a node
+  // that only moved by inference was not observed, it was inferred about.
+  for (const [id, value] of Object.entries(merged)) {
+    const prev = states[id] ?? emptyConceptState(id);
+    states[id] = { ...prev, mastery: value };
+  }
+
+  for (const nodeId of event.outcomeIds) {
+    const answer = {
+      probeId: payload.probeId ?? `${event.id}:${nodeId}`,
+      nodeId,
+      correct: payload.correct,
+      chosenIndex: chosenIndexFor(event, payload),
+      ms: payload.ms,
+    };
 
     /**
      * THE ASKED NODE IS COUNTED WHETHER OR NOT ITS BELIEF MOVED.
      *
-     * A belief pinned at the floor or the ceiling does not move, and the loop
+     * A belief pinned at the floor or the ceiling does not move, and the merge
      * above skips anything unchanged — so ten cold wrong answers on the same
      * outcome used to leave `observations` at 2 while `unassistedObservations`
      * reached 10. A subset counter larger than the set it is a subset of is not
@@ -248,7 +302,10 @@ function foldAnswer(
     const prev = states[nodeId] ?? emptyConceptState(nodeId);
     const updated: ConceptState = {
       ...prev,
-      observations: counted.has(nodeId) ? prev.observations : prev.observations + 1,
+      // Once, here, and nowhere else. The merge above moves belief and counts
+      // nothing, so an asked node is counted exactly once per answer whether or
+      // not its own belief moved.
+      observations: prev.observations + 1,
       // Answers only, and always the asked node — this is what opens the
       // evidence gate, and attendance must never reach it.
       answerObservations: prev.answerObservations + 1,

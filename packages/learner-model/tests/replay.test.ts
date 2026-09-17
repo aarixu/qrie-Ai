@@ -154,15 +154,37 @@ describe('replay', () => {
    * isolation while overall belief hears the failed prerequisite `a` through
    * the graph — the assisted/unassisted split doing exactly what it is for.
    */
+  /**
+   * These numbers moved on 2026-09-17, and the OLD ones were the bug.
+   *
+   * `a` was recorded with 6 observations against 2 answers and 1 lesson, and
+   * `b` with 4 against 3 answers and no lesson. Both are counters larger than
+   * the set they count, from a fold that walked `event.outcomeIds` applying
+   * evidence once per named outcome against states the previous iteration had
+   * already moved. The seq-3 answer names BOTH nodes, so it was counted twice
+   * and propagated twice. `a` is named by exactly three events -- one taught
+   * and two answers -- and `b` by three answers, and three is what each now
+   * reads. `a`'s mastery fell by 0.0039, which is the compounded pull removed.
+   */
   it('reproduces the known state byte for byte', () => {
+    // The invariant the old fixture violated, asserted here so a future fold
+    // cannot quietly reintroduce it: a node is observed once per event that
+    // names it, never once per outcome that event happened to name beside it.
+    for (const state of Object.values(foldFromZero().states)) {
+      expect(
+        state.observations,
+        `${state.outcomeId}: ${state.observations} observations`,
+      ).toBeLessThanOrEqual(state.answerObservations + state.taughtCount);
+    }
+
     expect(foldFromZero()).toEqual({
       states: {
         a: {
           outcomeId: 'a',
-          mastery: 0.8672566371681415,
+          mastery: 0.8633333333333332,
           unassistedMastery: 0.32432432432432434,
           assistedPerformance: 0.5,
-          observations: 6,
+          observations: 3,
           answerObservations: 2,
           doubtCount: 0,
           unassistedObservations: 2,
@@ -179,7 +201,7 @@ describe('replay', () => {
           mastery: 0.3617204335276203,
           unassistedMastery: 0.9283667621776505,
           assistedPerformance: 0.782608695652174,
-          observations: 4,
+          observations: 3,
           answerObservations: 3,
           doubtCount: 1,
           unassistedObservations: 2,

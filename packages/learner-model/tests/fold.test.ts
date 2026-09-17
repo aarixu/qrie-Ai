@@ -412,3 +412,98 @@ describe('foldSession', () => {
     );
   });
 });
+
+/**
+ * ONE ANSWER IS ONE ANSWER, HOWEVER MANY OUTCOMES THE BEAT NAMED.
+ *
+ * `classLedger` files an answer with `beat.checks`, and across the fifteen
+ * authored lessons 27 of the 126 beats that name any outcome name more than
+ * one; one names seven. `foldAnswer` walked that list calling `applyEvidence`
+ * once per id, each call rebuilding `before` from the states the PREVIOUS
+ * iteration had already moved -- so propagation ran N times for one answer.
+ *
+ * Measured on a seven-node chain before the fix: one CORRECT answer left every
+ * node above the 0.75 settled line, the chain reading 0.96/0.96/0.96/0.95/
+ * 0.94/0.91 against an honest 0.52/0.55/0.59/0.67/0.80. One WRONG answer ran
+ * the same chain to four nodes pinned exactly on the 0.02 floor, against an
+ * honest 0.41/0.45/0.48. That is the shape of the harm: a single misheard
+ * Hinglish answer on a five-outcome ask could floor five outcomes and put a
+ * child on a remedial plan for things they can already do.
+ *
+ * The rest of the repo already had the rule and states it twice --
+ * `diagnostic/src/session.ts` and `adapt.ts`: "what a student actually answered
+ * must not be overwritten by belief propagating from a later question." Not one
+ * test in this package passed more than a single outcome id before these, which
+ * is how it survived.
+ */
+describe('a beat that checks more than one outcome', () => {
+  const shared = new GraphIndex({
+    version: 1,
+    nodes: [node('a', []), node('b', ['a']), node('c', ['a'])],
+  } as never);
+
+  const session = (ids: string[], correct: boolean): LedgerEvent[] => [
+    ev('session-started', [], {}),
+    answered(0, correct, ids),
+    ev('session-ended', [], {}),
+  ];
+
+  const fold = (ids: string[], correct = true) =>
+    foldSession(emptyModel(), S1, session(ids, correct), shared, params);
+
+  for (const correct of [true, false]) {
+    const word = correct ? 'a correct' : 'a wrong';
+
+    it(`leaves each named outcome where ${word} answer about it alone would`, () => {
+      const together = fold(['b', 'c'], correct);
+      const bAlone = fold(['b'], correct);
+
+      // Each outcome's own posterior is its own evidence. What the beat happened
+      // to name beside it is not evidence about it.
+      expect(together.states.b?.mastery).toBeCloseTo(bAlone.states.b?.mastery ?? -1, 6);
+    });
+
+    it(`moves the shared prerequisite no further on ${word} answer than one outcome would`, () => {
+      const together = fold(['b', 'c'], correct);
+      const alone = fold(['b'], correct);
+
+      // The compounding, stated as an assertion: one answer is one piece of
+      // evidence about `a`, whether the beat named one outcome or seven.
+      expect(together.states.a?.mastery ?? 0).toBeCloseTo(alone.states.a?.mastery ?? 0, 6);
+    });
+  }
+
+  it('counts an observation only where the student was actually asked', () => {
+    const m = fold(['b', 'c']);
+
+    // `a` moved by inference and was never asked, so it has no observation to
+    // its name. Before the fix it collected one per iteration that moved it.
+    expect(m.states.a?.observations ?? 0).toBe(0);
+    expect(m.states.b?.observations).toBe(1);
+    expect(m.states.c?.observations).toBe(1);
+  });
+
+  it('never lets observations exceed the answers and lessons that produced them', () => {
+    // A counter larger than the set it counts is the record disagreeing with
+    // itself, and `chooseAsk` ranks on exactly this field.
+    const m = fold(['b', 'c']);
+
+    for (const state of Object.values(m.states)) {
+      expect(
+        state.observations,
+        `${state.outcomeId}: ${state.observations} observations against ${state.answerObservations} answers and ${state.taughtCount} taught`,
+      ).toBeLessThanOrEqual(state.answerObservations + state.taughtCount);
+    }
+  });
+
+  it('still gives every named outcome its own belief and its own answer count', () => {
+    // The loop exists for a reason and must keep working: taking outcomeIds[0]
+    // threw away every other outcome the beat claimed to be checking.
+    const m = fold(['b', 'c']);
+
+    for (const id of ['b', 'c']) {
+      expect(m.states[id]?.answerObservations, id).toBe(1);
+      expect(m.states[id]?.unassistedObservations, id).toBe(1);
+    }
+  });
+});
