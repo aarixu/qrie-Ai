@@ -1,7 +1,7 @@
 /**
  * RISO POP — the palette, derived and PROVEN, then written out.
  *
- *   node docs/brand/build-theme.mjs            # check only, prints the audit
+ *   node docs/brand/build-theme.mjs            # audit + drift check vs the committed CSS
  *   node docs/brand/build-theme.mjs --write    # also writes theme.css + tints.css
  *
  * WHY THIS IS A SCRIPT AND NOT A FILE OF HEXES. The contract is 47 Material-3
@@ -158,7 +158,18 @@ for (const s of SUBJECTS) {
   PAIRS.push([`subject ${s.name}: ink on tile`, s.ink, s.tile, 4.5]);
   PAIRS.push([`subject ${s.name}: ink on ring`, s.ink, s.ring, 3.0]);
   PAIRS.push([`subject ${s.name}: dk ink on dk tile`, s.dkInk, s.dkTile, 4.5]);
+  // Chapter.tsx renders 'ring-tint-green ink-green' as ONE lockup, so the
+  // dark room's ink-on-ring pair is rendered too — audit it like the light.
+  PAIRS.push([`subject ${s.name}: dk ink on dk ring`, s.dkInk, s.dkRing, 3.0]);
 }
+
+// Help.tsx sets BODY text — on-surface and on-surface-variant — on the blue
+// ring tint, so those four are rendered pairs at text size: 4.5, not 3.0.
+const ringBlue = SUBJECTS.find((s) => s.name === 'blue');
+PAIRS.push(['on-surface / ring-tint-blue', INK.ink, ringBlue.ring, 4.5]);
+PAIRS.push(['on-surface-variant / ring-blue', INK.inkSoft, ringBlue.ring, 4.5]);
+PAIRS.push(['dk on-surface / dk ring-blue', DARK.onSurface, ringBlue.dkRing, 4.5]);
+PAIRS.push(['dk on-surface-var / dk ring-blue', DARK.onSurfaceV, ringBlue.dkRing, 4.5]);
 
 console.log('\nRISO POP — every rendered pair, measured\n');
 let bad = 0;
@@ -275,5 +286,21 @@ if (process.argv.includes('--write')) {
   console.log('  Written: docs/brand/riso-pop.theme.css');
   console.log('  Written: docs/brand/riso-pop.tints.css\n');
 } else {
-  console.log('  (re-run with --write to emit the CSS)\n');
+  // Check mode also proves the COMMITTED files are this script's output. The
+  // audit above measures this script's constants; the app's tests compare the
+  // shipped CSS to the committed docs/brand files; this comparison is the
+  // middle link — without it a hand-edit to riso-pop.theme.css would ship
+  // unmeasured colours with every light green. Line endings are normalised
+  // because git on Windows may check the files out with CRLF.
+  const flat = (s) => s.replace(/\r\n/g, '\n');
+  const drift = [
+    ['docs/brand/riso-pop.theme.css', css],
+    ['docs/brand/riso-pop.tints.css', tints],
+  ].filter(([file, want]) => flat(fs.readFileSync(file, 'utf8')) !== flat(want));
+  if (drift.length) {
+    for (const [file] of drift) console.log(`  DRIFT: ${file} is not what --write would emit.`);
+    console.log('  Never hand-edit a measured value — change an ink here and --write.\n');
+    process.exit(1);
+  }
+  console.log('  Committed CSS matches what --write would emit. (--write to re-emit)\n');
 }

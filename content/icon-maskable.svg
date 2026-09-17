@@ -1,14 +1,30 @@
-<!-- Maskable variant: full-bleed background because the launcher crops to its
-     own shape, and the mark scaled down so every point of it stays inside the
-     safe circle (the middle 80%) whatever mask Android applies. -->
+<!-- Maskable variant, which is ALSO the Android adaptive FOREGROUND layer:
+     tools/bin/make-app-icons.mjs renders this same file 1:1. Two croppings
+     apply and the smaller one wins. PWA maskable masks keep at least the
+     central 80% circle (r=204.8 at 512); Android's adaptive pipeline shows
+     only the central 72/108dp of the layer and guarantees nothing outside the
+     66/108dp safe circle — r=156.4 at 512. An earlier draft keylined the
+     yellow with a ring at r=220: inside every PWA mask, cropped off every
+     real Android launcher — yellow unbounded (law 3 broken) exactly where
+     most students see the mark.
+
+     So the keylined yellow tile from icon.svg moves INSIDE the safe circle,
+     corners included (corner reach = sqrt2 x (125 - 55) + 55 = 154 < 156.4),
+     and the full bleed is paper, croppable without losing a law. Same riso
+     inks as icon.svg; the mask's edge is still not a keyline — the tile's
+     stroked rect is. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#4648d4"/>
-  <g transform="translate(256 256) scale(11.5)">
-    <g fill="none" stroke="#ffffff" stroke-width="2.4">
-      <ellipse rx="14" ry="6.2" transform="rotate(45)"/>
-      <ellipse rx="14" ry="6.2" transform="rotate(-45)"/>
+  <rect width="512" height="512" fill="#FAF7F0"/>
+  <rect x="131" y="131" width="250" height="250" rx="55" fill="#FFD21E"/>
+  <rect x="136" y="136" width="240" height="240" rx="50" fill="none" stroke="#17171D" stroke-width="10"/>
+  <g transform="translate(256 256) scale(6.6)">
+    <g fill="none" stroke-width="2.4">
+      <ellipse rx="14" ry="6.2" transform="rotate(45)" stroke="#0B5FD9"/>
+      <ellipse rx="14" ry="6.2" transform="rotate(-45)" stroke="#FF48A0"/>
     </g>
-    <circle r="4" fill="#ffffff"/>
-    <circle cx="9.9" cy="-9.9" r="2.2" fill="#ffffff"/>
+    <circle r="4" fill="#17171D"/>
+    <!-- Pink on yellow is a hue change, not a contrast one, so the electron
+         gets its own keyline. -->
+    <circle cx="9.9" cy="-9.9" r="2.2" fill="#FF48A0" stroke="#17171D" stroke-width="1.2"/>
   </g>
 </svg>

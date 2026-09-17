@@ -15,6 +15,17 @@ import { BRAND } from '../brand';
  * the silhouette square — so the mark optically centres inside a circle or a
  * rounded square without nudging. Stroke weight is tuned so the orbits still
  * read as two distinct rings at 24px.
+ *
+ * RISO POP redrew the inks, not the geometry: each orbit is one riso PLATE —
+ * the pressable blue and the fluoro pink — overprinted the way a two-colour
+ * riso poster actually prints, the nucleus in ink and the electron riding its
+ * orbit's fluoro plate (in the icon files, where it sits on yellow, the
+ * electron gains an ink keyline it does not need in-app). Every
+ * colour arrives through a token class and `currentColor`, never a literal
+ * hex, so the mark re-pitches itself in the dark room with the rest of the
+ * palette (the blue plate lightens, the ink flips to paper). The yellow tile
+ * and its keyline belong to content/icon.svg — in the app the mark sits
+ * straight on whatever surface the screen already has.
  */
 export function Logo({
   size = 32,
@@ -22,6 +33,7 @@ export function Logo({
 }: {
   /** Rendered edge length in px. The mark is square. */
   size?: number;
+  /** Colours the BLUE plate; the pink plate and the ink stay on their tokens. */
   className?: string;
 }) {
   return (
@@ -34,13 +46,28 @@ export function Logo({
       focusable="false"
     >
       <g transform="translate(16 16)">
-        <g fill="none" stroke="currentColor" strokeWidth="2.4">
-          <ellipse rx="14" ry="6.2" transform="rotate(45)" />
-          <ellipse rx="14" ry="6.2" transform="rotate(-45)" />
+        <g fill="none" strokeWidth="2.4">
+          <ellipse rx="14" ry="6.2" transform="rotate(45)" stroke="currentColor" />
+          {/* primary-container IS the fluoro plate — a ground colour, which a
+              stroked orbit is: nothing ever has to be read off it. */}
+          <ellipse
+            rx="14"
+            ry="6.2"
+            transform="rotate(-45)"
+            className="text-primary-container"
+            stroke="currentColor"
+          />
         </g>
-        <circle r="4" fill="currentColor" />
-        {/* Sits exactly on the far end of the rotate(-45) orbit's major axis. */}
-        <circle cx="9.9" cy="-9.9" r="2.2" fill="currentColor" />
+        <circle r="4" className="text-on-background" fill="currentColor" />
+        {/* Sits exactly on the far end of the rotate(-45) orbit's major axis,
+            and wears that orbit's plate. */}
+        <circle
+          cx="9.9"
+          cy="-9.9"
+          r="2.2"
+          className="text-primary-container"
+          fill="currentColor"
+        />
       </g>
     </svg>
   );
