@@ -72,3 +72,40 @@ export function toStudent(text: string, lessonId?: string): Screened {
   }
   return { text, say: null };
 }
+
+/**
+ * THE SCREEN AS A THING, RATHER THAN AS A HABIT.
+ *
+ * `toStudent` decides. Something has to CALL it on every path from a model's
+ * words to a child's ears, and for a while that something was a closure named
+ * `speakSafely` living inside a 1,300-line screen component. The doubt handoff
+ * was built fifty lines above it with `speak: (text) => tts.speak(text)`, so
+ * the one model that converses freely with a child on any subject was the one
+ * whose words were never looked at — while `speakSafely`'s own docblock named
+ * the doubt tutor among the things it protected.
+ *
+ * A screen you have to remember to use is a screen that gets missed. So it
+ * wraps the speaker instead: callers are handed something that has already
+ * been screened, and reaching the unscreened voice is a thing you would have
+ * to go and do on purpose.
+ *
+ * `halted` says the class stopped here and she has just told a student to talk
+ * to somebody. Every caller has a next line — resolve the question, reopen the
+ * mic, carry on the doubt — and every one of them would be the app talking
+ * over that.
+ *
+ * A REJECTED LINE COUNTS AS SPOKEN. A stuck beat is a dead class, and a doubt
+ * that never resolves is a child holding their hand up at a frozen screen. The
+ * voice failing is not a reason to stop.
+ */
+export function screenedSpeech(
+  speak: (text: string) => Promise<void>,
+  lessonId?: string,
+): (text: string) => Promise<{ halted: boolean }> {
+  return async (text) => {
+    const screened = toStudent(text, lessonId);
+    const halted = screened.say !== null;
+    await speak(screened.say ?? screened.text ?? text).catch(() => undefined);
+    return { halted };
+  };
+}

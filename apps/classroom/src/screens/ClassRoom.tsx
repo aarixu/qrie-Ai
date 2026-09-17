@@ -40,7 +40,7 @@ import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
-import { fromStudent, toStudent } from '../lib/safety';
+import { fromStudent, screenedSpeech } from '../lib/safety';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
@@ -456,11 +456,36 @@ export function ClassRoom({
     return createGeminiAgent({ student, fallback: createStubAgent() });
   }, [liveVoiceKey, voiceMode, student]);
 
+  /**
+   * ANYTHING SHE IS ABOUT TO SAY, LOOKED AT FIRST.
+   *
+   * It matters most exactly where a model is most likely to go wrong —
+   * repeating a child's disclosure back at them as if it were teaching — so
+   * this is on the path from a MODEL's words to the student's ears, and
+   * nowhere else. The lesson's own narration does not come through here; it is
+   * screened once at preparation, where it is written, rather than re-checked
+   * on every beat of a fixed recording forever.
+   *
+   * IT SITS ABOVE THE HANDOFF ON PURPOSE. It used to be declared fifty lines
+   * BELOW it, and the handoff was therefore built with a raw
+   * `speak: (text) => tts.speak(text)` — so the one model that converses freely
+   * with a child on any subject was the one whose words were never looked at,
+   * while this docblock claimed the opposite. The screen now wraps the speaker
+   * (`lib/safety.ts`) instead of being a function callers must remember, and it
+   * is declared before the first thing that needs it.
+   */
+  const speakSafely = useMemo(
+    () => screenedSpeech((text: string) => tts.speak(text), lesson.id),
+    [tts, lesson.id],
+  );
+
   const handoff = useMemo(
     () =>
       createHandoff({
         agent,
-        speak: (text) => tts.speak(text),
+        speak: async (text) => {
+          await speakSafely(text);
+        },
         onPause: () => playerRef.current.pause(),
         onResume: () => {
           // Recall view ends with the doubt; play() re-speaks the current beat,
@@ -501,27 +526,6 @@ export function ClassRoom({
 
   const inDoubt = handoffState !== 'PLAYING';
 
-  /**
-   * ANYTHING SHE IS ABOUT TO SAY, LOOKED AT FIRST.
-   *
-   * The outbound half of the safety screen had no caller: every line the judge
-   * and the doubt tutor produced went straight to the speaker. It matters most
-   * exactly where a model is most likely to go wrong — repeating a child's
-   * disclosure back at them as if it were teaching — so this is on the path
-   * from a MODEL's words to the student's ears, and nowhere else. The lesson's
-   * own narration is not screened here: it came through prep, which screens
-   * what it plans, and re-checking it every beat would be a filter running
-   * against a fixed recording forever.
-   */
-  const speakSafely = async (text: string): Promise<{ halted: boolean }> => {
-    const screened = toStudent(text, lesson.id);
-    const swapped = screened.say !== null;
-    await tts.speak(screened.say ?? screened.text ?? text);
-    // She has just told a student to talk to somebody. Whoever called this has
-    // a next line — resolve the question, reopen the mic — and every one of
-    // them would be the app talking over that.
-    return { halted: swapped };
-  };
 
   /**
    * THE EAR. When she asks, the mic opens on its own, waits for the spoken

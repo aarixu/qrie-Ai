@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { HELPLINES, SUPPORT_REPLY } from '@ai-tutor/safety';
 import { TUTOR } from '@ai-tutor/persona';
 import { buildSystemPrompt } from '@ai-tutor/persona';
-import { fromStudent, toStudent } from '../src/lib/safety';
+import { fromStudent, screenedSpeech, toStudent } from '../src/lib/safety';
 import { flagStore, recentFlags } from '../src/stores/flags';
 import { ReportSheet } from '../src/ui/ReportSheet';
 
@@ -135,5 +135,78 @@ describe('ReportSheet', () => {
 
   it('cannot be sent without saying what happened', () => {
     expect(html).toContain('disabled');
+  });
+});
+
+/**
+ * THE OUTBOUND SCREEN, AS A THING RATHER THAN AS A HABIT.
+ *
+ * `toStudent` decides; something has to CALL it on every path from a model's
+ * words to a child's ears. That was a closure named `speakSafely` inside a
+ * 1,300-line component, and the doubt handoff was built fifty lines above it
+ * with `speak: (text) => tts.speak(text)`. So the one model that converses
+ * freely with a child on any subject was the one whose words were never
+ * looked at -- while `speakSafely`'s own docblock named the doubt tutor as
+ * something it protected.
+ *
+ * A screen you have to remember to use is a screen that gets missed. This is
+ * the screen as a wrapper around the speaker itself, so the unscreened one is
+ * not something a caller can reach for by accident.
+ */
+describe('screenedSpeech', () => {
+  it('says ordinary teaching exactly as it was written', async () => {
+    const said: string[] = [];
+    const speak = screenedSpeech(async (t) => void said.push(t), 'class10-blood');
+
+    const out = await speak('The left ventricle pumps blood to the whole body.');
+
+    expect(said).toEqual(['The left ventricle pumps blood to the whole body.']);
+    expect(out.halted).toBe(false);
+  });
+
+  it('never lets a distressing line through in the model’s own words', async () => {
+    // The failure this exists to prevent: a model repeating a child's
+    // disclosure back at them, in her voice, as though it were teaching.
+    const said: string[] = [];
+    const speak = screenedSpeech(async (t) => void said.push(t), 'class10-blood');
+
+    const out = await speak('i want to kill myself');
+
+    expect(said).toHaveLength(1);
+    expect(said[0]).toBe(SUPPORT_REPLY);
+    expect(said[0]).not.toContain('kill myself');
+    expect(out.halted).toBe(true);
+  });
+
+  it('says the helpline out loud, not only into a log', async () => {
+    const said: string[] = [];
+    const speak = screenedSpeech(async (t) => void said.push(t), 'class10-blood');
+
+    await speak('i want to kill myself');
+
+    // Tele-MANAS and Childline are the point of the reply, not decoration.
+    expect(said[0]).toContain(HELPLINES.telemanas);
+    expect(said[0]).toContain(HELPLINES.childline);
+  });
+
+  it('records the flag against the lesson it happened in', async () => {
+    const speak = screenedSpeech(async () => undefined, 'class10-blood');
+
+    await speak('i want to kill myself');
+
+    expect(recentFlags(flagStore.get())[0]).toMatchObject({
+      kind: 'distress',
+      lessonId: 'class10-blood',
+    });
+  });
+
+  it('treats a lost voice line as spoken rather than wedging the class', async () => {
+    // A stuck beat is a dead class, and a doubt that never resolves is a
+    // student holding their hand up at a frozen screen.
+    const speak = screenedSpeech(async () => {
+      throw new Error('the voice went away');
+    }, 'class10-blood');
+
+    await expect(speak('carry on')).resolves.toMatchObject({ halted: false });
   });
 });
