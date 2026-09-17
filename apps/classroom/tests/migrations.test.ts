@@ -655,3 +655,214 @@ describe('the per-topic prep lock', () => {
     expect(sql).toMatch(/revoke all on function public\.take_prep_lock\([^)]*\) from/i);
   });
 });
+
+/**
+ * THE SCHEMA FLOOR, POURED WHILE THE TABLES ARE STILL EMPTY.
+ *
+ * Every column a later phase needs lands in one migration while the
+ * per-student tables hold zero or near-zero rows; that window closes the day
+ * the first real student arrives and never reopens. The constraint above all
+ * others is ZERO BEHAVIOUR CHANGE — the client upserts student_state without
+ * org_id, claim_relay writes relay_usage without it, record_usage writes
+ * usage_event without it, keepClass writes prepared_class without it, and
+ * every one of those writers must keep working untouched. So the columns are
+ * nullable, Postgres fills what it can on the way in, and — the assertion
+ * that matters most below — not one row-security rule moves. Teacher
+ * visibility is a later, deliberate permission change, not a side effect of
+ * plumbing.
+ */
+describe('the schema-floor migration', () => {
+  // With the `--` prose stripped, so every assertion here — especially the
+  // no-policy one — is about what Postgres will run, never about a comment.
+  const sql = sqlOf('0018_org_and_attribution_columns.sql').replace(/--[^\n]*/g, '');
+
+  it('adds a nullable org_id to the four tables that never carried one', () => {
+    // learning_session, ledger_event and concept_state were born with org_id;
+    // these four were not, and a school pilot cannot answer "whose students
+    // spent this" without it.
+    for (const table of ['student_state', 'relay_usage', 'usage_event', 'prepared_class']) {
+      expect(sql).toMatch(
+        new RegExp(
+          `alter table public\\.${table}\\s+add column if not exists org_id uuid references public\\.organization on delete set null`,
+          'i',
+        ),
+      );
+    }
+  });
+
+  it('never lets org_id block account deletion', () => {
+    // delete_own_account (0002) deletes auth.users and the cascade takes the
+    // student's rows; the last membership going fires on_membership_removed
+    // (0007), which deletes the empty solo org. A `restrict` here would make
+    // that org delete — and so account deletion itself — fail. SET NULL and
+    // nothing else.
+    expect(sql).toMatch(/on delete set null/i);
+    expect(sql).not.toMatch(/org_id uuid references public\.organization on delete (cascade|restrict)/i);
+    expect(sql).not.toMatch(/org_id uuid not null/i);
+  });
+
+  it('fills org_id from membership on the way in, so no writer has to change', () => {
+    expect(sql).toMatch(/create or replace function public\.fill_org_id/i);
+    expect(sql).toMatch(/new\.org_id is null/i);
+    for (const table of ['student_state', 'relay_usage', 'usage_event']) {
+      expect(sql).toMatch(new RegExp(`before insert on public\\.${table}`, 'i'));
+    }
+  });
+
+  it('breaks a several-membership tie by earliest created_at, on the record', () => {
+    // Temporary until the school claim flow exists and the caller says which
+    // org they act under; asserted so removing it later is a conscious edit.
+    expect(sql).toMatch(/order by m\.created_at asc\s+limit 1/i);
+  });
+
+  it('leaves prepared_class untriggered, because it has no user to resolve', () => {
+    // No user_id column, so no membership to look up. The keep path will pass
+    // org_id explicitly later; until then the column stays null.
+    expect(sql).not.toMatch(/before insert on public\.prepared_class/i);
+  });
+
+  it('backfills the rows that predate the trigger, by the same rule', () => {
+    // The trigger DOES fire on every upsert attempt, conflicting or not —
+    // but on the ON CONFLICT UPDATE arm its fill lands only in EXCLUDED,
+    // and the client's set-list (supabase.ts upserts user_id, key, value,
+    // updated_at — no org_id) never copies it to the stored row. So a
+    // pre-existing row's null would live forever without this.
+    for (const table of ['student_state', 'relay_usage', 'usage_event']) {
+      expect(sql).toMatch(
+        new RegExp(`update public\\.${table}[\\s\\S]{0,300}org_id is null`, 'i'),
+      );
+    }
+  });
+
+  it('adds the prep attribution columns the cost books will read', () => {
+    // S — how many students share one preparation — is the whole cost model,
+    // and without these nothing ties a call or a sitting to the preparation
+    // that served it. Bare uuids, no foreign key, for 0008's reason: the
+    // catalogue row may land after the calls that made it.
+    expect(sql).toMatch(/alter table public\.usage_event\s+add column if not exists prep_id uuid/i);
+    expect(sql).toMatch(/alter table public\.learning_session\s+add column if not exists prep_id uuid/i);
+    expect(sql).not.toMatch(/prep_id uuid[^,;]*references/i);
+    expect(sql).toMatch(/add column if not exists bucket text check \(bucket in \('live', 'warm'\)\)/i);
+  });
+
+  it('widens the provider check by its real name instead of stacking a second', () => {
+    // 0008 declared the check inline, so Postgres named it
+    // usage_event_provider_check; a second overlapping constraint would make
+    // every future widening touch two. 'self' is the Piper box.
+    expect(sql).toMatch(/drop constraint if exists usage_event_provider_check/i);
+    expect(sql).toMatch(
+      /add constraint usage_event_provider_check\s+check \(provider in \('vertex', 'openrouter', 'storage', 'self'\)\)/i,
+    );
+  });
+
+  it('adds the review columns with published as the deliberate default', () => {
+    // The reviewer that would earn a 'pending' default does not exist yet
+    // (phase E, wave 2). Defaulting to 'pending' today would hide every class
+    // on the live project the moment the migration ran — the exact behaviour
+    // change this file exists to not make. Flipping it later is a one-line,
+    // conscious edit.
+    expect(sql).toMatch(
+      /add column if not exists review_status text not null default 'published'\s+check \(review_status in \('pending', 'published', 'retracted'\)\)/i,
+    );
+    expect(sql).toMatch(/add column if not exists published_at timestamptz/i);
+    expect(sql).toMatch(/add column if not exists review_note text/i);
+    expect(sql).toMatch(/add column if not exists version integer not null default 1/i);
+    expect(sql).toMatch(/add column if not exists retracted_at timestamptz/i);
+  });
+
+  it('keeps the fill function out of student hands, like every definer here', () => {
+    expect(sql).toMatch(/security definer/i);
+    expect(sql).toMatch(/set search_path = public/i);
+    expect(sql).toMatch(/revoke all on function public\.fill_org_id\(\) from public, anon, authenticated/i);
+  });
+
+  it('changes NO row-security rule anywhere, because this is plumbing, not permission', () => {
+    // THE ONE THAT MATTERS. Every table touched here keeps exactly the
+    // visibility it has today; a policy statement in this file would be a
+    // permission change smuggled in as a column.
+    expect(sql).not.toMatch(/create policy|drop policy|alter policy/i);
+  });
+
+  it('binds each fill trigger to fill_org_id, row by row', () => {
+    // `before insert on` alone would also pass for a statement-level trigger
+    // or one bound to some other function; the full binding is the promise.
+    for (const table of ['student_state', 'relay_usage', 'usage_event']) {
+      expect(sql).toMatch(
+        new RegExp(
+          `before insert on public\\.${table}\\s+for each row execute function public\\.fill_org_id`,
+          'i',
+        ),
+      );
+    }
+  });
+
+  it('refuses to widen a provider check it cannot find by name', () => {
+    // The drop-by-name rests on the name Postgres's convention gives an
+    // inline column check. If the live name ever differed, `drop constraint
+    // if exists` would no-op, the add would still SUCCEED, and both checks
+    // would coexist — the stale narrow one refusing the first
+    // provider = 'self' row at runtime, long after the push reported clean.
+    // So the migration looks the name up in pg_constraint first and raises
+    // loudly on a miss, turning a silent runtime refusal into a failed push.
+    expect(sql).toMatch(/select 1\s+from pg_constraint[\s\S]{0,200}usage_event_provider_check/i);
+    expect(sql).toMatch(/raise exception/i);
+  });
+
+  it('indexes org_id on all four tables, for the deletion path first', () => {
+    // ON DELETE SET NULL is enforced by Postgres hunting the dying org's
+    // rows in every referencing table — and an org dies on EVERY account
+    // deletion (0002 deletes auth.users; the last membership going fires
+    // on_membership_removed, 0007). Without these, that store-mandated,
+    // child-facing flow pays four sequential scans, the worst over
+    // usage_event, the fastest-growing table in the schema. Poured now for
+    // this file's own reason: later means CREATE INDEX CONCURRENTLY on
+    // live tables.
+    for (const table of ['student_state', 'relay_usage', 'usage_event', 'prepared_class']) {
+      expect(sql).toMatch(
+        new RegExp(
+          `create index if not exists ${table}_org\\s+on public\\.${table} \\(org_id\\) where org_id is not null`,
+          'i',
+        ),
+      );
+    }
+  });
+
+  it('gives every pre-review published row its truthful publication date', () => {
+    // A pre-reviewer class was de facto published the moment it was kept, so
+    // created_at is the honest retro-date. Without this, the first phase-E
+    // query that says "published since X" would silently drop the exact rows
+    // the 'published' default was chosen to protect.
+    expect(sql).toMatch(
+      /update public\.prepared_class\s+set published_at = created_at[\s\S]{0,120}published_at is null/i,
+    );
+  });
+
+  it('rebuilds usage_cost so the cost books can read the columns poured for them', () => {
+    // `select e.*` in a view is a column snapshot taken at CREATE time: the
+    // 0008 view does not grow with the table, so without this rebuild
+    // prep_id, bucket and org_id would stay invisible to the very reports
+    // section 3 exists for. DROP then CREATE, not create-or-replace, because
+    // replace refuses to reorder an existing view's columns; and the 0010
+    // ritual — security_invoker plus the full regrant — restated whole,
+    // because a recreated view is a NEW object that Supabase grants to anon
+    // and authenticated by default, which is the exact leak 0010 measured.
+    expect(sql).toMatch(/drop view (if exists )?public\.usage_cost/i);
+    expect(sql).toMatch(/create view public\.usage_cost as/i);
+    expect(sql).toMatch(/alter view public\.usage_cost set \(security_invoker = true\)/i);
+    expect(sql).toMatch(/revoke all on public\.usage_cost from/i);
+    expect(sql).toMatch(/grant select on public\.usage_cost to service_role/i);
+  });
+
+  it('grants nothing on any base table and disables row security nowhere', () => {
+    // The no-policy assertion above would wave through a `grant select ...
+    // to anon` or a `disable row level security` — the same permission
+    // change walking in through a different door. The one relation grant
+    // this file makes is the usage_cost regrant to service_role alone,
+    // restating what 0010 already made true.
+    expect(sql).not.toMatch(/disable row level security/i);
+    expect(sql).not.toMatch(
+      /grant\s+(select|insert|update|delete|all)\s+on\s+(table\s+)?public\.(student_state|relay_usage|usage_event|prepared_class|learning_session|organization|membership)\b/i,
+    );
+    expect(sql).not.toMatch(/grant[\s\S]{0,60}on public\.usage_cost to (public|anon|authenticated)/i);
+  });
+});
