@@ -1,19 +1,61 @@
 # The safety net the repo was built for.
 #
-# 1,691 tests that run only on one laptop are not a safety net for a codebase
-# whose stated purpose is that a stranger can pick it up. Every push and every
-# pull request runs the same three commands a developer runs, in the same
-# order, and a red check is the only thing standing between a broken main and
-# a student.
+# A test suite that runs only on one laptop is not a safety net for a
+# codebase whose stated purpose is that a stranger can pick it up. (No count
+# of that suite here on purpose: the last one written into this comment went
+# stale by 1,216 tests, and a number that is wrong teaches people to skip the
+# paragraph it sits in.) Every push and every pull request runs the same
+# commands a developer runs, in the same order, and a red check is the only
+# thing standing between a broken main and a student.
+#
+# WHAT THIS JOB DELIBERATELY NEEDS: nothing. No secrets, no .env, no VITE_
+# variables. The app is built so that absence is a working state — telemetry
+# treats an unset DSN and key as a complete no-op (apps/classroom/src/lib/
+# telemetry.ts), the vite config guards every env read so absence is a
+# working state — the reads feeding the dev relay plugins default to the
+# empty string, the rest are existence-checked or truthy-guarded
+# (apps/classroom/vite.config.ts) — and the secret scan's third pass matches
+# key SHAPES precisely so it still catches a leak when there is no .env to
+# compare against (tools/bin/check-bundle-secrets.mjs). If a step here ever
+# starts wanting a secret, that is a bug in the step, not a missing setting.
 name: CI
 
+# This job only reads the tree and reports a verdict. checkout persists the
+# token into .git/config by default, and `npm ci` then runs every
+# dependency's install scripts with that file on disk — a token that could
+# also write is surface area with no purpose here.
+permissions:
+  contents: read
+
 on:
+  # Both events, one run each per commit: `push: ['**']` is what makes a
+  # plain push to any branch go green or red with no ceremony, and
+  # `pull_request` is what covers a PR from a fork, whose push lands in the
+  # fork rather than here. A same-repo PR would fire both, so the `if:` on
+  # the verify job skips the pull_request copy — the push run has already
+  # verified that exact commit, and its check attaches to the commit, so it
+  # still shows on the PR.
   push:
     branches: ['**']
   pull_request:
 
+# One live run per ref. On a branch, a push on top of a push cancels the
+# stale run rather than queueing behind it: the superseded commit's verdict
+# answers a question nobody is still asking, and free-tier minutes are the
+# budget this spends. Not on master — there every commit's verdict is the
+# record, and a cancelled run would let a breaking commit hide under the
+# next push's green — so master runs queue instead of cancelling.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 jobs:
   verify:
+    # pull_request only earns its run when the head branch lives in a fork —
+    # a same-repo PR's push event already ran these exact commands on this
+    # exact commit. This halves the minutes on the busiest path without
+    # closing either door the `on:` comment names.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -22,12 +64,27 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
+          # '22' tracks the 22.x line the app is developed on. The cache key
+          # is package-lock.json, so `npm ci` after the first run downloads
+          # nothing that has not changed.
           node-version: '22'
           cache: npm
 
       # `ci` rather than `install`: the lockfile is the point, and a build
       # that quietly resolves a different tree is a build that proves nothing.
+      #
+      # ONNXRUNTIME_NODE_INSTALL=skip: onnxruntime-node (via the classroom
+      # app's @huggingface/transformers) has a postinstall that, on linux/x64
+      # only, downloads CUDA GPU provider libraries from NuGet — hundreds of
+      # MB this GPU-less runner can never load, outside the npm cache, on
+      # every run. On win32/x64 its requirement list is empty, which is why
+      # no local install ever showed it. The CPU binaries ship inside the
+      # npm package itself, so skipping loses nothing a CI runner could use.
+      # (Flag read at onnxruntime-node/script/install-utils.js; "skip" makes
+      # the postinstall exit 0 before any download.)
       - run: npm ci
+        env:
+          ONNXRUNTIME_NODE_INSTALL: skip
 
       - name: Typecheck
         run: npm run typecheck
@@ -41,5 +98,9 @@ jobs:
       - name: Production build
         run: npm run build
 
+      # Must follow the build: the scan walks apps/classroom/dist and fails
+      # loudly if it is not there, which is the correct behaviour — a scan
+      # that "passes" on an empty directory is the lie this file exists to
+      # prevent.
       - name: No secret may reach the bundle
         run: node tools/bin/check-bundle-secrets.mjs
