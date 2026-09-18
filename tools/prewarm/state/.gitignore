@@ -1,0 +1,7 @@
+# Run state is operational data — which topics THIS operator's runs have paid
+# for — not source. Committing it would make one machine's spending history
+# every machine's, and a resume decision must come from the machine that ran.
+*.json
+# And the lock a running process holds. It names a pid on THIS machine, so it
+# means nothing anywhere else.
+*.lock

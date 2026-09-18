@@ -1,12 +1,17 @@
 -- PRICES FOR THE MODELS CURIE ACTUALLY CALLS.
 --
--- This is operator data, not a migration, and it is deliberately NOT applied
--- by any script: prices are a fact about somebody else's contract, and the
--- person who pays the bill is the person who confirms them. Read it, change
--- the rate or a number if the provider page says otherwise today, then paste
--- it into the Supabase SQL editor. Every row is a NEW row (effective_from is
--- part of the key), so re-running after a price change re-prices only what
--- comes after — history keeps the price it was billed at.
+-- This is operator data, not a migration: prices are a fact about somebody
+-- else's contract, and the person who pays the bill is the person who
+-- confirms them. Read it, change the rate or a number if the provider page
+-- says otherwise today, then apply it one of two ways — paste it into the
+-- Supabase SQL editor, or run `node tools/bin/apply-prices.mjs`, which reads
+-- THIS file, shows the diff against the live table, and inserts nothing
+-- until you type --yes. Neither path decides a number; both carry yours.
+-- Every applied row is a NEW row (effective_from is part of the key), so
+-- re-applying after a price change re-prices only what comes after —
+-- history keeps the price it was billed at. (tools/prewarm reads this file
+-- too, to price the token counts the relay reports into its per-topic
+-- spend line.)
 --
 -- Sources, checked 2026-09-13:
 --   gemini-3.7-flash   $0.75 / $3.75 per M tokens (intro; DOUBLES 2027-01-01)
