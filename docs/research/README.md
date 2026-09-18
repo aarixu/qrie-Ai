@@ -19,6 +19,7 @@ inference, and says so explicitly. Trust the first, check the second.
 | `avatar-1.md` | Offline pre-rendered talking heads — the cheap half, since the recorded class needs no real time |
 | `avatar-2.md` | Hosted avatar services with a usable free tier, ranked for rupee-scale unit economics |
 | `avatar-3.md` | The browser-only stylised 2D path: zero marginal cost, offline, no likeness consent |
+| `lipsync-hinglish-result.md` | Rhubarb measured on this repo's own audio: what survives Hinglish, what `avatar-3.md` got wrong, and why the art can be commissioned now |
 
 The licence findings in `avatar-0.md` and `avatar-1.md` are the part most worth
 reading before writing any avatar code. Several of the repos the internet
