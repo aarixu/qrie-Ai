@@ -23,7 +23,7 @@ import {
   type MicStatus,
 } from '../lib/mic';
 import { listenOnce } from '../lib/ear';
-import { judgeSpokenAnswer, resolveCrossQuestion } from '../lib/judge';
+import { resolveCrossQuestion, resolveSpokenAnswer } from '../lib/judge';
 import { progressStore, saveBeat, markCompleted, isCompleted } from '../stores/progress';
 import { doubtLogStore, logDoubt } from '../stores/doubtLog';
 import {
@@ -271,6 +271,15 @@ export function ClassRoom({
   // class did not register it. They return only if the answer was wrong.
   const [askBusy, setAskBusy] = useState(false);
 
+  /**
+   * A TAP NEVER COST ANYTHING AND STILL DOES NOT.
+   *
+   * The whyProbe change below is about the SPOKEN path: a tapped chip already
+   * names its option, so `option.why` was always spoken with no model in the
+   * loop. A probe on the same beat mirrors those options rather than replacing
+   * them (`askedAs: 'options'` is the confusable-pairs exception), so there is
+   * nothing here to rewire.
+   */
   const answerAsk = async (index: number) => {
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
@@ -684,10 +693,32 @@ export function ClassRoom({
 
         if (heard.text === null) return; // silence — the chips carry it
         setEar('thinking');
-        const judged = await judgeSpokenAnswer(ask, heard.text).catch(() => null);
+        /**
+         * THE CLASS JUDGES ITS OWN ASK WHEN IT CAN AFFORD TO.
+         *
+         * A beat carrying a whyProbe is a beat whose judgement was authored at
+         * prep time, and `resolveSpokenAnswer` reads the student's words
+         * against it locally — no model, no money. It falls back to the judge
+         * whenever the local read is not confident, which is the whole of the
+         * contract; see lib/judge.ts for what that buys and what it gives up.
+         */
+        const resolved = await resolveSpokenAnswer(ask, heard.text).catch(() => null);
         if (cancelled) return;
         // A judge that failed says nothing and leaves the chips standing.
-        if (judged === null) return;
+        if (resolved === null) return;
+        const judged = resolved.verdict;
+        /**
+         * WHICH PATH RESOLVED IT — so the saving is measured rather than
+         * asserted. Enums and our own lesson id only; `clean()` drops anything
+         * longer than an id, and the student's words are not here to drop.
+         */
+        track('answer_resolved', {
+          lessonId: lesson.id,
+          path: resolved.path,
+          reading: resolved.reading ?? 'none',
+          verdict: judged.verdict,
+          probed: ask.whyProbe !== undefined,
+        });
         // "unclear" is not evidence about the student — nothing is recorded.
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
@@ -734,6 +765,29 @@ export function ClassRoom({
         // talking straight over them.
         if (judged.halt || spoken.halted) return;
         if (judged.verdict === 'right') {
+          /**
+           * A LOCALLY RESOLVED RIGHT ANSWER ENDS HERE, AND THAT IS THE COST
+           * DECISION MADE VISIBLE.
+           *
+           * The model path asks one why/how/when about their own answer and
+           * closes it a turn later — two calls, and the only evidence this
+           * system gets that a student can JUSTIFY a right answer
+           * (`ledger.reflected`). A whyProbe match has no question to ask:
+           * `judged.say` is already the authored reason, so she has just given
+           * what the cross-question exists to draw out. Continuing would
+           * reopen the mic on a line that asked nothing and then pay for a
+           * close — the second of the two calls this change exists to remove.
+           *
+           * So this class files no reflection for locally resolved asks. That
+           * is a real loss of evidence and it is what buys the ceiling; it is
+           * written here rather than left for somebody to discover in the
+           * ledger.
+           */
+          if (resolved.path === 'local') {
+            const options = ask.options ?? [];
+            playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
+            return;
+          }
           // Her line just ended on the cross-question; the next listen takes
           // their reasoning, and the probe branch above always resolves.
           // Screened, for the same reason: this is sent back to the model on
@@ -1295,7 +1349,26 @@ export function ClassRoom({
 
       {micAsk && <MicRationale onAllow={() => micAsk(true)} onSkip={() => micAsk(false)} />}
 
-      {reporting && <ReportSheet lessonId={lesson.id} onClose={() => setReporting(false)} />}
+      {/* THE REPORT CARRIES WHERE IT HAPPENED, not just that it happened.
+          `spokenLine` is her own delivered line — the doubt tutor's latest if
+          a doubt is open, otherwise the beat's narration — and on a 'rude' or
+          an 'unsafe' report it is the only field that says what the child is
+          objecting to. `player.caption` rather than the `caption` above,
+          because that one is blanked when the student has captions switched
+          off, and what she said does not depend on whether it was subtitled. */}
+      {reporting && (
+        <ReportSheet
+          lessonId={lesson.id}
+          topicRef={lesson.topicRef}
+          beatId={player.beat?.id ?? null}
+          spokenLine={
+            inDoubt
+              ? ([...doubtLines].reverse().find((l) => l.role === 'tutor')?.text ?? null)
+              : (player.caption || null)
+          }
+          onClose={() => setReporting(false)}
+        />
+      )}
     </div>
   );
 }

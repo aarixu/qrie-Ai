@@ -35,9 +35,22 @@ const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 /**
  * Draws a picture of a real thing on white — a kidney, a cross-section.
  *
- * Measured on a half-cut kidney: 11s and about Rs 5.75, against Rs 2.25 for
- * the whole class without one. So it is worth it exactly when the subject has
- * to LOOK right, which is why the planner is told to earn it.
+ * Measured on a half-cut kidney: 11s and about Rs 5.75.
+ *
+ * THE COMPARISON THIS PARAGRAPH USED TO DRAW IS DEAD, and it inverted. It said
+ * Rs 5.75 against "Rs 2.25 for the whole class without one" — a picture costing
+ * two and a half times the entire class, which is a strong reason to make the
+ * planner earn it. But Rs 2.25 is an OpenRouter-era price, and the billing path
+ * moved underneath it: Vertex charges a generated picture as output tokens.
+ * The same text-only class measured Rs 9.08 on 2026-09-13
+ * (docs/architecture/README.md:183), so a picture is about 63% of the class it
+ * goes into, not 250% of it.
+ *
+ * The instruction to the planner does NOT change, and the reason is no longer
+ * the price. Three or four pictures are what take a Rs 9.08 class to the Rs 30
+ * this repo plans on, so they are still most of the bill; and a picture that is
+ * not worth looking at is worth nothing at any price. Earning it is a
+ * pedagogical rule that happens to also be the cheaper one.
  */
 const IMAGE_MODEL = 'google/gemini-3.1-flash-image';
 /** Looks at a generated picture to find where its named parts are. */
@@ -191,6 +204,22 @@ export interface LivePrep {
  */
 const PICTURE_SEARCH = createCommonsSearch();
 
+/**
+ * THE LOCK IS THE CALLER'S JOB, NOT THIS FUNCTION'S — said here because the
+ * money is spent inside it.
+ *
+ * `ask` has no `topicRef`, and a topicRef is the only key two students can
+ * arrive at independently, so there is nothing here to lock ON. The gate
+ * therefore sits in screens/LiveClass.tsx, which knows the topicRef and owns
+ * the wait and busy screens the 'held'/'busy' answers need.
+ *
+ * WHICH LEAVES THREE CALLERS PREPARING UNLOCKED, named rather than left to be
+ * found: screens/CanvasLab.tsx:26 (the dev lab, free-text, no topicRef — it
+ * could not lock), prep5.ts:95 and prep-clone.ts:33 (offline operator
+ * scripts). All three are foreign to this phase; the scripts can race a live
+ * student's preparation on the same topic and pay Rs 30 twice. Recorded as a
+ * handoff.
+ */
 export async function prepareLiveClass(
   ask: {
     topic: string;
@@ -288,4 +317,268 @@ export async function prepareLiveClass(
   onProgress({ phase: 'done', message: 'Ready.', done: 1 });
 
   return { lesson: result.lesson, assets: result.assets, report: result.report };
+}
+
+/* ==========================================================================
+ * THE PREPARATION LOCK, TAKEN.
+ * ==========================================================================
+ *
+ * Preparing a cold topic is the single most expensive thing this product
+ * does — the planning constant every PRD budgets on is Rs 30 a topic, against
+ * a Rs 5 per-student-hour ceiling — and it is paid ONCE per topic only if the
+ * students racing for it take turns. 0017 put `take_prep_lock` in Postgres
+ * and packages/relay/src/prep.ts put four routes in front of it; until this,
+ * nothing in the app called any of them, so N students arriving at one cold
+ * topic each paid the full Rs 30 and N-1 of those payments bought a duplicate
+ * of a class somebody else was already making.
+ *
+ * The key is ALWAYS the topicRef. 0017's header owns that argument: two
+ * students reaching one topic by different derivations must take ONE lock, so
+ * a derived class id would be no lock at all.
+ *
+ * WHO HOLDS IT IS THE USER, NOT THE PREP ID. `release_prep_lock` takes the
+ * caller's user id and the relay reads that from the bearer token — so the
+ * prep id below is attribution and never identity.
+ */
+
+/** What the lock answered, in the four shapes a caller must behave differently for. */
+/**
+ * ONE PREPARATION'S ID, AND IT MUST NEVER BE THE REASON A CLASS DOES NOT HAPPEN.
+ *
+ * `crypto.randomUUID` exists only in a SECURE CONTEXT. This repo has already
+ * paid for forgetting that once — stores/ledger.ts:133 carries a hand-rolled
+ * v4 with the reason written beside it: "http-on-a-LAN is exactly how this
+ * gets opened on a school tablet or a phone pointed at a dev laptop". The prep
+ * id is minted on the cold-topic path, so an unguarded call there turns such a
+ * device into one that can prepare NO classes at all — the throw lands in the
+ * screen's catch and paints an error over a class that was about to be made.
+ *
+ * And the id is only ATTRIBUTION: the lock's identity is the bearer token (see
+ * WHO HOLDS IT below), and the relay's x-prep-id passthrough validates-or-
+ * drops. So the worst a fallback id can cost is a usage row that cannot be
+ * attributed. That is not a price worth a lesson.
+ *
+ * DUPLICATED FROM ledger.ts rather than imported, because stores/ledger.ts is
+ * outside this phase's paths and `mint` is module-private there. Recorded as a
+ * handoff: one exported mint would be better than two.
+ */
+export function mintPrepId(): string {
+  const c = typeof crypto !== 'undefined' ? crypto : undefined;
+  if (c && typeof c.randomUUID === 'function') {
+    try {
+      return c.randomUUID();
+    } catch {
+      // Present but refusing (a non-secure context on some engines). Fall through.
+    }
+  }
+  const bytes = new Uint8Array(16);
+  if (c && typeof c.getRandomValues === 'function') c.getRandomValues(bytes);
+  else for (let i = 0; i < bytes.length; i += 1) bytes[i] = Math.floor(Math.random() * 256);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 1
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+}
+
+export type PrepGate =
+  /** It is ours. Prepare, renew while preparing, and release in a finally. */
+  | { kind: 'granted'; prepId: string }
+  /** Somebody else is preparing this very topic. Wait for THEIR class. */
+  | { kind: 'held'; expiresAt?: string }
+  /** The project is at its concurrency ceiling. Nobody may prepare right now. */
+  | { kind: 'busy'; running: number }
+  /**
+   * The relay could not answer — a 503, a 501 from a host with no lock store,
+   * or no network at all.
+   *
+   * THE CLIENT FAILS OPEN HERE AND THE RELAY FAILS CLOSED, and that is not an
+   * inconsistency: the relay is protecting money and this is protecting a
+   * child's lesson. An outage then costs at most what every preparation cost
+   * before this file existed; refusing to teach during one costs the product.
+   */
+  | { kind: 'unavailable' };
+
+/** How often the waiter asks whether the holder has finished. */
+const PREP_POLL_MS = 3_000;
+
+/**
+ * How long a student waits for somebody else's class before preparing it
+ * themselves.
+ *
+ * The lock's TTL is 180 seconds (PREP_LOCK_TTL_SECONDS in the relay), so a
+ * holder that died is swept within that; a little past it is the point at
+ * which waiting longer can only be waiting for nothing. Fifteen seconds of
+ * slack covers a sweep that lands between two polls.
+ */
+const PREP_WAIT_MS = 195_000;
+
+const prepPost = async (
+  route: 'lock' | 'renew' | 'release',
+  topicRef: string,
+  prepId: string,
+  /**
+   * The page is going away. `keepalive` lets the browser finish the request
+   * after the document is gone — best effort, because `relayFetch` awaits a
+   * token before it calls `fetch` and a teardown can beat that. It costs
+   * nothing when it does not work and saves every other student 180 seconds
+   * when it does.
+   */
+  keepalive = false,
+): Promise<unknown | null> => {
+  try {
+    const res = await relayFetch(`/api/prep/${route}`, {
+      method: 'POST',
+      ...(keepalive ? { keepalive: true } : {}),
+      headers: {
+        'content-type': 'application/json',
+        /**
+         * WHICH PREPARATION THIS IS, so `usage_event.prep_id` can attribute
+         * the spend. The relay's passthrough validates the uuid or drops it
+         * (handler.ts), so a malformed one costs attribution and never a call.
+         *
+         * HONESTLY: this stamps the LOCK calls, which are metered at zero
+         * units and spend nothing. The rupees are on /api/llm, and those go
+         * through `createBrowserLlm` -> `relayFetch`, neither of which this
+         * phase owns and neither of which has a way to carry a per-preparation
+         * header. Until one does, prep_id attributes the control calls and not
+         * the planner and artist that actually cost money.
+         */
+        'x-prep-id': prepId,
+      },
+      body: JSON.stringify({ topicRef }),
+    });
+    if (!res.ok) return null;
+    return (await res.json().catch(() => null)) as unknown;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Take the lock on a topic before paying to prepare it.
+ *
+ * `prepId` is a uuid the caller mints per preparation and keeps for the renew
+ * and the release, so one preparation is one id from end to end.
+ */
+export async function takePrepLock(topicRef: string, prepId: string): Promise<PrepGate> {
+  const answer = (await prepPost('lock', topicRef, prepId)) as {
+    granted?: unknown;
+    reason?: unknown;
+    expiresAt?: unknown;
+    running?: unknown;
+  } | null;
+  if (!answer || typeof answer.granted !== 'boolean') return { kind: 'unavailable' };
+  if (answer.granted) return { kind: 'granted', prepId };
+  if (answer.reason === 'busy') {
+    return { kind: 'busy', running: typeof answer.running === 'number' ? answer.running : 0 };
+  }
+  /**
+   * Anything not granted and not busy is treated as held. The relay sends only
+   * those two reasons, and a reason we do not recognise is still somebody else
+   * holding something: waiting for a class that never comes costs a bounded
+   * wait, while preparing over a live holder costs Rs 30.
+   */
+  return {
+    kind: 'held',
+    ...(typeof answer.expiresAt === 'string' ? { expiresAt: answer.expiresAt } : {}),
+  };
+}
+
+/**
+ * Push the deadline out while a long preparation is still running.
+ *
+ * The TTL is twice a preparation measured on a DEVELOPMENT MACHINE, and the
+ * stated device is a cheap Android. A holder that does not heartbeat looks
+ * dead to the sweep, a second student wins the lock, and both preparations run
+ * and both are paid for — the exact failure the lock exists to prevent,
+ * arriving on the slow phone where it costs most.
+ *
+ * `false` means the lock is gone.
+ */
+export async function renewPrepLock(topicRef: string, prepId: string): Promise<boolean> {
+  const answer = (await prepPost('renew', topicRef, prepId)) as { renewed?: unknown } | null;
+  return answer?.renewed === true;
+}
+
+/**
+ * Let it go — on success AND on failure, which is why every caller puts this
+ * in a `finally`. A lock held by a browser that crashed costs every other
+ * student on that topic the full 180-second TTL.
+ */
+export async function releasePrepLock(
+  topicRef: string,
+  prepId: string,
+  opts: { unloading?: boolean } = {},
+): Promise<void> {
+  await prepPost('release', topicRef, prepId, opts.unloading === true);
+}
+
+/** 'ready' | 'preparing' | 'absent', or null when the relay could not say. */
+export async function prepStateOf(
+  topicRef: string,
+): Promise<'ready' | 'preparing' | 'absent' | null> {
+  try {
+    const res = await relayFetch(`/api/prep/state?topicRefs=${encodeURIComponent(topicRef)}`);
+    if (!res.ok) return null;
+    const body = (await res.json().catch(() => null)) as {
+      states?: Record<string, unknown>;
+    } | null;
+    const state = body?.states?.[topicRef];
+    return state === 'ready' || state === 'preparing' || state === 'absent' ? state : null;
+  } catch {
+    return null;
+  }
+}
+
+/** What the wait ended as. */
+export type PrepWait =
+  /** The holder finished and kept it. Go and fetch their class. */
+  | 'ready'
+  /** Nobody is preparing it any more and no class appeared. Prepare it. */
+  | 'gone'
+  /** The student left the screen. Do nothing at all. */
+  | 'cancelled';
+
+/**
+ * Wait for whoever won the lock, honestly and with a bound.
+ *
+ * A student who loses the race is not shown an error and is not silently made
+ * to pay for a second copy: they are told somebody is preparing this class and
+ * they wait for it, which is the only outcome where the Rs 30 is spent once.
+ *
+ * Three ways out, and the bound is what makes this safe to put in front of a
+ * child: 'ready' when the winner's class lands, 'gone' when the holder died or
+ * the wait ran past the lock's own TTL — in which case the caller prepares it
+ * after all — and 'cancelled' when the screen went away.
+ *
+ * A relay that cannot answer the state is treated as still preparing rather
+ * than as gone: `prepStateOf` answers null for an outage, and reading that as
+ * "nobody is holding it" would send every waiting student off to prepare their
+ * own copy at exactly the moment the relay is unwell.
+ */
+export async function waitForHolder(
+  topicRef: string,
+  opts: {
+    isCancelled: () => boolean;
+    /** How long they have been waiting, in whole seconds, for the screen. */
+    onWait?: (seconds: number) => void;
+    sleep?: (ms: number) => Promise<void>;
+    now?: () => number;
+  },
+): Promise<PrepWait> {
+  const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((done) => setTimeout(done, ms)));
+  const now = opts.now ?? (() => Date.now());
+  const startedAt = now();
+
+  while (!opts.isCancelled()) {
+    if (now() - startedAt >= PREP_WAIT_MS) return 'gone';
+    opts.onWait?.(Math.round((now() - startedAt) / 1000));
+    await sleep(PREP_POLL_MS);
+    if (opts.isCancelled()) return 'cancelled';
+    const state = await prepStateOf(topicRef);
+    if (state === 'ready') return 'ready';
+    if (state === 'absent') return 'gone';
+    // 'preparing', or null for an outage: keep waiting, within the bound.
+  }
+  return 'cancelled';
 }
