@@ -37,6 +37,82 @@ export interface ImagePart {
   h: number;
 }
 
+/**
+ * THE PRE-AUTHORED JUDGEMENT LAYER of an ask — never a visible option list.
+ *
+ * The pedagogy rule stands: as a rule the on-screen ask shows NO options,
+ * because a student picking from a list is recognising, not thinking (the
+ * planner prompt states this beside the one confusable-pairs exception, and
+ * `ask.options` is that exception). A whyProbe is different in kind: it is
+ * what the tutor has ALREADY worked out about the answers she expects —
+ * the right one, and the named misconceptions a wrong answer usually is —
+ * each with the reply she gives, written to be SPOKEN.
+ *
+ * Why it exists: judging a spoken answer with a model at playback costs about
+ * Rs 18.70/student-hour against the Rs 5 ceiling, and the only route under
+ * the ceiling is the class carrying its own asks. With a whyProbe on every
+ * ask, playback can match the student's words against these options locally
+ * and speak the matching `why`, reaching for the judge only when nothing
+ * matches. MVP-1 ships the format, the prompt and the validator; the
+ * ClassRoom playback change that actually skips the judge call is MVP-2.
+ *
+ * THIS SHAPE SUPERSEDES the one PRD-4 requirement 6 documents
+ * (`{ question, accept: [{contains, say}], otherwise }`). The reconciled
+ * design is options + askedAs, so that one vocabulary covers both the shown
+ * and the unshown case; an MVP-2 author reading the PRD should implement
+ * `options`/`askedAs` and not `accept`/`otherwise`.
+ *
+ * It lives on the SPINE at formatVersion 1. At formatVersion 2 (PRD-4
+ * requirement 21) it moves into NarrationTrack with the other spoken
+ * strings — every string in here is spoken, so it is a track field, not a
+ * spine field, and a v2 migration that forgets it strands the judgement.
+ */
+/**
+ * ONE ANSWER THE TUTOR HAS ALREADY THOUGHT ABOUT.
+ *
+ * Declared once and used by both the shown `ask.options` (the confusable-
+ * pairs exception) and the unshown `WhyProbe.options`, because they are the
+ * same vocabulary and two inline copies of a shape are two shapes the moment
+ * somebody adds a fifth field to one of them. The only difference between the
+ * two uses is that a probe REQUIRES `why` — stated once, in `WhyProbe`.
+ *
+ * (board-layout's Instruction ask arm carries a third copy of this shape; it
+ * is a foreign package, and converging it is a recorded handoff.)
+ */
+export interface AskOption {
+  text: string;
+  /** Exactly one option in a list is the right answer. */
+  correct?: boolean;
+  /** What she says about this choice — why it is right, or why not. */
+  why?: string;
+  /** A nudge short of the answer, for the first wrong try. */
+  hint?: string;
+}
+
+export interface WhyProbe {
+  /**
+   * 2 to 4, exactly one `correct: true`, every option carrying `why`
+   * (validated). Same vocabulary as `ask.options` on purpose — an option is
+   * an option — but here `why` is required, because an option whose match
+   * leaves the tutor with nothing to say is a dead end at playback.
+   *
+   * A distractor's `text` is the named misconception as a student who holds
+   * it would SAY it (the probe-bank style: "the sugar melted", not "wrong
+   * answer B"), which is what makes matching a spoken reply possible.
+   */
+  options: (AskOption & {
+    /** What she says on this match — the reason, spoken. Never "correct!". */
+    why: string;
+  })[];
+  /**
+   * How the question was put to the student. 'open' is the rule: a spoken
+   * open question, and these options are only the judge's ears. 'options' is
+   * the confusable-pairs exception, where `ask.options` is genuinely shown
+   * and this probe mirrors it.
+   */
+  askedAs: 'options' | 'open';
+}
+
 export type Element =
   | { kind: 'title'; id: string; x: number; y: number; text: string; sub?: string }
   | { kind: 'text'; id: string; x: number; y: number; text: string; size?: number; muted?: boolean }
@@ -309,20 +385,26 @@ export interface Beat {
     expect?: string;
     /** The nudge a wrong spoken try gets, short of the answer. */
     hint?: string;
-    options?: {
-      text: string;
-      correct?: boolean;
-      /** What she says about this choice — why it is right, or why not. */
-      why?: string;
-      /** A nudge short of the answer, for the first wrong try. */
-      hint?: string;
-    }[];
+    options?: AskOption[];
+    /**
+     * The pre-authored judgement for this ask. See `WhyProbe`: not shown,
+     * spoken — the on-screen no-options rule is about `options` above, never
+     * about this field.
+     */
+    whyProbe?: WhyProbe;
   };
   teaches?: string[];
   /**
    * Node ids this beat CHECKS rather than teaches — a question about something
    * already covered. Kept separate from `teaches` because a check that raised
    * belief would be a test that grades itself.
+   *
+   * A beat may file checks WITHOUT an `ask`: a recap that revisits three ideas
+   * is the shape four committed beats use, and the fold arithmetic reads those
+   * ids either way. Only a beat that ASKS is capped at two, because the cap is
+   * about what a single spoken answer may be evidence for. What an askless
+   * check is really evidence OF is a measurement hole this format has not
+   * closed — NOT VERIFIED that it means anything at all.
    */
   checks?: string[];
   /** Minimum time on this beat even if narration finishes sooner. */

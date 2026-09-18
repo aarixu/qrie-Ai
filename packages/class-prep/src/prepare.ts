@@ -8,7 +8,10 @@ import {
   type Element,
   type ImagePart,
   type Lesson,
+  type WhyProbe,
 } from '@ai-tutor/lesson-format';
+import { reviewLesson } from './review.ts';
+import { screenSpine } from './screenSpine.ts';
 
 import {
   ARTIST_SYSTEM,
@@ -57,6 +60,37 @@ export interface PrepOptions {
   planner: LlmAdapter;
   /** The model that draws. Separate because drawing wants a stronger, slower model. */
   artist: LlmAdapter;
+  /**
+   * The model that checks the TEACHING IS TRUE before anyone is taught it.
+   *
+   * Optional so existing callers keep compiling, and that optionality is a
+   * hole, not a feature: a prep run without a reviewer produces a class
+   * nothing has fact-checked, and the keep path stores it forever. The
+   * classroom's live-prep caller must pass one (recorded as a handoff).
+   *
+   * When present it runs IN-PIPELINE, before onDraft — the reconciled
+   * design: the room opens LATER, and in exchange the first student is
+   * never taught an unreviewed class. How much later, honestly: a clean
+   * review is ONE extra model call, and a FLAGGED lesson is three (review,
+   * a full planner repair, re-review) plus a possible JSON-repair retry
+   * inside each review. The only measurement this package owns is the plan
+   * call — 13.7s on flash to 55.7s on pro (README.md, "Measured") — and
+   * this call reads more than it writes, so the added wait is of that order
+   * but has NOT been measured; `report.review.ms` is the mechanism that
+   * will measure it. No invented range.
+   *
+   * A reviewer that cannot be REACHED blocks the prep: the error comes out
+   * of reviewLesson and out of prepareClass, every student loses the class,
+   * and that is deliberate — fail closed is the only posture for a truth
+   * gate on children's teaching. It is not free, though: the relay's own
+   * gate ships an `unavailable` reason precisely so "the vendor is down" is
+   * not dressed up as "you are refused", and this gate does not yet make
+   * that distinction (recorded gap; it belongs with the keep-side wiring).
+   *
+   * A flagged lesson gets ONE repair round fuelled by the named problems,
+   * then prep refuses rather than teaches.
+   */
+  reviewer?: LlmAdapter;
   /**
    * The model that generates pictures. Optional: without it a lesson simply
    * gets no photographic artwork, which is a poorer class, not a broken one.
@@ -251,6 +285,25 @@ export function assemble(
       pages: sheets,
       asks,
     } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
+
+    /**
+     * Re-attach each ask's whyProbe. The layout engine copies an ask FIELD BY
+     * FIELD (board-layout/src/layout.ts:389-396) and has never heard of the
+     * whyProbe, so the judgement the planner authored would silently vanish
+     * between the blueprint and the lesson — authored, prompted for, and
+     * never played. The nth marker in `asks` is the nth ask instruction on
+     * this board, because layoutBeat walks the board in order and neither
+     * the drawn-filter nor `reuse` touches an ask. Board-layout carrying the
+     * field on its own Instruction type is a recorded handoff; until then
+     * the instruction is read past its type.
+     */
+    const askSteps = board.filter(
+      (s): s is Extract<Instruction, { do: 'ask' }> & { whyProbe?: WhyProbe } => s.do === 'ask',
+    );
+    asks.forEach((a, n) => {
+      const probe = askSteps[n]?.whyProbe;
+      if (probe) a.ask = { ...a.ask, whyProbe: probe };
+    });
 
     // A beat left with nothing to show was a beat about a picture that failed;
     // its narration would talk about something invisible.
@@ -467,6 +520,86 @@ export function dropInventedOutcomes(
   return invented;
 }
 
+/**
+ * PRD-4 requirement 2, the half a prompt cannot do: an ask beat files ONE
+ * spoken answer as evidence, and a beat listing five `checks` files that one
+ * answer as evidence about five outcomes. The prompt now states the cap; this
+ * enforces it, the same way `dropInventedOutcomes` enforces the id rule —
+ * trimmed rather than sent to repair, because an over-long list is one bad
+ * field, not a bad class, and a repair round costs a student thirteen seconds
+ * of blank board.
+ *
+ * Only beats that ASK are trimmed. A beat with three checks and no ask files
+ * no answer, and committed content does this deliberately: scanning content/
+ * finds four such beats across three lessons (class10-excretion `recap` with
+ * 3, life-processes-transportation `beat_significance_and_summary_3` with 3,
+ * class9-particle-size `b5` with 3 and `b11` with SEVEN). A per-beat cap as
+ * PRD-4's heading literally reads would have invalidated three shipped
+ * lessons; `validateLesson` draws the same ask-only line for that reason.
+ */
+export function capChecks(
+  beats: readonly { checks?: string[]; board?: readonly { do: string }[] }[],
+): number {
+  let cut = 0;
+  for (const beat of beats) {
+    if (!Array.isArray(beat.checks) || beat.checks.length <= 2) continue;
+    if (!beat.board?.some((step) => step.do === 'ask')) continue;
+    cut += beat.checks.length - 2;
+    beat.checks = beat.checks.slice(0, 2);
+  }
+  return cut;
+}
+
+/**
+ * A MIS-SHAPED whyProbe IS ONE BAD FIELD, NOT A BAD CLASS.
+ *
+ * `validateLesson` is strict about a whyProbe on purpose: hand-authored
+ * content and the committed lessons should fail loudly, because a probe with
+ * two right answers is a coin toss a child never sees coming. Live planner
+ * output is the other case. The planner is now asked for a probe on EVERY
+ * ask, nothing plays it until MVP-2, and without this a model that marks two
+ * options correct would cost a child the whole class — one wasted repair
+ * round and then "the planned lesson is not valid", for a field that is
+ * optional by design. Same posture as `dropInventedOutcomes` and `capChecks`
+ * two functions above: trim deterministically, report it, teach the class.
+ *
+ * The rules mirror `validateLesson`'s exactly, which is the point — anything
+ * this leaves in place is something the validator will accept.
+ */
+export function dropBadProbes(beats: readonly { board?: readonly { do: string }[] }[]): number {
+  let dropped = 0;
+  for (const beat of beats) {
+    for (const step of beat.board ?? []) {
+      if (step.do !== 'ask') continue;
+      const ask = step as { whyProbe?: unknown };
+      if (ask.whyProbe === undefined) continue;
+      if (!usableProbe(ask.whyProbe)) {
+        delete ask.whyProbe;
+        dropped += 1;
+      }
+    }
+  }
+  return dropped;
+}
+
+/** Exactly what `validateLesson` will accept — see lesson-format/src/validate.ts. */
+function usableProbe(probe: unknown): boolean {
+  if (typeof probe !== 'object' || probe === null) return false;
+  const { options, askedAs } = probe as { options?: unknown; askedAs?: unknown };
+  if (askedAs !== 'open' && askedAs !== 'options') return false;
+  if (!Array.isArray(options) || options.length < 2 || options.length > 4) return false;
+  let right = 0;
+  for (const option of options) {
+    if (typeof option !== 'object' || option === null) return false;
+    const { text, why, hint, correct } = option as Record<string, unknown>;
+    if (typeof text !== 'string' || text.length === 0) return false;
+    if (typeof why !== 'string' || why.length === 0) return false;
+    if (hint !== undefined && (typeof hint !== 'string' || hint.length === 0)) return false;
+    if (correct === true) right += 1;
+  }
+  return right === 1;
+}
+
 export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
     opts;
@@ -524,6 +657,18 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const invented = dropInventedOutcomes(blueprint.beats, opts.outcomes);
   if (invented > 0) issues.push(`Dropped ${invented} outcome id(s) the map does not have.`);
+
+  // After the invented ids are gone, so what is capped is what is real.
+  const capped = capChecks(blueprint.beats);
+  if (capped > 0) {
+    issues.push(`Capped ${capped} outcome id(s) past the at-most-two checks an ask beat may file.`);
+  }
+
+  // And a probe the validator would reject goes, rather than the class.
+  const badProbes = dropBadProbes(blueprint.beats);
+  if (badProbes > 0) {
+    issues.push(`Dropped ${badProbes} whyProbe(s) the planner mis-shaped.`);
+  }
 
 
   const planMs = Date.now() - t0;
@@ -627,6 +772,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       if (stillInvented > 0) {
         issues.push(`Dropped ${stillInvented} outcome id(s) the repaired plan invented.`);
       }
+      // The repaired plan is fresh planner output; the cap applies to it for
+      // the same reason the id filter does.
+      if (capChecks(fixed.beats) > 0) {
+        issues.push('Capped the repaired plan to at most two checks per ask beat.');
+      }
+      const repairedProbes = dropBadProbes(fixed.beats);
+      if (repairedProbes > 0) {
+        issues.push(`Dropped ${repairedProbes} whyProbe(s) the repaired plan mis-shaped.`);
+      }
 
       const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
       const revalidated = validateLesson(rebuilt.lesson);
@@ -651,7 +805,197 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     throw new Error(`The planned lesson is not valid:\n${validated.errors.slice(0, 8).join('\n')}`);
   }
 
-  const lesson = validated.lesson as Lesson;
+  let lesson = validated.lesson as Lesson;
+
+  /**
+   * THE SPINE IS SCREENED BEFORE THE FIRST STUDENT HEARS IT.
+   *
+   * The keep gate (relays.ts) runs the same screen — about eighty seconds
+   * from now, when the class is kept. A cold topic starts TEACHING at
+   * roughly fourteen seconds, so the first student was hearing narration
+   * nothing had screened; this closes that gap at assembly, before the
+   * draft is handed out. Refused, never cleaned, and prep's caller already
+   * treats a throw as "no class". See screenSpine.ts for what is walked
+   * and why the limit is each string's own length.
+   */
+  const distressed = screenSpine(lesson);
+  if (distressed.length > 0) {
+    say('failed', 'The class did not pass the safety screen.', 1);
+    /**
+     * NAME THE PLACE, NEVER THE LINE. ClassRoom renders `e.message` verbatim
+     * (apps/classroom/src/screens/ClassRoom.tsx), so quoting the offending
+     * sentence would put it on the screen of the very child this refusal
+     * exists to protect — under a system error, which is worse than the
+     * narration would have been. The relay's keep gate makes the same choice:
+     * it names the file and quotes nothing. The text itself stays with the
+     * operator, on the ScreenedLine screenSpine returns.
+     */
+    throw Object.assign(
+      new Error(
+        `The class narration reads as distress and was refused (beat ${distressed[0].where}).`,
+      ),
+      // For the operator's log, off the message: what was flagged, and where.
+      { spineDistress: true, screened: distressed },
+    );
+  }
+
+  /**
+   * THE FACTUAL GATE, IN-PIPELINE — before the room opens.
+   *
+   * The latency tradeoff, honestly: the draft below is what opens the room
+   * at ~14s, and this puts one more planner-grade model call in front of it
+   * — three on a flagged lesson (review, planner repair, re-review). The
+   * only calls this package has MEASURED are the plan calls, 13.7s on flash
+   * to 55.7s on pro (README.md, "Measured"); this one reads more than it
+   * writes, so the added wait is of that order, but it has not been measured
+   * and no range here is invented. report.review.ms is what will measure it.
+   * The alternative — reviewing after onDraft — keeps
+   * the 14s open but teaches the FIRST student an unreviewed class while
+   * the verdict is still coming back, which is the exact gap this gate
+   * exists to close. A wrong class is kept permanently and served to
+   * everyone, so the first student's extra wait buys every student's
+   * correctness.
+   *
+   * A flag is never repaired silently: one repair round through the same
+   * repairPlanUser path as every other rejection, fuelled by the NAMED
+   * problems, re-screened and re-reviewed — then refusal. `reviewer` being
+   * optional is a recorded gap, not a design: without one, nothing here
+   * runs, exactly as before this gate existed.
+   */
+  let review: PrepReport['review'];
+  if (opts.reviewer) {
+    const r0 = Date.now();
+    say('checking', 'Checking the facts…', 0.25);
+    let verdict = await reviewLesson(lesson, {
+      reviewer: opts.reviewer,
+      topic,
+      klass,
+      outcomes: opts.outcomes,
+    });
+    const flagged = verdict.problems;
+    let repaired = false;
+    if (!verdict.ok) {
+      issues.push(`The reviewer flagged ${verdict.problems.length} claim(s); sent for one repair.`);
+      say('checking', 'Correcting the teaching…', 0.27);
+      try {
+        /**
+         * THE CLAIM LEADS AND THE ID IS ADVISORY, because the reviewer's id
+         * may name nothing in the document the planner is about to be handed.
+         * The reviewer judges the ASSEMBLED lesson, whose beats are split one
+         * per spoken moment and renamed `<id>_<n>` (assemble, above); this
+         * prompt carries the BLUEPRINT, whose beats keep the unsuffixed id.
+         * Most real beats carry a suffix, and a beatId may even name a board
+         * ELEMENT, which the blueprint does not contain at all — so the quoted
+         * claim is the only anchor guaranteed to survive assembly, and the id
+         * is offered stripped of its suffix and hedged.
+         */
+        const named = verdict.problems
+          .slice(0, 10)
+          .map(
+            (p) =>
+              `The claim "${p.claim}" is factually wrong — ${p.why}. Look for it in or around beat "${p.beatId.replace(/_\d+$/, '')}". Correct the teaching itself; do not delete the beat.`,
+          );
+        const reply = await planner.complete(
+          PLANNER_SYSTEM,
+          repairPlanUser(JSON.stringify(blueprint), named),
+        );
+        const fixed = parsePlan(reply);
+        if (!fixed) throw new Error('the corrected plan was unreadable');
+        fixed.beats ??= [];
+        // Pinned for the same reason the structural repair pins them: the
+        // draft's element ids come from the briefs.
+        fixed.visuals = blueprint.visuals;
+        fixed.id ||= blueprint.id;
+        fixed.title ||= blueprint.title;
+        for (const beat of fixed.beats) beat.topic ||= fixed.title;
+        // The same three deterministic trims the first plan got, with the
+        // same accounting: a repaired class that silently loses the record of
+        // what was dropped is a class nobody can explain afterwards.
+        const correctedInvented = dropInventedOutcomes(fixed.beats, opts.outcomes);
+        if (correctedInvented > 0) {
+          issues.push(`Dropped ${correctedInvented} outcome id(s) the corrected plan invented.`);
+        }
+        if (capChecks(fixed.beats) > 0) {
+          issues.push('Capped the corrected plan to at most two checks per ask beat.');
+        }
+        const correctedProbes = dropBadProbes(fixed.beats);
+        if (correctedProbes > 0) {
+          issues.push(`Dropped ${correctedProbes} whyProbe(s) the corrected plan mis-shaped.`);
+        }
+        const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
+        const revalidated = validateLesson(rebuilt.lesson);
+        if (!revalidated.ok) {
+          throw new Error(`the corrected plan no longer validates: ${revalidated.errors[0]}`);
+        }
+        // The corrected plan is fresh model output; it gets the same screen
+        // the first one did.
+        /**
+         * A DISTRESS REFUSAL KEEPS ITS OWN NAME. Thrown PAST the catch below
+         * rather than into it: the class is refused either way, but the
+         * caller is told to map "reads as distress" and "failed factual
+         * review" to different words for the student, and folding this one
+         * into the factual reason quietly defeats that.
+         */
+        const corrupted = screenSpine(revalidated.lesson as Lesson);
+        if (corrupted.length > 0) {
+          say('failed', 'The class did not pass the safety screen.', 1);
+          throw Object.assign(
+            new Error(
+              `The corrected narration reads as distress and was refused (beat ${corrupted[0].where}).`,
+            ),
+            { spineDistress: true },
+          );
+        }
+        verdict = await reviewLesson(revalidated.lesson as Lesson, {
+          reviewer: opts.reviewer,
+          topic,
+          klass,
+          outcomes: opts.outcomes,
+        });
+        if (verdict.ok) {
+          blueprint = fixed;
+          aliases = rebuilt.aliases;
+          lesson = revalidated.lesson as Lesson;
+          repaired = true;
+          for (const miss of [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)]) {
+            issues.push(`Still unwritten after factual repair: ${miss}`);
+          }
+          issues.push('The teaching was corrected and passed review.');
+        }
+      } catch (e) {
+        // Everything here is "the repair did not work, refuse for the
+        // factual reason" — except a distressed correction, which owns its
+        // own reason and is re-thrown.
+        if (e !== null && typeof e === 'object' && 'spineDistress' in e) throw e;
+        issues.push(`Factual repair failed: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    }
+    if (!verdict.ok) {
+      // The house failure posture: a class the reviewer still flags is not
+      // taught, not kept, not softened. Wrong once is a model; wrong twice
+      // with the problems named is a lesson we refuse to give a child.
+      say('failed', 'The class did not pass factual review.', 1);
+      /**
+       * COUNTED AND LOCATED, NEVER QUOTED. This message is rendered verbatim
+       * to the student (ClassRoom renders `e.message`), and repeating the
+       * wrong teaching on her screen under a system error is precisely what
+       * this refusal exists to prevent. The claims ride on the error itself,
+       * where an operator's log can read them and a child cannot — `issues`
+       * would be the natural home, but a throw means no report is ever
+       * returned to carry them.
+       */
+      throw Object.assign(
+        new Error(
+          `The class failed factual review: ${verdict.problems.length} claim(s) still wrong (beats: ${verdict.problems
+            .slice(0, 8)
+            .map((p) => p.beatId)
+            .join(', ')}).`,
+        ),
+        { reviewProblems: verdict.problems },
+      );
+    }
+    review = { flagged, repaired, ms: Date.now() - r0 };
+  }
 
   /**
    * THE ROOM CAN OPEN NOW.
@@ -833,6 +1177,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     visualsMs,
     issues,
     visuals,
+    ...(review ? { review } : {}),
     ...(sources.size > 0 ? { credits: Object.fromEntries(sources) } : {}),
   };
   say('done', 'Ready.', 1);

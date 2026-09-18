@@ -1,5 +1,6 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
 import type { Lesson } from '@ai-tutor/lesson-format';
+import type { ReviewProblem } from './review.ts';
 
 /**
  * Everything the artwork author needs to draw one picture, and everything the
@@ -107,6 +108,27 @@ export interface PrepReport {
   /** Non-fatal things the prep decided to live with. */
   issues: string[];
   visuals: VisualOutcome[];
+  /**
+   * The factual gate's account, PRESENT ONLY WHEN THE LESSON PASSED — a
+   * lesson still flagged after its one repair throws and there is no report
+   * to carry. Absent means no reviewer was configured, which is the honest
+   * difference between "checked and clean" and "never checked"; the keep
+   * side should treat the two differently (recorded handoff — the relay's
+   * review_status columns are PRD 3's, not this package's).
+   */
+  review?: {
+    /**
+     * What the FIRST pass flagged. Empty when the lesson passed untouched,
+     * and that is now true by construction rather than by hope: `parseVerdict`
+     * makes a verdict that NAMES a problem a flag whatever its `ok` field
+     * claims, so a non-empty list here always means a repair round ran.
+     */
+    flagged: ReviewProblem[];
+    /** True when the class taught is the repaired one, not the first draft. */
+    repaired: boolean;
+    /** What the gate cost in wall-clock, since it delays the room opening. */
+    ms: number;
+  };
   /**
    * The page each found picture came from, by visual id. Empty when every
    * picture was drawn or generated.

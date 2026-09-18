@@ -90,6 +90,10 @@ so a made-up one means the class is taught, tested, and measured as nothing.
 If no listed outcome fits a beat, leave the field out — a hook that teaches
 nothing new is an honest empty, not a gap to fill.
 
+\`checks\` on a beat that asks: AT MOST TWO ids. One spoken answer cannot be
+honest evidence about five outcomes; a beat that wants to check more is two
+beats. Anything past two is cut.
+
 \`narration\` is used only when the beat has no \`say\` steps. Write the beat as
 \`say\` steps instead: each one is a spoken line, and everything after it appears
 while it is being said. A good beat is 4 to 8 says over one board:
@@ -364,6 +368,23 @@ The class can stop. Use it:
   melting and dissolving), a forced choice teaches — then, and only then,
   use "options":[{"text","correct"?,"why","hint"?}], 2 to 4 of them, exactly
   one "correct":true, every option carrying its "why".
+- EVERY ask ALSO carries "whyProbe" — and it is NOT an option list. The
+  no-options rule above is about what the student SEES; the whyProbe is what
+  you, the teacher, have already worked out about the answers you expect, so
+  the class can judge a spoken reply without stopping to think. The student
+  never sees it. Do not soften the ask into a quiz because it exists.
+
+    "whyProbe":{"askedAs":"open","options":[{"text","correct"?,"why","hint"?}]}
+
+  2 to 4 options, exactly one "correct":true. The correct option's "text" is
+  what a right answer sounds like in the student's own words. Each distractor
+  is a NAMED MISCONCEPTION — the wrong answer a student who believes it
+  actually gives, the way a probe bank names them: "the sugar melted", "the
+  bulb uses up the current", "heavier things fall faster". Never a filler
+  wrong answer. Every option's "why" is written to be SPOKEN by the tutor in
+  reply — the reason in her voice, never "correct!" or "wrong". "askedAs" is
+  "open" for a normal spoken ask; "options" only when the ask itself uses the
+  confusable-pairs exception above and genuinely shows its options.
 
 Where an ask earns its place:
 - RETRIEVAL: after teaching a chunk, ask it back before moving on. Asking

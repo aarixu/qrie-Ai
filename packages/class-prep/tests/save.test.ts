@@ -178,3 +178,40 @@ describe('a picture that came back as a JPEG', () => {
     expect(inline.lungs).toBeUndefined();
   });
 });
+
+/**
+ * THE KEEP IS WHERE A WRONG CLASS BECOMES PERMANENT.
+ *
+ * `topic_ref` is unique and the keep ignores duplicates, so the FIRST keeper
+ * of a topic wins forever: a class kept before anyone fact-checked it can
+ * never be replaced by the reviewed pre-warm that arrives later. The factual
+ * gate in prepareClass cannot prevent that on its own, because a caller that
+ * passes no reviewer produces a perfectly saveable class. This is the
+ * fail-closed half, and it is opt-in so that existing callers keep their
+ * behaviour until they are wired: a caller that means "reviewed or nothing"
+ * says so, and then "kept unreviewed forever" becomes "not kept".
+ */
+describe('requireReviewed — reviewed or not kept', () => {
+  const reviewed: PrepReport = {
+    ...clean,
+    review: { flagged: [], repaired: false, ms: 4_000 },
+  };
+
+  it('refuses a class no reviewer ever saw', () => {
+    expect(saveable({ lesson: lesson(), assets: assets(), report: clean }, { ...meta, requireReviewed: true })).toBeNull();
+  });
+
+  it('keeps one the reviewer passed', () => {
+    const saved = saveable(
+      { lesson: lesson(), assets: assets(), report: reviewed },
+      { ...meta, requireReviewed: true },
+    );
+    expect(saved).not.toBeNull();
+  });
+
+  it('keeps an unreviewed class when the caller has not asked for the gate', () => {
+    // The default is unchanged behaviour: a flag nobody sets must not
+    // silently stop the app keeping the classes it keeps today.
+    expect(saveable({ lesson: lesson(), assets: assets(), report: clean }, meta)).not.toBeNull();
+  });
+});

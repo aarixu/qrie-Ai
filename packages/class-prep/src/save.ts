@@ -56,6 +56,24 @@ export interface SaveMeta {
    * have and is always safe to keep.
    */
   studentNames?: readonly string[];
+  /**
+   * KEEP ONLY WHAT WAS FACT-CHECKED.
+   *
+   * Off by default, because turning it on for a caller that has no reviewer
+   * would stop the app keeping anything at all. On, it is the fail-closed
+   * half of the factual gate, and the half that actually protects later
+   * students: `topic_ref` is unique and the keep ignores duplicates, so the
+   * first class kept on a topic is the class every later student is served,
+   * forever. A live student who reaches a cold topic before the reviewed
+   * pre-warm does would otherwise install an unreviewed class permanently
+   * and the reviewed one could never replace it.
+   *
+   * `report.review` is the evidence: PRESENT means reviewed and passed (a
+   * lesson still flagged after its repair throws, so no report survives it);
+   * ABSENT means never reviewed. Refusing to keep costs the second student
+   * one cold prep. Keeping wrong teaching costs every student after that.
+   */
+  requireReviewed?: boolean;
 }
 
 /** Every element that cannot be drawn without artwork handed in. */
@@ -247,6 +265,10 @@ export function saveable(
    * to nobody else — and the next one deserves their own opening rather than
    * an inherited greeting.
    */
+  // Before anything else: a class nothing fact-checked is not a class to
+  // install permanently, when the caller has said it wants the gate.
+  if (meta.requireReviewed && prep.report.review === undefined) return null;
+
   const personal = namesInSpine(prep.lesson, meta.studentNames ?? []);
   if (personal.length > 0) return null;
   if (remembersASession(prep.lesson).length > 0) return null;

@@ -23,6 +23,20 @@ this package depends on nothing.
   recall (`recall(beatId)`) trivial.
 - `beat.focus` must be a subset of `beat.show` (validated).
 - Coordinates live in a fixed 1000x620 canvas space; devices scale it.
+- `ask.whyProbe` is the **pre-authored judgement layer**: 2–4 options, exactly
+  one `correct`, every option carrying a spoken `why` (all validated). It is
+  never a visible option list — the on-screen no-options pedagogy rule lives in
+  `ask.options` and its confusable-pairs exception; the probe is what playback
+  matches a *spoken* reply against so the Rs 18.70/student-hour judge call can
+  be skipped. Format, prompt and validator ship in MVP-1; the playback change
+  that consumes it is MVP-2. This shape **supersedes** the
+  `{ question, accept, otherwise }` interface in PRD-4 requirement 6 — an
+  MVP-2 author should implement `options`/`askedAs`. It sits on the spine at
+  `formatVersion: 1` and moves into `NarrationTrack` at v2 (PRD-4 req 21),
+  with the other spoken strings.
+- An **ask** beat may list at most two `checks` (validated): one spoken answer
+  cannot honestly be evidence about five outcomes. Askless beats are uncapped —
+  they file no answer.
 
 ## Usage
 

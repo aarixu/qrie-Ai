@@ -1,7 +1,20 @@
 // Public surface of @ai-tutor/class-prep. See README.md for the contract.
 export type { TopicOutcome } from './prompts.ts';
 
+// capChecks, dropInventedOutcomes and dropBadProbes are deliberately NOT
+// exported: they mutate a blueprint in place, they have no consumer outside
+// this package, and a public export is a contract somebody else builds on.
 export { prepareClass, assemble, parsePlan, type LlmAdapter, type PrepOptions } from './prepare.ts';
+export {
+  reviewLesson,
+  reviewerUser,
+  parseVerdict,
+  REVIEWER_SYSTEM,
+  type ReviewVerdict,
+  type ReviewProblem,
+  type ReviewOptions,
+} from './review.ts';
+export { screenSpine, type ScreenedLine } from './screenSpine.ts';
 export { verifySvg } from './verify.ts';
 export { PLANNER_SYSTEM, ARTIST_SYSTEM, plannerUser, artistUser, repairUser } from './prompts.ts';
 export type {

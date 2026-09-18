@@ -196,7 +196,13 @@ function beatErrors(
   if (!isStr(beat.topic)) errs.push(`${path}: beat needs a non-empty topic label`);
 
   if (beat.ask !== undefined) {
-    const ask = beat.ask as { question?: unknown; options?: unknown; expect?: unknown; hint?: unknown };
+    const ask = beat.ask as {
+      question?: unknown;
+      options?: unknown;
+      expect?: unknown;
+      hint?: unknown;
+      whyProbe?: unknown;
+    };
     if (!isStr(ask.question)) errs.push(`${path}: ask needs a non-empty question`);
     if (ask.expect !== undefined && !isStr(ask.expect))
       errs.push(`${path}: ask expect must be a non-empty string when present`);
@@ -212,6 +218,45 @@ function beatErrors(
         // A question with no right answer is a trick with no door out of it.
         if (!options.some((o) => o.correct === true))
           errs.push(`${path}: one ask option must be marked correct`);
+      }
+    }
+    /**
+     * The whyProbe is judged at playback with NO model in the loop, so every
+     * promise the format makes about it has to be checked here: an option the
+     * matcher lands on with no `why` leaves the tutor silent, two `correct`
+     * options make the verdict a coin toss, and either failure is invisible
+     * until a child hits it. Optional overall — 15 committed lessons and every
+     * pre-whyProbe blueprint carry none, and that stays valid.
+     */
+    if (ask.whyProbe !== undefined) {
+      if (!isObj(ask.whyProbe)) {
+        errs.push(`${path}: whyProbe must be an object with options and askedAs`);
+      } else {
+        const probe = ask.whyProbe as { options?: unknown; askedAs?: unknown };
+        if (probe.askedAs !== 'options' && probe.askedAs !== 'open') {
+          errs.push(`${path}: whyProbe askedAs must be "options" or "open"`);
+        }
+        const options = probe.options as { text?: unknown; correct?: unknown; why?: unknown; hint?: unknown }[];
+        if (!Array.isArray(options) || options.length < 2 || options.length > 4) {
+          errs.push(
+            `${path}: whyProbe needs 2 to 4 options — one right answer and the named misconceptions`,
+          );
+        } else {
+          if (!options.every((o) => isObj(o) && isStr(o.text)))
+            errs.push(`${path}: every whyProbe option needs text`);
+          if (!options.every((o) => !isObj(o) || isStr(o.why)))
+            errs.push(
+              `${path}: every whyProbe option needs a non-empty why — the why is what she says on a match, so an option without one leaves her silent`,
+            );
+          if (options.some((o) => isObj(o) && o.hint !== undefined && !isStr(o.hint)))
+            errs.push(`${path}: a whyProbe option hint must be a non-empty string when present`);
+          const correct = options.filter((o) => isObj(o) && o.correct === true).length;
+          if (correct !== 1) {
+            errs.push(
+              `${path}: whyProbe needs exactly one option marked correct, got ${correct}`,
+            );
+          }
+        }
       }
     }
   }
@@ -268,6 +313,24 @@ function beatErrors(
     if (new Set(value.map(String)).size !== value.length) {
       errs.push(`${path}: ${field} lists the same outcome twice`);
     }
+  }
+  /**
+   * PRD-4 requirement 2: an ask beat may check AT MOST TWO outcomes. One
+   * spoken answer filed as evidence about five things is a pedagogy defect
+   * even after the fold arithmetic is fixed, and the planner prompt's cap is
+   * a request, not a mechanism. Bound to beats that carry an ask because the
+   * cap is about what one ANSWER may be evidence for — a beat that lists
+   * three checks and asks nothing files no answer and stays valid. Committed
+   * content relies on that: four askless beats across three lessons exceed
+   * two checks (class10-excretion `recap`, life-processes-transportation
+   * `beat_significance_and_summary_3`, class9-particle-size `b5` and `b11`,
+   * which files SEVEN). A cap on every beat, as PRD-4's heading literally
+   * reads, would have invalidated three shipped lessons.
+   */
+  if (beat.ask !== undefined && Array.isArray(beat.checks) && beat.checks.length > 2) {
+    errs.push(
+      `${path}: an ask beat may check at most two outcomes, got ${beat.checks.length} — one answer cannot be evidence about ${beat.checks.length} things; split the beat`,
+    );
   }
   if (Array.isArray(beat.teaches) && Array.isArray(beat.checks)) {
     const taught = new Set(beat.teaches.map(String));
