@@ -15,13 +15,69 @@ import {
 import { setRemindersEnabled, setStudyDays, setStudyMinute } from '../stores/schedule';
 import { askForNotifications } from '../lib/reminders';
 import { TutorTile } from '../ui/TutorTile';
+import { writeWorkspace, type EntryPath, type TutorLanguage } from '../lib/workspace';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
-const STEPS = ['name', 'class', 'subjects', 'when', 'ready'] as const;
-type Step = (typeof STEPS)[number];
 
 /**
- * First run: name, class, subjects, then into the placement test.
+ * THE FORK IS THE FIRST QUESTION, because everything after it differs.
+ *
+ * A self-serve student answers these questions. A school student will pick
+ * themselves off a roster their school uploaded, and inherits their class,
+ * their subjects and their consent from it — a different flow end to end.
+ * That branch is MVP-2: the fork is here and visible so nothing has to be
+ * renamed when it lands, and the school arm is a named stub rather than a
+ * half-built roster.
+ */
+export const ONBOARDING_STEPS = [
+  'door',
+  'name',
+  'class',
+  'subjects',
+  'language',
+  'when',
+  'ready',
+] as const;
+type Step = (typeof ONBOARDING_STEPS)[number];
+const STEPS = ONBOARDING_STEPS;
+
+/**
+ * WHICH LANGUAGE THE CLASS IS TAUGHT IN — never which language the app is.
+ *
+ * The app chrome is English for every student. This asks about the TUTOR's
+ * voice, and the wording has to carry that difference on its own, because a
+ * student who reads it as an app-language switch will pick Hinglish and then
+ * wonder why the buttons did not change.
+ */
+export const LANGUAGE_QUESTION = 'Which language should your class be taught in?';
+
+/**
+ * THE HALF OF THE LANGUAGE ANSWER A CHILD ACTS ON.
+ *
+ * The picker shows a Hinglish class and says nothing about the microphone, so
+ * a student who chooses Hinglish has been shown 'Chalo, heart ko dekhte hain.'
+ * and is left to guess whether answering that way will be marked wrong.
+ *
+ * It will not, and this is checked rather than assumed: matchSpokenAnswer
+ * takes no language argument (packages/tutor-judge/src/match.ts:124), but its
+ * POSITION table carries pehla/doosra/teesra (match.ts:110-115) and its stated
+ * contract is to return index: null whenever it is not confident so the caller
+ * escalates to the model. A Hinglish answer therefore fails safe — escalated,
+ * not marked wrong. That is what this sentence promises and no more; it does
+ * not promise the tutor will reply in Hinglish, which nothing reads the choice
+ * for yet.
+ *
+ * Exported because both doors ask this question and neither may drift from the
+ * other's promise.
+ */
+export const LANGUAGE_ANSWER_NOTE = 'You can answer in either one — I will understand.';
+
+/** The way back out of the school stub, kept here so the test can read it. */
+export const SCHOOL_STUB_BACK = 'Go back';
+
+/**
+ * First run: which door, name, class, subjects, the tutor's language, then
+ * into the placement test.
  *
  * One question per screen — a single form asking everything at once looks
  * shorter and feels longer, and a student who abandons a stepped flow has
@@ -34,7 +90,12 @@ type Step = (typeof STEPS)[number];
  */
 export function Onboarding() {
   const navigate = useNavigate();
-  const [step, setStep] = useState<Step>('name');
+  const [step, setStep] = useState<Step>('door');
+  /** Which door they said they came through. Written at the end, not here. */
+  const [entry, setEntry] = useState<EntryPath>('self_serve');
+  const [tutorLanguage, setTutorLanguageChoice] = useState<TutorLanguage>('en');
+  /** The school arm, shown as what it is: not built yet. */
+  const [showSchoolStub, setShowSchoolStub] = useState(false);
   const [days, setDays] = useState<Weekday[]>([...DEFAULT_SCHEDULE.days]);
   const [minute, setMinute] = useState(DEFAULT_SCHEDULE.minute);
   const [name, setName] = useState('');
@@ -62,6 +123,14 @@ export function Onboarding() {
   const finish = (toDiagnostic: boolean) => {
     if (klass === null) return;
     profileStore.update((p) => ({ ...p, name: name.trim(), klass, subjects }));
+    /**
+     * The workspace, written into the same profile row — the one shape this
+     * door and the contest door both leave behind. `consent` is deliberately
+     * untouched: nobody has verified a parent on this path, and writing a
+     * consent mark here would be the app claiming an agreement that does not
+     * exist in consent_record.
+     */
+    writeWorkspace({ entry, tutorLanguage });
     // settingsStore still drives screens that predate the profile store; both
     // are written so neither can go stale.
     settingsStore.update((s) => ({ ...s, klass }));
@@ -104,6 +173,97 @@ export function Onboarding() {
 
       <main className="flex-1 grid place-items-center px-margin-mobile pb-10">
         <div className="w-full max-w-[440px]">
+          {step === 'door' &&
+            (showSchoolStub ? (
+              <div className="text-center">
+                <div className="w-20 h-20 rounded-full bg-primary-fixed grid place-items-center mx-auto mb-5">
+                  <Icon name="school" filled className="text-[38px] text-on-primary-fixed" />
+                </div>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                  Your school's classes are not here yet
+                </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                  {/* Named as a stub rather than dressed up: a roster your
+                      school uploads, which you pick yourself off, is being
+                      built. Telling a student that is kinder than a sign-in
+                      that never works. */}
+                  When your school is set up, you will find your own name on your class list
+                  and everything will already be filled in. Until then you can carry on here
+                  on your own, and your school can be joined later.
+                </p>
+                <button
+                  onClick={() => {
+                    setEntry('self_serve');
+                    setShowSchoolStub(false);
+                    setStep('name');
+                  }}
+                  className={PRIMARY}
+                >
+                  Carry on by myself
+                </button>
+                {/* THE STUB WAS A ONE-WAY DOOR. The header Back button is
+                    disabled at index 0, so a mis-tap on the second card had
+                    exactly one exit — and that exit also rewrote `entry` to
+                    'self_serve', losing the fact that they came from a school
+                    for a student who never meant to say so. This one leaves
+                    `entry` where it was. */}
+                <button
+                  onClick={() => setShowSchoolStub(false)}
+                  className="w-full mt-3 py-3 font-label-md text-label-md text-on-surface-variant underline underline-offset-2"
+                >
+                  {SCHOOL_STUB_BACK}
+                </button>
+              </div>
+            ) : (
+              <div className="text-center">
+                <div className="grid place-items-center mb-5">
+                  <TutorTile mode="teaching" variant="pip" />
+                </div>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                  How did you get here?
+                </h1>
+                <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                  This only decides which questions I ask you next.
+                </p>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      setEntry('self_serve');
+                      setStep('name');
+                    }}
+                    className="rounded-[20px] p-5 shadow-sm border-2 border-transparent bg-surface-container-lowest hover:border-primary-fixed-dim transition-all flex items-center gap-4 text-left"
+                  >
+                    <Icon name="person" className="text-[28px] text-primary shrink-0" />
+                    <span>
+                      <span className="block font-label-md text-label-md text-on-surface">
+                        I'm here on my own
+                      </span>
+                      <span className="block font-label-md text-label-md text-on-surface-variant">
+                        I'll answer a few questions about what I study.
+                      </span>
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEntry('school');
+                      setShowSchoolStub(true);
+                    }}
+                    className="rounded-[20px] p-5 shadow-sm border-2 border-transparent bg-surface-container-lowest hover:border-primary-fixed-dim transition-all flex items-center gap-4 text-left"
+                  >
+                    <Icon name="school" className="text-[28px] text-primary shrink-0" />
+                    <span>
+                      <span className="block font-label-md text-label-md text-on-surface">
+                        My school set this up
+                      </span>
+                      <span className="block font-label-md text-label-md text-on-surface-variant">
+                        I'll find myself on my class list.
+                      </span>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            ))}
+
           {step === 'name' && (
             <div className="text-center">
               <div className="grid place-items-center mb-5">
@@ -196,12 +356,80 @@ export function Onboarding() {
                 })}
               </div>
               <button
-                onClick={() => setStep('when')}
+                onClick={() => setStep('language')}
                 // A class with no authored subjects yet must still get through —
                 // an empty selection is only a refusal when there was a choice.
                 disabled={subjects.length === 0 && available.length > 0}
                 className={`mt-stack-lg ${PRIMARY}`}
               >
+                Continue
+              </button>
+            </div>
+          )}
+
+          {step === 'language' && (
+            <div className="text-center">
+              <div className="w-20 h-20 rounded-full bg-primary-fixed grid place-items-center mx-auto mb-5">
+                <Icon name="translate" className="text-[38px] text-on-primary-fixed" />
+              </div>
+              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                {LANGUAGE_QUESTION}
+              </h1>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                {/* WHAT IS TRUE TODAY, SAID TO A CHILD IN THE PRESENT
+                    TENSE ONLY WHERE IT IS TRUE. The answer is stored and
+                    NOTHING READS IT YET: a grep for tutorLanguage() across
+                    apps/classroom/src finds the writers and no consumer. The
+                    per-lesson `language` in packages/lesson-format
+                    (types.ts:441-442) is what a lesson was AUTHORED in, not
+                    the student's choice. HANDOFF, and not a one-liner:
+                    lib/liveClass.ts prepareClass must carry tutorLanguage()
+                    into the narration it generates, and
+                    packages/tutor-judge matchSpokenAnswer(said, options)
+                    (match.ts:124) takes no language argument at all, so the
+                    answer path cannot use the signal until its signature
+                    does. Until then this says "will", never "does". */}
+                This is the voice I will teach you in. Every class written so far is in
+                English, so Hinglish arrives with the ones being written now — and the buttons
+                and menus stay in English either way. {LANGUAGE_ANSWER_NOTE}
+              </p>
+              <div className="flex flex-col gap-3">
+                {(
+                  [
+                    { value: 'en', title: 'English', said: '"Let us look at the heart."' },
+                    {
+                      value: 'hi-en',
+                      title: 'Hinglish',
+                      said: '"Chalo, heart ko dekhte hain."',
+                    },
+                  ] as const
+                ).map((option) => {
+                  const on = tutorLanguage === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      onClick={() => setTutorLanguageChoice(option.value)}
+                      aria-pressed={on}
+                      className={`rounded-[20px] p-5 shadow-sm border-2 transition-all text-left ${
+                        on
+                          ? 'bg-primary-fixed border-primary'
+                          : 'bg-surface-container-lowest border-transparent hover:border-primary-fixed-dim'
+                      }`}
+                    >
+                      <span className="block font-label-md text-label-md text-on-surface">
+                        {option.title}
+                      </span>
+                      <span className="block font-label-md text-label-md text-on-surface-variant">
+                        {option.said}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {/* No "you can change this later" line: there is no setting for
+                  it yet, and a promise the app cannot keep is worse than a
+                  question asked once. */}
+              <button onClick={() => setStep('when')} className={`mt-stack-lg ${PRIMARY}`}>
                 Continue
               </button>
             </div>

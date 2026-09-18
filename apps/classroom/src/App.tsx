@@ -20,6 +20,7 @@ import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/conte
 import { hrefFor } from './lib/destination';
 import { reportCrash, track } from './lib/telemetry';
 import { isNative } from './lib/platform';
+import { isTrialPath, isTrialSession, mayPersist } from './lib/workspace';
 import type { QuizOutcome } from './lib/quiz';
 import type { PlanChange } from './lib/adaptPlan';
 import { Splash, MIN_SPLASH_MS } from './screens/Splash';
@@ -52,6 +53,14 @@ const Notes = lazy(() => import('./screens/Notes').then((m) => ({ default: m.Not
 const Bookmarks = lazy(() => import('./screens/Bookmarks').then((m) => ({ default: m.Bookmarks })));
 const Achievements = lazy(() => import('./screens/Achievements').then((m) => ({ default: m.Achievements })));
 const SignIn = lazy(() => import('./screens/SignIn').then((m) => ({ default: m.SignIn })));
+/**
+ * The front door and the door before it. Lazy for the same reason as the
+ * rest: a student who is already enrolled never loads either.
+ */
+const Enrol = lazy(() => import('./screens/contest/Enrol').then((m) => ({ default: m.Enrol })));
+const TrialConsent = lazy(() =>
+  import('./screens/contest/TrialConsent').then((m) => ({ default: m.TrialConsent })),
+);
 import { ErrorBoundary } from './ui/ErrorBoundary';
 import { Onboarding } from './screens/Onboarding';
 import { Home } from './screens/Home';
@@ -224,7 +233,12 @@ function QuizRoute() {
  * The splash is held for MIN_SPLASH_MS even when startup is instant — a splash
  * that appears for eighty milliseconds reads as a rendering glitch, not a brand.
  */
-function Gate({ children }: { children: React.ReactNode }) {
+/**
+ * Exported for the test that reads the confinement as BEHAVIOUR rather than as
+ * the predicate behind it. It is the only guarantee this door states to a
+ * child as fact, so a green suite must not survive an edit to the condition.
+ */
+export function Gate({ children }: { children: React.ReactNode }) {
   const settings = useStore(settingsStore);
   const location = useLocation();
   const [booting, setBooting] = useState(true);
@@ -244,11 +258,106 @@ function Gate({ children }: { children: React.ReactNode }) {
       location.pathname === '/model' ||
       location.pathname.startsWith('/action-lab/'));
 
+  /**
+   * THE TWO DOORS, AND THE SESSION ONE OF THEM OPENS.
+   *
+   * /enrol and /try are reached by people who have not onboarded — that is
+   * what they are for — so the onboarding redirect must not swallow them.
+   *
+   * A TRIAL IS CONFINED, NOT WAVED THROUGH. It must reach the catalogue and
+   * an already-prepared class without being sent to a form that asks a child
+   * for their name, which is the one thing a pre-consent student must not be
+   * asked to type. It must reach NOTHING ELSE.
+   *
+   * A blanket pass let the trial screen's own allow-list govern only the
+   * first hop and nothing after it. Two taps later a chapter with no authored
+   * lesson navigated to /class/<topic> (Chapter.tsx:75), which is a live
+   * preparation: real vendor spend on a visitor with no parent, no phone and
+   * no consent row. About Rs 30 of it — the planning figure every document
+   * here uses (docs/prd/6-cost-monetisation-ops.md:573, band Rs 26-40). An
+   * earlier revision of this comment named a second, disagreeing figure of
+   * Rs 2.25 and declined to choose; that one turned out not to be a rival
+   * estimate at all but an OpenRouter-era price for a class with no pictures,
+   * superseded by Rs 9.08 measured on Vertex and then by Rs 30 with the
+   * pictures a real class carries. There is one number, and this is it.
+   * A trial reaching /settings, meanwhile, wrote and synced a
+   * preference about a pre-consent minor, which is the other half of the same
+   * refusal.
+   *
+   * isTrialPath is the list, and it lives in lib/workspace.ts so this and the
+   * screen cannot drift apart.
+   *
+   * THE REFUSAL CARRIES THE PATH IT REFUSED. A bare redirect returned a child
+   * to the screen they had just read, with no reason given and their place
+   * lost — most often after tapping a topic nobody has authored, which is
+   * most topics. `?blocked=` is what lets /try say which thing needs an
+   * account. The path is our own vocabulary and carries no student data.
+   *
+   * THE CONFINEMENT APPLIES TO EVERY TRIAL, SETTLED DEVICE OR NOT, and this
+   * paragraph used to say the opposite on a premise that was never true.
+   *
+   * It claimed beginTrial refuses a device that has already onboarded, so a
+   * settled device could not be in a trial and needed no confining.
+   * `lib/workspace.ts` says in capitals that it does NOT refuse one, and
+   * deliberately: a shared kiosk or a family phone is a settled device where
+   * the next child has no parent and no consent, and refusing them a trial
+   * would hand them the enrolled student's app. So TrialConsent offers exactly
+   * that — "Not me — watch a class as a guest" — and the branch this comment
+   * said was impossible is the one the whole design exists for. Gated on
+   * `!settled` it was also the only branch left unconfined: /class/<topic> is
+   * a live preparation and real money, and /settings, /progress and
+   * /diagnostic were open, while the screen that child had just read promised
+   * "a trial is the class, and nothing else". That is a promise in prose with
+   * the opposite behaviour underneath it, which is the aa278cd shape.
+   *
+   * The cost of confining both is that an enrolled student who taps a /try
+   * link is held to trial paths until they leave the trial — and they can:
+   * TrialConsent's own way out calls endTrial, and the `?blocked=` redirect
+   * lands them on the screen carrying that button. A stopped student who can
+   * see the way out beats a child who was promised a confinement that was not
+   * applied.
+   *
+   * isTrialSession is session-scoped, so all of this ends with the tab.
+   */
   if (booting && !isBench) return <Splash />;
-  if (!isBench && !isOnboarded(settings) && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
+  const to = gateTo(location.pathname, {
+    settled: isOnboarded(settings),
+    trial: isTrialSession(),
+    bench: isBench,
+  });
+  return to === null ? <>{children}</> : <Navigate to={to} replace />;
+}
+
+/**
+ * WHERE THIS SESSION MAY BE, AS A FUNCTION RATHER THAN AS JSX.
+ *
+ * Null means render what was asked for; a string is where to send them
+ * instead. It is out here because it is the only money guarantee this bundle
+ * states to a child as a fact, and inside the component the nearest a test
+ * could get was the predicate underneath it — which would leave an edit to
+ * this condition breaking the guarantee with a green suite.
+ *
+ * Read in order:
+ *
+ *   - a bench is a dev tool with no student behind it and is never gated;
+ *   - a trial is CONFINED, and the comment above says at length why;
+ *   - the doors are reached by people who have not onboarded, which is what
+ *     they are for, so the onboarding redirect must not swallow them.
+ */
+export function gateTo(
+  pathname: string,
+  { settled, trial, bench }: { settled: boolean; trial: boolean; bench: boolean },
+): string | null {
+  if (bench) return null;
+  const isDoor = pathname === '/enrol' || pathname === '/try';
+  // `trial` alone, never `!settled && trial`: the guest trial on a settled
+  // device is the case the confinement exists for, not the case it skips.
+  if (trial) {
+    if (isDoor || isTrialPath(pathname)) return null;
+    return `/try?blocked=${encodeURIComponent(pathname)}`;
   }
-  return <>{children}</>;
+  if (!isDoor && !settled && pathname !== '/onboarding') return '/onboarding';
+  return null;
 }
 
 /**
@@ -295,6 +404,15 @@ function Boundaried({ children }: { children: React.ReactNode }) {
    * dropped for exactly that reason.
    */
   useEffect(() => {
+    /**
+     * NOT DURING A TRIAL. track() puts distinct_id: installId() on every
+     * event (lib/telemetry.ts:284), which is a stable identifier for a device
+     * — and /try tells a child nobody is told they were here. This is the one
+     * such writer inside a file this phase owns, so it is guarded here rather
+     * than handed off; telemetry's own early return, which would cover the
+     * call sites in ClassRoom and elsewhere, is the handoff that remains.
+     */
+    if (!mayPersist()) return;
     track('screen_viewed', { path: location.pathname.replace(/\/[^/]{40,}/g, '/…') });
   }, [location.pathname]);
 
@@ -375,6 +493,10 @@ export default function App() {
             <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="/achievements" element={<Achievements />} />
             <Route path="/signin" element={<SignIn />} />
+            {/* The contest door, and the try-before-you-enrol door in front
+              of it. /enrol?c=<campaign> carries the contest. */}
+            <Route path="/enrol" element={<Enrol />} />
+            <Route path="/try" element={<TrialConsent />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<Help />} />
             <Route path="*" element={<Navigate to="/" replace />} />
