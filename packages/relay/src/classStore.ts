@@ -3,9 +3,11 @@ import { fail, checkSavedClass, type RelayResponse, type SavedClass } from './re
 /**
  * KEEPING A CLASS THE TUTOR JUST MADE.
  *
- * A topic is prepared once — about fifty seconds and ₹2.25 — and every student
- * after that gets it for the cost of a download. That is the entire economic
- * case for warm entry, and until this existed it was not true in production:
+ * A topic is prepared once — about ₹30, the planning figure every document
+ * here uses (docs/prd/6-cost-monetisation-ops.md:573, band ₹26-40) — and every
+ * student after that gets it for the cost of a download. That is the entire
+ * economic case for warm entry, and until this existed it was not true in
+ * production:
  * /api/class answered 501, so every student re-prepared every topic they
  * touched and paid for it again.
  *

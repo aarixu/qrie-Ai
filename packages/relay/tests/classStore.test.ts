@@ -5,8 +5,9 @@ import type { SavedClass } from '../src/relays';
 /**
  * KEEPING A CLASS SO THE NEXT STUDENT GETS IT FREE.
  *
- * A topic is prepared once — fifty seconds and about ₹2.25 — and everyone
- * after that downloads it. That is the whole economic case for warm entry, and
+ * A topic is prepared once — about ₹30 a topic, this repo's planning figure —
+ * and everyone after that downloads it. That is the whole economic case for
+ * warm entry, and
  * it was not true in production: /api/class answered 501, so every student
  * re-prepared every topic they touched.
  */

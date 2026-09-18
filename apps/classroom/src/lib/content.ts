@@ -65,7 +65,18 @@ let catalogCache: CatalogEntry[] | null = null;
  * Two sources, because they arrive two ways. The authored lessons are files in
  * content/, shipped with the app and available offline. A class prepared live
  * is written to Storage and its catalogue row to Postgres, so that a topic one
- * student paid fifty seconds and ₹2.25 to prepare is free for everyone after.
+ * student paid to prepare is free for everyone after — which is the whole
+ * point of the second query, because that sharing is what divides a
+ * preparation's cost by the number of students who arrive at the topic.
+ *
+ * This sentence carried "fifty seconds and ₹2.25" until now. That is an
+ * OpenRouter-era price for a class with NO pictures, and the billing path
+ * moved underneath it: Vertex charges a generated picture as output tokens,
+ * and the same text-only class measured ₹9.08 on 2026-09-13
+ * (docs/architecture/README.md:183). With the three or four pictures a real
+ * class carries at about ₹5.75 each, every document here plans on ₹30 a topic
+ * (docs/prd/6-cost-monetisation-ops.md:573, band ₹26-40). Quote that, not a
+ * number this file used to keep.
  *
  * The kept ones are a BONUS, not a requirement: if that query fails — offline,
  * signed out, the project unreachable — the app carries on with the lessons it

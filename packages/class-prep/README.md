@@ -111,6 +111,16 @@ The flash model was not a compromise: its drawing was the best of the three.
 End to end in the browser, a cold class lands in about **50 seconds for roughly
 Rs 2.25**.
 
+**That Rs 2.25 is an OpenRouter-era price and no longer what a class costs.**
+The billing path moved, not the arithmetic: Vertex charges a generated picture
+as output tokens rather than per image. The same text-only class measured
+**Rs 9.08** on 2026-09-13 (`docs/architecture/README.md:183`), and with the
+three or four pictures a real class carries at about Rs 5.75 each, every
+document in this repo plans on **Rs 30 a topic** (band Rs 26-40,
+`docs/prd/6-cost-monetisation-ops.md:573`). The table above is kept because the
+model COMPARISON it was run for still holds; read the rupees in it as relative,
+not as a bill.
+
 Those figures are **plan and draw only**: they predate steps 3 and 4 above. A
 reviewed prep adds one planner-grade call before the room opens — three on a
 flagged lesson (review, repair, re-review) — and the reviewer reads more than
