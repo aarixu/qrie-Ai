@@ -1,0 +1,229 @@
+######################################################################
+COST ROLLUP
+######################################################################
+All figures use the measured 16.55 classes per student-hour (`last-class.json` activeMs 217,571 = 3.6262 min), prep at PRD 6's planning Rs 30/topic (so prep per student-hour = 16.55 x 30 / S = Rs 496.5 / S), and one denominator for every fixed line: the pilot's 2,500 student-hours/month (500 students x 5 h). Summing all six PRDs' fixed lines at that denominator: Supabase Pro Rs 2,390/mo = Rs 0.96/h (PRD 3); Piper VPS Rs 2,000/mo = Rs 0.80/h (PRD 6); Vercel Pro Rs 1,800/mo = Rs 0.72/h (PRD 2 — PRD 6's table omits it entirely, and PRD 2 divides it by 15,000 h to reach Rs 0.12, which is the main reason the six documents do not add up as written); R2 backups Rs 4/mo = Rs 0.0016/h (PRD 3). Fixed total Rs 2.48/student-hour.
+
+END OF MVP-1. Marginal lines: narration and replies Rs 0 (Piper, PRD 6 req 7 is MVP-1); the ear Rs 0 if the GPU spike clears -0.22, else Rs 0.27/class x 16.55 = Rs 4.47/h; the judge Rs 1.13/class x 16.55 = Rs 18.70/h, because neither PRD puts the whyProbe playback change in MVP-1; prep Rs 496.5/S. MVP-1 has no teacher assignment (PRD 5 req 12 is MVP-2) and no school roster, so S is whatever the contest cohort converges on — PRD 6 risk 4 warns it could be single digits. At S=100: 18.70 + 4.97 + 2.48 = Rs 26.15/student-hour with the GPU ear, Rs 30.62 without. At S=10 it is Rs 71.2. If instead the 274 Class 9-10 science topics are pre-warmed (Rs 8,200 CAPEX) and that CAPEX is amortised over one year of a 100-student cohort at 50 h each (5,000 student-hours), prep becomes Rs 1.64/h and MVP-1 is Rs 22.8 / Rs 27.3. Either way MVP-1 is 4.5x to 6x the ceiling. IT BREAKS ON THE JUDGE: Rs 18.70 is 3.7x the ceiling on its own, before anything else is counted. Second break: prep at S below 100. Cash out of pocket is a different and much better number — Rs 23.7 of the Rs 26.15 is Vertex drawn on Google Cloud credits, leaving about Rs 2.5 of cash, which is why PRD 6's 'under Rs 5 of cash from day one' is true and its 'Rs 5 ceiling met' is not.
+
+END OF MVP-2. This is where the six documents disagree with each other and PRD 6 disagrees with itself. Under PRD 4's staging (whyProbe playback lands in MVP-2), the judge goes to Rs 0 and, with the teacher assignment plus pre-warm intent driving S to 500: 0 + 0 + 0.99 + 2.48 + 0.02 (card delivery, PRD 5) = Rs 3.49/student-hour. CLEARS. Under PRD 6 req 12's staging (class path is MVP-3; its MVP-2 covers only the placement and quiz paths, which PRD 4 already counted as making zero LLM calls anyway), the judge stays: 18.70 + 0.99 + 2.48 + 0.02 = Rs 22.19/student-hour, or Rs 26.66 without the GPU ear. DOES NOT CLEAR. PRD 6's own stated MVP-2 projection of Rs 8-12 is reachable under neither staging; it appears to assume a partial judge reduction that requirement 12 does not describe. At S=40 (one section assigned rather than a whole school) add Rs 11.42, giving Rs 14.9 under PRD 4's staging and Rs 33.6 under PRD 6's.
+
+END OF MVP-3. Both PRDs agree the judge is off the class path by now, narration and the ear are ours, and on-device speech (if it survives PRD 2's open question 3) adds a model CDN at Rs 2,065/mo. At pilot scale (2,500 h, S=500): prep 0.99 + fixed 2.48 + CDN 0.83 + card 0.02 = Rs 4.32/student-hour. CLEARS, with 14 per cent of headroom and nothing spare. At 25,000 student-hours (5,000 students x 5 h) the fixed lines collapse to (2,390 + 2,000 + 1,800 + 2,065) / 25,000 = Rs 0.33, giving 0.99 + 0.33 + 0.02 = Rs 1.34/student-hour. CLEARS with room, which matches PRD 6's Rs 1-2 marginal projection. AFTER 2027-01-01 prep doubles to Rs 60/topic: at 25,000 h and S=500 that is 16.55 x 60 / 500 = Rs 1.99 + 0.33 + 0.02 = Rs 2.34, still clearing; at S=100 it is Rs 9.93 + 0.33 = Rs 10.3 and BREAKS. So the post-cliff product requires S of roughly 250 or better on every topic — which is exactly what PRD 5's assignment button and PRD 6's pre-warm runner are for, and why neither is an optional feature.
+
+WHERE IT BREAKS, PRECISELY. (1) MVP-1 and MVP-2 break on the judge, and only requirement 6/12's class-path playback change closes it; everything else across six documents is rounding against Rs 18.70. (2) Every MVP breaks at small S: at S=1 prep alone is Rs 496.5/student-hour, 99x the ceiling, and that is the default state of a self-serve student on a cold topic today, with no lock and no pre-warm. (3) MVP-1's hundred-student cohort breaks on fixed cost alone — Supabase Pro at 100 students x 5 h is Rs 4.78/student-hour, 96 per cent of the ceiling before a single model call. PRD 3 states this plainly and no other PRD carries it forward. (4) The doubt tutor is in no rollup in any PRD; PRD 4's unverified estimate is Rs 28/student-hour. If it lands anywhere near that, every figure above is wrong and MVP-3 breaks too. Measuring it (PRD 4 req 7) is the cheapest way to find out whether this arithmetic means anything at all.
+
+######################################################################
+CRITICAL PATH
+######################################################################
+ 1. 1. Fix the `foldAnswer` compounding defect (PRD 4 req 1). Nothing that persists belief may land first, or the defect is baked into Postgres permanently. It blocks the server fold, which blocks `concept_state`, which blocks the progress card, the teacher board and the entire school demo. PRD 5 names this as the largest risk in the product and it is a one-line ordering constraint.
+ 2. 2. Apply migration 0014 and land 0015 (`org_id` on `student_state`, `relay_usage`, `usage_event`, `prepared_class`; `folded_through_session`) plus the currently unowned 0017 (`prep_id`, `bucket`, provider `'self'`, `fixed_cost`) while every table holds zero or near-zero rows (PRD 3 reqs 8 and 9; PRD 4 req 11). The zero-row window closes the day the first real student arrives and never reopens. This must precede step 10, not follow it.
+ 3. 3. Global spend ceiling, kill switch, CAPTCHA on sign-up, and the in-Postgres alarm at 50/80/100 per cent (PRD 3 reqs 1-4). This gates having any users at all and therefore must precede the first deploy. Its Rs 500/day default must be re-derived and raised, with the derivation written down, before the contest or the pilot opens — at pilot load the default halts the product on day one.
+ 4. 4. Commit and deploy `bareModel`, paste the prices, attribute prep spend by `prep_id`, and assert both in `verify-deploy` (PRD 6 reqs 1-3, replacing PRD 3 req 24). Every decision in every other cost requirement is judged on `cost_per_student_hour`, which today returns Rs 0 and reads as success. Nothing downstream is measurable until this lands.
+ 5. 5. The per-topic prep lock and admission control (PRD 3 req 6), with PRD 4's claim key reconciled to `topic_ref`. This is what makes S real; every prep figure in all six documents divides by it. It blocks the pre-warm runner and PRD 1's catalogue-first UI.
+ 6. 6. The four safety fixes: prep screens its own narration (PRD 4 req 4), the factual-correctness reviewer and the retraction path (PRD 4 req 3 plus PRD 3 req 7, reconciled), the doubt-tutor reply screen (PRD 4's dependency on PRD 2), and a report that reaches a human on one payload (PRD 1 req 7 + PRD 3 req 22 + PRD 6 req 24). These gate the Play listing and the school pilot, and the reviewer specifically is a hard gate on step 9 — PRD 6 risk 5 calls it non-negotiable.
+ 7. 7. The Piper VPS deployed, authenticated, behind TLS, with vendor fallback, AND visible in the books (PRD 6 reqs 7 and 4, which needs step 2's provider widening). Rs 141/student-hour, the largest single item in the product. Requirement 4 must ship with it or the lever is invisible and nobody pulls it twice.
+ 8. 8. whyProbe format, prompt and validator (PRD 4 req 6, MVP-1) BEFORE the pre-warm runner, and Form B (PRD 4 req 5) alongside it. This ordering constraint appears in neither PRD: warm 274 topics without the field and all 274 must be re-prepared to get it, at a second Rs 8,200.
+ 9. 9. The headless pre-warm runner (PRD 6 req 10), after 5, 6, 7 and 8. Rs 8,200 for the 274 Class 9-10 science topics, writing `review_status = 'pending'` and never publishing directly.
+10. 10. First deploy of the front end: one origin, `base: '/app/'`, the narrowed rewrite, the legacy-WebView floor, legal routes, telemetry switched on with a real release stamp, and the refusal-rendering nobody currently owns (PRD 2 reqs 1, 5, 10, 11; PRD 6 reqs 19, 20). Cannot precede step 3.
+11. 11. `/api/enroll` and `/api/enroll/otp`, the `consent_record`, and the contest landing (PRD 3 reqs 19 and 20; PRD 2 req 6; PRD 1's design half). The contest cannot open before steps 3, 7 and 10, because the ceiling, the voice cost and the deploy all gate it. PRD 0's prize-integrity requirements — unowned today — must land with it, not after, because the client-written ledger becomes a target the moment a prize is announced.
+12. 12. The server-side fold as an Edge Function (PRD 4 req 10), after 1 and 2. This is the named blocker for the school demo and it blocks steps 14, 15 and 16.
+13. 13. School tenancy: the four tables, the provisioning-trigger change, roster import, the claim flow, and `my_student_ids()` (PRD 3 reqs 10 and 15-18). The tables and the trigger change should be pulled forward into step 2's zero-row window, leaving only the three routes and the picker for MVP-2 — PRD 3's own mitigation for its second-largest risk.
+14. 14. The `progress_card` table and its builder, including the honesty floor (PRD 5 reqs 3, 4 and 6), after 12. The table must land in MVP-1, not MVP-2, because PRD 5 writes a `baseline` card at Test 1 in MVP-1 and cannot write into a table that does not exist yet.
+15. 15. The teacher class board, the assignment entity and the pre-warm intent (PRD 5 reqs 10, 12 and 13), after 12 and 13. Requirement 13 feeds back into step 9 and is what raises S from single digits to hundreds — it is a cost requirement wearing a teacher-surface costume.
+16. 16. whyProbe ClassRoom playback (PRD 4 req 6 / PRD 6 req 12). The only thing in six documents that puts the product under Rs 5. Its date must be set against the credit cliff and the credit balance, neither of which anyone currently knows (PRD 6 open question 5).
+17. 17. Card delivery: provider choice, BSP onboarding and template approval started at least three weeks before the demo (unowned today), then the monthly send job, then Cashfree mandate, webhook and the pre-debit notification (PRD 6 reqs 15 and 16), which need step 14's card and the published refund and privacy policies.
+18. 18. Android: the debug build in CI first (PRD 2 req 15, the cheapest insurance in the set), then signing, keystore custody, R8 and an uploadable AAB (PRD 2 req 16; PRD 6 req 20.4), then the Play listing after step 10's legal pages are live. Answer PRD 2's open question 3 before any of it, because it decides whether the 306 MB model download exists at all.
+
+######################################################################
+CONTRADICTIONS
+######################################################################
+
+* PRD 4 req 12 and PRD 5 req 3
+  ISSUE: The progress card is two different objects. PRD 4 defines `public.progress_card(p_user, p_from, p_to) returns jsonb` — a live query over an arbitrary window, "service_role-callable and readable by the student's own JWT". PRD 5 defines `public.progress_card` as a TABLE of immutable stored artefacts, service_role write only, "no select policy for `authenticated` at all", "never recomputed", unique o
+  FIX:   PRD 5's stored table wins on all three arguments. Rename PRD 4's function `build_progress_card(p_user, p_from, p_to) returns jsonb` and demote it to the builder the monthly job calls, writing into PRD 5's `progress_card.body`. Nothing reads the function directly. PRD 4's 'readable by the student's own JWT' becomes PRD 5's `/app/grown-up` softer view.
+
+* PRD 4 req 6 and PRD 6 req 12
+  ISSUE: The whyProbe / judge-off-playback change is staged differently. PRD 4: format, prompt and validator in MVP-1, ClassRoom playback change in MVP-2. PRD 6: 'MVP 2 for the placement and quiz paths, 3 for the class path'. The placement and quiz paths already make zero LLM calls (PRD 4 counted it), so PRD 6's MVP-2 buys nothing and its MVP-3 carries the entire Rs 18.70/student-hour judge line. This is t
+  FIX:   PRD 4's staging. Class-path playback in MVP-2, and PRD 6 re-dates requirement 18's credits-cliff plan against it. PRD 6's own MVP-2 projection of Rs 8-12 is impossible under its own staging (Rs 22.19) and pessimistic under PRD 4's (Rs 3.49); replace it with both figures and name which one the staging decision buys.
+
+* PRD 3 req 7 and PRD 4 req 3
+  ISSUE: The fact-check gate and the retraction path are designed twice. PRD 3: `/api/class` writes a pending row, a pg_cron job hands it to a review Edge Function every minute, the select policy becomes `review_status = 'published'`, retraction is `retire_prepared_class()` plus a `retired_class` table plus `tools/bin/retire-class.mjs`, and `content.ts:101` 'needs no change'. PRD 4: the reviewer runs insid
+  FIX:   Split by layer, do not pick one. PRD 3 owns the columns, the policy and the operator tool (`review_status`, `published_at`, `review_note`, plus PRD 4's `version` and `retracted_at` folded into the same migration, one tool named `retract-class.mjs`). PRD 4 owns the reviewer prompt and verdict content, and runs it in-pipeline for live prep (so a student is never taught an unreviewed class) AND serve
+
+* PRD 4 req 5 and PRD 5 req 9
+  ISSUE: Test 2 is specified two ways. PRD 4 generates Form B — 1,096 new `probe-b-*` items for Class 9-10 science, MVP-1, equated by anchor-node with a 100% anchor set, card field `equatedBy: 'anchor-node'`. PRD 5 says Test 2 is 'drawn from the same bank, matched to Test 1 on node set and on difficulty distribution, excluding every probe id Test 1 used', MVP-2, and its acceptance test is 'share zero probe
+  FIX:   PRD 4's Form B, MVP-1, and PRD 5 rewrites requirement 9 to consume it. Keep PRD 5's honest caveat wording ('different questions of the same difficulty', no statistical equating claimed) and drop the implication in PRD 4's `equatedBy: 'anchor-node'` that equating has been performed — it names the method, not a result.
+
+* PRD 3 req 24(c) and PRD 6 req 2
+  ISSUE: Prep spend attribution is fixed two incompatible ways. PRD 3: "prep's relay calls must carry the `x-session-id` header the way the class's do". PRD 6 demonstrates that is impossible — `currentSessionId()` is deliberately null outside an open session and `openSession` is not called until the lesson already exists — and instead mints a `prepId`, adds `usage_event.prep_id` and `learning_session.prep_
+  FIX:   PRD 6's mechanism and PRD 6's figure. Delete PRD 3 req 24(c) and correct the Rs 4.31 at 3-backend-db-auth.md:795. PRD 3 keeps only the migration that adds the two columns.
+
+* PRD 0 (decided 2026-09-17), PRD 1 req 19 and PRD 5 req 1
+  ISSUE: Language. PRD 0 records an explicit decision: app UI, buttons, labels, errors, onboarding, settings and the website are English always; Hinglish is the tutor's layer and a per-student setting; 'the Riso Pop straplines drafted in Hinglish are superseded'. PRD 1 requirement 19 (1-brand-ui-ux.md:240) builds a Hinglish i18n layer for the chrome in MVP-2 and open question 5 re-opens the decision. PRD 5
+  FIX:   Delete PRD 1 requirement 19 and open question 5; make PRD 5's guardian view English. Replace them with what PRD 0 actually requires and nobody built: a tutor-language step in onboarding (PRD 1) and narration language as a render parameter (PRD 4).
+
+* PRD 1 req 11 and PRD 0 section 3 / PRD 2 req 6
+  ISSUE: Where the contest front door lives. PRD 1 builds four screens inside the app — `ContestLanding`, `ContestForm`, `OtpVerify`, `EnrolDone` under `apps/classroom/src/screens/contest/` — with its own `ContestEnrolment` type. PRD 0 and PRD 2 put the form on the marketing site at `curie.co.in/enter`, built by Aarav against `POST /api/enroll`, with the app doing nothing but honouring the server-chosen `n
+  FIX:   PRD 0/PRD 2's design. The form is Aarav's, on the site. PRD 1 keeps only the landing/consent copy, the Riso Pop design of the form, and the Test 1 handoff screen — which is a design deliverable to the site, not four app screens. This removes roughly a quarter of PRD 1's MVP-1 build.
+
+* PRD 2 reqs 2/3/17 and PRD 6 req 20.3
+  ISSUE: On-device speech models. PRD 2 gates them out of the web build entirely, deletes the 23.5 MB wasm, proposes in open question 3 deleting `content/models`, `fetch-speech-models.mjs` and `onDeviceSpeech.ts` outright, and in MVP-3 fetches them from a CDN rather than bundling them (req 21 targets `android/app/src/main/assets/public` under 8 MB). PRD 6 req 20.3 makes `fetch-speech-models.mjs` a prerequi
+  FIX:   Answer PRD 2's open question 3 first; it decides a third of PRD 2 and all of PRD 6 req 20.3. If on-device voice survives, PRD 6's assertion becomes 'the CDN manifest resolves and every sha256 matches', not 'assets/public/models is non-empty'.
+
+* PRD 3 reqs 1-2 and PRD 6 req 14 / PRD 5 req 12
+  ISSUE: The global ceiling and the demand the other PRDs plan for are irreconcilable. PRD 3 defaults `global_units_per_day` to 50,000 (Rs 500/day, Rs 15,000/month) with `halt_on_ceiling` true by default. PRD 6 prices a 5,000-student contest at Rs 125,000-750,000 of vendor spend in free months, and the pilot at 500 students x 5 h/month x Rs 25.4 is Rs 63,500/month, about Rs 2,117/day. Either default halts 
+  FIX:   Keep the cap and the default (it is doing its job) but make requirement 2's derivation a gate on opening the funnel rather than a note: the contest may not open until the ceiling has been raised to the cohort's derived figure AND the Piper VPS has landed. Add the ceiling to PRD 6's runbook as a pre-contest checklist item, and make PRD 6 req 14's contest sizing quote the ceiling it implies.
+
+* PRD 3 req 3, PRD 3 req 19 and PRD 6 req 13
+  ISSUE: Anonymous try-before-you-enrol cannot coexist with the consent assertion. PRD 3 req 3 keeps anonymous sign-in at a tenth of the budget via `membership.tier`; PRD 3 req 19's acceptance test is that 'no `ledger_event` row can exist for a `user_id` with no `consent_record`, and a nightly job asserts that and shouts if it is false'. An anonymous student taking a class writes ledger rows and has no con
+  FIX:   Decide PRD 3 open question 6 now. If anonymous survives, add `'anon'` to the Tier union at 1,200 units and exempt it from the consent assertion with a bounded TTL (delete anonymous accounts and their ledger rows after N days). If it does not, requirement 3's tier work collapses to the enrolment door and the assertion stands unqualified.
+
+* PRD 3 open question 5 and PRD 6's MVP-1 cost table
+  ISSUE: Supabase Pro is an open question in PRD 3 ('now, or at the pilot?') and a settled line item in PRD 6's MVP-1 table at Rs 2,390/month, Rs 0.96/student-hour. PRD 3 req 23's backup requirement and PRD 6 req 20's deploy gate both assume Pro. PRD 4 separately budgets the fold Edge Function against 'Supabase's free-tier 500,000 invocations'.
+  FIX:   PRD 6's answer: Pro from the day the contest funnel opens, because that is the first day losing the ledger costs something irreplaceable. Close PRD 3's open question and correct PRD 4's free-tier note.
+
+* PRD 4's cross-references and the actual PRD numbering
+  ISSUE: PRD 4 addresses cost-monetisation as 'PRD 5' and LMS as 'PRD 6' throughout its dependency list, and its Contracts section says the progress card RPC is one 'which PRD 6 (LMS) renders and PRD 5 uses as the pre-debit notification's payload' — inverted in both halves. Every dependency PRD 4 raises is therefore addressed to the wrong document.
+  FIX:   Mechanical fix, but do it before anyone works from the dependency list: PRD 5 is LMS, PRD 6 is cost/monetisation/ops.
+
+* PRD 4's cost section and PRD 5 / PRD 6 / PRD 1
+  ISSUE: Prep cost planning constant. PRD 6 states 'the planning number this PRD uses is Rs 30 a topic' with a measured range of Rs 26-32; PRD 5 and PRD 1 both adopt Rs 30. PRD 4 plans on Rs 25-40 and derives its headline break-even figures from it (414 students/topic at Rs 25, 662 at Rs 40, Rs 6,850-10,960 CAPEX for 274 topics). At Rs 30 those become 497 students and Rs 8,200, which is what PRD 6 prints.
+  FIX:   Rs 30 everywhere, with Rs 26-40 stated once as the uncertainty band. Re-derive PRD 4's break-even to 497 pre-cliff and 993 post-cliff, and its CAPEX to Rs 8,200.
+
+######################################################################
+BROKEN CONTRACTS
+######################################################################
+
+* `POST /api/report` — the child's report payload
+  Four incompatible definitions across four PRDs. PRD 1: `ReportSubmission { kind: 'wrong'|'confusing'|'rude'|'scary'|'other'; note; lessonId; beatId; spokenLine; at }`, posted to `/report`, returning `202 { id }`. PRD 2: `ReportRequest { kind: 'content'|'safety'|'bug'; lessonRef; topicRef; sessionId; note; release; platform }`, posted to `/api/report`, returning `{ ok: true; tic
+
+* `ProgressCard`
+  Two TypeScript interfaces of the same name sharing no fields. PRD 4: `{ from, to, learningMinutes, gainPerLearningMinute, chapters[{chapter,subject,klass,outcomesTotal,heldBefore,heldAfter}], misconceptionsCleared[{outcomeId,outcomeTitle,misconception}], tests }`. PRD 5: `{ version, shape, studentName, periodStart, periodEnd, activeMinutes, sittings, unassistedAnswers, nowAlone
+
+* The enrolment hand-off
+  Three shapes for one payload. PRD 0's `EnrollRequest` carries `board`, `subjects`, `parentName`, `city`, `contestCode`. PRD 1's `StudentWorkspace` carries `studentId`, `orgId`, `orgKind`, `source`, `campaign` and is declared 'written identically by both onboarding paths'. PRD 2 says the hand-off is the existing `StudentProfile` row at `student_state` key `ai-tutor:profile` — `{
+
+* `student_state` row shape
+  PRD 3 requirement 9 adds `org_id uuid NOT NULL references organization` to `student_state` and changes its policy to `using (auth.uid() = user_id and public.is_member(org_id))`. PRD 2's profile hand-off contract is `{ user_id, key, value, updated_at }` with no `org_id`, and `/api/enroll` (PRD 3's own endpoint) writes that row. Either the endpoint supplies `org_id` or every enro
+
+* `prepared_class` columns and the catalogue read at `content.ts:101`
+  PRD 3 adds `review_status`, `published_at`, `review_note`, `org_id` and states the catalogue read 'needs no change'. PRD 4 adds `version`, `review_verdict`, `reviewed_at`, `retracted_at` and states the catalogue read must change to filter `retracted_at is null` and take max(version). PRD 6's pre-warm runner writes `review_status = 'pending'` (PRD 3's column) as a hard gate. One
+
+* `membership.tier`
+  PRD 3 declares `tier text not null default 'full'`. PRD 6 declares `type Tier = 'trial' | 'paid' | 'school' | 'lapsed' | 'staff'` and `UNITS_PER_DAY_BY_TIER` keyed on exactly those five. `'full'` is not a member, so every row created before a tier is assigned resolves to no budget, and `claim_relay`'s fourth argument has no defined behaviour for it. PRD 6 flags this itself; PRD
+
+* `PrewarmIntent`
+  Produced by PRD 5 requirement 13 as the mechanism that makes the teacher's assignment button a cost lever. No PRD's migration set defines a table for it — PRD 5's own 'tables this PRD adds' list is `progress_card`, `parent_link`, `card_view`, `assignment`, `assignment_progress`. PRD 6's runner reads `tools/prewarm/state/<syllabus>.json` and the topic map, never an intent row. A
+
+* `UsageEvent` and the `usage_event` schema
+  PRD 6 requires `prepId`, `bucket: 'live'|'warm'`, and `provider: 'self'`, plus `learning_session.prep_id`, the `fixed_cost` table and `fixed_cost_per_student_hour()`. It states PRD 3 writes the migration. PRD 3's requirements 9 and 15 define migrations 0015 and 0016 and contain none of them. The `provider` CHECK at `0008_usage.sql:28` admits only `('vertex','openrouter','storag
+
+* `/api/card/*` and `/api/teacher/*`
+  PRD 5 specifies six endpoints — `GET /api/card/:token`, `POST /api/card/:token/verify`, `POST /api/card/send`, `GET /api/teacher/class/:classId/board`, `GET /api/teacher/student/:userId/card` — and says PRD 3 mounts them behind `handleRelay`. PRD 3's contracts section lists the relay's routes (`/api/prep/lock`, `/api/enroll`, `/api/join`, `/api/roster`, `/api/report`) and none 
+
+* `Degrade` and `ClaimReason`
+  PRD 6 defines `Degrade = 'none'|'no-new-topics'|'recorded-voice-only'|'read-only'` and says PRD 2 renders it; PRD 3 extends `ClaimReason` with `'global'|'halted'` and says PRD 2 must render them differently from `'budget'`. PRD 2 defines neither and has no requirement that touches refusal rendering. The refusal path is also where a halted relay reaches a student mid-class, so t
+
+* `Probe.parentPhrasing`
+  PRD 5 requirement 8 adds `parentPhrasing[]` aligned index-for-index to `misconceptions[]` on 952 Class 9-10 science probes (2,856 strings, 2,807 distinct), generated through `tools/gen-graph`, and lists it as 'consumed by PRD 4's probe selection'. PRD 4 owns `tools/gen-graph`, owns the probe banks, and regenerates them for Form B in requirement 5 — with no mention of `parentPhr
+
+* The per-topic prep lock key
+  PRD 3's `prep_lock.topic_ref` is a text primary key of the form `<syllabus>/<chapter>/<topic>` and `POST /api/prep/lock` takes `{ topicRef }`. PRD 4 requirement 9 says the client 'POSTs a claim for `idFor(topicRef)`' — the derived class id, not the topic ref. Two students reaching the same topic through different derivations take two different locks, which is exactly the failur
+
+* `form: 'A' | 'B'` on `DiagnosticResult` and the `answered` payload
+  PRD 4 adds the field so Test 1 and Test 2 can be told apart, and PRD 4's `ProgressCard.tests` reports `one: { form: 'A' }` and `two: { form: 'B' }`. PRD 5's Test 2 has no concept of a form — it draws from the same bank excluding used probe ids — so nothing would ever write `'B'`, and the card's test section is unfillable. PRD 2's `StudentProfile` contract carries `diagnostic: D
+
+######################################################################
+UNOWNED WORK
+######################################################################
+
+* Contest prize integrity: recomputing the prize metric server-side from `ledger_event` under the service key (never from `student_state`), anomaly detection over the shortlist (sub-human answer latencies, `active_ms` exceeding wall-clock elapsed, unbroken perfect runs, several accounts sharing a devi
+  -> PRD 4 for the metric recompute and the anomaly detector; PRD 3 for the service-role job, the schedule and the `active_ms` vs wall-clock constraint.
+
+* Narration language as a parameter: planning a class once in a language-neutral form and rendering narration per language, which PRD 0 explicitly chose over planning per language, and which requires a `lesson-format` change because the planner currently writes Hinglish narration straight into the les
+  -> PRD 4 for the format and planner change; PRD 1 for the onboarding step. PRD 6 owes the arithmetic PRD 0 already sketched: pre-warm CAPEX and audio storage multiply by language count (~Rs 35,600 and ~1.9 GB at two languages for 1,099 topics), which appears in none of PRD 6's warming figures.
+
+* Nearest-prepared-neighbour selection over the outcome graph. PRD 1 req 10 makes it the mechanism that converts a Rs 30 CAPEX event into a Rs 0 download and names PRD 4 as the owner; PRD 4 has no such requirement, so `PreparedState.nearestReady` has no producer and requirement 10 degrades to string s
+  -> PRD 4, as a pure function over the loaded outcome map plus the prepared-topic set.
+
+* A read-only 'is this topic prepared, and is one running right now' endpoint. PRD 1's `preparedState(topicRef)` must render on every topic affordance on Home, Syllabus, Chapter, Search and AskBox. PRD 3 offers only `POST /api/prep/lock`, which takes a lock; taking a lock to paint a badge is wrong.
+  -> PRD 3, as `GET /api/prep/state?topicRefs=` returning ready/preparing/absent in one round trip for a screen's worth of topics.
+
+* The migration adding `usage_event.prep_id`, `usage_event.bucket`, `learning_session.prep_id`, the `fixed_cost` table, `billing_mandate`, and the widening of `usage_event.provider` to admit `'self'`. PRD 6 requires all six and says 'PRD 3 writes it'; PRD 3's migration set (0015 org_id, 0016 school) c
+  -> PRD 3, as migration 0017, landed with 0015 while the tables are near-empty.
+
+* Client rendering of every refusal the backend now produces: `ClaimReason` 'global' and 'halted' distinguished from 'budget', the prep-lock 'busy'/'held' wait-or-fall-back screen rather than a retry loop, and PRD 6's `Degrade` ladder ('no-new-topics', 'recorded-voice-only', 'read-only'). PRD 3 and PR
+  -> PRD 2, MVP-1, alongside requirement 5's floor — these are the sentences a student sees when the product is working correctly and saying no.
+
+* A server-rendered `/card/:token` page that works with no app and no login on a Rs 6,000 phone on 3G. PRD 5 requires it and assigns it to PRD 2. PRD 2 is a Vite SPA with one rewrite and no SSR anywhere, and `/card/*` is absent from its origin and path map.
+  -> PRD 3, rendering HTML from the relay Edge Function (it already owns `/api/*` on the same origin), with PRD 1 supplying the print-capable Riso Pop design and PRD 2 adding the path to the origin map.
+
+* WhatsApp Business API provider selection, BSP onboarding and template approval (two to three weeks of calendar time PRD 5 flags as uncontrollable), and the monthly job that calls `POST /api/card/send`. PRD 5's contract says 'PRD 6 calls it'; PRD 6 has a pre-debit notification job in MVP-3 and no mon
+  -> PRD 6, MVP-2, as a scheduled job beside the daily cost job; PRD 3 picks the provider so OTP and card delivery share one vendor.
+
+* `PrewarmIntent` has no storage and no reader. PRD 5 req 13 writes it; no PRD's migration list contains a `prewarm_intent` table; PRD 6's runner reads only its own file manifest and the topic list from the map. As written, the teacher's assignment button — which PRD 5 calls the single largest lever o
+  -> PRD 3 for the table, PRD 6 for the runner reading it ahead of its own manifest. Until then PRD 5 req 12's Rs 12.41-at-S=40 figure is unearned.
+
+* Consent capture for the self-serve, non-contest student. PRD 3's `consent_record` has a `source` value `'self_serve'` and requirement 19's nightly job forbids a ledger row for a user with no consent record, but no requirement in any PRD builds the self-serve consent screen or its OTP. The only conse
+  -> PRD 3 for the endpoint and record, PRD 1 for the screen. This also decides PRD 3 open question 6.
+
+* `/app/grown-up`, PRD 5's MVP-1 guardian view: a new route and screen in the student app. PRD 1 owns the screen inventory, the design system, the component layer and all 27 screens and never mentions it; PRD 2 owns routing and never registers it. PRD 5 lists PRD 1 as a dependency for the progress car
+  -> PRD 5 keeps the content decision; PRD 1 designs it and adds it to the inventory; PRD 2 registers the route. Otherwise MVP-1's only parent-facing surface ships outside the design system.
+
+* A cost ceiling for the doubt tutor. PRD 4 req 7 measures it and estimates it could be Rs 28/student-hour — larger than everything else in its area combined — and PRD 4 open question 6 asks whether a doubt turn may ever be refused. It appears in no rollup in PRD 6, has no tier budget in requirement 1
+  -> PRD 4 to measure and, if it lands high, to pre-author; PRD 6 to carry the number into the rollup and the degradation ladder once measured.
+
+* Consumption of the prepared-hit ratio. PRD 1 emits `prepared_hit` and `prep_triggered` and states the ratio 'drives the prep term in the Rs 5 ceiling'. PRD 6's arithmetic uses S directly and never reads either event, so the one telemetry pair designed to make the ceiling measurable feeds nothing.
+  -> PRD 6, in the daily cost log, as the observed denominator behind the S the model assumes.
+
+* Ownership of `.github/workflows/ci.yml` as a whole. Four PRDs add jobs to it independently — PRD 1 req 2 (the brand contrast gate), PRD 2 req 8 (the bundle budget) and req 15 (the Android debug build), PRD 3 req 25 (`deno check`), PRD 6 req 6 and 20 (cost.yml and deploy.yml) — with no PRD owning the
+  -> PRD 6, which already owns CI/CD; the others contribute steps and state their runtime cost.
+
+######################################################################
+DOUBLE-OWNED
+######################################################################
+
+* The four cost-apparatus fixes: paste `model_price`, record the bare model name, attribute prep spend, and extend `verify-deploy.mjs` plus add npm scripts.
+  claimed by PRD 3 requirement 24 (a)(b)(c)(d) and PRD 6 requirements 1, 2 and 3 — the same four items, with (c) specified incompatibly (see contradictions). -> PRD 6. PRD 3 retains only the migration that adds `prep_id` and `bucket`. Delete PRD 3 req 24 and replace it with a one-line pointer.
+
+* Daily cost reporting and threshold alerting on `cost_per_student_hour`.
+  claimed by PRD 3 requirement 4 (a second pg_cron + pg_net job posting yesterday's cost per student-hour and total rupees to an ops webhook) and PRD 6 requirement 6 (`.github/workflows/cost.yml` at 02:30 IST with four failure thresholds and a committed `docs/ops/cost-log.md`). -> PRD 6 for the cost report and its thresholds; PRD 3 keeps only the in-database ceiling alarm at 50/80/100 per cent, which must stay in Postgres for the reason `0009` gives.
+
+* The first ever Vercel deploy of the front end.
+  claimed by PRD 2 requirement 1 and PRD 6 requirement 20.2, both calling it an MVP-1 line item. -> PRD 2 for `base`, `start_url`, scope, the narrowed rewrite and the origin map; PRD 6 for the workflow that runs the deploy and the verify step that fails it loudly.
+
+* Switching telemetry on: creating the projects, setting `VITE_SENTRY_DSN` / `VITE_POSTHOG_KEY` / `VITE_RELEASE`, and adding call sites.
+  claimed by PRD 2 requirement 11 and PRD 6 requirement 19. -> PRD 6 for provisioning, environment variables, the git-sha release stamp and the PostHog reverse proxy; PRD 2 for the in-app disclosure and the opt-out that actually stops `track`, which is the children's-app half.
+
+* Making `ReportSheet` send a report that reaches a person.
+  claimed by PRD 1 requirement 7 (the POST, the pending/sent/failed states, the offline queue, the visible contact line) and PRD 2 requirement 10 (change ReportSheet so it POSTs `/api/report` and falls back to localStorage). -> PRD 1, which owns the sheet, its states vocabulary and its copy — including the live defect that a button labelled 'Send report' sits above a confirmation saying nothing was sent. PRD 2 keeps only the route registration.
+
+* Legal and grievance surfaces in the app.
+  claimed by PRD 1 requirement 16 (an About/Privacy/Terms screen carrying the grievance contact) and PRD 2 requirement 10 (`/app/legal/privacy`, `/app/legal/terms`, `/app/legal/dpdp`, `/app/help/report` as real routes), with PRD 3 requirements 20 and 22 writing the copy and PRD 6 requirement 24 publishing the address. -> PRD 2 for the routes and the Play Data Safety mapping, PRD 1 for the design, PRD 3 for the copy and the named grievance officer. Three PRDs is right; two of them building the same screen is not.
+
+* The Notes and Bookmarks decision and the ClassRoom note control.
+  claimed by PRD 1 requirement 15 (leaves it open as one of Aarav's calls, open question 3) and PRD 5 requirement 15 (decides it: Notes stay, Bookmarks go, MVP-1, 'this resolves PRD 1's open question 3'). -> PRD 1. Fold PRD 5's decision into PRD 1 requirement 15 and close open question 3 there; PRD 5 keeps only the one line that notes are never visible to a teacher, a parent or a school.
+
+* The support / grievance address: who it belongs to, where it is published, and who triages what arrives.
+  claimed by PRD 3 requirement 22 (a real mailbox on the real domain, a named human, DPDP grievance officer) and PRD 6 requirement 24 (a `support@` address published in the app, on the site and in the Play listing, 24-hour triage, ops-channel posting). -> PRD 3 for the DPDP artefact and the named officer; PRD 6 for publication, the incident path and the triage log.
+
+* The pre-warm topic ordering.
+  claimed by PRD 4 requirement 9 ('the pre-warm order is a LAM decision, not an ops decision', with a three-key ordering that maximises S per rupee) and PRD 6 requirement 10 (the runner reads the topic list from the map and its own manifest, with no ordering input). -> PRD 4 exports the ordering as a function; PRD 6's runner calls it instead of walking the map. As written the LAM's ordering is unreachable.
+
+* The fee-line commercial model and the school channel's arithmetic.
+  claimed by PRD 6 requirement 17 (`docs/commercial/fee-line.md`, the quote sheet, the Rs 250/Rs 1,270 arithmetic) and PRD 5 requirement 14 plus its cost section (what the school gets, the coverage block, the S argument). PRD 6's 'what the school gets' list names the teacher surface and the progress card, which are entirely PRD 5's build. -> PRD 6 for the document and the price; PRD 5 supplies the deliverables list and the coverage honesty block, which PRD 6 should cite rather than restate.
+
+* The per-topic prep concurrency decision and the 'join the running prep' behaviour.
+  claimed by PRD 3 requirement 6 (the table, the function, the endpoint), PRD 4 requirement 9 (the client claim, the decision to wait, the poll) and PRD 1 requirement 10 (`PreparedState.preparing` joins rather than starting a second). Three PRDs describe the same wait, with PRD 4 keying the claim on `idFor(topicRef)` and PRD 3 on `topic_ref`. -> PRD 3 for the lock and its key; PRD 4 for the prep pipeline's wait-and-poll; PRD 1 for the affordance and the copy. Reconcile the key to `topic_ref` in one pass.
+
+######################################################################
+RECONCILE SUMMARY
+######################################################################
+The six PRDs are individually strong and collectively not yet one document set. They agree on the spine's facts and on most measured numbers (16.55 classes/student-hour, Rs 164 today, Rs 30/topic prep, Rs 141/hr Piper saving), but they disagree on twelve substantive decisions, three of which decide whether the product clears Rs 5 at all.
+
+The three that matter most. (1) The progress card is specified twice, incompatibly: PRD 4 builds it as a live RPC over a window, PRD 5 builds it as an immutable stored table with no authenticated read, and the two `ProgressCard` TypeScript types share a name and no fields. Three PRDs (1, 2, 6) consume it and would each get a different object. (2) The whyProbe class-path change — the only thing in the entire plan that takes the product under Rs 5 — is MVP-2 in PRD 4 and MVP-3 in PRD 6. That one staging disagreement is the difference between MVP-2 at Rs 3.49/student-hour and MVP-2 at Rs 22.19. PRD 6's own MVP-2 projection of Rs 8-12 is reachable under neither staging, which means PRD 6 contradicts itself. (3) `prepared_class` moderation is designed twice with different columns, different catalogue-read rules, different tools (`retire-class.mjs` vs `retract-class.mjs`) and different placements of the fact-check gate (PRD 3: asynchronous, server-side, after the class was taught; PRD 4: synchronous, inside `prepareClass`, before `saveable()`). PRD 6's pre-warm runner depends on PRD 3's version and calls it a hard non-negotiable gate.
+
+Beneath those: the report payload has four incompatible definitions across four PRDs; the enrolment payload has three (`EnrollRequest`, `StudentWorkspace`, `StudentProfile`) with no carrier for `orgId`, `orgKind`, `source`, `campaign` or `board`, while PRD 3 makes `student_state.org_id` NOT NULL; PRD 6 depends on five schema objects (`usage_event.prep_id`, `usage_event.bucket`, `learning_session.prep_id`, `fixed_cost`, provider `'self'`) that PRD 3's migration set does not contain; and `PrewarmIntent` is produced by PRD 5, stored nowhere, and read by nobody.
+
+The largest unowned item is not technical. PRD 0's decided contest-integrity requirements — recompute the prize metric server-side from `ledger_event`, run anomaly detection over the shortlist, bound `active_ms` against the wall clock — are assigned to PRD 3 and PRD 4 and appear in neither. A prize turns a client-written ledger into a target, and nothing in the six documents defends it. The second largest is PRD 0's language decision (English UI always, tutor language per student), which PRD 1 req 19 and PRD 5 req 1 both contradict, and whose real consequence — planning a class language-neutral and rendering narration per language — no PRD claims.
+
+The critical path is not what the MVP labels imply. Four MVP-1 items have a hard ordering that no PRD states: `foldAnswer` before the fold; migrations 0014/0015 before the first real user closes the zero-row window; the whyProbe *format* before the pre-warm runner, or all 274 warmed classes must be re-prepared; and the global spend cap before the first deploy, not after it. PRD 3's default ceiling of Rs 500/day halts the pilot on day one (500 students x 5 h/month at Rs 25.4 is Rs 2,117/day) and halts a 5,000-student contest almost immediately against PRD 6's own Rs 125,000-750,000 estimate for it.
