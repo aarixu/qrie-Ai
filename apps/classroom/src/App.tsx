@@ -13,11 +13,13 @@ import { GraphIndex } from '@ai-tutor/knowledge-graph';
 import { settingsStore, isOnboarded } from './stores/settings';
 import { watchTheme } from './lib/theme';
 import { profileStore, saveDiagnostic, hasDiagnostic } from './stores/profile';
+import { flagStore, replayUnsent, unsentReports } from './stores/flags';
 import { preferencesStore } from './stores/preferences';
 import { useStore } from './stores/localStore';
 import { loadDiagnosticDataFor } from './lib/diagnosticData';
 import { SYLLABI, fetchCatalog, findEntry, type CatalogEntry } from './lib/content';
 import { hrefFor } from './lib/destination';
+import { currentAccount } from './lib/supabase';
 import { reportCrash, track } from './lib/telemetry';
 import { isNative } from './lib/platform';
 import { isTrialPath, isTrialSession, mayPersist } from './lib/workspace';
@@ -386,6 +388,111 @@ function useAppearance(): void {
 }
 
 /**
+ * ONE DRAIN AT A TIME.
+ *
+ * <StrictMode> double-invokes the mount effect in development, and the two
+ * listeners below can fire while a drain is already in the air. Without this,
+ * both passes read the same snapshot before either marked anything sent, and
+ * every kept report was POSTed twice. The relay deduplicates on
+ * (user, lessonId, beatId, at) so no operator ever read a report twice — but
+ * the comment said "once" and the code did not, which is the thing this repo
+ * fails phases for.
+ */
+let draining: Promise<void> | null = null;
+
+/**
+ * A REPORT THAT DID NOT GO, SENT NOW.
+ *
+ * `fileReport` has always answered an outcome and nothing read 'kept' back, so
+ * one 503 or one moment in a lift dropped a child's Safety report for good —
+ * while the sheet told them it was saved on their phone, which was true and
+ * was not the point. The sheet's "try again" button only ever helped a child
+ * who was still looking at it.
+ *
+ * NOT ON A TIMER. A student who leaves the app open all evening is one person
+ * having one evening. It runs on the moments a phone actually has signal, which
+ * lib/ledgerSync.ts has drained the event outbox on since before this wave:
+ * the app opening, the browser saying the network returned, and the tab or the
+ * WebView coming back to the foreground. The last of those is not decoration —
+ * inside the Capacitor shell, opening the app from the launcher RESUMES a live
+ * WebView, so React never remounts and a mount effect alone would have made
+ * "we will try again" a promise the Android build does not keep.
+ *
+ * THE CHUNK IS NOT LOADED UNLESS THERE IS SOMETHING TO SEND. The check against
+ * the local flag log is synchronous and is false on essentially every open, so
+ * the report sheet's module stays out of the first seconds of the app — the
+ * same trade every lazy() above this makes.
+ *
+ * WHY THE SENDER IS INJECTED RATHER THAN IMPORTED BY THE STORE: stores/flags.ts
+ * must not import a React component, and this is the seam that lets it not.
+ *
+ * COSTS NOTHING TO RUN. /api/report is metered at zero units and pays no
+ * vendor (packages/relay/src/report.ts), so a replay spends no part of a
+ * student's Rs 5.
+ */
+export function replayKeptReports(): Promise<void> {
+  draining ??= drainKeptReports().finally(() => {
+    draining = null;
+  });
+  return draining;
+}
+
+async function drainKeptReports(): Promise<void> {
+  if (unsentReports(flagStore.get()).length === 0) return;
+  try {
+    const { fileReport } = await import('./ui/ReportSheet');
+    /**
+     * WHOSE PHONE IS THIS NOW? — resolved before a byte goes out.
+     *
+     * The POST carries whoever is signed in at this moment, so on a contest
+     * kiosk or a family phone a report written by the last child would be
+     * filed against this one. lib/ledgerSync.ts claims the event outbox for
+     * exactly this reason; `replayUnsent` applies the same rule to reports,
+     * and waits rather than guessing when this comes back null.
+     *
+     * The draft itself is resent WHOLE — it IS the body, `at` and all — because
+     * the relay deduplicates on (user, lessonId, beatId, at).
+     */
+    const account = await currentAccount().catch(() => null);
+    const { discarded } = await replayUnsent(fileReport, account?.id ?? null);
+    if (discarded > 0) track('report_handover', { discarded });
+  } catch {
+    // A chunk that will not load is a replay that did not happen. The marker
+    // stays, the next open tries again, and nothing is lost.
+  }
+}
+
+/**
+ * Listen on the moments a phone has signal, and hand back the detach.
+ *
+ * Exported so tests can drive the real events rather than assert about the
+ * effect: the confirmation copy promises the child a retry, and a test named
+ * for a promise the code does not keep is worse than no test at all.
+ */
+export function watchForReportReplay(): () => void {
+  const flush = (): void => {
+    void replayKeptReports();
+  };
+  const onVisible = (): void => {
+    if (document.visibilityState === 'visible') flush();
+  };
+
+  window.addEventListener('online', flush);
+  document.addEventListener('visibilitychange', onVisible);
+  flush();
+
+  return () => {
+    window.removeEventListener('online', flush);
+    document.removeEventListener('visibilitychange', onVisible);
+  };
+}
+
+/** The one line that makes the above happen, for as long as the app is open. */
+function useReportReplay(): void {
+  useEffect(() => watchForReportReplay(), []);
+}
+
+/**
  * The boundary sits INSIDE the router so it can be keyed by path: a student
  * who navigates away from a screen that threw is recovered by the navigation
  * itself, with no button to press. Outside the router it would have no way to
@@ -452,6 +559,7 @@ const Router = isNative() ? HashRouter : BrowserRouter;
 
 export default function App() {
   useAppearance();
+  useReportReplay();
   return (
     <Router>
       <Boundaried>

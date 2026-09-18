@@ -140,6 +140,49 @@ export async function currentAccount(): Promise<Account | null> {
   return asAccount(data.user ?? null);
 }
 
+/**
+ * WHO IS SIGNED IN, ANSWERED WITHOUT THE NETWORK — and saying so when it cannot.
+ *
+ * `currentAccount` above calls `getUser`, which is a GET to `/user`
+ * (GoTrueClient `_getUser`). Offline that throws `AuthRetryableFetchError`,
+ * `_getUser` swallows it and answers `user: null`, and `currentAccount` cannot
+ * tell that apart from nobody being signed in. That is fine for a screen and it
+ * was NOT fine for stamping a report: a child who IS signed in, in a lift,
+ * writing the report that being offline is exactly what creates, was recorded as
+ * unclaimed and then filed under whoever opened the app next. On a family phone
+ * or a contest kiosk that is a different child.
+ *
+ * `getSession` reads the persisted session out of storage (`__loadSession` ->
+ * `getItemAsync`) and, for a session that has NOT expired, returns it with no
+ * request at all — which is the whole point. `persistSession: true` is set on
+ * the client above, so the session is there to read.
+ *
+ * THE ONE CASE IT STILL CANNOT ANSWER is an EXPIRED token offline: `getSession`
+ * then tries a refresh, the refresh cannot reach anybody, and it answers with an
+ * error. That is genuinely unknown rather than nobody, and the two must not be
+ * confused again, so this returns a THREE-WAY answer and makes the caller say
+ * which it means.
+ */
+export type WhoIsHere =
+  /** A session in storage, and this is its owner. */
+  | { known: true; account: Account }
+  /** No session in storage, or no project configured. Nobody is signed in. */
+  | { known: true; account: null }
+  /** Storage or a refresh failed. We do not know, and must not guess. */
+  | { known: false };
+
+export async function accountFromStoredSession(): Promise<WhoIsHere> {
+  const db = supabase();
+  if (!db) return { known: true, account: null };
+  try {
+    const { data, error } = await db.auth.getSession();
+    if (error) return { known: false };
+    return { known: true, account: asAccount(data.session?.user ?? null) };
+  } catch {
+    return { known: false };
+  }
+}
+
 /** Called on sign-in and sign-out, including the one restored at startup. */
 export function onAccountChange(cb: (account: Account | null) => void): () => void {
   const db = supabase();

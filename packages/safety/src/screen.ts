@@ -204,7 +204,17 @@ const EMAIL = /\b[\w.+-]+@[\w-]+\.[\w.-]{2,}\b/g;
 const ADDRESS =
   /\b(?:flat|house\s*no\.?|h\.?\s?no\.?|door\s?no\.?|my\s+address\s+is)\s*[.:#-]?\s*\d+[\w/-]*[,\s]+[\w.\s-]{3,40}/gi;
 
-const MASK = '[removed]';
+/**
+ * What stands in the place of anything taken out.
+ *
+ * Exported so that anything asserting on it, or one day showing it, names the
+ * token this file writes rather than a second copy that drifts from it. No UI
+ * shows it today: the confirmation copy in apps/classroom/src/ui/
+ * ReportSheet.tsx names what was removed ("phone numbers and email addresses")
+ * rather than the marker left behind. packages/safety/tests/redact.test.ts is
+ * the only reader.
+ */
+export const MASK = '[removed]';
 
 /** Trim, collapse runs of whitespace, and cap. */
 function tidy(text: string, limit: number): string {
@@ -229,6 +239,72 @@ export interface ScreenOptions {
 
 const matches = (patterns: RegExp[], text: string): boolean =>
   patterns.some((pattern) => pattern.test(text));
+
+/** What the masking pass took out, and what is left. */
+export interface Redaction {
+  /** The same words with every match replaced by MASK. */
+  text: string;
+  /** Which kinds of thing were taken out; empty when nothing was. */
+  removed: Removed[];
+}
+
+/**
+ * THE MASKING PASS, ON ITS OWN AND WITH NO OPINION.
+ *
+ * `screen` answers four ways and only two of them hand text back. The two that
+ * do not — `support` and `redirect` — are the verdicts a child's most serious
+ * words take, so the one note that most needs to reach a person was also the
+ * one note with no cleaned copy in existence. apps/classroom/src/ui/
+ * ReportSheet.tsx could therefore only withhold such a note: an operator saw
+ * that a child had reported something and could not see what.
+ *
+ * This is the half that was missing. It masks and it stops: no distress
+ * judgement, no reply, no verdict. A caller that has ALREADY decided what to
+ * do — file it, flag it, put a helpline in front of the child — can still ask
+ * what is safe to carry.
+ *
+ * IT IS THE ONLY COPY OF THE MASKING. `screen` calls this rather than
+ * repeating it, because two sets of these patterns would drift and the quiet
+ * one would be the copy protecting children. packages/safety/tests/
+ * redact.test.ts asserts the two agree byte for byte on the clean path.
+ *
+ * It DEFAULTS to 'from-student', which is the cautious direction: the
+ * instruction patterns only fire that way, so a caller who forgets the
+ * argument gets more masking rather than less.
+ */
+export function redact(
+  text: string,
+  direction: Direction = 'from-student',
+  options: ScreenOptions = {},
+): Redaction {
+  const removed: Removed[] = [];
+  let cleaned = tidy(text, options.limit ?? MAX_STUDENT_WORDS);
+
+  if (direction === 'from-student' && matches(INSTRUCTION, cleaned)) {
+    // Every occurrence, not the first: "ignore your instructions. also ignore
+    // your instructions" left the second one standing in the prompt. The
+    // patterns are written without /g so that .test() has no lastIndex to
+    // carry between calls, so the flag is added here instead.
+    for (const pattern of INSTRUCTION) {
+      cleaned = cleaned.replace(new RegExp(pattern.source, `${pattern.flags}g`), MASK);
+    }
+    removed.push('instruction');
+  }
+
+  const before = cleaned;
+  cleaned = cleaned.replace(PHONE, MASK);
+  if (cleaned !== before) removed.push('phone');
+
+  const beforeEmail = cleaned;
+  cleaned = cleaned.replace(EMAIL, MASK);
+  if (cleaned !== beforeEmail) removed.push('email');
+
+  const beforeAddress = cleaned;
+  cleaned = cleaned.replace(ADDRESS, MASK);
+  if (cleaned !== beforeAddress) removed.push('address');
+
+  return { text: cleaned, removed };
+}
 
 /**
  * Look at one piece of text, in one direction, and say what to do with it.
@@ -256,31 +332,17 @@ export function screen(
     return { kind: 'redirect', say: REDIRECT_REPLY };
   }
 
-  const removed: Removed[] = [];
-  let cleaned = tidied;
-
-  if (direction === 'from-student' && matches(INSTRUCTION, cleaned)) {
-    // Every occurrence, not the first: "ignore your instructions. also ignore
-    // your instructions" left the second one standing in the prompt. The
-    // patterns are written without /g so that .test() has no lastIndex to
-    // carry between calls, so the flag is added here instead.
-    for (const pattern of INSTRUCTION) {
-      cleaned = cleaned.replace(new RegExp(pattern.source, `${pattern.flags}g`), MASK);
-    }
-    removed.push('instruction');
-  }
-
-  const before = cleaned;
-  cleaned = cleaned.replace(PHONE, MASK);
-  if (cleaned !== before) removed.push('phone');
-
-  const beforeEmail = cleaned;
-  cleaned = cleaned.replace(EMAIL, MASK);
-  if (cleaned !== beforeEmail) removed.push('email');
-
-  const beforeAddress = cleaned;
-  cleaned = cleaned.replace(ADDRESS, MASK);
-  if (cleaned !== beforeAddress) removed.push('address');
+  /**
+   * The masking itself lives in `redact` — one copy, two callers.
+   *
+   * `tidied` is handed in already tidied and `redact` tidies again. That is a
+   * no-op rather than a second truncation: collapsing whitespace twice changes
+   * nothing, and in the over-long branch the ellipsis `tidy` appends is the
+   * only character past the limit, so the second pass re-slices to the same
+   * string. redact.test.ts pins that on a note longer than the limit rather
+   * than leaving this paragraph as a claim.
+   */
+  const { text: cleaned, removed } = redact(tidied, direction, { limit });
 
   if (removed.length > 0) return { kind: 'clean', text: cleaned.trim(), removed };
   return { kind: 'allow', text: cleaned };
