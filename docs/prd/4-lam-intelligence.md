@@ -1325,12 +1325,29 @@ a business decision rather than a favour.
 2,500 student-hours a month (500 students x 5 h). These figures are shared across all six
 documents and this one does not contradict them:
 
-| | Fixed | Judge | Prep | Total | Against Rs 5 |
-|---|---|---|---|---|---|
-| MVP-1, S=100 | Rs 2.48 | Rs 18.70 | Rs 4.97 | **Rs 22.8 to 30.6** | breaks, 4.5x to 6x |
-| MVP-2, S=500 | Rs 2.48 | Rs 0 | Rs 0.99 | **Rs 3.49** | clears |
-| MVP-3, S=500 | Rs 3.31 | Rs 0 | Rs 0.99 | **Rs 4.32** | clears, 14% headroom |
-| MVP-3 at 25,000 h | Rs 0.33 | Rs 0 | Rs 0.99 | **Rs 1.34** | clears with room |
+| | Fixed | Judge | Prep | LMS card | Total | Against Rs 5 |
+|---|---|---|---|---|---|---|
+| MVP-1, S=100 | Rs 2.48 | Rs 18.70 | Rs 4.97 | Rs 0 | **Rs 26.15 to 30.62** | breaks, 5.2x to 6.1x |
+| MVP-2, S=500 | Rs 2.48 | Rs 0 | Rs 0.99 | Rs 0.02 | **Rs 3.49** | clears |
+| MVP-3, S=500 | Rs 3.31 | Rs 0 | Rs 0.99 | Rs 0.02 | **Rs 4.32** | clears, 14% headroom |
+| MVP-3 at 25,000 h | Rs 0.33 | Rs 0 | Rs 0.99 | Rs 0.02 | **Rs 1.34** | clears with room |
+
+**Two corrections to an earlier version of this table, because both were read by five
+other documents.** It carried four columns against a rollup with five components, so
+PRD 5's card delivery — Rs 0.02/student-hour, and zero before the LMS exists — was in
+every Total and in none of the columns. Each row then appeared to be two paise out. It
+was not; the column was missing. PRD 6's breakdown is the authority and it names the
+line: `judge 0 + ear 0 + prep 0.99 + fixed 2.48 + card delivery 0.02 = Rs 3.49`.
+
+**And the MVP-1 total was understated by Rs 3.35, in the direction that flatters the
+product.** It read "Rs 22.8 to 30.6", which this row's own columns do not produce:
+2.48 + 18.70 + 4.97 = Rs 26.15, which is exactly PRD 6's measured figure. The lower
+bound had been computed with the MEASURED prep of Rs 9.08 — a class that generated
+zero pictures — while the Prep column beside it showed Rs 4.97, the Rs 30 planning
+figure. One row, two prep assumptions. The range is not a prep band at all: it is
+**the ear**. Rs 26.15 if the GPU ear works and speech-to-text is marginal-free,
+Rs 30.62 if it does not and the ear is Rs 4.47/student-hour of cash. Both figures are
+PRD 6's table at `docs/prd/6-cost-monetisation-ops.md:1747`.
 
 The fixed line is Rs 2.48/student-hour at pilot scale and belongs to nobody in this area:
 Supabase Pro Rs 0.96, Piper VPS Rs 0.80, Vercel Pro Rs 0.72, R2 backups Rs 0.0016. MVP-1

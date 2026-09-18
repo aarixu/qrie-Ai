@@ -780,8 +780,8 @@ Hobby is planned from the day the funnel opens, on the same reasoning PRD 6 give
 Supabase: Hobby's terms do not cover commercial use (NOT VERIFIED against current terms),
 and a free tier is not a plan once a school is depending on the deploy.
 
-Where that lands in the rollup. MVP-1 is Rs 22.8 to 30.6/student-hour and it breaks, 4.5x
-to 6x over, on the judge alone (Rs 18.70). MVP-2, with the judge off the class path, is
+Where that lands in the rollup. MVP-1 is Rs 26.15 to 30.62/student-hour and it breaks, 5.2x
+to 6.1x over, on the judge alone (Rs 18.70). MVP-2, with the judge off the class path, is
 Rs 3.49 and clears. MVP-3 is Rs 4.32 at pilot scale (prep Rs 0.99, the four fixed lines
 Rs 2.48, this PRD's model CDN Rs 0.83, card delivery Rs 0.02) and Rs 1.34 at 25,000
 student-hours. This area contributes Rs 0.72 of that at MVP-1 and MVP-2, and Rs 1.55 at

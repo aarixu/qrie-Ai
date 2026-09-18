@@ -299,7 +299,7 @@ asserts the memory ledger refuses with `capped` at the same total Postgres does.
 
 **2. The ceiling is set from what Aarav can afford to lose in a day, and it must be raised
 before the pilot.** Rs 500 a UTC day is the right number for self-serve MVP-1 and it is
-deliberately, uncomfortably tight: at MVP-1's Rs 22.8 to 30.6 per student-hour it buys about
+deliberately, uncomfortably tight: at MVP-1's Rs 26.15 to 30.62 per student-hour it buys about
 nineteen student-hours a day, or about sixteen cold topic preparations at PRD 6's planning
 Rs 30 a topic. **It halts the school pilot on day one.** 500 students at roughly ten minutes
 a day is about 83 student-hours a day, which at MVP-1 rates is roughly Rs 2,158 a day, more
@@ -1478,8 +1478,8 @@ Rs 5 number can exist at all.
 **Where this area sits in the rollup.** All six documents divide by one denominator, the
 pilot's 2,500 student-hours a month (500 students at 5 h), and the fixed lines total **Rs 2.48
 per student-hour**: Supabase Pro Rs 0.96 (this PRD), the Piper VPS Rs 0.80 (PRD 6), Vercel Pro
-Rs 0.72 (PRD 2), R2 backups Rs 0.0016 (this PRD). On top of that, MVP-1 is **Rs 22.8 to 30.6
-per student-hour** and breaks, four and a half to six times over, and it breaks on the judge,
+Rs 0.72 (PRD 2), R2 backups Rs 0.0016 (this PRD). On top of that, MVP-1 is **Rs 26.15 to 30.62
+per student-hour** and breaks, five to six times over, and it breaks on the judge,
 which is Rs 18.70 per student-hour on its own. MVP-2 is **Rs 3.49** and clears. MVP-3 is
 **Rs 4.32** at pilot scale and **Rs 1.34** at 25,000 student-hours. What buys MVP-2 is one
 change: the whyProbe format, prompt and validator land in MVP-1 and the ClassRoom playback

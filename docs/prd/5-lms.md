@@ -1083,7 +1083,7 @@ VPS Rs 0.80, Vercel Pro Rs 0.72, R2 backups Rs 0.0016). Against that:
 
 | stage | Rs/student-hour | verdict |
 |---|---|---|
-| MVP-1 | 22.8 to 30.6 | **breaks**, 4.5x to 6x over, on the judge |
+| MVP-1 | 26.15 to 30.62 | **breaks**, 5.2x to 6.1x over, on the judge |
 | MVP-2 | 3.49 | clears |
 | MVP-3, pilot scale | 4.32 | clears, 14% of headroom |
 | MVP-3, 25,000 student-hours | 1.34 | clears with room |
