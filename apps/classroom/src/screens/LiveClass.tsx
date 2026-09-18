@@ -31,6 +31,8 @@ import { takeSource } from '../lib/sourceHandoff';
 import { SOURCE_LIMIT, plannerTopicFromSource } from '../lib/sourceText';
 import { recordFlag } from '../stores/flags';
 import { track } from '../lib/telemetry';
+import { readRefusal } from '../lib/refusal';
+import { RefusalNotice } from '../ui/RefusalNotice';
 import { Icon } from '../ui/Icon';
 import { ClassRoom } from './ClassRoom';
 
@@ -773,6 +775,42 @@ export function LiveClassRoute() {
   if (error) {
     // "There is no such topic" is the one failure another go cannot fix.
     const canRetry = ask !== null;
+
+    /**
+     * A REFUSAL IS NOT A FAILURE, AND THIS SCREEN USED TO CALL IT ONE.
+     *
+     * The relay's own sentence has always arrived here — browserLlm hands it to
+     * relayError, which keeps the message for a 429 or a 503, and `setError`
+     * puts it on screen. It was the FRAME around it that lied: an error icon,
+     * "one of them did not finish", and a Try again button. For `budget` and
+     * `capped` nothing failed — a limit was reached — and the retry is a promise
+     * we cannot keep, so a child taps it, gets the same sentence, and learns the
+     * app is not telling them the truth. For `halted` it is premature by
+     * minutes.
+     *
+     * RefusalNotice says which it is and offers a retry only where waiting
+     * actually changes the answer. Anything that is NOT one of the relay's five
+     * refusals falls through to the ordinary failure screen below, which is
+     * right: a network drop or a missing topic really did fail.
+     */
+    const refusal = online ? readRefusal(error) : null;
+    if (refusal) {
+      return (
+        <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
+          <RefusalNotice
+            refusal={refusal}
+            onRetry={canRetry ? () => setAttempt((n) => n + 1) : undefined}
+          >
+            <button
+              onClick={() => navigate('/')}
+              className="text-on-surface-variant font-label-md text-label-md px-5 py-3 rounded-full hover:bg-surface-container-high transition-colors"
+            >
+              Back home
+            </button>
+          </RefusalNotice>
+        </div>
+      );
+    }
 
     return (
       <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
