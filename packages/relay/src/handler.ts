@@ -147,10 +147,16 @@ export interface HandlerDeps {
   /**
    * The per-topic preparation lock (0017), so N students on one cold topic
    * pay for ONE preparation. Absent means 501: the dev host counts in
-   * memory, the Edge Function calls the definer functions. Until Wave 3
-   * wires liveClass.ts to take the lock, renew it every sixty seconds while
-   * preparing and release it on success AND failure, this lock has no caller
-   * in the product — routes first, caller next, on the record.
+   * memory, the Edge Function calls the definer functions.
+   *
+   * THE CALLER LANDED IN WAVE 3 and this docblock used to say it had not.
+   * apps/classroom/src/lib/liveClass.ts takes the lock, renews it while
+   * preparing and releases it on success, on failure and on pagehide.
+   *
+   * What is still true, and is the reason to keep reading: a LOST lock does
+   * not abort a preparation already in flight, because prepareClass has no
+   * cancellation. When renew returns false the heartbeat stops and the
+   * twin-spend window is narrowed rather than closed.
    */
   prepLocks?: PrepLocks;
   /**
