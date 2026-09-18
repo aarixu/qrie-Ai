@@ -38,6 +38,14 @@ export interface UsageEvent {
    * parameter beside the ticket. Absent for calls made outside a class.
    */
   sessionId: string | null;
+  /**
+   * The preparation run this call served, when the app said (an `x-prep-id`
+   * header, validated as a uuid in handler.ts and dropped otherwise). This
+   * is what lets the cost books measure S — how many students one
+   * preparation ended up serving — instead of asserting it. Absent or null
+   * for every call outside a preparation, which is most of them.
+   */
+  prepId?: string | null;
   relay: RelayName;
   provider: 'vertex' | 'openrouter' | 'storage';
   model: string | null;
@@ -72,7 +80,7 @@ export interface Usage {
 
 /** Pull what Vertex measured out of the reply it sent back. */
 export function usageFromVertex(
-  base: Pick<UsageEvent, 'userId' | 'sessionId'>,
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,
   status: number,
   reply: OpenAiReply | undefined,
@@ -99,7 +107,7 @@ export function usageFromVertex(
  * students reach — so the blank is tolerable and it is written down.
  */
 export function usageFromOpenRouterLlm(
-  base: Pick<UsageEvent, 'userId' | 'sessionId'>,
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   body: Uint8Array,
 ): UsageEvent {
   let model: string | null = null;
@@ -113,7 +121,7 @@ export function usageFromOpenRouterLlm(
 }
 
 export function usageFromSpeech(
-  base: Pick<UsageEvent, 'userId' | 'sessionId'>,
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,
   text: string,
 ): UsageEvent {
@@ -131,7 +139,7 @@ export function usageFromSpeech(
 }
 
 export function usageFromHear(
-  base: Pick<UsageEvent, 'userId' | 'sessionId'>,
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,
   status: number,
   audio: Uint8Array,
@@ -140,7 +148,7 @@ export function usageFromHear(
 }
 
 export function usageFromClass(
-  base: Pick<UsageEvent, 'userId' | 'sessionId'>,
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   status: number,
   bytes: number,
 ): UsageEvent {
@@ -197,6 +205,18 @@ export function createSupabaseUsage(
             p_characters: e.characters ?? null,
             p_audio_bytes: e.audioBytes ?? null,
             p_bytes: e.bytes ?? null,
+            /**
+             * SENT ONLY WHEN THERE IS ONE, and that is a deploy-order
+             * safety catch rather than tidiness. p_prep_id arrived with
+             * 0019; the pre-0019 record_usage has no such parameter and
+             * answers PGRST202 to the whole call, which record() swallows —
+             * so a relay deployed ahead of its migration would lose EVERY
+             * usage row silently while spend carried on. Omitting the key
+             * when it is null means only the handful of prep-attributed
+             * calls depend on the ordering at all. `npm run relay:deploy`
+             * still pushes migrations first, and that is the real fix.
+             */
+            ...(e.prepId ? { p_prep_id: e.prepId } : {}),
           }),
         });
       } catch {

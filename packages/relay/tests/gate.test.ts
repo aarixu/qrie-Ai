@@ -6,6 +6,7 @@ import {
   UNITS_PER_DAY,
   UNITS_PER_DAY_PROJECT,
   admit,
+  admitFree,
   createMemoryLedger,
   createSupabaseLedger,
   unitsFor,
@@ -140,6 +141,96 @@ describe('handleTicket', () => {
 });
 
 // ----------------------------------------------------------------- admit ---
+
+/**
+ * ADMITFREE EXISTS FOR EXACTLY ONE PROPERTY: ZERO UNITS.
+ *
+ * Reporting abuse, asking whether a topic is warm and enrolling pay no
+ * vendor, so they must not eat a child's daily class budget. Nothing tested
+ * that. Every stub ledger in the route suites is `async claim() { return
+ * { allowed: true } }`, which discards its arguments, so somebody passing
+ * `unitsFor(...)` or a flat ten here would charge a child for reporting
+ * abuse and every one of those suites would stay green.
+ */
+describe('admitFree', () => {
+  const recording = () => {
+    const seen: { userId: string; relay: string; units: number }[] = [];
+    const ledger: Ledger = {
+      async claim(userId, relay, units) {
+        seen.push({ userId, relay, units });
+        return { allowed: true };
+      },
+    };
+    return { seen, ledger };
+  };
+
+  it('claims ZERO units for every free route, under the route’s own name', async () => {
+    for (const route of ['report', 'prep', 'enroll'] as const) {
+      const { seen, ledger } = recording();
+      const out = await admitFree(req(), route, gate({ ledger }));
+      expect(out.ok && out.userId).toBe(USER);
+      expect(seen).toEqual([{ userId: USER, relay: route, units: 0 }]);
+    }
+  });
+
+  it('turns away a caller with no token, and takes no speech-ticket side door', async () => {
+    // None of these is an <audio src>, so there is no reason for the one
+    // exception the speech relay needs — a query-string ticket with no
+    // Authorization header must still be a 401.
+    const ticket = await mintTicket(USER, SECRET, 10_000);
+    const out = await admitFree(
+      req({ url: `/api/report?ticket=${ticket}`, headers: {} }),
+      'report',
+      gate({ now: () => 1_000 }),
+    );
+    expect(!out.ok && out.response.status).toBe(401);
+  });
+
+  it('passes a per-minute refusal straight through as a 429', async () => {
+    const ledger: Ledger = {
+      async claim() {
+        return { allowed: false, reason: 'rate', retryAfterSeconds: 42 };
+      },
+    };
+    for (const route of ['report', 'prep', 'enroll'] as const) {
+      const out = await admitFree(req(), route, gate({ ledger }));
+      expect(!out.ok && out.response.status).toBe(429);
+    }
+  });
+
+  /**
+   * THE HALT EXEMPTION, AND ITS EDGES. claim_relay refuses even a zero-unit
+   * claim when the relay is halted or the project day is spent — arms that
+   * have nothing to do with this call's cost. A report is let through
+   * anyway, because the switch stops SPEND and the minute it is down is the
+   * minute a child has most to report. Prep and enrolment are not safety and
+   * still wait.
+   */
+  it('lets a report through a halted or capped ledger, and only a report', async () => {
+    for (const reason of ['halted', 'capped', 'budget'] as const) {
+      const ledger: Ledger = {
+        async claim() {
+          return { allowed: false, reason, retryAfterSeconds: 300 };
+        },
+      };
+      expect((await admitFree(req(), 'report', gate({ ledger }))).ok).toBe(true);
+      expect((await admitFree(req(), 'prep', gate({ ledger }))).ok).toBe(false);
+      expect((await admitFree(req(), 'enroll', gate({ ledger }))).ok).toBe(false);
+    }
+  });
+
+  it('refuses even a report when the meter itself cannot be reached', async () => {
+    // A deliberate pause is one thing; a meter that is not answering at all
+    // is an outage, and a route running with no meter during one is a
+    // different risk from one running during a planned halt.
+    const ledger: Ledger = {
+      async claim() {
+        return { allowed: false, reason: 'unavailable', retryAfterSeconds: 5 };
+      },
+    };
+    expect((await admitFree(req(), 'report', gate({ ledger }))).ok).toBe(false);
+  });
+});
 
 describe('admit', () => {
   it('turns away a caller with no token', async () => {

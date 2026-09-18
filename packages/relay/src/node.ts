@@ -42,6 +42,12 @@ export async function toRelayRequest(req: IncomingMessage): Promise<RelayRequest
 export async function sendRelayResponse(res: ServerResponse, out: RelayResponse): Promise<void> {
   if (out.body.kind === 'json') {
     res.statusCode = out.status;
+    // EVERY header the decision set, not just the content type. This branch
+    // used to set content-type alone, so `retry-after` — the one thing a
+    // client can act on after a 429 or a 503 — never arrived in dev, and a
+    // client written to honour it could not be tested against the dev
+    // server at all. The bytes branch below always did this correctly.
+    for (const [k, v] of Object.entries(out.headers)) res.setHeader(k, v);
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify(out.body.value));
     return;

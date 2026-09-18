@@ -16,7 +16,12 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 import { fileURLToPath } from 'node:url';
 import {
   cacheVerifier,
+  createDevOtpProvider,
+  createMemoryConsentStore,
   createMemoryLedger,
+  createMemoryOtpGate,
+  createMemoryPrepLocks,
+  createMemoryReportStore,
   createSupabaseVerifier,
   createTokenSource,
   readServiceAccount,
@@ -104,6 +109,18 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
      */
     ...(process.env.RELAY_DISABLED ? { disabled: true } : {}),
     ...(vertex ? { vertex } : {}),
+    /**
+     * The wave-2 route families, on their memory halves — the SAME
+     * handleRelay decisions as production, counted in maps because a laptop
+     * has no Postgres. A report logs one line here (no OPS_ALERT_WEBHOOK in
+     * dev); the dev OTP provider prints the code to this terminal instead
+     * of sending an SMS, which is the whole point of the seam.
+     */
+    reports: createMemoryReportStore(),
+    prepLocks: createMemoryPrepLocks(),
+    otp: createDevOtpProvider(),
+    otpGate: createMemoryOtpGate(),
+    consent: createMemoryConsentStore(),
     transcribe: (call: HeardAudio) => transcribeViaFormData(key, call),
     // On a laptop the accounting goes to the terminal. One line per call,
     // the same shape Postgres receives in production, so a developer sees
@@ -133,7 +150,10 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
     name: 'curie-openrouter-relays',
     apply: 'serve',
     configureServer(server) {
-      for (const route of ['/api/llm', '/api/speech', '/api/hear', '/api/ticket']) {
+      // /api/prep and /api/enroll are PREFIX mounts: connect matches the
+      // prefix, and the URL rebuilt below carries the tail (/lock, /state,
+      // /otp, …) back to routeFor exactly as production sees it.
+      for (const route of ['/api/llm', '/api/speech', '/api/hear', '/api/ticket', '/api/report', '/api/prep', '/api/enroll']) {
         server.middlewares.use(route, (req, res) => {
           void (async () => {
             const relayRequest = await toRelayRequest(req);

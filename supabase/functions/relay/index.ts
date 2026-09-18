@@ -10,7 +10,17 @@
 // day is what faces the internet.
 //
 // Deploy:
-//   supabase functions deploy relay --no-verify-jwt
+//   npm run relay:deploy
+//
+// MIGRATIONS FIRST, AND THAT SCRIPT IS WHY IT SAYS THAT RATHER THAN THE BARE
+// `supabase functions deploy relay --no-verify-jwt`. This function now calls
+// record_usage with p_prep_id, which does not exist before migration 0019,
+// and the three route families below call keep_student_report, claim_otp_send
+// and extend_prep_lock, which do not exist before it either. A function
+// deployed ahead of its migrations answers PGRST202 to usage rows and the
+// sink swallows it, so spend carries on with nothing written down at all.
+// `npm run relay:deploy` runs `supabase db push` before the deploy, in that
+// order, which is the whole reason it exists.
 //
 // --no-verify-jwt is REQUIRED and is not a hole. The platform's own JWT check
 // rejects a request before it reaches this code, and `/relay/speech` cannot
@@ -45,6 +55,12 @@ import { createSupabaseLedger } from '../../../packages/relay/src/gate.ts';
 import { createSupabaseUsage } from '../../../packages/relay/src/usage.ts';
 import { handleRelay, type HandlerDeps } from '../../../packages/relay/src/handler.ts';
 import { keepClass } from '../../../packages/relay/src/classStore.ts';
+import { createSupabaseReportStore } from '../../../packages/relay/src/report.ts';
+import { createSupabasePrepLocks } from '../../../packages/relay/src/prep.ts';
+import {
+  createSupabaseConsentStore,
+  createSupabaseOtpGate,
+} from '../../../packages/relay/src/enroll.ts';
 import { createTokenSource, readServiceAccount } from '../../../packages/relay/src/googleAuth.ts';
 import { toRelayRequest, toResponse, transcribeViaFormData } from '../../../packages/relay/src/web.ts';
 
@@ -90,7 +106,9 @@ const CORS = {
   // record (0008). A header the browser is not told about here is a header the
   // preflight refuses - and then EVERY relay call from the web app fails, not
   // just the accounting. Adding a header to the app means adding it here.
-  'access-control-allow-headers': 'authorization, content-type, x-session-id',
+  // x-prep-id: which preparation run a call served (0018's prep_id column),
+  // added for exactly that rule.
+  'access-control-allow-headers': 'authorization, content-type, x-session-id, x-prep-id',
   'access-control-allow-methods': 'GET, POST, OPTIONS',
   'access-control-max-age': '86400',
 };
@@ -152,6 +170,51 @@ const deps: HandlerDeps = {
    */
   keep: (saved) =>
     keepClass(saved, { supabaseUrl: SUPABASE_URL, serviceRoleKey: SERVICE_ROLE_KEY }),
+  /**
+   * A child's report, kept exactly once through keep_student_report (0019)
+   * and alerted onward. OPS_ALERT_WEBHOOK optional: set, a kept report POSTs
+   * {kind, lessonId, at, reportId} there — metadata only, never the child's
+   * words; unset, one log line in this function's own stream says the same.
+   */
+  reports: createSupabaseReportStore(SUPABASE_URL, SERVICE_ROLE_KEY),
+  ...(Deno.env.get('OPS_ALERT_WEBHOOK')
+    ? { opsAlertWebhook: Deno.env.get('OPS_ALERT_WEBHOOK') }
+    : {}),
+  /**
+   * The prep lock (0017), finally called. The org the definer function
+   * wants is resolved from the caller's membership inside the store, with
+   * the same earliest-created_at tie-break fill_org_id uses.
+   */
+  prepLocks: createSupabasePrepLocks(SUPABASE_URL, SERVICE_ROLE_KEY),
+  /**
+   * NO `otp` HERE, AND THAT IS THE POINT. Both enrolment routes answer 501
+   * on the deployed host until a real SMS vendor exists.
+   *
+   * The dev provider was wired here and it could not work: its codes live
+   * in a per-isolate Map, Edge Functions run many short-lived isolates —
+   * the exact argument createSupabaseOtpGate makes three lines below for
+   * why the SEND counter had to go to Postgres — so a verify routinely
+   * lands on an instance that never saw the send. The parent is then told
+   * their correct code is wrong, while claim_otp_send has already counted
+   * the send, so retrying burns the 3-per-10-minutes and then the daily
+   * cap. And even on one isolate the code only ever reaches THIS FUNCTION'S
+   * LOG STREAM; no parent can read it. A route that cannot succeed should
+   * say 501, not lie to a parent about the digits they just typed.
+   *
+   * ONE LINE TURNS IT ON: `otp: createMsg91Otp(env('MSG91_KEY'))` — or
+   * whichever vendor — behind the OtpProvider seam, with the key set as a
+   * function secret, never anywhere a browser can reach. The gate and the
+   * consent store below are already wired and waiting for it.
+   *
+   * The dev server keeps createDevOtpProvider: one process, one Map, and a
+   * developer who can read their own terminal.
+   */
+  // SMS is money and identities are free: the count lives in Postgres
+  // (claim_otp_send, 0019), per phone AND per user, because instances of
+  // this function are many and short-lived and a Map in one is no meter.
+  otpGate: createSupabaseOtpGate(SUPABASE_URL, SERVICE_ROLE_KEY),
+  // The DPDP verifiable-parental-consent row (0019), service role only.
+  consent: createSupabaseConsentStore(SUPABASE_URL, SERVICE_ROLE_KEY),
 };
 
 Deno.serve(async (request: Request) => {

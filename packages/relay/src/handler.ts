@@ -9,6 +9,9 @@ import {
   type SavedClass,
 } from './relays.ts';
 import { admit, type Gate, type RelayName } from './gate.ts';
+import { handleReport, isUuid, type ReportStore } from './report.ts';
+import { handlePrep, type PrepLocks } from './prep.ts';
+import { handleEnroll, handleEnrollOtp, type ConsentStore, type OtpGate, type OtpProvider } from './enroll.ts';
 import { mintTicket, TICKET_TTL_MS } from './ticket.ts';
 import { readSavedClass } from './classStore.ts';
 import {
@@ -125,6 +128,56 @@ export interface HandlerDeps {
    * not cost a student their class.
    */
   usage?: Usage;
+  /**
+   * Where a child's report goes. (Safety #4: it must reach a person.)
+   * Optional like `keep`, and absent means the route answers 501 out loud —
+   * the client keeps its local copy either way, so an honest refusal loses
+   * nothing while a host that silently swallowed reports would lose all of
+   * them. Dev keeps them in memory; the Edge Function writes Postgres
+   * through keep_student_report.
+   */
+  reports?: ReportStore;
+  /**
+   * OPS_ALERT_WEBHOOK, handed in by the host like RELAY_DISABLED is. Set, a
+   * kept report POSTs {kind, lessonId, at, reportId} there — metadata only,
+   * NEVER the child's words. Unset, one server-side log line. Either way an
+   * alert failure never fails the 202.
+   */
+  opsAlertWebhook?: string;
+  /**
+   * The per-topic preparation lock (0017), so N students on one cold topic
+   * pay for ONE preparation. Absent means 501: the dev host counts in
+   * memory, the Edge Function calls the definer functions. Until Wave 3
+   * wires liveClass.ts to take the lock, renew it every sixty seconds while
+   * preparing and release it on success AND failure, this lock has no caller
+   * in the product — routes first, caller next, on the record.
+   */
+  prepLocks?: PrepLocks;
+  /**
+   * The OTP seam for enrolment. No SMS vendor exists yet, so the DEV SERVER
+   * runs the dev provider (one process, one Map, the code in the developer's
+   * own terminal) and the EDGE HOST LEAVES THIS ABSENT — both enrolment
+   * routes answer 501 there rather than failing a parent with "that code is
+   * not right" when it was: a memory-backed provider cannot work across
+   * many short-lived isolates, and no parent can read a function's log
+   * stream anyway. The real vendor lands behind this same interface with its
+   * key in the HOST's environment. A vendor key path must never reach a
+   * browser — that is the whole reason the relay exists.
+   */
+  otp?: OtpProvider;
+  /**
+   * May this user send this phone another code. SMS is money and identities
+   * are free, so the count is per PHONE and per user, and in production it
+   * lives in Postgres (claim_otp_send) for the ledger's own reason: many
+   * short-lived instances cannot count in a Map.
+   */
+  otpGate?: OtpGate;
+  /**
+   * Where the DPDP verifiable-parental-consent row is written. Absent means
+   * enrolment answers 501 rather than pretending: an enrolment whose consent
+   * row was never kept is not an enrolment.
+   */
+  consent?: ConsentStore;
   now?: () => number;
 }
 
@@ -140,6 +193,40 @@ function sessionOf(req: RelayRequest, relay: RelayName): string | null {
     return new URL(req.url, 'http://relay.local').searchParams.get('session');
   }
   return req.headers['x-session-id'] ?? req.headers['X-Session-Id'] ?? null;
+}
+
+/**
+ * The route families beside the relays: a report, the prep lock, enrolment.
+ *
+ * Matched exactly as written below, and the two rules differ: 'report' and
+ * 'enroll' are named by their LAST SEGMENT, like the relays; the prep family
+ * and enroll/otp by their LAST TWO, because /api/prep/lock and some future
+ * /api/other/lock must not collide. The looser pair means /api/anything/
+ * report also routes here — harmless, since it still admits and validates,
+ * but say it rather than describe a stricter router than this is. Both rules
+ * serve both hosts' prefixes (/api/... in dev, /relay/... behind the
+ * function's name in production), which is why neither anchors on 'api'.
+ */
+export type RouteName =
+  | 'report'
+  | 'prep/lock'
+  | 'prep/renew'
+  | 'prep/release'
+  | 'prep/state'
+  | 'enroll'
+  | 'enroll/otp';
+
+export function routeFor(url: string): RouteName | null {
+  const parts = new URL(url, 'http://relay.local').pathname.split('/').filter(Boolean);
+  const last = parts[parts.length - 1];
+  const prev = parts.length > 1 ? parts[parts.length - 2] : undefined;
+  if (last === 'report') return 'report';
+  if (prev === 'prep' && (last === 'lock' || last === 'renew' || last === 'release' || last === 'state')) {
+    return `prep/${last}`;
+  }
+  if (last === 'enroll') return 'enroll';
+  if (prev === 'enroll' && last === 'otp') return 'enroll/otp';
+  return null;
 }
 
 /** The relay a path names, or null. */
@@ -197,9 +284,26 @@ export async function handleTicket(req: RelayRequest, gate: Gate): Promise<Relay
  * limit at all.
  */
 export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise<RelayResponse> {
-  // Before everything, including the ticket. A ticket outlives the switch by
-  // its whole ten minutes, so minting one during an incident hands out access
-  // that survives the fix.
+  /**
+   * ABOVE THE KILL SWITCH, AND ONLY THIS ONE. (Safety #4.)
+   *
+   * The switch exists to stop SPEND. A report spends nothing — no vendor is
+   * called, no unit is claimed — and the moment somebody flips the switch is
+   * the moment a child is most likely to have something to say: a leaked
+   * key, a wrong answer, a line that frightened somebody. A relay that goes
+   * quiet and takes the report button with it is one that can only be told
+   * about problems while it is healthy. admitFree still demands a verified
+   * identity, and it exempts 'report' from the ledger's halted/capped arms
+   * for the same reason — see its docblock for the price of that.
+   *
+   * Prep and enrolment stay BELOW: neither is safety, and both can wait.
+   */
+  const early = routeFor(req.url);
+  if (early === 'report') return handleReport(req, deps);
+
+  // Before everything else, including the ticket. A ticket outlives the
+  // switch by its whole ten minutes, so minting one during an incident hands
+  // out access that survives the fix.
   if (deps.disabled === true) {
     return {
       status: 503,
@@ -220,6 +324,18 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   if (path.split('/').filter(Boolean).pop() === 'ticket') {
     return handleTicket(req, deps.gate);
   }
+
+  // The route families beside the relays. Each does its own admission —
+  // identity plus the per-minute window, zero units. These ones DO sit
+  // below the kill switch: preparing a class and enrolling can both wait
+  // for the incident to end. The report route is the exception and was
+  // dispatched above.
+  const route = early;
+  if (route === 'prep/lock' || route === 'prep/renew' || route === 'prep/release' || route === 'prep/state') {
+    return handlePrep(route, req, deps);
+  }
+  if (route === 'enroll') return handleEnroll(req, deps);
+  if (route === 'enroll/otp') return handleEnrollOtp(req, deps);
 
   const relay = relayFor(req.url);
   if (relay === null) return fail(404, 'no such relay');
@@ -244,10 +360,23 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
 
+  /**
+   * WHICH PREPARATION THIS CALL BELONGS TO, when the app says.
+   *
+   * S — how many students share one preparation — is the whole cost model,
+   * and 0018 poured usage_event.prep_id so it could finally be measured.
+   * An optional x-prep-id header fills it. VALIDATED OR DROPPED, never
+   * trusted: a header is browser input, and browser input does not get to
+   * write unvalidated bytes into the cost books — a non-uuid would only
+   * bounce off the column type later and cost the whole usage row.
+   */
+  const said = req.headers['x-prep-id'] ?? req.headers['X-Prep-Id'];
+  const prepId = typeof said === 'string' && isUuid(said) ? said.toLowerCase() : null;
+
   // Usage is recorded on the way OUT, never in the way. `void` because a
   // slow or absent accounting sink must not delay the reply; the sink itself
   // swallows its errors.
-  const base = { userId: admitted.userId, sessionId: sessionOf(req, relay) };
+  const base = { userId: admitted.userId, sessionId: sessionOf(req, relay), prepId };
   const note = (event: Parameters<Usage['record']>[0]): void => {
     if (!deps.usage) return;
     // Both a synchronous throw and a rejected promise are caught HERE, not

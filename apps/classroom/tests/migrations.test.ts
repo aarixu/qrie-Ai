@@ -866,3 +866,257 @@ describe('the schema-floor migration', () => {
     expect(sql).not.toMatch(/grant[\s\S]{0,60}on public\.usage_cost to (public|anon|authenticated)/i);
   });
 });
+
+/**
+ * A CHILD'S REPORT MUST REACH A PERSON, AND CONSENT MUST BE A ROW.
+ *
+ * 0019 gives Safety #4 its table — until it, ReportSheet wrote localStorage
+ * and nothing left the phone — and gives DPDP its verifiable-parental-consent
+ * artifact. Everything below is the same discipline as the meter: RLS on,
+ * zero policies, service role as the only door, and every number that lives
+ * in both SQL and TypeScript asserted equal so the pair cannot drift.
+ */
+// Appended imports are legal ESM (hoisted); the block is append-only by phase
+// contract, so the file's original import line is left untouched.
+import {
+  MAX_REPORT_NOTE_CHARS,
+  OTP_BURST_WINDOW_MINUTES,
+  OTP_SENDS_PER_DAY_PROJECT,
+  OTP_SENDS_PER_PHONE_BURST,
+  OTP_SENDS_PER_PHONE_PER_DAY,
+  OTP_SENDS_PER_USER_PER_DAY,
+  PREP_LOCK_TTL_SECONDS,
+} from '@ai-tutor/relay';
+
+describe('the report-and-consent migration', () => {
+  // With the `--` prose stripped, so every assertion is about what Postgres
+  // will run, never about a comment.
+  const sql = sqlOf('0019_report_and_consent.sql').replace(/--[^\n]*/g, '');
+
+  describe('student_report', () => {
+    it('holds exactly the report kinds the client can send', () => {
+      expect(sql).toMatch(/create table if not exists public\.student_report/i);
+      expect(sql).toMatch(/kind text not null check \(kind in \('wrong', 'rude', 'unsafe', 'other'\)\)/i);
+    });
+
+    it('caps the note at the same number the relay refuses past', () => {
+      // The relay rejects (never truncates) past MAX_REPORT_NOTE_CHARS; the
+      // constraint is the fence behind the fence, and the two must be one
+      // number or a report the relay accepted dies in Postgres.
+      const inSql = /check \(char_length\(note\) <= (\d+)\)/i.exec(sql);
+      expect(inSql).not.toBeNull();
+      expect(Number(inSql![1])).toBe(MAX_REPORT_NOTE_CHARS);
+    });
+
+    it('dedupes on (user, lesson, beat, at) with nulls folded honestly', () => {
+      // beat_id is nullable and a plain unique constraint treats NULLs as
+      // distinct, so without the coalesce a report made outside any beat
+      // could be duplicated freely by retries.
+      expect(sql).toMatch(
+        /create unique index if not exists student_report_dedupe\s+on public\.student_report \(user_id, lesson_id, coalesce\(beat_id, ''\), at\)/i,
+      );
+    });
+
+    it('keeps both clocks, because a phone clock cannot be trusted', () => {
+      expect(sql).toMatch(/at timestamptz not null,/i);
+      expect(sql).toMatch(/received_at timestamptz not null default now\(\)/i);
+    });
+
+    it('goes with the account when the account goes', () => {
+      expect(sql).toMatch(/user_id uuid not null references auth\.users on delete cascade/i);
+    });
+
+    it('gets the same org attribution the 0018 tables got, from the same function', () => {
+      expect(sql).toMatch(
+        /before insert on public\.student_report\s+for each row execute function public\.fill_org_id/i,
+      );
+      expect(sql).toMatch(/org_id uuid references public\.organization on delete set null/i);
+    });
+
+    it('answers a retried POST with the SAME id, atomically in Postgres', () => {
+      // The definer function inserts on-conflict-do-nothing and then reads
+      // the survivor — the one thing a direct PostgREST insert cannot say.
+      expect(sql).toMatch(/create or replace function public\.keep_student_report/i);
+      expect(sql).toMatch(/on conflict \(user_id, lesson_id, coalesce\(beat_id, ''\), at\) do nothing/i);
+      expect(sql).toMatch(/if kept is null then/i);
+    });
+
+    it('is written by the relay alone', () => {
+      expect(sql).toMatch(/revoke all on function public\.keep_student_report[^;]*from public, anon, authenticated/i);
+      expect(sql).toMatch(/grant execute on function public\.keep_student_report[^;]*to service_role/i);
+    });
+  });
+
+  describe('consent_record, the DPDP artifact', () => {
+    it('carries who consented, when, and how it was verified', () => {
+      expect(sql).toMatch(/create table if not exists public\.consent_record/i);
+      expect(sql).toMatch(/parent_name text not null/i);
+      expect(sql).toMatch(/consent_at timestamptz not null default now\(\)/i);
+      // Not nullable: a consent row without a verification time is exactly
+      // the unverifiable consent this table exists to make impossible.
+      expect(sql).toMatch(/otp_verified_at timestamptz not null/i);
+    });
+
+    it('names its two doors and no others', () => {
+      expect(sql).toMatch(/source text not null check \(source in \('contest', 'self_serve'\)\)/i);
+    });
+
+    it('holds the phone to one canonical shape, or per-phone limits fragment', () => {
+      expect(sql).toMatch(/parent_phone text not null check/i);
+      expect(sql).toMatch(/\[1-9\]\[0-9\]\{7,14\}/);
+    });
+
+    it('is erased with the child’s account, because a permission slip for deleted data is retained PII', () => {
+      const consent = sql.match(/create table if not exists public\.consent_record \(([\s\S]*?)\n\);/i);
+      expect(consent).not.toBeNull();
+      expect(consent![1]).toMatch(/references auth\.users on delete cascade/i);
+    });
+  });
+
+  describe('claim_otp_send, the meter on the SMS bill', () => {
+    it('holds the same numbers as the memory gate that mirrors it', () => {
+      // The same drift check UNITS_PER_DAY has: two files hold each number
+      // and only this test ties them together.
+      const burst = /burst_per_phone\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+      const window = /burst_window_minutes\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+      const phoneDay = /day_per_phone\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+      const userDay = /day_per_user\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+      expect(Number(burst![1])).toBe(OTP_SENDS_PER_PHONE_BURST);
+      expect(Number(window![1])).toBe(OTP_BURST_WINDOW_MINUTES);
+      expect(Number(phoneDay![1])).toBe(OTP_SENDS_PER_PHONE_PER_DAY);
+      expect(Number(userDay![1])).toBe(OTP_SENDS_PER_USER_PER_DAY);
+      const project = /day_project\s+constant\s+integer\s*:=\s*(\d+)/i.exec(sql);
+      expect(Number(project![1])).toBe(OTP_SENDS_PER_DAY_PROJECT);
+    });
+
+    /**
+     * THE LINE UNDER ALL OF THEM. Identities are free, so per-phone and
+     * per-user caps bound nothing on their own — N anonymous accounts times
+     * N phones is an unbounded SMS bill with every key inside its limit.
+     * The same hole UNITS_PER_DAY had, and the same answer.
+     */
+    it('counts the whole project’s day, not only one phone’s and one account’s', () => {
+      expect(sql).toMatch(/from public\.otp_send where sent_at >= day_start/i);
+      expect(sql).toMatch(/if project_today >= day_project then/i);
+    });
+
+    it('answers the real seconds left on the burst, the way the memory gate does', () => {
+      // A flat ten minutes made a parent wait longer than they had to, and
+      // made the two hosts disagree with nothing failing.
+      expect(sql).toMatch(/min\(sent_at\)/i);
+      expect(sql).toMatch(/burst_oldest \+ make_interval\(mins => burst_window_minutes\) - now_at/i);
+    });
+
+    it('counts by the phone that is billed, not only the account that is free', () => {
+      expect(sql).toMatch(/where phone = p_phone/i);
+      expect(sql).toMatch(/where user_id = p_user/i);
+    });
+
+    it('serialises per phone, so a simultaneous pair cannot both admit the last send', () => {
+      expect(sql).toMatch(/pg_advisory_xact_lock\(hashtext\(p_phone\)\)/i);
+    });
+
+    it('is closed to students, like every other meter', () => {
+      expect(sql).toMatch(/alter table public\.otp_send enable row level security/i);
+      expect(sql).toMatch(/revoke all on function public\.claim_otp_send\(uuid, text\) from public, anon, authenticated/i);
+      expect(sql).toMatch(/grant execute on function public\.claim_otp_send\(uuid, text\) to service_role/i);
+    });
+  });
+
+  /**
+   * THE TRIAGE HALF, which PRD 3 requirement 22 specifies and the first
+   * draft of this table dropped. Without a status column an operator can
+   * read the queue and cannot work it: nothing to mark seen, nothing to
+   * record what was done, and PRD 6's 24-hour clock with nothing to measure.
+   */
+  describe('a report an operator can actually work', () => {
+    it('carries the status, the clock and the note PRD 3 gives it', () => {
+      expect(sql).toMatch(
+        /status text not null default 'new' check \(status in \('new', 'seen', 'actioned', 'dismissed'\)\)/i,
+      );
+      expect(sql).toMatch(/actioned_at timestamptz/i);
+      expect(sql).toMatch(/action_note text/i);
+    });
+
+    it('holds platform to the two the client can be, like PRD 1 spells them', () => {
+      expect(sql).toMatch(/platform text check \(platform in \('web', 'android'\)\)/i);
+    });
+
+    it('indexes the unworked queue rather than every report ever filed', () => {
+      expect(sql).toMatch(
+        /create index if not exists student_report_received[\s\S]*?where status = 'new'/i,
+      );
+    });
+
+    it('tells the caller whether IT created the row, so one report rings once', () => {
+      // The alert is the only thing that says a report exists. A retry
+      // through a flaky connection must not knock five times.
+      expect(sql).toMatch(/returns table \(report_id uuid, fresh boolean\)/i);
+      expect(sql).toMatch(/was_fresh := false;/i);
+      expect(sql).toMatch(/return query select kept, was_fresh;/i);
+    });
+  });
+
+  /**
+   * THE HEARTBEAT 0017'S LOCK NEVER HAD. Its 180-second TTL was measured on
+   * a development machine; the stated device is a cheap Android, and a
+   * preparation that outruns the TTL loses its lock silently — a second
+   * student wins it and both preparations are paid for in full.
+   */
+  describe('extend_prep_lock', () => {
+    it('exists, and defaults to the same TTL the relay mirrors', () => {
+      expect(sql).toMatch(/create or replace function public\.extend_prep_lock/i);
+      const ttl = /p_ttl_seconds integer default (\d+)/i.exec(sql);
+      expect(Number(ttl![1])).toBe(PREP_LOCK_TTL_SECONDS);
+    });
+
+    it('is holder-only and will not resurrect a lock that already lapsed', () => {
+      expect(sql).toMatch(/where topic_ref = p_topic[\s\S]*?and user_id = p_user[\s\S]*?and expires_at > now\(\)/i);
+    });
+
+    it('is the relay’s alone, like every other definer function here', () => {
+      expect(sql).toMatch(
+        /revoke all on function public\.extend_prep_lock\(text, uuid, integer\) from public, anon, authenticated/i,
+      );
+      expect(sql).toMatch(
+        /grant execute on function public\.extend_prep_lock\(text, uuid, integer\) to service_role/i,
+      );
+    });
+  });
+
+  describe('record_usage growing p_prep_id', () => {
+    it('drops the old signature so replace cannot silently overload instead', () => {
+      expect(sql).toMatch(
+        /drop function if exists public\.record_usage\(uuid, uuid, text, text, text, integer, integer, integer, integer, integer, integer, integer, integer\)/i,
+      );
+    });
+
+    it('defaults the new parameter, so the still-deployed 13-argument caller keeps working', () => {
+      expect(sql).toMatch(/p_prep_id uuid default null/i);
+    });
+
+    it('actually writes the column 0018 poured', () => {
+      expect(sql).toMatch(/insert into public\.usage_event \([\s\S]*prep_id[\s\S]*\) values \([\s\S]*p_prep_id[\s\S]*\)/i);
+    });
+
+    it('restates the grants whole, because the drop took the ACL with it', () => {
+      expect(sql).toMatch(
+        /revoke all on function public\.record_usage\(uuid, uuid, text, text, text, integer, integer, integer, integer, integer, integer, integer, integer, uuid\) from public, anon, authenticated/i,
+      );
+      expect(sql).toMatch(
+        /grant execute on function public\.record_usage\(uuid, uuid, text, text, text, integer, integer, integer, integer, integer, integer, integer, integer, uuid\) to service_role/i,
+      );
+    });
+  });
+
+  it('creates NO policy and grants nothing on any table — service role is the only door', () => {
+    // The absence is the permission model: RLS denies what nothing allows.
+    expect(sql).not.toMatch(/create policy|alter policy|drop policy/i);
+    expect(sql).not.toMatch(/disable row level security/i);
+    expect(sql).not.toMatch(/grant\s+(select|insert|update|delete|all)\s+on\s+(table\s+)?public\./i);
+    for (const table of ['student_report', 'consent_record', 'otp_send']) {
+      expect(sql).toMatch(new RegExp(`alter table public\\.${table} enable row level security`, 'i'));
+      expect(sql).toMatch(new RegExp(`revoke all on table public\\.${table} from anon, authenticated`, 'i'));
+    }
+  });
+});

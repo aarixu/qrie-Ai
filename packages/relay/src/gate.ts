@@ -28,6 +28,15 @@ import { readTicket } from './ticket.ts';
 export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons';
 
 /**
+ * The route families that spend no vendor money: a report, a prep lock, an
+ * enrolment. Named apart from RelayName on purpose — they have no row in
+ * UNITS, because a price table entry of zero would contradict the table's
+ * own rule, and these are not priced calls; they are control traffic that
+ * still has to answer to WHO and HOW OFTEN.
+ */
+export type FreeRoute = 'report' | 'prep' | 'enroll';
+
+/**
  * WHAT EACH CALL COSTS AGAINST THE DAILY BUDGET.
  *
  * ONE UNIT IS ONE PAISA OF VENDOR SPEND. That is the whole rule, and it is
@@ -159,7 +168,7 @@ export type ClaimResult =
     };
 
 export interface Ledger {
-  claim(userId: string, relay: RelayName, units: number): Promise<ClaimResult>;
+  claim(userId: string, relay: RelayName | FreeRoute, units: number): Promise<ClaimResult>;
 }
 
 export interface Gate {
@@ -270,6 +279,69 @@ export async function admit(
   if (!claim.allowed) return { ok: false, response: refuse(claim) };
 
   return { ok: true, userId };
+}
+
+/**
+ * Admission for the routes that spend no vendor money.
+ *
+ * ZERO UNITS, AND THAT IS NOT THE HOLE `unitsFor` WARNS ABOUT. Its "never
+ * zero" rule guards priced calls — a vendor call charged nothing is a call
+ * worth making a million times. These routes pay no vendor: a report is a
+ * row, a lock is a row, an enrolment's one costly act (the SMS) sits behind
+ * its own two-key gate in enroll.ts. What zero units buys is that reporting
+ * a problem or asking "is this topic warm?" never eats a child's class
+ * budget. What still holds every one of them is WHO — a verified identity,
+ * header only, no speech-ticket side door because none of these is an
+ * <audio src> — and HOW OFTEN, the same per-minute window as everything
+ * else, which the ledger counts on every claim whatever the units say.
+ *
+ * AND ONE EXEMPTION, FOR 'report' ONLY.
+ *
+ * Of claim_relay's spend arms, exactly ONE can refuse a claim of zero units
+ * today: 'halted' (0016:93), which tests a boolean and never looks at the
+ * cost. The minute somebody flips relay_control — because a key leaked, or
+ * because the tutor said something wrong — is precisely the minute children
+ * have something to report, and the kill switch exists to stop SPEND. A
+ * report spends nothing, so it is let through.
+ *
+ * THE OTHER TWO CANNOT FIRE AT ZERO, and saying otherwise was the bug this
+ * paragraph used to carry. 'budget' is `row_units + p_units > units_per_day`
+ * (0016:137) and 'capped' commits under `b.units + p_units <= ceiling_units`
+ * (0016:159); both totals are themselves refused before they can pass their
+ * ceiling, so at p_units = 0 the first is never greater and the second is
+ * always less-or-equal. An ordinary spent-out day does NOT produce 'capped'
+ * for a free route. It becomes reachable only when an operator lowers
+ * `global_units_per_day` BELOW the spend already accrued, which is a real
+ * thing somebody may do in an incident and exactly when reports matter.
+ *
+ * They are exempted anyway, all three, and deliberately: the reachability
+ * above is a property of SQL that can be edited without this file, and the
+ * failure mode of getting it wrong is a child unable to report something.
+ * The exemption is the belt; the arithmetic above is only the braces.
+ *
+ * THE PRICE, SAID OUT LOUD: claim_relay returns from the halted arm BEFORE
+ * it touches the per-minute window, so during a halt a report carries no
+ * rate limit — only a verified identity and an idempotency key on a small
+ * row. That is accepted deliberately. 'rate' is still obeyed in every other
+ * state, and 'unavailable' — the meter itself being unreachable — is still
+ * a refusal, because a report route running with no meter at all during an
+ * outage is a different thing from one running during a deliberate pause.
+ */
+export async function admitFree(
+  req: RelayRequest,
+  route: FreeRoute,
+  gate: Gate,
+): Promise<Admission> {
+  const verified = await gate.verify(req.headers['authorization'] ?? req.headers['Authorization']);
+  if (!verified.ok) return { ok: false, response: fail(verified.status, verified.why) };
+
+  const claim = await gate.ledger.claim(verified.user.userId, route, 0);
+  if (!claim.allowed) {
+    const spendOnly = claim.reason === 'halted' || claim.reason === 'capped' || claim.reason === 'budget';
+    if (!(route === 'report' && spendOnly)) return { ok: false, response: refuse(claim) };
+  }
+
+  return { ok: true, userId: verified.user.userId };
 }
 
 // ---------------------------------------------------------------------------

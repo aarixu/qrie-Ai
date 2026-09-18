@@ -57,6 +57,20 @@ const json = (status: number, value: unknown): RelayResponse => ({
 export const fail = (status: number, message: string): RelayResponse =>
   json(status, { error: { message } });
 
+/**
+ * A short, present piece of text — the shared vocabulary every validator in
+ * this package reaches for.
+ *
+ * ONE DEFINITION, because there were two: report.ts asked for `length > 0`
+ * and enroll.ts for `trim() !== ''`, so "   " was a valid lessonId and an
+ * invalid parentName for no stated reason. The TRIM-AWARE rule wins, and
+ * deliberately: a name made of spaces is not a name, and a lessonId made of
+ * spaces joins to nothing. Whitespace is REFUSED, never trimmed off and
+ * accepted — this package rejects rather than quietly repairs.
+ */
+export const isShortText = (v: unknown, max: number): v is string =>
+  typeof v === 'string' && v.trim() !== '' && v.length <= max;
+
 const OPENROUTER = 'https://openrouter.ai/api/v1';
 
 const authHeaders = (key: string): Record<string, string> => ({
