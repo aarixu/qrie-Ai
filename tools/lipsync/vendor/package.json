@@ -1,0 +1,10 @@
+{
+  "name": "curie-lipsync-vendor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Install target for the optional rhubarb-lip-sync-wasm aligner. Deliberately OUTSIDE the root package.json and outside the npm workspaces (which are packages/* and apps/*), so that cloning this repo does not force a 37 MB acoustic-model download on anyone who is not running the lip-sync spike. node_modules/ is gitignored at every level, so nothing here is ever committed. Install with: npm install --prefix tools/lipsync/vendor rhubarb-lip-sync-wasm@0.1.8",
+  "dependencies": {
+    "rhubarb-lip-sync-wasm": "^0.1.8"
+  }
+}

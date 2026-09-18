@@ -1,0 +1,42 @@
+{
+  "_README": [
+    "HAND-WRITTEN HINGLISH, AND THIS FIELD EXISTS SO NOBODY EVER MISTAKES IT FOR ANYTHING ELSE.",
+    "",
+    "Every committed lesson narration in this repo is English (`language: \"en\"` in each",
+    "content/*/lesson.json) — tools/stt-spike/make-corpus.mjs says the same thing and for the",
+    "same reason: the app chrome is English and Hinglish is the TUTOR's spoken register,",
+    "chosen per student at onboarding and generated at runtime. It is not stored, so it cannot",
+    "be pulled out of the tree.",
+    "",
+    "So these lines were written by hand, beat for beat against content/class10-blood, in the",
+    "register an Indian science tutor actually uses with a Class 10 child: Hindi grammar in",
+    "Roman script, English technical vocabulary left in English because that is how the",
+    "subject is taught and how the exam is written.",
+    "",
+    "WHAT THEY CAN BE USED FOR: driving the rule-table recogniser, which needs only text and a",
+    "duration, and measuring dictionary coverage, which needs only words. Both are real",
+    "measurements on real Hinglish.",
+    "",
+    "WHAT THEY CANNOT BE USED FOR: measuring Rhubarb. Rhubarb needs AUDIO, and there is no",
+    "Hinglish audio in this repo — content/class10-blood/audio is the only rendered narration",
+    "that exists and it is the English script. Rendering these lines would cost a real Gemini",
+    "TTS call, which this phase does not make. Every Rhubarb number in the report is therefore",
+    "measured on ENGLISH audio, and the report says so wherever it says anything.",
+    "",
+    "durationSourceMs is the measured length of the ENGLISH clip for the same beat, taken from",
+    "content/class10-blood/audio/narration.json. Scaling the Hinglish text to the English",
+    "clip's length is a CONTROLLED COMPARISON, not a claim that a tutor would take the same",
+    "time to say it — holding the duration fixed is the only way the difference between the",
+    "two timelines is attributable to the language rather than to the clock."
+  ],
+  "lessonId": "class10-blood",
+  "writtenBy": "hand, in this repo, not generated and not transcribed",
+  "beats": {
+    "hook": "Apni kalai dekho — nason ko dekho. Abhi is waqt tumhare andar lagbhag paanch litre khoon ghoom raha hai, poore shareer ka ek chakkar ek minute se bhi kam mein. Lekin khoon sirf laal paani nahi hai — yeh chaar alag workers ki ek team hai. Chalo inse milte hain.",
+    "components": "Yeh rahi poori team. Plasma, red blood cells, white blood cells, aur platelets. Chaar components, chaar bilkul alag kaam. Har ek ko dhyan se dekho.",
+    "plasma_rbc": "Plasma khud liquid hai — yeh digested food, carbon dioxide aur wastes ko ghol kar le jaata hai. Red cells oxygen ke courier hain: inmein haemoglobin bhara hai, ek iron-rich pigment jo lungs mein oxygen pakadta hai. Usi iron ki wajah se khoon laal hai.",
+    "wbc_platelets": "White cells fauj hain — jaise hi koi infection ghusta hai, yeh use dhoondh kar khatam kar dete hain. Platelets repair crew hain: ungli kat jaaye, to kuch hi minute mein yeh leak ko jamaa kar band kar dete hain. Inke bina chhota sa cut bhi kabhi nahi rukta.",
+    "vessels": "Ab in raston ki baat karte hain jin par yeh fleet chalti hai. Arteries khoon ko dil se door le jaati hain — moti deewaron wali, kyunki pressure zyada hota hai. Veins wapas laati hain — patli deewarein, aur valves lage hote hain taaki dheema khoon peeche na khisak jaaye. Inke beech capillaries itni patli ki ek baar mein sirf ek cell nikalta hai.",
+    "recap": "Ek line yaad rakho: plasma le jaata hai, red cells oxygen pahunchate hain, white cells bachaate hain, platelets marammat karte hain — aur arteries dil se door jaati hain jabki veins wapas aati hain. Exam mein artery aur vein ka antar zaroor aata hai. Kuch samajh na aaye to haath uthao."
+  }
+}
