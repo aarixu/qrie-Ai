@@ -63,14 +63,66 @@ export const LANGUAGE_QUESTION = 'Which language should your class be taught in?
  * POSITION table carries pehla/doosra/teesra (match.ts:110-115) and its stated
  * contract is to return index: null whenever it is not confident so the caller
  * escalates to the model. A Hinglish answer therefore fails safe — escalated,
- * not marked wrong. That is what this sentence promises and no more; it does
- * not promise the tutor will reply in Hinglish, which nothing reads the choice
- * for yet.
+ * not marked wrong. That is what this sentence promises and no more.
+ *
+ * It is deliberately still about the MICROPHONE only. Which language the tutor
+ * SPEAKS is now honoured for a class prepared live — lib/liveClass.ts reads
+ * the choice — and that promise is made by LANGUAGE_PROMISE_NOTE below, where
+ * the committed-lessons caveat is made in the same breath. Folding the two
+ * into one sentence would make a promise with its exception missing.
  *
  * Exported because both doors ask this question and neither may drift from the
  * other's promise.
  */
 export const LANGUAGE_ANSWER_NOTE = 'You can answer in either one — I will understand.';
+
+/**
+ * WHAT IS TRUE TODAY, SAID TO A CHILD IN THE PRESENT TENSE ONLY WHERE IT IS
+ * TRUE — and the tenses are load-bearing, not tidiness.
+ *
+ * "I teach in" is present because the answer is now READ: lib/liveClass.ts
+ * reads tutorLanguage() per preparation and hands it to prepareClass, which
+ * puts the register in the planner's prompt (HINGLISH_REGISTER) and writes it
+ * onto the finished lesson.
+ *
+ * LANGUAGE, NEVER VOICE. Nothing here picks the speaker: lib/lessonVoice.ts:48
+ * fixes the streaming voice, lines 79 and 155 ask the browser for 'en-IN', and
+ * the relay's own docblock says choosing among its Hindi speakers is a
+ * decision with a student in front of it and not a query parameter
+ * (packages/relay/src/relays.ts:177-181). A child reads "voice" as what they
+ * HEAR, so this promises the words and nothing about the sound.
+ *
+ * "The classes that are already written are in English" is the other half, and
+ * a child is told it HERE rather than left to find it out in a class. All
+ * fifteen committed lessons carry language: "en" (each content folder's
+ * lesson.json) and nothing translates them at runtime: that would be a fresh
+ * model call on a class already measured at Rs 9.08 of preparation spend
+ * (docs/architecture/README.md:182), and the new narration would need
+ * fact-reviewing all over again in the new language.
+ *
+ * THE ALTERNATIVE, and why it is not taken: prefer a live preparation for a
+ * Hinglish student on a topic that already has an English lesson. That is the
+ * planning constant every PRD budgets on — about Rs 30 a topic — spent again
+ * per student rather than once, and a spend of that size is a decision
+ * somebody makes, never a default a screen turns on quietly.
+ *
+ * NARROWER THAN IT READS, and this is the honest gap: "a class I make for you
+ * while you wait" is true of a topic nobody has reached before. screens/
+ * LiveClass.tsx keeps every live preparation under a unique topic_ref, so a
+ * topic another student prepared minutes ago is a kept class — and it is
+ * always an ENGLISH one, because save.ts refuses to keep anything else. So the
+ * surprise is narrower than it first looked and it only runs one way: a
+ * Hinglish student can meet an English class that somebody else's preparation
+ * installed. An English student can never meet a Hinglish one.
+ *
+ * Exported for the same reason LANGUAGE_QUESTION is: both doors ask this
+ * question and neither may drift from the other's promise —
+ * screens/contest/Enrol.tsx renders this same constant rather than a copy.
+ */
+export const LANGUAGE_PROMISE_NOTE =
+  'This is the language I teach in. When I make a class for you while you wait, it comes ' +
+  'out in the language you pick here. The classes that are already written are in English, ' +
+  'so those stay English — and the buttons and menus are English either way.';
 
 /** The way back out of the school stub, kept here so the test can read it. */
 export const SCHOOL_STUB_BACK = 'Go back';
@@ -376,22 +428,11 @@ export function Onboarding() {
                 {LANGUAGE_QUESTION}
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                {/* WHAT IS TRUE TODAY, SAID TO A CHILD IN THE PRESENT
-                    TENSE ONLY WHERE IT IS TRUE. The answer is stored and
-                    NOTHING READS IT YET: a grep for tutorLanguage() across
-                    apps/classroom/src finds the writers and no consumer. The
-                    per-lesson `language` in packages/lesson-format
-                    (types.ts:441-442) is what a lesson was AUTHORED in, not
-                    the student's choice. HANDOFF, and not a one-liner:
-                    lib/liveClass.ts prepareClass must carry tutorLanguage()
-                    into the narration it generates, and
-                    packages/tutor-judge matchSpokenAnswer(said, options)
-                    (match.ts:124) takes no language argument at all, so the
-                    answer path cannot use the signal until its signature
-                    does. Until then this says "will", never "does". */}
-                This is the voice I will teach you in. Every class written so far is in
-                English, so Hinglish arrives with the ones being written now — and the buttons
-                and menus stay in English either way. {LANGUAGE_ANSWER_NOTE}
+                {/* The paragraph and the reasoning behind every clause of it
+                    live on LANGUAGE_PROMISE_NOTE above, where the contest door
+                    can import them instead of keeping a second copy that says
+                    something else. */}
+                {LANGUAGE_PROMISE_NOTE} {LANGUAGE_ANSWER_NOTE}
               </p>
               <div className="flex flex-col gap-3">
                 {(

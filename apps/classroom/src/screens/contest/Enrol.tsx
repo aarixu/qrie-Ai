@@ -6,7 +6,7 @@ import { subjectsAvailable } from '../../lib/content';
 import { profileStore } from '../../stores/profile';
 import { settingsStore } from '../../stores/settings';
 import { markConsented, type TutorLanguage } from '../../lib/workspace';
-import { LANGUAGE_ANSWER_NOTE, LANGUAGE_QUESTION } from '../Onboarding';
+import { LANGUAGE_ANSWER_NOTE, LANGUAGE_PROMISE_NOTE, LANGUAGE_QUESTION } from '../Onboarding';
 import {
   requestOtp,
   submitEnrolment,
@@ -404,14 +404,16 @@ export function Enrol({ initialStep = 'student' }: { initialStep?: EnrolStep }) 
                 {LANGUAGE_QUESTION}
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                {/* Said here as onboarding says it, in the same tense and
-                    for the same reason: this is the teacher's voice, never an
-                    app-language setting, and nothing reads the answer yet —
-                    see the handoff beside the matching step in
-                    screens/Onboarding.tsx. */}
-                This is the voice we will teach in. Every class written so far is in English,
-                so Hinglish arrives with the ones being written now — and the buttons and menus
-                stay in English either way. {LANGUAGE_ANSWER_NOTE}
+                {/* THE SAME SENTENCE AS ONBOARDING'S, BECAUSE IT IS THE SAME
+                    PROMISE and two copies of a promise are two things to keep
+                    true. This door had its own wording, and it went stale the
+                    moment lib/liveClass.ts started reading the answer: it still
+                    said "nothing reads the answer yet" and put the whole thing
+                    in the future tense. It also said VOICE, which onboarding
+                    deliberately does not — a child reads voice as what they
+                    HEAR, and the speaker is still en-IN whichever language is
+                    picked. LANGUAGE_PROMISE_NOTE is exported for exactly this. */}
+                {LANGUAGE_PROMISE_NOTE} {LANGUAGE_ANSWER_NOTE}
               </p>
               <div className="flex flex-col gap-3">
                 {(

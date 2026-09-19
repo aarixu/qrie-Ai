@@ -11,6 +11,7 @@ import {
 } from "@ai-tutor/class-prep";
 import { createBrowserLlm } from "./browserLlm";
 import { createBrowserImageArtist, createBrowserVision } from "./browserImage";
+import { tutorLanguage, type TutorLanguage } from './workspace';
 
 /**
  * PREPARING ONE CLASS, LIVE.
@@ -251,6 +252,25 @@ export async function prepareLiveClass(
      * shipped app does not have, however many tests the package has.
      */
     web?: WebImageAdapter | null;
+    /**
+     * WHICH LANGUAGE THE TUTOR SPEAKS THIS CLASS IN.
+     *
+     * Absent — which is every caller today — means the answer the child gave at
+     * onboarding, read from the workspace below.
+     *
+     * NO CALLER PASSES IT YET, and saying otherwise would be this comment
+     * claiming a safety it does not have. It exists so that a preparation
+     * which is not one student's can say so outright: the difference between
+     * "no opinion" and "English, please" is one a defaulted argument cannot
+     * express. The three callers it is for, none of which passes it:
+     * prep5.ts:95 and prep-clone.ts:33, which get 'en' from the absent
+     * workspace row because Node has no localStorage — a different mechanism
+     * from this one, and one that would stop protecting them the day they ran
+     * in a browser; and screens/CanvasLab.tsx:26, which DOES run in a browser
+     * (App.tsx:585, /canvas-lab), so a Hinglish student's canvas-lab
+     * preparation comes out Hinglish today. All three are handoffs.
+     */
+    language?: TutorLanguage;
   },
   onProgress: (progress: PrepProgress) => void,
   /**
@@ -266,8 +286,56 @@ export async function prepareLiveClass(
     onArt: () => void;
   },
 ): Promise<LivePrep> {
+  /**
+   * THE ANSWER A CHILD GAVE, FINALLY READ.
+   *
+   * Onboarding.tsx and contest/Enrol.tsx both ask which language the tutor
+   * should speak and both write it to the workspace; until this line nothing
+   * anywhere read it back, and the screen said so in a comment. This is the
+   * whole of the wire: `prepareClass` puts the register in the planner's
+   * prompt (HINGLISH_REGISTER in packages/class-prep/src/prompts.ts) and
+   * writes it onto the finished lesson.
+   *
+   * READ HERE, PER PREPARATION, rather than captured at module load: a
+   * student can be re-onboarded on a shared device between one class and the
+   * next, and a value read once would teach the previous child's language to
+   * this one.
+   *
+   * IN A NODE SCRIPT there is no profile row, so `tutorLanguage()` returns its
+   * 'en' default — which is the right answer for prep5.ts and prep-clone.ts,
+   * because every class they write is committed content and all fifteen
+   * committed lessons are English.
+   *
+   * WHAT HAPPENS TO A HINGLISH CLASS AFTERWARDS, because it is not obvious and
+   * it costs money: IT IS NOT KEPT. screens/LiveClass.tsx keeps every class it
+   * prepares under a unique topic_ref and serves it to every later student on
+   * that topic, so keeping one would make a Hinglish preparation the permanent
+   * class for students who asked for English. packages/class-prep/src/save.ts
+   * refuses it, beside the refusal it already makes about a student's name.
+   *
+   * THAT REFUSAL IS NOT FREE, and the price falls on Hinglish students:
+   * `topic_ref` is unique, so the store has no room for two languages under one
+   * topic, and a Hinglish student therefore pays the full preparation on every
+   * cold topic they reach and never benefits from the cache. Warm topics are
+   * unaffected — they serve the English class that is there, which is what the
+   * onboarding copy tells a student to expect. The wider key that would fix it
+   * properly, `(topic_ref, language)`, is a migration and a relay change.
+   *
+   * AND WHAT IT DOES NOT REACH AT ALL: the live conversation. Everything the
+   * tutor says back to an answer is written by the judge, and nothing carries
+   * this value there — JUDGE_SYSTEM (packages/tutor-judge/src/prompts.ts:21-31)
+   * says "say" is spoken aloud and gives no instruction about which language
+   * to speak it in, and CLOSE_SYSTEM's "meet them in kind" mirrors the
+   * STUDENT, not the class. So a Hinglish class narrates in Hinglish and may
+   * well reply in English. That is the larger half of "the tutor speaks the
+   * language the student chose", and it is a handoff to the judge, not
+   * something this line can reach.
+   */
+  const language: TutorLanguage = ask.language ?? tutorLanguage();
+
   const result = await prepareClass({
     topic: ask.topic,
+    language,
     ...(ask.teacherStyle ? { teacherStyle: ask.teacherStyle } : {}),
     klass: ask.klass,
     minutes: ask.minutes,

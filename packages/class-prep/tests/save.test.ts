@@ -72,6 +72,25 @@ describe('what is worth keeping', () => {
     expect(saveable({ lesson: lesson(), assets: assets(), report: clean }, { ...meta, topicRef: undefined })).toBeNull();
   });
 
+  /**
+   * THE LANGUAGE THREAD MADE THIS REACHABLE, AND WITHOUT IT THE THREAD IS A
+   * BROKEN PROMISE POINTING THE OTHER WAY.
+   *
+   * The tutor's register is a per-student choice now, so a cold topic opened by
+   * a Hinglish student produces Hinglish narration. The store is keyed on
+   * `topic_ref` alone and the relay serves that one row to everybody — so
+   * keeping it would let the first Hinglish student install Hinglish
+   * permanently, and the next English student would be taught in a language
+   * they did not choose, with nothing on screen looking like an error.
+   *
+   * It is the same refusal as the one for a name in the spine: a class made for
+   * one student is not a class to keep.
+   */
+  it('keeps nothing taught in one student’s chosen register', () => {
+    const hinglish = { ...lesson(), language: 'hi-en' as const };
+    expect(saveable({ lesson: hinglish, assets: assets(), report: clean }, meta)).toBeNull();
+  });
+
   it('keeps nothing when a picture did not draw', () => {
     const holed: PrepReport = {
       ...clean,

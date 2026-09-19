@@ -2,6 +2,135 @@ import { TUTOR } from '@ai-tutor/persona';
 import type { VisualBrief } from './types.ts';
 
 /**
+ * WHICH LANGUAGE THE TUTOR SPEAKS IN — never which language the app is in.
+ *
+ * The same two spellings apps/classroom/src/lib/workspace.ts:42 stores from
+ * the onboarding question and packages/lesson-format/src/types.ts:442 records
+ * on a finished lesson, deliberately re-used rather than re-invented: the
+ * child picks it, the planner is told it here, and the lesson carries it.
+ * Three vocabularies for one distinction is how the three drift apart.
+ */
+export type TutorLanguage = 'en' | 'hi-en';
+
+/**
+ * WHAT HINGLISH MEANS HERE, said to the planner in the planner's own terms.
+ *
+ * Not Devanagari and not translated English: the register a Class 10 teacher
+ * in an Indian classroom actually speaks — Roman script, Hindi grammar,
+ * English technical nouns left in English because that is how the subject is
+ * taught and how the exam is written. tools/lipsync/corpus/hinglish.json holds
+ * six lines somebody wrote by hand in exactly that register, and the example
+ * below is two of them spliced — the opening of `hook` and one technical
+ * sentence from `plasma_rbc`, cut short of that beat's next clause. Quoted
+ * rather than invented so the prompt and the only hand-written Hinglish in
+ * this repository cannot describe two different languages; spliced because one
+ * beat shows either the opening voice or the technical voice, not both, and
+ * the register has to ask for both. tests/language.test.ts checks both
+ * fragments against the two beats named here, so this sentence cannot drift
+ * away from what it quotes.
+ *
+ * WHAT IT MUST NOT TOUCH, which is the half a reviewer should read first. The
+ * app chrome is English for every student — a standing product rule, not a
+ * preference — and every id is a string something matches on: the board
+ * resolves `ref` and `part`, the Learning Outcome Map resolves `teaches` and
+ * `checks`, the tests resolve beat ids. An id that came back in another
+ * language is a class taught, tested and measured as having taught nothing,
+ * which is the failure `dropInventedOutcomes` already exists for, arriving
+ * through a different door.
+ *
+ * AND THE FIELD THAT IS NEITHER SPEECH NOR CHROME: an option's `text`. It
+ * reads like a spoken line — a distractor is written as a student who holds
+ * the misconception would say it — but nobody ever hears it. It is the local
+ * matcher's rubric (`matchSpokenAnswer`, packages/tutor-judge/src/match.ts),
+ * which is what keeps a spoken answer off a paid judge and therefore under
+ * the Rs 5 ceiling, and on the confusable-pairs exception it is also the
+ * lettered list the board writes (packages/board-layout/src/layout.ts:400).
+ * `judge.ts`'s sawAList guard (apps/classroom/src/lib/judge.ts:253-258)
+ * additionally requires `ask.options[i].text` and `whyProbe.options[i].text`
+ * to read identically, so a register that sent one to Hinglish and left the
+ * other in English would break that guard by construction. Whatever is chosen,
+ * it has to be chosen for BOTH lists.
+ *
+ * WHAT KEEPING THEM ENGLISH COSTS, measured in a file rather than in a
+ * sentence: packages/class-prep/tests/matcherRegister.test.ts. An earlier
+ * version of this paragraph carried three decimals from a probe that was
+ * written down nowhere, and three people re-measuring it got three different
+ * sets of numbers — which is what a probe-specific figure with no probe is
+ * worth. The committed one says this: what decides a local match is not that
+ * the option text is ENGLISH, it is that the option text is in the SAME
+ * REGISTER as the words the student says. A Hinglish answer against
+ * Hinglish-worded options resolves at 1.000; the same answer against
+ * English-worded options scores 0.200, under MATCH_FLOOR 0.55, and goes to the
+ * paid judge.
+ *
+ * SO THE RULE BELOW IS A TRADE AND NOT A FREE CHOICE, and it is kept for the
+ * OTHER reason rather than the matcher: on the confusable-pairs exception an
+ * option's `text` is what the board writes, and the board stays English because
+ * it is what a child copies into a notebook for an English exam. Whether that
+ * is worth a model call on every close Hinglish answer is a product decision
+ * nobody has made deliberately yet.
+ *
+ * The honest other half, also in that test: English option text does not RESCUE
+ * a Hinglish paraphrase either — a paraphrase escalates in every combination of
+ * registers, so this only decides what happens to answers that land close to
+ * the authored words. `match.ts`'s STOP list carries twelve Hindi particles and its
+ * word scoring was tuned on an English bank, so a Hinglish class escalates
+ * paraphrased answers whichever register the options are in. That is a
+ * tutor-judge measurement nobody has made, not something this block can fix.
+ */
+export const HINGLISH_REGISTER = `## The voice of this class: HINGLISH
+
+Everything SPOKEN is Hinglish — the register an Indian classroom actually runs
+on, not a translation of an English lesson. Roman script, Hindi grammar,
+English technical nouns left in English:
+
+  "Apni kalai dekho — nason ko dekho. Red cells oxygen ke courier hain:
+   inmein haemoglobin bhara hai, ek iron-rich pigment."
+
+Never Devanagari. Never an English sentence with a few Hindi words dropped
+into it — write the line the way she would SAY it, out loud, the first time.
+Terms stay in English (haemoglobin, artery, valve, oxygen, evaporation)
+because that is how the subject is taught and how the exam is written.
+
+SPOKEN means exactly these, and every one of them is a line a child HEARS:
+every "say" text, every "narration", every line in "fill", an ask's "question"
+and its "hint", and each option's "why" and its "hint". The reply to an answer
+is read straight off the matching option — its "hint" on a first wrong try,
+otherwise its "why" — so an English one is an English reply in the middle of a
+Hinglish class.
+
+An ask's "question" is the one string that is both spoken AND written: the
+board writes it back word for word. Write it in Hinglish and it is Hinglish in
+both places, which is exactly what a teacher asking her own question and
+writing it up does.
+
+EVERYTHING ELSE STAYS IN ENGLISH, and this is not a matter of style:
+- Every field name, and every value that is an id: "id", "beatId", "ref",
+  "part", "parts", "group", "teaches", "checks", "do", "mark", "tone",
+  "askedAs", "noun". The app matches on these; a translated one matches
+  nothing.
+- "title" and "subtitle". They are shown in the app's own menus, and the
+  menus are English for every student.
+- Everything WRITTEN ON THE BOARD: "write", "note", "caption", "card",
+  "equation", "list", a "flow" step's or "chart" bar's label, and a "label"
+  text. The board is what a student copies into a notebook and the exam is
+  written in English — so she says it in Hinglish and writes it in English,
+  exactly as she does in the room.
+- Every option's "text" — in "options" and in "whyProbe" alike, and the two
+  read the SAME words wherever both exist. An option's "text" is never spoken
+  and, apart from the confusable-pairs exception, never shown: it is what the
+  class compares a spoken answer against to answer without stopping to think.
+  Write the misconception as a student would say it, in English.
+- An ask's "expect". Also never spoken and never written — it is the sentence
+  a judge weighs a spoken answer against, and that judge is told to weigh the
+  IDEA, not the wording or the language the student used.
+- A visual's "brief" and "alt": the brief is read by an artist that draws from
+  English, and "alt" is what the board writes when the artwork is dropped.
+
+The facts do not move with the language. A claim that would be wrong in
+English is wrong in Hinglish.`;
+
+/**
  * The planner's system prompt.
  *
  * It describes a board it cannot see and cannot measure, and it is never asked
@@ -438,9 +567,16 @@ export function plannerUser(
   /**
    * How a REAL teacher being cloned teaches, from `styleBrief`.
    *
-   * Appended LAST on purpose: it is the voice everything above has to come
-   * out in, and a model weights the end of its instructions most heavily.
+   * Appended NEAR the end on purpose: it is the voice everything above has to
+   * come out in, and a model weights the end of its instructions most heavily.
    * Absent for Curie own tutor, who has a persona of her own.
+   *
+   * FOR A HINGLISH CLASS it is no longer the very last thing the planner
+   * reads: the register goes after it, because a style brief describes a real
+   * teacher's habits, every one of them observed in English, so left last it
+   * would quietly be the final word on the LANGUAGE as well as the manner.
+   * For an English class nothing moved — `withRegister` returns the body
+   * untouched, which is the byte-identity tests/language.test.ts asserts.
    */
   teacherStyle?: string,
   /**
@@ -455,6 +591,18 @@ export function plannerUser(
    * state: the class is still taught, it just cannot be measured.
    */
   outcomes?: readonly TopicOutcome[],
+  /**
+   * WHICH LANGUAGE THE TUTOR SPEAKS THIS CLASS IN — the answer the child gave
+   * at onboarding, carried here from apps/classroom/src/lib/workspace.ts.
+   *
+   * 'en' is the default AND the untouched path: with it this function returns
+   * the same string, character for character, that it returned before the
+   * argument existed, so English is not a new code path pretending to be the
+   * old one. 'hi-en' appends HINGLISH_REGISTER and nothing else changes here —
+   * the whole rule, including everything the register may NOT touch, lives in
+   * that block rather than being spread across this function.
+   */
+  language: TutorLanguage = 'en',
 ): string {
 
   /** The brief, when there is one. Whitespace-only counts as none. */
@@ -484,9 +632,24 @@ already has a feel for, then build. Do not summarise the topic — teach it.`;
 THIS TOPIC TEACHES — the only ids "teaches" and "checks" may contain:
 ${outcomes.map((o) => `  ${o.id}: ${o.statement}`).join('\n')}`;
 
-  if (!studentLines || studentLines.length === 0) return withStyle(withOutcomes(base));
+  /**
+   * THE REGISTER, AFTER EVERYTHING ELSE.
+   *
+   * Last because it has to win. The style brief above and the student notes
+   * below both describe teaching that was observed and written in English, and
+   * whichever block sits closest to the end is what a model treats as the
+   * final instruction about the voice.
+   */
+  const withRegister = (body: string): string =>
+    language === 'hi-en' ? `${body}
 
-  return withStyle(`${withOutcomes(base)}
+${HINGLISH_REGISTER}` : body;
+
+  if (!studentLines || studentLines.length === 0) {
+    return withRegister(withStyle(withOutcomes(base)));
+  }
+
+  return withRegister(withStyle(`${withOutcomes(base)}
 
 THIS STUDENT — private notes for planning, mirrored from how her live persona
 is briefed. Never recite this list, never mention scores or say you are
@@ -502,7 +665,7 @@ had. Everything else you may do freely in the narration itself: spend the
 minutes where the notes say the ground is shaky, give one confident sentence
 of recall for what is held securely rather than re-teaching it, and put your
 first ask where they stumbled. Choosing WHAT to teach from these notes leaves
-no trace of the student in the words; saying their name does.`);
+no trace of the student in the words; saying their name does.`));
 }
 
 /**
@@ -512,7 +675,33 @@ no trace of the student in the words; saying their name does.`);
  * and fixes only what the validator named. A regenerated plan would be a
  * different lesson, and might well break somewhere else.
  */
-export function repairPlanUser(previous: string, errors: string[]): string {
+export function repairPlanUser(
+  previous: string,
+  errors: string[],
+  /**
+   * The register the rejected plan was written in.
+   *
+   * A repair is a SEPARATE model call, and it is not handed the planner's user
+   * prompt again — only the problems and the plan it produced. Without this
+   * line a Hinglish plan comes back with an English list of complaints and no
+   * instruction about which language to answer in, so the repaired beats drift
+   * to English while every untouched beat stays Hinglish, and the class is
+   * taught in two languages. 'en' returns exactly the string this function
+   * returned before the argument existed.
+   *
+   * It restates the rule rather than referring back to it, for the same
+   * reason: there is no "the register you were given" in this call.
+   */
+  language: TutorLanguage = 'en',
+): string {
+  const register =
+    language === 'hi-en'
+      ? `
+
+Every spoken line stays HINGLISH — Roman script, Hindi grammar, English
+technical nouns. Ids, "title", "subtitle", every option's "text", an ask's
+"expect" and everything written on the board stay English.`
+      : '';
   return `This plan was rejected:
 
 ${errors.map((e) => `- ${e}`).join('\n')}
@@ -521,7 +710,7 @@ Here is the plan you produced:
 
 ${previous}
 
-Return the SAME lesson with exactly those problems fixed. Change nothing else.`;
+Return the SAME lesson with exactly those problems fixed. Change nothing else.${register}`;
 }
 
 /**

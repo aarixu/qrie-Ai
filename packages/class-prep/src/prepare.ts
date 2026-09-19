@@ -21,6 +21,7 @@ import {
   repairPlanUser,
   repairUser,
   type TopicOutcome,
+  type TutorLanguage,
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
 import { classMustAsk, saidButNotWritten } from './saidNotWritten.ts';
@@ -54,6 +55,29 @@ export interface PrepOptions {
    * @ai-tutor/teacher-clone). Absent for Curie own classes.
    */
   teacherStyle?: string;
+  /**
+   * WHICH LANGUAGE THE TUTOR SPEAKS THIS CLASS IN.
+   *
+   * The answer a child gave at onboarding, carried in by the caller — see
+   * apps/classroom/src/lib/liveClass.ts. Only the SPOKEN narration moves: ids,
+   * titles and board ink stay English, and HINGLISH_REGISTER in prompts.ts is
+   * where that boundary is drawn and defended.
+   *
+   * Absent means 'en', which is byte-for-byte the prompt this package sent
+   * before the field existed.
+   *
+   * IT IS WRITTEN ONTO THE LESSON (`Lesson.language`), and that matters more
+   * than it looks: a live class is KEPT under a unique topic_ref and served to
+   * every later student on that topic, so a Hinglish preparation would become
+   * the permanent class for students who asked for English.
+   *
+   * `save.ts` READS THIS FIELD AND REFUSES ON IT — the refusal landed next to
+   * the one it already makes about a student's name, and this docblock asked
+   * for it while it was still a handoff. So the stamp is not decoration: it is
+   * the only fact the keep gate has to go on, and a preparation that stamped it
+   * wrongly would be kept for the wrong students.
+   */
+  language?: TutorLanguage;
   klass: number;
   minutes?: number;
   /** The model that plans the lesson. */
@@ -209,6 +233,17 @@ export function assemble(
   pictureParts: ReadonlyMap<string, readonly ImagePart[]> = new Map(),
   /** The shape of each generated picture — its width over its height. */
   pictureShapes: ReadonlyMap<string, number> = new Map(),
+  /**
+   * The register the narration below was actually written in.
+   *
+   * Recorded rather than assumed: this used to hardcode 'en' onto every
+   * lesson, which was true while nothing could ask for anything else and
+   * became a lie the moment something could. Nothing READS the field today
+   * (packages/lesson-format/src/validate.ts:373 only checks it is one of the
+   * two), so this is the evidence being laid down for the keep gate and the
+   * voice picker that will need it, not a behaviour change.
+   */
+  language: TutorLanguage = 'en',
 ): { lesson: unknown; dropped: string[]; aliases: Record<string, string> } {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
@@ -401,7 +436,7 @@ export function assemble(
       id: blueprint.id,
       title: blueprint.title,
       subtitle: blueprint.subtitle,
-      language: 'en',
+      language,
       topicRef: blueprint.topicRef,
       // The plane is as wide as its pages. Height never grows: a teacher's
       // board runs sideways, and the camera's zoom floor is one page.
@@ -604,6 +639,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
     opts;
   const web = opts.web;
+  /**
+   * The register every spoken line in this class comes out in.
+   *
+   * Read once and threaded to every place that can produce or re-produce
+   * narration — the plan, all three repair rounds (unreadable JSON, failed
+   * validation, a flagged review) and every assemble — because a class planned
+   * in Hinglish and repaired in English is worse than either one on its own.
+   */
+  const language: TutorLanguage = opts.language ?? 'en';
   const say = (phase: PrepProgress['phase'], message: string, done: number) =>
     opts.onProgress?.({ phase, message, done });
 
@@ -613,7 +657,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   say('planning', 'Working out how to teach this…', 0.05);
   const raw = await planner.complete(
     PLANNER_SYSTEM,
-    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes),
+    plannerUser(topic, klass, minutes, opts.studentLines, opts.teacherStyle, opts.outcomes, language),
   );
 
   // Unreadable JSON gets the same second chance a bad plan does. A model that
@@ -625,7 +669,11 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     say('planning', 'That came back garbled — asking again…', 0.2);
     const retry = await planner.complete(
       PLANNER_SYSTEM,
-      repairPlanUser(raw.slice(0, 4000), ['The reply was not valid JSON. Return the whole plan again, as one JSON object.']),
+      repairPlanUser(
+        raw.slice(0, 4000),
+        ['The reply was not valid JSON. Return the whole plan again, as one JSON object.'],
+        language,
+      ),
     );
     blueprint = parsePlan(retry);
   }
@@ -723,7 +771,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const sources = new Map<string, string>();
 
   say('checking', 'Checking the class holds together…', 0.15);
-  let { lesson: candidate, aliases } = assemble(blueprint, promised, pictureParts, pictureShapes);
+  let { lesson: candidate, aliases } = assemble(blueprint, promised, pictureParts, pictureShapes, language);
 
   let validated = validateLesson(candidate);
 
@@ -749,7 +797,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     try {
       const reply = await planner.complete(
         PLANNER_SYSTEM,
-        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10)),
+        repairPlanUser(JSON.stringify(blueprint), named.slice(0, 10), language),
       );
       // parsePlan, not bare JSON.parse: a repair reply is a model reply, and
       // recovering JSON from prose is the whole reason parsePlan exists.
@@ -782,7 +830,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         issues.push(`Dropped ${repairedProbes} whyProbe(s) the repaired plan mis-shaped.`);
       }
 
-      const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
+      const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes, language);
       const revalidated = validateLesson(rebuilt.lesson);
       if (revalidated.ok) {
         validated = revalidated;
@@ -897,7 +945,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           );
         const reply = await planner.complete(
           PLANNER_SYSTEM,
-          repairPlanUser(JSON.stringify(blueprint), named),
+          repairPlanUser(JSON.stringify(blueprint), named, language),
         );
         const fixed = parsePlan(reply);
         if (!fixed) throw new Error('the corrected plan was unreadable');
@@ -922,7 +970,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         if (correctedProbes > 0) {
           issues.push(`Dropped ${correctedProbes} whyProbe(s) the corrected plan mis-shaped.`);
         }
-        const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes);
+        const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes, language);
         const revalidated = validateLesson(rebuilt.lesson);
         if (!revalidated.ok) {
           throw new Error(`the corrected plan no longer validates: ${revalidated.errors[0]}`);
@@ -1154,7 +1202,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const beats = blueprint.beats;
   let final = lesson;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
-    const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes);
+    const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
     const revalidated = validateLesson(refitted.lesson);
     if (revalidated.ok) {
       final = revalidated.lesson as Lesson;

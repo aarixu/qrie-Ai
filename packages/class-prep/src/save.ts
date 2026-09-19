@@ -272,6 +272,35 @@ export function saveable(
   const personal = namesInSpine(prep.lesson, meta.studentNames ?? []);
   if (personal.length > 0) return null;
   if (remembersASession(prep.lesson).length > 0) return null;
+
+  /**
+   * A CLASS TAUGHT IN ONE STUDENT'S CHOSEN LANGUAGE IS ALSO A CLASS PLANNED
+   * FOR SOMEBODY, and it is kept the same way: not at all.
+   *
+   * The tutor's register is now a per-student choice carried into the planner,
+   * so a cold topic reached by a Hinglish student produces Hinglish narration
+   * and `prepare.ts` stamps `Lesson.language` truthfully. The store is keyed on
+   * `topic_ref` ALONE, and the relay serves that one row to everybody — so
+   * without this the first Hinglish student to open a cold topic would install
+   * Hinglish permanently, and the next English student would be taught in a
+   * language they did not choose. That is the same broken promise the language
+   * thread was built to fix, pointing the other way, and it would be the harder
+   * one to notice because nothing would look like an error.
+   *
+   * WHAT THIS COSTS, SAID PLAINLY RATHER THAN DISCOVERED LATER. A Hinglish
+   * student's live preparation is never cached, so every cold topic they open
+   * costs the full preparation again — about Rs 30, the planning constant — and
+   * never amortises across the students who follow. Warm topics are unaffected:
+   * they already serve the English class that is there, which is what the
+   * onboarding copy tells a student to expect.
+   *
+   * THE REAL FIX IS A WIDER KEY, not a cleverer gate here: `prepared_class`
+   * keyed on (topic_ref, language) has room for both, and then each language
+   * amortises across its own students. That is a migration and a relay change,
+   * neither of which belongs in this function. Until it lands, refusing is the
+   * only answer that cannot teach a child in a language they did not pick.
+   */
+  if (prep.lesson.language !== 'en') return null;
   // A picture that never drew was already reported. Its beat may have been
   // dropped, but the class is one demonstration short of the one that was
   // planned, and that is not the one to keep forever.
