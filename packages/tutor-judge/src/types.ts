@@ -13,6 +13,44 @@
  * ends.
  */
 
+/**
+ * WHAT THE PLANNER ALREADY WORKED OUT ABOUT THIS ANSWER.
+ *
+ * Structurally `lesson-format`'s `WhyProbe`, declared here rather than imported
+ * because this package takes neither the format nor the browser as a
+ * dependency — the pedagogy is testable without either, and that is the whole
+ * reason it lives in a package. `WhyProbe` is assignable to this, so the
+ * classroom's `PlayableAsk` keeps its own stricter type (every option's `why`
+ * required) and nothing upstream has to loosen.
+ *
+ * NOT A LIST THE STUDENT SAW, and `askedAs` is how the difference is stated:
+ * 'open' is the rule — the question was spoken and these options are only the
+ * judge's ears — and 'options' is the confusable-pairs exception, where
+ * `ask.options` genuinely is on screen and mirrors this.
+ */
+export interface AuthoredProbe {
+  /**
+   * Carried for the format's sake, and read by nothing in this package.
+   * `describeAsk` decides on `ask.options` being empty, NOT on this: what the
+   * child actually saw is the on-screen list and nothing else, and a probe that
+   * says 'options' on a beat that shows none would otherwise suppress the block
+   * on the strength of a claim about a screen it cannot see.
+   */
+  askedAs: 'options' | 'open';
+  /**
+   * 2-4, exactly one `correct: true`, each carrying the reply she SPEAKS on a
+   * match. A distractor's `text` is the misconception written as a student who
+   * holds it would say it, which is what makes it a thing a spoken answer can
+   * be read against at all.
+   */
+  options: {
+    text: string;
+    correct?: boolean;
+    why?: string;
+    hint?: string;
+  }[];
+}
+
 export interface SpokenAsk {
   question: string;
   /** What a right answer contains, in the planner's words. */
@@ -25,6 +63,24 @@ export interface SpokenAsk {
     why?: string;
     hint?: string;
   }[];
+  /**
+   * THE AUTHORED JUDGEMENT, SO THE ESCALATED JUDGE IS NOT THE BLINDEST STEP.
+   *
+   * The classroom reads a spoken answer against this locally first and pays
+   * for nothing when it can (apps/classroom/src/lib/judge.ts). When it cannot,
+   * it escalates — and until this field existed, the model was handed the
+   * question and `expect`/`hint` only, so the one call anybody pays for was
+   * the one that had not been told what a wrong answer looks like.
+   *
+   * Wave 3 made that the common case rather than the rare one: it refused the
+   * bare-letter and position readings on an open ask, because neither has a
+   * referent when the student was shown nothing. Most spoken answers that are
+   * not close to verbatim now reach the model.
+   *
+   * `describeAsk` decides what of this the model is told and in what frame;
+   * prompts.ts carries the reasoning for both.
+   */
+  whyProbe?: AuthoredProbe;
 }
 
 export interface SpokenVerdict {

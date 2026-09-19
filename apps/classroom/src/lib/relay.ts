@@ -151,8 +151,122 @@ export async function relayFetch(path: string, init: RequestInit = {}): Promise<
   // cost. Absent outside a class, and that is fine.
   const session = currentSessionId();
   if (session) headers.set('x-session-id', session);
+  // And which PREPARATION, when one is running. A caller that set the header
+  // itself keeps it — `prepPost` in lib/liveClass.ts names its own, and an
+  // explicitly named preparation must beat an ambient one rather than be
+  // silently overwritten.
+  if (preparing !== null && !headers.has('x-prep-id')) headers.set('x-prep-id', preparing);
   return fetch(relayUrl(path), { ...init, headers });
 }
+
+/**
+ * ==========================================================================
+ * WHICH PREPARATION THIS CALL PAID FOR.
+ * ==========================================================================
+ *
+ * S - how many students share one preparation - is the whole cost model, and
+ * `usage_event.prep_id` (column poured by 0018, written from 0019's
+ * `record_usage`) exists to measure it. The relay fills it from an optional
+ * `x-prep-id` header, validated as a uuid or DROPPED (handler.ts:373). The
+ * pre-warm CLI sends it.
+ *
+ * THE BROWSER DID NOT, WHERE IT MATTERED. liveClass.ts stamped it on
+ * /api/prep/lock, /renew and /release — all three metered at ZERO units. The
+ * rupees are the planner and the artist on /api/llm, and those go through
+ * `createBrowserLlm` -> `relayFetch`, which sent no prep id at all. So prep
+ * attribution worked for the CLI and not for a student preparing their own
+ * class, which is the case the cost model is actually about.
+ *
+ * AND IT STILL DOES NOT, TODAY. What follows is the way to carry one; NOTHING
+ * IN THE APP OPENS A SCOPE YET. The wiring is one call in lib/liveClass.ts, at
+ * the site that already holds the id from `takePrepLock`, and until it lands
+ * /api/llm leaves the browser with no prep id exactly as before. Read the rest
+ * of this block as a mechanism, not as a description of what the app does.
+ *
+ * WHAT A SCOPE ATTRIBUTES, SAID PLAINLY BEFORE ANYBODY WRAPS ONE. Every relay
+ * call made while it is open, by anybody, on any path — not only the
+ * preparation's own. That matters here because the class STARTS PLAYING inside
+ * the preparation: `onDraft` puts it on screen while the artist is still
+ * working (screens/LiveClass.tsx), so a scope around the whole of
+ * `prepareLiveClass` would bill the judge, the ear and the speech tickets of a
+ * child already watching to `prep_id` - per-student playback rupees landing in
+ * the column that exists to measure per-preparation ones. Wrap the planner and
+ * the artist, or pass `prepId` to the adapters they use; do not wrap a window
+ * of wall-clock time that playback is inside.
+ *
+ * WHY IT MAY TRAVEL AT ALL. A prep id is OUR vocabulary: a uuid this app mints
+ * per preparation, carrying nothing about the student. Identity is the bearer
+ * token and stays there (see WHO HOLDS IT on `takePrepLock`). Nothing else
+ * belongs on this seam — a header that leaves the browser on every relay call
+ * is the last place a piece of a child's data should be put.
+ *
+ * WHY A SCOPE AND NOT A SETTER. A bare `setPrepId` left set is a preparation id
+ * stamped on the whole class after it — playback spend attributed to a
+ * preparation that finished — and nothing would say so, because the relay drops
+ * only a MALFORMED id and this one is well-formed and wrong. A scope cannot be
+ * left set: the `finally` restores whatever was there before, so a nested or
+ * re-entrant preparation also unwinds correctly.
+ *
+ * HONESTLY: it is one module-level variable, so two preparations running at
+ * once IN ONE TAB would both be attributed to the inner one for as long as it
+ * is open. The app prepares one class at a time, and the alternative - threading
+ * the id through every adapter to every call site - is the arrangement that left
+ * this unwired in the first place.
+ */
+let preparing: string | null = null;
+
+/** The preparation this tab is inside, if any. Attribution only, never identity. */
+export const currentPrepId = (): string | null => preparing;
+
+export async function duringPreparation<T>(prepId: string, run: () => Promise<T>): Promise<T> {
+  const before = preparing;
+  // The era `forgetTicket` moves on, read here for the same reason the ticket
+  // reads it: a student may sign out while this is still unwinding, and putting
+  // `before` back would then stamp a departed student's preparation on the next
+  // student's calls. Restore only into the era we started in.
+  const startedIn = era;
+  preparing = prepId;
+  try {
+    return await run();
+  } finally {
+    if (era === startedIn) preparing = before;
+  }
+}
+
+/**
+ * A RELAY FAILURE, WITH THE EVIDENCE STILL ON IT.
+ *
+ * An ordinary `Error` plus the two things the relay actually said. It is still
+ * an Error and `message` is untouched, so every `catch` that renders
+ * `error.message` renders exactly the same sentence it did before.
+ */
+export interface RelayFailure extends Error {
+  /** The HTTP status the relay answered with. A 429 and a 503 are different refusals. */
+  status: number;
+  /**
+   * The relay's own name for the refusal - gate.ts sends `rate`, `budget`,
+   * `halted`, `capped` or `unavailable` beside the sentence. Absent when the
+   * body carried none, which is most non-refusals.
+   */
+  reason?: string;
+}
+
+/**
+ * The mark `relayError` puts on what it builds.
+ *
+ * BRANDED RATHER THAN DUCK-TYPED, because the predicate below is a promise
+ * about `message`: that it is a sentence the relay wrote, and for a 429 or a
+ * 503 a sentence written for a CHILD to read. "An Error with a numeric status"
+ * is also true of a Supabase error and of most HTTP clients, so a structural
+ * check would let an internal string be shown to a student the day one of those
+ * reaches the same catch. `Symbol.for` so the mark survives a module loaded
+ * twice, which is an ordinary thing for a test runner to do.
+ */
+const RELAY_FAILURE = Symbol.for('curie.relay.failure');
+
+/** A thrown thing the relay produced, as opposed to a dropped connection. */
+export const isRelayFailure = (thrown: unknown): thrown is RelayFailure =>
+  thrown instanceof Error && (thrown as unknown as Record<symbol, unknown>)[RELAY_FAILURE] === true;
 
 /**
  * What went wrong, in the words the student should see.
@@ -162,11 +276,45 @@ export async function relayFetch(path: string, init: RequestInit = {}): Promise<
  * refusals as sentences. Wrapping one in "LLM 429:" turns a sentence somebody
  * can respond to back into a status code. Anything else keeps the technical
  * form, because anything else is ours to debug.
+ *
+ * AND THE STATUS SURVIVES NOW, WHICH IS THE POINT OF THE SENTENCE IN THE FIRST
+ * PLACE. gate.ts is careful about exactly two codes: 429 is the student's own
+ * rate or their own day, 503 is OUR capacity or OUR outage and its wording
+ * deliberately does not hand a child a fault they do not have (gate.ts:198).
+ * Returning `new Error(said)` kept the sentence and threw that distinction
+ * away, so `lib/refusal.ts` had to recover it by comparing the sentence,
+ * character for character, against a second copy of gate.ts's prose - a string
+ * comparison standing between a child and being told whose fault something is,
+ * which breaks the day anybody rewords a refusal.
+ *
+ * IT STILL COMPARES THE SENTENCE TODAY. Carrying the evidence is half the job;
+ * teaching `readRefusal` to read it is the other half, and that file was not
+ * this phase's to edit. Until it is, the past tense above is about what
+ * `relayError` drops, not about what refusal.ts does. The coupling is asserted
+ * out loud in tests/refusal.test.ts and again in tests/whyProbePlayback.test.ts
+ * so a reword fails a test rather than a child's screen.
+ *
+ * `reason` is the machine-readable half gate.ts already sends in the same body.
+ * It is validated as a string and otherwise dropped, for the same reason the
+ * relay validates the prep id: a response body is still input.
  */
-export function relayError(status: number, body: { error?: { message?: string } } | null): Error {
+export function relayError(
+  status: number,
+  body: { error?: { message?: string; reason?: string } } | null,
+): RelayFailure {
   const said = body?.error?.message;
-  if (said && (status === 429 || status === 503)) return new Error(said);
-  return new Error(said ? `relay ${status}: ${said}` : `relay ${status}`);
+  const error = (
+    said && (status === 429 || status === 503)
+      ? new Error(said)
+      : new Error(said ? `relay ${status}: ${said}` : `relay ${status}`)
+  ) as RelayFailure;
+  error.status = status;
+  const reason = body?.error?.reason;
+  if (typeof reason === 'string') error.reason = reason;
+  // Non-enumerable, so the mark does not turn up in a log line or a JSON copy
+  // of the error; `isRelayFailure` is the only thing meant to read it.
+  Object.defineProperty(error, RELAY_FAILURE, { value: true });
+  return error;
 }
 
 /**
@@ -268,4 +416,11 @@ export function forgetTicket(): void {
   ticket = null;
   minting = null;
   signingIn = null;
+  // The preparation the previous student was inside is over as far as this app
+  // is concerned. The era above is what makes that stick: a `duringPreparation`
+  // still unwinding restores what it saved only if the era has not moved, so a
+  // nested scope cannot put the departed student's outer preparation back and
+  // have it stamped on the next student's calls. Nothing drops the id in flight
+  // — a request already on the wire keeps the header it left with.
+  preparing = null;
 }

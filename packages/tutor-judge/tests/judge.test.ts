@@ -284,3 +284,339 @@ describe('what the close made of their reasoning', () => {
     expect(out.held).toBeUndefined();
   });
 });
+
+/**
+ * WHAT THE PLANNER AUTHORED, PUT IN FRONT OF THE JUDGE.
+ *
+ * A whyProbe is the tutor's judgement written at prep time: the right answer,
+ * the named misconceptions as a student who holds one would SAY it, and the
+ * reply she gives for each. `SpokenAsk` had no field for it, so `describeAsk`
+ * could not carry it — and the escalated model call, the only one anybody pays
+ * for, was the least informed thing in the loop.
+ *
+ * Wave 3 made that worse rather than better: it refused the two ordinal
+ * readings on an open ask, so escalation is now the outcome for most spoken
+ * answers that are not close to verbatim. The judge is on the path far more
+ * often than it was, and it was arriving blind.
+ *
+ * TWO RULES THESE TESTS EXIST TO HOLD.
+ *
+ *  1. IT MUST NOT BECOME A LIST THE MODEL PICKS FROM. The pedagogy is explicit
+ *     that a student picking from a list is recognising rather than thinking
+ *     (lesson-format types.ts:41), and the student was shown none of this. A
+ *     lettered list in the prompt is one paraphrase away from being read out.
+ *  2. THE AUTHORED WORDS ARE HERS AND ALREADY WRITTEN. `why` is what she SAYS
+ *     on a match — the local path speaks it verbatim — so if the model reaches
+ *     for it, a tap and a spoken answer to the same question must not come back
+ *     differently worded.
+ */
+describe('the judgement the planner already authored', () => {
+  const probed: SpokenAsk = {
+    question: 'How many chambers does the human heart have?',
+    // CARRIED ON PURPOSE, and the budget test below is why: class-prep asks the
+    // planner for `expect` on every ask (packages/class-prep/src/prompts.ts) and
+    // for a probe on every normal one, so an ask with a probe and no `expect` is
+    // a shape production never emits. Pricing the block against one netted the
+    // 78-character "An open question - no options" fallback off the delta and
+    // understated what the product actually pays.
+    expect: 'four — two atria and two ventricles',
+    hint: 'Count the ones on top and the ones below.',
+    whyProbe: {
+      askedAs: 'open',
+      options: [
+        {
+          text: 'four chambers, two atria and two ventricles',
+          correct: true,
+          why: 'Yes - two atria on top, two ventricles below.',
+        },
+        {
+          text: 'two chambers, one in and one out',
+          why: 'That is a fish heart, not ours.',
+          hint: 'Where would the used blood and the fresh blood mix?',
+        },
+        { text: 'three chambers like a frog', why: 'A frog has three; a human has four.' },
+      ],
+    },
+  };
+
+  it('tells the judge what a right answer amounts to, in the planner words', () => {
+    const out = describeAsk(probed);
+    expect(out).toContain('four chambers, two atria and two ventricles');
+  });
+
+  it('names the wrong turns the planner expects, as a student would say them', () => {
+    const out = describeAsk(probed);
+    expect(out).toContain('two chambers, one in and one out');
+    expect(out).toContain('three chambers like a frog');
+  });
+
+  it('carries the authored reply and nudge for each wrong turn', () => {
+    const out = describeAsk(probed);
+    expect(out).toContain('That is a fish heart, not ours.');
+    expect(out).toContain('Where would the used blood and the fresh blood mix?');
+  });
+
+  /**
+   * THE OPTIONS ARE THE JUDGE'S EARS, NOT THE STUDENT'S CHOICES.
+   *
+   * Said in the prompt in so many words, because the model has no other way to
+   * know: everything else in this user message describes a question the student
+   * can see, and these three sentences are the one part they cannot.
+   */
+  it('says plainly that these are the judge ears and never the student choices', () => {
+    const out = describeAsk(probed);
+    expect(out).toMatch(/shown none of it/i);
+    expect(out).toMatch(/never read these out/i);
+    expect(out).toMatch(/never ask them to pick/i);
+  });
+
+  /**
+   * AND THE READING RULE, WHICH IS NOT THE SAME AS THE SPEAKING RULES.
+   *
+   * `JUDGE_SYSTEM` tells the model students may answer "in their own words or
+   * by letter". On an open ask that was harmless while the user message carried
+   * no list — a letter indexed nothing. The probe IS a list, ordered, correct
+   * option first. Every other guard in the block constrains what she SAYS; none
+   * of them constrains how she READS, and `apps/classroom/src/lib/judge.ts`
+   * refuses a letter or a position locally and ESCALATES it, so a child who
+   * says "B" on an open ask is routed to exactly this prompt. Wave 3 refused
+   * that reading on purpose; the block must not hand it back.
+   */
+  it('refuses the model the ordinal reading the local path escalated to it', () => {
+    const out = describeAsk(probed);
+    expect(out).toMatch(/no letters and no order/i);
+    expect(out).toMatch(/names nothing here/i);
+  });
+
+  it('does NOT letter them, because a lettered list is a list to pick from', () => {
+    const out = describeAsk(probed);
+    // A. / B. / C. is what `ask.options` looks like when a list really IS on
+    // screen. A probe that renders the same way is one paraphrase from being
+    // read out to a child who was asked an open question.
+    expect(out).not.toMatch(/^[A-D]\. /m);
+  });
+
+  /**
+   * HER WORDS, ALREADY WRITTEN — not a hint to paraphrase.
+   *
+   * The local path speaks `why` verbatim (apps/classroom/src/lib/judge.ts).
+   * If the escalated path reworded it, the same misconception would be answered
+   * one way by a tap and another way by a voice, and the difference would be
+   * invisible to everyone except the child hearing both.
+   */
+  it('marks the authored words as hers and already written, not as a hint', () => {
+    const out = describeAsk(probed);
+    expect(out).toMatch(/already written, in her words/i);
+    expect(out).toMatch(/do not paraphrase/i);
+  });
+
+  /**
+   * A RIGHT ANSWER STILL DOES NOT GET THE REASON.
+   *
+   * `JUDGE_SYSTEM` is explicit — acknowledge, ask ONE cross-question, STOP,
+   * "Do not give the reason yet". The correct option's `why` IS that reason, so
+   * handing it over unlabelled would let the probe quietly repeal the one rule
+   * the whole cross-question exists to enforce. It is what she CLOSES with,
+   * which is a different turn.
+   */
+  it('does not let the right answer why be spoken in place of the cross-question', () => {
+    const out = describeAsk(probed);
+    // Bound to the TURN rather than to the verdict, because this same
+    // description feeds `resolveCrossQuestion` too — and on that turn
+    // `CLOSE_SYSTEM` asks for exactly this line. "Do not give it on a right
+    // answer" was an instruction the close had to be rescued from by its
+    // trailing clause.
+    expect(out).toMatch(/Not on the turn you judge/i);
+    expect(out).toMatch(/cross-question first/i);
+    expect(out).toMatch(/closes with once they have reasoned/i);
+  });
+
+  /**
+   * A WRONG TURN GETS THE NUDGE, NOT THE NUDGE AND THE ANSWER.
+   *
+   * `JUDGE_SYSTEM` gives a wrong answer ONE move: a question or the hint, never
+   * the answer. A distractor's `why` IS the correction, and "Her nudge first /
+   * Then her reply" reads as two halves of one turn. The local path is not
+   * ambiguous about this — it speaks `hint ?? why`, exactly one of them
+   * (apps/classroom/src/lib/judge.ts) — so the prompt says the same thing, and
+   * a tap and a spoken answer to one misconception stay the same turn.
+   */
+  it('gives a wrong turn the nudge for this turn and holds the reply for later', () => {
+    const out = describeAsk(probed);
+    expect(out).toMatch(/Her nudge for this turn: "Where would the used blood/);
+    expect(out).toMatch(/for later, once they have tried again: "That is a fish heart/);
+  });
+
+  it('speaks the reply on this turn for a wrong turn with no nudge, as the local path does', () => {
+    // `hint ?? why`: with no hint the authored `why` IS the first move, and
+    // the prompt must not tell the model to withhold what a tap would speak.
+    const out = describeAsk(probed);
+    expect(out).toMatch(/Her reply for this turn: "A frog has three; a human has four\."/);
+  });
+
+  /**
+   * THE PROMPT IS BILLED, SO ITS SIZE IS A NUMBER SOMEBODY OWNS.
+   *
+   * TWO TERMS, AND ONLY ONE OF THEM IS OURS. The block costs a FIXED framing
+   * cost plus the planner's own words, and the planner's words are as long as
+   * the planner made them. Asserting the total for one fixture prices a probe
+   * nobody ships: class-prep asks for 2-4 options, each with a misconception
+   * sentence and a spoken `why` (packages/class-prep/src/prompts.ts), so a
+   * four-option probe is an ordinary outcome and costs far more than this
+   * three-option one. So the ceiling below is on the FRAMING - the part a
+   * change to this file can actually move.
+   *
+   * MEASURED, both of them, by rendering probes whose authored text is one
+   * character an option: the header and the right-answer scaffolding come to
+   * 688 characters for the header and the right answer's own turn, 165 more
+   * for the wrong-turns section and its first turn, and 91 for each wrong turn
+   * after that. At four characters to the token, gemini-3.7-flash's $0.75/1M prompt
+   * price and Rs 95.6 to the dollar, every 100 characters here is Rs 0.0018 on
+   * every escalated judge-side call and the measured class makes eight of
+   * those. The ceilings are not a style rule, they are the Rs 5 ceiling with a
+   * number on it: a change that needs more room has to redo the arithmetic in
+   * `describeProbe` and move these numbers on purpose.
+   */
+  /**
+   * THE THREE TERMS, EACH PINNED SO IT CANNOT DRIFT SILENTLY.
+   *
+   * The header ceiling used to be 560, measured against a probe carrying one
+   * option with `text` and nothing else — a shape packages/class-prep never
+   * produces, because it requires a `why` on every option. That measurement
+   * was 533 and it underbilled every real probe by 138 to 229 characters.
+   * These three are measured against the shapes the planner is actually asked
+   * for.
+   */
+  const HEADER_CEILING = 720;
+  const FIRST_TURN_CEILING = 180;
+  const PER_TURN_CEILING = 100;
+
+  /** Everything the renderer added that the planner did not write. */
+  const framingOf = (a: SpokenAsk): number => {
+    const authored = (a.whyProbe?.options ?? []).reduce(
+      (n, o) => n + o.text.length + (o.why?.length ?? 0) + (o.hint?.length ?? 0),
+      0,
+    );
+    // The SAME ask minus only the probe. Building the baseline by hand dropped
+    // `expect` as well, so the fallback line rendered in its place was netted
+    // off the delta and the block looked 79 characters cheaper than it is.
+    return describeAsk(a).length - describeAsk({ ...a, whyProbe: undefined }).length - authored;
+  };
+
+  const withOptions = (options: NonNullable<SpokenAsk['whyProbe']>['options']): SpokenAsk => ({
+    ...probed,
+    whyProbe: { askedAs: 'open', options },
+  });
+
+  it('keeps the fixed framing inside a budget somebody has actually priced', () => {
+    // One-character options, so what is left IS the scaffolding. This is where
+    // an explanatory sentence lands, and it is billed on every escalated call.
+    // WITH a `why`, because class-prep requires one and a probe without one is
+    // not a probe this repo can be handed.
+    expect(
+      framingOf(withOptions([{ text: 'x', correct: true, why: 'w' }])),
+    ).toBeLessThanOrEqual(HEADER_CEILING);
+  });
+
+  it('keeps the wrong-turns section and its first turn inside their own budget', () => {
+    // The step from "no wrong turns" to "one wrong turn" pays for the section
+    // header as well as the turn, so it is bigger than every step after it and
+    // is priced on its own rather than averaged into them.
+    const one = withOptions([{ text: 'x', correct: true, why: 'w' }]);
+    const two = withOptions([
+      { text: 'x', correct: true, why: 'w' },
+      { text: 'y', why: 'z', hint: 'h' },
+    ]);
+    expect(framingOf(two) - framingOf(one)).toBeLessThanOrEqual(FIRST_TURN_CEILING);
+  });
+
+  it('keeps what each further wrong turn costs inside its own budget', () => {
+    const two = withOptions([
+      { text: 'x', correct: true, why: 'w' },
+      { text: 'y', why: 'z', hint: 'h' },
+    ]);
+    const three = withOptions([
+      { text: 'x', correct: true, why: 'w' },
+      { text: 'y', why: 'z', hint: 'h' },
+      { text: 'a', why: 'b', hint: 'c' },
+    ]);
+    // Priced separately because THIS is the term that scales: class-prep asks
+    // for 2-4 options, so the same two labels are paid for up to three times.
+    expect(framingOf(three) - framingOf(two)).toBeLessThanOrEqual(PER_TURN_CEILING);
+  });
+
+  /**
+   * AND THE TOTAL SCALES WITH THE PLANNER, WHICH IS THE NUMBER TO QUOTE.
+   *
+   * Not a ceiling - a demonstration, so the cost of a REAL probe is written
+   * down somewhere rather than inferred from a miniature one. A four-option
+   * probe of the length class-prep asks for is the upper bound the wave should
+   * plan against, and it is roughly twice this fixture's.
+   */
+  it('costs what the planner writes: a four-option probe is the real upper bound', () => {
+    const big: SpokenAsk = {
+      ...probed,
+      whyProbe: {
+        askedAs: 'open',
+        options: [
+          {
+            text: 'the sound travels faster through the solid rail than through the air',
+            correct: true,
+            why: 'Yes — the particles in a solid are close enough to pass the knock on at once.',
+          },
+          {
+            text: 'the rail is louder because metal makes more noise than air',
+            why: 'Loudness is not speed. The rail carries it sooner, not bigger.',
+            hint: 'Which one reached your ear first?',
+          },
+          {
+            text: 'the sound went through the gaps between the particles',
+            why: 'Sound needs the particles themselves, not the gaps between them.',
+            hint: 'What would happen if there were nothing there at all?',
+          },
+          {
+            text: 'the train was simply closer to the rail than to me',
+            why: 'Distance would change both the same way; this changed only one.',
+            hint: 'Both sounds started at the same place.',
+          },
+        ],
+      },
+    };
+    const delta = describeAsk(big).length - describeAsk({ ...big, whyProbe: undefined }).length;
+    // MEASURED: 1,654 characters — ~414 prompt tokens, Rs 0.0296 a call and
+    // Rs 0.237 across the eight judge-side calls the measured class makes,
+    // against a judge bill of Rs 1.13. The three-option fixture above costs
+    // 1,151. If this moves, the arithmetic in the report has moved with it.
+    expect(delta).toBeGreaterThan(1500);
+    expect(delta).toBeLessThan(1800);
+  });
+
+  it('adds nothing at all when the ask carries no probe', () => {
+    const out = describeAsk({ question: 'What do you notice?' });
+    expect(out).not.toMatch(/already written, in her words/i);
+    expect(out).toContain('An open question - no options');
+  });
+
+  /**
+   * AND IT HAS TO REACH THE WIRE, not merely the formatter.
+   *
+   * `describeAsk` is called from two places and the escalated judge is the one
+   * that costs money. A field added to the type and rendered by the formatter
+   * but dropped on the way to `complete` would pass every test above.
+   */
+  it('reaches the escalated judge call itself, not just the formatter', async () => {
+    const d = deps('{"verdict":"wrong","say":"Count the top ones.","gave":"hint"}');
+    await judgeSpokenAnswer(probed, 'two chambers', d);
+    const [, user] = d.complete.mock.calls[0];
+    expect(user).toContain('That is a fish heart, not ours.');
+  });
+
+  it('reaches the close as well, which speaks the authored why for real', async () => {
+    // CLOSE_SYSTEM's own rule is "give the full why in one line" — so on this
+    // turn the correct option's `why` is not withheld, it IS her line.
+    const d = deps('{"say":"Two atria, two ventricles.","held":true}');
+    await resolveCrossQuestion(probed, 'four chambers', 'why four?', 'two circuits', d);
+    const [, user] = d.complete.mock.calls[0];
+    expect(user).toContain('Yes - two atria on top, two ventricles below.');
+  });
+});

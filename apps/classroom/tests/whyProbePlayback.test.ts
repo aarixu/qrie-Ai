@@ -1,4 +1,6 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { WhyProbe } from '@ai-tutor/lesson-format';
 
 /**
@@ -26,6 +28,18 @@ vi.mock('../src/lib/browserLlm', () => ({
   createBrowserImageArtist: () => ({}),
   createBrowserVision: () => ({}),
 }));
+
+/**
+ * NO PROJECT, NO SIGN-IN, NO NETWORK.
+ *
+ * `relay.ts` asks `supabase()` for a session and, finding none, signs the
+ * device in anonymously — against the REAL project, because the repo's
+ * `.env.local` sets `VITE_SUPABASE_URL` and vitest loads it. The tests below
+ * drive the real `relayFetch`, so without this they would mint anonymous auth
+ * users on a live project every run. Null is the app's own local-only path:
+ * `accessToken` returns null and no Authorization header is attached.
+ */
+vi.mock('../src/lib/supabase', () => ({ supabase: () => null }));
 
 const probe = (): WhyProbe => ({
   askedAs: 'open',
@@ -325,5 +339,398 @@ describe('the safety screen still runs, once, on every path', () => {
       'the sugar melted into the water, call 9876543210',
     );
     expect(resolved.verdict.heard ?? '').not.toContain('9876543210');
+  });
+});
+
+/**
+ * ==========================================================================
+ * THE ESCALATED JUDGE IS NO LONGER BLIND TO WHAT THE PLANNER AUTHORED.
+ * ==========================================================================
+ *
+ * The saving the rest of this file measures comes from NOT calling the model.
+ * This is the other half: what the model is told on the calls that do happen.
+ * Wave 3 refused the two ordinal readings on an open ask, so escalation is now
+ * the outcome for most spoken answers that are not close to verbatim — and
+ * until `SpokenAsk` carried the probe, the one call anybody pays for was the
+ * one that had not been shown the named misconceptions the planner wrote down.
+ */
+describe('what the model is told when the local read refuses', () => {
+  it('carries the authored misconceptions and her written replies into the prompt', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    reply = '{"verdict":"wrong","say":"Was anything heated?","gave":"hint"}';
+    const resolved = await resolveSpokenAnswer(
+      ask({ whyProbe: probe() }),
+      'something about water and sugar and particles maybe',
+    );
+    expect(resolved.path).toBe('model');
+    const { user } = completions[0];
+    // The distractor as a student who holds it would say it, and the reply she
+    // already has written for it.
+    expect(user).toContain('the sugar melted into the water');
+    expect(user).toContain('Melting needs heat. This is dissolving, which is a different thing.');
+  });
+
+  it('tells it they are ears and not a menu, on the real escalation path', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    reply = '{"verdict":"unclear","say":"Say that once more?"}';
+    await resolveSpokenAnswer(ask({ whyProbe: probe() }), 'erm the thing with the water');
+    const { user } = completions[0];
+    expect(user).toMatch(/never offer them as a list/i);
+    expect(user).not.toMatch(/^[A-D]\. /m);
+  });
+});
+
+/**
+ * ==========================================================================
+ * A REFUSAL KEEPS THE ONE BIT THAT SAYS WHOSE FAULT IT IS.
+ * ==========================================================================
+ *
+ * These belong to lib/relay.ts rather than to the judge, and they are here
+ * because this is the only classroom test file this phase owns. Recorded as a
+ * handoff: they want to live in tests/relay.test.ts beside the other
+ * `relayError` cases.
+ *
+ * gate.ts:198 words five refusals for a child and the care is in the
+ * DISTINCTION: 429 is the student's own rate or budget and says so, 503 is our
+ * capacity or our outage and its wording deliberately does not hand a child a
+ * fault they do not have. `relayError` kept the sentence and dropped the
+ * status, the machine-readable `reason` and the Retry-After header — so
+ * lib/refusal.ts had to recover all of it by comparing the sentence, character
+ * for character, to a copy of gate.ts's prose.
+ *
+ * TWO OF THE THREE SURVIVE NOW. Retry-After does not, and refusal.ts still
+ * reads the prose: teaching it to read `reason` needs that file and the catch
+ * at screens/LiveClass.tsx that keeps only `e.message`, neither of which this
+ * phase owns. Both are handoffs, and the guard below is what keeps the prose
+ * coupling loud until they land.
+ */
+describe('a thrown relay refusal carries its status and its reason', () => {
+  const budget = {
+    error: { message: 'You have used up today\u2019s classes. This resets tomorrow.', reason: 'budget' },
+  };
+  const capped = {
+    error: { message: 'Curie has taught a lot of classes today. Please come back tomorrow.', reason: 'capped' },
+  };
+
+  it('keeps the student sentence EXACTLY as it was, for every caller that shows it', async () => {
+    const relay = await import('../src/lib/relay');
+    // The whole point of the 429/503 branch: a sentence somebody can respond to
+    // must not be turned back into a status code. Every existing `catch` that
+    // renders `error.message` must still render this.
+    expect(relay.relayError(429, budget).message).toBe(budget.error.message);
+    expect(relay.relayError(503, capped).message).toBe(capped.error.message);
+    expect(relay.relayError(500, { error: { message: 'boom' } }).message).toBe('relay 500: boom');
+    expect(relay.relayError(404, null).message).toBe('relay 404');
+  });
+
+  it('carries the status, which is the whole 429-versus-503 distinction', async () => {
+    const relay = await import('../src/lib/relay');
+    expect(relay.relayError(429, budget).status).toBe(429);
+    expect(relay.relayError(503, capped).status).toBe(503);
+    expect(relay.relayError(500, null).status).toBe(500);
+  });
+
+  it('carries the relay own reason, so nobody has to read prose to find it', async () => {
+    const relay = await import('../src/lib/relay');
+    expect(relay.relayError(429, budget).reason).toBe('budget');
+    expect(relay.relayError(503, capped).reason).toBe('capped');
+  });
+
+  it('drops a reason that is not a string, because a body is still input', async () => {
+    const relay = await import('../src/lib/relay');
+    const odd = { error: { message: 'no', reason: { drop: 'table' } } } as unknown as {
+      error?: { message?: string; reason?: string };
+    };
+    expect(relay.relayError(429, odd).reason).toBeUndefined();
+  });
+
+  it('is recognisable as a relay failure without guessing from the message', async () => {
+    const relay = await import('../src/lib/relay');
+    expect(relay.isRelayFailure(relay.relayError(503, capped))).toBe(true);
+    expect(relay.isRelayFailure(new Error('the network went away'))).toBe(false);
+    expect(relay.isRelayFailure('a string somebody kept in state')).toBe(false);
+  });
+
+  /**
+   * AND NOT ANY ERROR THAT HAPPENS TO CARRY A NUMBER.
+   *
+   * The predicate promises `RelayFailure` — that `message` is a sentence the
+   * relay wrote, which for a 429 or a 503 is a sentence written for a CHILD. A
+   * Supabase error or a third-party client with its own `status` would satisfy
+   * a structural check and hand a screen an internal string to read out.
+   */
+  it('does not mistake somebody else error for a relay refusal', async () => {
+    const relay = await import('../src/lib/relay');
+    const impostor = Object.assign(new Error('PGRST116: no rows'), { status: 406 });
+    expect(relay.isRelayFailure(impostor)).toBe(false);
+  });
+});
+
+/**
+ * THE EVIDENCE HAS TO SURVIVE THE REAL PATH, NOT ONLY THE CONSTRUCTOR.
+ *
+ * `relayError` is called from exactly two places, and both hand it the parsed
+ * body (browserLlm.ts and browserImage.ts). That body was typed without
+ * `reason`, so the field arrived only by the accident that the whole parsed
+ * object is passed through — tighten the cast, or rebuild the object, and Job 2
+ * dies with every direct-call assertion above still passing. JOB 3 was held to
+ * "assert ARRIVAL, not sending"; this is the same standard on this path.
+ */
+describe('a refusal thrown by the adapter a student actually uses', () => {
+  const budget = {
+    error: { message: 'You have used up today’s classes. This resets tomorrow.', reason: 'budget' },
+  };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('carries the status and the reason out of /api/llm itself', async () => {
+    vi.stubGlobal('fetch', async () => ({
+      ok: false,
+      status: 429,
+      json: async () => budget,
+    }) as unknown as Response);
+    const { createBrowserLlm } = await vi.importActual<typeof import('../src/lib/browserLlm')>(
+      '../src/lib/browserLlm',
+    );
+    const relay = await import('../src/lib/relay');
+
+    const thrown = await createBrowserLlm('m', { json: true })
+      .complete('s', 'u')
+      .then(() => null)
+      .catch((e: unknown) => e);
+
+    expect(relay.isRelayFailure(thrown)).toBe(true);
+    const failure = thrown as import('../src/lib/relay').RelayFailure;
+    // The sentence a screen shows is unchanged; the evidence beside it is new.
+    expect(failure.message).toBe(budget.error.message);
+    expect(failure.status).toBe(429);
+    expect(failure.reason).toBe('budget');
+  });
+});
+
+/**
+ * THE COUPLING THAT IS STILL THERE, ASSERTED OUT LOUD.
+ *
+ * `lib/refusal.ts` still recognises a refusal by its SENTENCE — this phase
+ * could not edit that file, so the string comparison stands and the handoff is
+ * recorded. A silent coupling between two packages is worse than a loud one, so
+ * the test below reads gate.ts's own source at test time and a rename breaks a
+ * test here rather than a child's screen in production. The SENTENCES half of
+ * that guard is not new and is not here: `tests/refusal.test.ts` has read the
+ * same block since Wave 4A. What follows is the half nothing asserted — that
+ * the five reason NAMES agree, which is what `relayError` now carries instead
+ * of the prose, and which is what the handoff asks refusal.ts to read.
+ */
+describe('the client and gate.ts, held together on purpose', () => {
+  /** gate.ts's REFUSALS block, read out of the relay's own source. */
+  const refusalsBlock = (): string => {
+    const at = path.join(process.cwd(), 'packages/relay/src/gate.ts');
+    expect(existsSync(at), 'run vitest from the repo root').toBe(true);
+    const source = readFileSync(at, 'utf8');
+    const from = source.indexOf('const REFUSALS');
+    expect(from).toBeGreaterThan(-1);
+    return source.slice(from, source.indexOf('\n};', from));
+  };
+
+  /**
+   * THE NAMES, which is what `relayError` now carries instead of the prose.
+   * The reader's `RefusalReason` union and gate.ts's `REFUSALS` keys have to be
+   * the same five words, or the day refusal.ts starts reading `reason` it will
+   * read one it does not know and hand a child the generic frame again.
+   */
+  it('agrees with gate.ts about the five NAMES, not only the five sentences', async () => {
+    const { readRefusal } = await import('../src/lib/refusal');
+    const block = refusalsBlock();
+    const names = [...block.matchAll(/^ {2}([a-z]+): \{$/gm)].map((m) => m[1]);
+    expect([...names].sort()).toEqual(['budget', 'capped', 'halted', 'rate', 'unavailable']);
+    const sentences = [...block.matchAll(/message:\s*'([^']*)'/g)].map((m) => m[1]);
+    // Same order in the same block: each sentence's reason is the key above it.
+    names.forEach((name, i) => {
+      expect(readRefusal(new Error(sentences[i]))?.reason, name).toBe(name);
+    });
+  });
+});
+
+/**
+ * ==========================================================================
+ * THE SPEND KNOWS WHICH PREPARATION IT PAID FOR.
+ * ==========================================================================
+ *
+ * `usage_event.prep_id` exists (poured by 0018, written from 0019's
+ * `record_usage`) and the relay validates-or-drops an
+ * `x-prep-id` header (handler.ts:373). The pre-warm CLI sends it. The browser
+ * stamped it only on /api/prep/lock, /renew and /release — which are metered at
+ * ZERO units. The rupees are on /api/llm, and that path sent nothing, so a
+ * student's own preparation spend was unattributed.
+ *
+ * THE RELAY DROPS A MALFORMED ID RATHER THAN FAILING THE CALL, so a bug here is
+ * silent: asserting that a header was SENT would pass for an id the cost books
+ * then throw away. The test below therefore takes the headers the browser
+ * actually produced and feeds them to the real `handleRelay`, and asserts on
+ * what lands in the usage row.
+ */
+describe('a preparation attributing its own spend', () => {
+  const PREP = '3f2b1c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d';
+
+  /** Every fetch the app made, headers and all. */
+  const sent: { url: string; init: RequestInit }[] = [];
+
+  const llmBody = JSON.stringify({ choices: [{ message: { content: '{}' } }] });
+
+  beforeEach(() => {
+    sent.length = 0;
+    vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
+      sent.push({ url: String(url), init });
+      return { ok: true, status: 200, json: async () => JSON.parse(llmBody) } as unknown as Response;
+    });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  /** The real adapter, not this file's counting stub. */
+  const realLlm = async () =>
+    (await vi.importActual<typeof import('../src/lib/browserLlm')>('../src/lib/browserLlm'))
+      .createBrowserLlm;
+
+  const headerOf = (init: RequestInit, name: string) => new Headers(init.headers).get(name);
+
+  it('sends nothing at all when no preparation is running', async () => {
+    const createBrowserLlm = await realLlm();
+    await createBrowserLlm('m', { json: true }).complete('s', 'u');
+    expect(headerOf(sent[0].init, 'x-prep-id')).toBeNull();
+  });
+
+  it('stamps the LLM call — where the rupees are — while a preparation runs', async () => {
+    const relay = await import('../src/lib/relay');
+    const createBrowserLlm = await realLlm();
+    await relay.duringPreparation(PREP, async () => {
+      await createBrowserLlm('m', { json: true }).complete('s', 'u');
+    });
+    expect(headerOf(sent[0].init, 'x-prep-id')).toBe(PREP);
+  });
+
+  it('stops stamping the moment the preparation is over, so playback is not billed to it', async () => {
+    const relay = await import('../src/lib/relay');
+    const createBrowserLlm = await realLlm();
+    await relay.duringPreparation(PREP, async () => {});
+    await createBrowserLlm('m', {}).complete('s', 'u');
+    expect(headerOf(sent[0].init, 'x-prep-id')).toBeNull();
+  });
+
+  /**
+   * A STUDENT WHO LEAVES TAKES THEIR PREPARATION WITH THEM.
+   *
+   * `forgetTicket` runs on sign-out and clears the scope — on a shared phone
+   * the next student is a different person on the same tab. A scope still
+   * unwinding would then RESTORE what it saved, and if that was an outer
+   * preparation the departed student was inside, every call the next student
+   * makes carries their prep id. The relay drops only a MALFORMED id and this
+   * one is well-formed and wrong, so the cost books would be quietly wrong
+   * about the one number they exist to measure.
+   */
+  it('does not hand a departed student preparation to whoever is next', async () => {
+    const relay = await import('../src/lib/relay');
+    const createBrowserLlm = await realLlm();
+    const inner = 'bbbbbbbb-cccc-4ddd-8eee-ffffffffffff';
+
+    await relay.duringPreparation(PREP, async () => {
+      await relay.duringPreparation(inner, async () => {
+        // Sign-out, mid-preparation. Everything of theirs goes.
+        relay.forgetTicket();
+      });
+      // The inner scope has just unwound and must NOT have put the outer
+      // preparation back, because the student it belonged to has gone.
+      expect(relay.currentPrepId()).toBeNull();
+      await createBrowserLlm('m', {}).complete('s', 'u');
+    });
+
+    expect(headerOf(sent[0].init, 'x-prep-id')).toBeNull();
+  });
+
+  it('lets a caller name the preparation on one adapter, which wins', async () => {
+    const other = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
+    const relay = await import('../src/lib/relay');
+    const createBrowserLlm = await realLlm();
+    await relay.duringPreparation(PREP, async () => {
+      await createBrowserLlm('m', { prepId: other }).complete('s', 'u');
+    });
+    expect(headerOf(sent[0].init, 'x-prep-id')).toBe(other);
+  });
+
+  /**
+   * IT ARRIVES. Not "a header was set" — the real relay handler, with the real
+   * uuid validation in front of it, writing the real usage row.
+   */
+  it('ARRIVES in the usage row, through the relay own validation', async () => {
+    const { handleRelay } = await import('../../../packages/relay/src/handler');
+    const { createMemoryUsage } = await import('../../../packages/relay/src/usage');
+    const relay = await import('../src/lib/relay');
+    const createBrowserLlm = await realLlm();
+
+    await relay.duringPreparation(PREP, async () => {
+      await createBrowserLlm('m', { json: true }).complete('s', 'u');
+    });
+
+    const headers: Record<string, string> = {};
+    new Headers(sent[0].init.headers).forEach((v, k) => {
+      headers[k] = v;
+    });
+    // The bearer is supplied here because this test has no Supabase project to
+    // mint one from; everything else is the browser's own. The prep id is not.
+    headers.authorization = 'Bearer good-token';
+
+    const usage = createMemoryUsage();
+    await handleRelay(
+      { method: 'POST', url: '/api/llm', headers, body: new TextEncoder().encode('{"model":"m"}') },
+      {
+        key: 'sk-test',
+        gate: {
+          verify: async () => ({ ok: true, user: { userId: '11111111-2222-3333-4444-555555555555' } }),
+          ledger: { async claim() { return { allowed: true }; } },
+        },
+        usage,
+        transcribe: async () => {
+          throw new Error('not this test');
+        },
+      },
+    );
+
+    expect(usage.events).toHaveLength(1);
+    expect(usage.events[0].prepId).toBe(PREP);
+  });
+
+  /**
+   * WHY THE TEST ABOVE HAD TO GO ALL THE WAY THROUGH. A malformed id is dropped
+   * by the relay and the call succeeds, so the failure mode is a usage row with
+   * no attribution and nothing anywhere saying so.
+   */
+  it('shows what a malformed id costs: nothing loud, and the attribution', async () => {
+    const { handleRelay } = await import('../../../packages/relay/src/handler');
+    const { createMemoryUsage } = await import('../../../packages/relay/src/usage');
+    const usage = createMemoryUsage();
+    await handleRelay(
+      {
+        method: 'POST',
+        url: '/api/llm',
+        headers: { authorization: 'Bearer good-token', 'x-prep-id': 'prep-7' },
+        body: new TextEncoder().encode('{"model":"m"}'),
+      },
+      {
+        key: 'sk-test',
+        gate: {
+          verify: async () => ({ ok: true, user: { userId: '11111111-2222-3333-4444-555555555555' } }),
+          ledger: { async claim() { return { allowed: true }; } },
+        },
+        usage,
+        transcribe: async () => {
+          throw new Error('not this test');
+        },
+      },
+    );
+    expect(usage.events[0].prepId).toBeNull();
   });
 });

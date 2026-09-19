@@ -152,7 +152,42 @@ export interface ResolvedAnswer {
   confidence?: number;
 }
 
-/** The ask as the player hands it over: a SpokenAsk that may carry a probe. */
+/**
+ * The ask as the player hands it over: a SpokenAsk that may carry a probe.
+ *
+ * `SpokenAsk` now carries `whyProbe` itself, so the intersection no longer adds
+ * the field — it NARROWS it to `lesson-format`'s stricter shape, where every
+ * option's `why` is required. That is the shape `readLocally` below depends on:
+ * it speaks `option.why` on a match, and an option whose match leaves her with
+ * nothing to say is a dead end at playback.
+ *
+ * WHAT CHANGED BENEATH THIS. The probe used to be read locally and then
+ * DROPPED: escalation handed the model the question, `expect` and `hint` and
+ * nothing else, so the only call anybody pays for was the only step that had
+ * not been told what a wrong answer looks like. `describeAsk` now renders it
+ * — as the judge's ears and explicitly not as a list to pick from, see
+ * packages/tutor-judge/src/prompts.ts.
+ *
+ * IT IS NOT FREE, and it is not a new call. MEASURED: a FOUR-option probe of
+ * the length class-prep asks the planner for adds 1,654 characters to the user
+ * message - about 414 prompt tokens, Rs 0.030 a call at gemini-3.7-flash's
+ * $0.75/1M prompt price and Rs 95.6 to the dollar, and Rs 0.24 across the eight
+ * judge-side calls the measured class makes. A three-option probe adds 1,151,
+ * Rs 0.021 a call. The four-option figure is the one to plan with, because 2-4
+ * options is what the planner is asked for. The fixed part of that - the
+ * framing this repo can actually move - is 688 characters for the header and
+ * the right answer's turn, 165 for the wrong-turns section and its first turn,
+ * and 91 for each wrong turn after that: 1,035 on a four-option probe. All
+ * three are asserted in packages/tutor-judge/tests/judge.test.ts. (It read
+ * "533 plus 91" until a verifier checked it: 533 is the framing for a probe
+ * whose one option carries no `why`, which class-prep never produces.)
+ *
+ * ONE LIMIT, SAID PLAINLY: `describeAsk` renders the probe only when the ask
+ * shows no options. An ask that DOES show options is escalated here exactly
+ * when the shown list and the probe's list disagree (`sawAList` below), and in
+ * that case the model is given the lettered list the child actually saw rather
+ * than a probe that does not correspond to it.
+ */
 export type PlayableAsk = SpokenAsk & { whyProbe?: WhyProbe };
 
 /**

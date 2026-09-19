@@ -12,7 +12,7 @@
  * the one that drifts is the one nobody reads in review.
  *
  * WHY IT MATCHES ON TEXT, WHICH LOOKS WRONG AND IS NOT. `relayError`
- * (lib/relay.ts:166) turns a 429 or a 503 into `new Error(sentence)` and drops
+ * (lib/relay.ts:301) turns a 429 or a 503 into `new Error(sentence)` and drops
  * the rest of the evidence: the status, the machine-readable `reason` field
  * that gate.ts puts in the same body, and the Retry-After header. By the time a
  * screen catches the thing, the sentence IS the only evidence left. Matching it
