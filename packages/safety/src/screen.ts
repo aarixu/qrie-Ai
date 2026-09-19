@@ -127,6 +127,60 @@ const DISTRESS: RegExp[] = [
   /\bi\s+am\s+(?:being\s+)?(?:beaten|abused|molested)\b/i,
   /\bhe\s+touch(?:es|ed)?\s+me\b/i,
   /\bafraid\s+to\s+go\s+home\b/i,
+
+  /**
+   * THE SAME SENTENCES IN THE LANGUAGE THE CHILD IS BEING TAUGHT IN.
+   *
+   * Every pattern above is English, and this list has always been the screen on
+   * BOTH directions — the tutor's narration on its way out, and a student's own
+   * words on their way back in through /api/hear. The product has always
+   * expected Hinglish from students (tutor-judge's matcher is built for "wo
+   * lamba wala" and "B hoga na"), so an English-only distress list has always
+   * been a hole; the language thread, which makes the tutor SPEAK Hinglish
+   * first, is what turns it from a hole into the likely case.
+   *
+   * "mujhe marna hai" and "papa mujhe maarte hain" are what a frightened Class
+   * 8 student actually types. Neither matched anything.
+   *
+   * ROMANISED HINDI HAS NO SPELLING, which is the hard part and the reason this
+   * is a FLOOR and never a ceiling. One child writes "mujhe", the next "muje",
+   * the next "mjhe"; "nahi" is also "nhi" and "nahin"; "hai" is also "h". The
+   * alternations below cover the spellings that actually appear, and they will
+   * miss one. A regex list cannot be complete here in the way it nearly can be
+   * in English, and pretending otherwise in a comment would be worse than the
+   * gap. NOT VERIFIED against any corpus of real student writing: there is none
+   * in this repository.
+   *
+   * The asymmetry that sets the threshold is the one stated above and it is
+   * sharper here. A false positive costs a warm sentence and a phone number.
+   * A false negative is a child who asked for help in their own language and
+   * was answered with a physics explanation.
+   */
+  // Intent about oneself: "mujhe marna hai", "mujhe mar jana hai".
+  /\b(?:mujhe|muje|mujhy|mjhe)\s+(?:ab\s+)?(?:mar|maar)(?:\s*na|\s+jana|\s+jaana)\s+(?:hai|hain|h)\b/i,
+  // "main mar jaunga", "mai mar jaungi", "ab mar jaunga".
+  /\b(?:main|mai|m)\s+(?:mar|maar)\s+ja(?:a)?(?:unga|ungi|un|au)\b/i,
+  // "jeena nahi chahta", "jina nhi chahti".
+  /\b(?:jee?na|jina|jeene|jine)\s+(?:nahi+n?|nhi|nai)\s+chaht?(?:a|i|e)\b/i,
+  // "jeene ka mann nahi", "jine ka dil nahi karta".
+  /\b(?:jee?ne|jine)\s+ka\s+(?:mann?|dil)\s+(?:nahi+n?|nhi|nai)\b/i,
+  // "zinda nahi rehna", "zinda rehna nahi chahta".
+  /\bzinda\s+(?:nahi+n?|nhi|nai)\s+reh/i,
+  /\bzinda\s+reh(?:na)?\s+(?:nahi+n?|nhi|nai)\b/i,
+  // The nouns, and ONLY with intent attached — "suicide" alone matches nothing
+  // above for the same reason: a history chapter is not a helpline.
+  /\b(?:khud\s*kushi|khudkhushi|atmahatya|aatmhatya|aatmahatya)\b[^.!?]{0,30}\b(?:kar|karna|karunga|karungi|karni|kr)\b/i,
+  // "apne aap ko maar", "khud ko nuksan".
+  /\b(?:apne\s+aap|khud)\s+ko\s+(?:maar|mar|nuksan|chot|khatam)/i,
+
+  // Being hurt by someone, named the way a child names them.
+  /\b(?:papa|pappa|pita|mummy|mumma|maa|ammi|abbu|bhai|bhaiya|didi|chacha|chachi|mama|mami|tau|sir|madam|teacher)\s+(?:mujhe|muje|mujhy|mjhe)\s+(?:bahut\s+)?(?:maar|mar|peet|pit)/i,
+  // "mujhe maarta hai", "muje peetti hai" — the person unnamed.
+  /\b(?:mujhe|muje|mujhy|mjhe)\s+(?:roz\s+|bahut\s+)?(?:maar|mar|peet|pit)(?:ta|ti|te|tha|thi)\s+(?:hai|hain|h)\b/i,
+  // "ghar jane se darr lagta hai".
+  /\bghar\s+ja(?:ne|na)\s+se\s+dar/i,
+  // "galat tarike se chhuta hai", "mujhe galat jagah chhua".
+  /\b(?:mujhe|muje|mujhy|mjhe)\s+galat\s+(?:tarike\s+se\s+|jagah\s+)?(?:chu|chh?u|chhoo|choo)/i,
 ];
 
 /**
