@@ -575,6 +575,28 @@ here and used nowhere else. All six documents plan on Rs 30, which makes the 274
 Rs 8,200 and puts prep under Rs 1 per student-hour at **S = 497** before the 2027 price cliff
 and at **S = 993** after it:
 
+> **FIRST REAL MEASUREMENT, 2026-09-19 — and it is not yet a reason to move the
+> number.** Six Class 10 science topics were warmed through `tools/prewarm`, the
+> first ever put through that runner: Rs 14.07, 6.09, 10.07, 6.29, 4.89, 7.88 —
+> **mean Rs 8.22 a topic across 46 relay calls (7.7 a topic)**, against a
+> planning number of Rs 30.
+>
+> THE PLANNING NUMBER STAYS AT Rs 30, for three reasons worth stating rather
+> than quietly averaging away. **Four of the six runs printed "N unmeasured —
+> the figure is a floor"**, so the true mean is above Rs 8.22 by an unknown
+> amount. **The sample is six topics from one syllabus**, all chemistry and
+> ecology, and the picture count is what drives the cost — a topic that needs
+> four diagrams is not a topic that needs one. And the band was set to survive
+> a 2027 price cliff that has not happened yet. Re-read this once a few dozen
+> topics across several syllabi have run; until then Rs 30 is a ceiling that
+> has not been disproved, and Rs 8.22 is an early signal.
+>
+> What the same run DID settle is the pace: 46 calls plus six keeps is 3,970
+> units, so **662 units a topic**. Against 12,000 units per identity per day
+> that is ~18 topics a day on one identity, and against the project's 50,000 it
+> is ~75 a day shared with real students. The catalogue is days of work, not an
+> evening — which is what the runner's own README says and what this measures.
+
 | S | prep, per student-hour |
 |---|---|
 | 1 | Rs 497 |
