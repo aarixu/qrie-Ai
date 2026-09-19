@@ -12,6 +12,7 @@ import {
 } from '@ai-tutor/lesson-format';
 import { reviewLesson } from './review.ts';
 import { screenSpine } from './screenSpine.ts';
+import { readDistress } from './distressReading.ts';
 
 import {
   ARTIST_SYSTEM,
@@ -866,7 +867,19 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * treats a throw as "no class". See screenSpine.ts for what is walked
    * and why the limit is each string's own length.
    */
-  const distressed = screenSpine(lesson);
+  /**
+   * THE PATTERN MATCHER FLAGS; A READER DECIDES. `screenSpine` cannot tell the
+   * tutor saying "mujhe marna hai" from the tutor teaching Premchand's farmer
+   * saying it, and on THIS side of the screen a false positive refuses the
+   * whole class rather than costing a warm sentence. Measured: seven of eleven
+   * ordinary curriculum lines trip the patterns. So a flagged line gets one
+   * more reading before it stops a lesson — see distressReading.ts, including
+   * why it fails closed and why it asks the planner rather than the reviewer.
+   *
+   * Nothing is softened for the student's own words: `screen` on the
+   * from-student path still answers instantly, with no model in the way.
+   */
+  const distressed = await readDistress(screenSpine(lesson), { planner, topic, klass });
   if (distressed.length > 0) {
     say('failed', 'The class did not pass the safety screen.', 1);
     /**
