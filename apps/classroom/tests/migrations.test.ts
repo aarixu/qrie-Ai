@@ -1120,3 +1120,112 @@ describe('the report-and-consent migration', () => {
     }
   });
 });
+
+/**
+ * THE CONTEST DOOR, AND THE TWO THINGS THE VENDOR DOES NOT DO.
+ *
+ * The landing page verifies a parent's phone BEFORE the app ever sees the
+ * student, which puts an OTP on a public marketing site rather than behind the
+ * app's identity. Two properties have to hold there and neither is MSG91's to
+ * give: a code must be bound to the person who asked for it, and it must be
+ * burnt after a few wrong guesses.
+ *
+ * MSG91's verify call takes a mobile and a code and is never told who is
+ * asking, and its published documentation states no default attempt limit. So
+ * both live in `claim_otp_verify`, and these assertions are what stop either
+ * being softened later by somebody who assumes the vendor has it covered.
+ */
+describe('the contest-signup migration', () => {
+  const sql = sqlOf('0020_contest_signup_and_otp_attempts.sql').replace(/--[^\n]*/g, '');
+
+  describe('contest_signup', () => {
+    it('keeps the contest fields OFF the consent artifact', () => {
+      // consent_record stays thin on purpose. The address in particular belongs
+      // to a prize being posted, not to a record of what a parent agreed to.
+      expect(sql).toMatch(/create table if not exists public\.contest_signup/i);
+      expect(sql).toMatch(/address text check \(char_length\(address\) <= 300\)/i);
+      const consent = sqlOf('0019_report_and_consent.sql').replace(/--[^\n]*/g, '');
+      expect(consent).not.toMatch(/address/i);
+    });
+
+    it('fences the student phone into the one canonical shape', () => {
+      // Two spellings of one number are two students to everybody counting.
+      // Asserted against consent_record's own E.164 fence rather than by
+      // spelling the pattern twice: the point is that the two agree, and a
+      // second hand-typed copy of a regex is how they stop agreeing.
+      const fenceIn = (text: string) => /~ '(\^[^']+\$)'/.exec(text)?.[1] ?? null;
+      const consent = fenceIn(sqlOf('0019_report_and_consent.sql'));
+      expect(consent).not.toBeNull();
+      expect(fenceIn(sql)).toBe(consent);
+    });
+
+    it('enters a child once, however many times the form is submitted', () => {
+      expect(sql).toMatch(
+        /create unique index if not exists contest_signup_user\s+on public\.contest_signup \(user_id\)/i,
+      );
+    });
+
+    it('is closed to everybody but the service role, like every table here', () => {
+      expect(sql).toMatch(/alter table public\.contest_signup enable row level security/i);
+      expect(sql).toMatch(/revoke all on table public\.contest_signup from anon, authenticated/i);
+      // RLS on with no policy at all is the house rule. A policy here would be
+      // a way in that nobody audited.
+      expect(sql).not.toMatch(/create policy[\s\S]*contest_signup/i);
+    });
+
+    it('goes with the account when the account goes', () => {
+      expect(sql).toMatch(/user_id uuid not null references auth\.users on delete cascade/i);
+    });
+  });
+
+  describe('claim_otp_verify — the binding MSG91 cannot make', () => {
+    it('only ever looks at a send THIS user made for THIS phone', () => {
+      // The whole point. Without the user_id predicate a second person at a
+      // kiosk spends the first person's code against their own account.
+      expect(sql).toMatch(/where user_id = p_user\s+and phone = p_phone/i);
+    });
+
+    it('burns the send after five attempts, whatever the code was', () => {
+      expect(sql).toMatch(/max_attempts constant integer := 5/i);
+      expect(sql).toMatch(/if row_attempts >= max_attempts then[\s\S]*consumed_at = now\(\)/i);
+    });
+
+    it('counts the attempt BEFORE the vendor is asked, so a wrong guess costs one', () => {
+      expect(sql).toMatch(/update public\.otp_send set attempts = attempts \+ 1/i);
+    });
+
+    it('locks the row it is counting, so two verifies cannot both read four', () => {
+      expect(sql).toMatch(/for update/i);
+    });
+
+    it('answers the same way for expired, missing, and somebody else’s code', () => {
+      // Telling them apart would say whether a live code exists for a number
+      // the caller does not hold.
+      const arms = sql.match(/return query select false, '([a-z-]+)'/gi) ?? [];
+      expect(arms).toHaveLength(2);
+      expect(sql).toMatch(/if row_id is null then\s+return query select false, 'no-send'/i);
+    });
+
+    it('is reachable only by the service role', () => {
+      expect(sql).toMatch(
+        /revoke all on function public\.claim_otp_verify\(uuid, text\) from public, anon, authenticated/i,
+      );
+      expect(sql).toMatch(
+        /grant execute on function public\.claim_otp_verify\(uuid, text\) to service_role/i,
+      );
+    });
+  });
+
+  describe('consume_otp_send — the "exactly once" half', () => {
+    it('exists separately, because the vendor sits between claiming and consuming', () => {
+      expect(sql).toMatch(/create or replace function public\.consume_otp_send/i);
+      expect(sql).toMatch(/set consumed_at = now\(\)/i);
+    });
+
+    it('is reachable only by the service role', () => {
+      expect(sql).toMatch(
+        /revoke all on function public\.consume_otp_send\(uuid, text\) from public, anon, authenticated/i,
+      );
+    });
+  });
+});

@@ -101,9 +101,20 @@ export interface OtpProvider {
    * ATTEMPT-LIMITING IS PART OF THIS CONTRACT, not an implementation
    * detail: a four-to-eight digit space behind a 120-a-minute window is a
    * few days of guessing. An implementation MUST burn the code after a
-   * small number of wrong guesses. Both vendors on the shortlist (Twilio
-   * Verify, MSG91) enforce this themselves — this line is here so whoever
-   * picks one checks rather than assumes.
+   * small number of wrong guesses.
+   *
+   * THIS PARAGRAPH USED TO SAY THE SHORTLISTED VENDORS ENFORCE IT THEMSELVES,
+   * and told the next reader to check rather than assume. Somebody checked.
+   * MSG91's published documentation states no default wrong-attempt limit and
+   * no lockout; what is written about attempts describes integrator-side
+   * configuration. So for MSG91 it is NOT VERIFIED that anything is burnt, and
+   * the assurance has been removed rather than left to be relied on.
+   *
+   * An adapter therefore owns this. `claim_otp_verify` (0020) is where it
+   * lives for the MSG91 path: five attempts against the send THIS user made
+   * for THIS phone, then the send is spent whatever the code was — which also
+   * supplies the (phone, user) pairing above, because the vendor's verify call
+   * takes a mobile and a code and is never told who is asking.
    */
   verify(phone: string, otp: string, userId: string): Promise<boolean>;
 }
