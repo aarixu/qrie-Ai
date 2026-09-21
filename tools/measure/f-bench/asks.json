@@ -1,0 +1,715 @@
+[
+  {
+    "topicRef": "class10-science/our-environment/food-chains-and-webs",
+    "title": "Food Chains, Energy Flow & Biological Magnification",
+    "klass": 10,
+    "beatId": "b1_2",
+    "ask": {
+      "question": "What common garden animal might eat the grasshopper, and what eats that animal next?",
+      "expect": "A frog or bird eats the grasshopper, and a snake eats the frog.",
+      "hint": "Think of a small amphibian or reptile that snaps up garden insects.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "A frog eats the grasshopper, and a snake eats the frog.",
+            "correct": true,
+            "why": "That forms a clear line of who eats whom in nature."
+          },
+          {
+            "text": "The grasshopper turns into soil and feeds the plants directly.",
+            "why": "Grasshoppers get eaten by primary carnivores like frogs before decomposers break down what remains."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/our-environment/food-chains-and-webs",
+    "title": "Food Chains, Energy Flow & Biological Magnification",
+    "klass": 10,
+    "beatId": "b2_3",
+    "ask": {
+      "question": "If plants have 10,000 J of energy, how much reaches the herbivores?",
+      "expect": "1,000 Joules.",
+      "hint": "Calculate 10 percent of 10,000.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "1,000 Joules",
+            "correct": true,
+            "why": "Ten percent of 10,000 J is exactly 1,000 J."
+          },
+          {
+            "text": "100 Joules",
+            "why": "100 Joules would be only 1 percent of 10,000 J, but 10 percent is passed."
+          },
+          {
+            "text": "9,000 Joules",
+            "why": "9,000 Joules is the amount lost to metabolic processes, leaving 10 percent for the consumer."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/our-environment/food-chains-and-webs",
+    "title": "Food Chains, Energy Flow & Biological Magnification",
+    "klass": 10,
+    "beatId": "b3_2",
+    "ask": {
+      "question": "Why are food chains usually limited to 3 or 4 steps?",
+      "expect": "Because so little usable energy remains after 3 or 4 levels that it cannot support another population.",
+      "hint": "Look at the remaining energy at the top — would a fifth animal get enough food to survive?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "The energy remaining after 3 to 4 levels is too small to sustain another trophic level.",
+            "correct": true,
+            "why": "Because 90% is lost at every step, very little usable energy remains at the top."
+          },
+          {
+            "text": "There are no predators strong enough to hunt the top animals.",
+            "why": "The limit is thermodynamic and energetic, not about physical strength."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/our-environment/food-chains-and-webs",
+    "title": "Food Chains, Energy Flow & Biological Magnification",
+    "klass": 10,
+    "beatId": "b4_3",
+    "ask": {
+      "question": "How does an interconnected food web help a predator survive when one prey species drops?",
+      "expect": "The predator can switch to feeding on other available prey in the web, like mice or insects.",
+      "hint": "Check the other arrows pointing into the hawk.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "The hawk can feed on alternative prey like mice or small birds in the web.",
+            "correct": true,
+            "why": "Alternative pathways provide ecosystem stability."
+          },
+          {
+            "text": "The hawk begins eating plants directly instead.",
+            "why": "Carnivores cannot switch their digestive biology to become primary producers."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/our-environment/food-chains-and-webs",
+    "title": "Food Chains, Energy Flow & Biological Magnification",
+    "klass": 10,
+    "beatId": "b5_4",
+    "ask": {
+      "question": "Which organism in a food chain accumulates the maximum concentration of non-biodegradable pesticides?",
+      "expect": "The organism at the top trophic level (top consumer / humans).",
+      "hint": "Think about where the chemicals pile up after passing through every lower level.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "The top consumer or humans at the highest trophic level.",
+            "correct": true,
+            "why": "Because toxins cannot be broken down and accumulate progressively at each higher level."
+          },
+          {
+            "text": "The primary producers because they absorb it first.",
+            "why": "Producers have the lowest concentration per organism; it concentrates as higher consumers eat many of them."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation",
+    "title": "Writing a Chemical Equation",
+    "klass": 10,
+    "beatId": "b1_3",
+    "ask": {
+      "question": "What two substances react together when magnesium burns in air, and what new substance is formed?",
+      "expect": "Magnesium reacts with oxygen in the air to produce magnesium oxide.",
+      "hint": "Think about what gas in the air is needed for any burning reaction.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Magnesium and oxygen react to make magnesium oxide.",
+            "correct": true,
+            "why": "That's it: magnesium combines with atmospheric oxygen to yield magnesium oxide."
+          },
+          {
+            "text": "Magnesium and carbon dioxide make magnesium oxide.",
+            "correct": false,
+            "why": "Burning in air relies on oxygen gas, not carbon dioxide.",
+            "hint": "Which gas in air supports combustion?"
+          },
+          {
+            "text": "Magnesium alone turns into ash without reacting.",
+            "correct": false,
+            "why": "Burning is a combination with oxygen gas from the surrounding air.",
+            "hint": "Where does the extra mass and oxygen in magnesium oxide come from?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation",
+    "title": "Writing a Chemical Equation",
+    "klass": 10,
+    "beatId": "b2_3",
+    "ask": {
+      "question": "When zinc granules react with dilute sulphuric acid to produce zinc sulphate and hydrogen gas, what are the chemical formulae of the two reactants on the LHS?",
+      "expect": "Zn and H2SO4",
+      "hint": "What is the symbol for zinc, and what is the formula for sulphuric acid?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Zn and H2SO4",
+            "correct": true,
+            "why": "Zinc is Zn and sulphuric acid is H2SO4; together they form the reactants on the left."
+          },
+          {
+            "text": "Zn and HCl",
+            "correct": false,
+            "why": "HCl is hydrochloric acid, but the reaction specifies sulphuric acid, which is H2SO4.",
+            "hint": "Remember sulphate contains SO4."
+          },
+          {
+            "text": "ZnSO4 and H2",
+            "correct": false,
+            "why": "ZnSO4 and H2 are the products formed on the right side, not the starting reactants.",
+            "hint": "Which substances are we starting with before the reaction occurs?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation",
+    "title": "Writing a Chemical Equation",
+    "klass": 10,
+    "beatId": "b3_4",
+    "ask": {
+      "question": "If solid iron reacts with steam (gaseous water) to form solid iron oxide and hydrogen gas, what state symbol belongs right after steam: (l) or (g)?",
+      "expect": "(g) because steam is water in its gaseous state.",
+      "hint": "Think about what steam physically is compared to liquid water in a glass.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "(g) because steam is gaseous water",
+            "correct": true,
+            "why": "Steam is water in the gas phase, so it gets the symbol (g)."
+          },
+          {
+            "text": "(l) because water is naturally a liquid",
+            "correct": false,
+            "why": "Even though water is liquid at room temperature, steam in this reaction is a gas, so it must be marked (g).",
+            "hint": "What state is steam in during this high-temperature reaction?"
+          },
+          {
+            "text": "(aq) because water is a solvent",
+            "correct": false,
+            "why": "Aqueous denotes something dissolved in water, not water itself.",
+            "hint": "Is steam a solution or pure water vapor?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/writing-a-chemical-equation",
+    "title": "Writing a Chemical Equation",
+    "klass": 10,
+    "beatId": "b4_3",
+    "ask": {
+      "question": "In the reaction CO(g) + 2H2(g) -> CH3OH(l), where should the condition '340 atm' be written in the equation?",
+      "expect": "Above or below the reaction arrow.",
+      "hint": "Where do special conditions like temperature and pressure sit in a chemical equation?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Above or below the arrow connecting reactants and products.",
+            "correct": true,
+            "why": "Reaction conditions like pressure (340 atm) are always indicated directly above or below the arrow."
+          },
+          {
+            "text": "Next to the reactants on the left side with a plus sign.",
+            "correct": false,
+            "why": "Pressure is an operating condition, not a chemical reactant, so it cannot be added with a plus sign.",
+            "hint": "Does pressure have a chemical formula like a reactant?"
+          },
+          {
+            "text": "In brackets after the product CH3OH.",
+            "correct": false,
+            "why": "Brackets after chemical formulas are reserved for state symbols like (l) or (g).",
+            "hint": "Brackets after compounds indicate physical states, not external conditions."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/balanced-chemical-equations",
+    "title": "Balanced Chemical Equations",
+    "klass": 10,
+    "beatId": "b1_hook_conservation_3",
+    "ask": {
+      "question": "Did that missing mass actually vanish from the universe, or where did it go?",
+      "expect": "The missing mass escaped into the air as smoke, carbon dioxide, and water vapor.",
+      "hint": "Think about what rises up from a fire as the wood burns.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "The mass turned into smoke and gases that escaped into the air",
+            "correct": true,
+            "why": "The atoms in the wood combined with oxygen to form gases like carbon dioxide and steam that floated away."
+          },
+          {
+            "text": "The mass was destroyed by the heat of the fire",
+            "why": "Heat cannot destroy atoms; chemical reactions only rearrange atoms into new substances like gases."
+          },
+          {
+            "text": "The log converted directly into pure heat and light energy",
+            "why": "In ordinary chemical reactions, atoms are never converted into energy; they just escape as unseen gases."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/balanced-chemical-equations",
+    "title": "Balanced Chemical Equations",
+    "klass": 10,
+    "beatId": "b2_atom_accounting_4",
+    "ask": {
+      "question": "Why is the equation H2 + O2 -> H2O incomplete as it stands?",
+      "expect": "One oxygen atom on the reactant side is unaccounted for on the product side.",
+      "hint": "Compare the number of oxygen atoms on the left with the number on the right.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Because there are two oxygen atoms on the left but only one on the right",
+            "correct": true,
+            "why": "An oxygen atom cannot vanish; our equation must account for both oxygen atoms."
+          },
+          {
+            "text": "Because hydrogen and oxygen cannot react directly",
+            "why": "Hydrogen and oxygen react readily to form water; the issue is simply that our atom tally does not match."
+          },
+          {
+            "text": "Because water is H2O2 instead of H2O",
+            "why": "Water is strictly H2O; H2O2 is hydrogen peroxide, an entirely different substance."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/balanced-chemical-equations",
+    "title": "Balanced Chemical Equations",
+    "klass": 10,
+    "beatId": "b3_coefficients_not_subscripts_4",
+    "ask": {
+      "question": "What number coefficient must we put in front of H2 on the left to get 4 hydrogen atoms?",
+      "expect": "A coefficient of 2 in front of H2.",
+      "hint": "Each H2 molecule brings 2 hydrogen atoms. How many molecules make 4 atoms?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Put a 2 in front of H2",
+            "correct": true,
+            "why": "2 times H2 gives exactly 4 hydrogen atoms, matching the right side perfectly."
+          },
+          {
+            "text": "Change H2 to H4",
+            "why": "We cannot alter subscripts because H4 is not a stable molecular formula for hydrogen gas."
+          },
+          {
+            "text": "Put a 4 in front of H2",
+            "why": "4 H2 would give 8 hydrogen atoms, which is too many."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/balanced-chemical-equations",
+    "title": "Balanced Chemical Equations",
+    "klass": 10,
+    "beatId": "b4_practice_combustion_5",
+    "ask": {
+      "question": "What coefficient should we place in front of O2 on the left side to get 4 oxygen atoms?",
+      "expect": "A coefficient of 2 in front of O2.",
+      "hint": "Each O2 molecule contains 2 oxygen atoms. What times 2 equals 4?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Put a 2 in front of O2",
+            "correct": true,
+            "why": "2 times 2 gives 4 oxygen atoms, completing the balance for all elements."
+          },
+          {
+            "text": "Put a 4 in front of O2",
+            "why": "4 O2 would give 8 oxygen atoms on the left, but we only have 4 on the right."
+          },
+          {
+            "text": "Put a 1 in front of O2",
+            "why": "1 O2 gives only 2 oxygen atoms, which leaves the equation short by 2 oxygens."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction",
+    "title": "Combination Reaction",
+    "klass": 10,
+    "beatId": "b1_3",
+    "ask": {
+      "question": "When charcoal burns completely in oxygen, what single gas is formed?",
+      "expect": "Carbon dioxide gas is formed when carbon reacts with oxygen.",
+      "hint": "What gas do you exhale and what gas forms when carbon joins with oxygen?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Carbon dioxide gas",
+            "correct": true,
+            "why": "Carbon combines directly with oxygen gas from the air to form one single product: carbon dioxide."
+          },
+          {
+            "text": "Carbon monoxide only",
+            "correct": false,
+            "why": "Carbon monoxide forms only in limited oxygen, but complete burning in air produces carbon dioxide.",
+            "hint": "Think about the common gas formed when carbon fully burns in abundant air."
+          },
+          {
+            "text": "Ash and smoke only, no gas",
+            "correct": false,
+            "why": "Ash is just the mineral residue left behind; the main carbon turns into carbon dioxide gas.",
+            "hint": "The carbon itself combines with oxygen in the air to escape as an invisible gas."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction",
+    "title": "Combination Reaction",
+    "klass": 10,
+    "beatId": "b2_5",
+    "ask": {
+      "question": "What is the key feature on the product side of every combination reaction?",
+      "expect": "There is only one single product formed.",
+      "hint": "Count how many distinct compounds or elements are produced on the right-hand side of the arrow.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Only one single product is formed",
+            "correct": true,
+            "why": "No matter how many reactants combine on the left, a combination reaction always yields exactly one single product on the right."
+          },
+          {
+            "text": "Two products are always formed",
+            "correct": false,
+            "why": "If two products form, substances have exchanged parts or decomposed, not simply combined into one.",
+            "hint": "Look at the general form A + B -> AB again."
+          },
+          {
+            "text": "There are always two reactants and two products",
+            "correct": false,
+            "why": "The reactants can be two or more, but the defining rule is that they unite into a single product.",
+            "hint": "Focus on the right side of the chemical arrow."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction",
+    "title": "Combination Reaction",
+    "klass": 10,
+    "beatId": "b3_4",
+    "ask": {
+      "question": "What does the sharp rise in temperature tell us about this combination reaction?",
+      "expect": "It shows that the reaction is exothermic, meaning it releases heat energy.",
+      "hint": "Think about what kind of reaction releases heat into its surroundings.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "It is an exothermic reaction that releases heat",
+            "correct": true,
+            "why": "Reactions in which heat is released along with the formation of products are called exothermic reactions."
+          },
+          {
+            "text": "It is an endothermic reaction absorbing heat",
+            "correct": false,
+            "why": "An endothermic reaction absorbs heat and makes the container colder, whereas here heat is released.",
+            "hint": "Does heat entering or leaving the mixture make the container feel hot?"
+          },
+          {
+            "text": "It means the water is boiling on its own",
+            "correct": false,
+            "why": "The heat comes from the chemical bond formation between calcium oxide and water, not from external heating.",
+            "hint": "The chemical reaction itself produces this heat."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/combination-reaction",
+    "title": "Combination Reaction",
+    "klass": 10,
+    "beatId": "b4_2",
+    "ask": {
+      "question": "Which reaction is a combination reaction: Reaction 1, 2, or 3?",
+      "expect": "Reaction 2 (burning of magnesium) because magnesium and oxygen combine to form a single product, magnesium oxide.",
+      "hint": "Look for the reaction that has two reactants on the left but only one single product on the right.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Reaction 2 (2Mg + O2 -> 2MgO) because it forms only one single product",
+            "correct": true,
+            "why": "Two substances, magnesium and oxygen, combine to yield only one product: magnesium oxide (MgO)."
+          },
+          {
+            "text": "Reaction 1 because it has oxygen in it",
+            "correct": false,
+            "why": "Reaction 1 produces both CO2 and H2O, so two products are formed, making it a combustion reaction, not combination.",
+            "hint": "Check how many different products appear on the right side."
+          },
+          {
+            "text": "Reaction 3 because zinc combines with sulfate",
+            "correct": false,
+            "why": "Reaction 3 is a displacement reaction where zinc displaces copper, producing two separate substances.",
+            "hint": "Remember the golden rule: combination reactions must produce only ONE single product."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction",
+    "title": "Displacement Reaction",
+    "klass": 10,
+    "beatId": "b1_2",
+    "ask": {
+      "question": "If a stronger player claims a chair from someone already seated, what happens to the person who was sitting there?",
+      "expect": "The person who was already sitting there gets pushed out or displaced.",
+      "hint": "Does the person stay on the chair, or do they have to get up and leave?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "They are pushed off their seat and have to step aside.",
+            "correct": true,
+            "why": "Exactly, they lose their spot because someone stronger took their place."
+          },
+          {
+            "text": "Both of them share the chair peacefully.",
+            "why": "In musical chairs, only one person gets to keep the seat — the stronger or faster one pushes the other out.",
+            "hint": "Can two people keep the same spot in musical chairs?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction",
+    "title": "Displacement Reaction",
+    "klass": 10,
+    "beatId": "b2_4",
+    "ask": {
+      "question": "What is the reddish-brown substance that coats the iron nail?",
+      "expect": "It is metallic copper displaced from the copper sulphate solution.",
+      "hint": "Which metal was combined in the blue solution before iron went in?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "It is copper metal settling on the nail.",
+            "correct": true,
+            "why": "Yes! Copper was in the liquid, and now it has been pushed out as solid metal onto the nail."
+          },
+          {
+            "text": "It is rust formed from iron reacting with water.",
+            "why": "Rust is an oxide of iron, but here copper metal itself is displaced from the solution and deposits on the nail.",
+            "hint": "What metal was present inside the blue copper sulphate solution?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction",
+    "title": "Displacement Reaction",
+    "klass": 10,
+    "beatId": "b3_4",
+    "ask": {
+      "question": "If you put copper into iron sulphate solution, will a displacement reaction occur? Why or why not?",
+      "expect": "No reaction occurs because copper is less reactive than iron.",
+      "hint": "Can a weaker metal kick out a more reactive metal from its compound?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "No reaction will occur because copper is less reactive than iron.",
+            "correct": true,
+            "why": "Spot on. A less reactive metal cannot displace a more reactive metal from its salt solution."
+          },
+          {
+            "text": "Yes, it will turn blue and form copper sulphate.",
+            "why": "Copper cannot displace iron because iron holds on more strongly due to being more reactive.",
+            "hint": "Remember, only the more reactive metal has the power to displace."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/displacement-reaction",
+    "title": "Displacement Reaction",
+    "klass": 10,
+    "beatId": "b4_3",
+    "ask": {
+      "question": "What products are formed when lead reacts with copper chloride (Pb + CuCl2)?",
+      "expect": "Lead chloride (PbCl2) and copper metal (Cu).",
+      "hint": "Lead replaces copper, so lead combines with chlorine while copper is released.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Lead chloride and copper metal.",
+            "correct": true,
+            "why": "Exactly. Lead combines with chloride to form PbCl2, leaving copper as solid metal."
+          },
+          {
+            "text": "Lead copper and chlorine gas.",
+            "why": "Metals don't combine into an alloy solution like that here — lead displaces copper to bind with chlorine as PbCl2.",
+            "hint": "Which part did copper leave behind for lead to pair with?"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction",
+    "title": "Double Displacement Reactions",
+    "klass": 10,
+    "beatId": "b1_2",
+    "ask": {
+      "question": "If you mix two clear, see-through liquids, what do you usually expect to see?",
+      "expect": "The mixture remains clear and transparent.",
+      "hint": "Does dissolving two clear things suddenly make a solid object appear, or does it stay liquid and see-through?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "It stays a clear liquid",
+            "correct": true,
+            "why": "Exactly. Usually, mixing two clear solutions just gives another clear mixture."
+          },
+          {
+            "text": "It turns into a solid lump",
+            "why": "Normally mixing two clear solutions doesn't create solids — unless a specific chemical reaction takes place."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction",
+    "title": "Double Displacement Reactions",
+    "klass": 10,
+    "beatId": "b2_5",
+    "ask": {
+      "question": "What is the general name for a reaction that produces an insoluble solid precipitate?",
+      "expect": "A precipitation reaction.",
+      "hint": "It is named directly after the word precipitate.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "Precipitation reaction",
+            "correct": true,
+            "why": "Yes! Any chemical reaction that forms an insoluble solid is classified as a precipitation reaction."
+          },
+          {
+            "text": "Neutralisation reaction",
+            "why": "Neutralisation is specifically acid plus base; when an insoluble solid forms, it is called a precipitation reaction."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction",
+    "title": "Double Displacement Reactions",
+    "klass": 10,
+    "beatId": "b3_6",
+    "ask": {
+      "question": "In your own words, what happens between the reactants in a double displacement reaction?",
+      "expect": "There is a mutual exchange of ions between the two reactants.",
+      "hint": "Think about what the positive and negative ions do with their partners.",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "The reactants exchange their ions with each other",
+            "correct": true,
+            "why": "Exactly. The positive and negative ions swap partners between the two compounds."
+          },
+          {
+            "text": "One more reactive metal pushes out a less reactive one",
+            "why": "That is single displacement. In double displacement, both compounds mutually swap their ions."
+          }
+        ]
+      }
+    }
+  },
+  {
+    "topicRef": "class10-science/chemical-reactions-and-equations/double-displacement-reaction",
+    "title": "Double Displacement Reactions",
+    "klass": 10,
+    "beatId": "b4_3",
+    "ask": {
+      "question": "Why is BaSO4 written as solid (s) in the equation, while NaCl is written as aqueous (aq)?",
+      "expect": "Barium sulphate is insoluble and forms a solid precipitate, while sodium chloride remains dissolved in water.",
+      "hint": "Which one formed the white solid that settled at the bottom?",
+      "whyProbe": {
+        "askedAs": "open",
+        "options": [
+          {
+            "text": "BaSO4 is the insoluble white precipitate, and NaCl stays dissolved in water",
+            "correct": true,
+            "why": "Precisely. BaSO4 does not dissolve in water, so it falls out as a solid precipitate, while NaCl stays dissolved."
+          },
+          {
+            "text": "BaSO4 is a gas and NaCl is a liquid",
+            "why": "Neither is a gas. BaSO4 is an insoluble solid precipitate, and NaCl is a salt dissolved in water."
+          }
+        ]
+      }
+    }
+  }
+]
