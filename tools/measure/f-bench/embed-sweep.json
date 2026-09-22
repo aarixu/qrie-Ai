@@ -1,0 +1,1489 @@
+{
+  "model": "Xenova/all-MiniLM-L6-v2",
+  "rows": [
+    {
+      "threshold": 0.05,
+      "f": 79.8,
+      "extra": 95,
+      "harmed": 1
+    },
+    {
+      "threshold": 0.1,
+      "f": 60.1,
+      "extra": 62,
+      "harmed": 0
+    },
+    {
+      "threshold": 0.15,
+      "f": 51.8,
+      "extra": 48,
+      "harmed": 0
+    },
+    {
+      "threshold": 0.2,
+      "f": 41.7,
+      "extra": 31,
+      "harmed": 0
+    },
+    {
+      "threshold": 0.25,
+      "f": 34.5,
+      "extra": 19,
+      "harmed": 0
+    },
+    {
+      "threshold": 0.3,
+      "f": 29.8,
+      "extra": 11,
+      "harmed": 0
+    },
+    {
+      "threshold": 0.4,
+      "f": 25.6,
+      "extra": 4,
+      "harmed": 0
+    }
+  ],
+  "scored": [
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Frog, then snake.",
+      "margin": 0.4889880172016292,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Grasshopper ko frog khayega, aur frog ko snake.",
+      "margin": 0.25849804467216053,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Frog khayega and then snake... snake hi khata hai shayad?",
+      "margin": 0.3676812526319556,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Snake eats the grasshopper directly, and then hawk eats it.",
+      "margin": 0.20909644465371957,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Garden me toh bahut saare insects hote hain jaise caterpillars, jo plants pe feed karte hain...",
+      "margin": 0.1801893599095737,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Doesn't it just die and mix in the soil, and then plants absorb it?",
+      "margin": 0.3462748071223397,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "It becomes soil to feed plants directly.",
+      "margin": 0.5191374291518862,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Sir woh grasshopper direct mitti ban jayega na, for the plants.",
+      "margin": 0.30818989106396816,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Dus percent matlab 1000 Joules milega.",
+      "margin": 0.022057001147847033,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "1000 Joules hoga shayad...",
+      "margin": 0.026836575388750283,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Nahi samajh aa raha ma'am.",
+      "margin": 0.051987972528101695,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh 90 percent energy toh heat banke waste ho jaata hai na environment mein...",
+      "margin": 0.07031661916436521,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "Because after three or four levels, there's hardly any energy left to sustain another organism.",
+      "margin": 0.4483531537200991,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Not enough energy left.",
+      "margin": 0.29441336754420655,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Har step pe energy kam hoti rehti hai, toh top pe next level ke liye energy bachti hi nahi.",
+      "margin": 0.2232768159630557,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Energy bohot kam ho jaati hai upar aate aate... toh survive nahi kar payenge, I think?",
+      "margin": 0.20169097619730658,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Because biological magnification becomes so high at the top that the animals die.",
+      "margin": 0.11452781398402356,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh 10 percent law hota hai na ma'am jisme energy environment mein release ho jaati hai heat banke...",
+      "margin": 0.20025695481789657,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Because at the top level animals like lions are too strong, so nothing can hunt them after that.",
+      "margin": 0.40864459732857095,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Top predators are too strong to be eaten.",
+      "margin": 0.3485707241707133,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Sir top carnivores itne powerful hote hain, unko aage hunt karne wala koi bachta hi nahi.",
+      "margin": 0.1373717848369132,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "It has other options, like the hawk can just eat mice or lizards instead.",
+      "margin": 0.12427932390442531,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Eats other prey.",
+      "margin": 0.05945540225736423,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Uske paas alternative prey options hote hain, so wo mice ya snakes pe switch kar lega.",
+      "margin": 0.07594308779291042,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Dusra prey kha lega jaise mouse wagera... shayad?",
+      "margin": 0.08942102956175127,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Predator ka population bhi kam ho jayega kyunki 10 percent law se energy kam ho gayi.",
+      "margin": 0.05260999748567005,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wo arrows to trophic levels show kar rahe hain na, jaise primary consumer to secondary consumer.",
+      "margin": 0.06572817590900276,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Sir it will just adjust and start eating grass and plants directly?",
+      "margin": 0.2573823236824258,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Starts eating plants instead...",
+      "margin": 0.4220533982944372,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Sir hawk fir directly plants aur grass khana start kar dega na?",
+      "margin": 0.1500441131093344,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "The organism at the top trophic level, like top consumers.",
+      "margin": 0.3742469161948037,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Top trophic level.",
+      "margin": 0.4508502372941576,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Jo top level pe hota hai, apex consumer.",
+      "margin": 0.2620986237645697,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Top consumer me sabse zyada hoga... I think?",
+      "margin": 0.2597752593264976,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Plants, because pesticides are sprayed directly on them.",
+      "margin": 0.12286989024430567,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Nahi yaad aa raha ma'am.",
+      "margin": 0.061819502835534716,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Vo energy transfer ka 10 percent rule hota hai na har level pe...",
+      "margin": 0.03594222995784786,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "The plants... because they're the ones absorbing it first from the soil.",
+      "margin": 0.3119709607164445,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Producers... they take it first.",
+      "margin": 0.368457455850559,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Plants na? Kyunki sabse pehle toh wahi soil se absorb karte hain.",
+      "margin": 0.10110655850107106,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "Magnesium reacts with oxygen, and magnesium oxide is formed.",
+      "margin": 0.15784575066489848,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Magnesium, oxygen... makes magnesium oxide.",
+      "margin": 0.06781010254466768,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Magnesium air ke oxygen ke sath react karke magnesium oxide banata hai.",
+      "margin": 0.10773700213026649,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Magnesium and oxygen react to give magnesium oxide... shayad?",
+      "margin": 0.1576521428371781,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Magnesium reacts with carbon dioxide and makes magnesium carbonate.",
+      "margin": 0.1578903191317168,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh ribbon ko burn karte hain na ma'am toh white colour ki dazzling flame aati hai...",
+      "margin": 0.09061870037876912,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Magnesium reacts with carbon dioxide, and it makes magnesium oxide.",
+      "margin": 0.08660467619142265,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Magnesium and CO2... makes magnesium oxide.",
+      "margin": 0.05699377333077593,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Magnesium and carbon dioxide react karenge to magnesium oxide banega.",
+      "margin": 0.13497589394334508,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "It will be g, because steam is in gas form.",
+      "margin": 0.4528156981768814,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "g, because steam.",
+      "margin": 0.3030784222443141,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "g aayega na, kyunki steam toh gas phase mein hoti hai.",
+      "margin": 0.19962328116666242,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "g hoga... kyunki steam hai, but not sure.",
+      "margin": 0.13576175608841995,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "l aayega ma'am, water ka formula H2O hai toh liquid hi likhte hain.",
+      "margin": 0.06227447811035436,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Iron oxide toh solid banega na, Fe3O4 hota hai uska formula...",
+      "margin": 0.02602978782238266,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "(l)... water is liquid only.",
+      "margin": 0.25691666999554497,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "(l) aayega na sir, paani toh waise liquid hi hota hai.",
+      "margin": 0.05544607136188762,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "It should be written above or below the arrow.",
+      "margin": 0.15046961788353186,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Above the arrow.",
+      "margin": 0.2367346211904185,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Arrow ke upar likhenge na.",
+      "margin": 0.15124218167539902,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Arrow ke upar ya niche likhte hain shayad...",
+      "margin": 0.1685629528041802,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Reactant side pe, bracket mein.",
+      "margin": 0.03109465550972229,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Pata nahi ma'am, bhool gaya.",
+      "margin": 0.10877521009753964,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wo pressure hai na toh gas ke saath hi likhenge state jaise...",
+      "margin": 0.015606600589118988,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "On the left side with the reactants, like plus 340 atm.",
+      "margin": 0.1999404769787161,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Left side... plus 340 atm.",
+      "margin": 0.20925703254169026,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Left side mein reactants ke saath, plus 340 atm karke.",
+      "margin": 0.10782049877563638,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "No, it didn't vanish. It just escaped into the air as smoke, carbon dioxide and water vapor.",
+      "margin": 0.22247541773314194,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Escaped as gases, ma'am.",
+      "margin": 0.17327817754783387,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Vanish nahi hua ma'am, woh smoke aur CO2 banke hawa mein nikal gaya.",
+      "margin": 0.08072420589524854,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Smoke aur gases banke air mein chala gaya hoga... CO2 shayad?",
+      "margin": 0.1553540903147849,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "It got converted into heat and light energy during the reaction.",
+      "margin": 0.17464488410310258,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Nahi pata ma'am, idea nahi hai.",
+      "margin": 0.0004929560777796153,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wood burns toh bas ash bachta hai niche aur surrounding hot ho jata hai...",
+      "margin": 0.03998371303624104,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Fire destroyed it.",
+      "margin": 0.24552971975094356,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Aag ke heat se destroy ho gaya na mass.",
+      "margin": 0.1366147132106246,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Oxygen isn't balanced.",
+      "margin": 0.059721841288489674,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Left side pe do oxygen atoms hain aur right pe bas ek hi hai.",
+      "margin": 0.22865121350867595,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Left pe do oxygen hai aur right pe ek... shayad?",
+      "margin": 0.1696668336264346,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Because state symbols like gas and liquid are not written.",
+      "margin": 0.0411322373802136,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wo hydrogen and oxygen react karte hain to form water, like conservation of mass...",
+      "margin": 0.03430126945332945,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "They don't react directly.",
+      "margin": 0.29728762197940994,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Sir H2 aur O2 directly react thodi karte hain...",
+      "margin": 0.03759358421135017,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "We have to put 2 in front of H2.",
+      "margin": 0.05763626908198061,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Coefficient of two.",
+      "margin": 0.09499871542340929,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "H2 ke aage 2 lagana padega.",
+      "margin": 0.056401543161289036,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Two aayega shayad... not sure.",
+      "margin": 0.05722886016742945,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Four lagayenge kyunki four atoms chahiye.",
+      "margin": 0.03804673269677866,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Samajh nahi aaya, nahi pata.",
+      "margin": 0.008467119525156712,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Just make it H4.",
+      "margin": 0.007025936441111158,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Aage number kyu lagana, H2 ko seedha H4 kar dete hain na?",
+      "margin": 0.03352387982383681,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "We should put a coefficient of 2.",
+      "margin": 0.04638371253119561,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Two lagana hoga.",
+      "margin": 0.027968291203415097,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "O2 ke aage 2 laga denge toh four ho jayega.",
+      "margin": 0.00267308146630435,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Two aayega na... shayad?",
+      "margin": 0.01868550255205742,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Four aayega coefficient.",
+      "margin": 0.07062343718560915,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Oxygen diatomic hai toh subscript me four likh sakte hain kya?",
+      "margin": 0.013848601586059939,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "We'll just put four in front of O2.",
+      "margin": 0.06856258454612862,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Four.",
+      "margin": 0.16100706041840732,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Chaar aayega na O2 ke aage.",
+      "margin": 0.07202791622225874,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Carbon dioxide.",
+      "margin": 0.2298014892807828,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Carbon dioxide hoga shayad...",
+      "margin": 0.11643495879874122,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Carbon monoxide gas.",
+      "margin": 0.04138084271189102,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Charcoal jalne pe wo black smoke nikalta hai na.",
+      "margin": 0.2105177700454021,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Only one product.",
+      "margin": 0.18600818520456308,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Sir right side pe bas ek hi product banta hai.",
+      "margin": 0.017283957498926333,
+      "pickedCorrect": false,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Single product banta hai... shayad?",
+      "margin": 0.03888843952672344,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Heat release hoti hai product side pe.",
+      "margin": 0.04069547422212613,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh reactants combine hoke balance karte hain equation ko...",
+      "margin": 0.17228841399760164,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "We always get two products forming on that side, right?",
+      "margin": 0.10124854372300418,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Two products.",
+      "margin": 0.10359608000946174,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Product side pe do products bante hain na?",
+      "margin": 0.10948564060293264,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "It means the reaction is exothermic, so it's releasing heat.",
+      "margin": 0.1059108394708097,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Exothermic reaction, heat released.",
+      "margin": 0.12044996762750715,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Reaction exothermic hai, heat release ho rahi hai.",
+      "margin": 0.04970110902849101,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Exothermic reaction hoga... heat nikal rahi hai shayad?",
+      "margin": 0.05374587435606626,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "It's endothermic because temperature badh gaya react karne ke liye.",
+      "margin": 0.019961490025407924,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wo quicklime aur water mix hua toh boil hone lag gaya na, toh state change ho raha hai...",
+      "margin": 0.20182110813711435,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "It means it is an endothermic reaction because it's absorbing heat.",
+      "margin": 0.05906172349249772,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Endothermic... it absorbs heat.",
+      "margin": 0.09334044179474099,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Sir endothermic reaction hai... heat absorb kar raha hai.",
+      "margin": 0.08487418595108287,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "Reaction 2, because magnesium and oxygen combine to form a single product, magnesium oxide.",
+      "margin": 0.05223953436813822,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Reaction 2, single product.",
+      "margin": 0.1423934750971214,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Reaction 2 hoga, kyunki do reactants milke ek single product bana rahe hain.",
+      "margin": 0.03188245184609939,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Reaction 2... kyunki right side mein bas magnesium oxide ban raha hai... shayad?",
+      "margin": 0.019497066492161375,
+      "pickedCorrect": false,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Reaction 1, because acid and base combine together to form salt and water.",
+      "margin": 0.12081112684130724,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh magnesium ribbon ko burn karte hain toh dazzling white flame aati hai na...",
+      "margin": 0.014521274104991766,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Reaction 1, because there is oxygen in it.",
+      "margin": 0.3599237191252277,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "First one... has oxygen.",
+      "margin": 0.2765212106569571,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "First wala sir, usme oxygen hai isliye.",
+      "margin": 0.14831041084544605,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "They have to get up and leave the seat.",
+      "margin": 0.38485182935283957,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "He gets displaced.",
+      "margin": 0.0551019155032097,
+      "pickedCorrect": false,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Jo pehle baitha tha woh remove ho jayega.",
+      "margin": 0.05405378321318508,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "They will get pushed out... displacement hoga shayad?",
+      "margin": 0.11402205989720537,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Like in musical chairs when the music stops everyone runs to find an empty chair...",
+      "margin": 0.10908835086042207,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "They will just adjust and share the chair?",
+      "margin": 0.038912817221275264,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Share the chair.",
+      "margin": 0.301354700854661,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Dono adjust kar lenge na... chair share karenge.",
+      "margin": 0.09157016530051959,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Copper metal, ma'am.",
+      "margin": 0.2505575079271256,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Copper sulphate se copper alag hoke nail pe lag gaya.",
+      "margin": 0.3354348099027095,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Copper deposit hua hai shayad?",
+      "margin": 0.16383389298483766,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Rust lag gaya hai nail pe.",
+      "margin": 0.04421070770812591,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh solution ka colour blue se light green ho gaya na because of displacement...",
+      "margin": 0.062002314710449646,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Rust... iron got rusted.",
+      "margin": 0.3375971696733002,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Wo rust hai na sir... water se react karke zang lag gaya.",
+      "margin": 0.2317446925212543,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "No, it won't happen because copper is less reactive than iron.",
+      "margin": 0.34251137795208986,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "No, copper is less reactive.",
+      "margin": 0.2848515081961295,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Nahi hoga, copper iron se less reactive hota hai toh displace nahi karega.",
+      "margin": 0.20984774065680883,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "No reaction... copper reactivity series mein iron se neeche hota hai, shayad?",
+      "margin": 0.2752850657115205,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Yes, copper will displace iron and solution blue ho jayega.",
+      "margin": 0.08700937741349457,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Nahi pata ma'am, reactivity series yaad nahi aa rahi.",
+      "margin": 0.013256561077980511,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh iron sulphate green colour ka hota hai na... toh test tube mein precipitate banega?",
+      "margin": 0.09519852109508292,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Yeah it will react, it forms copper sulphate so the solution turns blue.",
+      "margin": 0.2830237848862581,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "Yes, it turns blue... copper sulphate.",
+      "margin": 0.5069338175349298,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Haan reaction hoga na, copper sulphate banega and blue ho jayega.",
+      "margin": 0.09121020239070793,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "PbCl2 and copper.",
+      "margin": 0.03230497011516653,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "Lead chloride banega aur copper alag nikal jayega.",
+      "margin": 0.0907336183634998,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Lead chloride aur copper... shayad?",
+      "margin": 0.08061198639764644,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Lead aur copper combine ho jayenge aur chlorine gas release hogi.",
+      "margin": 0.06859671049699734,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Woh displacement reaction mein reactivity series dekhna padta hai na, toh solution ka colour change ho jayega blue se...",
+      "margin": 0.0019841439687866558,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Lead and copper will form... and chlorine gas will be released?",
+      "margin": 0.13512534860520609,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Lead aur copper banega na... aur chlorine gas niklegi.",
+      "margin": 0.09130598875733387,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "It will stay see-through only... shayad?",
+      "margin": 0.15726704586468443,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "A white precipitate will form and it turns cloudy.",
+      "margin": 0.006672218989781764,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Like in reactions when we mix test tubes some gas or colour change happens na?",
+      "margin": 0.01488818682784715,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-plain",
+      "said": "Like, the whole liquid will turn into a solid lump?",
+      "margin": 0.22644449692079516,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Vo jisme white colour ka insoluble substance ban ke niche baith jata hai...",
+      "margin": 0.059302585304016234,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "Exchange of ions.",
+      "margin": 0.33924445623287747,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "They swap their positive and negative ions... shayad?",
+      "margin": 0.2517149456343334,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "The more reactive element displaces the less reactive element from the compound.",
+      "margin": 0.23927498153997995,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "dont-know",
+      "said": "Yaad nahi aa raha ma'am.",
+      "margin": 0.020593716220916904,
+      "pickedCorrect": true,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Wo precipitate ban jata hai na test tube ke bottom mein jaise barium sulphate.",
+      "margin": 0.05108161515043251,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-terse",
+      "said": "More reactive metal displaces the weaker metal.",
+      "margin": 0.41849402062186297,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "primed",
+      "shape": "primed-hinglish",
+      "said": "Jo zyada reactive metal hota hai na, woh less reactive wale ko hata deta hai.",
+      "margin": 0.302966276751664,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "right-plain",
+      "said": "BaSO4 is insoluble so it forms a precipitate, while NaCl stays dissolved in water.",
+      "margin": 0.16652684352014446,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-terse",
+      "said": "BaSO4 is the precipitate.",
+      "margin": 0.09603456448808889,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hinglish",
+      "said": "BaSO4 precipitate ban ke settle ho jata hai, aur NaCl water mein dissolve rehta hai.",
+      "margin": 0.09101041449508107,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "right-hedged",
+      "said": "Barium sulphate insoluble precipitate hai and NaCl dissolve ho gaya... shayad?",
+      "margin": 0.11136110770094426,
+      "pickedCorrect": true,
+      "isRight": true
+    },
+    {
+      "group": "blind",
+      "shape": "wrong-plain",
+      "said": "Because BaSO4 is a heavy molecule so it settles down, and NaCl is a light liquid.",
+      "margin": 0.06914708146850124,
+      "pickedCorrect": false,
+      "isRight": false
+    },
+    {
+      "group": "blind",
+      "shape": "off-target",
+      "said": "Double displacement mein ions exchange hote hain na ma'am... barium sulphate and sodium chloride banta hai.",
+      "margin": 0.03205910781026072,
+      "pickedCorrect": true,
+      "isRight": false
+    }
+  ]
+}

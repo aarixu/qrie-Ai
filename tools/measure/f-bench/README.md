@@ -109,3 +109,64 @@ not that a threshold was too strict.
   option, so they read alike and a textbook-perfect answer lands on both. The
   honest signal is in `right-terse` and `right-hinglish`.
 - 24 asks, one syllabus, chemistry and ecology.
+
+## The semantic rung, measured 2026-09-22
+
+`embed-probe.mjs` and `embed-sweep.mjs`. The question was whether comparing
+MEANING on the student's own phone — zero marginal cost,
+`@huggingface/transformers` is already a dependency and `onDeviceSpeech.ts`
+already runs models through it — could reach the answers the word matcher
+cannot.
+
+**Which model can read Hinglish.** rank@1 is how often the correct option is
+the nearest:
+
+| model | size | Hinglish | terse |
+|---|---:|---:|---:|
+| **Xenova/all-MiniLM-L6-v2** | **23 MB** | **96%** | 96% |
+| Xenova/paraphrase-multilingual-MiniLM-L12-v2 | 118 MB | 92% | 96% |
+| Xenova/multilingual-e5-small | 118 MB | 92% | 88% |
+
+**The English-only model wins, and that is not an accident.**
+`HINGLISH_REGISTER` tells the planner "terms stay in English", so
+"Grasshopper ko frog khayega, aur frog ko snake" carries its technical nouns in
+English and a small English model finds them. 23 MB rather than 118 MB is a
+real difference on a student's mobile data.
+
+(The e5 numbers are a floor: that family expects `query:` / `passage:` prefixes
+and was scored without them. It lost on size and margin anyway.)
+
+**What a threshold buys, and what it costs.** Lexical first, embeddings only on
+what lexical refused, the paid judge only on what neither settled:
+
+| margin | f | right answers called WRONG |
+|---:|---:|---:|
+| 0.05 | 79.8% | **1** |
+| **0.10** | **60.1%** | **0** |
+| 0.15 | 51.8% | 0 |
+| 0.20 | 41.7% | 0 |
+
+**0.10 is the operating point.** f nearly triples and the safety property
+survives untouched. The three answers this rung would get wrong all sit at
+margin 0.055 or below, so 0.10 carries about twice the headroom it needs:
+
+```
+0.055  "He gets displaced."
+0.019  "Reaction 2... kyunki right side mein bas magnesium oxide ban raha hai... shayad?"
+0.017  "Sir right side pe bas ek hi product banta hai."
+```
+
+**AND IT IS STILL NOT Rs 5.** The rollup is `3.49 + (1 - f) x 18.70`:
+
+| f | rollup |
+|---:|---:|
+| 23.2% (lexical alone) | Rs 17.85 |
+| 60.1% (+ embeddings @ 0.10) | Rs 10.95 |
+| 79.8% (+ embeddings @ 0.05) | Rs 7.27 |
+| **91.9%** | **Rs 5.00** |
+
+**f has to reach 91.9% to clear the ceiling.** The semantic rung is a large
+step — Rs 17.85 to Rs 10.95, safely — and it does not finish the job on its own.
+The other lever measured here, shortening the authored option text, raises the
+LEXICAL rung, which means fewer answers reach the embedding rung at all. Neither
+has been measured with the other yet, and that is the next thing to run.

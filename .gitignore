@@ -66,3 +66,4 @@ probe*.json
 # line of `piper.download_voices` brings it back; see tools/speech/README.md.
 tools/speech/voices/
 tools/speech/samples/
+tools/measure/f-bench/.models/
