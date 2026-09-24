@@ -15,7 +15,29 @@ export type HandoffEvent = 'statechange' | 'agent-say';
 export interface HandoffOptions {
   agent: AgentAdapter;
   /** How bridge lines and agent lines get voiced. Resolves when spoken. */
-  speak(text: string): Promise<void>;
+  /**
+   * Say this line, and report THE LINE ACTUALLY SAID through `onSaid` as soon
+   * as it is decided — before the audio, not after it.
+   *
+   * The callback exists for a child-safety reason and its TIMING is the second
+   * half of that reason. The caller screens what the model produced: a
+   * distress-flagged line is replaced with a support reply rather than spoken
+   * as written. This seam is also what feeds the captions and the text-mode
+   * transcript, and while it reported nothing, `voice` below had only the
+   * model's raw text to surface — so a replaced line was SPOKEN safely and
+   * DISPLAYED verbatim. Text-only is the mode that ships, which made the
+   * display the whole output.
+   *
+   * Returning the line instead of reporting it would fix the safety and break
+   * the captions: `speak` resolves when the line has finished playing, so the
+   * caption would appear at the END of every spoken sentence. The screen is
+   * pure and decides instantly; the audio is what takes time. So the decision
+   * is reported when it is made.
+   *
+   * A caller that never calls `onSaid` surfaces nothing, which is the safe
+   * direction: no caption is better than an unscreened one.
+   */
+  speak(text: string, onSaid: (said: string) => void): Promise<void>;
   /** Pause the recording (called during PAUSING). */
   onPause(): void;
   /** Resume the recording (called during RESUMING). */
@@ -74,13 +96,30 @@ export function createHandoff(opts: HandoffOptions): Handoff {
   };
 
   // A rejected speak() must never wedge the seam: a lost voice line is
-  // recoverable, a machine stuck forever in AGENT_ENTERING is not.
-  const speakSafe = (text: string): Promise<void> => opts.speak(text).catch(() => undefined);
+  // recoverable, a machine stuck forever in AGENT_ENTERING is not. Null is
+  // "the room heard nothing", which is different from "it heard this".
+  const speakSafe = (text: string, onSaid: (said: string) => void): Promise<void> =>
+    opts.speak(text, onSaid).catch(() => undefined);
 
-  // Every line the room hears is surfaced as an event (captions/UI) AND voiced.
+  /**
+   * Every line the room HEARD is surfaced as an event (captions/UI).
+   *
+   * What is emitted is what the speaker says came out, never what the model
+   * produced. Those differ exactly when the safety screen replaced a line, and
+   * emitting the model's version was a hole: the audio was safe and the text
+   * on screen was not. A speak that failed emits nothing, because nothing was
+   * heard and a caption for an unheard line is a caption for a line nobody can
+   * check.
+   */
   const voice = async (text: string): Promise<void> => {
-    emit('agent-say', text);
-    await speakSafe(text);
+    let surfaced = false;
+    await speakSafe(text, (said) => {
+      // Once per line. A speaker that reports twice must not double the
+      // transcript, and the first report is the one the screen decided.
+      if (surfaced || said === '') return;
+      surfaced = true;
+      emit('agent-say', said);
+    });
   };
 
   const io: AgentIO = {

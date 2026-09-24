@@ -101,11 +101,24 @@ export function toStudent(text: string, lessonId?: string): Screened {
 export function screenedSpeech(
   speak: (text: string) => Promise<void>,
   lessonId?: string,
-): (text: string) => Promise<{ halted: boolean }> {
-  return async (text) => {
+): (text: string, onSaid?: (said: string) => void) => Promise<{ halted: boolean; said: string }> {
+  return async (text, onSaid) => {
     const screened = toStudent(text, lessonId);
     const halted = screened.say !== null;
-    await speak(screened.say ?? screened.text ?? text).catch(() => undefined);
-    return { halted };
+    /**
+     * `said` IS THE LINE THAT CAME OUT, and it is returned because the caller
+     * has a second surface: captions, and the text-mode transcript. Handing
+     * back only `halted` left them with the model's raw text to display, so a
+     * replaced line was spoken safely and shown verbatim. The speaker is the
+     * only thing that knows which line won; it says so rather than leaving a
+     * caller to re-derive it and get it wrong.
+     */
+    const said = screened.say ?? screened.text ?? text;
+    // Reported BEFORE the audio, because the screen is pure and instant while
+    // `speak` resolves only when the line has finished playing. A caption that
+    // waited for that would arrive at the end of every sentence.
+    onSaid?.(said);
+    await speak(said).catch(() => undefined);
+    return { halted, said };
   };
 }

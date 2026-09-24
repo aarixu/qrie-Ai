@@ -50,8 +50,17 @@ function setup(agentOverride?: AgentAdapter) {
 
   const handoff = createHandoff({
     agent: agentOverride ?? manualAgent,
-    speak(text: string): Promise<void> {
+    /**
+     * Resolves with what was SAID, which is the seam's contract: the caller
+     * screens, and the caption is whatever the caller says came out. This stub
+     * speaks the line unchanged; `screens the line before it is captioned`
+     * below is the one that returns something different.
+     */
+    speak(text: string, onSaid: (said: string) => void): Promise<void> {
       log.push(`speak:${text}`);
+      // Reported immediately, the way the screened speaker does: the screen is
+      // pure and instant, only the audio waits.
+      onSaid(text);
       return new Promise<void>((res) => queue.push(res));
     },
     onPause(): void {
@@ -157,7 +166,10 @@ describe('createHandoff — the state machine', () => {
           return { sendUserText() {}, stop() {} };
         },
       },
-      speak: () => Promise.resolve(),
+      speak: (text: string, onSaid: (s: string) => void) => {
+        onSaid(text);
+        return Promise.resolve();
+      },
       onPause() {},
       onResume() {},
     });
@@ -316,5 +328,66 @@ describe('createHandoff — full seam with the stub agent', () => {
     // The recording was paused exactly once and resumed exactly once.
     expect(s.log.filter((l) => l === 'pause')).toEqual(['pause']);
     expect(s.log.filter((l) => l === 'resume')).toEqual(['resume']);
+  });
+});
+
+/**
+ * THE CAPTION MUST BE WHAT THE ROOM HEARD, NOT WHAT THE MODEL PRODUCED.
+ *
+ * `voice` used to `emit('agent-say', text)` with the model's raw line and only
+ * then hand it to `speak`, where the caller's safety screen lives. So a line
+ * the screen REPLACED — a distress-flagged sentence swapped for a support
+ * reply — was spoken safely and displayed verbatim. Text-only is the mode that
+ * ships, and there the display is the whole output.
+ *
+ * These tests drive the seam with a speaker that replaces the line, which is
+ * exactly what `screenedSpeech` does in the app.
+ */
+describe('createHandoff — the caption follows the speaker, not the model', () => {
+  const REPLACED = 'That sounds heavy. Please talk to someone you trust.';
+
+  /** A speaker that screens: it reports its own line, never the one handed in. */
+  const screeningSetup = () => {
+    const said: string[] = [];
+    const handoff = createHandoff({
+      agent: {
+        start(_ctx, agentIo) {
+          io = agentIo;
+          return { sendUserText() {}, stop() {} };
+        },
+      },
+      speak: (_text: string, onSaid: (s: string) => void) => {
+        onSaid(REPLACED);
+        return Promise.resolve();
+      },
+      onPause() {},
+      onResume() {},
+    });
+    let io: Parameters<Parameters<typeof createHandoff>[0]['agent']['start']>[1];
+    handoff.on('agent-say', (line) => { if (line) said.push(line); });
+    return { handoff, said, io: () => io };
+  };
+
+  it('surfaces the replacement, never the line the model wrote', () => {
+    const s = screeningSetup();
+    s.handoff.raiseHand(ctxOf());
+    expect(s.said).toEqual([REPLACED]);
+    expect(s.said.join(' ')).not.toContain('what would you like to know');
+  });
+
+  it('says nothing at all when the speaker reports nothing', async () => {
+    const said: string[] = [];
+    const handoff = createHandoff({
+      agent: { start: () => ({ sendUserText() {}, stop() {} }) },
+      // A speaker that never reports is a speaker whose line nobody can check.
+      // No caption is the safe answer; an unscreened one is not.
+      speak: () => Promise.resolve(),
+      onPause() {},
+      onResume() {},
+    });
+    handoff.on('agent-say', (line) => { if (line) said.push(line); });
+    handoff.raiseHand(ctxOf());
+    await Promise.resolve();
+    expect(said).toEqual([]);
   });
 });

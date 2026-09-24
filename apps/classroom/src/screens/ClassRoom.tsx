@@ -502,8 +502,11 @@ export function ClassRoom({
     () =>
       createHandoff({
         agent,
-        speak: async (text) => {
-          await speakSafely(text);
+        // The SCREENED line goes back, so the caption and the text-mode
+        // transcript show what the room actually heard. Returning nothing here
+        // is what let a replaced line be spoken safely and displayed verbatim.
+        speak: async (text, onSaid) => {
+          await speakSafely(text, onSaid);
         },
         onPause: () => playerRef.current.pause(),
         onResume: () => {

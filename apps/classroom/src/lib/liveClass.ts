@@ -12,6 +12,7 @@ import {
 import { createBrowserLlm } from "./browserLlm";
 import { createBrowserImageArtist, createBrowserVision } from "./browserImage";
 import { tutorLanguage, type TutorLanguage } from './workspace';
+import { pencilGlyph } from '@ai-tutor/graphics';
 
 /**
  * PREPARING ONE CLASS, LIVE.
@@ -77,6 +78,32 @@ const VISION_MODEL = 'google/gemini-3.7-flash';
  * The choice never blocks the class: if the model fails, each noun keeps the
  * best name match, which is exactly what it had before.
  */
+/** One glyph as standalone markup. Both the icon path and the pencil use it. */
+const svgOf = (glyph: { body: string; width: number; height: number }): string =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${glyph.width} ${glyph.height}">` +
+  `${glyph.body}</svg>`;
+
+/**
+ * A hand-drawn circle for every noun on the board, when no icon relay answered.
+ *
+ * Keyed by ELEMENT id and not by noun, for the reason the icon path gives: the
+ * same noun placed twice is two pictures, and the renderer looks each one up by
+ * its own id.
+ *
+ * Deliberately draws NOTHING with a model. The generated-icon path costs money
+ * per noun, and a class falling back because a route is unhosted is the wrong
+ * moment to start spending — a pencil is free, honest, and enough to make the
+ * class keepable.
+ */
+export function pencilsFor(lesson: Lesson): Record<string, string> {
+  const assets: Record<string, string> = {};
+  for (const el of lesson.elements) {
+    if (el.kind !== 'graphic') continue;
+    assets[el.id] = svgOf(pencilGlyph(el.noun));
+  }
+  return assets;
+}
+
 async function fetchGraphics(
   lesson: Lesson,
   topic: string,
@@ -94,7 +121,26 @@ async function fetchGraphics(
   const query = new URLSearchParams();
   for (const noun of nouns) query.append('noun', noun);
   const res = await relayFetch(`/api/icons?${query}`);
-  if (!res.ok) return {};
+  /**
+   * NO ICON RELAY MEANS PENCILS, NOT NOTHING — and in production it always
+   * means pencils, because the relay answers 501 there on purpose: the icon
+   * index is a 443 MB package that must never reach a browser
+   * (packages/relay/src/handler.ts says so beside the refusal).
+   *
+   * Returning `{}` here, which is what this did, was quietly worse than a
+   * missing picture. `saveable()` refuses to keep a class whose `graphic`
+   * elements have no artwork (packages/class-prep/src/save.ts), so every cold
+   * topic opened in production was TAUGHT AND THEN THROWN AWAY — the next
+   * student paid the full preparation again, forever, on every topic with a
+   * noun in it. The catalogue could never warm itself.
+   *
+   * `pencilGlyph` is the answer the relay itself falls back to, and it is pure
+   * arithmetic — a wobbled circle with the word inside, the way a teacher draws
+   * a thing she cannot draw. `packages/graphics/src/resolve.ts` carries no
+   * catalogue and is safe in a bundle; its own header is explicit that loading
+   * the sets is somebody else's job.
+   */
+  if (!res.ok) return pencilsFor(lesson);
 
   type Glyph = { body: string; width: number; height: number };
   type Found = {
@@ -157,9 +203,7 @@ async function fetchGraphics(
     }
     const glyph = glyphFor(el.noun) ?? found[el.noun]?.pencil;
     if (!glyph) continue;
-    assets[el.id] =
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${glyph.width} ${glyph.height}">` +
-      `${glyph.body}</svg>`;
+    assets[el.id] = svgOf(glyph);
   }
   return assets;
 }
