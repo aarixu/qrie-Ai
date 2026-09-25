@@ -1,18 +1,18 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
 import { saveEntry } from '@/lib/contest'
 import { APP_URL } from '@/lib/app-url'
+import { ART, imgProps } from '@/lib/art'
 
-const logo = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%202%2C%202026%2C%2010_42_12%20AM-5vJi1SeaJztqjZeAI2DCYyOzA3vNDC.png'
 
 /**
  * FOUR STATES, BECAUSE THERE ARE FOUR THINGS THAT CAN BE TRUE.
  *
  * This page used to have two: a boolean that went true on submit and rendered
- * "Your details are saved for this challenge." It saved nothing — the handler
- * called setSubmitted(true) and stopped — so every entry in a ₹1,00,000
+ * "Your details are saved for this challenge." It saved nothing â€” the handler
+ * called setSubmitted(true) and stopped â€” so every entry in a â‚¹1,00,000
  * contest was destroyed on refresh while the parent was told it was kept.
  *
  * "saving" and "failed" are the two that were missing, and "failed" is the one
@@ -57,7 +57,7 @@ export default function ChallengeRegisterPage() {
     } catch {
       setState({
         at: 'failed',
-        message: 'We could not reach Curie. Nothing was saved — please check your connection.',
+        message: 'We could not reach Curie. Nothing was saved â€” please check your connection.',
       })
     }
   }
@@ -68,10 +68,10 @@ export default function ChallengeRegisterPage() {
     <main className="register-page">
       <nav className="nav shell">
         <Link className="logo" href="/">
-          <img src={logo} alt="Curie logo" />
+          <img {...imgProps(ART.logo, 'Curie logo', true)} />
           <span>curie</span>
         </Link>
-        <Link className="back-home" href="/">← Back home</Link>
+        <Link className="back-home" href="/">â† Back home</Link>
       </nav>
       <section className="register-shell shell">
         <div className="register-intro">
@@ -79,13 +79,10 @@ export default function ChallengeRegisterPage() {
           <h1>Ready to<br /><em>show up?</em></h1>
           <p>Tell us a little about the learner. We&apos;ll save your spot and take you straight to the challenge.</p>
           <div className="register-illustration">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ChatGPT%20Image%20Sep%202%2C%202026%2C%2010_23_01%20AM-5PaL1bjeKMdhJXo6nZi0aDuZgq5n40.png"
-              alt="Student learning on a mobile device"
-            />
+            <img {...imgProps(ART.hand, 'Student learning on a mobile device', true)} />
           </div>
           <div className="register-highlight">
-            <strong>₹1,00,000+</strong>
+            <strong>â‚¹1,00,000+</strong>
             <span>in prizes for curious minds</span>
           </div>
         </div>
@@ -119,7 +116,7 @@ export default function ChallengeRegisterPage() {
                 <option value="12">12th</option>
               </select>
             </label>
-            {/* Controlled, and now carrying a name — without one it was never
+            {/* Controlled, and now carrying a name â€” without one it was never
                 part of the form data at all. */}
             <label>Do you take tuition elsewhere? *
               <select
@@ -147,11 +144,11 @@ export default function ChallengeRegisterPage() {
             <div className="success-box">
               <strong>You&apos;re registered.</strong>
               <span>Your details are saved for this challenge.</span>
-              <a className="pill dark-pill" href={APP_URL}>Continue to the test ↗</a>
+              <a className="pill dark-pill" href={APP_URL}>Continue to the test â†—</a>
             </div>
           ) : (
             <button className="pill dark-pill form-submit" type="submit" disabled={saving}>
-              {saving ? 'Saving…' : 'Save & continue to test ↗'}
+              {saving ? 'Savingâ€¦' : 'Save & continue to test â†—'}
             </button>
           )}
         </form>
