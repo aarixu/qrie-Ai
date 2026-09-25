@@ -19,13 +19,15 @@ import { BRAND } from '../brand';
  * RISO POP redrew the inks, not the geometry: each orbit is one riso PLATE —
  * the pressable blue and the fluoro pink — overprinted the way a two-colour
  * riso poster actually prints, the nucleus in ink and the electron riding its
- * orbit's fluoro plate (in the icon files, where it sits on yellow, the
+ * orbit's fluoro plate (in the icon files, where it sits on amber, the
  * electron gains an ink keyline it does not need in-app). Every
  * colour arrives through a token class and `currentColor`, never a literal
  * hex, so the mark re-pitches itself in the dark room with the rest of the
- * palette (the blue plate lightens, the ink flips to paper). The yellow tile
- * and its keyline belong to content/icon.svg — in the app the mark sits
- * straight on whatever surface the screen already has.
+ * palette (the blue plate lightens, the ink flips to paper) — and it picked up
+ * the move from #FFD21E to the marketing site's #FFC85C without a line
+ * changing here, which is what the tokens are for. The amber tile and its
+ * keyline belong to content/icon.svg — in the app the mark sits straight on
+ * whatever surface the screen already has.
  */
 export function Logo({
   size = 32,

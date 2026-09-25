@@ -20,10 +20,12 @@
          load. Deliberately duplicates src/lib/theme.ts rather than importing
          it: the module graph has not loaded yet at this point. The store key
          and the rule must stay in step with that file.
-         KNOWN drift until a recorded handoff lands: theme.ts CHROME still
-         holds the pre-riso hexes and re-stamps the meta at boot, overwriting
-         these values. theme.css is the source of truth — brand.test.ts and
-         theme.test.ts pin THIS file to it, so fix theme.ts, never here. -->
+         The drift this comment used to warn about is GONE: theme.ts CHROME is
+         #faf7f0 / #141318, the same pair as below and the same as the
+         background token in theme.css, so applyTheme re-stamping the meta at
+         boot no longer overwrites these with a stale value. theme.css stays
+         the source of truth — brand.test.ts and theme.test.ts pin THIS file
+         to it, so a colour moves in theme.css first, never here. -->
     <script>
       try {
         var pref = JSON.parse(localStorage.getItem('ai-tutor:preferences') || '{}');

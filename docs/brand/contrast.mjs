@@ -31,7 +31,12 @@ const INK = {
   // as pitched
   'fluoro-pink':   '#FF48A0',
   'riso-blue':     '#0B5FD9',
-  'riso-yellow':   '#FFD21E',
+  'riso-yellow':   '#FFD21E',   // what was pitched, and no longer what ships
+  // THE AMBER THAT SHIPS. build-theme.mjs moved primary-fixed to the marketing
+  // site's hero colour so the landing page and the app are one brand; this
+  // file is the exploration bench, so both stay listed rather than one being
+  // quietly overwritten.
+  'brand-amber':   '#FFC85C',
   'overprint':     '#196B46',
   'newsprint':     '#FAF7F0',
   'ink':           '#17171D',

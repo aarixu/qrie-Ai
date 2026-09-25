@@ -7,8 +7,10 @@
         under white, 5.68:1 under ink — so ink is the only thing on it. This is
         the same call the amber palette made, for the same reason.
      2. Pink that has to be READ is #D6117A (4.65:1).
-     3. Yellow #FFD21E is 1.35:1 on paper — invisible unbounded. It never
+     3. Amber #FFC85C is 1.44:1 on paper — invisible unbounded. It never
         appears without a keyline. Riso printing has keylines anyway.
+        It is the marketing site's hero amber, so the landing page and the
+        app are one brand rather than two.
 
    Values are RGB triplets because Tailwind's opacity modifiers (bg-primary/25)
    compose an alpha into them. */
@@ -18,8 +20,8 @@
   --c-on-primary: 250 247 240;
   --c-primary-container: 255 72 160;
   --c-on-primary-container: 23 23 29;
-  --c-primary-fixed: 255 210 30;
-  --c-primary-fixed-dim: 227 188 30;
+  --c-primary-fixed: 255 200 92;
+  --c-primary-fixed-dim: 227 179 84;
   --c-on-primary-fixed: 23 23 29;
   --c-on-primary-fixed-variant: 142 35 16;
   --c-inverse-primary: 143 180 255;
@@ -53,8 +55,8 @@
   --c-surface-bright: 255 251 242;
   --c-surface-dim: 220 218 213;
   --c-surface-container-lowest: 255 255 255;
-  --c-surface-container-low: 250 245 230;
-  --c-surface-container: 250 244 221;
+  --c-surface-container-low: 250 245 233;
+  --c-surface-container: 250 243 227;
   --c-surface-container-high: 234 231 225;
   --c-surface-container-highest: 225 222 217;
   --c-inverse-surface: 20 19 24;
@@ -68,8 +70,8 @@
   --c-on-primary: 10 23 48;
   --c-primary-container: 255 127 192;
   --c-on-primary-container: 43 0 22;
-  --c-primary-fixed: 255 210 30;
-  --c-primary-fixed-dim: 227 188 30;
+  --c-primary-fixed: 255 200 92;
+  --c-primary-fixed-dim: 227 179 84;
   --c-on-primary-fixed: 23 23 29;
   --c-on-primary-fixed-variant: 142 35 16;
   --c-inverse-primary: 11 95 217;

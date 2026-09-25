@@ -35,6 +35,22 @@ function rooms(css: string): { light: Record<string, string>; dark: Record<strin
   return { light: tokens(css.slice(0, darkAt)), dark: tokens(css.slice(darkAt)) };
 }
 
+/** `255 200 92` -> `#FFC85C`. The CSS carries triplets; SVG carries hex. */
+const asHex = (triplet: string): string =>
+  '#' + triplet.split(' ').map((n) => Number(n).toString(16).padStart(2, '0')).join('').toUpperCase();
+
+/**
+ * THE BRAND AMBER, READ FROM THE GENERATOR RATHER THAN REMEMBERED.
+ *
+ * This used to be the literal `#FFD21E` typed into two assertions below, and
+ * that is exactly the drift this file exists to catch: when the palette moved
+ * to the marketing site's #FFC85C, the icons and the theme could have parted
+ * company with both tests still green, because the tests were pinning a
+ * snapshot instead of the invariant. The invariant is "the icon tile IS
+ * --c-primary-fixed", so that is what is asserted.
+ */
+const AMBER = asHex(rooms(read('docs/brand/riso-pop.theme.css')).light['primary-fixed']);
+
 describe('the shipped palette is the generated palette', () => {
   const generated = rooms(read('docs/brand/riso-pop.theme.css'));
   const shipped = rooms(read('apps/classroom/src/theme.css'));
@@ -93,8 +109,8 @@ describe('the icons wear the riso inks on the shared geometry', () => {
         expect(svg).toContain('#FF48A0');
       });
 
-      it('sits on the yellow tile with an ink keyline — law 3', () => {
-        expect(svg).toContain('#FFD21E');
+      it('sits on the amber tile with an ink keyline — law 3', () => {
+        expect(svg, 'the tile is not --c-primary-fixed').toContain(AMBER);
         // The keyline the law is about: an ink-STROKED rect bounding the tile,
         // heavy enough to survive a launcher's downscale. Asserting "some ink
         // stroke exists" was satisfiable by the electron's outline alone, which
@@ -121,11 +137,13 @@ describe('the maskable icon survives the Android adaptive viewport', () => {
     expect(svg).toMatch(/<rect width="512" height="512"[^>]*fill="#FAF7F0"/);
   });
 
-  it('keeps the yellow tile — corners included — inside the 66dp safe circle', () => {
+  it('keeps the amber tile — corners included — inside the 66dp safe circle', () => {
     const tile = svg.match(
-      /<rect x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)" rx="([\d.]+)" fill="#FFD21E"/,
+      new RegExp(
+        `<rect x="([\\d.]+)" y="([\\d.]+)" width="([\\d.]+)" height="([\\d.]+)" rx="([\\d.]+)" fill="${AMBER}"`,
+      ),
     );
-    expect(tile, 'no inset yellow tile rect found').not.toBeNull();
+    expect(tile, 'no inset amber tile rect found').not.toBeNull();
     const [, x, , w, , rx] = tile!.map(Number);
     // Farthest yellow from centre: out along the diagonal to the rounded
     // corner's arc centre, then its radius in any direction.
