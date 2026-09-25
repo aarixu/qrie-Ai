@@ -13,7 +13,7 @@ import { LegalPage, Section } from '@/components/LegalPage'
  * closing date or judging basis is the part that bites.
  */
 export const metadata = {
-  title: 'Terms & Conditions | Qrie',
+  title: 'Terms & Conditions | Qrie AI',
   description: 'The terms for using Qrie and for entering the Champion League.',
 }
 

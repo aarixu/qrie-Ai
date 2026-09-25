@@ -2,7 +2,7 @@
 import { ART, imgProps } from '@/lib/art'
 
 export const metadata = {
-  title: 'Qrie mobile app — Coming soon',
+  title: 'Qrie AI mobile app — Coming soon',
   description: 'The Qrie mobile app is coming soon. Continue learning with Qrie in your browser.',
 }
 
@@ -12,7 +12,7 @@ export default function MobileComingSoonPage() {
       <nav className="nav shell">
         <Link className="logo" href="/" aria-label="Qrie home">
           <img {...imgProps(ART.logo, 'Qrie logo', true)} />
-          <span>qrie</span>
+          <span>qrie ai</span>
         </Link>
         <Link className="back-home" href="/">← Back home</Link>
       </nav>

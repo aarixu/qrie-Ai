@@ -19,7 +19,7 @@ import { LegalPage, Section } from '@/components/LegalPage'
  * this student" is a child ticking a box.
  */
 export const metadata = {
-  title: 'Privacy Policy | Qrie',
+  title: 'Privacy Policy | Qrie AI',
   description: 'What Qrie collects, why, and how long it is kept.',
 }
 

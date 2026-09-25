@@ -3,7 +3,10 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Qrie — Your personal AI tutor',
+  // The formal name in the tab and in search results; the description below
+  // keeps the short form, because "Qrie AI is a one-on-one live AI tutor" says
+  // AI twice.
+  title: 'Qrie AI — Your personal AI tutor',
   description: 'Qrie is a one-on-one live AI tutor that adapts to every student in classes 6–12.',
   generator: 'v0.app',
 }

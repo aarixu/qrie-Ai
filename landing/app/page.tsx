@@ -20,7 +20,7 @@ export default function Page() {
     <main>
       <section className="hero">
         <nav className="nav shell">
-          <a className="logo" href="#top" aria-label="Qrie home"><img {...imgProps(ART.logo, 'Qrie logo', true)} /><span>qrie</span></a>
+          <a className="logo" href="#top" aria-label="Qrie home"><img {...imgProps(ART.logo, 'Qrie logo', true)} /><span>qrie ai</span></a>
           <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label="Toggle menu">Menu <span>+</span></button>
           <div className={`nav-links ${menuOpen ? 'is-open' : ''}`}><a href="#how">How it works</a><a href="#subjects">Subjects</a><a href="#events">Events</a><a href="#why">Why Qrie</a></div>
           {/* `href="#login"` — there is no element with id="login" on this page,
@@ -50,7 +50,7 @@ export default function Page() {
 
       <section className="app-promo"><div className="shell"><p className="eyebrow">Learning, wherever you are</p><h2>Your next <em>breakthrough</em><br />can start anywhere.</h2><p>Keep your tutor, questions, and progress close with Qrie.</p><div className="store-buttons"><a className="play-store-button" href="/mobile-coming-soon"><img src="/art/googleplay.svg" alt="Google Play" width="24" height="24" loading="lazy" decoding="async" /><span>GET IT ON<br /><b>Google Play</b></span></a></div></div></section>
 
-      <footer><div className="shell footer-grid"><div><a className="logo footer-logo" href="#top"><img {...imgProps(ART.logoLight, 'Qrie light logo')} /><span>qrie</span></a><p>Your one-on-one AI tutor<br />for classes 6–12.</p></div><div><b>Learn</b><a href="/subjects">Subjects</a><a href="/how-it-works">How it works</a><a href="/why-qrie">Why Qrie</a></div><div><b>For families</b><a href="/students">For students</a><a href="/parents">For parents</a><a href="/contact">Contact us</a></div>{/*
+      <footer><div className="shell footer-grid"><div><a className="logo footer-logo" href="#top"><img {...imgProps(ART.logoLight, 'Qrie light logo')} /><span>qrie ai</span></a><p>Your one-on-one AI tutor<br />for classes 6–12.</p></div><div><b>Learn</b><a href="/subjects">Subjects</a><a href="/how-it-works">How it works</a><a href="/why-qrie">Why Qrie</a></div><div><b>For families</b><a href="/students">For students</a><a href="/parents">For parents</a><a href="/contact">Contact us</a></div>{/*
             THIS WAS A NEWSLETTER BOX THAT KEPT NOTHING.
             `onSubmit` was `if (email) setJoined(true)` and the page then said
             "You're on the list." There is no list: the address was never sent

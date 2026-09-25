@@ -69,7 +69,7 @@ export default function ChallengeRegisterPage() {
       <nav className="nav shell">
         <Link className="logo" href="/">
           <img {...imgProps(ART.logo, 'Qrie logo', true)} />
-          <span>qrie</span>
+          <span>qrie ai</span>
         </Link>
         <Link className="back-home" href="/">← Back home</Link>
       </nav>
