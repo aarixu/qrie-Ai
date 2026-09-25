@@ -2,6 +2,17 @@ node_modules/
 dist/
 build/
 .vite/
+# Next.js build output, from landing/. Sits at the repo root rather than under
+# apps/ on purpose: apps/* is an npm workspace glob, and a Next app in there
+# would pull its whole dependency tree into the root install of a working
+# classroom build.
+.next/
+.vercel/
+# The classroom build, staged under the marketing site so the two share one
+# origin. 43 MB of build output that `npm run build:site` regenerates from
+# apps/classroom in half a minute — a copy of it in git would be a second
+# source of truth for the app, and a stale one within a day.
+landing/public/app/
 __pycache__/
 *.py[cod]
 .venv/
@@ -67,3 +78,4 @@ probe*.json
 tools/speech/voices/
 tools/speech/samples/
 tools/measure/f-bench/.models/
+.vercel

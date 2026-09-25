@@ -253,12 +253,16 @@ export function Gate({ children }: { children: React.ReactNode }) {
   // The dev benches are not the product and have no student behind them.
   // Sending them through onboarding just puts a name form in front of a tool
   // whose whole job is to be opened and looked at.
+  // Compared against the app's own root, not the origin's: these are the only
+  // three places left that read location.pathname directly, and a literal '/'
+  // in front of them stops matching the moment the app is mounted at /app/.
+  const root = import.meta.env.BASE_URL;
   const isBench =
     import.meta.env.DEV &&
-    (location.pathname === '/canvas-lab' ||
-      location.pathname === '/avatar-lab' ||
-      location.pathname === '/model' ||
-      location.pathname.startsWith('/action-lab/'));
+    (location.pathname === `${root}canvas-lab` ||
+      location.pathname === `${root}avatar-lab` ||
+      location.pathname === `${root}model` ||
+      location.pathname.startsWith(`${root}action-lab/`));
 
   /**
    * THE TWO DOORS, AND THE SESSION ONE OF THEM OPENS.
@@ -557,11 +561,40 @@ function Boundaried({ children }: { children: React.ReactNode }) {
  */
 const Router = isNative() ? HashRouter : BrowserRouter;
 
+/**
+ * WHERE THIS APP IS MOUNTED ON ITS ORIGIN.
+ *
+ * Vite sets BASE_URL from `base`, which is '/' for the standalone build and
+ * '/app/' when the app is served under the marketing site so that the two
+ * share one origin — and therefore one Supabase session, and therefore one
+ * student rather than two. Read here rather than hardcoded so a single build
+ * flag moves the whole app and nothing has to be remembered.
+ *
+ * Only the web Router takes it. Inside the native shell the paths live after
+ * a '#' on a file:// URL, where a basename is meaningless at best.
+ */
+/**
+ * WITHOUT A TRAILING SLASH, which is not a detail — it is the whole thing.
+ *
+ * Vite's BASE_URL always ends in one ('/app/'), and React Router matches a
+ * basename as a PREFIX of the pathname. A student arriving at '/app' does not
+ * have a pathname starting with '/app/', so the router matched nothing and
+ * rendered nothing: assets all 200, Supabase signed in, #root empty, a blank
+ * cream screen. Caught in a local build, and it would have been a blank app on
+ * the front door in production.
+ *
+ * The `|| '/'` is for the standalone build, where stripping the slash off '/'
+ * leaves an empty string.
+ */
+const BASENAME = isNative()
+  ? undefined
+  : import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+
 export default function App() {
   useAppearance();
   useReportReplay();
   return (
-    <Router>
+    <Router basename={BASENAME}>
       <Boundaried>
         <Suspense fallback={<Splash />}>
         <Gate>

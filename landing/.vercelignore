@@ -1,0 +1,16 @@
+# WHAT NOT TO UPLOAD — and, by existing at all, what MUST be.
+#
+# Without this file the Vercel CLI falls back to .gitignore, and the repo root
+# ignores landing/public/app/ (43 MB of built classroom that has no business in
+# git). That would upload a site whose /app is empty: the rewrite would resolve,
+# index.html would be missing, and the app would 404 from its own front door
+# while every marketing page looked perfect.
+#
+# So the classroom build is deliberately NOT listed here.
+
+node_modules
+.next
+.env
+.env.*
+.v0-trash
+__v0_runtime_loader.js

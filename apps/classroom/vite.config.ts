@@ -334,6 +334,23 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, fileURLToPath(new URL('../..', import.meta.url)), '');
 
   return {
+    /**
+     * WHERE THIS APP IS MOUNTED, AS A BUILD FLAG.
+     *
+     * Default '/' — the standalone deploy, unchanged, so nothing that exists
+     * today moves. `VITE_BASE=/app/ npm run build` produces the same app
+     * mounted under the marketing site instead, which is what puts the landing
+     * form and the classroom on ONE ORIGIN.
+     *
+     * That is not a tidiness preference. A Supabase session lives in
+     * localStorage and localStorage is per-origin, so across two hostnames the
+     * contest form's anonymous user and the app's anonymous user are two
+     * different students, and `contest_signup.user_id` points at somebody who
+     * never opened a class. One flag, because the alternative is remembering
+     * eight places — BASE_URL is read by the router, the catalogue, the lesson
+     * and audio URLs, the service worker's scope and the reload guard.
+     */
+    base: env.VITE_BASE || '/',
     plugins: [
       react(),
       openRouterRelays(

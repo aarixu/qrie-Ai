@@ -71,11 +71,36 @@ with no use in MVP-1.
 
 ## 3. The endpoint
 
+> **CORRECTION, 2026-09-25 — the shape below is NOT sufficient, and a form built
+> exactly to it fails on every call.** Two things this section left out, both
+> verified against the deployed relay:
+>
+> 1. **Every relay route needs `Authorization: Bearer <supabase access token>`.**
+>    `admitFree` 401s without one, and the relay never mints an identity — the
+>    caller does. A marketing page must ship `@supabase/supabase-js`, call
+>    `signInAnonymously()` on first visit, and send that token. CORS is a
+>    wildcard, so reaching the relay was never the problem; being admitted was.
+> 2. **`/api/enroll` and `/api/enroll/otp` both answer `501` today**, before auth
+>    and before the gate, because no SMS vendor adapter exists —
+>    `createMsg91Otp` is a proposal in a comment, not a symbol. So no phone can
+>    be verified and no `consent_record` can be written at all
+>    (`otp_verified_at` is NOT NULL, deliberately).
+>
+> **What actually ships now:** the contest form at `landing/` writes to
+> `contest_signup` through `record_contest_signup`, a `security definer`
+> function that reads `auth.uid()` from the caller's own JWT — no endpoint, no
+> service-role key on the website, and no user id on the wire to forge. The
+> parent's name and number go into `parent_name_unverified` /
+> `parent_phone_unverified`, which are what they say they are.
+>
+> The shape below stands as the design for the day an SMS vendor exists.
+
 **It does not exist yet. I will build it.** Build your form against this shape and it
 will work when I land it.
 
 ```
 POST /api/enroll
+Authorization: Bearer <supabase access token>
 Content-Type: application/json
 ```
 

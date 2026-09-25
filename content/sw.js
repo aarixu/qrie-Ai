@@ -13,8 +13,17 @@
  */
 const CACHE = 'ai-tutor-v3'; // bumped for the Riso re-brand: the activate handler clears v2, so installed clients stop serving amber-era icons
 
+/**
+ * The app's root, taken from the worker's own scope rather than assumed to be
+ * the origin root. Standalone that is '/'; mounted under the marketing site it
+ * is '/app/', and precaching '/' there would store the landing page as this
+ * app's offline shell — the wrong document entirely, served first, every time
+ * the connection drops.
+ */
+const ROOT = new URL(self.registration.scope).pathname;
+
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(['/'])));
+  event.waitUntil(caches.open(CACHE).then((c) => c.addAll([ROOT])));
   // NO skipWaiting HERE, deliberately. A deploy while a student is mid-class
   // would otherwise swap the app out from under them - during the one
   // experience in this product that has to be seamless. The new worker waits

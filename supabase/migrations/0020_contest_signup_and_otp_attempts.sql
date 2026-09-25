@@ -46,6 +46,21 @@ create table if not exists public.contest_signup (
   city text check (char_length(city) <= 80),
   school_name text check (char_length(school_name) <= 120),
   campaign text check (char_length(campaign) <= 40),
+  -- THE PARENT, AS TYPED, AND NOT AS CONSENT.
+  --
+  -- consent_record.otp_verified_at is NOT NULL, deliberately: that table can
+  -- only hold a consent somebody actually proved. There is no SMS vendor yet,
+  -- so nothing can be proved, and the landing form still asks for a parent's
+  -- name and number because the contest needs somebody to ring about a prize.
+  --
+  -- Those two facts have to live somewhere that cannot be mistaken for the
+  -- first one. Here, on the entry form, under names that say what they are: a
+  -- string a child typed into a box. NOT a verified parent, NOT permission to
+  -- contact anybody, and never to be read as either. When an OTP vendor
+  -- exists, a verify writes consent_record and THAT is the record that counts;
+  -- this column stays what it always was.
+  parent_name_unverified text check (char_length(parent_name_unverified) <= 80),
+  parent_phone_unverified text check (parent_phone_unverified ~ '^\+[1-9][0-9]{7,14}$'),
   created_at timestamptz not null default now()
 );
 
@@ -56,6 +71,117 @@ create unique index if not exists contest_signup_user on public.contest_signup (
 
 alter table public.contest_signup enable row level security;
 revoke all on table public.contest_signup from anon, authenticated;
+
+-- ---------------------------------------------------------------------------
+-- record_contest_signup — the one door in, and it does not take a user id.
+-- ---------------------------------------------------------------------------
+--
+-- WHY A DEFINER FUNCTION RATHER THAN A SERVICE-ROLE ROUTE. The obvious build
+-- is a server route on the marketing site holding the service key and passing
+-- the user id along. Two things are wrong with it. The service key becomes a
+-- SECOND thing that can write any row in this database, sitting in a Vercel
+-- project whose whole job is to serve strangers HTML; and the user id arrives
+-- in an argument, so whoever can call that route can write into anybody's
+-- entry — on a contest with prizes, that is the entire attack.
+--
+-- Here there is no argument to forge. `auth.uid()` is read out of the caller's
+-- own verified JWT by Postgres, so an entry can only ever be the caller's own,
+-- and the marketing site holds nothing but the published anon key.
+--
+-- The column CHECKs are the validation. They are already written above and
+-- they are the ones that actually hold, so this does not restate them; a
+-- rejected phone or an out-of-range class raises and the caller shows it.
+--
+-- ON CONFLICT rather than insert: contest_signup_user is unique on user_id, so
+-- a parent who submits twice is correcting their entry, and a retry after a
+-- dropped response does not enter the same child a second time.
+create or replace function public.record_contest_signup(
+  p_student_name text,
+  p_klass integer,
+  p_student_phone text,
+  p_address text,
+  p_takes_tuition boolean,
+  p_parent_name text,
+  p_parent_phone text,
+  p_campaign text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  -- THE LINE UNDER THE WHOLE THING, and it is the same one 0019 drew.
+  --
+  -- This function is granted to `authenticated`, and a marketing page mints an
+  -- anonymous identity for every visitor — so identities are FREE. A unique
+  -- index on user_id bounds rows per identity and therefore bounds nothing at
+  -- all: a script that signs in anonymously in a loop has one unlimited write
+  -- path into a table of children's home addresses.
+  --
+  -- claim_otp_send answered exactly this hole with day_project (0019), and its
+  -- comment says why in as many words: "Identities are free, so per-phone and
+  -- per-user caps together still bound nothing." The same sentence is true
+  -- here with 'phone' crossed out, so the same fence goes up.
+  --
+  -- 2000 is chosen against the contest rather than against the cost: the plan
+  -- is a first-500 push, so a real day never comes near it, and a day that
+  -- does is either a success worth being woken up for or an attack worth
+  -- stopping. Raise it deliberately, not reflexively.
+  day_project constant integer := 2000;
+  caller uuid := auth.uid();
+  day_start timestamptz := date_trunc('day', now() at time zone 'utc') at time zone 'utc';
+  existing boolean;
+  today integer;
+begin
+  -- No session, no entry. A definer function runs with the owner's rights, so
+  -- this is the check that stops it being an open write for the whole world.
+  if caller is null then
+    raise exception 'not signed in' using errcode = '28000';
+  end if;
+
+  select true into existing from public.contest_signup where user_id = caller;
+
+  -- Only a NEW entry is counted. A parent fixing a typo in their own entry
+  -- must not be turned away because strangers filled today's quota, and an
+  -- update adds no row to bound.
+  if existing is null then
+    -- Serialised for this transaction so two simultaneous entries cannot both
+    -- read 1999 and both be admitted. Count-then-insert without it is a race,
+    -- and the race is as wide as the traffic.
+    perform pg_advisory_xact_lock(hashtext('contest_signup_day'));
+    select count(*)::integer into today
+      from public.contest_signup where created_at >= day_start;
+    if today >= day_project then
+      raise exception 'entries are closed for today' using errcode = '53400';
+    end if;
+  end if;
+
+  insert into public.contest_signup as c (
+    user_id, student_name, klass, student_phone, address,
+    takes_tuition, parent_name_unverified, parent_phone_unverified, campaign
+  )
+  values (
+    caller, p_student_name, p_klass, p_student_phone, p_address,
+    p_takes_tuition, p_parent_name, p_parent_phone, p_campaign
+  )
+  on conflict (user_id) do update set
+    student_name = excluded.student_name,
+    klass = excluded.klass,
+    student_phone = excluded.student_phone,
+    address = excluded.address,
+    takes_tuition = excluded.takes_tuition,
+    parent_name_unverified = excluded.parent_name_unverified,
+    parent_phone_unverified = excluded.parent_phone_unverified,
+    campaign = excluded.campaign;
+end;
+$$;
+
+-- Readable by nobody. A signed-in visitor may WRITE their own entry and can
+-- still not SELECT one, which is the point of the table having no policies:
+-- the address of every child who entered is not a thing a browser may list.
+revoke all on function public.record_contest_signup(text, integer, text, text, boolean, text, text, text) from public, anon;
+grant execute on function public.record_contest_signup(text, integer, text, text, boolean, text, text, text) to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- 2. The verify gate — the binding the vendor does not do, and the attempt

@@ -49,6 +49,33 @@ if (isNative() && BASE === '') {
   );
 }
 
+/**
+ * AND THE SAME COURTESY ON THE WEB, FOR THE SETTING THAT FAILS QUIETEST.
+ *
+ * With VITE_SUPABASE_URL or the anon key missing, `supabase()` returns null and
+ * the app carries on looking perfectly well: the sign-in UI simply is not there,
+ * sync simply does not happen. Then every relay call needs a session token, a
+ * null client cannot mint one, no Authorization header is sent, and every class
+ * dies at the server with a 401 the student sees as "something went wrong".
+ *
+ * Nothing said this out loud on the web path. The guard above is fenced behind
+ * isNative(), and a deployed build with an empty env is exactly the case a
+ * person cannot debug from the outside — the page looks fine.
+ *
+ * Read from import.meta.env here rather than imported from ./supabase: this
+ * must fire at module load, and importing that module to ask it would pull the
+ * whole client into the entry chunk to answer a question about a string.
+ */
+if (!isNative() && import.meta.env.PROD) {
+  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+    console.error(
+      '[relay] VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY are missing from this BUILD. ' +
+        'The app will run local-only and every class will fail with 401 — the values are ' +
+        'baked in at build time, so setting them after the fact changes nothing.',
+    );
+  }
+}
+
 export const relayUrl = (path: string): string => `${BASE}${path}`;
 
 /**

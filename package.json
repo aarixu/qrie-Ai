@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "npm run dev --workspace @ai-tutor/classroom",
     "build": "npm run build --workspace @ai-tutor/classroom",
+    "build:site": "node tools/bin/build-site.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",

@@ -140,9 +140,23 @@ async function fetchKeptClasses(): Promise<CatalogEntry[]> {
   }));
 }
 
+/**
+ * THE STATIC ROOT, WHICH IS NOT ALWAYS THE ORIGIN ROOT.
+ *
+ * Lessons are served out of Vite's publicDir, so they sit beside index.html —
+ * at '/' for the standalone build and at '/app/' when the app is mounted under
+ * the marketing site. Vite sets BASE_URL to whichever it is, with a trailing
+ * slash guaranteed, so every path below is built from it rather than from a
+ * hardcoded '/'. Three lines here used to assume the origin root, and under a
+ * subpath each one fetched a file that is not there.
+ */
+const STATIC_ROOT = import.meta.env.BASE_URL;
+
 export async function fetchCatalog(): Promise<CatalogEntry[]> {
   if (catalogCache) return catalogCache;
-  const doc = (await (await fetch('/index.json')).json()) as { lessons: CatalogEntry[] };
+  const doc = (await (await fetch(`${STATIC_ROOT}index.json`)).json()) as {
+    lessons: CatalogEntry[];
+  };
 
   const kept = await fetchKeptClasses();
   // Authored first, and an authored lesson wins a clash: a hand-written class
@@ -161,7 +175,7 @@ export async function fetchCatalog(): Promise<CatalogEntry[]> {
  * what a lesson folder is called.
  */
 export const lessonAudioUrl = (entry: CatalogEntry): string =>
-  `${isAbsolute(entry.path) ? '' : '/'}${entry.path.replace(/\/[^/]+$/, '')}/audio`;
+  `${isAbsolute(entry.path) ? '' : STATIC_ROOT}${entry.path.replace(/\/[^/]+$/, '')}/audio`;
 
 /**
  * A class kept in Storage carries a whole URL; an authored one carries a path
@@ -170,7 +184,7 @@ export const lessonAudioUrl = (entry: CatalogEntry): string =>
 const isAbsolute = (path: string): boolean => /^https?:\/\//.test(path);
 
 export const lessonUrl = (entry: CatalogEntry): string =>
-  isAbsolute(entry.path) ? entry.path : `/${entry.path}`;
+  isAbsolute(entry.path) ? entry.path : `${STATIC_ROOT}${entry.path}`;
 
 /**
  * THE PICTURES INSIDE A CLASS THAT LIVES SOMEWHERE ELSE.
@@ -187,13 +201,19 @@ export const lessonUrl = (entry: CatalogEntry): string =>
  * should not have to.
  */
 function pointAtItsOwnFolder(lesson: Lesson, entry: CatalogEntry): Lesson {
-  if (!isAbsolute(entry.path)) return lesson;
+  const cloud = isAbsolute(entry.path);
+  // A local class under a subpath has the same problem for the same reason:
+  // "/<id>/generated/x.png" is absolute from the ORIGIN root, and at /app/ the
+  // file is one folder further in. When STATIC_ROOT is '/' this is a no-op and
+  // the lesson comes back untouched, which is the standalone build.
+  if (!cloud && STATIC_ROOT === '/') return lesson;
   const folder = entry.path.replace(/\/[^/]+$/, '');
 
   return {
     ...lesson,
     elements: lesson.elements.map((el) => {
       if (!('src' in el) || typeof el.src !== 'string' || !el.src.startsWith('/')) return el;
+      if (!cloud) return { ...el, src: `${STATIC_ROOT}${el.src.slice(1)}` };
       // "/<id>/generated/x.png" -> "<storage folder>/generated/x.png". The id
       // segment is dropped because the folder already ends with it.
       const withoutId = el.src.replace(/^\/[^/]+\//, '');

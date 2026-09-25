@@ -57,8 +57,17 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
    *    hold their state in memory, so a reload there restarts them from the
    *    first question.
    */
-  const SAFE_TO_RELOAD = (): boolean =>
-    !/^\/(lesson|class|diagnostic|quiz)\b/.test(window.location.pathname);
+  /**
+   * The app's own root, which is '/' standalone and '/app/' when it is mounted
+   * under the marketing site so the two share one origin. Both the reload
+   * guard below and the worker's own scope are relative to THIS, not to the
+   * origin — a regex anchored at '/' matches nothing once there is a prefix in
+   * front of it, and a guard that silently never fires is a reload in the
+   * middle of somebody's placement test.
+   */
+  const ROOT = import.meta.env.BASE_URL;
+  const IN_CLASS = new RegExp(`^${ROOT}(lesson|class|diagnostic|quiz)\\b`);
+  const SAFE_TO_RELOAD = (): boolean => !IN_CLASS.test(window.location.pathname);
 
   window.addEventListener('load', () => {
     // Captured BEFORE registering: this is what tells a first visit apart
@@ -66,7 +75,7 @@ if (import.meta.env.PROD && !isNative() && 'serviceWorker' in navigator) {
     const wasControlled = navigator.serviceWorker.controller !== null;
 
     void navigator.serviceWorker
-      .register('/sw.js')
+      .register(`${ROOT}sw.js`, { scope: ROOT })
       .then((registration) => {
         const askWhenSafe = (worker: ServiceWorker | null): void => {
           if (!worker || !SAFE_TO_RELOAD()) return;
