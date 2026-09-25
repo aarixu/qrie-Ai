@@ -1,6 +1,6 @@
 # 3. Backend, database, auth and security
 
-This is the part of Curie that decides who a student is, what it is allowed to spend on
+This is the part of Qrie that decides who a student is, what it is allowed to spend on
 them, where the record of what they did is kept, and who else is ever permitted to see
 it. It is also the only place that can answer four questions the rest of the product asks
 constantly and cannot answer for itself: has anybody had this class before, may this call
@@ -236,7 +236,7 @@ The relay is the strongest thing in the repo and deserves to be said plainly.
   screen is the sharper case: `packages/safety/src/screen.ts:250` returns a `support`
   verdict with Tele-MANAS 14416 and Childline 1098 (`:71-72`), the class stops, and
   `apps/classroom/src/lib/safety.ts:41-43` records a `distress` flag into the same local log.
-  A child telling Curie they are being hurt currently reaches nobody at all.
+  A child telling Qrie they are being hurt currently reaches nobody at all.
 - **School auth in every part, including the teacher.** `organization.kind` already permits
   `'school'` and `membership.role` already permits `'teacher'` and `'admin'` (`0005:36,46`),
   and only `'solo'` and `'student'` have ever been written. There is no roster, no invite,
@@ -656,7 +656,7 @@ header.
 This is the biggest new build in this PRD and the thing the MVP-2 demo cannot happen
 without. The shape is forced by two facts: the students are minors, so no email and no
 password; and the school holds the relationship, so the school is the data fiduciary under
-DPDP and Curie is the processor, which is what removes the per-child verifiable-consent
+DPDP and Qrie is the processor, which is what removes the per-child verifiable-consent
 burden from us. **Teachers and school admins are the opposite case: they are adults, they
 sign in with email and password, and requirement 27 is the door that lets them exist at
 all.**
@@ -915,7 +915,7 @@ two channels. The contest funnel writes `parent_otp` with the OTP-verified paren
 from the enrolment form, which is the artifact DPDP needs for verifiable parental consent
 and is the same number the progress card and the RBI pre-debit notification travel down.
 The school channel writes `school_fiduciary` once per organization at pilot signing, with the
-written agreement naming the school as fiduciary and Curie as processor, and every roster
+written agreement naming the school as fiduciary and Qrie as processor, and every roster
 student inherits it. The consent text is versioned because a wording change must not
 retroactively claim people agreed to something they did not see.
 
@@ -1089,12 +1089,12 @@ be subpoenaed, leaked or read by us.
 
 **29. A breach has a clock, and a school that leaves takes its data with it.** DPDP obliges
 a fiduciary to notify the Board and every affected principal of a personal data breach, and
-the whole school design rests on Curie being a processor under the school's instructions,
+the whole school design rests on Qrie being a processor under the school's instructions,
 which requires a contract with breach terms that does not exist yet. Three pieces, all of
 them cheap and none of them optional before a pilot agreement is signed.
 
-- **The DPA clauses**, in the pilot agreement: the school is fiduciary and Curie is
-  processor; the purposes Curie may process for and no others; sub-processors named
+- **The DPA clauses**, in the pilot agreement: the school is fiduciary and Qrie is
+  processor; the purposes Qrie may process for and no others; sub-processors named
   (Supabase, Google Cloud, the SMS vendor, Cloudflare); a breach notification obligation to
   the school within 24 hours of detection; deletion or return on termination; and an exit
   clause naming the export format and the window.
@@ -1609,7 +1609,7 @@ Ranked by what would actually stop the product.
 
 Only the ones that are Aarav's.
 
-1. **What is Curie's position on mandatory reporting under POCSO when a disclosure names an
+1. **What is Qrie's position on mandatory reporting under POCSO when a disclosure names an
    adult?** Requirement 28 routes a disclosure to one person, you, and stops there, which is
    the right default and is not a policy. POCSO places a reporting obligation on a person who
    has knowledge of an offence against a child, and the product is now a channel through which
@@ -1630,7 +1630,7 @@ Only the ones that are Aarav's.
    about you, not about code.
 4. **Is the school the data fiduciary, in writing, with breach terms?** The entire school-auth
    design, and the fact that we do not collect a parent phone number for 500 children, rests
-   on the pilot agreement saying the school holds the relationship and Curie processes on its
+   on the pilot agreement saying the school holds the relationship and Qrie processes on its
    instructions. Requirement 29 lists the six clauses that have to be in it. If that clause is
    not there then every roster student needs individual parental consent and the channel
    changes shape completely. This is the single highest-leverage sentence in the pilot

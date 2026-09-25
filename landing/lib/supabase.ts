@@ -54,7 +54,7 @@ async function startAnonymousSession(): Promise<string | null> {
   if (!db) return null
   const { data, error } = await db.auth.signInAnonymously()
   if (error) {
-    console.error('[curie] could not start an anonymous session:', error.message)
+    console.error('[qrie] could not start an anonymous session:', error.message)
     return null
   }
   return data.session?.access_token ?? null

@@ -82,7 +82,7 @@ const PHASES = [
 'gate.ts:198 already wrote those words carefully, and the care is in the',
 'DISTINCTION: a 429 is the student own rate or daily budget and says so; a 503',
 'is our capacity or our outage, and its wording deliberately does not hand a',
-'child a fault they do not have ("Curie has taught a lot of classes today", not',
+'child a fault they do not have ("Qrie has taught a lot of classes today", not',
 '"you did something wrong"). relayError already turns that into an Error whose',
 'message IS that sentence, for 429 and 503 only.',
 '',

@@ -102,7 +102,7 @@ export async function saveEntry(entry: Entry): Promise<Saved> {
   if (error) {
     // The message is ours, not Postgres's — a constraint name helps nobody on a
     // phone — but the real one is logged so a broken deploy is diagnosable.
-    console.error('[curie] contest signup failed:', error.code, error.message)
+    console.error('[qrie] contest signup failed:', error.code, error.message)
     // 53400 is the project-wide daily cap in record_contest_signup, and it is
     // the one failure where "try again in a moment" would be a lie: the cap
     // does not lift until midnight UTC. Everything else is worth retrying.

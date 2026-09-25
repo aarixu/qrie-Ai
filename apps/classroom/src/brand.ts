@@ -11,7 +11,7 @@
  */
 export const BRAND = {
   /** Product name. Change this one line to rename the app. */
-  name: 'Curie',
+  name: 'Qrie',
   /** Used where the name needs a qualifier, e.g. an empty state or a share title. */
   tagline: 'Learn with a tutor who never runs out of patience',
   /** Greeting prefix on Home. Kept separate so a rename does not reword the greeting. */

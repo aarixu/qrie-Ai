@@ -53,7 +53,7 @@ async function complete(system: string, user: string): Promise<string> {
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${keyFromEnvFile()}`,
-      'X-Title': 'Curie',
+      'X-Title': 'Qrie',
     },
     body: JSON.stringify({
       model: MODEL,

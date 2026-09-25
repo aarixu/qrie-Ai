@@ -125,7 +125,7 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${opts.apiKey}`,
-          'X-Title': 'Curie',
+          'X-Title': 'Qrie',
         },
         body: JSON.stringify({
           model,

@@ -1,6 +1,6 @@
 export const meta = {
   name: 'curie-prd-corrections',
-  description: 'Apply the locked corrections to all six Curie PRDs, then re-check that the seams actually closed',
+  description: 'Apply the locked corrections to all six Qrie PRDs, then re-check that the seams actually closed',
   phases: [
     { title: 'Correct', detail: 'one agent per PRD, applying the shared decision list to its own file' },
     { title: 'Recheck', detail: 'confirm the contradictions and broken contracts are gone' },

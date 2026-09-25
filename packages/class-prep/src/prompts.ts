@@ -569,7 +569,7 @@ export function plannerUser(
    *
    * Appended NEAR the end on purpose: it is the voice everything above has to
    * come out in, and a model weights the end of its instructions most heavily.
-   * Absent for Curie own tutor, who has a persona of her own.
+   * Absent for Qrie own tutor, who has a persona of her own.
    *
    * FOR A HINGLISH CLASS it is no longer the very last thing the planner
    * reads: the register goes after it, because a style brief describes a real

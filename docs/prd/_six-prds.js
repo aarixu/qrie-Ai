@@ -1,6 +1,6 @@
 export const meta = {
   name: 'curie-six-prds',
-  description: 'Write the six Curie PRDs from the verified audit, each self-checked against the tree, then cross-checked for contradictions',
+  description: 'Write the six Qrie PRDs from the verified audit, each self-checked against the tree, then cross-checked for contradictions',
   phases: [
     { title: 'Draft', detail: 'one PRD per area, grounded in its verified audit brief' },
     { title: 'Ground', detail: 'each PRD re-checked against the actual source tree' },
@@ -12,12 +12,12 @@ const SCRATCH = 'docs/prd/_audit'
 
 const SPINE = [
 '=============================================================================',
-'CURIE - THE LOCKED SPINE. Every PRD must agree with every line of this.',
+'QRIE - THE LOCKED SPINE. Every PRD must agree with every line of this.',
 'Decided with Aarav (the founder) over 2026-09-16/17. Do not re-open these.',
 '=============================================================================',
 '',
 'THE PRODUCT',
-'Curie is an AI tutor for Class 6-12 in India, narrating in Hinglish. A student',
+'Qrie is an AI tutor for Class 6-12 in India, narrating in Hinglish. A student',
 'asks for a topic; if no class exists it is PREPARED LIVE by LLMs (planned,',
 'drawn, checked) and starts teaching in ~14 seconds; the class is then KEPT, so',
 'every later student gets it as a download, personalised by the learner model.',
@@ -69,7 +69,7 @@ const SPINE = [
 'JetBrains Mono (data). Class names are unchanged, so no screen needs rewriting.',
 '',
 'GO TO MARKET - TWO CHANNELS, BOTH REAL',
-'(a) SCHOOLS AND INSTITUTES - the FEE-LINE model. Curie does NOT invoice the',
+'(a) SCHOOLS AND INSTITUTES - the FEE-LINE model. Qrie does NOT invoice the',
 '    school; the school adds a per-student "digital learning" line item to its',
 '    existing annual fee structure and collects it with fees it already',
 '    collects. One school is READY and has asked for a demo (~500 students,',
@@ -277,7 +277,7 @@ const AREAS = [
 ' - SCHOOL AUTH, in full. One school account; teachers and students scoped to one',
 '   organization; a student joins by picking themselves off their class roster with NO',
 '   email and NO password, because they are minors; the school holds the data and is',
-'   the data fiduciary under DPDP while Curie is the processor, which is what removes',
+'   the data fiduciary under DPDP while Qrie is the processor, which is what removes',
 '   the per-child verifiable-consent burden. organization.kind=school and role=teacher',
 '   are already legal values in migration 0005. membership has no id column. Define the',
 '   roster import, the invite and claim flow, and the RLS policies that let a teacher',
@@ -460,7 +460,7 @@ const CRITIC_SCHEMA = {
 }
 
 const writePrompt = (a) => [
-'You are writing PRD ' + a.n + ' of 6 for Curie. Your cwd is the repo.',
+'You are writing PRD ' + a.n + ' of 6 for Qrie. Your cwd is the repo.',
 '',
 'FIRST, read your verified audit brief. It is the ground truth for your area, produced',
 'by an agent that read the source and was then adversarially re-verified:',
@@ -561,7 +561,7 @@ const results = await parallel([
   () =>
     agent(
       [
-'Six PRDs have been written for Curie and each has been fact-checked against the tree.',
+'Six PRDs have been written for Qrie and each has been fact-checked against the tree.',
 'Your job is to make them one document set instead of six documents.',
 '',
 SPINE,
@@ -588,7 +588,7 @@ corpus,
   () =>
     agent(
       [
-'Be the completeness critic on six PRDs for Curie, an AI tutor for Indian schoolchildren',
+'Be the completeness critic on six PRDs for Qrie, an AI tutor for Indian schoolchildren',
 'that is about to be demoed to a real school and launched to real students via a contest.',
 '',
 SPINE,

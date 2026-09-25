@@ -406,7 +406,7 @@ saying no, and they are now the most likely sentences in the product: the projec
 is Rs 500 a UTC day (`packages/relay/src/gate.ts:151`) against a pilot that will spend
 roughly Rs 2,158 a day at MVP-1 rates, so until PRD 6 re-derives and raises it, `capped`
 is not an edge case, it is a Tuesday. A student who is told "you have used up today's
-classes" when the truth is that Curie has, has been handed a fault that is ours, and a
+classes" when the truth is that Qrie has, has been handed a fault that is ours, and a
 student who is shown a spinner where a queue is has been handed nothing at all.
 *Depends on:* PRD 3 for the prep-lock states and for what the relay does when speech
 queues rather than 5xxs; PRD 6 for the degradation ladder and for raising the ceiling
@@ -554,7 +554,7 @@ and the `SCHEDULE_EXACT_ALARM` permission from `AndroidManifest.xml:63`.
 currently arrive with Android's generic info icon, at an unpredictable time, and Play
 scrutinises `SCHEDULE_EXACT_ALARM` for apps that are not clocks or calendars.
 *Known good when:* a reminder on an Android 14 device arrives within a minute of its
-time, showing the Curie mark.
+time, showing the Qrie mark.
 
 **21. APK payload diet.**
 The web payload copied into the APK is 44 MB before a single model byte: 33 MB of
@@ -841,7 +841,7 @@ not be allowed to grow quietly: there is no credit cushion behind it.
    Until PRD 6 re-derives the ceiling and PRD 3 makes it a configurable value rather than
    a plpgsql constant, a school afternoon ends in `capped` for everyone who logged in
    after it did. The client cannot fix that, and requirement 23 is the difference between
-   a product that says "Curie has taught a lot of classes today" and a product that tells
+   a product that says "Qrie has taught a lot of classes today" and a product that tells
    thirty children they used up something they did not.
 8. **Two MVP-2 screens are waiting on an identity scheme that is being replaced.**
    The roster picker and the staff sign-in are cheap screens over auth that does not

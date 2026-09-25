@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 /**
  * THE APP ICONS, DRAWN FROM THE ONE MARK.
  *
- * The Curie mark lives in exactly one place — apps/classroom/src/ui/Logo.tsx —
+ * The Qrie mark lives in exactly one place — apps/classroom/src/ui/Logo.tsx —
  * and content/icon.svg is that component's geometry placed by a single
  * transform so the two cannot drift. This turns those SVGs into the PNGs the
  * stores and the launchers insist on, and it is a SCRIPT rather than a folder

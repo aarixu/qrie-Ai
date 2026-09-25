@@ -14,7 +14,7 @@ in the morning. So the order is: stop the bleeding, then find out why.
 | what you are told | first thing to look at |
 |---|---|
 | "it says come back tomorrow" | §2 — a cap fired. Which one decides everything. |
-| "it says Curie is having a rest" | §1 — somebody or something halted the relay. |
+| "it says Qrie is having a rest" | §1 — somebody or something halted the relay. |
 | "nothing happens when I tap a class" | §3 — the relay, or the preparation, or the lock. |
 | "the class started and stopped" | §4 — the ear, the judge, or speech. |
 | "I never got the code" | §5 — there is no SMS vendor. This is expected. |
@@ -42,7 +42,7 @@ A row in Postgres, read on the very next request. This is the one to use.
 update public.relay_control set halted = true, halted_reason = 'why', updated_at = now();
 ```
 
-Students immediately get *"Curie is having a rest. Classes are paused for a few
+Students immediately get *"Qrie is having a rest. Classes are paused for a few
 minutes."* — 503, and the wording says **minutes**, so do not leave it set for a
 day without changing the message.
 

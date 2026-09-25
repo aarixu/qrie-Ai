@@ -1,4 +1,4 @@
--- PRICES FOR THE MODELS CURIE ACTUALLY CALLS.
+-- PRICES FOR THE MODELS QRIE ACTUALLY CALLS.
 --
 -- This is operator data, not a migration: prices are a fact about somebody
 -- else's contract, and the person who pays the bill is the person who

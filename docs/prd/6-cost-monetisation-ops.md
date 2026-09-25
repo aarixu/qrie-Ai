@@ -1,6 +1,6 @@
 # 6. Cost, monetisation and operations
 
-This is the part of Curie that decides whether it can afford its own students, how a rupee
+This is the part of Qrie that decides whether it can afford its own students, how a rupee
 gets from a parent or a school into the account that pays the vendors, and what happens at
 two in the morning when the class will not start. Three questions live here and nowhere
 else: what did that hour of teaching actually cost, who is allowed to spend it, and who
@@ -312,7 +312,7 @@ of this document takes them apart.
 - **A runbook and an on-call story.** Repo-wide, there is no runbook, no on-call rota and no
   status page. `git grep -niE "mailto:|support@|grievance"` returns **zero** hits in code and
   two in a research note (`docs/research/recon-2.md:18,137`), and both of those are a vendor's
-  own address. Curie has no support address anywhere, nobody has estimated how much inbound a
+  own address. Qrie has no support address anywhere, nobody has estimated how much inbound a
   pilot produces, and there is no page for the one incident class that has a legal clock on
   it: a personal data breach.
 - **A catalogue-warming decision.** By the repo's own model, preparing all 1,099 topics is
@@ -1047,7 +1047,7 @@ the date as required:
 
 > Aarav studied 47 topics this month and now does 7 outcomes on his own that he could not
 > do in August, including the one about how the heart is a double pump. See his card:
-> <link>. Curie renews tomorrow, Rs <amount>, on the UPI mandate ending <last4>. To pause,
+> <link>. Qrie renews tomorrow, Rs <amount>, on the UPI mandate ending <last4>. To pause,
 > reply STOP or tap here.
 
 Then `notified_at` is stamped, and a debit never happens without a stamp: the job that
@@ -1078,12 +1078,12 @@ reply moves the mandate to `paused` without losing the account.
 - **What the school gets.** The deliverables list is PRD 5's, cited rather than restated here,
   because every item on it is PRD 5's build: the teacher surface, the class board, the
   assignment entity, the progress card per student per term and the coverage honesty block
-  that says what the product does not claim. This document adds only the access terms: Curie
+  that says what the product does not claim. This document adds only the access terms: Qrie
   for every student in the classes covered, roster-pick login with no email for minors, and
   teacher and admin sign-in by email and password - which is PRD 3's provisioning, PRD 2's
   screen and PRD 5's role statement, and without which nobody can set the school up at all.
 - **What the school adds.** One line in the existing annual fee structure, "digital
-  learning", per student per year, collected with fees they already collect. Curie does not
+  learning", per student per year, collected with fees they already collect. Qrie does not
   invoice the parent and does not invoice the school per seat. Whether that line is quoted
   inclusive or exclusive of 18% GST is settled once the entity question is, and the quote
   sheet says which on its face.
@@ -1433,7 +1433,7 @@ to Aarav, by email and by SMS**, and he decides what happens next. It does **not
 school by default, because a disclosure is sometimes about an adult at that school. The
 payload carries the minimum that lets him act and no transcript: a flag id, the student id,
 the org, the time, and the verdict. PRD 3 owns the route and the alert, PRD 5 owns whatever
-surface exists for it, and PRD 3 carries the open question addressed to Aarav about Curie's
+surface exists for it, and PRD 3 carries the open question addressed to Aarav about Qrie's
 position on mandatory reporting under POCSO when a disclosure names an adult - which needs a
 lawyer, not a PRD. This document's part is one page in requirement 23's runbook and the fact
 that this alert must not share a channel with a cost alarm.
@@ -1778,10 +1778,10 @@ Vertex drawn from Google Cloud credits** - Rs 18.70 of judge and Rs 4.97 of prep
 LLM calls - leaving about **Rs 2.48 of actual cash**, which is the fixed lines and nothing
 else. So two sentences are both true and they are not the same sentence:
 
-- "Curie costs under Rs 5 of **cash** per student-hour from day one" - **true**, and only
+- "Qrie costs under Rs 5 of **cash** per student-hour from day one" - **true**, and only
   while the GPU ear works. If it does not, the vendor ear adds Rs 4.47 of cash and the cash
   figure is Rs 6.95, which breaks too.
-- "Curie meets the Rs 5 ceiling" - **false** at MVP-1, by a factor of five.
+- "Qrie meets the Rs 5 ceiling" - **false** at MVP-1, by a factor of five.
 
 Anyone quoting a number from this document says which of the two they mean.
 

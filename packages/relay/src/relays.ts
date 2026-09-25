@@ -76,7 +76,7 @@ const OPENROUTER = 'https://openrouter.ai/api/v1';
 const authHeaders = (key: string): Record<string, string> => ({
   authorization: `Bearer ${key}`,
   'HTTP-Referer': 'https://github.com/aarixu/curie',
-  'X-Title': 'Curie',
+  'X-Title': 'Qrie',
 });
 
 /**

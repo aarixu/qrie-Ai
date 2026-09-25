@@ -13,8 +13,8 @@ import { LegalPage, Section } from '@/components/LegalPage'
  * closing date or judging basis is the part that bites.
  */
 export const metadata = {
-  title: 'Terms & Conditions | Curie',
-  description: 'The terms for using Curie and for entering the Champion League.',
+  title: 'Terms & Conditions | Qrie',
+  description: 'The terms for using Qrie and for entering the Champion League.',
 }
 
 export default function TermsPage() {
@@ -24,24 +24,24 @@ export default function TermsPage() {
       title="The rules,"
       accent="in plain words."
       updated="25 September 2026"
-      lede="Curie is built for students in classes 6 to 12. These terms cover using the tutor and entering the Champion League."
+      lede="Qrie is built for students in classes 6 to 12. These terms cover using the tutor and entering the Champion League."
     >
-      <Section title="Who may use Curie">
+      <Section title="Who may use Qrie">
         <p>
-          Curie is for school students in classes 6 to 12. If you are under 18, a
+          Qrie is for school students in classes 6 to 12. If you are under 18, a
           parent or guardian must agree to these terms before you use it.
         </p>
       </Section>
 
-      <Section title="What Curie is, and is not">
+      <Section title="What Qrie is, and is not">
         <p>
-          Curie is an AI tutor. It explains, asks questions and adapts to what you
+          Qrie is an AI tutor. It explains, asks questions and adapts to what you
           answer. Like any AI, <b>it can be wrong</b>. Do not treat it as the final
           word on an exam answer, and tell us when it gets something wrong — there
           is a report button in every class.
         </p>
         <p>
-          Curie is not a substitute for school, and it does not guarantee any
+          Qrie is not a substitute for school, and it does not guarantee any
           result in any examination.
         </p>
       </Section>
@@ -53,7 +53,7 @@ export default function TermsPage() {
           <Link href="/privacy">Privacy Policy</Link>.
         </p>
         <p>
-          Do not share your account with anyone else. If you use Curie on a shared
+          Do not share your account with anyone else. If you use Qrie on a shared
           phone, sign out when you are done.
         </p>
       </Section>

@@ -241,7 +241,7 @@ const html = `<title>The Web Picture Trial</title>
 
 <div class="page">
   <header class="top">
-    <p class="eyebrow">Curie · picture ladder · rung three</p>
+    <p class="eyebrow">Qrie · picture ladder · rung three</p>
     <h1>Should the tutor take pictures off the web?</h1>
     <p class="stand">Sixteen briefs written the way the planner really writes them, put to
       Wikimedia Commons, and every openly licensed result shown to a Gemini Flash model with

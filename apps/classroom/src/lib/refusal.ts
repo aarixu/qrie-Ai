@@ -82,12 +82,12 @@ const REFUSALS: Record<string, Omit<Refusal, 'message'>> = {
     ours: false,
     wait: 'tomorrow',
   },
-  'Curie is having a rest. Classes are paused for a few minutes.': {
+  'Qrie is having a rest. Classes are paused for a few minutes.': {
     reason: 'halted',
     ours: true,
     wait: 'minutes',
   },
-  'Curie has taught a lot of classes today. Please come back tomorrow.': {
+  'Qrie has taught a lot of classes today. Please come back tomorrow.': {
     reason: 'capped',
     ours: true,
     wait: 'tomorrow',

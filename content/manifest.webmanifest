@@ -1,6 +1,6 @@
 {
-  "name": "Curie",
-  "short_name": "Curie",
+  "name": "Qrie",
+  "short_name": "Qrie",
   "description": "Recorded classes with a live AI tutor one raised hand away.",
   "start_url": ".",
   "display": "standalone",

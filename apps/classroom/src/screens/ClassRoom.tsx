@@ -222,7 +222,7 @@ export function ClassRoom({
 }: {
   lesson: Lesson;
   /**
-   * A real teacher, lip-dubbed, instead of Curie own penguin. Absent for
+   * A real teacher, lip-dubbed, instead of Qrie own penguin. Absent for
    * every ordinary class - this is the client-clone path, and the room is
    * otherwise identical either way.
    */

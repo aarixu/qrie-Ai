@@ -1,10 +1,10 @@
-# Curie — continue from here (2026-08-23)
+# Qrie — continue from here (2026-08-23)
 
 Paste everything below into the new session.
 
 ---
 
-I'm Aarav, solo founder. We're building **Curie**, a learning app for Indian
+I'm Aarav, solo founder. We're building **Qrie**, a learning app for Indian
 Class 6–12 students. Read `ARCHITECTURE.md` and your memory files first, then
 read this whole message before touching anything.
 

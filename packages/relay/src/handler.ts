@@ -318,7 +318,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
         kind: 'json',
         value: {
           error: {
-            message: 'Curie is having a rest. Classes are paused for a few minutes.',
+            message: 'Qrie is having a rest. Classes are paused for a few minutes.',
             reason: 'disabled',
           },
         },

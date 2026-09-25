@@ -1,10 +1,10 @@
-# Curie — continue from here (2026-09-21)
+# Qrie — continue from here (2026-09-21)
 
 Paste everything below into the new session.
 
 ---
 
-I'm Aarav, solo founder. We're building **Curie**, a live AI tutor for Indian
+I'm Aarav, solo founder. We're building **Qrie**, a live AI tutor for Indian
 Class 6–12 students. Read `docs/handoff/2026-08-23-continue-here.md` for what the
 product IS (the recorded-first-class + raise-hand seam — that has not changed),
 then read this for where it stands. Read your memory files too.

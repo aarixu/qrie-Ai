@@ -27,7 +27,7 @@ export function LegalPage({
   return (
     <main className="subpage">
       <nav className="nav shell">
-        <Link className="logo" href="/" aria-label="Curie home"><span>curie</span></Link>
+        <Link className="logo" href="/" aria-label="Qrie home"><span>qrie</span></Link>
         <Link className="back-home" href="/">← Back home</Link>
       </nav>
       <section className="subpage-hero shell">
@@ -41,7 +41,7 @@ export function LegalPage({
       <section className="subpage-content shell">{children}</section>
       <footer>
         <div className="shell footer-bottom">
-          <span>© 2026 Curie Learning Co.</span>
+          <span>© 2026 Qrie Learning Co.</span>
           <Link href="/">Learning, made personal.</Link>
         </div>
       </footer>

@@ -1,4 +1,4 @@
-# Curie — the six-part plan
+# Qrie — the six-part plan
 
 > **SUPERSEDED, later the same day, by
 > `2026-09-12-closed-loop-rebuild.md`.** Aarav's product brief recut the

@@ -409,7 +409,7 @@ describe('a thrown relay refusal carries its status and its reason', () => {
     error: { message: 'You have used up today\u2019s classes. This resets tomorrow.', reason: 'budget' },
   };
   const capped = {
-    error: { message: 'Curie has taught a lot of classes today. Please come back tomorrow.', reason: 'capped' },
+    error: { message: 'Qrie has taught a lot of classes today. Please come back tomorrow.', reason: 'capped' },
   };
 
   it('keeps the student sentence EXACTLY as it was, for every caller that shows it', async () => {

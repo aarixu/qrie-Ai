@@ -77,14 +77,14 @@ describe('whose fault it is, and whether waiting helps', () => {
   });
 
   it('a halt is OURS and measured in minutes, never in days', () => {
-    const it_ = read('Curie is having a rest. Classes are paused for a few minutes.');
+    const it_ = read('Qrie is having a rest. Classes are paused for a few minutes.');
     expect(it_?.reason).toBe('halted');
     expect(it_?.ours).toBe(true);
     expect(it_?.wait).toBe('minutes');
   });
 
   it('our own spent day is OURS, and tomorrow', () => {
-    const it_ = read('Curie has taught a lot of classes today. Please come back tomorrow.');
+    const it_ = read('Qrie has taught a lot of classes today. Please come back tomorrow.');
     expect(it_?.reason).toBe('capped');
     expect(it_?.ours).toBe(true);
     expect(it_?.wait).toBe('tomorrow');
@@ -139,7 +139,7 @@ describe('the shape a screen actually holds', () => {
    * already puts a refusal in front of a child.
    */
   it('reads the bare sentence a screen kept in state', () => {
-    expect(readRefusal('Curie is having a rest. Classes are paused for a few minutes.')?.reason).toBe(
+    expect(readRefusal('Qrie is having a rest. Classes are paused for a few minutes.')?.reason).toBe(
       'halted',
     );
   });
@@ -200,8 +200,8 @@ describe('what a child reads', () => {
 
     for (const later of [
       'You have used up today’s classes. This resets tomorrow.',
-      'Curie is having a rest. Classes are paused for a few minutes.',
-      'Curie has taught a lot of classes today. Please come back tomorrow.',
+      'Qrie is having a rest. Classes are paused for a few minutes.',
+      'Qrie has taught a lot of classes today. Please come back tomorrow.',
     ]) {
       expect(show(later, { onRetry: true }), later).not.toContain('>Try again<');
     }
@@ -230,14 +230,14 @@ describe('what a child reads', () => {
   it('renders the caller move even where there is no retry to offer', () => {
     for (const later of [
       'You have used up today’s classes. This resets tomorrow.',
-      'Curie has taught a lot of classes today. Please come back tomorrow.',
+      'Qrie has taught a lot of classes today. Please come back tomorrow.',
     ]) {
       expect(show(later, { onRetry: true }), later).toContain('Back home');
     }
   });
 
   it('says it is not their fault only when it is ours', () => {
-    expect(show('Curie has taught a lot of classes today. Please come back tomorrow.')).toContain(
+    expect(show('Qrie has taught a lot of classes today. Please come back tomorrow.')).toContain(
       'Nothing you did caused this.',
     );
     expect(show('You have used up today’s classes. This resets tomorrow.')).not.toContain(

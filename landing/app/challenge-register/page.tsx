@@ -57,7 +57,7 @@ export default function ChallengeRegisterPage() {
     } catch {
       setState({
         at: 'failed',
-        message: 'We could not reach Curie. Nothing was saved — please check your connection.',
+        message: 'We could not reach Qrie. Nothing was saved — please check your connection.',
       })
     }
   }
@@ -68,14 +68,14 @@ export default function ChallengeRegisterPage() {
     <main className="register-page">
       <nav className="nav shell">
         <Link className="logo" href="/">
-          <img {...imgProps(ART.logo, 'Curie logo', true)} />
-          <span>curie</span>
+          <img {...imgProps(ART.logo, 'Qrie logo', true)} />
+          <span>qrie</span>
         </Link>
         <Link className="back-home" href="/">← Back home</Link>
       </nav>
       <section className="register-shell shell">
         <div className="register-intro">
-          <p className="eyebrow">Curie Champion League</p>
+          <p className="eyebrow">Qrie Champion League</p>
           <h1>Ready to<br /><em>show up?</em></h1>
           <p>Tell us a little about the learner. We&apos;ll save your spot and take you straight to the challenge.</p>
           <div className="register-illustration">
@@ -136,7 +136,7 @@ export default function ChallengeRegisterPage() {
           </div>
           <div className="consent-box">
             <label><input type="checkbox" required /> I confirm that the information shared is accurate and I am permitted to register this student.</label>
-            <label><input type="checkbox" required /> I agree to Curie&apos;s <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms &amp; Conditions</Link>.</label>
+            <label><input type="checkbox" required /> I agree to Qrie&apos;s <Link href="/privacy">Privacy Policy</Link> and <Link href="/terms">Terms &amp; Conditions</Link>.</label>
           </div>
           {error && <p className="form-error" role="alert">{error}</p>}
           {state.at === 'failed' && <p className="form-error" role="alert">{state.message}</p>}

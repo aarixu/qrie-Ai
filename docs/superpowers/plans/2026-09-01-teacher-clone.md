@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Put a client's two real teachers — their face, their voice, their teaching style — into Curie's live classroom, well enough to record a 2-minute demo, on a pipeline that can later run realtime.
+**Goal:** Put a client's two real teachers — their face, their voice, their teaching style — into Qrie's live classroom, well enough to record a 2-minute demo, on a pipeline that can later run realtime.
 
 **Architecture:** Three clones behind the seams that already exist. The **style** clone turns a transcript into a card the planner writes with, so the lesson is planned in their voice. The **voice** clone sits behind the existing `TtsAdapter`. The **face** clone is a `VideoAvatar` that plays a lip-dubbed clip per line, indexed by a manifest that mirrors the narration manifest exactly — same hash discipline, same fall-through. One Azure GPU VM runs MuseTalk and the chosen TTS behind a small HTTP service.
 
@@ -14,7 +14,7 @@
 
 - **Weights licences are checked separately from code licences.** Wav2Lip, V-Express, Sonic, FLOAT and XTTS-v2 weights are non-commercial and MUST NOT be used. Re-verify MuseTalk's weights licence on the day it is downloaded.
 - **Nothing renders a teacher's face or voice until the written consent email exists.** It must name both teachers and say "voice and likeness".
-- **The penguin stays.** This adds a second renderer; Curie's own students keep `CartoonAvatar`.
+- **The penguin stays.** This adds a second renderer; Qrie's own students keep `CartoonAvatar`.
 - **Do not touch** `ClassRoom.tsx` beyond which avatar it mounts, nor the player, canvas, ask gate or mic.
 - **The existing suite stays green:** `npm run typecheck` and `npx vitest run` before every commit.
 - Comments explain WHY, in the voice of the existing codebase. No decoration.
@@ -468,7 +468,7 @@ In `packages/class-prep/src/prepare.ts`, add to `PrepOptions`:
 ```ts
   /**
    * How a real teacher being cloned teaches (`styleBrief`). Absent for
-   * Curie's own tutor, which has a persona of her own.
+   * Qrie's own tutor, which has a persona of her own.
    */
   teacherStyle?: string;
 ```
@@ -685,7 +685,7 @@ const manifest: ClipManifest = {
 };
 
 describe('which face the tile shows', () => {
-  it('shows the penguin when no clone is given — Curie keeps her mascot', () => {
+  it('shows the penguin when no clone is given — Qrie keeps her mascot', () => {
     const html = renderToStaticMarkup(<TutorTile mode="teaching" variant="rail" />);
     expect(html).toContain('<svg');
     expect(html).not.toContain('<video');
@@ -722,7 +722,7 @@ export function TutorTile({
   variant: 'pip' | 'rail';
   /**
    * A real teacher's lip-dubbed take. Absent — every ordinary class — the
-   * penguin plays, because he is Curie's own tutor and this is a second
+   * penguin plays, because he is Qrie's own tutor and this is a second
    * renderer, not a replacement.
    */
   clone?: { manifest: ClipManifest; baseUrl: string; beatId: string | null };
@@ -830,7 +830,7 @@ rest, then render the remainder, write `clips.json`, and record the class.
 ## Self-review notes
 
 - **Spec coverage:** style clone → Tasks 2, 3. Voice clone → Task 8. Avatar →
-  Tasks 1, 4, 5, 7, 9. The Curie seam → Tasks 4, 5. Consent and licences →
+  Tasks 1, 4, 5, 7, 9. The Qrie seam → Tasks 4, 5. Consent and licences →
   Global Constraints. Azure risk → Task 6, first in Phase B.
 - **Deliberately deferred:** Tasks 7 and 9 carry shape but not commands,
   because both depend on the SKU Task 6 discovers. This is a real dependency,

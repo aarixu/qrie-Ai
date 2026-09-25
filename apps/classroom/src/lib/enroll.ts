@@ -144,7 +144,7 @@ export function otpWords(refusal: OtpRefusal): string {
  * them apart. A 429 on /api/enroll/otp is the send gate (3 a phone per ten
  * minutes) OR admitFree's rate window (gate.ts:199-202); a 503 is the kill
  * switch (handler.ts:307-320) OR the project's daily cap, whose own accurate
- * words are "Curie has taught a lot of classes today. Please come back
+ * words are "Qrie has taught a lot of classes today. Please come back
  * tomorrow." Substituting our sentence for either asserts a cause we do not
  * know — and the relay's prose is already written for a parent, which is why
  * refuseEnrol has always preferred it.

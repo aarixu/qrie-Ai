@@ -210,7 +210,7 @@ const REFUSALS: Record<Extract<ClaimResult, { allowed: false }>['reason'], { sta
   // day, so it must not say "tomorrow".
   halted: {
     status: 503,
-    message: 'Curie is having a rest. Classes are paused for a few minutes.',
+    message: 'Qrie is having a rest. Classes are paused for a few minutes.',
   },
   // WE have spent our day, not them. They did nothing, they have no budget to
   // check, and there is nothing they can do differently — so the message says
@@ -218,7 +218,7 @@ const REFUSALS: Record<Extract<ClaimResult, { allowed: false }>['reason'], { sta
   // than 429 for the same reason: this is our capacity, not their rate.
   capped: {
     status: 503,
-    message: 'Curie has taught a lot of classes today. Please come back tomorrow.',
+    message: 'Qrie has taught a lot of classes today. Please come back tomorrow.',
   },
   // The meter is down, which is ours to fix and not the student's fault. It is
   // still a refusal: a limit that disappears during an outage is not a limit,

@@ -47,7 +47,9 @@ npm run build:site    # then deploy the `landing` directory
 
 Before either, `npx vercel link` this directory to the intended project. There
 is a third, empty Vercel project called `curie` with zero deployments, which is
-what an unlinked `vercel deploy` produces.
+what an unlinked `vercel deploy` produces. The Vercel and Supabase projects, the
+GitHub repo and this folder all still carry the old name; renaming those is done
+in their own dashboards, not here.
 
 ## Where things live
 

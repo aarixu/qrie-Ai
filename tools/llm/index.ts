@@ -255,7 +255,7 @@ export class OpenRouterAdapter implements LlmAdapter {
           authorization: `Bearer ${this.key}`,
           // Optional attribution headers OpenRouter uses for its dashboards.
           'HTTP-Referer': 'https://github.com/aarixu/curie',
-          'X-Title': 'Curie',
+          'X-Title': 'Qrie',
         },
         body: JSON.stringify({
           model: this.model,

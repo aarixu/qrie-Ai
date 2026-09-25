@@ -7,7 +7,7 @@ import { TutorTile } from '../src/ui/TutorTile';
 /**
  * WHICH FACE THE TILE SHOWS.
  *
- * Curie's own students see the penguin — he is her tutor, and a client
+ * Qrie's own students see the penguin — he is her tutor, and a client
  * engagement must not quietly replace him. A cloned teacher is a SECOND
  * renderer, mounted only when a class carries one.
  */
@@ -40,7 +40,7 @@ describe('which face the tile shows', () => {
     expect(html).not.toContain('<svg');
   });
 
-  it('puts the teacher own name under their face, never Curie tutor', () => {
+  it('puts the teacher own name under their face, never Qrie tutor', () => {
     const html = renderToString(
       <TutorTile
         mode="teaching"

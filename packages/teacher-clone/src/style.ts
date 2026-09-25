@@ -33,7 +33,7 @@ export interface StyleCard {
    *
    * Aarav watched both source videos and named this himself: these teachers
    * write while they speak - every definition, every key point, in full, as
-   * it is said. That is half of how they teach, and Curie already has an
+   * it is said. That is half of how they teach, and Qrie already has an
    * engine built around exactly this ("the board shows what you are SAYING"),
    * so the card must carry it or the clone teaches with its hands in its
    * pockets.

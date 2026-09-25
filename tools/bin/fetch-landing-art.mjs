@@ -39,7 +39,7 @@ const BLOB = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com';
  */
 const ART = [
   /**
-   * THE LOGO, FROM docs/brand/curie-logo.png — Aarav's mark, not a generated
+   * THE LOGO, FROM docs/brand/qrie-logo.png — Aarav's mark, not a generated
    * placeholder.
    *
    * The two files it replaced were AI-generated art from a blob store, and
@@ -52,8 +52,8 @@ const ART = [
    * 256 wide for a mark drawn at ~32px: double a retina screen's ask, and
    * still 8 KB.
    */
-  { name: 'logo', width: 256, file: path.join(BRAND, 'curie-logo.png') },
-  { name: 'logo-light', width: 256, file: path.join(BRAND, 'curie-logo.png') },
+  { name: 'logo', width: 256, file: path.join(BRAND, 'qrie-logo.png') },
+  { name: 'logo-light', width: 256, file: path.join(BRAND, 'qrie-logo.png') },
   { name: 'hero', width: 1000, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2008_54_40%20AM-DVdJ26xemlQr34NrXUR1cLdEnTAalw.png` },
   { name: 'desk', width: 900, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2008_57_00%20AM-3fCXcQsKeSM7pjF9T0ZOCm7ReOLIZq.png` },
   { name: 'teacher', width: 900, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2010_26_21%20AM-lWHa6iZC0Gk36j59X0KhNq9hlQKiVJ.png` },

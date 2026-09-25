@@ -1,4 +1,4 @@
-# Curie — the closed-loop rebuild
+# Qrie — the closed-loop rebuild
 
 **Written 2026-09-12. Revised 2026-09-14** — Phase 0's last gap closed, the
 class cost re-measured upward, two pre-measurement guesses about a cold class

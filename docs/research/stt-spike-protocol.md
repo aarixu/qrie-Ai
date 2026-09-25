@@ -10,7 +10,7 @@ output into a decision instead of a vibe.
 Does **whisper-large-v3 on a rented GPU** hear Hinglish well enough, and
 fast enough, to be the ear on our own VPS?
 
-One unmeasured assumption is holding up the money claim. "Curie costs
+One unmeasured assumption is holding up the money claim. "Qrie costs
 under Rs 5 of **cash** per student-hour" is true **only while the GPU ear
 works** — if it does not, the vendor ear stays and adds Rs 4.47 of cash
 per student-hour, and the cash figure becomes **Rs 6.95**, which breaks

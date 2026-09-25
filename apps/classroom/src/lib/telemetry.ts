@@ -290,7 +290,7 @@ export function track(event: string, props: Record<string, unknown> = {}): void 
         api_key: POSTHOG_KEY,
         event,
         distinct_id: installId(),
-        properties: { ...clean(props), $lib: 'curie', release: RELEASE },
+        properties: { ...clean(props), $lib: 'qrie', release: RELEASE },
         timestamp: new Date().toISOString(),
       }),
     );

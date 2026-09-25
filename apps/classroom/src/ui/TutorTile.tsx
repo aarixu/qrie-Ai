@@ -25,14 +25,14 @@ export function TutorTile({
   variant: 'pip' | 'rail';
   /**
    * A real teacher, lip-dubbed. Absent — every ordinary class — the penguin
-   * plays: he is Curie own tutor, and a client engagement must not quietly
+   * plays: he is Qrie own tutor, and a client engagement must not quietly
    * replace him. This is a second renderer, not a replacement.
    */
   clone?: {
     manifest: ClipManifest;
     baseUrl: string;
     beatId: string | null;
-    /** What the caption calls them. Curie tutor name under a real
+    /** What the caption calls them. Qrie tutor name under a real
      * teacher face is the kind of detail a client notices first. */
     name: string;
   };

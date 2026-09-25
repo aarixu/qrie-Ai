@@ -1,6 +1,6 @@
 # 4. The LAM - learner model, knowledge graph and orchestration
 
-This is the part of Curie that knows what a child can do, decides what to put in front of
+This is the part of Qrie that knows what a child can do, decides what to put in front of
 them next, and can prove afterwards that something changed. It owns the Learning Outcome
 Map (what there is to learn and what depends on what), the ledger (what actually happened
 in a sitting), the learner model (what we therefore believe), the controller (what we do

@@ -53,7 +53,7 @@ export interface PrepOptions {
   studentLines?: readonly string[];
   /**
    * How a real teacher being cloned teaches (`styleBrief` from
-   * @ai-tutor/teacher-clone). Absent for Curie own classes.
+   * @ai-tutor/teacher-clone). Absent for Qrie own classes.
    */
   teacherStyle?: string;
   /**

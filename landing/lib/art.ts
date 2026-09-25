@@ -24,7 +24,7 @@ const art = (name: string, w: number, h: number): Art => ({ src: `/art/${name}.w
 
 export const ART = {
   /**
-   * Aarav's mark, from docs/brand/curie-logo.png. `logoLight` is the SAME
+   * Aarav's mark, from docs/brand/qrie-logo.png. `logoLight` is the SAME
    * picture: the old pair had a separately lightened copy for the ink footer,
    * and this one needs none — the amber carries 11.2:1 there. The name stays
    * so no page has to change.

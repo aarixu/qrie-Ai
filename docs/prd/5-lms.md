@@ -1,6 +1,6 @@
 # 5. LMS - school, teacher, parent and the progress card
 
-Everything Curie shows to somebody who is not the student. Today the product is a good
+Everything Qrie shows to somebody who is not the student. Today the product is a good
 single-player tutor with no second seat of any kind: a parent who pays sees nothing, a
 teacher who would put us on a fee structure sees nothing, and a school that has already
 asked for a demo has nothing to be shown. This PRD builds the second seat, and at its
@@ -95,7 +95,7 @@ any of it.
   the placement test and by `learnFromQuiz` (`apps/classroom/src/stores/profile.ts:45`
   `saveDiagnostic`), carrying node ids and copied `topicRef`/`lessonRef`, with no owner, no
   due date and no visibility to anyone. `0005`'s own stated LMS motivation, "homework and
-  exam dates flowing into Curie", has nowhere to land. *Finished by:* requirement 9.
+  exam dates flowing into Qrie", has nowhere to land. *Finished by:* requirement 9.
 - **Notes and Bookmarks can never hold anything.** `addNote`
   (`apps/classroom/src/stores/notes.ts:36`) has no caller anywhere in `apps/classroom/src` or
   `packages/` — only its own test suite (`apps/classroom/tests/notes.test.ts`) calls it. The
@@ -226,7 +226,7 @@ What this PRD decides is the surface, and the answer is mostly that there is not
   the helpline reply is already the best thing in the repo, and Help is where a child finds it
   again. The child's copy is theirs.
 
-Curie's position on mandatory reporting under POCSO when a disclosure names an adult is an
+Qrie's position on mandatory reporting under POCSO when a disclosure names an adult is an
 open question addressed to Aarav in PRD 3, and it needs a lawyer rather than a PRD. Until it
 is answered, the alert goes to one person and stops there.
 
@@ -360,7 +360,7 @@ Rs 0.013/student-hour, a rounding error against either the Rs 3.49 MVP-2 figure 
 ceiling. The argument is that nothing in this repo
 fact-checks an LLM (safety defect 3: `verifySvg` checks markup, `validateLesson` is
 structural, `packages/pedagogy` is imported by nothing in the product), and the first
-document Curie ever sends to a paying adult must not be the first place a hallucinated number
+document Qrie ever sends to a paying adult must not be the first place a hallucinated number
 appears. A model that paraphrases "7 of 9" can write "most of".
 
 *MVP-2, and it is a review rule, not a feature.*
@@ -373,7 +373,7 @@ test asserts it.
 *What.* Before any claim is made, the builder checks the window for
 `count(distinct learning_session.id) >= 3` and `sum(active_ms) >= 30 minutes` and at least 20
 answers with `assistanceRung = 0`. Below any of those the card switches to its `thin` shape:
-it reports exactly what happened ("Aarav opened Curie twice and studied 18 minutes. There is
+it reports exactly what happened ("Aarav opened Qrie twice and studied 18 minutes. There is
 not enough evidence yet to say what he has learned."), shows the plan's next three steps, and
 makes **no** claim about outcomes, misconceptions or gain. A thin card is still written and
 still stored, and it is **not** sent as a conversion message; it is available at the link if
@@ -573,7 +573,7 @@ ninety seconds before a period starts. Four blocks, in this order:
    in the next ninety seconds of her own lesson, and no other product in an Indian classroom
    gives it to her.
 3. **Who to worry about.** Students with a falling `unassisted_mastery`, students who have
-   not opened Curie since the last assignment, and students with a wheel-spinning signal
+   not opened Qrie since the last assignment, and students with a wheel-spinning signal
    (`wheelSpinning`, `packages/learner-model/src/wheelSpin.ts:41`, whose only reader today is
    the dev-only inspector at `screens/ModelInspector.tsx:80`). Names and one reason each. Capped at ten, because a list of thirty is a list nobody reads.
 4. **Assignment status.** Done, started, not started, as three counts and a tap to the names.
@@ -598,9 +598,9 @@ message or chat inbox, a per-student dashboard of tiles, content authoring, a ma
 screen, timetable management, and any screen that requires daily data entry.
 
 *Why.* The school already has all of these and mostly in a system it pays for or on paper.
-Duplicating the school's own gradebook is the fastest route to a teacher deciding Curie is
+Duplicating the school's own gradebook is the fastest route to a teacher deciding Qrie is
 extra work, and a message inbox between adults and children is a child-safety surface we
-would have to moderate. The thing Curie has that the school's ERP does not is outcome-level
+would have to moderate. The thing Qrie has that the school's ERP does not is outcome-level
 belief about individual children, and the teacher surface should be exactly that and nothing
 else. A teacher who logs in once a week and gets one useful sentence is a success; one who
 must log in daily is a churned account.
@@ -653,7 +653,7 @@ closes.
 *MVP-2.*
 
 *Known when.* A teacher assigns a topic to 9-A and 38 `assignment_progress` rows exist
-immediately; a student who opens Curie sees the assignment on Home; and the cost report
+immediately; a student who opens Qrie sees the assignment on Home; and the cost report
 attributes all 38 students' sessions to one prep.
 
 **13. An assignment emits a pre-warm intent.**
@@ -726,7 +726,7 @@ token gets 403 from every `/api/teacher/*` route; and `anon` gets 401.
 
 *What.* `/app/teacher/school`, visible to `membership.role = 'admin'` only. Four numbers and
 two lists: students enrolled against roster rows claimed, sections and their teachers,
-coverage (which of the school's subjects and classes Curie can actually teach today, which
+coverage (which of the school's subjects and classes Qrie can actually teach today, which
 in MVP-2 is Class 9-10 science and nothing else, stated plainly), and this school's
 `child_report` rows through the same `my_student_ids()` predicate, because the school is the
 fiduciary. Plus a button that generates PTM-ready cards for a whole section as one print job,
@@ -800,7 +800,7 @@ that answers it.
 
 *MVP-2, with item 3 before MVP-2 is scoped.*
 
-*Known when.* A teacher who has never seen Curie sets an assignment from the one-page guide
+*Known when.* A teacher who has never seen Qrie sets an assignment from the one-page guide
 with nobody standing next to her.
 
 **23. What a school and a parent take with them when they leave.**
@@ -981,7 +981,7 @@ export interface ClassBoard {
       'slipping' | 'inactive' | 'wheel_spinning' | 'assignment_overdue' }[];
   assignments: { id: string; title: string; dueAt: string | null;
                  done: number; started: number; notStarted: number }[];
-  /** What Curie cannot teach this section yet. Rendered, never hidden. */
+  /** What Qrie cannot teach this section yet. Rendered, never hidden. */
   uncovered: { subject: string; chapters: number }[];
 }
 ```
@@ -1115,7 +1115,7 @@ measured.
   edge is that delivery is **per student**, while the ceiling is **per hour**: a student doing
   2 hours a month carries Rs 0.125/student-hour, 2.5% of the ceiling, for the same one
   message. Requirement 6 removes the worst case structurally, because a student who barely
-  used Curie gets a thin card and a thin card is never sent.
+  used Qrie gets a thin card and a thin card is never sent.
 - **Card build.** Pure Postgres over `concept_state`, `ledger_event` and `learning_session`,
   a few hundred rows per card, once a month, on the Supabase Pro instance PRD 3 already buys.
   Rs 0/student-hour marginal.
@@ -1249,7 +1249,7 @@ Only the ones Aarav must answer.
    control, on top of the TRAI DLT registration the enrolment OTP needs anyway. Requirement 20
    sets the clock at three weeks before the demo and names link-only delivery as the fallback;
    what is still yours is which channel, and therefore which vendor PRD 3 registers with.
-3. **Does the pilot teacher set homework in Curie, or does Curie only report?** If she keeps
+3. **Does the pilot teacher set homework in Qrie, or does Qrie only report?** If she keeps
    using her existing method, requirement 12 becomes a reporting join rather than a
    teacher-facing screen, and the pre-warm intent in requirement 13 has to come from
    somewhere else, which would remove the largest cost lever in this document. Ask her before

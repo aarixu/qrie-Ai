@@ -280,7 +280,7 @@ export async function prepareLiveClass(
     outcomes?: readonly TopicOutcome[];
     /**
      * How a REAL teacher being cloned teaches (styleBrief). Absent for every
-     * ordinary class - Curie own tutor has a persona of her own.
+     * ordinary class - Qrie own tutor has a persona of her own.
      */
     teacherStyle?: string;
     /**

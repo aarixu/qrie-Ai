@@ -1,4 +1,4 @@
-# Curie — System Architecture
+# Qrie — System Architecture
 
 **For developers.** This is the wiring diagram: what talks to what, over which protocol, carrying which payload, and what happens when it fails. It is written from the **source**, not from the other docs in this repo — where a README and the code disagreed, the code won and the disagreement is called out.
 

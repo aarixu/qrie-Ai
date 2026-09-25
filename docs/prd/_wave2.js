@@ -13,7 +13,7 @@ const RULES = [
 '=============================================================================',
 'HOUSE RULES - every agent, every phase. Breaking one is a failed phase.',
 '=============================================================================',
-'Your cwd is C:/Users/Ashish Sharma/curie - the Curie repo, branch',
+'Your cwd is C:/Users/Ashish Sharma/curie - the Qrie repo, branch',
 'phase3-completion. TWO OTHER PHASES RUN IN THIS SAME TREE AT THE SAME TIME,',
 'editing files you do not own.',
 '',

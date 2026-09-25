@@ -4,9 +4,13 @@ import { BRAND } from '../brand';
  * The mark: a nucleus circled by two crossed orbits, with one electron caught
  * at the top of its arc.
  *
- * The app is named for Marie Curie, so the mark points at her subject — the
- * atom — instead of the lightbulb every other learning app reaches for. It is
- * inline SVG rather than an image file for two reasons: it inherits its colour
+ * WHY AN ATOM, now that the name no longer explains it. The product was called
+ * Curie when this was drawn, named for Marie Curie, so the mark pointed at her
+ * subject instead of the lightbulb every other learning app reaches for. The
+ * name is Qrie and the reason is gone; the mark stayed because a good mark
+ * outlives its pun, and because the alternative was a lightbulb.
+ *
+ * It is inline SVG rather than an image file for two reasons: it inherits its colour
  * from a Tailwind text class via `currentColor`, so it themes with the rest of
  * the app, and it stays crisp at every size without a second asset.
  *

@@ -19,8 +19,8 @@ import { LegalPage, Section } from '@/components/LegalPage'
  * this student" is a child ticking a box.
  */
 export const metadata = {
-  title: 'Privacy Policy | Curie',
-  description: 'What Curie collects, why, and how long it is kept.',
+  title: 'Privacy Policy | Qrie',
+  description: 'What Qrie collects, why, and how long it is kept.',
 }
 
 export default function PrivacyPage() {
@@ -30,11 +30,11 @@ export default function PrivacyPage() {
       title="What we collect,"
       accent="and what we do not."
       updated="25 September 2026"
-      lede="Curie is used by school students, so this is written to be read rather than to be defended. Every section below describes what the software actually does today."
+      lede="Qrie is used by school students, so this is written to be read rather than to be defended. Every section below describes what the software actually does today."
     >
       <Section title="What the contest form collects">
         <p>
-          When you enter the Curie Champion League at <Link href="/challenge-register">/challenge-register</Link>,
+          When you enter the Qrie Champion League at <Link href="/challenge-register">/challenge-register</Link>,
           we store: the student&apos;s name, their class, the student&apos;s mobile number,
           a parent or guardian&apos;s name and mobile number, a postal address, and
           whether the student takes tuition elsewhere.

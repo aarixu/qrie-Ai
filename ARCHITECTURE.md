@@ -1,4 +1,4 @@
-# Curie — Architecture
+# Qrie — Architecture
 
 **Read this first.** It is the map; each package's README is the territory. A new
 developer should be able to pick one part and work in it without holding the rest

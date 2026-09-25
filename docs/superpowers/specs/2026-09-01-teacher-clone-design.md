@@ -9,7 +9,7 @@
 ## What we are building
 
 A client asked for a demo: their two real teachers, cloned, teaching inside
-Curie. Not a video file — the **live classroom** (option B), the same room we
+Qrie. Not a video file — the **live classroom** (option B), the same room we
 already built, with the real teacher in the tile instead of the penguin,
 teaching on the canvas and asking questions.
 
@@ -52,7 +52,7 @@ will notice first.
 
 - Not productising this for every school. One client, two teachers, one demo.
 - Not touching the canvas, the player, the ask gate, or the mic. They work.
-- Not replacing the penguin for Curie's own students. The penguin stays;
+- Not replacing the penguin for Qrie's own students. The penguin stays;
   the teacher clone is a second renderer behind the same seam.
 
 ---
@@ -67,7 +67,7 @@ else already exists in this repo.
                │                                          │
                └─► clean reference audio ──► VOICE CLONE ──┤
                                                            ▼
-                                    Curie's existing class prep
+                                    Qrie's existing class prep
                                     (planner writes the lesson
                                      IN THEIR STYLE)
                                                            │
@@ -92,7 +92,7 @@ That card is appended to `PLANNER_SYSTEM` the same way `TUTOR` and
 `studentLines` already are. The lesson is then **planned** in their voice —
 not merely spoken in it.
 
-**Why this is not optional:** a cloned voice reading Curie's own phrasing
+**Why this is not optional:** a cloned voice reading Qrie's own phrasing
 sounds like a stranger using their throat. The teacher's colleague will hear
 it in one sentence.
 
@@ -132,7 +132,7 @@ becomes "MuseTalk when live".
 per teacher — steady framing, no big head turns, mouth visible throughout.
 Everything is dubbed onto that loop.
 
-### 4. The seam in Curie
+### 4. The seam in Qrie
 
 The avatar is already isolated behind two things:
 
@@ -188,7 +188,7 @@ exactly as `assets.json` and the audio manifest already are.
 
 ## Success criteria
 
-A 2-minute recording of the Curie classroom in which the client's teacher —
+A 2-minute recording of the Qrie classroom in which the client's teacher —
 their face, their voice, their phrasing — teaches one of our topics on the
 canvas and asks the student a question, with nothing on screen that makes a
 viewer ask "is that a computer?". Plus the honest sentence to the client:

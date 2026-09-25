@@ -8,7 +8,7 @@ export const meta = {
 }
 
 const GROUND = [
-'CONTEXT. Curie is an AI tutor for Class 6-12 India; students ANSWER BY VOICE',
+'CONTEXT. Qrie is an AI tutor for Class 6-12 India; students ANSWER BY VOICE',
 'in Hinglish (Hindi-English code-switching, Latin script mostly): lines like',
 '"wo lamba wala", "B hoga na", "mujhe lagta hai plasma carries karta hai".',
 'The ear today: the app records ~10s WAV per answer, POSTs to a relay, relay',
@@ -104,7 +104,7 @@ const LENSES = [
 'Chirp, Azure. For each: Hindi/code-switch benchmark evidence, Rs per',
 'audio-hour, confidence fields in the response, batch latency, data residency',
 'and children/DPDP posture. CRITICAL comparison: several of these are cheaper',
-'than what Curie pays today through OpenRouter - quantify the middleman tax if',
+'than what Qrie pays today through OpenRouter - quantify the middleman tax if',
 'there is one, from public prices.',
     ].join('\n'),
   },
@@ -145,7 +145,7 @@ const LENSES = [
   {
     key: 'product-shape',
     prompt: [
-'LENS: THE REPO, NOT THE WEB. You may read (never edit) the Curie repo at cwd.',
+'LENS: THE REPO, NOT THE WEB. You may read (never edit) the Qrie repo at cwd.',
 'Recompute the ear\'s economics from source: tools/measure/model-cost.mjs and',
 'last-class.json (EAR_SEC, the 40s), packages/relay/src/gate.ts (0.69',
 'units/sec pricing), apps/classroom/src/lib/ear.ts (when the mic opens, the',

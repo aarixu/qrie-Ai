@@ -1,6 +1,6 @@
 <!-- GENERATED FILE - do not edit directly.
      Edit README.template.md or diagrams/*.mmd, then run: node docs/architecture/build.mjs -->
-# Curie — System Architecture
+# Qrie — System Architecture
 
 **For developers.** This is the wiring diagram: what talks to what, over which protocol, carrying which payload, and what happens when it fails. It is written from the **source**, not from the other docs in this repo — where a README and the code disagreed, the code won and the disagreement is called out.
 
@@ -41,7 +41,7 @@ Two rules shape every wire below:
 2. **Actuators report and execute; they never decide.**
 
 ```mermaid
-%% Curie — System context: every component and every wire that crosses a process boundary.
+%% Qrie — System context: every component and every wire that crosses a process boundary.
 %% Solid = shipping path. Dotted = dev-only or unwired. Verified against the tree 2026-09-16.
 flowchart TB
     subgraph DEVICE["📱 Student device — holds NO vendor key"]
@@ -115,7 +115,7 @@ flowchart TB
 ## 2. Deployment topology
 
 ```mermaid
-%% Curie — Deployment & infrastructure topology, with honest status.
+%% Qrie — Deployment & infrastructure topology, with honest status.
 %% GREEN = deployed. AMBER = configured but not deployed / built but not switched on. GREY = absent.
 flowchart LR
     subgraph LOCAL["💻 Local development"]
@@ -183,7 +183,7 @@ flowchart LR
 Measured once end-to-end on 2026-09-13: **~96 s** of preparation, **₹18.98** all in (₹9.08 prep + ₹9.90 playback). The room opens at **~14 s** on the draft, before any artwork lands.
 
 ```mermaid
-%% Curie — Preparing a COLD class live. ~14s to first frame, ~96s full (measured 2026-09-13, ₹18.98).
+%% Qrie — Preparing a COLD class live. ~14s to first frame, ~96s full (measured 2026-09-13, ₹18.98).
 %% Every LLM hop goes through the relay; the browser never holds a vendor key.
 sequenceDiagram
     autonumber
@@ -247,7 +247,7 @@ sequenceDiagram
 ## 4. Runtime — playing a class that already exists
 
 ```mermaid
-%% Curie — Playing a class that already exists. A cache hit is a download: ₹9.90, no planner, no artist.
+%% Qrie — Playing a class that already exists. A cache hit is a download: ₹9.90, no planner, no artist.
 sequenceDiagram
     autonumber
     actor S as Student
@@ -302,7 +302,7 @@ sequenceDiagram
 This is the **SENSE → VERIFY → RECORD** path. It is where every piece of evidence the product is built on comes from.
 
 ```mermaid
-%% Curie — The in-class answer loop: how one spoken answer becomes evidence.
+%% Qrie — The in-class answer loop: how one spoken answer becomes evidence.
 %% This is the SENSE → VERIFY → RECORD path of the control plane.
 sequenceDiagram
     autonumber
@@ -374,7 +374,7 @@ sequenceDiagram
 The ledger is the **system of record**; everything downstream reads it as ground truth. It shipped before the demo because *capture cannot be backfilled*.
 
 ```mermaid
-%% Curie — Evidence → record → model. The closed loop's data path, and where it stops.
+%% Qrie — Evidence → record → model. The closed loop's data path, and where it stops.
 flowchart TB
     subgraph SENSE["SENSE — the recorders"]
         CLH["classLedger<br/>source 'class'"]
@@ -490,7 +490,7 @@ interface AnsweredPayload {
 ## 7. Identity, tickets and tenancy
 
 ```mermaid
-%% Curie — Identity, the speech ticket, and tenancy. The student never types anything to get an id.
+%% Qrie — Identity, the speech ticket, and tenancy. The student never types anything to get an id.
 sequenceDiagram
     autonumber
     participant APP as apps/classroom
@@ -547,7 +547,7 @@ sequenceDiagram
 **One unit = one paisa of vendor spend.** The meter **fails closed**; the accounting **fails open**.
 
 ```mermaid
-%% Curie — The meter (fails closed) and the books (fail open). One unit = one paisa of vendor spend.
+%% Qrie — The meter (fails closed) and the books (fail open). One unit = one paisa of vendor spend.
 flowchart TB
     CALL["any relay call"] --> ADMIT["admit()"]
     ADMIT --> VERIFY{"identity verified?"}
@@ -597,7 +597,7 @@ flowchart TB
 Every ladder in the system. Nothing here is announced to the student.
 
 ```mermaid
-%% Curie — Every degradation ladder. Each rung falls to the next; nothing is announced to the student.
+%% Qrie — Every degradation ladder. Each rung falls to the next; nothing is announced to the student.
 %% The house rule: "a stuck beat is a dead class" — a rejected promise counts as finished speech.
 flowchart TB
     subgraph V["🔊 VOICE — packages/voice"]
@@ -693,7 +693,7 @@ flowchart TB
 Migrations 0001 → 0013 are **applied**. `0014_concept_state_evidence_columns.sql` is **written and not applied**.
 
 ```mermaid
-%% Curie — Postgres schema after migrations 0001→0013 (0014 written, NOT applied).
+%% Qrie — Postgres schema after migrations 0001→0013 (0014 written, NOT applied).
 %% Append-only tables are append-only BY THE ABSENCE of an update/delete policy, not by a rule.
 erDiagram
     AUTH_USERS ||--o{ MEMBERSHIP : "cascade"
@@ -891,7 +891,7 @@ interface TutorAction {
 ## 12. The package graph
 
 ```mermaid
-%% Curie — Internal import DAG. Four roots, no cycles. NO package has a build step:
+%% Qrie — Internal import DAG. Four roots, no cycles. NO package has a build step:
 %% every packages/*/package.json points "main" and "types" straight at src/index.ts.
 %% Numbers are import counts BY PACKAGE NAME. Tools reach packages by RELATIVE PATH
 %% instead, so a "0" here does not mean dead — see pedagogy and graphics.
@@ -959,7 +959,7 @@ flowchart BT
 This runs on a laptop before any student exists, and writes into the **repo** — not into Storage. It is a different path from the live `prepareClass`.
 
 ```mermaid
-%% Curie — The OFFLINE authoring pipeline. Runs on a laptop, before any student exists.
+%% Qrie — The OFFLINE authoring pipeline. Runs on a laptop, before any student exists.
 %% Distinct from the live prepareClass path: this one writes into the repo, not into Storage.
 flowchart TB
     subgraph LLMB["tools/llm — the ONE provider boundary"]
