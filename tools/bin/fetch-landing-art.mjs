@@ -28,7 +28,8 @@ const require = createRequire(import.meta.url);
 const sharp = require('sharp');
 
 const OUT = fileURLToPath(new URL('../../landing/public/art', import.meta.url));
-const PRIZES = fileURLToPath(new URL('../../landing/public/prizes', import.meta.url));
+const PRIZES = fileURLToPath(new URL('../../docs/brand/prizes', import.meta.url));
+const BRAND = fileURLToPath(new URL('../../docs/brand', import.meta.url));
 const BLOB = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com';
 
 /**
@@ -37,8 +38,22 @@ const BLOB = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com';
  * Doubled from the CSS size so it still looks right on a 2x screen.
  */
 const ART = [
-  { name: 'logo', width: 128, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2010_42_12%20AM-5vJi1SeaJztqjZeAI2DCYyOzA3vNDC.png` },
-  { name: 'logo-light', width: 128, src: `${BLOB}/image-U7AsVhF29T0XsHb2J6StnNsjoQ81ci.png` },
+  /**
+   * THE LOGO, FROM docs/brand/curie-logo.png — Aarav's mark, not a generated
+   * placeholder.
+   *
+   * The two files it replaced were AI-generated art from a blob store, and
+   * there were two of them because one was a lightened copy for the dark
+   * footer. This mark needs no second version: it is amber and blue on
+   * transparent, and amber carries 11.2:1 on the ink footer while blue carries
+   * the light rooms. So `logo` and `logo-light` are the same picture, and the
+   * name `logo-light` is kept only so no page has to change.
+   *
+   * 256 wide for a mark drawn at ~32px: double a retina screen's ask, and
+   * still 8 KB.
+   */
+  { name: 'logo', width: 256, file: path.join(BRAND, 'curie-logo.png') },
+  { name: 'logo-light', width: 256, file: path.join(BRAND, 'curie-logo.png') },
   { name: 'hero', width: 1000, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2008_54_40%20AM-DVdJ26xemlQr34NrXUR1cLdEnTAalw.png` },
   { name: 'desk', width: 900, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2008_57_00%20AM-3fCXcQsKeSM7pjF9T0ZOCm7ReOLIZq.png` },
   { name: 'teacher', width: 900, src: `${BLOB}/ChatGPT%20Image%20Sep%202%2C%202026%2C%2010_26_21%20AM-lWHa6iZC0Gk36j59X0KhNq9hlQKiVJ.png` },
@@ -93,12 +108,16 @@ for (const item of ART) {
 console.log(`\n  TOTAL  ${kb(before)}  ->  ${kb(after)}   (${Math.round((1 - after / before) * 100)}% smaller)`);
 console.log(`\n  Intrinsic sizes for landing/lib/art.ts:\n${JSON.stringify(sizes, null, 2)}`);
 
-// The originals are no longer referenced by anything once lib/art.ts lands.
-try {
-  for (const f of ['cash-prize.png', 'playstation.png', 'moto-edge.png']) {
-    statSync(path.join(PRIZES, f));
-  }
-  console.log('\n  landing/public/prizes/*.png are now unused — delete them.');
-} catch {
-  /* already gone */
+/**
+ * The sources are KEPT, in docs/brand, and that is the point.
+ *
+ * They lived in landing/public/prizes and were deleted once the WebP existed,
+ * which made this script unrunnable: the very failure mode
+ * tools/bin/make-app-icons.mjs was caught in on the same day — a generator
+ * that cannot reproduce its own output is a folder of exported files wearing
+ * a script's name. Nothing here deletes a source.
+ */
+for (const item of ART) {
+  if (item.file) statSync(item.file);
 }
+console.log('\n  Sources verified in docs/brand. Re-run any time; nothing is consumed.');

@@ -23,8 +23,14 @@ export interface Art {
 const art = (name: string, w: number, h: number): Art => ({ src: `/art/${name}.webp`, w, h })
 
 export const ART = {
-  logo: art('logo', 128, 150),
-  logoLight: art('logo-light', 128, 192),
+  /**
+   * Aarav's mark, from docs/brand/curie-logo.png. `logoLight` is the SAME
+   * picture: the old pair had a separately lightened copy for the ink footer,
+   * and this one needs none — the amber carries 11.2:1 there. The name stays
+   * so no page has to change.
+   */
+  logo: art('logo', 256, 246),
+  logoLight: art('logo-light', 256, 246),
   hero: art('hero', 1000, 667),
   desk: art('desk', 900, 600),
   teacher: art('teacher', 900, 576),

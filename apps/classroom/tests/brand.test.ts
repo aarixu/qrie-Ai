@@ -104,9 +104,18 @@ describe('the icons wear the riso inks on the shared geometry', () => {
         expect(svg).toContain('cx="9.9" cy="-9.9" r="2.2"');
       });
 
-      it('splits the orbits onto the two riso plates', () => {
+      /**
+       * BOTH ORBITS ARE THE BLUE PLATE, AND NO FLUORO IS IN THE MARK.
+       *
+       * This used to assert that #FF48A0 was present — it was pinning the pink
+       * INTO the logo. The brand is two primaries, amber and blue, and law 1
+       * says fluoro is a ground and never the thing you read; a mark that was
+       * half pink made pink half the brand. So the assertion is inverted: the
+       * blue is there, the fluoro is not.
+       */
+      it('draws both orbits on the blue plate, with no fluoro in the mark', () => {
         expect(svg).toContain('#0B5FD9');
-        expect(svg).toContain('#FF48A0');
+        expect(svg, 'fluoro pink is back in the mark').not.toContain('#FF48A0');
       });
 
       it('sits on the amber tile with an ink keyline — law 3', () => {

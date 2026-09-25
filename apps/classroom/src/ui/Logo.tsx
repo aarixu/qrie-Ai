@@ -16,16 +16,19 @@ import { BRAND } from '../brand';
  * rounded square without nudging. Stroke weight is tuned so the orbits still
  * read as two distinct rings at 24px.
  *
- * RISO POP redrew the inks, not the geometry: each orbit is one riso PLATE —
- * the pressable blue and the fluoro pink — overprinted the way a two-colour
- * riso poster actually prints, the nucleus in ink and the electron riding its
- * orbit's fluoro plate (in the icon files, where it sits on amber, the
- * electron gains an ink keyline it does not need in-app). Every
- * colour arrives through a token class and `currentColor`, never a literal
- * hex, so the mark re-pitches itself in the dark room with the rest of the
- * palette (the blue plate lightens, the ink flips to paper) — and it picked up
- * the move from #FFD21E to the marketing site's #FFC85C without a line
- * changing here, which is what the tokens are for. The amber tile and its
+ * RISO POP redrew the inks, not the geometry. Both orbits are the BLUE plate
+ * now: the second one was the fluoro pink, which made pink half the mark and
+ * therefore half the brand, against the palette's own first law that fluoro is
+ * a ground and never the thing you read. The two primaries are the amber and
+ * the blue, so the mark is the blue on the amber and nothing else. The nucleus
+ * stays ink; the electron rides its orbit's plate (in the icon files, where it
+ * sits on amber, it gains an ink keyline it does not need in-app).
+ *
+ * Every colour arrives through a token class and `currentColor`, never a
+ * literal hex, so the mark re-pitches itself in the dark room with the rest of
+ * the palette (the blue plate lightens, the ink flips to paper) — and it
+ * picked up the move from #FFD21E to the marketing site's #FFC85C without a
+ * line changing here, which is what the tokens are for. The amber tile and its
  * keyline belong to content/icon.svg — in the app the mark sits straight on
  * whatever surface the screen already has.
  */
@@ -48,28 +51,22 @@ export function Logo({
       focusable="false"
     >
       <g transform="translate(16 16)">
-        <g fill="none" strokeWidth="2.4">
-          <ellipse rx="14" ry="6.2" transform="rotate(45)" stroke="currentColor" />
-          {/* primary-container IS the fluoro plate — a ground colour, which a
-              stroked orbit is: nothing ever has to be read off it. */}
-          <ellipse
-            rx="14"
-            ry="6.2"
-            transform="rotate(-45)"
-            className="text-primary-container"
-            stroke="currentColor"
-          />
+        {/* BOTH ORBITS ON THE BLUE PLATE. The second one used to be
+            primary-container, the fluoro pink — which made pink half the
+            mark, and therefore half the brand, while the palette's own first
+            law says fluoro is a GROUND and never the thing you read. The two
+            primaries are the amber and this blue; the mark says so now.
+            They are the SAME blue on purpose: the ellipses are rotated ±45°,
+            so the silhouette still reads as two crossed orbits without a
+            second hue doing the work. */}
+        <g fill="none" strokeWidth="2.4" stroke="currentColor">
+          <ellipse rx="14" ry="6.2" transform="rotate(45)" />
+          <ellipse rx="14" ry="6.2" transform="rotate(-45)" />
         </g>
         <circle r="4" className="text-on-background" fill="currentColor" />
         {/* Sits exactly on the far end of the rotate(-45) orbit's major axis,
-            and wears that orbit's plate. */}
-        <circle
-          cx="9.9"
-          cy="-9.9"
-          r="2.2"
-          className="text-primary-container"
-          fill="currentColor"
-        />
+            and wears that orbit's plate — which is now the blue one. */}
+        <circle cx="9.9" cy="-9.9" r="2.2" fill="currentColor" />
       </g>
     </svg>
   );
