@@ -403,10 +403,11 @@ Listed so the next session does not mistake silence for evidence.
     this month.
 13. **Choose between the two marks.** The site carries the two-crescent "C"; the
     app and its icons carry the atom. Nobody has chosen.
-14. **Put L0 and L1 live.** Run `npx supabase db push --linked` from the LMS
-    worktree folder, add `lms` to the exposed schemas, then run the first
-    import with the service role key. Claude's auto mode refuses production
-    deploys. Details are under "Progress" in the LMS build plan.
+14. **Put L0–L3 live.** Run `npx supabase db push --linked` from the LMS
+    worktree folder (it applies 0021–0025) and add `lms` to the exposed
+    schemas. Then load the library and run the first import, both with the
+    service role key. Claude's auto mode refuses production deploys. Details
+    are under "Progress" in the LMS build plan.
 
 ---
 
@@ -451,6 +452,8 @@ platforms by API key** (see the API track below).
 | 13 | **The teacher app is a separate web app, `apps/lms`.** The student side is a new `apps/student`; the tutor's `apps/classroom` is not touched. Both share the theme tokens and packages | 2026-09-26 |
 | 14 | **The pilot gives parents nothing.** The `parent` role value is reserved in the schema now, so adding it later is not a constraint change | 2026-09-26 |
 | 15 | **Tutor and LMS data are kept apart by Postgres schema, inside the one Supabase project.** School structure, homework, submissions and marks live in a new `lms` schema; the tutor's tables stay where they are; the shared brain (`learner`, the ledger, `concept_state`) connects them. One login per child and one bill. If a school ever demands physical isolation, it can still be given its own project | 2026-09-26 |
+| 16 | **The LMS apps reuse permissively licensed open source rather than being built from scratch.** MIT, Apache or BSD only, with the licence kept; never GPL/AGPL; learn from big apps' flows, never copy their code, icons or text. Every licence is checked on GitHub itself, because a search result called one repo MIT that has no licence at all | 2026-09-26 |
+| 17 | **The teacher app is built on [satnaing/shadcn-admin](https://github.com/satnaing/shadcn-admin)** (MIT; 14,310 stars; updated 2026-09-10; React 19, Vite, Tailwind 4, TanStack Router and Table). Its Clerk login is replaced by Supabase ID + PIN. **The student app uses the same shadcn/ui components in a phone layout**, so both apps share one design language and one theme system under the white-label tokens | 2026-09-27 |
 
 Carried over, and not up for debate:
 
@@ -587,24 +590,38 @@ details of L2–L5 are settled once Aarav reports what the teachers said.
 **Working rule:** while the tutor session is active, run only the tests a change
 touches — never the full suite, an install or a build without asking.
 
-### Progress — measured 2026-09-26
+### Progress — measured 2026-09-26 and 2026-09-27
 
-**L0 and L1 are built and tested on branch `lms`** (pushed to `origin/lms`),
-and are **not yet live**.
+**L0 to L3 are built and tested on branch `lms`** (pushed to `origin/lms`),
+and are **not yet live**. Full suite after L3: 3,678 passed, 0 failed.
 
 | Milestone | Commit | What exists | Evidence |
 |---|---|---|---|
 | **L0** | `7d72e5b` | A PGlite harness that *runs* every migration as the real `authenticated` role, not a regex over the file. Migration **0021**: one org rule `org_of()` used by `fill_org_id` and by the relay's prep lock; no solo org for school-created accounts; students read only their own membership rows; the purge deletes only what the fold covered, so nothing until the fold exists; school members cannot self-delete; `learner` with a backfill; ledger sources widened; `parent` reserved; a 4 KB payload cap and a 200-character answer cap | 29 DB tests, each watched failing first. Full suite 3,539 passed, 0 failed. **Run against the live database inside a transaction that could not commit:** 219 users, 219 learners, 6 of 6 constraints validated on real rows, nothing left behind (re-checked) |
 | **L1** | `aee1cea`, `eb99509` | Migration **0022**: the `lms` schema (school, year, subject, section, account, teaching assignment, enrolment) with its visibility rules. **`tools/lms-import`**: two CSVs + `school.json` → accounts, sections, teaching and enrolments, plus printable ID/PIN slips. Dry run by default | 17 structure tests; three policies broken on purpose in a scratch run to prove each leak is caught. 53 import tests, with `applyPlan` run against the real migrations. The CLI was run on Node against a sample school. 0021 + 0022 run together on live inside a rollback: 7 tables, 7 policies |
+| **L2** | `a085dd2`, `e4d9683` | Migration **0023**: `lms.item` (the Qrie library plus each school's own questions), `item_approval`, `assignment`, `assignment_item`. **Only an item a teacher of the school has approved can be set as work**, which is the review pipeline for the 4,697 unreviewed probes. **Students cannot read `lms.item` at all**; they get a published assignment's questions from `lms.assignment_questions`, stem and options only. A published assignment's questions are frozen. **`tools/lms-library`** loads all 13 banks (4,697 items) and never overwrites an item whose question or key has changed, since a teacher may have approved the old words | 17 homework tests, 16 library tests. The library test loads the real banks: 4,697 items, 13 grade-subject pairs, unique refs, no probe pointing at a missing node |
+| **L3** | `e0d09fc`, `6631a8e` | Migration **0024**: MCQ submissions **marked by the database** (`lms.submit_mcq`) from the key students cannot read. Submission, answer and mark tables are read-only to every browser. Attempts are capped per kind; late work is flagged. An option a question does not have is rejected, not clamped. The teacher's mark sits beside the machine's, with an uneditable history. Each answer reaches the ledger as source `homework`. Migration **0025**: photos of notebook work in a **private** `lms-work` bucket at `<org>/<assignment>/<student>/<file>`, uploadable only into your own folder and readable only by you, the class's teacher and the admin. `lms.submit_photos` creates a submission for the teacher to mark | 20 MCQ tests, 19 photo tests. 0021–0025 were run together on live inside a rollback: 16 tables, 23 `lms` policies, both storage policies, the private bucket, nothing left behind |
+
+**A correction to the L3 row above.** Submissions are written by two
+`SECURITY DEFINER` database functions, not by "a separate Edge Function". The
+guarantee is the same (no client can post its own "correct"), with one thing
+fewer to deploy.
+
+**UNVERIFIED, from L3:** the 5 MB photo cap against real phones; and which of
+`storage.objects.owner` / `owner_id` the live Storage API fills. Both exist on
+live, so both are accepted.
 
 **Waiting on Aarav before any of it is live** — Claude's auto mode refuses
 production deploys (tried twice, 2026-09-26):
 
 1. **`npx supabase db push --linked`, run from the LMS worktree folder** — it
-   applies 0021 and 0022. The main checkout does not have those files yet.
+   applies 0021–0025. The main checkout does not have those files yet.
 2. **Add `lms` to the project's exposed schemas** (dashboard: Project Settings →
    Data API). Until then no browser, and not the import tool, can reach it.
-3. **The first real import**, which needs `SUPABASE_URL` and
+3. **Load the library**: `node tools/lms-library/src/cli.ts --apply`, with the
+   same two variables as the import. It adds the 4,697 items, which no child
+   sees until a teacher approves one.
+4. **The first real import**, which needs `SUPABASE_URL` and
    `SUPABASE_SERVICE_ROLE_KEY` in the environment. UNVERIFIED until then: that
    the auth service accepts the `.invalid` login addresses.
 
