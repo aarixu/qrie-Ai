@@ -44,9 +44,11 @@ export type Readiness = 'loading' | 'ready' | 'not-yet';
  *
  * NOTE THAT "PREPARED" IS WIDER THAN THE FILES IN content/. `fetchCatalog`
  * merges the rows in Supabase `prepared_class`, so a class some earlier
- * student had made and kept counts too — 21 topics at the time of writing,
- * not the 15 that ship as files. Asking the catalogue rather than the folder
- * is what keeps those six openable.
+ * student had made and kept counts too — measured against production on
+ * 2026-09-26: 15 lesson files and 6 `prepared_class` rows, 21 catalogue
+ * entries covering 20 distinct topics, because one shipped lesson carries no
+ * topicRef and so is reachable as a lesson but never as a topic tile. Asking
+ * the catalogue rather than the folder is what keeps those six openable.
  */
 export function readiness(lessons: readonly unknown[] | null | undefined): Readiness {
   if (lessons == null) return 'loading';
