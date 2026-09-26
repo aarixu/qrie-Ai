@@ -157,6 +157,54 @@ export interface McqResult {
   total: number;
 }
 
+export interface AssignmentOverview extends AssignmentSummary {
+  sectionId: string;
+  grade: number;
+  sectionName: string;
+  subjectId: string;
+  subjectName: string;
+}
+
+/** A homework's question as its teacher sees it: with the key. */
+export interface TeacherItem {
+  itemId: string;
+  questionPosition: number;
+  kind: 'mcq' | 'task';
+  stem: string;
+  options: string[] | null;
+  correctIndex: number | null;
+  /** Per option: the misconception a wrong option was written to catch, or ''. */
+  misconceptions: string[] | null;
+  source: 'library' | 'school';
+  outcomeIds: string[];
+}
+
+export interface ItemStats {
+  itemId: string;
+  questionPosition: number;
+  stem: string;
+  options: string[] | null;
+  correctIndex: number | null;
+  misconceptions: string[] | null;
+  answered: number;
+  correct: number;
+  /** How many chose each option, over each student's latest attempt. */
+  optionCounts: number[] | null;
+}
+
+export interface AssignmentChanges {
+  title?: string;
+  /** '' clears them. */
+  instructions?: string;
+  dueAt?: string;
+  attemptsAllowed?: number;
+}
+
+export interface SubmissionPhoto {
+  objectName: string;
+  photoPosition: number;
+}
+
 const camel = (k: string): string => k.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
 
 function shape<T>(row: Record<string, unknown>): T {
@@ -221,6 +269,25 @@ export function createLmsClient(t: Transport) {
       rows<AssignmentSummary>('class_assignments', { p_section: sectionId, p_subject: subjectId }),
     assignmentResults: (assignmentId: string) =>
       rows<ResultRow>('assignment_results', { p_assignment: assignmentId }),
+    async assignmentOverview(assignmentId: string): Promise<AssignmentOverview | null> {
+      return (await rows<AssignmentOverview>('assignment_overview', { p_assignment: assignmentId }))[0] ?? null;
+    },
+    assignmentItems: (assignmentId: string) => rows<TeacherItem>('assignment_items', { p_assignment: assignmentId }),
+    itemStats: (assignmentId: string) => rows<ItemStats>('item_stats', { p_assignment: assignmentId }),
+    async updateAssignment(assignmentId: string, c: AssignmentChanges): Promise<void> {
+      await t.value('update_assignment', {
+        p_assignment: assignmentId,
+        p_title: c.title,
+        p_instructions: c.instructions,
+        p_due_at: c.dueAt,
+        p_attempts_allowed: c.attemptsAllowed,
+      });
+    },
+    async deleteDraft(assignmentId: string): Promise<void> {
+      await t.value('delete_draft', { p_assignment: assignmentId });
+    },
+    submissionPhotos: (submissionId: string) =>
+      rows<SubmissionPhoto>('submission_photos', { p_submission: submissionId }),
     async setTeacherMark(submissionId: string, score: number, max: number): Promise<void> {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },

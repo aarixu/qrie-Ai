@@ -17,13 +17,15 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedBankRouteImport } from './routes/_authenticated/bank'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
-import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
-import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
-import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
+import { Route as AuthenticatedHomeworkAssignmentIdIndexRouteImport } from './routes/_authenticated/homework/$assignmentId/index'
+import { Route as AuthenticatedHomeworkAssignmentIdEditRouteImport } from './routes/_authenticated/homework/$assignmentId/edit'
+import { Route as AuthenticatedClassesSectionIdSubjectIdIndexRouteImport } from './routes/_authenticated/classes/$sectionId/$subjectId/index'
+import { Route as AuthenticatedClassesSectionIdSubjectIdNewRouteImport } from './routes/_authenticated/classes/$sectionId/$subjectId/new'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -64,6 +66,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedBankRoute = AuthenticatedBankRouteImport.update({
+  id: '/bank',
+  path: '/bank',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRouteRoute =
   AuthenticatedSettingsRouteRouteImport.update({
     id: '/settings',
@@ -82,29 +89,35 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedSettingsAccountRoute =
-  AuthenticatedSettingsAccountRouteImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
-  } as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
-const AuthenticatedSettingsDisplayRoute =
-  AuthenticatedSettingsDisplayRouteImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedHomeworkAssignmentIdIndexRoute =
+  AuthenticatedHomeworkAssignmentIdIndexRouteImport.update({
+    id: '/homework/$assignmentId/',
+    path: '/homework/$assignmentId/',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSettingsNotificationsRoute =
-  AuthenticatedSettingsNotificationsRouteImport.update({
-    id: '/notifications',
-    path: '/notifications',
-    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+const AuthenticatedHomeworkAssignmentIdEditRoute =
+  AuthenticatedHomeworkAssignmentIdEditRouteImport.update({
+    id: '/homework/$assignmentId/edit',
+    path: '/homework/$assignmentId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedClassesSectionIdSubjectIdIndexRoute =
+  AuthenticatedClassesSectionIdSubjectIdIndexRouteImport.update({
+    id: '/classes/$sectionId/$subjectId/',
+    path: '/classes/$sectionId/$subjectId/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedClassesSectionIdSubjectIdNewRoute =
+  AuthenticatedClassesSectionIdSubjectIdNewRouteImport.update({
+    id: '/classes/$sectionId/$subjectId/new',
+    path: '/classes/$sectionId/$subjectId/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -116,12 +129,14 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/bank': typeof AuthenticatedBankRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
+  '/homework/$assignmentId/': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
+  '/classes/$sectionId/$subjectId/new': typeof AuthenticatedClassesSectionIdSubjectIdNewRoute
+  '/classes/$sectionId/$subjectId/': typeof AuthenticatedClassesSectionIdSubjectIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof authSignInRoute
@@ -130,13 +145,15 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/bank': typeof AuthenticatedBankRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
+  '/homework/$assignmentId': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
+  '/classes/$sectionId/$subjectId/new': typeof AuthenticatedClassesSectionIdSubjectIdNewRoute
+  '/classes/$sectionId/$subjectId': typeof AuthenticatedClassesSectionIdSubjectIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -148,13 +165,15 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
+  '/_authenticated/bank': typeof AuthenticatedBankRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
-  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
-  '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
-  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
+  '/_authenticated/homework/$assignmentId/': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
+  '/_authenticated/classes/$sectionId/$subjectId/new': typeof AuthenticatedClassesSectionIdSubjectIdNewRoute
+  '/_authenticated/classes/$sectionId/$subjectId/': typeof AuthenticatedClassesSectionIdSubjectIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -167,12 +186,14 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/bank'
     | '/errors/$error'
-    | '/settings/account'
     | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
     | '/settings/'
+    | '/homework/$assignmentId/edit'
+    | '/homework/$assignmentId/'
+    | '/classes/$sectionId/$subjectId/new'
+    | '/classes/$sectionId/$subjectId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -181,13 +202,15 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/bank'
     | '/'
     | '/errors/$error'
-    | '/settings/account'
     | '/settings/appearance'
-    | '/settings/display'
-    | '/settings/notifications'
     | '/settings'
+    | '/homework/$assignmentId/edit'
+    | '/homework/$assignmentId'
+    | '/classes/$sectionId/$subjectId/new'
+    | '/classes/$sectionId/$subjectId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -198,13 +221,15 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/bank'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
-    | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
-    | '/_authenticated/settings/display'
-    | '/_authenticated/settings/notifications'
     | '/_authenticated/settings/'
+    | '/_authenticated/homework/$assignmentId/edit'
+    | '/_authenticated/homework/$assignmentId/'
+    | '/_authenticated/classes/$sectionId/$subjectId/new'
+    | '/_authenticated/classes/$sectionId/$subjectId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -275,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/bank': {
+      id: '/_authenticated/bank'
+      path: '/bank'
+      fullPath: '/bank'
+      preLoaderRoute: typeof AuthenticatedBankRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -296,13 +328,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/settings/account': {
-      id: '/_authenticated/settings/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
-    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -310,38 +335,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
-    '/_authenticated/settings/display': {
-      id: '/_authenticated/settings/display'
-      path: '/display'
-      fullPath: '/settings/display'
-      preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/homework/$assignmentId/': {
+      id: '/_authenticated/homework/$assignmentId/'
+      path: '/homework/$assignmentId'
+      fullPath: '/homework/$assignmentId/'
+      preLoaderRoute: typeof AuthenticatedHomeworkAssignmentIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/settings/notifications': {
-      id: '/_authenticated/settings/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
-      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    '/_authenticated/homework/$assignmentId/edit': {
+      id: '/_authenticated/homework/$assignmentId/edit'
+      path: '/homework/$assignmentId/edit'
+      fullPath: '/homework/$assignmentId/edit'
+      preLoaderRoute: typeof AuthenticatedHomeworkAssignmentIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/classes/$sectionId/$subjectId/': {
+      id: '/_authenticated/classes/$sectionId/$subjectId/'
+      path: '/classes/$sectionId/$subjectId'
+      fullPath: '/classes/$sectionId/$subjectId/'
+      preLoaderRoute: typeof AuthenticatedClassesSectionIdSubjectIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/classes/$sectionId/$subjectId/new': {
+      id: '/_authenticated/classes/$sectionId/$subjectId/new'
+      path: '/classes/$sectionId/$subjectId/new'
+      fullPath: '/classes/$sectionId/$subjectId/new'
+      preLoaderRoute: typeof AuthenticatedClassesSectionIdSubjectIdNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
 interface AuthenticatedSettingsRouteRouteChildren {
-  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
-  AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
-  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
 
 const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
   {
-    AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
-    AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
-    AuthenticatedSettingsNotificationsRoute:
-      AuthenticatedSettingsNotificationsRoute,
     AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   }
 
@@ -352,14 +384,28 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedBankRoute: typeof AuthenticatedBankRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedHomeworkAssignmentIdEditRoute: typeof AuthenticatedHomeworkAssignmentIdEditRoute
+  AuthenticatedHomeworkAssignmentIdIndexRoute: typeof AuthenticatedHomeworkAssignmentIdIndexRoute
+  AuthenticatedClassesSectionIdSubjectIdNewRoute: typeof AuthenticatedClassesSectionIdSubjectIdNewRoute
+  AuthenticatedClassesSectionIdSubjectIdIndexRoute: typeof AuthenticatedClassesSectionIdSubjectIdIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedBankRoute: AuthenticatedBankRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedHomeworkAssignmentIdEditRoute:
+    AuthenticatedHomeworkAssignmentIdEditRoute,
+  AuthenticatedHomeworkAssignmentIdIndexRoute:
+    AuthenticatedHomeworkAssignmentIdIndexRoute,
+  AuthenticatedClassesSectionIdSubjectIdNewRoute:
+    AuthenticatedClassesSectionIdSubjectIdNewRoute,
+  AuthenticatedClassesSectionIdSubjectIdIndexRoute:
+    AuthenticatedClassesSectionIdSubjectIdIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

@@ -14,9 +14,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // Not 5173: the classroom app has that one.
+  server: { port: 5180, strictPort: true },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@ai-tutor/lms-client': path.resolve(__dirname, '../../packages/lms-client/src/index.ts'),
     },
   },
 })

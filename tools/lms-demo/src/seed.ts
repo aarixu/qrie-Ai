@@ -180,10 +180,16 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
     )
   ).rows;
 
+  // Published in the morning, due at 8 pm, as a teacher would set them.
+  const at = (days: number, hour: number) => {
+    const d = new Date(now + days * DAY);
+    d.setHours(hour, 0, 0, 0);
+    return d.getTime();
+  };
   const schedule = [
-    { published: now - 16 * DAY, due: now - 12 * DAY, current: false },
-    { published: now - 9 * DAY, due: now - 5 * DAY, current: false },
-    { published: now - 2 * DAY, due: now + 3 * DAY, current: true },
+    { published: at(-16, 9), due: at(-12, 20), current: false },
+    { published: at(-9, 9), due: at(-5, 20), current: false },
+    { published: at(-2, 9), due: at(3, 20), current: true },
   ];
   const ability = new Map<string, number>();
   const planted: Planted[] = [];
@@ -271,12 +277,12 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
         const { submissionId } = await student.submitMcq(hw.id, answers);
 
         const late = !hw.current && rand() < 0.15;
-        const at = hw.current
+        const handedAt = hw.current
           ? hw.publishedAt + rand() * (now - hw.publishedAt)
           : late
             ? hw.dueAt + (0.2 + rand() * 1.8) * DAY
             : hw.publishedAt + (0.1 + rand() * 0.85) * (hw.dueAt - hw.publishedAt);
-        await backdate(db, submissionId, new Date(Math.min(at, now)), new Date(hw.dueAt));
+        await backdate(db, submissionId, new Date(Math.min(handedAt, now)), new Date(hw.dueAt));
       }
     }
 
@@ -285,7 +291,9 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
       const hw = homeworks[0];
       for (const row of await teacher.assignmentResults(hw.id)) {
         if (!row.submissionId || rand() > 0.4) continue;
-        const bump = rand() < 0.3 ? 0.5 : 0;
+        // Mostly the machine's score confirmed; now and then half a mark for working shown.
+        const partial = row.machineCorrect! > 0 && row.machineCorrect! < row.machineTotal!;
+        const bump = partial && rand() < 0.3 ? 0.5 : 0;
         await teacher.setTeacherMark(row.submissionId, Math.min(row.machineCorrect! + bump, row.machineTotal!), row.machineTotal!);
         const markedAt = new Date(hw.dueAt + DAY);
         await db.query(`update lms.mark set marked_at = $2 where submission_id = $1`, [row.submissionId, markedAt]);

@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from '@tanstack/react-router'
 import { Loader2, LogIn } from 'lucide-react'
-import { toast } from 'sonner'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
-import { useAuthStore } from '@/stores/auth-store'
-import { sleep, cn } from '@/lib/utils'
+import { api, backend } from '@/lib/backend'
+import { cn } from '@/lib/utils'
+import { NOT_A_TEACHER, useAuthStore } from '@/stores/auth-store'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -20,14 +20,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/password-input'
 
+// The shapes lms.account (0022) and the import's PINs (6-8 digits) allow.
 const formSchema = z.object({
-  email: z.email({
-    error: (iss) => (iss.input === '' ? 'Please enter your email.' : undefined),
-  }),
-  password: z
+  loginId: z
     .string()
-    .min(1, 'Please enter your password.')
-    .min(7, 'Password must be at least 7 characters long.'),
+    .trim()
+    .min(1, 'Enter the ID on your sign-in slip.')
+    .regex(/^[A-Za-z0-9-]{3,40}$/, 'An ID is letters, digits and dashes, like DEMO-T01.'),
+  pin: z
+    .string()
+    .min(1, 'Enter your PIN.')
+    .regex(/^\d{6,8}$/, 'A PIN is 6 to 8 digits.'),
 })
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
@@ -40,45 +43,37 @@ export function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [problem, setProblem] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { auth } = useAuthStore()
+  const setMe = useAuthStore((s) => s.setMe)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: { loginId: '', pin: '' },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-
-    toast.promise(sleep(2000), {
-      loading: 'Signing in...',
-      success: () => {
-        setIsLoading(false)
-
-        // Mock successful authentication with expiry computed at success time
-        const mockUser = {
-          accountNo: 'ACC001',
-          email: data.email,
-          role: ['user'],
-          exp: Date.now() + 24 * 60 * 60 * 1000, // 24 hours from now
-        }
-
-        // Set user and access token
-        auth.setUser(mockUser)
-        auth.setAccessToken('mock-access-token')
-
-        // Redirect to the stored location or default to dashboard
-        const targetPath = redirectTo || '/'
-        navigate({ to: targetPath, replace: true })
-
-        return `Welcome back, ${data.email}!`
-      },
-      error: 'Error',
-    })
+    setProblem(null)
+    try {
+      await backend.signIn(data.loginId.toUpperCase(), data.pin)
+      const me = await api.me()
+      if (!me || me.kind === 'student') {
+        await backend.signOut()
+        setProblem(NOT_A_TEACHER)
+        return
+      }
+      setMe(me)
+      navigate({ to: redirectTo || '/', replace: true })
+    } catch (e) {
+      setProblem(
+        e instanceof TypeError
+          ? 'Could not reach the school server. Is it running?'
+          : (e as Error).message
+      )
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -88,14 +83,24 @@ export function UserAuthForm({
         className={cn('grid gap-3', className)}
         {...props}
       >
+        {problem && (
+          <Alert variant='destructive'>
+            <AlertDescription>{problem}</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
-          name='email'
+          name='loginId'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>School ID</FormLabel>
               <FormControl>
-                <Input placeholder='name@example.com' {...field} />
+                <Input
+                  placeholder='DEMO-T01'
+                  autoComplete='username'
+                  autoCapitalize='characters'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,12 +108,17 @@ export function UserAuthForm({
         />
         <FormField
           control={form.control}
-          name='password'
+          name='pin'
           render={({ field }) => (
-            <FormItem className='relative'>
-              <FormLabel>Password</FormLabel>
+            <FormItem>
+              <FormLabel>PIN</FormLabel>
               <FormControl>
-                <PasswordInput placeholder='********' {...field} />
+                <PasswordInput
+                  placeholder='••••••••'
+                  inputMode='numeric'
+                  autoComplete='current-password'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,26 +128,6 @@ export function UserAuthForm({
           {isLoading ? <Loader2 className='animate-spin' /> : <LogIn />}
           Sign in
         </Button>
-
-        <div className='relative my-2'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-background px-2 text-muted-foreground'>
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className='grid grid-cols-2 gap-2'>
-          <Button variant='outline' type='button' disabled={isLoading}>
-            <IconGithub className='h-4 w-4' /> GitHub
-          </Button>
-          <Button variant='outline' type='button' disabled={isLoading}>
-            <IconFacebook className='h-4 w-4' /> Facebook
-          </Button>
-        </div>
       </form>
     </Form>
   )

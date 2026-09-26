@@ -36,9 +36,9 @@ beforeAll(async () => {
   );
   libraryItem = (
     await db.query<{ id: string }>(
-      `insert into lms.item (library_ref, outcome_ids, grade, subject, kind, stem, options, correct_index)
+      `insert into lms.item (library_ref, outcome_ids, grade, subject, kind, stem, options, correct_index, misconceptions)
        values ('probe-api-1', '{m8-frac}', 8, 'Mathematics', 'mcq', 'What is 1/2 + 1/4?',
-               '["2/6","3/4","1/8"]'::jsonb, 1) returning id`,
+               '["2/6","3/4","1/8"]'::jsonb, 1, '["adds the tops and adds the bottoms","",""]'::jsonb) returning id`,
     )
   ).rows[0].id;
   teacher = createLmsClient(pgliteTransport(db, one.teacherA));
@@ -228,5 +228,69 @@ describe('the teacher reading the results', () => {
     const kabir = createLmsClient(pgliteTransport(db, kid2));
     const mine = await kabir.myAssignments();
     expect(mine.find((a) => a.id === homeworkId)).toMatchObject({ mcqAttemptsUsed: 0, bestCorrect: null });
+  });
+});
+
+describe("a teacher's other tools", () => {
+  it('sees the questions of their homework with the key, in order', async () => {
+    const items = await teacher.assignmentItems(homeworkId);
+    expect(items.map((i) => [i.questionPosition, i.stem, i.correctIndex])).toEqual([
+      [1, 'What is 1/2 + 1/4?', 1],
+      [2, 'What is 3/4 - 1/4?', 0],
+    ]);
+  });
+
+  it('sees, question by question, how many got it right and which wrong answers were chosen', async () => {
+    const stats = await teacher.itemStats(homeworkId);
+    expect(stats.map((s) => [s.questionPosition, s.answered, s.correct, s.optionCounts])).toEqual([
+      [1, 1, 1, [0, 1, 0]],
+      [2, 1, 0, [0, 0, 1]],
+    ]);
+    expect(stats[0].misconceptions).toEqual(['adds the tops and adds the bottoms', '', '']);
+  });
+
+  it('gives a student neither the key nor the class figures', async () => {
+    expect(await student.assignmentItems(homeworkId)).toEqual([]);
+    expect(await student.itemStats(homeworkId)).toEqual([]);
+  });
+
+  it('reads one homework with its class names', async () => {
+    expect(await teacher.assignmentOverview(homeworkId)).toMatchObject({
+      title: 'Fractions 1',
+      grade: 8,
+      sectionName: 'A',
+      subjectName: 'Mathematics',
+      items: 2,
+      submitted: 1,
+      students: 2,
+    });
+  });
+
+  it('moves the due date of published homework and renames it', async () => {
+    const due = new Date(Date.now() + 5 * 86_400_000).toISOString();
+    await teacher.updateAssignment(homeworkId, { title: 'Fractions 1 (extended)', dueAt: due });
+    const o = await teacher.assignmentOverview(homeworkId);
+    expect(o?.title).toBe('Fractions 1 (extended)');
+    expect(new Date(o!.dueAt).toISOString()).toBe(due);
+  });
+
+  it("cannot change another teacher's homework", async () => {
+    const other = createLmsClient(pgliteTransport(db, one.teacherB));
+    await expect(other.updateAssignment(homeworkId, { title: 'Mine now' })).rejects.toThrow(/not your class/);
+  });
+
+  it('deletes a draft, but never published homework', async () => {
+    const draft = await teacher.createAssignment({
+      sectionId: one.s8a,
+      subjectId: one.maths,
+      kind: 'homework',
+      title: 'Scrap',
+      dueAt: new Date(Date.now() + 86_400_000).toISOString(),
+      answerTypes: ['mcq'],
+    });
+    await teacher.setAssignmentItems(draft, [ownItem]);
+    await teacher.deleteDraft(draft);
+    expect((await teacher.classAssignments(one.s8a, one.maths)).map((a) => a.title)).not.toContain('Scrap');
+    await expect(teacher.deleteDraft(homeworkId)).rejects.toThrow(/published/);
   });
 });

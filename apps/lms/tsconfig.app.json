@@ -17,7 +17,8 @@
 
     /* Alias */
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@ai-tutor/lms-client": ["../../packages/lms-client/src/index.ts"]
     },
 
     /* Linting */

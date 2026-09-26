@@ -313,6 +313,141 @@ as $$
             e.roll_number nulls last, acc.display_name;
 $$;
 
+-- One homework, with its class's names and its counts.
+create or replace function lms.assignment_overview(p_assignment uuid)
+returns table (
+  id uuid, kind text, title text, instructions text, due_at timestamptz,
+  published boolean, published_at timestamptz, answer_types text[], attempts_allowed smallint,
+  section_id uuid, grade smallint, section_name text, subject_id uuid, subject_name text,
+  items integer, submitted integer, students integer
+)
+language sql stable security invoker
+set search_path = public, lms
+as $$
+  select a.id, a.kind, a.title, a.instructions, a.due_at,
+         a.published_at is not null, a.published_at, a.answer_types, a.attempts_allowed,
+         sec.id, sec.grade, sec.name, sub.id, sub.name,
+         (select count(*)::int from lms.assignment_item ai where ai.assignment_id = a.id),
+         (select count(distinct s.student_user_id)::int from lms.submission s where s.assignment_id = a.id),
+         (select count(*)::int from lms.enrolment e
+           where e.section_id = a.section_id and e.left_on is null)
+    from lms.assignment a
+    join lms.section sec on sec.id = a.section_id
+    join lms.subject sub on sub.id = a.subject_id
+   where a.id = p_assignment;
+$$;
+
+-- The teacher's view of a homework's questions: with the key and the
+-- misconception each wrong option stands for. A student reads neither
+-- table this joins, so gets nothing.
+create or replace function lms.assignment_items(p_assignment uuid)
+returns table (
+  item_id uuid, question_position smallint, kind text, stem text, options jsonb,
+  correct_index smallint, misconceptions jsonb, source text, outcome_ids text[]
+)
+language sql stable security invoker
+set search_path = public, lms
+as $$
+  select i.id, ai.position, i.kind, i.stem, i.options, i.correct_index, i.misconceptions,
+         case when i.org_id is null then 'library' else 'school' end, i.outcome_ids
+    from lms.assignment_item ai
+    join lms.item i on i.id = ai.item_id
+   where ai.assignment_id = p_assignment
+   order by ai.position;
+$$;
+
+-- Question by question, over each student's latest attempt: how many
+-- answered, how many were right, and how many chose each option - so a
+-- teacher sees WHICH wrong answer a class fell for, and the misconception
+-- that option was written to catch.
+create or replace function lms.item_stats(p_assignment uuid)
+returns table (
+  item_id uuid, question_position smallint, stem text, options jsonb, correct_index smallint,
+  misconceptions jsonb, answered integer, correct integer, option_counts integer[]
+)
+language sql stable security invoker
+set search_path = public, lms
+as $$
+  with latest as (
+    select distinct on (s.student_user_id) s.id
+      from lms.submission s
+     where s.assignment_id = p_assignment and s.kind = 'mcq'
+     order by s.student_user_id, s.attempt desc
+  ),
+  answers as (
+    select sa.item_id, sa.chosen_index, sa.correct
+      from lms.submission_answer sa
+      join latest l on l.id = sa.submission_id
+  )
+  select i.id, ai.position, i.stem, i.options, i.correct_index, i.misconceptions,
+         (select count(*)::int from answers x where x.item_id = i.id and x.chosen_index is not null),
+         (select count(*)::int from answers x where x.item_id = i.id and x.correct),
+         (select array_agg(
+                   (select count(*)::int from answers x where x.item_id = i.id and x.chosen_index = o.n - 1)
+                   order by o.n)
+            from jsonb_array_elements(coalesce(i.options, '[]'::jsonb)) with ordinality as o(v, n))
+    from lms.assignment_item ai
+    join lms.item i on i.id = ai.item_id
+   where ai.assignment_id = p_assignment
+   order by ai.position;
+$$;
+
+-- Rename, reword, move the due date or change the attempts of a homework,
+-- published or not. A null leaves that field as it is; an empty
+-- instruction clears it. Its questions and answer types stay as published.
+create or replace function lms.update_assignment(
+  p_assignment uuid,
+  p_title text default null,
+  p_instructions text default null,
+  p_due_at timestamptz default null,
+  p_attempts_allowed integer default null
+)
+returns void
+language plpgsql volatile security invoker
+set search_path = public, lms
+as $$
+begin
+  if not lms.can_manage_assignment(p_assignment) then
+    raise exception 'this is not your class';
+  end if;
+  update lms.assignment
+     set title = coalesce(p_title, title),
+         instructions = case when p_instructions is null then instructions else nullif(p_instructions, '') end,
+         due_at = coalesce(p_due_at, due_at),
+         attempts_allowed = coalesce(p_attempts_allowed, attempts_allowed)
+   where id = p_assignment;
+end;
+$$;
+
+-- Only a draft can go: published work may already have answers against it.
+create or replace function lms.delete_draft(p_assignment uuid)
+returns void
+language plpgsql volatile security invoker
+set search_path = public, lms
+as $$
+begin
+  if not lms.can_manage_assignment(p_assignment) then
+    raise exception 'this is not your class';
+  end if;
+  if exists (select 1 from lms.assignment where id = p_assignment and published_at is not null) then
+    raise exception 'published homework cannot be deleted';
+  end if;
+  delete from lms.assignment where id = p_assignment;
+end;
+$$;
+
+-- The photos of one submission, in the order they were handed in.
+create or replace function lms.submission_photos(p_submission uuid)
+returns table (object_name text, photo_position smallint)
+language sql stable security invoker
+set search_path = public, lms
+as $$
+  select sp.object_name, sp.position
+    from lms.submission_photo sp
+   where sp.submission_id = p_submission
+   order by sp.position;
+$$;
+
 -- ---------------------------------------------------------------------------
 -- A student.
 -- ---------------------------------------------------------------------------
@@ -373,6 +508,12 @@ revoke all on function lms.publish_assignment(uuid) from public, anon;
 revoke all on function lms.class_assignments(uuid, uuid) from public, anon;
 revoke all on function lms.assignment_results(uuid) from public, anon;
 revoke all on function lms.my_assignments() from public, anon;
+revoke all on function lms.assignment_overview(uuid) from public, anon;
+revoke all on function lms.assignment_items(uuid) from public, anon;
+revoke all on function lms.item_stats(uuid) from public, anon;
+revoke all on function lms.update_assignment(uuid, text, text, timestamptz, integer) from public, anon;
+revoke all on function lms.delete_draft(uuid) from public, anon;
+revoke all on function lms.submission_photos(uuid) from public, anon;
 
 grant execute on function lms.me() to authenticated, service_role;
 grant execute on function lms.my_classes() to authenticated, service_role;
@@ -386,3 +527,9 @@ grant execute on function lms.publish_assignment(uuid) to authenticated, service
 grant execute on function lms.class_assignments(uuid, uuid) to authenticated, service_role;
 grant execute on function lms.assignment_results(uuid) to authenticated, service_role;
 grant execute on function lms.my_assignments() to authenticated, service_role;
+grant execute on function lms.assignment_overview(uuid) to authenticated, service_role;
+grant execute on function lms.assignment_items(uuid) to authenticated, service_role;
+grant execute on function lms.item_stats(uuid) to authenticated, service_role;
+grant execute on function lms.update_assignment(uuid, text, text, timestamptz, integer) to authenticated, service_role;
+grant execute on function lms.delete_draft(uuid) to authenticated, service_role;
+grant execute on function lms.submission_photos(uuid) to authenticated, service_role;
