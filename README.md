@@ -1,5 +1,8 @@
 # AI Tutor
 
+> **Start here.** The one final plan and the current state of the project
+> are in [`docs/handoff/2026-09-26-state-of-play.md`](docs/handoff/2026-09-26-state-of-play.md). Where anything below disagrees with it, that file wins.
+
 A pre-recorded class on your phone with a **live AI tutor one button away**. The
 tutor narrates over a canvas that draws itself as she speaks; tap ✋ and a live agent
 takes over the same room, answers your doubt on the exact diagram from the lesson,

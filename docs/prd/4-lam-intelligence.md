@@ -1,5 +1,9 @@
 # 4. The LAM - learner model, knowledge graph and orchestration
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 This is the part of Qrie that knows what a child can do, decides what to put in front of
 them next, and can prove afterwards that something changed. It owns the Learning Outcome
 Map (what there is to learn and what depends on what), the ledger (what actually happened

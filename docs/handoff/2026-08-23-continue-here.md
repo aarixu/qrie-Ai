@@ -1,5 +1,10 @@
 # Qrie — continue from here (2026-08-23)
 
+> **Still the reference for what the tutor product IS** (the recorded first
+> class and the raise-hand seam). **It is not the plan:** since 2026-09-26 the
+> one final plan and the living status are [`docs/handoff/2026-09-26-state-of-play.md`](2026-09-26-state-of-play.md).
+> Where they disagree, that file wins.
+
 Paste everything below into the new session.
 
 ---

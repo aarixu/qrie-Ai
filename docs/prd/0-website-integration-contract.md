@@ -1,5 +1,9 @@
 # 0. Website integration contract
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 **Status: draft for Aarav, written 2026-09-17 while the website is being built.**
 This exists so the marketing site and the web app are built against the same seams
 instead of being reconciled afterwards. It is deliberately short. Everything here is

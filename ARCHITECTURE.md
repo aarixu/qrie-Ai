@@ -1,5 +1,9 @@
 # Qrie — Architecture
 
+> **The plan and the current state are not in this file.** Since 2026-09-26
+> they live in [`docs/handoff/2026-09-26-state-of-play.md`](docs/handoff/2026-09-26-state-of-play.md), the one final plan. Where this map
+> disagrees with it, that file wins.
+
 **Read this first.** It is the map; each package's README is the territory. A new
 developer should be able to pick one part and work in it without holding the rest
 of the system in their head.

@@ -1,5 +1,9 @@
 # Qrie — the closed-loop rebuild
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 **Written 2026-09-12. Revised 2026-09-14** — Phase 0's last gap closed, the
 class cost re-measured upward, two pre-measurement guesses about a cold class
 replaced by what one measured run did, the self-hosted voice added to Phase 2,

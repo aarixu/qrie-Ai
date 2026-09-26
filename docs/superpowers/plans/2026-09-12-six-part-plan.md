@@ -1,5 +1,9 @@
 # Qrie — the six-part plan
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 > **SUPERSEDED, later the same day, by
 > `2026-09-12-closed-loop-rebuild.md`.** Aarav's product brief recut the
 > product as a closed adaptive loop, which reorders everything below. Kept for

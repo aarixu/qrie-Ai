@@ -1,5 +1,9 @@
 # 6. Cost, monetisation and operations
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 This is the part of Qrie that decides whether it can afford its own students, how a rupee
 gets from a parent or a school into the account that pays the vendors, and what happens at
 two in the morning when the class will not start. Three questions live here and nowhere

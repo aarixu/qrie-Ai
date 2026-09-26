@@ -1,5 +1,9 @@
 # The live AI tutor — frozen 2026-09-22
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 Read this before restarting the tutor, and read the "what the LMS can reuse"
 section before building the school apps. Both audiences are served by one file
 on purpose: the thing most likely to be wasted is not the tutor code, it is the

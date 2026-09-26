@@ -1,5 +1,9 @@
 # Phase 3 — the learner model
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 **Written 2026-09-14.** The design for `packages/learner-model`, the table
 behind it, and the two places it changes what a student meets. Scope was
 settled with Aarav in the brainstorming session of the same date; every

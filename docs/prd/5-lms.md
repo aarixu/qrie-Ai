@@ -1,5 +1,9 @@
 # 5. LMS - school, teacher, parent and the progress card
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 Everything Qrie shows to somebody who is not the student. Today the product is a good
 single-player tutor with no second seat of any kind: a parent who pays sees nothing, a
 teacher who would put us on a fee structure sees nothing, and a school that has already

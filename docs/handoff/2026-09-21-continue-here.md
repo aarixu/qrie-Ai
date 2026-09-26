@@ -1,5 +1,9 @@
 # Qrie — continue from here (2026-09-21)
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 Paste everything below into the new session.
 
 ---

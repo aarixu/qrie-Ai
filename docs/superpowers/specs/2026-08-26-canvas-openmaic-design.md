@@ -1,5 +1,9 @@
 # Canvas: adopt OpenMAIC's classroom, keep our brain
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 **Date:** 2026-08-26
 **Status:** approved. Phase 0 done; the rest stands as §7 records it, 2026-09-14
 **Supersedes:** the image + vision-anchor canvas design discussed earlier the same day

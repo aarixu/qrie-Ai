@@ -1,5 +1,9 @@
 # 2. Web app, website and Android
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 This is every surface a student actually touches, and the machinery that puts it in
 front of them. One React app, built once, served two ways: from a URL on a browser
 they already have, and from inside a Capacitor shell on a phone. It also covers the

@@ -1,5 +1,9 @@
 # 1. Brand, UI and UX
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 This is everything a student sees. The mark on the home screen, the three seconds of splash, the onboarding that decides what a workspace is and which language the tutor speaks, the catalogue they browse, the dark room where a class actually happens, the board they stare at for fourteen minutes, the penguin who narrates it, the consent screen a parent meets before a minor is modelled, the page a grown-up reads to find out what happened, and the empty screens they meet on day one before any of it has data. It also owns the one design system underneath all of that: a token palette, a type stack, an icon set, four content states and the component layer that does not exist yet. Every word of that chrome is English. The tutor's own voice is Hinglish or English, chosen per student, and that fork is decided by one question in onboarding and rendered by PRD 4. The area's job in MVP-1 is not to be pretty. It is to stop the product looking like three products, to stop it telling children things that are not true, to make the board readable by somebody who cannot see it, and to steer every topic ask toward a class that already exists rather than one we pay to prepare.
 
 ## Where it stands today

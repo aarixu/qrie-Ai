@@ -1,16 +1,26 @@
-# Qrie — state of play (2026-09-26)
+# Qrie — the final plan, and the state of play
 
-**This is the living file. Update it rather than writing a new one.** The dated
-`*-continue-here.md` files beside it are snapshots of moments that have passed;
-this one is meant to be edited in place as things change.
+**This is THE final plan.** Aarav decided on 2026-09-26 that from now on this
+one file is the plan. Every other plan, PRD, spec and dated handoff in this
+repo is history. Where one of them disagrees with this file, this file wins,
+and each of them now says so at its top.
 
-Read `docs/handoff/2026-08-23-continue-here.md` for what the product IS — the
-recorded-first-class + raise-hand seam. That has not changed and is not repeated
-here. This file is only: where it stands, what works, what is broken, and what
-nobody has checked.
+**It is also the living status file.** Update it in place. Never write a new
+dated handoff beside it.
 
-Branch `phase3-completion`, HEAD `a51af6d`. **3,510 tests pass**, 3 skipped,
-typecheck clean, full suite run today.
+Read `docs/handoff/2026-08-23-continue-here.md` only for what the tutor product
+IS — the recorded-first-class + raise-hand seam. That has not changed and is not
+repeated here.
+
+Branch `phase3-completion`, HEAD `a51af6d` when Part 1 was measured. **3,510
+tests pass**, 3 skipped, typecheck clean, full suite run on 2026-09-26.
+
+- **Part 1 — Where it stands:** where everything lives · what works · what is
+  broken · what nobody has checked · what is blocked on Aarav
+- **Part 2 — The plan:** the direction · decisions made · decisions open · the
+  system · build order · workstreams A–N · the API track · changes to the brief
+  · what we must learn from schools
+- **Part 3 — How to work here:** traps · deploying · mistakes worth not repeating
 
 ## The rule this file lives by
 
@@ -22,6 +32,8 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 ---
 
+# Part 1 — Where it stands
+
 ## Where everything lives
 
 | Thing | Where |
@@ -31,7 +43,10 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 | Vercel project | `qrie-ai` (`prj_u0hplKlI1Lj20vOJALJUWaNCAm6F`) |
 | Supabase project | `ueemqirxyrltdmqgnidy` |
 | Relay | `https://ueemqirxyrltdmqgnidy.supabase.co/functions/v1/relay` — a Supabase **Edge Function**, not a Vercel route |
-| LMS work | separate worktree, `.claude/worktrees/lms`, branch `lms` at `a695b1d` |
+| LMS work | worktree `.claude/worktrees/lms`, branch `lms` at `a695b1d`, no commits of its own yet. Fast-forward it to `phase3-completion` before LMS code starts |
+| Evidence behind Part 2 | `docs/superpowers/specs/2026-09-25-lam-audit-appendix.md` — 311 requirement rows, with file:line and refuter verdicts |
+| Teacher interview sheet | `docs/research/2026-09-25-teacher-questions.md` (Hinglish) |
+| Google Cloud project (Vertex) | `project-dd876d44-2dc1-40de-935` — no billing account linked |
 
 **One origin is deliberate**, not tidiness: a Supabase session lives in
 localStorage, which is per-origin. Across two hostnames the contest form's
@@ -131,6 +146,13 @@ OpenRouter account and the cost per class is currently unmeasurable (see next
 item). UNVERIFIED: whether OpenRouter's price for `google/gemini-3.7-flash`
 keeps a class under the ₹5/student-hour ceiling.
 
+**If you flip it, flip it together with workstream A7, not alone.** The
+2026-09-24 audit reported three guards on the Vertex path that the OpenRouter
+path lacks: it has **no model allowlist, no 256 KB request cap, and it honours a
+caller-supplied `max_tokens`** (`supabase/functions/relay/index.ts:89-95`). This
+is UNVERIFIED since that audit. If it is true, unsetting the Google secret also
+removes three spending and safety limits.
+
 ### 3. The cost meter is blind — `model_price` has 0 rows
 
 Queried live: `model_price` → 200, **empty**. Every LLM call therefore prices at
@@ -181,6 +203,146 @@ So the fix, if one is needed, is a latency fix, not a prerender.
 vendor is wired. The relay refuses rather than lying to a parent about digits
 they just typed. An MSG91 adapter is the missing piece.
 
+### 6–13. Found by the LMS and LAM audits (2026-09-24 and 2026-09-25)
+
+**Method.** Two read-only multi-agent audits of commit `a695b1d`, with every
+cited file:line re-opened by a refuter, plus live database queries on
+2026-09-24 with `npx supabase db query --linked`. **✓** marks an item re-checked
+by hand after the audit. File references are as of `a695b1d` unless stated. Full
+evidence, 311 requirement rows:
+[`docs/superpowers/specs/2026-09-25-lam-audit-appendix.md`](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
+
+**Live database, measured 2026-09-24.** Counts will have moved since the contest
+form went live, so re-query before relying on one.
+
+| Probe | Result |
+|---|---|
+| Migrations | 0001–0019 applied then; **0020 applied since** (re-checked 2026-09-26, `npx supabase migration list --linked`) |
+| `auth.users` | 204 — **every one anonymous, 0 named accounts** |
+| `organization` / `membership` | 204 / 204, all `kind='solo'`, all `role='student'`, nobody in two orgs — **no school exists** |
+| `concept_state` / `learner_model` | **0 / 0** — the learner model has never run on the server |
+| `ledger_event` / `learning_session` | 145 / 58. How many of the 145 are *answers* is UNVERIFIED |
+| `cron.job` | `purge-old-ledger`, `30 19 * * *`, `purge_old_ledger(90)`, **active** |
+| Size | database 13 MB; `classes` bucket 3.97 MB, 17 files, **public** |
+
+#### 6. The learner model only exists on the phone
+
+Nothing writes `concept_state` or `learner_model`. Mastery is computed in the
+browser, kept in localStorage, and synced as opaque jsonb into `student_state`,
+whose policy is `for all`. **A student can overwrite their own mastery.**
+`apps/classroom/src/lib/learnerModel.ts:18-19` says so itself. `rebuildModel.ts:20`
+claims "concept_state is written by the server", which is false. A teacher
+dashboard cannot read a number that lives inside one child's browser.
+
+#### 7. The learning loop does not close — the LAM is about 2 of 5 against the brief
+
+- **The 15 bundled lessons record no answers.** Their 22 questions carry
+  `question`/`expect`/`hint` and **no `options` and no `whyProbe`** ✓. A tap with
+  no option is not evidence (`ClassRoom.tsx` `isEvidence = Boolean(option)`,
+  ~:298 ✓). A spoken answer goes to the model judge, which 403s (item 1). The 6
+  Supabase classes do carry options, so taps there count.
+- **Nothing decides anything from the model.** There is no
+  `packages/tutor-control` ✓. `chooseAsk` has no caller
+  (`learner-model/src/ask.ts:35`). Help levels are literals
+  (`ClassRoom.tsx:315/759/813/918`). The next lesson is syllabus order
+  (`content.ts:232-247`).
+- **Hinted answers count as much as unhinted ones** in the mastery every
+  decision reads (`learner-model/src/fold.ts:260`). The unassisted split exists
+  (`fold.ts:315-319`), and nothing reads it.
+- **A quiz retake re-asks the questions whose answers were just shown**, and
+  files them as unassisted (`quizLedger.ts:207-212`).
+- **The quiz wires 3 of 13 question banks** (`quiz.ts:128-141`).
+- **The 4,697 MCQs are LLM-written and unreviewed**, one per outcome, and 382
+  outcomes have none. `quiz.ts:18` claims each carries "a reviewed correct
+  answer". They would become marks on a child's record.
+- **Knowledge graph:** 5,079 outcomes and 6,546 edges, but **zero cross-class
+  edges**. It covers only Maths 6–11, Science 6–10, and Biology and Chemistry
+  11 — no Class 11 Physics, no Class 12, no other subject.
+- Spaced review, misconception tracking, confidence, engagement, strategy
+  tracking and the Learning Scientist are absent or exist only in the schema.
+  The 12 Sep plan's line *"their fields exist in the schema so switching them on
+  is wiring"* is false for misconceptions, engagement and the scientist.
+
+#### 8. Four deployed behaviours are wrong for a school
+
+All four are harmless today because no school org exists. Each must be fixed
+**before the first `kind='school'` row** (workstream A).
+
+1. **Every new user gets a private solo org.** `provision_solo_org` has no WHEN
+   clause (`0005_tenancy.sql:88-110` ✓). `fill_org_id` then picks the earliest
+   membership, and `ledgerSync.ts:103-112` picks one with no `.order()`.
+   Homework would be filed under the child's private org, invisible to the
+   teacher.
+2. **Any student could read the school's roster.** The membership read policy
+   is `using (is_member(org_id))` (`0005:129-131` ✓), so in a school org every
+   child could read the whole roster of minors.
+3. **The gradebook would empty itself.** The nightly purge deletes evidence that
+   was never folded, while `0007_retention.sql:12-14` ✓ claims "the learner
+   model has already absorbed them". A gradebook would empty itself one term in.
+4. **A student can erase their own marks.** `delete_own_account()`
+   (`0002_deleted_account.sql`) is reachable from Settings (`supabase.ts:380`),
+   and every student table cascades. A failing child can erase every mark, with
+   no tombstone.
+
+Also: `membership.role` is written only as `'student'` and **read by nothing** —
+no policy, no function, no TypeScript (`0005:100, 151` ✓). A teacher seeing a
+student is 0% built.
+
+#### 9. Safety holes on the doubt path
+
+- **`halted` is discarded**, so after distress the doubt session carries on
+  (`ClassRoom.tsx:509` on this branch ✓). `c3b604b` ✓ fixed the *display* half;
+  this half is still open.
+- **The relay screens nothing a student types.** Its only `screen()` call is
+  outbound (`relays.ts:511`).
+- There is no model allowlist on relay routes, OpenRouter data collection is not
+  denied, and Vertex `safetySettings` is not set.
+- The child's name goes into the prompt raw (`student.ts:110`).
+- **Distress never reaches an adult.** There is no server record of it, and
+  `stores/flags.ts` `hasFlags` has no caller.
+- **The mic screen tells children "Nothing is recorded or kept."**
+  (`apps/classroom/src/ui/MicRationale.tsx:51` ✓). The screened text of what
+  they say is kept for 90 days.
+- `MAX_STUDENT_WORDS` compares characters, not words
+  (`safety/src/screen.ts:274-276, 287`), so a typed answer is cut at 1,200
+  characters.
+
+#### 10. The relay cannot see a school or a partner
+
+`claim_relay(p_user, p_relay, p_units)` never reads `p_relay`, and `org_id`
+appears zero times in `0003`, `0012`, `0015` and `0016`. No school or partner can
+be metered, capped or halted on its own, so one runaway returns 503 to everyone.
+The per-student daily cap and the rate limit are plpgsql constants. The LLM meter
+charges a flat 85 units a call, calibrated on the voice class.
+
+#### 11. The LMS does not exist, and neither does most of what it needs
+
+- There are no teacher screens, and no section, subject, assignment, submission
+  or marks tables.
+- `ledger_event.source` is CHECK-constrained to
+  `('class','quiz','diagnostic','doubt')`, so **a homework event is rejected by
+  the database**.
+- There are no push notifications (local only) and **no file or photo upload**
+  — zero `.storage.from` calls in `apps/` or `packages/`. In India, homework is
+  a photo of a notebook.
+- There is no iOS target.
+- White-label is about a quarter done. The 47 colour tokens swap at runtime; the
+  app name, logo, manifest and Android appId are build-time, and the appId is
+  permanent once published.
+- **Every learner table keys on `auth.users`** (`0006:31`, `0006:61`,
+  `0013:26`, `0013:71` ✓). School students will have logins; an API partner's
+  students will not (Part 2, open decision 1).
+
+#### 12. About 25 comments and docs overclaim
+
+The worst are in items 6–9 above, and the full list is in the appendix, Part 1.
+Correcting them is workstream A12.
+
+#### 13. Lessons are served unreviewed
+
+`class-prep/src/review.ts:15-16` claims "a student is never taught an unreviewed
+class", but live preparation passes no reviewer (`liveClass.ts:336-356`).
+
 ---
 
 ## What NOBODY has checked
@@ -194,10 +356,20 @@ Listed so the next session does not mistake silence for evidence.
 - One **401** appears in the console on every lesson load. It is not in the
   same-origin request list and was never attributed. It blocks nothing
   observable.
-- Whether the LMS track (`.claude/worktrees/lms`) or the tutor track is the one
-  being pursued. Memory says the tutor was frozen on 2026-09-22 in favour of the
-  LMS; this session worked entirely on the tutor prototype. **Both exist. Nobody
-  has said which is live.**
+- ~~Which track is live, LMS or tutor~~ — **answered by Aarav on 2026-09-24:
+  both.** The tutor stays a website prototype, built in the tutor session. The
+  LMS and the student app are built in the LMS worktree. The tutor joins the
+  student app later, as an update. See Part 2.
+- How many of the live `ledger_event` rows are answers rather than attendance or
+  session rows, and whether any of them carry a `misconceptionId`.
+- What a school actually wants. Aarav was to speak to one or two teachers on
+  2026-09-25, and what they said is not recorded here yet. Steps 4–5 of the plan
+  wait on it.
+- Whether a teacher will review and approve questions fast enough. The whole
+  content model in Part 2 rests on it, and it is unmeasured.
+- The cost and `f` of a TEXT doubt agent. Only the voice class has ever been
+  measured.
+- Whether any student uses the native Android build.
 - `hello@curie.study` and `curie.co.in` — unchanged since the rename to Qrie.
 
 ---
@@ -216,8 +388,494 @@ Listed so the next session does not mistake silence for evidence.
    have had no legal review.
 6. **A real vector logo.** The supplied file is a raster wrapped in SVG, so the
    app icon and favicon still carry the old atom mark.
+7. **Tell us what the teachers said** in the 2026-09-25 conversations. Steps 4–5
+   of the plan wait on it.
+8. **Say go on Step 1** (workstream A). Everything in it is then ours to do.
+9. **Decide the `learner` entity** before the server fold is built (Part 2, open
+   decision 1). It is free now and a migration on children's data later.
+10. **If the API track is pursued, name the platforms you can actually reach**,
+    and which segment comes first (Part 2, the API track).
+11. **Get a lawyer on the DPDP questions:** is the school or Qrie the data
+    fiduciary, and does §9(3) allow the behavioural detectors in workstream E5?
+12. **Keep or pause Supabase Pro.** Only the plan fee is billing: the database
+    is 13 MB and storage 4 MB (measured 2026-09-24). Keep it if LMS work starts
+    this month.
+13. **Choose between the two marks.** The site carries the two-crescent "C"; the
+    app and its icons carry the atom. Nobody has chosen.
 
 ---
+
+# Part 2 — The plan
+
+Everything below is a plan or a decision, not a measurement. Where a plan item
+rests on a fact, that fact is in Part 1.
+
+## The direction
+
+Set by Aarav on 2026-09-22 and 2026-09-24: three products over one brain.
+
+| # | Product | Who uses it | State |
+|---|---|---|---|
+| 1 | **Qrie tutor website** — the live AI tutor | Students, direct | Prototype live at `qrie-ai.vercel.app/app`, gated to 20 topics, built in the tutor session. Scaling is frozen on cost: measured at ₹17.85/student-hour against the ₹5 ceiling (`tools/measure/f-bench`, 2026-09-22) |
+| 2 | **LMS** — teachers set homework, quizzes, tests and assignments, and see how students are doing | Teachers, school admins | Not started. This is the wedge into schools |
+| 3 | **White-label student app**, connected to the LMS | Students, as "their school's app" | Not started. It receives the tutor later, as an update |
+
+**The order is the strategy.** Get schools onto the LMS, get students using the
+app every day, and the tutor then becomes an update to an app they already have,
+rather than a new thing to sell.
+
+A fourth door is under consideration: **selling the LAM to established edtech
+platforms by API key** (see the API track below).
+
+## Decisions already made — do not re-open
+
+| # | Decision | Made |
+|---|---|---|
+| 1 | **Login: the school issues an ID + PIN.** We create the accounts from the school's list. Each child gets a hidden internal email with the PIN as its password. This replaces anonymous sign-in for school students | 2026-09-24 |
+| 2 | **Device:** the child's own or home phone. No shared-device flow yet | 2026-09-24 |
+| 3 | **A teacher sees only their own section and subject** — never `is_member(org_id)` | 2026-09-24 |
+| 4 | **White-label is one app.** The school is picked at first launch, and its name, logo and colours come from the org row at runtime | 2026-09-24 |
+| 5 | **Answer types:** MCQ, then a photo of the notebook, then typed — built in that order | 2026-09-24 |
+| 6 | **Marks:** MCQs are marked automatically; the teacher marks everything else. Store both the AI number and the teacher's number, plus who changed a mark and when | 2026-09-24 |
+| 7 | **The first 10 schools are set up by Aarav, by hand,** from their Excel. No admin console and no join code | 2026-09-24 |
+| 8 | **The tutor stays a separate website for now** and joins the student app later, as an update | 2026-09-24 |
+| 9 | **The LMS lane owns the database.** Every new migration from 0021 onwards is written there; the tutor session asks for what it needs | 2026-09-24 |
+| 10 | **The tutor's voice problem is not solved by prerecording** — the product claim is a live tutor | 2026-09-26 |
+
+Carried over, and not up for debate:
+
+- App chrome is always English; the tutor speaks Hinglish or English, as the child chooses.
+- Users are children, so reject rather than sanitise, and fail closed.
+- A comment is a claim.
+- The relay is the only holder of vendor keys.
+- ₹5/student-hour binds every AI feature that runs per interaction.
+
+## Decisions still open
+
+1. **The `learner` entity — decide before workstream B1.** Every learner table
+   keys on `auth.users` (Part 1, item 11). If the API track is pursued, the brain
+   must key on a `learner` instead: an optional login, or a partner org plus the
+   partner's own student id. The change is free while `concept_state` has 0
+   rows, and becomes a migration on children's data afterwards. It does no harm
+   if the API never happens.
+2. **The OpenRouter switch** (Part 1, item 2). If yes, do it together with
+   workstream A7.
+3. **DPDP:** is the school or Qrie the data fiduciary, and what does §9(3) allow
+   for behavioural signals?
+4. **Supabase Pro:** keep it or pause it.
+5. **The API:** go or not, and which segment first.
+
+## The system
+
+```
+ Qrie tutor website    LMS (teachers)    Student app (school-branded)    [API partners]
+          │                  │                     │                            │
+          └────── write "what the student did" as events, through the relay ───┘
+                                        │
+       RELAY — the one door: login, vendor keys, metering, kill switch, safety
+                                        │
+       LAM — one brain, ON THE SERVER: events → mastery per outcome
+             → gaps · misconceptions · due reviews · next best activity
+                                        │
+       DATABASE — school · section · teacher · learner · assignment ·
+                  submission · marks · events · mastery
+```
+
+**The one rule.** Every app writes what a student did as events, through the
+relay. The LAM folds those events on the server. Every app reads only its own
+slice, under RLS. No app keeps its own idea of a child's progress.
+
+**Worked example.**
+
+1. Riya gets a homework MCQ wrong in the student app.
+2. The relay records "Riya, fractions, wrong, chose the option tagged *adds the
+   denominators*".
+3. The server fold lowers her fractions mastery and counts that misconception.
+4. The teacher's class view shows it.
+5. Her next homework includes a fix-it item and a review.
+6. Later, the tutor opens on exactly that.
+
+**The central change** is moving the LAM from the phone to the server (Part 1,
+item 6). That change touches the tutor too.
+
+**Why the LMS makes the brief buildable.** The brief's three biggest missing
+inputs all come from teachers:
+
+- a teacher approving questions *is* the review pipeline;
+- teacher marks are the only independent ground truth;
+- homework due dates are the accountability mechanism.
+
+The homework loop itself is ordinary code with no model call — an estimate, not
+a measurement. So only the doubt agent threatens the ₹5 ceiling.
+
+## Build order
+
+| Step | Work | Waits on the school conversations? |
+|---|---|---|
+| 0 | LMS worktree and branch | Done |
+| 1 | **Workstream A** — fix what is broken | No |
+| 2 | **B + C1–C5 + D1–D3, together** — the server brain *and* something to feed it. A server fold on its own would read almost nothing, because the class records almost no answers. Settle open decision 1 first | No |
+| 3 | **N1** — school, section, subject, roster, ID + PIN, section-scoped teacher access | No |
+| 4 | **The LMS:** N2–N3 + C2–C4 + C6–C8 + J1 | **Yes** |
+| 5 | **The student app's closed loop:** E + F + G + D4–D7 + K1–K2 + M1–M4, plus school branding | **Yes** |
+| 6 | **The text tutor, behind a gate:** H + I + L + K3 + M5–M6 | Later |
+| Later | Voice (H7) and AI reading of photos (J2), once their cost is measured | — |
+
+No durations are given, because none could be stated with a basis.
+
+**Working rule for the shared machine.** While another session is active, never
+run the full test suite, an install or a build — only the test files a change
+touches. A full run on 2026-09-24 stalled the tutor session.
+
+## Workstreams A–N — every change, with its ID and references
+
+Each change has an ID, so work can be referred to as "do B3". References are as
+of `a695b1d`, and **✓** means re-checked by hand. The evidence for every row is in
+the [appendix](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
+
+### A. Fix what is broken first — Step 1, blocks everything
+
+| ID | Change | Why | Refs |
+|---|---|---|---|
+| A1 | Stop provisioning a solo org for school users; resolve the school org explicitly | Homework would file under the wrong org, invisible to the teacher | `0005_tenancy.sql:88-110` ✓ (no WHEN clause); `0018` `fill_org_id` `order by created_at asc limit 1` (recorded as temporary at `0018:87-92`); `ledgerSync.ts:103-112` (no `.order()`) |
+| A2 | A student may read only their own membership row | Today every student in a school org could read the roster of minors | `0005_tenancy.sql:129-131` ✓ `using (is_member(org_id))` |
+| A3 | Purge only rows already folded (a fold watermark); never graded work | Today the nightly purge deletes evidence that was never folded | live job `purge-old-ledger` `30 19 * * *` ✓; `0007_retention.sql:12-14` ✓ claims "the learner model has already absorbed them" — false |
+| A4 | Refuse or tombstone self-deletion for school members; hold open safety reports | A failing student can erase every mark, irreversibly | `0002_deleted_account.sql:9-26`; `supabase.ts:380`; cascades at `0001:7`, `0003:22`, `0005:43` ✓, `0006:31`, `0006:61`, `0008:21`, `0013:26`, `0013:71`, `0019:38` |
+| A5 | Honour `halted` in the doubt path — stop the session after distress | Live child-safety hole | `phase3-completion` tip `ClassRoom.tsx:509` ✓ discards `speakSafely`'s result; `c3b604b` ✓ fixed display, not this |
+| A6 | Run `packages/safety` `screen()` inside the relay on student text and `/api/hear` transcripts | A browser-only filter is one modified build away from absent | `relay/src/relays.ts:511` — the only `screen()` call in the relay, outbound |
+| A7 | Model allowlist on `hear`/`speech`/`llm`; OpenRouter `data_collection:'deny'`; Vertex `safetySettings` | No unknown models; no vendor training on children's words | `relay/src/vertex.ts` (`completeOnVertex`); `supabase/functions/relay/index.ts:89-95` (a malformed Google key silently falls through to OpenRouter) |
+| A8 | Screen or quote the child's name before prompting; start the scripted stub only on failure | A PII leak, and a double opening on every doubt | `student.ts:110`; `geminiAgent.ts:232-235`; `doubt-session/src/agent.ts:54-83` |
+| A9 | Seed `model_price` | Every cost report reads zero | live `model_price` = 0 rows ✓; `tools/sql/model_price.sql:48`; `tools/bin/apply-prices.mjs:5-7`; table at `0008_usage.sql:48-54` |
+| A10 | Server-side insert checks on `ledger_event`: payload size, `active_ms` ≤ wall clock, a derivable rung | Today a student can post "correct, unassisted" | `0006_ledger.sql:135-156` (insert RLS on `auth.uid()` only; `0006:135-141` says this stops being acceptable once a row is worth a mark) |
+| A11 | The quiz's "Ask the tutor" records help | Otherwise help on the quiz files as unassisted | `PracticeQuiz.tsx:274-282`; `quizLedger.ts:14-19, 210-212` |
+| A12 | Correct the overclaiming comments and copy — **first the mic screen** | Shown to children and parents | `ui/MicRationale.tsx:51` ✓ "Nothing is recorded or kept." (the text of what they said is kept 90 days); full list in the appendix, Part 1 |
+| A13 | `MAX_STUDENT_WORDS` compares characters, not words | Long typed answers are silently cut at 1,200 characters before grading | `safety/src/screen.ts:274-276, 287` |
+
+### B. Move the brain to the server — Step 2 · §1B, §5, data model
+
+| ID | Change | Refs |
+|---|---|---|
+| B1 | A server fold: a job (Edge Function on session close plus a pg_cron sweep) runs the existing `foldSession` over `ledger_event` in `(started_at, session_id, seq)` order and upserts `concept_state` and `learner_model` as `service_role` | `learner-model/src/fold.ts:48-118`; already run offline by `tools/bin/model-metric.mjs:186`; `supabase/functions` holds only `relay` |
+| B2 | Migration: the third cursor column; an index on `(user_id, next_review_at)` | `0013_learner_model.sql:74-79` (two columns) vs `learner-model/src/types.ts:90-109` (three parts); only index at `0013:66-67` |
+| B3 | The client reads `concept_state`; localStorage becomes a cache; `student_state` stops carrying the model | `learnerModel.ts:18-19` ✓, `:112-144` |
+| B4 | Discount help: scale evidence by `defaultCredit(rung)`; `attempt > 1` counts as at least a nudge; a monotonicity test | `fold.ts:260` (`applyEvidence` with no rung); `assistance.ts:19-25` claims the invariant; `rung.ts:26-33` |
+| B5 | A retake right after the reveal, or a rewatch after help, is not rung-0 evidence | `quizLedger.ts:207-212`; `PracticeQuiz.tsx:297-299, 319` |
+| B6 | Decisions read unassisted mastery wherever it exists | `fold.ts:315-319`; readers at `adaptPlan.ts:82`, `student.ts:141-150`, `ClassRoom.tsx:431` |
+| B7 | Server time (`received_at`) for every timestamp | device clock used today |
+| B8 | One mastery rule: unassisted ≥ 0.8 on 2+ distinct items at least a day apart; stamp `mastered_at` | none exists; one global 0.5 line today |
+| B9 | Server-folded profile fields: hint dependency, median answer speed, difficulty tolerance, recent mistakes, a prerequisite-gap view, a weekly engagement summary | `hintAbuse.ts`, `wheelSpin.ts` (DEV-only); appendix §1B rows |
+| B10 | Fold quiz evidence once, not twice | `quizLedger.ts:197` then `diagnostic/src/adapt.ts:142-147` via `adaptPlan.ts:82-84` (critic: plausible, not confirmed) |
+
+### C. Content — the real bottleneck · §7, feeds §2 §4 §5 §8
+
+| ID | Change | Refs |
+|---|---|---|
+| C1 | Load all 13 probe banks | `quiz.ts:128-141` hand-lists 3; `quiz.ts:115-127` claims "EVERY MAP THERE IS"; `diagnosticData.ts:46` already uses `import.meta.glob` |
+| C2 | A `reviewed` flag; only reviewed items are served; teacher approval is the review | `docs/prd/4-lam-intelligence.md:1447` calls the bank unreviewed; `quiz.ts:18` claims "a reviewed correct answer" |
+| C3 | Per outcome: 1 diagnostic, 1 retest, 2–4 review, 1 transfer item; maths gets numeric answers with tolerance and parameterised templates | one probe per outcome, test-enforced; 382 outcomes with none |
+| C4 | Item-level ids and difficulty; fit from responses; retire bad items | `knowledge-graph` `params.ts` (per-item slip/guess); `calibration.ts:314` `suspectItems` |
+| C5 | Give the 22 bundled-lesson asks real options, so the class records answers | `content/*/lesson.json` ✓ 22 asks, 0 options, 0 whyProbe; `ClassRoom.tsx:298-302` ✓; `judge.ts:384-393` |
+| C6 | Pre-authored help per item, reviewed once and served free: rethink line, concept question, hint (made mandatory), stronger hint, sibling worked example, answer + why | `lesson-format/src/types.ts` and its validator; `ClassRoom.tsx:311-315` needs `option.hint`/`why` |
+| C7 | A diagnostic follow-up per wrong option | `lesson-format` whyProbe option; `tools/gen-graph/src/prompt.ts` |
+| C8 | Cross-class prerequisite links (Maths 6–10 first), then Class 11 Physics, Class 12, further subjects as pilots need them | sidecar mechanism ready at `diagnosticData.ts:62-70, 114`; zero `*.links.json` exist; `diagnostic/src/plan.ts:56-58` claims a Class 7 root it cannot find |
+| C9 | A transfer-item tag; a "how could you check your answer?" line per outcome | knowledge-graph `Probe` type |
+| C10 | Serve only reviewed lessons: pass a reviewer to live prep, or turn live prep off for students; re-review the 15 bundled lessons | `class-prep/src/review.ts:15-16` claims otherwise; `liveClass.ts:336-356`; `tools/prewarm/tests/models.test.ts:33-36` |
+
+### D. Diagnosis — why the answer was wrong · §2, MISCONCEPTIONS
+
+| ID | Change | Refs |
+|---|---|---|
+| D1 | A misconception registry: cluster the ~14k distractor labels into stable ids per node; probes point at them | new `knowledge-graph/data/*.misconceptions.json`; labels aligned per distractor at `knowledge-graph/tests/probes.test.ts:55-66` |
+| D2 | Both class answer paths pass `misconceptionId`; the judge names the wrong option a spoken answer matched | `ClassRoom.tsx:301, 728-744`; `classLedger.ts:38, 508` already accept it; `tutor-judge/src/prompts.ts:24` returns `{verdict, say, gave}` only; `ledger/src/types.ts:168` claims otherwise |
+| D3 | A `misconception_state` table (user, org, outcome, key, times observed, last seen, status suspected/confirmed/resolved), written only by the fold | new migration; appendix §2 rows |
+| D4 | Confirmed after 2+ different items; resolved after N later unassisted correct answers | — |
+| D5 | A rule-based classifier: misconception / missing prerequisite / slip; fast guesses excluded from evidence | new `learner-model/src/diagnose.ts`; `GraphIndex.prerequisitesOf`, `MASTERY_SHAKY` |
+| D6 | When the classifier is unsure, ask the follow-up (C7) before explaining | — |
+| D7 | Act on it: the tutor names it, the planner inserts a fix-it step, the next review re-tests the same key on a different item | `persona/src/factors.ts:8-28` claims `namedMisconception` has a setter — it does not; `diagnostic/src/plan.ts:190-212` `reasonFor` never reads misconceptions |
+
+### E. The decision layer — new `packages/tutor-control` · §3, §4, §6
+
+| ID | Change | Refs |
+|---|---|---|
+| E1 | `packages/tutor-control`: pure `(model, item, signals) → Action`; apps execute and never decide | does not exist ✓; the closed-loop plan's CONTROL layer |
+| E2 | A 4-step ladder (alone → nudge → sibling worked example → answer + why), escalating per attempt with a retry budget; code checks the reply does not leak the answer early | literals at `ClassRoom.tsx:315, 759, 813, 918`; only rungs 0/2/3/7 are ever emitted |
+| E3 | Emit `intervened`, with its reason, for every action | `ledger/src/types.ts:196-202` defines it; nothing emits it |
+| E4 | Signal triggers: fast-wrong → re-read; silence → nudge; repeat misconception → fix-it; repeated failure plus a weak prerequisite → reteach the prerequisite | appendix §3 rows |
+| E5 | Wire three detectors server-side: rapid guess, wheel-spin (→ prerequisite), hint abuse | `wheelSpin.ts`, `hintAbuse.ts` — DEV-only via `/model` (`App.tsx:582-590`); `hintAbuse.ts:15-17` claims otherwise |
+| E6 | `nextActivity`: due reviews → misconception fixes → open gaps in prerequisite order → the teacher's next assignment; inside the teacher's scope; an item near p≈0.7; recomputed after every fold | `diagnostic/src/plan.ts`, `adapt.ts`; placement-only today (`adaptPlan.ts:61-64`) |
+| E7 | Activity kinds: learn / review / retrieve / probe-prerequisite | `PlanStep` |
+| E8 | Home and "next lesson" route through E6, not syllabus order | `content.ts:232-247` `nextLessonAfter`; `LessonComplete.tsx:119-128` |
+| E9 | Withhold help only after before/after data (the 12 Sep plan's decision 7) | `docs/superpowers/plans/2026-09-12-closed-loop-rebuild.md` |
+| E10 | Fix `chooseAsk` (it opens at rung 1, a rule its own comment retires) and wire it, or delete it | `learner-model/src/ask.ts:32-35, 62` |
+
+### F. Memory and spaced review · §8
+
+| ID | Change | Refs |
+|---|---|---|
+| F1 | A retrieval is an unassisted attempt at least a day after the last exposure; `last_retrieved_at` is separate from `last_exposed_at` | appendix §8 rows |
+| F2 | Leitner boxes in the fold on the 1/2/5/12/30/60-day ladder: an unassisted success moves up, a failure resets, a hinted success holds | — |
+| F3 | Write `memory_strength`, `next_review_at`, `retrieval_count`, `retrieval_accuracy` | defaulted only: `learner-model/src/types.ts:153-156`; `types.ts:73-77` and `0013:50-52` claim "written from day one" |
+| F4 | Mastery (understood) stays separate from recall (can retrieve today) | `knowledge-graph/src/mastery.ts:199-224` `decayMastery` — test callers only |
+| F5 | `dueReviews()`: 2–3 due items per homework or on Home, never the last-seen item | — |
+| F6 | Deliver through homework due dates and in-app notices, not push to children | `reminders.ts:89-92` return value discarded at `main.tsx:154` |
+
+### G. Student signals · §9, §10, §11
+
+| ID | Change | Refs |
+|---|---|---|
+| G1 | A 3-level confidence tap on about 1 in 4 items, stored on `AnsweredPayload` | no confidence field anywhere; `selfRating` was removed |
+| G2 | Calibration (confidence vs accuracy); over/under label; transfer items for the overconfident | — |
+| G3 | "Which mistake do you think you made?" (the wrong options as choices); teach-back at lesson end | — |
+| G4 | Engagement reduced to the E5 detectors, abandoned sessions and a fatigue rule | appendix §9 rows |
+| G5 | A "learned alone this week" figure ahead of the streak | — |
+| G6 | Commitment record at session end, checked at the next start; missed sessions via pg_cron; a server streak in IST days; a revision list; teacher/parent visibility through the LMS | streak counts first lesson completions on UTC days (appendix §10) |
+
+### H. The talking layer and teaching style · §1A, §12
+
+| ID | Change | Refs |
+|---|---|---|
+| H1 | The doubt agent reads a 5–10 line server summary; never writes belief | `persona/src/prompt.ts:181`, `factors.ts:56-68` |
+| H2 | Tutor language (Hinglish/English) on the profile and into persona | `HINGLISH_REGISTER` lives only in `class-prep` (frozen) and `liveClass.ts`; persona has no language field |
+| H3 | An honest "tutor unavailable" instead of a stub that pretends | `doubt-session/src/agent.ts:67-83`; `agent.ts:25-26` claims dev/test only — it is the production floor |
+| H4 | 2–3 mode-tagged alternate explanations per beat; switch after 2 misses or on request | `class-prep` prompts; `pedagogy.planBeats` (tool-only) |
+| H5 | A strategy tag on events; effectiveness measured population-wide (A/B later), not per student | `TutorAction.strategy` exists only in the plan doc |
+| H6 | Wire or delete the 12 of 15 persona moments with no caller | appendix §1A |
+| H7 | Later, voice: ephemeral tokens for live voice, hesitation timing, reasoning as evidence | voice doubts DEV-only at `ClassRoom.tsx:406-408`; `ear.ts:199-202` |
+
+### I. Checking answers · §15
+
+| ID | Change | Refs |
+|---|---|---|
+| I1 | Serve only reviewed lessons and items (C2, C10) | — |
+| I2 | Doubt replies grounded in the reviewed lesson; an "unsure — ask your teacher" field, logged | DONT_KNOW moment |
+| I3 | Maths: stored `expectedValue`/`expectedExpr`, checked by a client-side maths engine at no call cost | none exists |
+| I4 | A cheap check on numbers and units in text replies against the lesson | — |
+| I5 | Measure local-versus-model judge agreement | — |
+
+### J. Photos and handwriting · §13
+
+| ID | Change | Refs |
+|---|---|---|
+| J1 | **Photo of notebook work, teacher-graded**: a private per-org bucket, size limits, an offline queue | zero `.storage.from` in `apps/`/`packages/`; `AskBox.tsx:88-97` refuses images |
+| J2 | Later, after cost is measured: AI step extraction plus a deterministic check of each step | `relay/src/vertex.ts:138-160` already passes image parts |
+| J3 | Count answer changes in the quiz | — |
+| J4 | Drop pronunciation scoring and programming checks | out of NCERT Maths/Science scope |
+
+### K. Learning Scientist · §14
+
+| ID | Change | Refs |
+|---|---|---|
+| K1 | A deterministic server job on session close → `session_summary` (before/after, gain per minute, weak outcomes, misconceptions seen, forgotten, due) | `SessionEndedPayload` at `ledger/src/types.ts:133-141`; `metric.ts` `unassistedGain`, `gainPerLearningMinute` (CLI-only) |
+| K2 | The next-session template from it | — |
+| K3 | Optional nightly LLM narrative per class for teachers; never writes mastery; no transcripts | — |
+
+### L. Privacy and safety beyond Step 1 · §16
+
+| ID | Change | Refs |
+|---|---|---|
+| L1 | A `safety_event` table (metadata only) and an alert to the school's designated adult on distress | `relay/src/report.ts` webhook seam; `stores/flags.ts:24-27` (`hasFlags` has no caller) |
+| L2 | Set and test `OPS_ALERT_WEBHOOK`; a triage screen; a 24h SLA on unsafe reports | — |
+| L3 | A legal answer on fiduciary (school vs Qrie); code checks consent before processing | `consent_record` (0019) read by nothing; `/api/enroll` 501 |
+| L4 | Per-school toggles (doubt tutor, voice); a parent view through the LMS | — |
+| L5 | Per-table retention windows, one purge function, a public privacy page; telemetry respects `mayPersist`; redact notes; expire contest data | `telemetry.ts`; `contest_signup` (0020, applied since 2026-09-25) |
+| L6 | Encrypt phone and address columns; a vendor / no-training register | pgcrypto or Supabase Vault |
+| L7 | Output filters; Hinglish off-limits variants; a labelled test corpus for recall | `vertex.ts`, `liveAgent.ts` |
+| L8 | A legal answer on DPDP §9(3) before any behavioural feature | — |
+
+### M. Measuring success · Metrics
+
+| ID | Change | Refs |
+|---|---|---|
+| M1 | Per-session before/after unassisted snapshot; gain per active minute per student and cohort | `learning_session.active_ms`; `metric.ts` |
+| M2 | The primary metric on novel, delayed (24h+), unassisted items; in-class checks as the clean anchor | numerator today counts rung-0 recall seconds after teaching |
+| M3 | 7/30-day retention, transfer, time to mastery, misconceptions resolved, hint dependency, accuracy alone, completion, calibration | none computed in the product |
+| M4 | Teacher marks stored as external labels; correlation shown | — |
+| M5 | A founder dashboard | `tools/bin/model-metric.mjs:5-6` claims the device's params — it uses `emptyParams()` |
+| M6 | Measure the text doubt path's f and cost per student-hour before any student reaches it; ship only under Rs 5 | `tools/measure/f-bench`; A9 |
+
+### N. The school layer that feeds the brain · Steps 3–4
+
+| ID | Change | Refs |
+|---|---|---|
+| N1 | School, section, subject, roster; ID + PIN; section-scoped teacher RLS | `membership.role` written only as `'student'` (`0005:100, 151` ✓) and read by nothing |
+| N2 | Assignments scoped to outcomes with due dates; submissions; teacher marks | — |
+| N3 | Class view: unassisted mastery, the assisted/unassisted gap, top confirmed misconceptions, who is behind | — |
+| N4 | Exam calendar per school (the sequencer boosts in-window topics); a student goals table | — |
+
+---
+
+## The API track — selling the LAM to platforms (under consideration)
+
+**Why it can work.** The LAM does not need a live class; it needs answers.
+Platforms with practice sets, quizzes, test series and homework produce far more
+answers a day than our class has ever recorded, and a timed test is the cleanest
+unassisted evidence there is. Partners also bring the two things we lack most:
+**answers** and **large question banks**.
+
+| What a platform already has | What the LAM reads it as |
+|---|---|
+| A video watched | Taught / exposed |
+| A practice or quiz question | An answer: right or wrong, which option, how long it took |
+| A solution viewed, a hint, a doubt | A help level |
+| A timed test | Unassisted answers |
+| A revision session | A retrieval |
+
+What they get back:
+
+- mastery per outcome, alone vs with help
+- the root prerequisite behind a gap
+- misconceptions
+- the next best question, **from their own bank**
+- due reviews
+- at-risk learners
+- class and parent reports
+
+**The API.**
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /items` | Register questions and map them automatically |
+| `POST /events` | Send attempts in idempotent batches |
+| `GET /learners/{id}/state` | Mastery per outcome |
+| `GET /learners/{id}/next` | The next best question |
+| `GET /learners/{id}/reviews` | Reviews due |
+| `GET /learners/{id}/misconceptions` | The learner's misconceptions |
+| `GET /cohorts/{id}/report` | A class-level report |
+| `DELETE /learners/{id}` | Erase a learner |
+
+Plus webhooks (mastery changed, misconception confirmed, at risk), and optional
+embeddable widgets themed with the 47 colour tokens.
+
+**Build it API-first.** Our own three apps use the same API as partners, so
+nothing is built twice.
+
+| ID | Change | Why |
+|---|---|---|
+| P1 | The `learner` entity and a `'partner'` org kind | Open decision 1 — before B1 |
+| P2 | Partner API keys: hashed, one per org, rotatable | The relay accepts only Supabase user logins today |
+| P3 | Per-org metering, rate limits, caps and kill switch | Part 1, item 10 |
+| P4 | An auto-tagger: each partner question → one of our outcomes, each wrong option → a misconception. One LLM call per item, with a confidence score and a reviewed sample | The hardest step in every integration |
+| P5 | Stable, versioned outcome and misconception ids | They become a public contract, and the graph is LLM-generated and will change |
+| P6 | A public event schema, v1 | Partners need a fixed format to send |
+| P7 | Pseudonymous ids only. The partner is the data fiduciary and Qrie the processor, with a DPA and an erasure endpoint | DPDP |
+| P8 | Docs, a sandbox, a status page, an uptime commitment | Hard for one person |
+| P9 | Per-partner outcome measurement with an A/B harness | No sale without proof |
+| P10 | Embeddable widgets | Faster integration |
+
+**What the API does not need:** the school layer (N), photo upload (J1), the
+white-label app, teacher screens, or the tutor. An API MVP is a *smaller* build
+than the LMS. Its core is B, C4, D1–D5, E6–E7, F, K1 and M.
+
+**The fastest proof: a backtest, with no integration.**
+
+1. Ask a platform for an anonymised export of past attempts.
+2. Run the fold offline — `tools/bin/model-metric.mjs` already does this.
+3. Show them three things: that it predicts the next answer better than their
+   baseline, which students it would have flagged as at risk weeks early, and
+   their cohort's misconception map.
+
+This takes days, not months, and needs a data-sharing agreement rather than an
+integration. After that comes a paid A/B pilot on one cohort. The limit: without
+P4 it runs at their chapter level, with no prerequisite chains.
+
+**Honest risks** *(judgement, not researched)*:
+
+- The largest platforms build this in-house.
+- The integration work lands on their engineers.
+- The biggest paying segment (JEE/NEET, Classes 11–12) is outside our content:
+  no Class 12, no Class 11 Physics.
+- There is no proof yet that the LAM improves anything.
+- Business-grade uptime is hard for one person.
+
+The likeliest first buyers are mid-size K-12 practice apps, school ERP/LMS
+vendors, and white-label coaching-app platforms (one integration, many
+institutes) — not the top three.
+
+## Changes to the product brief
+
+The closed-loop brief — the one
+`docs/superpowers/plans/2026-09-12-closed-loop-rebuild.md` was cut from — keeps
+its North Star: *did the student become able to answer the next question
+without the AI?* It changes as follows. The full critique is in the appendix,
+Part 3.
+
+**Add or raise:**
+
+- a **reviewed question bank, as a P0 that blocks every other P0**
+- a cost column on every system, and a measured ₹5 ship gate
+- verification and safety (§15, §16) as a P0 gate before the text agent ships
+- teacher assignment, marks and the class view moved from P2 to P0, with
+  adaptivity working inside the teacher's scope
+- the primary metric defined on new, delayed (24h+), unassisted items, anchored
+  to teacher marks
+- "confidence" defined once
+- new sections: cold start, board-exam alignment, shared devices, language,
+  roster/ERP, and a per-table data inventory
+
+**Cut or shrink:**
+
+- the help ladder from 9 steps to 4
+- error classes from 9 to 3
+- affect estimation replaced by three detectors
+- per-student strategy profiles replaced by population A/B tests
+- the Learning Scientist never writes mastery
+- structured events, not transcripts
+- no pronunciation scoring and no programming checks
+- homework due dates, not push notifications to children
+
+### Brief section → what closes it
+
+| § | System | Today | Closed by | After |
+|---|---|---|---|---|
+| 1B | Learner model | 3 | B1–B9 | 4–5 |
+| 7 | Knowledge graph | 3 | C1, C3, C4, C8, C9 | 4 |
+| 2 | Why wrong | 2 | C7, D1–D7 | 4 |
+| 6 | What next | 3 | E6–E8, N4 | 4–5 |
+| 4 | Help ladder | 2 | C6, E2, E9 | 4 (as 4 steps) |
+| 5 | Assisted vs unassisted | 2 | B4–B8, C3, F1 | 5 |
+| 8 | Spaced review | 2 | F1–F6 | 4–5 |
+| 3 | Proactive help | 2 | E1–E5 | 4 |
+| 9 | Engagement | 2 | E5, G4, G5 | 3 (deliberately reduced) |
+| 10 | Accountability | 3 | G6, N2 | 4–5 |
+| 11 | Metacognition | 1 | G1–G3 | 4 |
+| 12 | Teaching style | 1 | H4, H5 | 3 (population-level only) |
+| 14 | Learning Scientist | 1 | K1–K3 | 4 |
+| 15 | Verification | 2 | C10, I1–I5 | 4 |
+| 16 | Privacy and safety | 3 | A5–A8, A12, L1–L8 | 4–5 |
+| 13 | Multimodal | 1 | J1–J3, H7 | 3 (photos teacher-graded) |
+| 1A | Talking layer | 2 | H1–H3, H6 | 4 |
+| — | Metrics | 2 | M1–M6 | 4 |
+
+"Today" uses the critic's rubric-consistent scores (appendix Part 2). The
+"After" column is the target, not a measurement.
+
+---
+
+## What we must learn from schools
+
+The number nobody has measured this time is *will a teacher open the app every
+day and enter data?* It is the same kind of assumption as `f`, which froze the
+tutor. The full sheet, in Hinglish, is
+[`docs/research/2026-09-25-teacher-questions.md`](../research/2026-09-25-teacher-questions.md).
+
+These are the questions that change the plan:
+
+1. **Will you open it every day, and for how long?**
+2. **What software do you already use** (Teachmint, Entab, CampusCare…)? If an
+   ERP already holds the roster, our sections become a mirror of it rather than
+   ours.
+3. Should students send a photo of the notebook, or type their answers?
+4. Is it acceptable for MCQs to be marked automatically and everything else by
+   you?
+5. What share of your students have their own phone?
+6. What would the school pay, per what, and who decides?
+7. Will you try a small version with one class?
+8. Please share **one section's student list**, even as a screenshot — it
+   decides how the import works.
+
+---
+
+# Part 3 — How to work here
 
 ## Traps that have each cost a deploy or a day
 

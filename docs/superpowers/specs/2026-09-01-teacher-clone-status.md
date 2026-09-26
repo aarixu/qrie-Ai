@@ -1,5 +1,9 @@
 # Teacher Clone — where it stopped
 
+> **Not the current plan.** Since 2026-09-26 the one final plan and the living
+> status are [`docs/handoff/2026-09-26-state-of-play.md`](../../handoff/2026-09-26-state-of-play.md). Where this file
+> disagrees with it, that file wins. Kept as a record.
+
 **Date:** 2026-09-01
 **Status:** paused on ONE blocker (a voice good enough to pass as the teacher)
 
