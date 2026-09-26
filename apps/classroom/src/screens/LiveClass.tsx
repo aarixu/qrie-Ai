@@ -28,6 +28,28 @@ import { useOnline } from '../lib/online';
 import { relayFetch } from '../lib/relay';
 import { quoteForPrompt, screen } from '@ai-tutor/safety';
 import { takeSource } from '../lib/sourceHandoff';
+import { PROTOTYPE_ONLY_PREPARED } from '../lib/prototype';
+import { PrototypeNotice } from '../ui/PrototypeNotice';
+
+/**
+ * The message a student may be shown, out of whatever was thrown.
+ *
+ * Ours pass through: they were written for this screen and they are the
+ * useful answer ("There is no such topic."). A vendor's does not — it carries
+ * status codes, URLs and infrastructure names that mean nothing to a
+ * fourteen-year-old and should not be published to one.
+ *
+ * The test is deliberately crude and deliberately fails CLOSED: anything that
+ * smells like a machine talking to a machine is replaced. A false positive
+ * costs one of our own sentences; a false negative costs a disclosure.
+ */
+function studentFacing(raw: string | null): string {
+  if (!raw) return 'Something went wrong';
+  const machine = /https?:\/\/|\b\d{3}\b|relay|api|project|billing|quota|token|http/i.test(raw);
+  if (!machine) return raw;
+  console.error('[qrie] class preparation failed:', raw);
+  return 'She could not make this class just now';
+}
 import { SOURCE_LIMIT, plannerTopicFromSource } from '../lib/sourceText';
 import { recordFlag } from '../stores/flags';
 import { track } from '../lib/telemetry';
@@ -322,6 +344,11 @@ export function LiveClassRoute() {
   const [artLanded, setArtLanded] = useState(0);
   const [progress, setProgress] = useState<PrepProgress | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /**
+   * Set when the prototype gate stops a cold class. Holds the topic's own name
+   * so the notice can say which one, rather than talking about topics.
+   */
+  const [notReady, setNotReady] = useState<string | null>(null);
   // Bumped by Try again. Preparing a class is the single likeliest thing in
   // this app to fail — it is several model calls over whatever connection a
   // student has — and "Back home" as the only way out of that made a bad
@@ -391,6 +418,7 @@ export function LiveClassRoute() {
       return;
     }
     setError(null);
+    setNotReady(null);
     setWaiting(null);
     setBusy(null);
     const startedAt = performance.now();
@@ -451,6 +479,26 @@ export function LiveClassRoute() {
           navigate(`/lesson/${existing.id}`, { replace: true });
           return;
         }
+      }
+
+      /**
+       * THE PROTOTYPE GATE, AND IT BELONGS HERE RATHER THAN ONLY ON THE TILES.
+       *
+       * Every warm ask has already navigated away above, so anything still
+       * running is a class that would have to be made — and with billing off
+       * it cannot be. This is the only gate that catches all of them: a typed
+       * URL, a pasted link, a bookmark, the browser's back button, and the two
+       * query forms of this route (`?topic=` and `?source=`) which carry no
+       * topicRef at all and so can never be judged by the catalogue.
+       *
+       * Gating the buttons alone would have left the route wide open, which is
+       * how a student would still have met the vendor's 403 — the one that
+       * prints a Google billing console URL and a cloud project id on a
+       * child's screen.
+       */
+      if (PROTOTYPE_ONLY_PREPARED) {
+        setNotReady(ask.topic);
+        return;
       }
 
       /**
@@ -772,6 +820,22 @@ export function LiveClassRoute() {
     );
   }
 
+  /**
+   * The gate's own screen, and it is checked BEFORE `error`.
+   *
+   * Not-ready is not a failure: nothing broke, the class simply has not been
+   * written. Falling through to the failure screen would put "one of them did
+   * not finish" and a Try again button in front of a student for whom neither
+   * is true, and Try again would loop them straight back here.
+   */
+  if (notReady) {
+    return (
+      <div className="bg-background min-h-screen">
+        <PrototypeNotice topic={notReady} onClose={() => navigate('/', { replace: true })} />
+      </div>
+    );
+  }
+
   if (error) {
     // "There is no such topic" is the one failure another go cannot fix.
     const canRetry = ask !== null;
@@ -816,8 +880,23 @@ export function LiveClassRoute() {
       <div className="bg-background min-h-screen grid place-items-center px-margin-mobile font-body-md">
         <div className="text-center flex flex-col items-center gap-4">
           <Icon name={online ? 'error' : 'wifi_off'} className="text-4xl text-on-surface-variant" />
+          {/*
+            A VENDOR'S ERROR IS NOT A SENTENCE FOR A CHILD.
+            This printed `error` verbatim, and `error` is whatever was thrown —
+            so with billing off a student who tapped a Mathematics topic was
+            shown "relay 403: This API method requires billing to be enabled.
+            Please enable billing on project #project-dd876d44-…" plus a Google
+            console URL. Unreadable to them, and it published a cloud project
+            id to anyone who tapped.
+
+            The messages this app WROTE are still shown — "There is no such
+            topic." is ours and it is the useful answer. Anything carrying a
+            status code, a URL or a provider's name is replaced, and the real
+            text goes to the console where it is a debugging aid rather than a
+            disclosure.
+          */}
           <p className="font-headline-md text-[18px] leading-6 text-on-surface">
-            {online ? error : 'You are offline'}
+            {online ? studentFacing(error) : 'You are offline'}
           </p>
           <p className="font-body-md text-body-md text-on-surface-variant max-w-[42ch]">
             {!online

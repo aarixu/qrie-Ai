@@ -3,6 +3,24 @@ import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { SUPPORT_REPLY } from '@ai-tutor/safety';
+
+/**
+ * THE GATE IS OFF FOR THIS FILE.
+ *
+ * Everything here is about what happens to a page a child uploads once it
+ * reaches the planner — a phone number masked, an injection refused, a
+ * distress line surfaced. While PROTOTYPE_ONLY_PREPARED is true nothing
+ * reaches the planner at all: /class?source= carries no topicRef, so it is
+ * always a live preparation and the gate stops it before the screening runs.
+ *
+ * These assertions are the reason the screening exists and they have to keep
+ * running. The gate's own behaviour — including that ?source= is refused —
+ * is pinned in prototypeGate.test.tsx.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: false,
+}));
 import { holdSource, forgetSources } from '../src/lib/sourceHandoff';
 import { flagStore, recentFlags } from '../src/stores/flags';
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { SYLLABI, fetchCatalog, type CatalogEntry } from '../lib/content';
 import { useAsync, dataOr } from '../lib/async';
 import { Screen, EmptyState } from '../ui/Screen';
+import { PROTOTYPE_ONLY_PREPARED } from '../lib/prototype';
 import { ErrorState, SkeletonList } from '../ui/States';
 import { Icon } from '../ui/Icon';
 
@@ -97,17 +98,29 @@ export function Search() {
          * about whether she can teach it. The same words go to the same room
          * the home screen's Ask box uses — off the syllabus, prepared live.
          */
+        /* THE EMPTY STATE PROMISED A CLASS, and while the gate is on it cannot
+           keep that promise: the words go to /class?topic=, which has no
+           topicRef and is therefore always a live preparation. So the offer is
+           withdrawn rather than left as a button that walks to a notice. The
+           body says the true thing instead — nothing matched, and this one is
+           not written yet. */
         <EmptyState
           icon="search_off"
           title="No lesson on that yet"
-          body={`Nothing in your lessons or syllabus matches "${query.trim()}" — but she can still teach it.`}
+          body={
+            PROTOTYPE_ONLY_PREPARED
+              ? `Nothing in your lessons matches "${query.trim()}". Qrie is still a prototype — a few classes are fully made, and the rest are being written.`
+              : `Nothing in your lessons or syllabus matches "${query.trim()}" — but she can still teach it.`
+          }
           action={
-            <button
-              onClick={() => navigate(`/class?topic=${encodeURIComponent(query.trim())}`)}
-              className="mt-1 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
-            >
-              Ask her to teach it
-            </button>
+            PROTOTYPE_ONLY_PREPARED ? undefined : (
+              <button
+                onClick={() => navigate(`/class?topic=${encodeURIComponent(query.trim())}`)}
+                className="mt-1 bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl shadow-md border-b-4 border-on-primary-fixed-variant active:border-b-0 active:translate-y-1 transition-all"
+              >
+                Ask her to teach it
+              </button>
+            )
           }
         />
       ) : (

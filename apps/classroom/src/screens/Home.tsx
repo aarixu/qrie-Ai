@@ -11,6 +11,8 @@ import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { BottomNav, SideNav } from '../ui/Nav';
 import { AskBox } from '../ui/AskBox';
+import { PROTOTYPE_ONLY_PREPARED, usePrototypeNotice } from '../lib/prototype';
+import { PrototypeNotice } from '../ui/PrototypeNotice';
 
 /**
  * Home, built to the Stitch design: a greeting bar with the streak, a hero card
@@ -41,6 +43,7 @@ export function Home() {
   const { state: catalogState } = useAsync(fetchCatalog, []);
   const catalog = dataOr<CatalogEntry[] | null>(catalogState, null);
   const [resumeEntry, setResumeEntry] = useState<CatalogEntry | null>(null);
+  const notice = usePrototypeNotice();
 
   useEffect(() => {
     if (!progress.lastLessonId) return;
@@ -89,6 +92,30 @@ export function Home() {
     const syllabus = SYLLABI.find((s) => s.subject === subject);
     const chapter = syllabus?.chapters[0];
     return syllabus && chapter ? `/chapter/${syllabus.id}/${chapter.id}` : null;
+  };
+
+  /**
+   * THE FIRST CHAPTER OF THIS SUBJECT THAT HAS A CLASS SOMEBODY CAN OPEN.
+   *
+   * `firstChapterPath` above takes chapter zero of whichever syllabus mentions
+   * the subject first, which is sorted by class — so Mathematics lands on Class
+   * 6 patterns and Biology on Class 11, and every prepared class in this app is
+   * Class 9 or 10 Science. Four tiles, four chapters with nothing in them.
+   *
+   * This asks the catalogue instead. Null has two meanings and the caller has
+   * to tell them apart: the catalogue has not arrived, or this subject has
+   * nothing ready at all.
+   */
+  const warmRefs = useMemo(() => new Set((catalog ?? []).map((e) => e.topicRef)), [catalog]);
+  const firstReadyChapter = (subject: string): string | null => {
+    for (const s of SYLLABI.filter((x) => x.subject === subject)) {
+      for (const c of s.chapters) {
+        if (c.topics.some((t) => warmRefs.has(`${s.id}/${c.id}/${t.id}`))) {
+          return `/chapter/${s.id}/${c.id}`;
+        }
+      }
+    }
+    return null;
   };
 
   return (
@@ -163,7 +190,14 @@ export function Home() {
                   // a minute of waiting and about 140 units of their daily
                   // budget — moments before the recorded one landed.
                   if (catalogState.status === 'loading') return;
-                  navigate(firstTopic);
+                  // The fallback used to be `navigate(firstTopic)` — the first
+                  // topic of the student's own class, prepared on the spot.
+                  // That is the right answer when a class CAN be prepared, and
+                  // it fires exactly when the catalogue could not be reached,
+                  // which is the moment a cold prep is least likely to work.
+                  // With the gate on it becomes a walk to the notice; the
+                  // syllabus is the more useful place to land.
+                  navigate(PROTOTYPE_ONLY_PREPARED ? '/syllabus' : firstTopic);
                 }}
                 aria-busy={catalogState.status === 'loading'}
                 className="bg-primary text-on-primary font-label-md text-label-md px-6 py-3 rounded-xl w-full md:w-auto shadow-md border-b-2 border-on-primary-fixed-variant hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-2"
@@ -188,20 +222,36 @@ export function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {subjects.map((subject) => {
               const s = styleFor(subject);
-              const path = firstChapterPath(subject);
               const chapters = chapterCount(subject);
+              // While the catalogue is still in flight nothing is frozen —
+              // a tile that greyed out and then came back under a finger
+              // already moving is worse than either state.
+              const settling = catalogState.status === 'loading';
+              const path = PROTOTYPE_ONLY_PREPARED
+                ? firstReadyChapter(subject)
+                : firstChapterPath(subject);
+              const frozen = PROTOTYPE_ONLY_PREPARED && !settling && path === null;
               return (
                 <button
                   key={subject}
-                  onClick={() => path && navigate(path)}
-                  className={`${s.tile} rounded-[24px] p-4 flex flex-col items-center justify-center text-center shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer`}
+                  aria-disabled={frozen}
+                  onClick={() => (frozen ? notice.show(subject) : path && navigate(path))}
+                  className={`${s.tile} rounded-[24px] p-4 flex flex-col items-center justify-center text-center shadow-sm transition-all ${
+                    frozen
+                      ? 'opacity-60 cursor-default'
+                      : 'hover:shadow-md hover:scale-[1.02] cursor-pointer'
+                  }`}
                 >
                   <div className={`w-16 h-16 ${s.ring} rounded-full flex items-center justify-center mb-3`}>
                     <Icon name={s.icon} className={`text-4xl ${s.ink}`} />
                   </div>
                   <h4 className="font-headline-md text-[20px] leading-7 mb-1">{subject}</h4>
                   <p className={`font-label-sm text-label-sm ${s.ink}`}>
-                    {chapters} {chapters === 1 ? 'Chapter' : 'Chapters'}
+                    {/* The chapter count still tells the truth about the course;
+                        the second line tells the truth about today. */}
+                    {frozen
+                      ? 'Coming soon'
+                      : `${chapters} ${chapters === 1 ? 'Chapter' : 'Chapters'}`}
                   </p>
                 </button>
               );
@@ -212,6 +262,7 @@ export function Home() {
 
       <SideNav />
       <BottomNav />
+      {notice.tapped && <PrototypeNotice topic={notice.tapped} onClose={notice.dismiss} />}
     </div>
   );
 }

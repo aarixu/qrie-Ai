@@ -1,7 +1,21 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+/**
+ * THE GATE IS OFF FOR THIS FILE.
+ *
+ * Both doors this box opens are always cold — a typed topic and an uploaded
+ * page carry no topicRef and so can never match a class that exists — which
+ * means PROTOTYPE_ONLY_PREPARED freezes the whole control. Every assertion
+ * below is about what the box does when it can do anything. The frozen
+ * behaviour is pinned in prototypeGate.test.tsx.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: false,
+}));
 import { AskBox } from '../src/ui/AskBox';
 import { takeSource, forgetSources } from '../src/lib/sourceHandoff';
 

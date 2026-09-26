@@ -11,6 +11,8 @@ import { klassOf, settingsStore } from '../stores/settings';
 import { useStore } from '../stores/localStore';
 import { Screen, EmptyState } from '../ui/Screen';
 import { Icon } from '../ui/Icon';
+import { PROTOTYPE_ONLY_PREPARED, usePrototypeNotice } from '../lib/prototype';
+import { PrototypeNotice } from '../ui/PrototypeNotice';
 
 /**
  * THE SYLLABUS — the whole course, as the student's own book.
@@ -304,6 +306,7 @@ interface ChapterRow {
 
 export function Syllabus() {
   const navigate = useNavigate();
+  const notice = usePrototypeNotice();
   const profile = useStore(profileStore);
   const settings = useStore(settingsStore);
   const progress = useStore(progressStore);
@@ -487,8 +490,23 @@ export function Syllabus() {
                       return (
                         <li key={row.id}>
                           <button
-                            onClick={() => navigate(`/chapter/${syllabus.id}/${row.id}`)}
-                            className="w-full flex items-center gap-3 text-left rounded-2xl p-3 hover:bg-surface-container transition-colors"
+                            // A chapter with no prepared lesson leads to a page
+                            // where every topic is frozen, so the walk teaches
+                            // nothing the row does not already say. The chapter
+                            // stays LISTED — the syllabus is the shape of the
+                            // course and hiding the empty parts would hide how
+                            // much of it exists.
+                            aria-disabled={PROTOTYPE_ONLY_PREPARED && !available}
+                            onClick={() =>
+                              PROTOTYPE_ONLY_PREPARED && !available
+                                ? notice.show(row.title)
+                                : navigate(`/chapter/${syllabus.id}/${row.id}`)
+                            }
+                            className={`w-full flex items-center gap-3 text-left rounded-2xl p-3 transition-colors ${
+                              PROTOTYPE_ONLY_PREPARED && !available
+                                ? 'opacity-70 cursor-default'
+                                : 'hover:bg-surface-container'
+                            }`}
                           >
                             <span
                               className={`w-9 h-9 rounded-full grid place-items-center shrink-0 font-label-md text-label-md font-bold ${
@@ -540,6 +558,7 @@ export function Syllabus() {
           })}
         </div>
       )}
+      {notice.tapped && <PrototypeNotice topic={notice.tapped} onClose={notice.dismiss} />}
     </Screen>
   );
 }

@@ -11,6 +11,8 @@ import { Icon } from '../ui/Icon';
 // and its batched reader want a lib/ and a ui/ file, and this phase owns
 // neither. Duplicating them here would give the app two badges that drift.
 import { PreparedBadge, usePrepBadges } from './Syllabus';
+import { PROTOTYPE_ONLY_PREPARED, usePrototypeNotice } from '../lib/prototype';
+import { PrototypeNotice } from '../ui/PrototypeNotice';
 
 /**
  * A chapter's topic list. Every syllabus topic appears; the ones without a
@@ -62,12 +64,19 @@ export function Chapter() {
    */
   const coldRefs = useMemo(
     () =>
-      dataOr<TopicRow[]>(state, [])
-        .filter((row) => row.lessons.length === 0)
-        .map((row) => row.path),
+      // NOTHING TO ASK ABOUT WHILE THE GATE IS ON. A cold tile cannot be
+      // tapped into a class, so "somebody is preparing this right now" is a
+      // fact with no action attached — and asking costs the relay one request
+      // per chapter for a badge nobody can act on.
+      PROTOTYPE_ONLY_PREPARED
+        ? []
+        : dataOr<TopicRow[]>(state, [])
+            .filter((row) => row.lessons.length === 0)
+            .map((row) => row.path),
     [state],
   );
   const badges = usePrepBadges(coldRefs);
+  const notice = usePrototypeNotice();
 
   if (!syllabus || !chapter) {
     return (
@@ -108,14 +117,45 @@ export function Chapter() {
           // continues rather than restarting it.
           const next = lessons.find((l) => !isCompleted(progress, l.id)) ?? lessons[0];
 
+          /**
+           * THE GATE, and it is one condition.
+           *
+           * A topic nobody has studied yet was never locked — tapping it
+           * prepared the class live, and the student after this one was shown
+           * what she made. That is still the design; it is switched off while
+           * billing is, because the preparation cannot finish and the student
+           * was being handed the vendor's own 403 instead of a class.
+           *
+           * `available` is the catalogue's answer and already correct here —
+           * the row carries the lessons filtered to its own topicRef — so this
+           * adds no second notion of readiness, it only changes what happens
+           * when the answer is no.
+           */
+          const frozen = PROTOTYPE_ONLY_PREPARED && !available;
+
           return (
             <button
               key={path}
-              // A topic nobody has studied yet is not locked — it is the one
-              // she has not had to teach before. Tapping it prepares the class
-              // live, and the student after this one is shown what she made.
-              onClick={() => navigate(available ? `/lesson/${next.id}` : `/class/${path}`)}
-              className="flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all hover:shadow-md hover:scale-[1.01] cursor-pointer"
+              // aria-disabled, NOT disabled. A disabled button fires no click,
+              // and the click is the whole point: it is what opens the notice
+              // that explains why. `disabled` would leave a dimmed tile that
+              // swallows taps, which reads as broken rather than as not-ready.
+              aria-disabled={frozen}
+              aria-label={frozen ? `${topic.title} — not ready yet` : undefined}
+              onClick={() =>
+                frozen
+                  ? notice.show(topic.title)
+                  : navigate(available ? `/lesson/${next.id}` : `/class/${path}`)
+              }
+              className={`flex items-center gap-4 text-left bg-surface-container-lowest rounded-[20px] p-4 shadow-sm transition-all ${
+                frozen
+                  ? // The app's own disabled idiom, from Bookmarks and
+                    // DoubtHistory: dimmed, no hover lift, no pointer. It still
+                    // takes a tap, because the notice is the point — a tile
+                    // that swallowed the tap would just look broken.
+                    'opacity-70 cursor-default'
+                  : 'hover:shadow-md hover:scale-[1.01] cursor-pointer'
+              }`}
             >
               <div
                 className={`w-12 h-12 rounded-full grid place-items-center shrink-0 ${
@@ -145,8 +185,17 @@ export function Chapter() {
                      to tap and "Start this class" is the thing to do about it,
                      so ready shows both; "being prepared" replaces the words
                      on purpose, because there not tapping is the better move. */
-                  <div className="font-label-md text-label-md text-primary truncate">
-                    {badges[path] === 'ready' ? (
+                  <div
+                    className={`font-label-md text-label-md truncate ${
+                      frozen ? 'text-on-surface-variant' : 'text-primary'
+                    }`}
+                  >
+                    {/* THE INVITATION IS THE FIRST THING TO GO. "Start this
+                        class" on a tile that cannot start one is the sentence
+                        that sent a child into the 403. */}
+                    {frozen ? (
+                      'Coming soon'
+                    ) : badges[path] === 'ready' ? (
                       <>
                         <PreparedBadge state="ready" /> · Start this class
                       </>
@@ -172,6 +221,7 @@ export function Chapter() {
       </div>
         )}
       </AsyncSection>
+      {notice.tapped && <PrototypeNotice topic={notice.tapped} onClose={notice.dismiss} />}
     </Screen>
   );
 }

@@ -22,6 +22,21 @@ vi.mock('../src/lib/content', async (importOriginal) => ({
   fetchCatalog: () => Promise.resolve([]),
 }));
 
+/**
+ * THE GATE IS OFF FOR THIS FILE.
+ *
+ * The offer this tests is `/class?topic=<what they typed>`, which carries no
+ * topicRef and so is always a live preparation. While PROTOTYPE_ONLY_PREPARED
+ * is true the offer is withdrawn rather than left as a button that walks to a
+ * notice, and the empty state says so instead — pinned in
+ * prototypeGate.test.tsx. This assertion is about the offer itself, for the
+ * day it comes back.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: false,
+}));
+
 const { Search } = await import('../src/screens/Search');
 
 const roots: Root[] = [];

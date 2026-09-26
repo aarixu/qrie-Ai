@@ -2,6 +2,7 @@ import type { DiagnosticResult, GraphIndex, PlanStep } from '@ai-tutor/knowledge
 import { destinationFor, type Destination } from '../lib/destination';
 import { SYLLABI, type CatalogEntry } from '../lib/content';
 import { Icon } from '../ui/Icon';
+import { PROTOTYPE_ONLY_PREPARED } from '../lib/prototype';
 
 /**
  * The payoff after the placement test: the twenty questions turned into a short,
@@ -170,7 +171,18 @@ function AllClear() {
  */
 const ACTION: Record<Destination['kind'], string | null> = {
   lesson: 'Start',
-  live: 'Start',
+  /**
+   * A LIVE STEP IS A CLASS THAT WOULD HAVE TO BE MADE, and while the prototype
+   * gate is on it cannot be. Null is what turns the row's Start button into
+   * the inert "Coming soon" chip the screen already has for steps that lead
+   * nowhere — so this needs no new state and no new component, just the
+   * honest answer to "is there an action here".
+   *
+   * The comment above still holds for the day the gate comes off: a recording
+   * is a CACHE of the first live class, not a lesser product, and both say
+   * "Start" again the moment both can happen.
+   */
+  live: PROTOTYPE_ONLY_PREPARED ? null : 'Start',
   // The map knows the chapter but was never filed under a topic. Saying so is
   // better than a Start that opens a list the student then has to search.
   chapter: 'Open chapter',

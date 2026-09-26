@@ -1,7 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { renderToString } from 'react-dom/server';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+/**
+ * THE GATE IS OFF FOR THIS FILE.
+ *
+ * Four assertions here are about a plan whose steps all lead somewhere —
+ * "offers Start on every step", "says Start whether the class is recorded or
+ * made on the spot", "shows nothing as coming soon". While
+ * PROTOTYPE_ONLY_PREPARED is true, a `live` step has no action by design and
+ * shows the inert "Coming soon" chip, so those four would be measuring the
+ * gate rather than the planner. The gate's own behaviour lives in
+ * prototypeGate.test.tsx.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: false,
+}));
 import {
   answerProbe,
   buildPlan,

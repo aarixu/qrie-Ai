@@ -11,6 +11,24 @@ import { settingsStore } from '../src/stores/settings';
 import { SYLLABI, forgetCatalog } from '../src/lib/content';
 
 /**
+ * THE GATE IS OFF FOR THIS FILE, DELIBERATELY.
+ *
+ * The badge exists to tell a student which cold topic is worth tapping, and
+ * while PROTOTYPE_ONLY_PREPARED is true no cold topic can be tapped at all —
+ * Chapter.tsx stops asking the relay entirely, because a badge nobody can act
+ * on is a request for nothing. So every assertion below would measure the gate
+ * rather than the badge.
+ *
+ * Turning the flag off here keeps the feature under test for the day billing
+ * comes back and the gate goes; the gate's own behaviour is pinned separately
+ * in prototypeGate.test.tsx.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: false,
+}));
+
+/**
  * A PREPARED TOPIC SHOULD NOT LOOK LIKE A COLD ONE.
  *
  * A cold topic costs about ninety-six seconds and about Rs 30 of somebody's

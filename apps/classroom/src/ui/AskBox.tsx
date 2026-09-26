@@ -4,6 +4,8 @@ import { Icon } from './Icon';
 import { SOURCE_PROBLEM, type SourceProblem, type SourcePage } from '../lib/sourceText';
 import { freshSourceKey, holdSource } from '../lib/sourceHandoff';
 import { track } from '../lib/telemetry';
+import { PROTOTYPE_ONLY_PREPARED, usePrototypeNotice } from '../lib/prototype';
+import { PrototypeNotice } from './PrototypeNotice';
 
 /**
  * THE THIRD DOOR INTO A CLASS: ASK FOR ANYTHING, OR HAND OVER A PAGE.
@@ -39,6 +41,23 @@ export function AskBox() {
   const [topic, setTopic] = useState('');
   const [holding, setHolding] = useState<Holding>({ state: 'idle' });
   const picker = useRef<HTMLInputElement>(null);
+  const notice = usePrototypeNotice();
+
+  /**
+   * THE WHOLE BOX IS FROZEN, not one control of it.
+   *
+   * Both doors here are ALWAYS cold: a typed topic and an uploaded page carry
+   * no topicRef, so neither can ever match a class that already exists — the
+   * docblock above says so ("taught and not kept"). There is no warm case to
+   * preserve, which is what makes this the one control that freezes whole.
+   *
+   * The paperclip is frozen at the paperclip and not at "Teach this". By the
+   * time "Teach this" renders, the student has chosen a file, watched it being
+   * read and been told how many words came out of it. Refusing them at the end
+   * of that is the worst possible moment to refuse them.
+   */
+  const frozen = PROTOTYPE_ONLY_PREPARED;
+  const explain = () => notice.show('Anything you ask for');
 
   const go = () => {
     const asked = topic.trim();
@@ -109,10 +128,18 @@ export function AskBox() {
           <input
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && go()}
-            placeholder="What should she teach you?"
+            onKeyDown={(e) => e.key === 'Enter' && (frozen ? explain() : go())}
+            // readOnly rather than disabled: a disabled input takes no click,
+            // so tapping it would do nothing at all and the student would be
+            // left guessing. This one still answers — with the notice.
+            readOnly={frozen}
+            onClick={frozen ? explain : undefined}
+            placeholder={frozen ? 'Ask anything — coming soon' : 'What should she teach you?'}
             aria-label="What should she teach you?"
-            className="w-full bg-transparent outline-none font-headline-md text-[17px] leading-6 text-on-surface placeholder:text-on-surface-variant"
+            aria-disabled={frozen}
+            className={`w-full bg-transparent outline-none font-headline-md text-[17px] leading-6 text-on-surface placeholder:text-on-surface-variant ${
+              frozen ? 'cursor-default' : ''
+            }`}
           />
         </div>
 
@@ -128,18 +155,27 @@ export function AskBox() {
           onChange={(e) => void choose(e.target.files?.[0])}
         />
         <button
-          onClick={pick}
-          disabled={holding.state === 'reading'}
+          onClick={frozen ? explain : pick}
+          disabled={!frozen && holding.state === 'reading'}
           aria-label="Teach me from a file"
-          className="w-11 h-11 grid place-items-center rounded-full text-on-surface-variant hover:bg-surface-container-high disabled:opacity-40 transition-colors shrink-0"
+          aria-disabled={frozen}
+          className={`w-11 h-11 grid place-items-center rounded-full text-on-surface-variant transition-colors shrink-0 ${
+            frozen ? 'opacity-40 cursor-default' : 'hover:bg-surface-container-high disabled:opacity-40'
+          }`}
         >
           <Icon name="attach_file" />
         </button>
         <button
-          onClick={go}
-          disabled={topic.trim() === ''}
+          onClick={frozen ? explain : go}
+          // Not disabled while frozen, and not gated on an empty box either:
+          // the tap has to reach `explain`, which is the only way the student
+          // finds out why nothing is happening.
+          disabled={!frozen && topic.trim() === ''}
           aria-label="Start this class"
-          className="bg-primary text-on-primary rounded-full w-11 h-11 grid place-items-center shadow-md disabled:opacity-40 active:scale-95 transition-transform shrink-0"
+          aria-disabled={frozen}
+          className={`bg-primary text-on-primary rounded-full w-11 h-11 grid place-items-center shadow-md shrink-0 ${
+            frozen ? 'opacity-40 cursor-default' : 'disabled:opacity-40 active:scale-95 transition-transform'
+          }`}
         >
           <Icon name="arrow_forward" filled />
         </button>
@@ -160,6 +196,7 @@ export function AskBox() {
           )}
         </div>
       )}
+      {notice.tapped && <PrototypeNotice topic={notice.tapped} onClose={notice.dismiss} />}
     </div>
   );
 }
