@@ -12,13 +12,20 @@ import type { SchoolConfig } from './plan.ts';
  * is read from the environment by the CLI, sent only in these headers, and
  * never included in an error message.
  */
-export function supabaseStore(url: string, serviceKey: string, fetchImpl: typeof fetch = fetch): ImportStore {
+export type RestCall = (
+  path: string,
+  init?: { method?: string; body?: unknown; profile?: 'lms'; prefer?: string },
+) => Promise<unknown>;
+
+/**
+ * One HTTP call to the project with the service role. Shared by every LMS tool
+ * that writes with that key, so there is exactly one place that decides what
+ * an error message may contain: the server's words, never a header.
+ */
+export function supabaseRest(url: string, serviceKey: string, fetchImpl: typeof fetch = fetch): RestCall {
   const base = { apikey: serviceKey, authorization: `Bearer ${serviceKey}` };
 
-  async function call(
-    path: string,
-    init: { method?: string; body?: unknown; profile?: 'lms'; prefer?: string } = {},
-  ): Promise<unknown> {
+  return async function call(path, init = {}) {
     const headers: Record<string, string> = { ...base };
     if (init.profile) headers[init.method && init.method !== 'GET' ? 'Content-Profile' : 'Accept-Profile'] = init.profile;
     if (init.body !== undefined) headers['content-type'] = 'application/json';
@@ -34,7 +41,11 @@ export function supabaseStore(url: string, serviceKey: string, fetchImpl: typeof
       throw new Error(`${init.method ?? 'GET'} ${path.split('?')[0]} failed: ${res.status} ${text.slice(0, 300)}`);
     }
     return text ? JSON.parse(text) : null;
-  }
+  };
+}
+
+export function supabaseStore(url: string, serviceKey: string, fetchImpl: typeof fetch = fetch): ImportStore {
+  const call = supabaseRest(url, serviceKey, fetchImpl);
 
   const firstId = (rows: unknown, field = 'id'): string | null => {
     const row = Array.isArray(rows) ? (rows[0] as Record<string, unknown> | undefined) : undefined;
