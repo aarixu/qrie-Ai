@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LibraryItem } from '../src/library.ts';
-import { supabaseLibraryStore } from '../src/supabaseLibraryStore.ts';
+import { supabaseLibraryStore, upsertOutcomes } from '../src/supabaseLibraryStore.ts';
 
 const URL_ = 'https://x.supabase.co';
 const KEY = 'service-role-secret-key';
@@ -77,5 +77,22 @@ describe('supabaseLibraryStore', () => {
     const err = await supabaseLibraryStore(URL_, KEY, impl).existing().catch((e: Error) => e);
     expect((err as Error).message).toMatch(/403/);
     expect((err as Error).message).not.toContain(KEY);
+  });
+
+  it('writes the outcomes in batches, updating any already there', async () => {
+    const { calls, impl } = fakeFetch(() => new Response('', { status: 201 }));
+    const rows = Array.from({ length: 1201 }, (_, i) => ({
+      id: `node-${i}`,
+      grade: 8,
+      subject: 'Science',
+      chapter: 'cells',
+      title: `Node ${i}`,
+    }));
+    await upsertOutcomes(URL_, KEY, rows, impl);
+    expect(calls.map((c) => JSON.parse(c.body!).length)).toEqual([1000, 201]);
+    for (const c of calls) {
+      expect(c.url).toBe(`${URL_}/rest/v1/outcome?on_conflict=id`);
+      expect(c.headers).toMatchObject({ 'Content-Profile': 'lms', prefer: 'resolution=merge-duplicates' });
+    }
   });
 });

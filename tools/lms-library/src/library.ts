@@ -27,6 +27,8 @@ interface GraphNode {
   id: string;
   klass: number;
   subject: string;
+  chapter?: string;
+  title?: string;
 }
 
 interface Probe {
@@ -78,6 +80,31 @@ export function libraryItems(banks: Bank[]): LibraryItem[] {
     }
   }
   return out;
+}
+
+/** A row of lms.outcome (0027): where an outcome sits in the curriculum. */
+export interface Outcome {
+  id: string;
+  grade: number;
+  subject: string;
+  chapter: string;
+  title: string;
+}
+
+/**
+ * Every outcome of every bank's map, with its chapter, so a teacher's view
+ * of what the brain believes can be grouped the way a syllabus is.
+ */
+export function outcomes(banks: Bank[]): Outcome[] {
+  return banks.flatMap((b) =>
+    b.graph.nodes.map((n) => ({
+      id: n.id,
+      grade: n.klass,
+      subject: n.subject,
+      chapter: n.chapter ?? n.id,
+      title: n.title ?? n.id,
+    })),
+  );
 }
 
 /**

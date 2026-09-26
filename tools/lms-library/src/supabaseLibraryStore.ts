@@ -1,5 +1,5 @@
 import { supabaseRest } from '../../lms-import/src/supabaseStore.ts';
-import { fingerprint, type LibraryItem } from './library.ts';
+import { fingerprint, type LibraryItem, type Outcome } from './library.ts';
 import type { LibraryStore } from './sync.ts';
 
 const PAGE = 1000;
@@ -48,4 +48,25 @@ export function supabaseLibraryStore(url: string, serviceKey: string, fetchImpl:
       }
     },
   };
+}
+
+/**
+ * lms.outcome, written whole each run: outcomes are curriculum, not anyone's
+ * work, so a newer map simply replaces an older row (merge-duplicates).
+ */
+export async function upsertOutcomes(
+  url: string,
+  serviceKey: string,
+  rows: Outcome[],
+  fetchImpl: typeof fetch = fetch,
+): Promise<void> {
+  const call = supabaseRest(url, serviceKey, fetchImpl);
+  for (let i = 0; i < rows.length; i += PAGE) {
+    await call('/rest/v1/outcome?on_conflict=id', {
+      method: 'POST',
+      profile: 'lms',
+      prefer: 'resolution=merge-duplicates',
+      body: rows.slice(i, i + PAGE),
+    });
+  }
 }

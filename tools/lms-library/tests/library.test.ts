@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { fingerprint, libraryItems, loadBanks, type LibraryItem } from '../src/library.ts';
+import { fingerprint, libraryItems, loadBanks, outcomes, type LibraryItem } from '../src/library.ts';
 
 const graph = {
   version: 1 as const,
@@ -70,5 +70,21 @@ describe('the real banks', () => {
     expect(items).toHaveLength(4697);
     expect(new Set(items.map((i) => i.libraryRef)).size).toBe(4697);
     expect(new Set(items.map((i) => `${i.grade} ${i.subject}`)).size).toBe(13);
+  });
+});
+
+describe('outcomes', () => {
+  it('gives every outcome a library question names its class, subject, chapter and title', () => {
+    const banks = loadBanks();
+    const byId = new Map(outcomes(banks).map((o) => [o.id, o]));
+    for (const item of libraryItems(banks)) {
+      for (const id of item.outcomeIds) {
+        const o = byId.get(id);
+        expect(o, id).toBeDefined();
+        expect(o).toMatchObject({ grade: item.grade, subject: item.subject });
+        expect(o!.chapter.length).toBeGreaterThan(0);
+        expect(o!.title.length).toBeGreaterThan(0);
+      }
+    }
   });
 });

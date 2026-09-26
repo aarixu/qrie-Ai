@@ -14,6 +14,7 @@ describe('lms-library', () => {
     const text = t.out.join('\n');
     expect(text).toMatch(/DRY RUN/);
     expect(text).toMatch(/4697 items from 13 banks/);
+    expect(text).toMatch(/\d+ outcomes, each with its chapter/);
   });
 
   it('refuses --apply without the project URL and service role key', async () => {

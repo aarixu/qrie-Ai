@@ -1,9 +1,10 @@
-import { libraryItems, loadBanks } from './library.ts';
-import { supabaseLibraryStore } from './supabaseLibraryStore.ts';
+import { libraryItems, loadBanks, outcomes } from './library.ts';
+import { supabaseLibraryStore, upsertOutcomes } from './supabaseLibraryStore.ts';
 import { syncLibrary } from './sync.ts';
 
 /**
- * Load the Qrie library into lms.item: `node tools/lms-library/src/cli.ts [--apply]`
+ * Load the Qrie library into lms.item, and its maps' outcomes into
+ * lms.outcome: `node tools/lms-library/src/cli.ts [--apply]`
  *
  * Without --apply it is a DRY RUN that reads the banks and counts them.
  * --apply writes with SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY from the
@@ -20,11 +21,13 @@ export interface CliDeps {
 export async function run(args: string[], deps: CliDeps): Promise<number> {
   const banks = loadBanks();
   const items = libraryItems(banks);
+  const rows = outcomes(banks);
 
   if (!args.includes('--apply')) {
     deps.log('DRY RUN — nothing was written.');
     deps.log(`  ${items.length} items from ${banks.length} banks`);
     for (const b of banks) deps.log(`    ${b.name}: ${b.probes.probes.length}`);
+    deps.log(`  ${rows.length} outcomes, each with its chapter`);
     deps.log('Run again with --apply to load them.');
     return 0;
   }
@@ -41,6 +44,8 @@ export async function run(args: string[], deps: CliDeps): Promise<number> {
   for (const ref of result.changed) {
     deps.log(`  CHANGED, NOT OVERWRITTEN: ${ref} — give the new version a new ref.`);
   }
+  await upsertOutcomes(url, key, rows, deps.fetchImpl);
+  deps.log(`Outcomes: ${rows.length} written.`);
   return 0;
 }
 
