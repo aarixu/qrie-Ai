@@ -27,10 +27,13 @@ create table if not exists lms.submission (
   org_id uuid not null references lms.school on delete cascade,
   assignment_id uuid not null references lms.assignment on delete cascade,
   student_user_id uuid not null references auth.users on delete cascade,
+  -- What was handed in. Attempts are counted per kind, so sending photos of
+  -- the notebook never uses up an attempt at the MCQs of the same assignment.
+  kind text not null default 'mcq' check (kind in ('mcq', 'photo')),
   attempt smallint not null check (attempt >= 1),
   submitted_at timestamptz not null default now(),
   late boolean not null,
-  unique (assignment_id, student_user_id, attempt)
+  unique (assignment_id, student_user_id, kind, attempt)
 );
 
 create index if not exists submission_assignment on lms.submission (assignment_id);
@@ -128,13 +131,13 @@ begin
 
   select coalesce(max(s.attempt), 0) + 1 into n_attempt
     from lms.submission s
-   where s.assignment_id = a.id and s.student_user_id = me;
+   where s.assignment_id = a.id and s.student_user_id = me and s.kind = 'mcq';
   if n_attempt > a.attempts_allowed then
     raise exception 'no attempts left for this homework';
   end if;
 
-  insert into lms.submission (org_id, assignment_id, student_user_id, attempt, late)
-  values (a.org_id, a.id, me, n_attempt, now() > a.due_at)
+  insert into lms.submission (org_id, assignment_id, student_user_id, kind, attempt, late)
+  values (a.org_id, a.id, me, 'mcq', n_attempt, now() > a.due_at)
   returning id into sid;
 
   insert into public.learning_session (id, org_id, user_id, source, started_at, ended_at)
