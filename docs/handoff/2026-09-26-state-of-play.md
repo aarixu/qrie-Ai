@@ -441,6 +441,7 @@ platforms by API key** (see the API track below).
 | 8 | **The tutor stays a separate website for now** and joins the student app later, as an update | 2026-09-24 |
 | 9 | **The LMS lane owns the database.** Every new migration from 0021 onwards is written there; the tutor session asks for what it needs | 2026-09-24 |
 | 10 | **The tutor's voice problem is not solved by prerecording** — the product claim is a live tutor | 2026-09-26 |
+| 11 | **The LMS is built first. The partner API is parked**, and its build plan is saved in the API track below. The LMS builds the shared brain, so most of the API's work is done along the way | 2026-09-26 |
 
 Carried over, and not up for debate:
 
@@ -463,7 +464,8 @@ Carried over, and not up for debate:
 3. **DPDP:** is the school or Qrie the data fiduciary, and what does §9(3) allow
    for behavioural signals?
 4. **Supabase Pro:** keep it or pause it.
-5. **The API:** go or not, and which segment first.
+5. **The API:** ~~go or not~~ — parked, LMS first (decision 11). Still open:
+   which segment first, once a partner is in hand.
 
 ## The system
 
@@ -704,7 +706,7 @@ the [appendix](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
 
 ---
 
-## The API track — selling the LAM to platforms (under consideration)
+## The API track — selling the LAM to platforms (parked, plan saved)
 
 **Why it can work.** The LAM does not need a live class; it needs answers.
 Platforms with practice sets, quizzes, test series and homework produce far more
@@ -790,6 +792,160 @@ P4 it runs at their chapter level, with no prerequisite chains.
 The likeliest first buyers are mid-size K-12 practice apps, school ERP/LMS
 vendors, and white-label coaching-app platforms (one integration, many
 institutes) — not the top three.
+
+### Status: parked — the LMS comes first (Aarav, 2026-09-26)
+
+The partner API is **not being built now**. The LMS and the student app come
+first.
+
+That costs the API little. About 70% of its work is the same brain the LMS
+needs anyway: Phase 0 below, the `learner` entity, the server fold,
+misconceptions, reviews and `tutor-control`. Building the LMS therefore builds
+most of the API. Only the partner-facing ~30% waits for a real partner.
+
+**The rule while it is parked:** build the brain as a clean *internal* API — pure
+functions behind one contract — so that the day a partner arrives the work is
+keys, metering and docs, not a rewrite. Take the `learner` decision now either
+way, because it is free now and a migration on children's data later.
+
+| Work | The LMS needs it | Partner API only |
+|---|---|---|
+| Phase 0 bugs (fold, cursor, purge, membership, org rule, integrity) | ✅ | |
+| `learner` entity | ✅ (free now) | |
+| Server fold, mastery, misconceptions, reviews | ✅ | |
+| `tutor-control` (next activity) | ✅ for adaptive homework | |
+| Reviewed question bank | ✅ (teachers approve items) | |
+| API keys, `'partner'` org kind, per-partner metering | | ✅ |
+| Auto-tagger for a partner's question bank | | ✅ |
+| Graph as a public, versioned contract; docs, sandbox, webhooks | | ✅ |
+| Backtest CLI, A/B harness | | ✅ |
+
+### Build plan, for the day a partner is in hand
+
+**Assumptions** — each can be overridden:
+
+1. **The `learner` entity exists.** Partner students never log in to us.
+2. **A separate Edge Function, `lam`, not routes inside the relay.** A bug in
+   the partner API then cannot take the tutor's relay down, and `lam` gets its
+   own kill switch. It holds no vendor key; the one model call (tagging) goes
+   through the relay, so the rule that only the relay holds vendor keys stands.
+3. **Real Postgres tests with PGlite**, an in-process Postgres. Today's
+   migration tests only regex the SQL text, and nothing in the repo opens a
+   Postgres connection.
+4. **Everything is deterministic except tagging.** The estimated per-learner
+   cost is about ₹0 — not measured. Tagging runs once per item and is metered
+   to the partner.
+
+#### Phase 0 — bugs under the API
+
+These also sit under the LMS, so the LMS does them first.
+
+| Bug | Where | Fix |
+|---|---|---|
+| A hinted correct answer moves mastery as much as an unhinted one | `learner-model/src/fold.ts:260` | Scale by `defaultCredit(rung)`; monotonicity test |
+| The fold cursor has three parts but the table stores two | `0013:74-79` vs `learner-model/src/types.ts:105-109` | Add `folded_through_session` |
+| A retake after the reveal counts as unassisted | `quizLedger.ts:207-212` | Not rung-0 |
+| Quiz evidence is folded twice | `diagnostic/src/adapt.ts:142-147` | Fold it once |
+| The org-choice rule is copied in four places | `0018:98`, `relay/src/prep.ts:236`, `supabase/functions/relay/index.ts:186`, `ledgerSync.ts:103` | One SQL `current_org_id()` |
+| A student can read the whole roster | `0005:129-131` | Own row only |
+| The purge deletes evidence that was never folded | `0007` | Delete only up to a `purge_safe_before` watermark written by the fold |
+| The cost meter is blind | `model_price` 0 rows; the `unpriced` flag checks 5 of 7 quantities | Seed the prices; check all 7 |
+| A student can post any event | `0006` insert policy | Size cap, `active_ms` ≤ wall clock, a derivable rung |
+| `homework` is rejected by the database | `ledger_event.source` CHECK | Widen once: `homework`, `test`, `practice`, `api` |
+| Comments that overclaim, in these files | `rebuildModel.ts:18-21`, `fold.ts:37-41`, `0007:12-14`, `assistance.ts:19-25`, `types.ts:73-77`, `quizLedger.ts:207-209` | Make them match the code |
+
+**Done when:** real SQL tests pass on PGlite (school and partner fixtures, RLS,
+purge), and the fold's monotonicity and single-count tests pass.
+
+#### Phase 1 — identity and tenancy
+
+- A `learner` table: `id`, `org_id`, a nullable `auth_user_id`, a nullable
+  `external_id`, and `(org_id, external_id)` unique. Backfill one learner per
+  existing user.
+- `concept_state` and `learner_model` are re-keyed on `learner_id`; both are
+  empty today, so this is free. `ledger_event` and `learning_session` gain
+  `learner_id`, backfilled; app rows keep `user_id` for RLS.
+- `organization.kind` gains `'partner'`.
+- An `api_key` table: hash only, a visible prefix, the key shown once,
+  revocable and rotatable.
+- Per-org metering, caps and kill switch (`claim_org`) — the org dimension the
+  relay lacks today (Part 1, item 10).
+
+**Done when:** one partner's key cannot read another partner's learners (test),
+and halting one org leaves the others running.
+
+#### Phase 2 — the content contract
+
+- Freeze the graph per version: an outcome id never changes meaning within a
+  version, and a deprecation map covers old → new. `GET /v1/graph`.
+- A misconception registry (D1): the ~14k free-text labels clustered into
+  stable ids per node — one model pass, then review.
+- An item registry: partner item → our outcome, each wrong option → a
+  misconception, with a mapping confidence and a reviewed flag.
+- An auto-tagger (P4): `POST /v1/items` → a model call through the relay,
+  metered to the partner. Low-confidence mappings go to a review queue, and the
+  partner can override them.
+- Our own 4,697 probes become items of an org called "qrie", so we are the
+  first client.
+
+**Done when:** no id means two things across versions (test), and the tagger's
+accuracy is measured and recorded on 100 sampled items.
+
+#### Phase 3 — events in, the brain on the server
+
+- `POST /v1/events`: schema v1 (learner, item, correct, option chosen, time,
+  help level, attempt, when). Batches of up to 500, idempotent. Malformed
+  events are rejected, not sanitised. Server time is authoritative.
+- The server fold (B1): the same `foldSession`, run on the server, writing
+  `concept_state` and the purge watermark.
+- One mastery rule: unassisted ≥ 0.8 on 2+ distinct items at least a day
+  apart, stamped `mastered_at`.
+- `misconception_state`: confirmed once seen on 2+ distinct items.
+- Leitner review boxes (1/2/5/12/30/60 days) and `next_review_at`.
+
+**Done when:** the server fold equals the offline replay byte for byte, and the
+same batch sent twice counts once.
+
+#### Phase 4 — answers out, and `tutor-control`
+
+- `GET /v1/learners/{id}/state`, `/misconceptions`, `/reviews`, `/next`
+- `GET /v1/cohorts/{id}/report`
+- `DELETE /v1/learners/{id}`
+- A new package `tutor-control` exposing `nextActivity()`. Its order: due
+  reviews → misconception fixes → prerequisite gaps → the partner's scope. It
+  picks from the partner's own bank, near a 70% chance of success, and never
+  repeats the last item.
+
+**Done when:** the same wrong answer gives two different students different
+next items, and an erased learner leaves no row behind.
+
+#### Phase 5 — proof, which is where revenue starts
+
+- A backtest CLI. It takes a partner's CSV export, maps it (with the tagger or
+  at chapter level), replays the fold, and reports three things:
+  - how much better it predicts the next answer than the partner's baseline
+  - which students it would have flagged at risk, and how early
+  - the cohort's misconception map
+
+  It is built on `tools/bin/model-metric.mjs`, whose `emptyParams()` vs
+  `currentParams()` mismatch gets fixed on the way.
+- Server metrics: unassisted gain per active minute, and 7-day and 30-day
+  retention.
+- An A/B harness, where the control arm keeps the partner's usual order.
+
+**Done when:** a synthetic export produces a full report whose numbers can be
+checked by hand.
+
+#### Phase 6 — partner-ready
+
+- OpenAPI docs, a sandbox org with synthetic data, rate-limit headers
+- Webhooks: mastery changed, misconception confirmed, at risk
+- A status page, a DPA template, a data inventory
+- Widgets, later
+
+**Order:** Phase 0 → 1 → 2 → 3 → 4 → 6. Run the **Phase 5 backtest in parallel,
+straight after Phase 0's fold fixes**, because it needs no integration from the
+partner and is the fastest route to revenue.
 
 ## Changes to the product brief
 
