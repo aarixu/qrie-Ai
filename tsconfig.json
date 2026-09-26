@@ -14,5 +14,8 @@
     "tools/**/*.ts",
     "supabase/tests/**/*",
     "vitest.config.ts"
+  ],
+  "exclude": [
+    "apps/lms/**"
   ]
 }
