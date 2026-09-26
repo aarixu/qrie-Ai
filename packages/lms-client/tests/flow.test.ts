@@ -202,6 +202,39 @@ describe('a student doing it', () => {
   });
 });
 
+describe('a student looking back at their answers', () => {
+  it('shows which answers were right, and the key once no attempt is left', async () => {
+    const review = await student.myReview(homeworkId);
+    expect(review.map((r) => [r.questionPosition, r.chosenIndex, r.correct, r.correctIndex])).toEqual([
+      [1, 1, true, 1],
+      [2, 2, false, 0],
+    ]);
+  });
+
+  it('keeps the key back while an attempt is left', async () => {
+    const twice = await teacher.createAssignment({
+      sectionId: one.s8a,
+      subjectId: one.maths,
+      kind: 'homework',
+      title: 'Two tries',
+      dueAt: new Date(Date.now() + 86_400_000).toISOString(),
+      answerTypes: ['mcq'],
+      attemptsAllowed: 2,
+    });
+    await teacher.setAssignmentItems(twice, [ownItem]);
+    await teacher.publishAssignment(twice);
+    await student.submitMcq(twice, { [ownItem]: 1 });
+    expect(await student.myReview(twice)).toEqual([
+      expect.objectContaining({ chosenIndex: 1, correct: false, correctIndex: null }),
+    ]);
+  });
+
+  it('shows nothing to a student who has not handed in, or is in another class', async () => {
+    expect(await createLmsClient(pgliteTransport(db, kid2)).myReview(homeworkId)).toEqual([]);
+    expect(await createLmsClient(pgliteTransport(db, one.kid8b)).myReview(homeworkId)).toEqual([]);
+  });
+});
+
 describe('the teacher reading the results', () => {
   it('sees who handed in and who did not', async () => {
     const results = await teacher.assignmentResults(homeworkId);

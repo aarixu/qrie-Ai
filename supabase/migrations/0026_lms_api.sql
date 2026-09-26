@@ -492,6 +492,45 @@ as $$
    order by a.due_at, a.title;
 $$;
 
+-- A student's own latest attempt, question by question: what they chose
+-- and whether it was right. The key itself only once it can no longer
+-- help them — every attempt used, or the due date passed — so a student
+-- with a try left cannot read the answers and resubmit.
+--
+-- SECURITY DEFINER, the one function here that is: a student may read
+-- neither lms.item nor lms.assignment_item (0023), so this reads them on
+-- the student's behalf, for the caller's own submission only.
+create or replace function lms.my_review(p_assignment uuid)
+returns table (
+  item_id uuid, question_position smallint, stem text, options jsonb,
+  chosen_index smallint, correct boolean, correct_index smallint
+)
+language sql stable security definer
+set search_path = public, lms
+as $$
+  with a as (
+    select * from lms.assignment
+     where id = p_assignment and published_at is not null and lms.in_section(section_id)
+  ),
+  tries as (
+    select s.id, s.attempt from lms.submission s join a on a.id = s.assignment_id
+     where s.student_user_id = auth.uid() and s.kind = 'mcq'
+  ),
+  mine as (
+    select id from tries order by attempt desc limit 1
+  )
+  select i.id, ai.position, i.stem, i.options, sa.chosen_index, coalesce(sa.correct, false),
+         case when (select count(*) from tries) >= a.attempts_allowed or now() > a.due_at
+              then i.correct_index end
+    from a
+    join mine on true
+    join lms.assignment_item ai on ai.assignment_id = a.id
+    join lms.item i on i.id = ai.item_id
+    left join lms.submission_answer sa on sa.submission_id = mine.id and sa.item_id = i.id
+   where i.kind = 'mcq'
+   order by ai.position;
+$$;
+
 -- ---------------------------------------------------------------------------
 -- Grants. Signed-in callers only; what each may do is still RLS's to decide.
 -- ---------------------------------------------------------------------------
@@ -508,6 +547,7 @@ revoke all on function lms.publish_assignment(uuid) from public, anon;
 revoke all on function lms.class_assignments(uuid, uuid) from public, anon;
 revoke all on function lms.assignment_results(uuid) from public, anon;
 revoke all on function lms.my_assignments() from public, anon;
+revoke all on function lms.my_review(uuid) from public, anon;
 revoke all on function lms.assignment_overview(uuid) from public, anon;
 revoke all on function lms.assignment_items(uuid) from public, anon;
 revoke all on function lms.item_stats(uuid) from public, anon;
@@ -527,6 +567,7 @@ grant execute on function lms.publish_assignment(uuid) to authenticated, service
 grant execute on function lms.class_assignments(uuid, uuid) to authenticated, service_role;
 grant execute on function lms.assignment_results(uuid) to authenticated, service_role;
 grant execute on function lms.my_assignments() to authenticated, service_role;
+grant execute on function lms.my_review(uuid) to authenticated, service_role;
 grant execute on function lms.assignment_overview(uuid) to authenticated, service_role;
 grant execute on function lms.assignment_items(uuid) to authenticated, service_role;
 grant execute on function lms.item_stats(uuid) to authenticated, service_role;

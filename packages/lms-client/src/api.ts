@@ -151,6 +151,18 @@ export interface Question {
   options: string[] | null;
 }
 
+/** One question of a student's own latest attempt. */
+export interface ReviewRow {
+  itemId: string;
+  questionPosition: number;
+  stem: string;
+  options: string[];
+  chosenIndex: number | null;
+  correct: boolean;
+  /** Null while the student still has an attempt left and the due date has not passed. */
+  correctIndex: number | null;
+}
+
 export interface McqResult {
   submissionId: string;
   correct: number;
@@ -296,6 +308,7 @@ export function createLmsClient(t: Transport) {
     myAssignments: () => rows<MyAssignment>('my_assignments'),
     assignmentQuestions: (assignmentId: string) =>
       rows<Question>('assignment_questions', { p_assignment: assignmentId }),
+    myReview: (assignmentId: string) => rows<ReviewRow>('my_review', { p_assignment: assignmentId }),
     async submitMcq(assignmentId: string, answers: Record<string, number>): Promise<McqResult> {
       const [r] = await rows<McqResult>('submit_mcq', {
         p_assignment: assignmentId,

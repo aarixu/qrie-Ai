@@ -16,6 +16,7 @@
     "vitest.config.ts"
   ],
   "exclude": [
-    "apps/lms/**"
+    "apps/lms/**",
+    "apps/student/**"
   ]
 }
