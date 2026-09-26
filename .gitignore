@@ -79,3 +79,7 @@ tools/speech/voices/
 tools/speech/samples/
 tools/measure/f-bench/.models/
 .vercel
+
+# The demo school's database, photos and sign-in sheet (npm run demo). Rebuilt
+# from the migrations and tools/lms-demo/data on --reset; never committed.
+tools/lms-demo/.demo-data/

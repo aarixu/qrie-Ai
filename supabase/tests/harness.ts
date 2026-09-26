@@ -147,6 +147,16 @@ async function apply(db: PGlite, files: readonly string[]): Promise<void> {
  * tests: production already holds rows written before a new migration, so a
  * migration is tested against data that predates it, via `applyAfter`.
  */
+/**
+ * The shim and every migration, onto a database the caller opened — the demo
+ * school (tools/lms-demo) keeps its database on disk, so it cannot use
+ * freshDatabase's in-memory one.
+ */
+export async function migrate(db: PGlite): Promise<void> {
+  await db.exec(SUPABASE_SHIM);
+  await apply(db, migrationFiles());
+}
+
 export async function freshDatabase(opts: { through?: string } = {}): Promise<PGlite> {
   const db = new PGlite();
   await db.exec(SUPABASE_SHIM);

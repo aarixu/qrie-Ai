@@ -1,10 +1,12 @@
 import type { PGlite } from '@electric-sql/pglite';
-import type { ImportStore } from '../src/apply.ts';
+import type { ImportStore } from './apply.ts';
 
 /**
  * The import's store, backed by the migration harness's real Postgres. It
  * writes what the service role would, so 0021's triggers and 0022's
- * constraints judge every row exactly as they will in production. Test-only.
+ * constraints judge every row exactly as they will in production. Used by the
+ * import's tests and by the demo school (tools/lms-demo), never against the
+ * hosted project.
  */
 export function pgliteStore(db: PGlite): ImportStore {
   const one = async (sql: string, params: unknown[]): Promise<string | null> =>

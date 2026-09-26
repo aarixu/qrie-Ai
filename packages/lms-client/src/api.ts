@@ -13,6 +13,8 @@ export type AnswerType = 'mcq' | 'photo' | 'typed';
 
 export interface Me {
   userId: string;
+  /** The school's id; the first folder of every photo of work (0025). */
+  orgId: string;
   kind: AccountKind;
   displayName: string;
   loginId: string;

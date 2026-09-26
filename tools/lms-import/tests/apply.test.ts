@@ -5,7 +5,7 @@ import { asUser, freshDatabase } from '../../../supabase/tests/harness.ts';
 import { applyPlan, loginEmail } from '../src/apply.ts';
 import { planImport, type SchoolConfig } from '../src/plan.ts';
 import { readStudents, readTeachers } from '../src/sheet.ts';
-import { pgliteStore } from './pgliteStore.ts';
+import { pgliteStore } from '../src/pgliteStore.ts';
 
 const SCHOOL: SchoolConfig = {
   code: 'DPS',

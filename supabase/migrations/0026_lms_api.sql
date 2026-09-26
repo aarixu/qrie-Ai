@@ -43,13 +43,13 @@ create policy "staff approve for their own school" on lms.item_approval
 
 create or replace function lms.me()
 returns table (
-  user_id uuid, kind text, display_name text, login_id text,
+  user_id uuid, org_id uuid, kind text, display_name text, login_id text,
   school_code text, school_name text, board text, brand jsonb, logo_path text
 )
 language sql stable security invoker
 set search_path = public, lms
 as $$
-  select a.user_id, a.kind, a.display_name, a.login_id,
+  select a.user_id, a.org_id, a.kind, a.display_name, a.login_id,
          s.code, s.display_name, s.board, s.brand, s.logo_path
     from lms.account a
     join lms.school s on s.org_id = a.org_id

@@ -55,6 +55,8 @@ describe('signing in', () => {
 
   it('tells a teacher who they are and which school they are in', async () => {
     expect(await teacher.me()).toMatchObject({
+      userId: one.teacherA,
+      orgId: one.org,
       kind: 'teacher',
       displayName: 'Teacher A',
       loginId: 'API-T1',
