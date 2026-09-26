@@ -403,6 +403,10 @@ Listed so the next session does not mistake silence for evidence.
     this month.
 13. **Choose between the two marks.** The site carries the two-crescent "C"; the
     app and its icons carry the atom. Nobody has chosen.
+14. **Put L0 and L1 live.** Run `npx supabase db push --linked` from the LMS
+    worktree folder, add `lms` to the exposed schemas, then run the first
+    import with the service role key. Claude's auto mode refuses production
+    deploys. Details are under "Progress" in the LMS build plan.
 
 ---
 
@@ -582,6 +586,45 @@ details of L2–L5 are settled once Aarav reports what the teachers said.
 
 **Working rule:** while the tutor session is active, run only the tests a change
 touches — never the full suite, an install or a build without asking.
+
+### Progress — measured 2026-09-26
+
+**L0 and L1 are built and tested on branch `lms`** (pushed to `origin/lms`),
+and are **not yet live**.
+
+| Milestone | Commit | What exists | Evidence |
+|---|---|---|---|
+| **L0** | `7d72e5b` | A PGlite harness that *runs* every migration as the real `authenticated` role, not a regex over the file. Migration **0021**: one org rule `org_of()` used by `fill_org_id` and by the relay's prep lock; no solo org for school-created accounts; students read only their own membership rows; the purge deletes only what the fold covered, so nothing until the fold exists; school members cannot self-delete; `learner` with a backfill; ledger sources widened; `parent` reserved; a 4 KB payload cap and a 200-character answer cap | 29 DB tests, each watched failing first. Full suite 3,539 passed, 0 failed. **Run against the live database inside a transaction that could not commit:** 219 users, 219 learners, 6 of 6 constraints validated on real rows, nothing left behind (re-checked) |
+| **L1** | `aee1cea`, `eb99509` | Migration **0022**: the `lms` schema (school, year, subject, section, account, teaching assignment, enrolment) with its visibility rules. **`tools/lms-import`**: two CSVs + `school.json` → accounts, sections, teaching and enrolments, plus printable ID/PIN slips. Dry run by default | 17 structure tests; three policies broken on purpose in a scratch run to prove each leak is caught. 53 import tests, with `applyPlan` run against the real migrations. The CLI was run on Node against a sample school. 0021 + 0022 run together on live inside a rollback: 7 tables, 7 policies |
+
+**Waiting on Aarav before any of it is live** — Claude's auto mode refuses
+production deploys (tried twice, 2026-09-26):
+
+1. **`npx supabase db push --linked`, run from the LMS worktree folder** — it
+   applies 0021 and 0022. The main checkout does not have those files yet.
+2. **Add `lms` to the project's exposed schemas** (dashboard: Project Settings →
+   Data API). Until then no browser, and not the import tool, can reach it.
+3. **The first real import**, which needs `SUPABASE_URL` and
+   `SUPABASE_SERVICE_ROLE_KEY` in the environment. UNVERIFIED until then: that
+   the auth service accepts the `.invalid` login addresses.
+
+**Deploy order.** 0021 must be live before any relay built from `lms` is
+deployed, because the relay now asks `org_of` for a student's org. The relay
+deployed today is unaffected by 0021.
+
+**Found on the way, and not fixed, on purpose:**
+
+- **28 of 42 closed sessions report more active time than their own span**;
+  the 20 quiz sessions average about 1,450×. `quizLedger.ts:88` records that a
+  quiz's `started_at` used to be stamped at grading. Whether these rows predate
+  that fix is UNVERIFIED. A cap on `active_ms` would have rejected real rows,
+  so 0021 adds none. Homework sessions will be written by the server (L3).
+- One live session carries `active_ms = 999,999,999`, a value no code in the
+  repo writes. It is a hand-made or probe row.
+- **For the tutor session:** `apps/classroom/src/lib/ledgerSync.ts` still
+  resolves a student's org itself (`.limit(1)`, no order). It should call
+  `current_org_id()`. It matters only for a self-signed-up student later
+  enrolled in a school.
 
 ## Workstreams A–N — every change, with its ID and references
 
