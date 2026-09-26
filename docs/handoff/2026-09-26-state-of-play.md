@@ -18,7 +18,8 @@ tests pass**, 3 skipped, typecheck clean, full suite run on 2026-09-26.
 - **Part 1 — Where it stands:** where everything lives · what works · what is
   broken · what nobody has checked · what is blocked on Aarav
 - **Part 2 — The plan:** the direction · decisions made · decisions open · the
-  system · build order · workstreams A–N · the API track · changes to the brief
+  system · build order · **the LMS build plan (L0–L7, the current work)** ·
+  workstreams A–N · the API track (parked) · changes to the brief
   · what we must learn from schools
 - **Part 3 — How to work here:** traps · deploying · mistakes worth not repeating
 
@@ -442,6 +443,9 @@ platforms by API key** (see the API track below).
 | 9 | **The LMS lane owns the database.** Every new migration from 0021 onwards is written there; the tutor session asks for what it needs | 2026-09-24 |
 | 10 | **The tutor's voice problem is not solved by prerecording** — the product claim is a live tutor | 2026-09-26 |
 | 11 | **The LMS is built first. The partner API is parked**, and its build plan is saved in the API track below. The LMS builds the shared brain, so most of the API's work is done along the way | 2026-09-26 |
+| 12 | **Teachers also log in with a school-issued ID + PIN**, like students. Because a teacher's account sees a whole class, it is hardened: a longer PIN than a student's, lockout after repeated failures, and a short session on shared staffroom computers | 2026-09-26 |
+| 13 | **The teacher app is a separate web app, `apps/lms`.** The student side is a new `apps/student`; the tutor's `apps/classroom` is not touched. Both share the theme tokens and packages | 2026-09-26 |
+| 14 | **The pilot gives parents nothing.** The `parent` role value is reserved in the schema now, so adding it later is not a constraint change | 2026-09-26 |
 
 Carried over, and not up for debate:
 
@@ -528,6 +532,51 @@ No durations are given, because none could be stated with a basis.
 **Working rule for the shared machine.** While another session is active, never
 run the full test suite, an install or a build — only the test files a change
 touches. A full run on 2026-09-24 stalled the tutor session.
+
+## The LMS build plan — the current work (L0–L7)
+
+Decided 2026-09-26: **the LMS is built first** (decision 11). The milestones
+below are how Steps 1–5 are carried out for the LMS; the workstream IDs in
+each row point into the tables further down.
+
+**What the pilot is.** A teacher web app plus a **small student side**, because
+an LMS has nothing to show until students hand work in. The full white-label
+app, the tutor and adaptive homework come later.
+
+**The pilot uses no AI at all.** Code marks MCQs, and the teacher marks photos.
+So the pilot depends on neither the ₹5 ceiling nor Google billing.
+
+**Where the code lives.**
+
+- The LMS work happens in the LMS worktree.
+- Teachers get a new web app, `apps/lms` (decision 13).
+- Students get a new app, `apps/student`. The tutor website stays separate
+  (decision 8), so `apps/classroom` is **not** touched — that is the tutor
+  session's app.
+- Both new apps share the theme tokens and the packages.
+
+| # | Milestone | What gets built | Workstreams | Waits on the school conversations? | Done when |
+|---|---|---|---|---|---|
+| **L0** | **Foundation, and the bugs under it** | A PGlite test harness (real SQL tests). Migration 0021: one org rule, `current_org_id()`, replacing the four copies (`0018:98`, `relay/src/prep.ts:236`, `supabase/functions/relay/index.ts:186`, `ledgerSync.ts:103`); no solo org for accounts the school created (flagged in `app_metadata`, which a student cannot change); a student reads only their own membership row; the purge deletes only what the fold has covered (`purge_safe_before` — so it deletes **nothing** until the fold exists); school members cannot delete themselves. Also: the `learner` entity with a backfill; `ledger_event.source` widened (`homework`, `test`, `practice`, `api`); insert integrity checks; the `parent` role value reserved. The open-safety-report question in A4 stays open | A1–A4, A10, P1 (learner only) | No | On PGlite: a school-created user gets no solo org and files events under the school; in a 2-student school a student reads 1 membership row; the purge on a fixture deletes nothing unfolded; a school member's self-delete is refused; an oversized payload is rejected |
+| **L1** | **The school's structure** | School fields on the org (board, display name, logo, colour tokens — this is where white-label lives), academic year, section, subject, teaching assignment (who teaches which section and subject), and enrolment (with a leaving date). Section- and subject-scoped RLS predicates. **ID + PIN accounts for students and teachers** (decision 12), created by the service role with a hidden internal email and the PIN as password. **Aarav's import tool:** Excel/CSV → org, sections, teachers, students, and printable ID/PIN slips; idempotent | N1 | No | A teacher reads rows only for students in their own section and subject — 0 for any other (test). Importing a sample sheet twice creates no duplicates |
+| **L2** | **Questions and homework** | The question bank: our 4,697 items (all 13 banks wired) plus the teacher's own MCQs. **Only an item the teacher has approved can be assigned.** Item-level ids. An assignment has a type (homework, quiz, test or assignment), a section, a subject, outcomes, a due date, an attempt limit and the answer types it accepts | C1, C2, C4, N2 | A little | An unreviewed item cannot be assigned (test). An assignment targets exactly one section and subject |
+| **L3** | **Submissions and marks** | Submissions are written **server-side** by a separate Edge Function (the same separation argument as `lam`). MCQs are marked on the server, so a client cannot post its own "correct". Photo upload goes to a private folder per school, with a size cap and retry on a bad connection. Marks keep the AI number and the teacher's number, who changed a mark and when (decision 6). Everything sits outside the 90-day purge. Each answer is also written to the ledger as source `homework`, which feeds the brain later | N2, J1, A10 | **Yes** — photo vs typed | A client-posted "correct" is ignored. A school B user cannot read a school A photo (test). The mark history keeps both numbers |
+| **L4** | **The teacher web app, `apps/lms`** | Login; my sections; create and assign homework (pick from the bank or write new); a queue of submitted work; photo marking; a per-student view; a class view (who submitted, who was late, averages). English chrome | N3 (marks level) | **Yes** — the daily loop | A teacher completes the whole loop on a fixture school in a real browser |
+| **L5** | **The small student side, `apps/student`** | ID + PIN login; the school's name, logo and colours at runtime (decision 4); a homework list with due dates; MCQ attempts; photo upload; the student's own marks | Decision 4, J1 | **Yes** — share of students with a phone | On a phone browser, a student sees their school's branding, submits an MCQ homework and a photo, and sees the mark |
+| **L6** | **The brain (level 2)** | The server fold (B1), with the fold bugs fixed (B2, B4, B5, B10). The misconception registry and state (D1–D3). The class view shows unassisted mastery per topic and the most common misconceptions. Review items appear in homework (F) | B, D1–D3, F, N3 | No | The server fold equals the replay. The class view shows unassisted mastery per topic, computed from real homework |
+| **L7** | **Pilot readiness** | A legal answer on DPDP (is the school or Qrie the data fiduciary); a privacy notice for schools; a retention period per table; backups; per-school cost visibility; the first school imported; teacher training | L3, L5, L6 | **Yes** | One real school is imported and completes one full homework cycle |
+
+**Order:** L0 → L1 → L2 → L3 → L4 and L5 in parallel → **pilot** → L6.
+
+The brain comes after the pilot for two reasons. A level-1 LMS (assign,
+submit, mark, see) works without it. And the brain's food is real homework
+answers, which only a pilot produces.
+
+**L0 and L1 do not wait on the school conversations and can start now.** The
+details of L2–L5 are settled once Aarav reports what the teachers said.
+
+**Working rule:** while the tutor session is active, run only the tests a change
+touches — never the full suite, an install or a build without asking.
 
 ## Workstreams A–N — every change, with its ID and references
 
