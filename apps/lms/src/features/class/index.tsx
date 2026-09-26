@@ -18,6 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { className } from '@/features/dashboard'
+import { Insights } from './insights'
 
 type ClassPageProps = { sectionId: string; subjectId: string }
 
@@ -57,11 +58,15 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
         <Tabs defaultValue='homework' className='space-y-4'>
           <TabsList>
             <TabsTrigger value='homework'>Homework</TabsTrigger>
+            <TabsTrigger value='insights'>Insights</TabsTrigger>
             <TabsTrigger value='grades'>Gradebook</TabsTrigger>
             <TabsTrigger value='students'>Students</TabsTrigger>
           </TabsList>
           <TabsContent value='homework'>
             <HomeworkList sectionId={sectionId} subjectId={subjectId} />
+          </TabsContent>
+          <TabsContent value='insights'>
+            <Insights sectionId={sectionId} subjectId={subjectId} />
           </TabsContent>
           <TabsContent value='grades'>
             <Gradebook sectionId={sectionId} subjectId={subjectId} />

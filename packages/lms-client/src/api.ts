@@ -217,6 +217,41 @@ export interface SubmissionPhoto {
   photoPosition: number;
 }
 
+/** What the brain believes about one student in one chapter (0027). */
+export interface ChapterStanding {
+  studentUserId: string;
+  displayName: string;
+  rollNumber: string | null;
+  /** The knowledge graph's chapter slug, e.g. 'rational-numbers'. */
+  chapter: string;
+  /** Outcomes in the chapter the student has answered questions on. */
+  outcomesSeen: number;
+  answers: number;
+  /** Mean belief over those outcomes, 0-1. */
+  mastery: number;
+  unassistedMastery: number;
+}
+
+/** A misconception a student's own wrong answers point to (0027). */
+export interface ShownMisconception {
+  studentUserId: string;
+  displayName: string;
+  rollNumber: string | null;
+  chapter: string | null;
+  label: string;
+  times: number;
+  lastAt: string;
+}
+
+export interface MyChapter {
+  grade: number;
+  subject: string;
+  chapter: string;
+  outcomesSeen: number;
+  answers: number;
+  mastery: number;
+}
+
 const camel = (k: string): string => k.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
 
 function shape<T>(row: Record<string, unknown>): T {
@@ -304,7 +339,13 @@ export function createLmsClient(t: Transport) {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },
 
+    classInsights: (sectionId: string, subjectId: string) =>
+      rows<ChapterStanding>('class_insights', { p_section: sectionId, p_subject: subjectId }),
+    classMisconceptions: (sectionId: string, subjectId: string) =>
+      rows<ShownMisconception>('class_misconceptions', { p_section: sectionId, p_subject: subjectId }),
+
     // --- a student -----------------------------------------------------------
+    myProgress: () => rows<MyChapter>('my_progress'),
     myAssignments: () => rows<MyAssignment>('my_assignments'),
     assignmentQuestions: (assignmentId: string) =>
       rows<Question>('assignment_questions', { p_assignment: assignmentId }),

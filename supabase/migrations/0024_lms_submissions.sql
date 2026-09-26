@@ -177,7 +177,11 @@ begin
         'itemId', it.id,
         'assignmentId', a.id,
         'submissionId', sid,
-        'attempt', n_attempt
+        'attempt', n_attempt,
+        -- Rung 0 of the assistance ladder: the product gave no help. The
+        -- fold credits unassisted mastery only on rung 0 (learner-model,
+        -- fold.ts), so without this every homework answer counts as helped.
+        'assistanceRung', 0
       )
     );
   end loop;

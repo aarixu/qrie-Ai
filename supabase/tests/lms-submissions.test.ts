@@ -138,14 +138,17 @@ describe('a student submitting MCQ homework', () => {
   it('files each answer in the ledger as homework evidence, under the school, with the outcome', async () => {
     const hw = await homework();
     await submit(one.kid8a, hw, { [q1]: 1, [q2]: 1 });
-    const { rows } = await db.query<{ source: string; outcome_ids: string[]; correct: string; org_id: string }>(
-      `select source, outcome_ids, payload->>'correct' as correct, org_id from public.ledger_event
+    const { rows } = await db.query<{ source: string; outcome_ids: string[]; correct: string; org_id: string; rung: string }>(
+      `select source, outcome_ids, payload->>'correct' as correct, org_id, payload->>'assistanceRung' as rung
+         from public.ledger_event
         where user_id = $1 and payload->>'assignmentId' = $2 order by seq`,
       [one.kid8a, hw],
     );
     expect(rows).toEqual([
-      { source: 'homework', outcome_ids: ['m8-add'], correct: 'true', org_id: one.org },
-      { source: 'homework', outcome_ids: ['m8-mul'], correct: 'false', org_id: one.org },
+      // Rung 0: nothing in the product helped. Without it the brain counts
+      // every homework answer as assisted and never as the child's own.
+      { source: 'homework', outcome_ids: ['m8-add'], correct: 'true', org_id: one.org, rung: '0' },
+      { source: 'homework', outcome_ids: ['m8-mul'], correct: 'false', org_id: one.org, rung: '0' },
     ]);
   });
 });

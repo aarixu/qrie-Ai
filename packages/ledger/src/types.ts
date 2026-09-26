@@ -36,7 +36,9 @@ export type EventKind =
   | 'reflected';
 
 /** Which part of the product produced it. */
-export type EventSource = 'class' | 'quiz' | 'diagnostic' | 'doubt';
+// The last four are the school's (0021): homework, tests, practice, and a
+// partner's API. The database check lists the same eight.
+export type EventSource = 'class' | 'quiz' | 'diagnostic' | 'doubt' | 'homework' | 'test' | 'practice' | 'api';
 
 /** How the student was speaking to us when it happened. */
 export type EventSurface = 'tap' | 'voice' | 'text';

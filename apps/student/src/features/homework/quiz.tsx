@@ -74,6 +74,7 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
       saveDraft(a.id, null)
       await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
       await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
+      await queryClient.invalidateQueries({ queryKey: ['my-progress'] })
       toast.success(`Handed in! You got ${r.correct} out of ${r.total}.`)
       onDone()
     } catch (e) {

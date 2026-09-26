@@ -6,6 +6,7 @@ import { pgliteStore } from '../../lms-import/src/pgliteStore.ts';
 import { planImport, type SchoolConfig } from '../../lms-import/src/plan.ts';
 import { readStudents, readTeachers } from '../../lms-import/src/sheet.ts';
 import { libraryItems, loadBanks, type LibraryItem } from '../../lms-library/src/library.ts';
+import { loadOutcomes, think } from '../../../packages/lms-brain/src/index.ts';
 import { setPin } from './auth.ts';
 
 /**
@@ -29,6 +30,9 @@ import { setPin } from './auth.ts';
  *      names the error. They are returned as `planted` and written beside the
  *      logins, so that when the brain (L6) says who is stuck on what, it can
  *      be checked against a known answer instead of admired.
+ *   6. The brain (packages/lms-brain) folds every student's answers into
+ *      concept_state, as the demo server does after each hand-in. It is
+ *      given the ledger only, never the planted list.
  *
  * Only step 4's timestamps, and the dates in step 3, are written directly
  * (as the database owner); everything else goes through the real paths.
@@ -148,6 +152,7 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
       [JSON.stringify(batch)],
     );
   }
+  await loadOutcomes(db);
   const ids = new Map(
     (await db.query<{ id: string; library_ref: string }>(`select id, library_ref from lms.item where library_ref is not null`))
       .rows.map((r) => [r.library_ref, r.id]),
@@ -301,6 +306,9 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
       }
     }
   }
+
+  // 6. The brain. It is given the ledger and nothing else — not `planted`.
+  await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
   return {
     orgId,

@@ -1,0 +1,235 @@
+import { useQuery } from '@tanstack/react-query'
+import type { ChapterStanding, ShownMisconception } from '@ai-tutor/lms-client'
+import { api } from '@/lib/backend'
+import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Loading, Problem } from '@/components/layout/page'
+
+/** Below this belief, after enough answers, a student is listed as needing help. */
+const NEEDS_HELP = 0.4
+const ENOUGH_ANSWERS = 3
+
+export const chapterTitle = (slug: string) => {
+  const words = slug.replace(/-/g, ' ')
+  return words.charAt(0).toUpperCase() + words.slice(1)
+}
+
+const pct = (x: number) => `${Math.round(x * 100)}%`
+
+function tone(m: number) {
+  return m < NEEDS_HELP
+    ? 'bg-red-500/15 text-red-700 dark:text-red-400'
+    : m < 0.7
+      ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400'
+      : 'bg-green-600/15 text-green-700 dark:text-green-400'
+}
+
+/**
+ * What Qrie's learning model believes about this class, chapter by chapter
+ * (lms.class_insights), and the misconceptions the students' own wrong
+ * answers point to (lms.class_misconceptions). Belief is per outcome, from
+ * every answer handed in, with prerequisites taken into account — so it is
+ * not the same as the average mark.
+ */
+export function Insights({ sectionId, subjectId }: { sectionId: string; subjectId: string }) {
+  const standing = useQuery({
+    queryKey: ['insights', sectionId, subjectId],
+    queryFn: () => api.classInsights(sectionId, subjectId),
+  })
+  const shown = useQuery({
+    queryKey: ['misconceptions', sectionId, subjectId],
+    queryFn: () => api.classMisconceptions(sectionId, subjectId),
+  })
+  if (standing.isError) return <Problem error={standing.error} />
+  if (shown.isError) return <Problem error={shown.error} />
+  if (standing.isPending || shown.isPending) return <Loading what='the insights' />
+  if (standing.data.length === 0) {
+    return (
+      <p className='text-muted-foreground'>
+        No answers yet, so nothing to show. Insights appear once students hand in homework.
+      </p>
+    )
+  }
+  return (
+    <div className='space-y-6'>
+      <p className='max-w-3xl text-sm text-muted-foreground'>
+        Worked out by Qrie’s learning model from every answer each student has handed in, question by
+        question — not from the marks. “Needs help” means below {pct(NEEDS_HELP)} after at least{' '}
+        {ENOUGH_ANSWERS} answers in that chapter.
+      </p>
+      <NeedsHelp rows={standing.data} shown={shown.data} />
+      <ClassMisconceptions shown={shown.data} />
+      <Heatmap rows={standing.data} />
+    </div>
+  )
+}
+
+function NeedsHelp({ rows, shown }: { rows: ChapterStanding[]; shown: ShownMisconception[] }) {
+  const byChapter = new Map<string, ChapterStanding[]>()
+  for (const r of rows) {
+    if (r.mastery >= NEEDS_HELP || r.answers < ENOUGH_ANSWERS) continue
+    byChapter.set(r.chapter, [...(byChapter.get(r.chapter) ?? []), r])
+  }
+  const chapters = [...byChapter.entries()].sort((a, b) => b[1].length - a[1].length)
+  // The mistakes this student's own wrong answers in this chapter point to,
+  // most repeated first; two is enough for a teacher to act on.
+  const mistakesOf = (s: ChapterStanding) =>
+    shown
+      .filter((m) => m.studentUserId === s.studentUserId && m.chapter === s.chapter)
+      .sort((a, b) => b.times - a.times)
+      .slice(0, 2)
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Who needs help, on what</CardTitle>
+        <CardDescription>
+          {chapters.length === 0 ? 'Nobody is below the line in any chapter.' : 'Chapters with the most students struggling first.'}
+        </CardDescription>
+      </CardHeader>
+      {chapters.length > 0 && (
+        <CardContent className='space-y-5'>
+          {chapters.map(([chapter, list]) => (
+            <div key={chapter}>
+              <p className='mb-2 font-medium'>
+                {chapterTitle(chapter)}{' '}
+                <span className='text-sm font-normal text-muted-foreground'>
+                  — {list.length} {list.length === 1 ? 'student' : 'students'}
+                </span>
+              </p>
+              <ul className='space-y-1.5'>
+                {list
+                  .sort((a, b) => a.mastery - b.mastery)
+                  .map((s) => {
+                    const mistakes = mistakesOf(s)
+                    return (
+                      <li key={s.studentUserId} className='flex flex-wrap items-baseline gap-x-2 text-sm'>
+                        <span className={cn('rounded px-1.5 py-0.5 text-xs font-medium tabular-nums', tone(s.mastery))}>
+                          {pct(s.mastery)}
+                        </span>
+                        <span className='font-medium'>{s.displayName}</span>
+                        <span className='text-muted-foreground'>({s.answers} answers)</span>
+                        {mistakes.length > 0 && (
+                          <span className='text-muted-foreground'>
+                            — likely:{' '}
+                            {mistakes.map((m) => (m.times > 1 ? `${m.label} (${m.times}×)` : m.label)).join('; ')}
+                          </span>
+                        )}
+                      </li>
+                    )
+                  })}
+              </ul>
+            </div>
+          ))}
+        </CardContent>
+      )}
+    </Card>
+  )
+}
+
+function ClassMisconceptions({ shown }: { shown: ShownMisconception[] }) {
+  const byLabel = new Map<string, { chapter: string | null; students: Set<string>; times: number }>()
+  for (const m of shown) {
+    const e = byLabel.get(m.label) ?? { chapter: m.chapter, students: new Set<string>(), times: 0 }
+    e.students.add(m.displayName)
+    e.times += m.times
+    byLabel.set(m.label, e)
+  }
+  const top = [...byLabel.entries()].sort((a, b) => b[1].students.size - a[1].students.size).slice(0, 8)
+  if (top.length === 0) return null
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Misconceptions to reteach</CardTitle>
+        <CardDescription>
+          Each wrong option in Qrie’s questions was written to catch one mistake. These are the ones your
+          students chose most.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ul className='space-y-2'>
+          {top.map(([label, e]) => (
+            <li key={label} className='text-sm'>
+              <div className='flex flex-wrap items-baseline gap-2'>
+                <Badge variant='secondary' className='tabular-nums'>
+                  {e.students.size} {e.students.size === 1 ? 'student' : 'students'}
+                </Badge>
+                <span className='font-medium'>{label.charAt(0).toUpperCase() + label.slice(1)}</span>
+                {e.chapter && <span className='text-muted-foreground'>· {chapterTitle(e.chapter)}</span>}
+              </div>
+              <p className='mt-0.5 text-xs text-muted-foreground'>{[...e.students].join(', ')}</p>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+  )
+}
+
+function Heatmap({ rows }: { rows: ChapterStanding[] }) {
+  const chapters = [...new Set(rows.map((r) => r.chapter))].sort()
+  const students = new Map<string, { name: string; roll: string | null; by: Map<string, ChapterStanding> }>()
+  for (const r of rows) {
+    const s = students.get(r.studentUserId) ?? { name: r.displayName, roll: r.rollNumber, by: new Map() }
+    s.by.set(r.chapter, r)
+    students.set(r.studentUserId, s)
+  }
+  const ordered = [...students.values()].sort(
+    (a, b) => Number(a.roll ?? 1e9) - Number(b.roll ?? 1e9) || a.name.localeCompare(b.name)
+  )
+  return (
+    <div>
+      <h2 className='mb-2 font-semibold'>Every student, every chapter</h2>
+      <div className='overflow-x-auto rounded-md border'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className='sticky left-0 bg-background'>Student</TableHead>
+              {chapters.map((c) => (
+                <TableHead key={c} className='min-w-28 text-center'>
+                  {chapterTitle(c)}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {ordered.map((s) => (
+              <TableRow key={s.name + s.roll}>
+                <TableCell className='sticky left-0 bg-background font-medium'>
+                  <span className='me-2 text-muted-foreground tabular-nums'>{s.roll}</span>
+                  {s.name}
+                </TableCell>
+                {chapters.map((c) => {
+                  const r = s.by.get(c)
+                  return (
+                    <TableCell key={c} className='text-center'>
+                      {r ? (
+                        <span
+                          className={cn('rounded px-1.5 py-0.5 text-xs font-medium tabular-nums', tone(r.mastery))}
+                          title={`${r.answers} answers across ${r.outcomesSeen} topics`}
+                        >
+                          {pct(r.mastery)}
+                        </span>
+                      ) : (
+                        <span className='text-muted-foreground'>—</span>
+                      )}
+                    </TableCell>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+}

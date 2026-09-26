@@ -4,6 +4,7 @@ import http from 'node:http';
 import type { AddressInfo } from 'node:net';
 import path from 'node:path';
 import type { PGlite } from '@electric-sql/pglite';
+import { think } from '../../../packages/lms-brain/src/index.ts';
 import { pgliteTransport } from '../../../packages/lms-client/src/transport.ts';
 import { checkPin } from './auth.ts';
 
@@ -140,15 +141,20 @@ export async function startDemoServer(opts: {
 
     const call = /^\/(rows|value)\/([a-z_]+)$/.exec(route);
     if (req.method === 'POST' && call) {
-      const t = pgliteTransport(db, caller(req));
+      const me = caller(req);
+      const t = pgliteTransport(db, me);
       const args = json();
+      let body: unknown;
       try {
-        return call[1] === 'rows'
-          ? send(res, 200, { rows: await t.rows(call[2], args) })
-          : send(res, 200, { value: await t.value(call[2], args) });
+        body = call[1] === 'rows' ? { rows: await t.rows(call[2], args) } : { value: await t.value(call[2], args) };
       } catch (e) {
         throw new HttpError(400, (e as Error).message);
       }
+      // The brain reads every hand-in as it lands, so a teacher's view is
+      // never behind the answers. (On the hosted project nothing does this
+      // yet: final plan, L6.)
+      if (call[2] === 'submit_mcq') await think(db, [me]);
+      return send(res, 200, body);
     }
 
     if (req.method === 'PUT' && route.startsWith('/work/')) {

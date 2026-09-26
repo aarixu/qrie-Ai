@@ -6,6 +6,7 @@ import type { MyAssignment } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from './progress'
 
 /** Where one homework stands for this student. */
 export function standing(a: MyAssignment): 'todo' | 'overdue' | 'done' {
@@ -44,6 +45,7 @@ export function Home() {
         />
       )}
       <Section title='Done' empty='Nothing handed in yet.' items={done} />
+      <Progress />
     </div>
   )
 }
