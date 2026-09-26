@@ -446,6 +446,7 @@ platforms by API key** (see the API track below).
 | 12 | **Teachers also log in with a school-issued ID + PIN**, like students. Because a teacher's account sees a whole class, it is hardened: a longer PIN than a student's, lockout after repeated failures, and a short session on shared staffroom computers | 2026-09-26 |
 | 13 | **The teacher app is a separate web app, `apps/lms`.** The student side is a new `apps/student`; the tutor's `apps/classroom` is not touched. Both share the theme tokens and packages | 2026-09-26 |
 | 14 | **The pilot gives parents nothing.** The `parent` role value is reserved in the schema now, so adding it later is not a constraint change | 2026-09-26 |
+| 15 | **Tutor and LMS data are kept apart by Postgres schema, inside the one Supabase project.** School structure, homework, submissions and marks live in a new `lms` schema; the tutor's tables stay where they are; the shared brain (`learner`, the ledger, `concept_state`) connects them. One login per child and one bill. If a school ever demands physical isolation, it can still be given its own project | 2026-09-26 |
 
 Carried over, and not up for debate:
 
@@ -554,6 +555,10 @@ So the pilot depends on neither the ₹5 ceiling nor Google billing.
   (decision 8), so `apps/classroom` is **not** touched — that is the tutor
   session's app.
 - Both new apps share the theme tokens and the packages.
+- New LMS tables go in the Postgres schema `lms` (decision 15). The schema
+  must also be exposed to the API — `supabase/config.toml` locally, and the
+  project's API settings in production, which is a production change that
+  needs Aarav's go-ahead.
 
 | # | Milestone | What gets built | Workstreams | Waits on the school conversations? | Done when |
 |---|---|---|---|---|---|
