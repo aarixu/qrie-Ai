@@ -42,14 +42,28 @@ what the contest funnel needs, because a Supabase session is per-origin and two
 hostnames mean two anonymous students for one child:
 
 ```bash
-npm run build:site    # then deploy the `landing` directory
+npm run build:site        # builds both halves
+cd landing && npx vercel deploy --prod
 ```
 
-Before either, `npx vercel link` this directory to the intended project. There
-is a third, empty Vercel project called `curie` with zero deployments, which is
-what an unlinked `vercel deploy` produces. The Vercel and Supabase projects, the
-GitHub repo and this folder all still carry the old name; renaming those is done
-in their own dashboards, not here.
+Two things that cost a deploy each, both non-obvious:
+
+- **`landing/vercel.json` must declare `"framework": "nextjs"`.** Without it
+  Vercel falls back to the project's preset, defaults the output directory to
+  `public`, publishes that folder as a static site and never runs `next build`
+  — every route 404s except `/app`, which makes it look like the rewrite broke.
+- **`landing/.vercelignore` must exist.** Without it the CLI falls back to
+  `.gitignore`, which ignores `landing/public/app` (43 MB of built classroom),
+  and `/app` ships empty.
+
+Before either deploy, `npx vercel link` this directory to the intended project.
+The link is stored as a project **id**, so renaming the project in Vercel does
+not break it — but deploying from an *unlinked* directory silently creates a
+brand-new project instead, which is where the stray empty one came from.
+
+**Names live in their own dashboards, not here.** The Vercel project, the
+Supabase project, the GitHub repo and this folder are renamed there; this repo
+only knows the Supabase project *ref*, which a rename never changes.
 
 ## Where things live
 

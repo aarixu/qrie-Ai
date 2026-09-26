@@ -75,8 +75,11 @@ const OPENROUTER = 'https://openrouter.ai/api/v1';
 
 const authHeaders = (key: string): Record<string, string> => ({
   authorization: `Bearer ${key}`,
-  'HTTP-Referer': 'https://github.com/aarixu/curie',
-  'X-Title': 'Qrie',
+  // OpenRouter shows these two in its dashboard and its rankings. They were
+  // left out of the Qrie rename on purpose — a repo URL is an identifier, not
+  // a brand — and updated here once the repo was actually renamed.
+  'HTTP-Referer': 'https://github.com/aarixu/qrie-Ai',
+  'X-Title': 'Qrie AI',
 });
 
 /**
