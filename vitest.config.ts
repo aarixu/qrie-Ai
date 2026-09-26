@@ -28,6 +28,9 @@ export default defineConfig({
       '@ai-tutor/graphics': pkg('graphics'),
       '@ai-tutor/action-player': pkg('action-player'),
       '@ai-tutor/maic-adapter': pkg('maic-adapter'),
+      '@ai-tutor/lms-client': pkg('lms-client'),
+      // The teacher app's own alias (apps/lms uses @/ for its src).
+      '@': fileURLToPath(new URL('./apps/lms/src', import.meta.url)),
     },
   },
   test: {

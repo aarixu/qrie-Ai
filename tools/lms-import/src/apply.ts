@@ -1,3 +1,4 @@
+import { loginEmail } from '../../../packages/lms-client/src/login.ts';
 import { newPin, type AccountKind } from './pin.ts';
 import type { ImportPlan, SchoolConfig } from './plan.ts';
 
@@ -63,15 +64,8 @@ export interface ImportResult {
   conflicts: string[];
 }
 
-/**
- * The address an account is stored under. `.invalid` is reserved (RFC 2606)
- * and can never receive mail, so no message about a child's account can ever
- * be delivered anywhere. UNVERIFIED until the first real import: that the
- * auth service accepts a `.invalid` address.
- */
-export function loginEmail(loginId: string): string {
-  return `${loginId.toLowerCase()}@login.qrie.invalid`;
-}
+// The one ID-to-address rule, shared with both apps' sign-in.
+export { loginEmail };
 
 export async function applyPlan(
   plan: ImportPlan,
