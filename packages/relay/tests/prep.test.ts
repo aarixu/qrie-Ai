@@ -299,12 +299,13 @@ describe('the prep routes through handleRelay', () => {
 describe('createSupabasePrepLocks', () => {
   const membershipRow = JSON.stringify([{ org_id: ORG }]);
 
-  it('resolves the caller’s organisation the way the definer function expects, then claims', async () => {
+  it('resolves the caller’s organisation with org_of — the one rule — then claims', async () => {
     const calls: { url: string; method: string; body?: unknown }[] = [];
     const locks = createSupabasePrepLocks('https://x.supabase.co', 'service-key', async (url, init) => {
       calls.push({ url: String(url), method: init?.method ?? 'GET', body: init?.body ? JSON.parse(String(init.body)) : undefined });
-      if (String(url).includes('/rest/v1/membership')) {
-        return new Response(membershipRow, { status: 200, headers: { 'content-type': 'application/json' } });
+      if (String(url).endsWith('/rest/v1/rpc/org_of')) {
+        // PostgREST answers a scalar function with the bare JSON value.
+        return new Response(JSON.stringify(ORG), { status: 200, headers: { 'content-type': 'application/json' } });
       }
       return new Response(
         JSON.stringify([{ granted: true, reason: null, holder: USER, expires_at: '2026-09-18T05:03:00Z', running: 1 }]),
@@ -315,10 +316,11 @@ describe('createSupabasePrepLocks', () => {
     const won = await locks.take(TOPIC, USER);
     expect(won).toEqual({ granted: true, holder: USER, expiresAt: '2026-09-18T05:03:00Z', running: 1 });
 
-    const membership = calls.find((c) => c.url.includes('/rest/v1/membership'));
-    // Earliest membership first — the same tie-break fill_org_id (0018) uses.
-    expect(membership!.url).toMatch(/order=created_at\.asc/);
-    expect(membership!.url).toMatch(/limit=1/);
+    // The relay asks the database's rule (0021's org_of: a school beats a solo
+    // org) instead of keeping its own copy of an older one.
+    const orgOf = calls.find((c) => c.url.endsWith('/rest/v1/rpc/org_of'));
+    expect(orgOf!.body).toEqual({ p_user: USER });
+    expect(calls.some((c) => c.url.includes('/rest/v1/membership'))).toBe(false);
 
     const rpc = calls.find((c) => c.url.endsWith('/rest/v1/rpc/take_prep_lock'));
     expect(rpc!.body).toEqual({ p_topic: TOPIC, p_user: USER, p_org: ORG });
@@ -344,8 +346,9 @@ describe('createSupabasePrepLocks', () => {
   });
 
   it('fails closed when the caller has no membership to resolve', async () => {
+    // org_of answers null for a user with no membership.
     const locks = createSupabasePrepLocks('https://x.supabase.co', 'service-key', async () =>
-      new Response('[]', { status: 200, headers: { 'content-type': 'application/json' } }),
+      new Response('null', { status: 200, headers: { 'content-type': 'application/json' } }),
     );
     expect(await locks.take(TOPIC, USER)).toBeNull();
   });

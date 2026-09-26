@@ -182,8 +182,9 @@ const deps: HandlerDeps = {
     : {}),
   /**
    * The prep lock (0017), finally called. The org the definer function
-   * wants is resolved from the caller's membership inside the store, with
-   * the same earliest-created_at tie-break fill_org_id uses.
+   * wants is resolved inside the store by asking 0021's org_of — the same
+   * rule fill_org_id uses, in which a school membership beats a solo one.
+   * So 0021 must be applied before this relay is deployed.
    */
   prepLocks: createSupabasePrepLocks(SUPABASE_URL, SERVICE_ROLE_KEY),
   /**

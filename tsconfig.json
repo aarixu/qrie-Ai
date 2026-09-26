@@ -12,6 +12,7 @@
     "apps/*/src/**/*",
     "apps/*/tests/**/*",
     "tools/**/*.ts",
+    "supabase/tests/**/*",
     "vitest.config.ts"
   ]
 }

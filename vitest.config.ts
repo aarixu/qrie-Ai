@@ -53,6 +53,7 @@ export default defineConfig({
       'packages/*/tests/**/*.test.{ts,tsx}',
       'apps/*/tests/**/*.test.{ts,tsx}',
       'tools/*/tests/**/*.test.ts',
+      'supabase/tests/**/*.test.ts',
     ],
   },
 });

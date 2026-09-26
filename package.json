@@ -26,6 +26,7 @@
     "model:metric": "node tools/bin/model-metric.mjs"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@iconify/json": "^2.2.522",
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^24.0.0",
