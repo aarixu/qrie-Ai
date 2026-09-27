@@ -148,6 +148,8 @@ describe('an online test', () => {
       resultsReleased: false,
     });
     expect(await riya.myReview(test)).toEqual([]);
+    // Nor by calling the teacher's results view directly.
+    expect(await riya.assignmentResults(test)).toEqual([]);
     await teacher.releaseResults(test);
     expect((await riya.myAssignments()).find((a) => a.id === test)).toMatchObject({ bestCorrect: 1, resultsReleased: true });
     expect(await riya.myReview(test)).toHaveLength(2);

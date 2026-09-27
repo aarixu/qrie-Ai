@@ -430,7 +430,8 @@ begin
 end;
 $$;
 
--- The teacher's results (0029's), with the teacher's word beside each child.
+-- The teacher's results (0029's), with the teacher's word beside each child,
+-- for the class's teacher and the school's admin only.
 drop function if exists lms.assignment_results(uuid);
 create or replace function lms.assignment_results(p_assignment uuid)
 returns table (
@@ -487,7 +488,10 @@ as $$
     left join lms.mark ppm on ppm.submission_id = pp.id
     left join lms.work_status ws on ws.assignment_id = a.id and ws.student_user_id = e.student_user_id
     left join lms.test_start ts on ts.assignment_id = a.id and ts.student_user_id = e.student_user_id
+   -- The class's teacher and the school's admin only. RLS alone would show a
+   -- student their own row — including a test's score before its release.
    where a.id = p_assignment
+     and (lms.can_manage_assignment(a.id) or lms.is_admin(a.org_id))
    order by case when e.roll_number ~ '^[0-9]{1,9}$' then e.roll_number::int end nulls last,
             e.roll_number nulls last, acc.display_name;
 $$;
