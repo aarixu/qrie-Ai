@@ -162,10 +162,10 @@ export async function startDemoServer(opts: {
       } catch (e) {
         throw new HttpError(400, (e as Error).message);
       }
-      // The brain reads every hand-in as it lands, so a teacher's view is
+      // The brain reads every hand-in and practice answer as it lands, so a teacher's view is
       // never behind the answers. (On the hosted project nothing does this
       // yet: final plan, L6.)
-      if (call[2] === 'submit_mcq') await think(db, [me]);
+      if (call[2] === 'submit_mcq' || call[2] === 'check_practice_answer') await think(db, [me]);
       return send(res, 200, body);
     }
 

@@ -369,7 +369,155 @@ export interface MyChapter {
   mastery: number;
 }
 
-const camel = (k: string): string => k.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
+// --- A student's report (0031): for the student, their teachers, the admin ---
+
+export interface StudentCard {
+  userId: string;
+  displayName: string;
+  loginId: string;
+  rollNumber: string | null;
+  sectionId: string | null;
+  grade: number | null;
+  /** e.g. '8A'. */
+  className: string | null;
+  schoolName: string;
+}
+
+/** One subject of a student's class, over work due so far. */
+export interface StudentSubject {
+  subjectId: string;
+  subjectName: string;
+  teacherName: string | null;
+  workDue: number;
+  handedIn: number;
+  handinRate: number | null;
+  /** 0-1; a test's score counts for the student only once released. */
+  averageScore: number | null;
+  /** The brain's mean belief over the chapters answered, 0-1. */
+  mastery: number | null;
+  chaptersSeen: number;
+}
+
+export interface TimelineRow {
+  assignmentId: string;
+  title: string;
+  kind: AssignmentKind;
+  subjectName: string;
+  dueAt: string;
+  handedIn: boolean;
+  late: boolean;
+  absent: boolean;
+  /** 0-1; null when not marked — or, for the student, a test not yet released. */
+  score: number | null;
+}
+
+export interface StudentChapter {
+  subject: string;
+  chapter: string;
+  outcomesSeen: number;
+  answers: number;
+  mastery: number;
+}
+
+export interface StudentMistake {
+  subject: string;
+  chapter: string | null;
+  label: string;
+  times: number;
+}
+
+// --- The school portal (0031): the admin only ---
+
+export interface SchoolOverview {
+  schoolName: string;
+  students: number;
+  teachers: number;
+  classes: number;
+  subjects: number;
+  workSet30d: number;
+  handinRate30d: number | null;
+  averageScore30d: number | null;
+  activeStudents7d: number;
+  mastery: number | null;
+}
+
+export interface SchoolClass {
+  sectionId: string;
+  subjectId: string;
+  className: string;
+  grade: number;
+  subjectName: string;
+  teacherName: string;
+  students: number;
+  workSet: number;
+  handinRate: number | null;
+  averageScore: number | null;
+  mastery: number | null;
+}
+
+export interface SchoolStudent {
+  userId: string;
+  displayName: string;
+  loginId: string;
+  sectionId: string;
+  className: string;
+  rollNumber: string | null;
+  workDue: number;
+  handinRate: number | null;
+  averageScore: number | null;
+  mastery: number | null;
+  lastActive: string | null;
+}
+
+export interface SchoolTeacher {
+  userId: string;
+  displayName: string;
+  loginId: string;
+  kind: AccountKind;
+  classes: number;
+  workSet: number;
+  workSet30d: number;
+  photosToMark: number;
+  testsToRelease: number;
+}
+
+/** One published piece of a class's work, for its trend. */
+export interface TrendPoint {
+  assignmentId: string;
+  title: string;
+  kind: AssignmentKind;
+  dueAt: string;
+  students: number;
+  handedIn: number;
+  late: number;
+  averageScore: number | null;
+}
+
+// --- Learn (0031): chapter-wise practice ---
+
+export interface PracticeChapter {
+  subjectName: string;
+  chapter: string;
+  /** Approved questions the student may practise now. */
+  questions: number;
+  answers: number;
+  mastery: number | null;
+}
+
+export interface PracticeQuestion {
+  itemId: string;
+  stem: string;
+  options: string[];
+}
+
+export interface PracticeResult {
+  correct: boolean;
+  correctIndex: number;
+  misconception: string | null;
+}
+
+// 'work_set_30d' → 'workSet30d': a digit after an underscore joins as it is.
+const camel = (k: string): string => k.replace(/_([a-z0-9])/g, (_, c: string) => c.toUpperCase());
 
 function shape<T>(row: Record<string, unknown>): T {
   const out: Record<string, unknown> = {};
@@ -500,8 +648,48 @@ export function createLmsClient(t: Transport) {
     classMisconceptions: (sectionId: string, subjectId: string) =>
       rows<ShownMisconception>('class_misconceptions', { p_section: sectionId, p_subject: subjectId }),
 
+    classTrend: (sectionId: string, subjectId: string) =>
+      rows<TrendPoint>('class_trend', { p_section: sectionId, p_subject: subjectId }),
+    /** Approves every library question on a chapter; returns how many were new. */
+    async approveChapter(grade: number, subject: string, chapter: string): Promise<number> {
+      return (await t.value('approve_chapter', { p_grade: grade, p_subject: subject, p_chapter: chapter })) as number;
+    },
+
+    // --- a student's report: the student, their teachers, the admin ----------
+    async studentCard(studentUserId: string): Promise<StudentCard | null> {
+      return (await rows<StudentCard>('student_card', { p_student: studentUserId }))[0] ?? null;
+    },
+    studentSubjects: (studentUserId: string) => rows<StudentSubject>('student_subjects', { p_student: studentUserId }),
+    studentTimeline: (studentUserId: string) => rows<TimelineRow>('student_timeline', { p_student: studentUserId }),
+    studentChapters: (studentUserId: string) => rows<StudentChapter>('student_chapters', { p_student: studentUserId }),
+    studentMistakes: (studentUserId: string) =>
+      rows<StudentMistake>('student_misconceptions', { p_student: studentUserId }),
+
+    // --- the school portal: the admin ----------------------------------------
+    async schoolOverview(): Promise<SchoolOverview | null> {
+      return (await rows<SchoolOverview>('school_overview'))[0] ?? null;
+    },
+    schoolClasses: () => rows<SchoolClass>('school_classes'),
+    schoolStudents: (sectionId?: string) => rows<SchoolStudent>('school_students', { p_section: sectionId }),
+    schoolTeachers: () => rows<SchoolTeacher>('school_teachers'),
+    async setSchoolBrand(brand: { primary?: string }): Promise<void> {
+      await t.value('set_school_brand', { p_brand: brand });
+    },
+
     // --- a student -----------------------------------------------------------
     myProgress: () => rows<MyChapter>('my_progress'),
+    practiceChapters: () => rows<PracticeChapter>('practice_chapters'),
+    practiceQuestions: (subject: string, chapter: string, count?: number) =>
+      rows<PracticeQuestion>('practice_questions', { p_subject: subject, p_chapter: chapter, p_count: count }),
+    /** Marks one practice answer at once; the session id is the device's, one per round. */
+    async checkPracticeAnswer(sessionId: string, itemId: string, chosenIndex: number): Promise<PracticeResult> {
+      const [r] = await rows<PracticeResult>('check_practice_answer', {
+        p_session: sessionId,
+        p_item: itemId,
+        p_chosen: chosenIndex,
+      });
+      return r;
+    },
     myAssignments: () => rows<MyAssignment>('my_assignments'),
     myTasks: (assignmentId: string) => rows<MyTask>('my_tasks', { p_assignment: assignmentId }),
     async tickTask(taskId: string, done: boolean): Promise<void> {

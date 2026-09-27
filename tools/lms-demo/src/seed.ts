@@ -314,6 +314,10 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   // 7. The other kinds of work, and events (0029), so each has an example.
   await seedWorkTypes(db, { rand, at, ability, items, orgId });
 
+  // 8. Learn (0031): each class's first three chapters approved whole, and a
+  // round of practice from some of its students.
+  await seedPractice(db, { rand, at, ability, items, orgId }, classes);
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -535,5 +539,51 @@ async function seedWorkTypes(db: PGlite, w: WorkSeed): Promise<void> {
     { kind: 'event' as const, title: 'Annual day', details: 'Parents welcome. Students in school uniform.', startsAt: new Date(at(21, 17)).toISOString() },
   ]) {
     await admin.createEvent({ sectionId: null, ...e });
+  }
+}
+
+interface TaughtRow {
+  teacher: string;
+  section_id: string;
+  grade: number;
+  subject: string;
+}
+
+/**
+ * Learn: the first three chapters of each class's subject approved whole by
+ * its teacher, then one practice round of five from about half of each
+ * class, answered to each child's ability.
+ */
+async function seedPractice(db: PGlite, w: WorkSeed, classes: TaughtRow[]): Promise<void> {
+  const approved = new Set<string>();
+  for (const c of classes) {
+    const key = `${c.grade}|${c.subject}`;
+    if (approved.has(key)) continue;
+    approved.add(key);
+    const teacher = createLmsClient(pgliteTransport(db, c.teacher));
+    const chapters = [...new Set(w.items.filter((i) => i.grade === c.grade && i.subject === c.subject).map((i) => i.chapter))];
+    for (const chapter of chapters.slice(0, 3)) await teacher.approveChapter(c.grade, c.subject, chapter);
+  }
+  const byItem = new Map(w.items.map((i) => [i.id, i]));
+  const done = new Set<string>();
+  for (const c of classes) {
+    const teacher = createLmsClient(pgliteTransport(db, c.teacher));
+    for (const r of await teacher.classRoster(c.section_id)) {
+      if (done.has(r.studentUserId)) continue;
+      done.add(r.studentUserId);
+      if (w.rand() > 0.5) continue;
+      const kid = createLmsClient(pgliteTransport(db, r.studentUserId));
+      const open = (await kid.practiceChapters()).filter((ch) => ch.questions > 0);
+      if (!open.length) continue;
+      const ch = open[Math.floor(w.rand() * open.length)];
+      const session = crypto.randomUUID();
+      const theta = w.ability.get(r.studentUserId) ?? 0;
+      for (const q of await kid.practiceQuestions(ch.subjectName, ch.chapter, 5)) {
+        const it = byItem.get(q.itemId);
+        if (!it) continue;
+        const p = 1 / (1 + Math.exp(-(1.4 * theta - it.difficulty + 0.5)));
+        await kid.checkPracticeAnswer(session, q.itemId, w.rand() < p ? it.correctIndex : distractor(it, w.rand, false));
+      }
+    }
   }
 }
