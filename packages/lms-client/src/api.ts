@@ -9,7 +9,12 @@ import type { Transport } from './transport.ts';
 
 export type AccountKind = 'student' | 'teacher' | 'admin';
 export type AssignmentKind = 'homework' | 'quiz' | 'test' | 'assignment';
-export type AnswerType = 'mcq' | 'photo' | 'typed';
+/**
+ * How students answer: MCQs (auto-marked), a photo of their work, a checklist
+ * of written tasks they tick (0029), or on paper with marks the teacher enters.
+ */
+export type AnswerType = 'mcq' | 'photo' | 'typed' | 'checklist' | 'paper';
+export type EventKind = 'event' | 'ptm' | 'exam' | 'holiday' | 'trip' | 'other';
 
 export interface Me {
   userId: string;
@@ -99,6 +104,12 @@ export interface NewAssignment {
   dueAt: string;
   answerTypes: AnswerType[];
   attemptsAllowed?: number;
+  /** Tests: students cannot start before this. */
+  opensAt?: string;
+  /** Tests only: kept by the server from each student's start. */
+  timeLimitMinutes?: number;
+  /** What marks are out of; required for work marked on paper. */
+  maxMarks?: number;
 }
 
 export interface AssignmentSummary {
@@ -112,9 +123,16 @@ export interface AssignmentSummary {
   answerTypes: AnswerType[];
   attemptsAllowed: number;
   items: number;
-  /** Students who have handed in anything. */
+  /** Students who have handed in anything, or ticked every task. */
   submitted: number;
   students: number;
+  opensAt: string | null;
+  timeLimitMinutes: number | null;
+  maxMarks: number | null;
+  /** Tests: when the scores and answers were shown to students; null until then. */
+  resultsReleasedAt: string | null;
+  /** Written tasks on the checklist. */
+  tasks: number;
 }
 
 /** One row per student on the class's current roster. */
@@ -137,6 +155,11 @@ export interface ResultRow {
   photoCount: number;
   photoTeacherScore: number | null;
   photoTeacherMax: number | null;
+  tasksDone: number;
+  tasksTotal: number;
+  /** Marks for work done on paper, entered by the teacher. */
+  paperScore: number | null;
+  paperMax: number | null;
 }
 
 export interface MyAssignment {
@@ -158,6 +181,16 @@ export interface MyAssignment {
   teacherScore: number | null;
   teacherMax: number | null;
   markedAt: string | null;
+  opensAt: string | null;
+  timeLimitMinutes: number | null;
+  maxMarks: number | null;
+  /** False on a test until the teacher releases it: scores and answers stay hidden. */
+  resultsReleased: boolean;
+  tasksTotal: number;
+  tasksDone: number;
+  /** A test: when this student started it, and when their time ends. */
+  startedAt: string | null;
+  endsAt: string | null;
 }
 
 export interface Question {
@@ -178,6 +211,47 @@ export interface ReviewRow {
   correct: boolean;
   /** Null while the student still has an attempt left and the due date has not passed. */
   correctIndex: number | null;
+}
+
+export interface Task {
+  taskId: string;
+  taskPosition: number;
+  text: string;
+}
+
+export interface MyTask extends Task {
+  done: boolean;
+}
+
+export interface TestClock {
+  startedAt: string;
+  endsAt: string;
+}
+
+export interface NewEvent {
+  /** null: the whole school (admin only). */
+  sectionId: string | null;
+  title: string;
+  startsAt: string;
+  endsAt?: string;
+  kind: EventKind;
+  details?: string;
+}
+
+/** An event, or a test that has not closed, the caller may see (0029). */
+export interface UpcomingEvent {
+  id: string;
+  source: 'event' | 'test';
+  kind: EventKind | 'test';
+  title: string;
+  details: string | null;
+  startsAt: string;
+  endsAt: string | null;
+  sectionId: string | null;
+  /** e.g. '8A'; null for the whole school. */
+  className: string | null;
+  /** Posted by the caller. */
+  mine: boolean | null;
 }
 
 export interface McqResult {
@@ -326,6 +400,9 @@ export function createLmsClient(t: Transport) {
         p_due_at: a.dueAt,
         p_answer_types: a.answerTypes,
         p_attempts_allowed: a.attemptsAllowed,
+        p_opens_at: a.opensAt,
+        p_time_limit_minutes: a.timeLimitMinutes,
+        p_max_marks: a.maxMarks,
       })) as string;
     },
     async setAssignmentItems(assignmentId: string, itemIds: string[]): Promise<void> {
@@ -357,6 +434,29 @@ export function createLmsClient(t: Transport) {
     },
     submissionPhotos: (submissionId: string) =>
       rows<SubmissionPhoto>('submission_photos', { p_submission: submissionId }),
+    async setAssignmentTasks(assignmentId: string, tasks: string[]): Promise<void> {
+      await t.value('set_assignment_tasks', { p_assignment: assignmentId, p_tasks: tasks });
+    },
+    assignmentTasks: (assignmentId: string) => rows<Task>('assignment_tasks', { p_assignment: assignmentId }),
+    async releaseResults(assignmentId: string): Promise<void> {
+      await t.value('release_results', { p_assignment: assignmentId });
+    },
+    async recordPaperMark(assignmentId: string, studentUserId: string, score: number): Promise<void> {
+      await t.value('record_paper_mark', { p_assignment: assignmentId, p_student: studentUserId, p_score: score });
+    },
+    async createEvent(e: NewEvent): Promise<string> {
+      return (await t.value('create_event', {
+        p_section: e.sectionId,
+        p_title: e.title,
+        p_starts_at: e.startsAt,
+        p_kind: e.kind,
+        p_details: e.details,
+        p_ends_at: e.endsAt,
+      })) as string;
+    },
+    async deleteEvent(eventId: string): Promise<void> {
+      await t.value('delete_event', { p_event: eventId });
+    },
     async setTeacherMark(submissionId: string, score: number, max: number): Promise<void> {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },
@@ -369,6 +469,15 @@ export function createLmsClient(t: Transport) {
     // --- a student -----------------------------------------------------------
     myProgress: () => rows<MyChapter>('my_progress'),
     myAssignments: () => rows<MyAssignment>('my_assignments'),
+    myTasks: (assignmentId: string) => rows<MyTask>('my_tasks', { p_assignment: assignmentId }),
+    async tickTask(taskId: string, done: boolean): Promise<void> {
+      await t.value('tick_task', { p_task: taskId, p_done: done });
+    },
+    async startTest(assignmentId: string): Promise<TestClock> {
+      const [clock] = await rows<TestClock>('start_test', { p_assignment: assignmentId });
+      return clock;
+    },
+    upcomingEvents: (days?: number) => rows<UpcomingEvent>('upcoming_events', { p_days: days }),
     assignmentQuestions: (assignmentId: string) =>
       rows<Question>('assignment_questions', { p_assignment: assignmentId }),
     myReview: (assignmentId: string) => rows<ReviewRow>('my_review', { p_assignment: assignmentId }),
