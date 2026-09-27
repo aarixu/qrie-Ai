@@ -114,6 +114,18 @@ Those belong to the Google *payments profile*; this error is asking for a
 **billing account linked to that specific project**. Different thing. The link
 in the error text is the one that has to be opened, for that project.
 
+**Re-checked 2026-09-27, same call through the deployed relay: still 403**,
+byte-identical message, 1,466 ms. Nothing has changed.
+
+**WHICH project must be paid for, exactly.** `packages/relay/src/googleAuth.ts:204`
+takes `projectId` from the **`project_id` field inside the
+`GOOGLE_SERVICE_ACCOUNT_JSON` secret**, and `vertex.ts:306` builds the request
+URL from it. So the relay always calls the project *the service-account key was
+created in* — `project-dd876d44-2dc1-40de-935` — no matter what any console is
+showing. **Enabling billing on a different, nicer-named project will never clear
+this 403.** Either link a billing account to that exact project, or mint a new
+service-account key inside a project that already has one and replace the secret.
+
 Consequence: cold class preparation, the doubt tutor and the escalated judge are
 all dead. This is what the gate exists to hide from children.
 
