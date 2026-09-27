@@ -20,8 +20,14 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedBankRouteImport } from './routes/_authenticated/bank'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedSchoolIndexRouteImport } from './routes/_authenticated/school/index'
+import { Route as AuthenticatedSchoolClassesRouteImport } from './routes/_authenticated/school/classes'
+import { Route as AuthenticatedSchoolSettingsRouteImport } from './routes/_authenticated/school/settings'
+import { Route as AuthenticatedSchoolStudentsRouteImport } from './routes/_authenticated/school/students'
+import { Route as AuthenticatedSchoolTeachersRouteImport } from './routes/_authenticated/school/teachers'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
+import { Route as AuthenticatedStudentsStudentIdRouteImport } from './routes/_authenticated/students/$studentId'
 import { Route as AuthenticatedHomeworkAssignmentIdIndexRouteImport } from './routes/_authenticated/homework/$assignmentId/index'
 import { Route as AuthenticatedHomeworkAssignmentIdEditRouteImport } from './routes/_authenticated/homework/$assignmentId/edit'
 import { Route as AuthenticatedClassesSectionIdSubjectIdIndexRouteImport } from './routes/_authenticated/classes/$sectionId/$subjectId/index'
@@ -83,6 +89,36 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSchoolIndexRoute =
+  AuthenticatedSchoolIndexRouteImport.update({
+    id: '/school/',
+    path: '/school/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSchoolClassesRoute =
+  AuthenticatedSchoolClassesRouteImport.update({
+    id: '/school/classes',
+    path: '/school/classes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSchoolSettingsRoute =
+  AuthenticatedSchoolSettingsRouteImport.update({
+    id: '/school/settings',
+    path: '/school/settings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSchoolStudentsRoute =
+  AuthenticatedSchoolStudentsRouteImport.update({
+    id: '/school/students',
+    path: '/school/students',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSchoolTeachersRoute =
+  AuthenticatedSchoolTeachersRouteImport.update({
+    id: '/school/teachers',
+    path: '/school/teachers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -94,6 +130,12 @@ const AuthenticatedSettingsAppearanceRoute =
     id: '/appearance',
     path: '/appearance',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedStudentsStudentIdRoute =
+  AuthenticatedStudentsStudentIdRouteImport.update({
+    id: '/students/$studentId',
+    path: '/students/$studentId',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedHomeworkAssignmentIdIndexRoute =
   AuthenticatedHomeworkAssignmentIdIndexRouteImport.update({
@@ -131,7 +173,13 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/bank': typeof AuthenticatedBankRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/school/settings': typeof AuthenticatedSchoolSettingsRoute
+  '/school/students': typeof AuthenticatedSchoolStudentsRoute
+  '/school/teachers': typeof AuthenticatedSchoolTeachersRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/school/': typeof AuthenticatedSchoolIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
   '/homework/$assignmentId/': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
@@ -148,7 +196,13 @@ export interface FileRoutesByTo {
   '/bank': typeof AuthenticatedBankRoute
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/school/settings': typeof AuthenticatedSchoolSettingsRoute
+  '/school/students': typeof AuthenticatedSchoolStudentsRoute
+  '/school/teachers': typeof AuthenticatedSchoolTeachersRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/school': typeof AuthenticatedSchoolIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
   '/homework/$assignmentId': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
@@ -168,7 +222,13 @@ export interface FileRoutesById {
   '/_authenticated/bank': typeof AuthenticatedBankRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/_authenticated/school/settings': typeof AuthenticatedSchoolSettingsRoute
+  '/_authenticated/school/students': typeof AuthenticatedSchoolStudentsRoute
+  '/_authenticated/school/teachers': typeof AuthenticatedSchoolTeachersRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/_authenticated/school/': typeof AuthenticatedSchoolIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/homework/$assignmentId/edit': typeof AuthenticatedHomeworkAssignmentIdEditRoute
   '/_authenticated/homework/$assignmentId/': typeof AuthenticatedHomeworkAssignmentIdIndexRoute
@@ -188,7 +248,13 @@ export interface FileRouteTypes {
     | '/503'
     | '/bank'
     | '/errors/$error'
+    | '/school/classes'
+    | '/school/settings'
+    | '/school/students'
+    | '/school/teachers'
     | '/settings/appearance'
+    | '/students/$studentId'
+    | '/school/'
     | '/settings/'
     | '/homework/$assignmentId/edit'
     | '/homework/$assignmentId/'
@@ -205,7 +271,13 @@ export interface FileRouteTypes {
     | '/bank'
     | '/'
     | '/errors/$error'
+    | '/school/classes'
+    | '/school/settings'
+    | '/school/students'
+    | '/school/teachers'
     | '/settings/appearance'
+    | '/students/$studentId'
+    | '/school'
     | '/settings'
     | '/homework/$assignmentId/edit'
     | '/homework/$assignmentId'
@@ -224,7 +296,13 @@ export interface FileRouteTypes {
     | '/_authenticated/bank'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/school/classes'
+    | '/_authenticated/school/settings'
+    | '/_authenticated/school/students'
+    | '/_authenticated/school/teachers'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/students/$studentId'
+    | '/_authenticated/school/'
     | '/_authenticated/settings/'
     | '/_authenticated/homework/$assignmentId/edit'
     | '/_authenticated/homework/$assignmentId/'
@@ -321,6 +399,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/school/': {
+      id: '/_authenticated/school/'
+      path: '/school'
+      fullPath: '/school/'
+      preLoaderRoute: typeof AuthenticatedSchoolIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/school/classes': {
+      id: '/_authenticated/school/classes'
+      path: '/school/classes'
+      fullPath: '/school/classes'
+      preLoaderRoute: typeof AuthenticatedSchoolClassesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/school/settings': {
+      id: '/_authenticated/school/settings'
+      path: '/school/settings'
+      fullPath: '/school/settings'
+      preLoaderRoute: typeof AuthenticatedSchoolSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/school/students': {
+      id: '/_authenticated/school/students'
+      path: '/school/students'
+      fullPath: '/school/students'
+      preLoaderRoute: typeof AuthenticatedSchoolStudentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/school/teachers': {
+      id: '/_authenticated/school/teachers'
+      path: '/school/teachers'
+      fullPath: '/school/teachers'
+      preLoaderRoute: typeof AuthenticatedSchoolTeachersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -334,6 +447,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/appearance'
       preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
+    '/_authenticated/students/$studentId': {
+      id: '/_authenticated/students/$studentId'
+      path: '/students/$studentId'
+      fullPath: '/students/$studentId'
+      preLoaderRoute: typeof AuthenticatedStudentsStudentIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/homework/$assignmentId/': {
       id: '/_authenticated/homework/$assignmentId/'
@@ -387,6 +507,12 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBankRoute: typeof AuthenticatedBankRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedSchoolClassesRoute: typeof AuthenticatedSchoolClassesRoute
+  AuthenticatedSchoolSettingsRoute: typeof AuthenticatedSchoolSettingsRoute
+  AuthenticatedSchoolStudentsRoute: typeof AuthenticatedSchoolStudentsRoute
+  AuthenticatedSchoolTeachersRoute: typeof AuthenticatedSchoolTeachersRoute
+  AuthenticatedStudentsStudentIdRoute: typeof AuthenticatedStudentsStudentIdRoute
+  AuthenticatedSchoolIndexRoute: typeof AuthenticatedSchoolIndexRoute
   AuthenticatedHomeworkAssignmentIdEditRoute: typeof AuthenticatedHomeworkAssignmentIdEditRoute
   AuthenticatedHomeworkAssignmentIdIndexRoute: typeof AuthenticatedHomeworkAssignmentIdIndexRoute
   AuthenticatedClassesSectionIdSubjectIdNewRoute: typeof AuthenticatedClassesSectionIdSubjectIdNewRoute
@@ -398,6 +524,12 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedBankRoute: AuthenticatedBankRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedSchoolClassesRoute: AuthenticatedSchoolClassesRoute,
+  AuthenticatedSchoolSettingsRoute: AuthenticatedSchoolSettingsRoute,
+  AuthenticatedSchoolStudentsRoute: AuthenticatedSchoolStudentsRoute,
+  AuthenticatedSchoolTeachersRoute: AuthenticatedSchoolTeachersRoute,
+  AuthenticatedStudentsStudentIdRoute: AuthenticatedStudentsStudentIdRoute,
+  AuthenticatedSchoolIndexRoute: AuthenticatedSchoolIndexRoute,
   AuthenticatedHomeworkAssignmentIdEditRoute:
     AuthenticatedHomeworkAssignmentIdEditRoute,
   AuthenticatedHomeworkAssignmentIdIndexRoute:

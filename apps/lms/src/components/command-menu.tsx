@@ -12,11 +12,13 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
-import { sidebarData } from './layout/data/sidebar-data'
+import { useAuthStore } from '@/stores/auth-store'
+import { sidebarFor } from './layout/data/sidebar-data'
 import { ScrollArea } from './ui/scroll-area'
 
 export function CommandMenu() {
   const navigate = useNavigate()
+  const sidebarData = sidebarFor(useAuthStore((s) => s.me?.kind))
   const { setTheme } = useTheme()
   const { open, setOpen } = useSearch()
 

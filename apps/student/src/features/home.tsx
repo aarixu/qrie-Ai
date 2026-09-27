@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { format, formatDistanceToNowStrict } from 'date-fns'
-import { CalendarDays, Camera, ChevronRight, ClipboardCheck, ListChecks, NotebookPen } from 'lucide-react'
+import { CalendarDays, Camera, ChevronRight, ClipboardCheck, ListChecks, NotebookPen, Sparkles } from 'lucide-react'
 import type { MyAssignment, UpcomingEvent } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from './progress'
+import { useAuthStore } from '@/stores/auth-store'
+import { chapterTitle } from './progress'
 
 export function kindLabel(a: Pick<MyAssignment, 'kind'>): string {
   return a.kind === 'test' ? 'Test' : a.kind === 'assignment' ? 'Assignment' : 'Homework'
@@ -35,27 +36,108 @@ export function scoreText(a: MyAssignment): string | null {
 }
 
 export function Home() {
+  const me = useAuthStore((st) => st.me)
   const mine = useQuery({ queryKey: ['my-assignments'], queryFn: api.myAssignments })
+  const subjects = useQuery({
+    queryKey: ['my-subjects'],
+    queryFn: () => api.studentSubjects(me!.userId),
+    enabled: !!me,
+  })
 
   if (mine.isPending) return <p className='text-muted-foreground'>Loading your work…</p>
   if (mine.isError) return <p className='text-destructive'>{say(mine.error)}</p>
 
-  const todo = mine.data.filter((a) => standing(a) === 'todo')
+  const todo = mine.data
+    .filter((a) => standing(a) === 'todo')
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
   const overdue = mine.data.filter((a) => standing(a) === 'overdue')
-  const done = mine.data
-    .filter((a) => standing(a) === 'done')
-    .sort((a, b) => b.dueAt.localeCompare(a.dueAt))
+  const weekAgo = Date.now() - 7 * 86_400_000
+  const doneThisWeek = mine.data.filter((a) => standing(a) === 'done' && new Date(a.dueAt).getTime() > weekAgo).length
+  const due = (subjects.data ?? []).reduce((n, x) => n + x.workDue, 0)
+  const handed = (subjects.data ?? []).reduce((n, x) => n + x.handedIn, 0)
+  const hour = new Date().getHours()
+  const hello = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
+  const first = me?.displayName.split(' ')[0] ?? ''
 
   return (
     <div className='space-y-6'>
+      <section>
+        <p className='text-sm text-muted-foreground'>{format(new Date(), 'EEEE, d MMMM')}</p>
+        <h1 className='text-2xl font-bold'>
+          {hello}, {first}
+        </h1>
+        <p className='text-sm text-muted-foreground'>
+          {todo.length + overdue.length === 0
+            ? 'You are all caught up.'
+            : `You have ${todo.length + overdue.length} ${todo.length + overdue.length === 1 ? 'thing' : 'things'} to do.`}
+        </p>
+      </section>
+
+      <div className='grid grid-cols-3 gap-2'>
+        <Stat label='To do' value={todo.length + overdue.length} tone={overdue.length > 0 ? 'late' : undefined} to='/work' />
+        <Stat label='Done this week' value={doneThisWeek} to='/work' />
+        <Stat label='Handed in' value={due ? `${Math.round((handed / due) * 100)}%` : '—'} to='/progress' />
+      </div>
+
+      <section>
+        <div className='mb-2 flex items-baseline justify-between'>
+          <h2 className='text-sm font-semibold tracking-wide text-muted-foreground uppercase'>Up next</h2>
+          <Link to='/work' className='text-sm font-medium text-primary'>
+            All work
+          </Link>
+        </div>
+        {overdue.length + todo.length === 0 ? (
+          <p className='rounded-xl border border-dashed p-4 text-center text-sm text-muted-foreground'>
+            Nothing to do right now. Well done!
+          </p>
+        ) : (
+          <ul className='space-y-2'>
+            {[...overdue, ...todo].slice(0, 3).map((a) => (
+              <li key={a.id}>
+                <WorkCard a={a} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <PractiseNow />
       <ComingUp />
-      <Section title='To do' empty='Nothing to do right now. Well done!' items={todo} />
-      {overdue.length > 0 && (
-        <Section title='Late — you can still hand these in' items={overdue} tone='late' />
-      )}
-      <Section title='Done' empty='Nothing handed in yet.' items={done} />
-      <Progress />
     </div>
+  )
+}
+
+function Stat({ label, value, tone, to }: { label: string; value: React.ReactNode; tone?: 'late'; to: '/work' | '/progress' }) {
+  return (
+    <Link to={to} className='rounded-xl border bg-card p-3 text-center active:bg-accent'>
+      <p className={cn('text-2xl font-bold tabular-nums', tone === 'late' && 'text-orange-600')}>{value}</p>
+      <p className='text-xs text-muted-foreground'>{label}</p>
+    </Link>
+  )
+}
+
+/** The chapter the child is weakest in that has questions to practise (lms.practice_chapters). */
+function PractiseNow() {
+  const chapters = useQuery({ queryKey: ['practice-chapters'], queryFn: api.practiceChapters })
+  const open = (chapters.data ?? []).filter((c) => c.questions > 0)
+  if (open.length === 0) return null
+  const pick = [...open].sort((a, b) => (a.mastery ?? 0.5) - (b.mastery ?? 0.5))[0]
+  return (
+    <Link
+      to='/learn/practice'
+      search={{ subject: pick.subjectName, chapter: pick.chapter }}
+      className='flex items-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground active:opacity-90'
+    >
+      <div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/15'>
+        <Sparkles className='size-6' />
+      </div>
+      <div className='min-w-0 flex-1'>
+        <p className='text-xs opacity-80'>Practise now · {pick.subjectName}</p>
+        <p className='truncate font-semibold'>{chapterTitle(pick.chapter)}</p>
+        <p className='text-xs opacity-80'>Quick questions, with the answer shown straight away</p>
+      </div>
+      <ChevronRight className='size-5 shrink-0' />
+    </Link>
   )
 }
 
@@ -70,7 +152,7 @@ const EVENT_WORDS: Record<string, string> = {
 }
 
 /** Tests and school events in the next few weeks (lms.upcoming_events). */
-function ComingUp() {
+export function ComingUp() {
   const upcoming = useQuery({ queryKey: ['upcoming'], queryFn: () => api.upcomingEvents(30) })
   const rows = upcoming.data ?? []
   if (upcoming.isError) return <p className='text-sm text-destructive'>{say(upcoming.error)}</p>
@@ -121,7 +203,7 @@ function EventRow({ e }: { e: UpcomingEvent }) {
   )
 }
 
-function Section({
+export function Section({
   title,
   items,
   empty,
@@ -143,7 +225,7 @@ function Section({
         <ul className='space-y-2'>
           {items.map((a) => (
             <li key={a.id}>
-              <Card a={a} />
+              <WorkCard a={a} />
             </li>
           ))}
         </ul>
@@ -159,7 +241,7 @@ function Icon({ a }: { a: MyAssignment }) {
   return <Camera className='size-5' />
 }
 
-function Card({ a }: { a: MyAssignment }) {
+export function WorkCard({ a }: { a: MyAssignment }) {
   const s = standing(a)
   const score = scoreText(a)
   const due = new Date(a.dueAt)

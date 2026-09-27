@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, Navigate } from '@tanstack/react-router'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { CalendarPlus, Users } from 'lucide-react'
 import type { TaughtClass } from '@ai-tutor/lms-client'
@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
+import { HomeCharts } from './home-charts'
 import { NeedsYou } from './needs-you'
 
 export const className = (c: Pick<TaughtClass, 'grade' | 'sectionName'>) =>
@@ -34,10 +35,12 @@ export function Dashboard() {
       label: `${className(c)} only`,
     })),
   ]
+  // The admin's home is the school portal.
+  if (me?.kind === 'admin') return <Navigate to='/school' />
 
   return (
     <Page
-      title='My classes'
+      title='Home'
       description={me ? `Signed in as ${me.displayName}, ${me.schoolName}.` : undefined}
       actions={
         audiences.length > 0 && (
@@ -48,6 +51,8 @@ export function Dashboard() {
       }
     >
       <NeedsYou />
+      {classes.data && <HomeCharts classes={classes.data} />}
+      <h2 className='mb-2 text-lg font-semibold'>My classes</h2>
       {classes.isPending ? (
         <Loading what='your classes' />
       ) : classes.isError ? (

@@ -29,6 +29,7 @@ import { className } from '@/features/dashboard'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
 import { WORK_KINDS, kindLabel } from '@/features/homework/kinds'
+import { ClassAnalytics } from './analytics'
 import { Insights } from './insights'
 
 type ClassPageProps = { sectionId: string; subjectId: string }
@@ -89,6 +90,7 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
           <TabsList>
             <TabsTrigger value='homework'>Classwork</TabsTrigger>
             <TabsTrigger value='upcoming'>Coming up</TabsTrigger>
+            <TabsTrigger value='analytics'>Analytics</TabsTrigger>
             <TabsTrigger value='insights'>Insights</TabsTrigger>
             <TabsTrigger value='grades'>Gradebook</TabsTrigger>
             <TabsTrigger value='students'>Students</TabsTrigger>
@@ -98,6 +100,9 @@ export function ClassPage({ sectionId, subjectId }: ClassPageProps) {
           </TabsContent>
           <TabsContent value='upcoming'>
             <UpcomingList sectionId={sectionId} empty='Nothing coming up for this class. Use Create → Event to add one.' />
+          </TabsContent>
+          <TabsContent value='analytics'>
+            <ClassAnalytics sectionId={sectionId} subjectId={subjectId} />
           </TabsContent>
           <TabsContent value='insights'>
             <Insights sectionId={sectionId} subjectId={subjectId} />
@@ -293,7 +298,7 @@ function Gradebook({ sectionId, subjectId }: ClassPageProps) {
               <TableRow key={row.studentUserId}>
                 <TableCell className='sticky left-0 bg-background font-medium'>
                   <span className='me-2 text-muted-foreground tabular-nums'>{row.rollNumber}</span>
-                  {row.displayName}
+                  <StudentLink id={row.studentUserId} name={row.displayName} />
                 </TableCell>
                 {published.map((a, i) => (
                   <TableCell key={a.id} className='text-center'>
@@ -368,12 +373,23 @@ function Roster({ sectionId }: { sectionId: string }) {
           {roster.data.map((s) => (
             <TableRow key={s.studentUserId}>
               <TableCell className='tabular-nums'>{s.rollNumber ?? '—'}</TableCell>
-              <TableCell className='font-medium'>{s.displayName}</TableCell>
+              <TableCell className='font-medium'>
+                <StudentLink id={s.studentUserId} name={s.displayName} />
+              </TableCell>
               <TableCell className='font-mono text-sm'>{s.loginId}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+/** A student's name, opening their report. */
+export function StudentLink({ id, name }: { id: string; name: string }) {
+  return (
+    <Link to='/students/$studentId' params={{ studentId: id }} className='hover:underline'>
+      {name}
+    </Link>
   )
 }

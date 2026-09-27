@@ -34,7 +34,7 @@ export function HomeworkPage({ assignmentId }: { assignmentId: string }) {
     return (
       <div className='space-y-3'>
         <p>This is not in your list.</p>
-        <Link to='/' className='underline'>Back to your work</Link>
+        <Link to='/work' className='underline'>Back to your work</Link>
       </div>
     )
   }
@@ -58,7 +58,7 @@ export function HomeworkPage({ assignmentId }: { assignmentId: string }) {
 
   return (
     <div className='space-y-5'>
-      <Link to='/' className='inline-flex items-center gap-1 text-sm text-muted-foreground'>
+      <Link to='/work' className='inline-flex items-center gap-1 text-sm text-muted-foreground'>
         <ArrowLeft className='size-4' /> All work
       </Link>
       <div>

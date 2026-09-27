@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { PenLine } from 'lucide-react'
+import { CheckCheck, PenLine } from 'lucide-react'
 import { toast } from 'sonner'
 import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
+import { useAuthStore } from '@/stores/auth-store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -28,7 +29,13 @@ const PAGE = 30
  * review — only approved questions can go on homework (0023).
  */
 export function QuestionBank() {
-  const classes = useQuery({ queryKey: ['classes'], queryFn: api.myClasses })
+  const me = useAuthStore((s) => s.me)
+  // A teacher's own classes; the admin, every class in the school.
+  const classes = useQuery({
+    queryKey: ['bank-classes', me?.kind],
+    queryFn: async (): Promise<{ grade: number; subjectName: string }[]> =>
+      me?.kind === 'admin' ? api.schoolClasses() : api.myClasses(),
+  })
   const pairs = [
     ...new Map((classes.data ?? []).map((c) => [`${c.grade}|${c.subjectName}`, c])).values(),
   ].sort((a, b) => a.grade - b.grade || a.subjectName.localeCompare(b.subjectName))
@@ -57,6 +64,18 @@ export function QuestionBank() {
       toast.success('Approved for your school.')
       queryClient.invalidateQueries({ queryKey: ['library'] })
     },
+  })
+  const approveChapter = useMutation({
+    mutationFn: (chapter: string) => api.approveChapter(grade!, subject!, chapter),
+    onSuccess: (n) => {
+      toast.success(
+        n === 0
+          ? 'Every question in this chapter was already approved.'
+          : `${n} ${n === 1 ? 'question' : 'questions'} approved. Students can now practise this chapter in Learn.`
+      )
+      queryClient.invalidateQueries({ queryKey: ['library'] })
+    },
+    onError: (e) => toast.error((e as Error).message),
   })
 
   return (
@@ -115,7 +134,22 @@ export function QuestionBank() {
               value={text}
               onChange={(e) => { setText(e.target.value); setLimit(PAGE) }}
             />
+            {place.chapter && (
+              <Button
+                variant='outline'
+                disabled={approveChapter.isPending}
+                onClick={() => approveChapter.mutate(place.chapter!)}
+              >
+                <CheckCheck /> Approve the whole chapter
+              </Button>
+            )}
           </div>
+          {!place.chapter && (
+            <p className='mb-3 text-sm text-muted-foreground'>
+              Pick a chapter to approve all of it at once. Approved questions can be set as work, and students can
+              practise them in Learn — except any on work that is still open.
+            </p>
+          )}
           {bank.isPending ? (
             <Loading what='questions' />
           ) : bank.isError ? (

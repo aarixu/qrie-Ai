@@ -6,13 +6,15 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { sidebarData } from './data/sidebar-data'
+import { useAuthStore } from '@/stores/auth-store'
+import { sidebarFor } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
 import { TeamSwitcher } from './team-switcher'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
+  const sidebarData = sidebarFor(useAuthStore((s) => s.me?.kind))
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>

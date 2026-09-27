@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteRouteImport } from './routes/_app/route'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppProgressRouteImport } from './routes/_app/progress'
+import { Route as AppWorkRouteImport } from './routes/_app/work'
 import { Route as AppHomeworkAssignmentIdRouteImport } from './routes/_app/homework.$assignmentId'
+import { Route as AppLearnIndexRouteImport } from './routes/_app/learn.index'
+import { Route as AppLearnPracticeRouteImport } from './routes/_app/learn.practice'
 
 const AppRouteRoute = AppRouteRouteImport.update({
   id: '/_app',
@@ -28,40 +32,90 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppProgressRoute = AppProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWorkRoute = AppWorkRouteImport.update({
+  id: '/work',
+  path: '/work',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppHomeworkAssignmentIdRoute = AppHomeworkAssignmentIdRouteImport.update({
   id: '/homework/$assignmentId',
   path: '/homework/$assignmentId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLearnIndexRoute = AppLearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLearnPracticeRoute = AppLearnPracticeRouteImport.update({
+  id: '/learn/practice',
+  path: '/learn/practice',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/sign-in': typeof SignInRoute
+  '/progress': typeof AppProgressRoute
+  '/work': typeof AppWorkRoute
   '/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
+  '/learn/practice': typeof AppLearnPracticeRoute
+  '/learn/': typeof AppLearnIndexRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
+  '/progress': typeof AppProgressRoute
+  '/work': typeof AppWorkRoute
   '/': typeof AppIndexRoute
   '/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
+  '/learn/practice': typeof AppLearnPracticeRoute
+  '/learn': typeof AppLearnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/_app/progress': typeof AppProgressRoute
+  '/_app/work': typeof AppWorkRoute
   '/_app/': typeof AppIndexRoute
   '/_app/homework/$assignmentId': typeof AppHomeworkAssignmentIdRoute
+  '/_app/learn/practice': typeof AppLearnPracticeRoute
+  '/_app/learn/': typeof AppLearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/homework/$assignmentId'
+  fullPaths:
+    | '/'
+    | '/sign-in'
+    | '/progress'
+    | '/work'
+    | '/homework/$assignmentId'
+    | '/learn/practice'
+    | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/sign-in' | '/' | '/homework/$assignmentId'
+  to:
+    | '/sign-in'
+    | '/progress'
+    | '/work'
+    | '/'
+    | '/homework/$assignmentId'
+    | '/learn/practice'
+    | '/learn'
   id:
     | '__root__'
     | '/_app'
     | '/sign-in'
+    | '/_app/progress'
+    | '/_app/work'
     | '/_app/'
     | '/_app/homework/$assignmentId'
+    | '/_app/learn/practice'
+    | '/_app/learn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -92,6 +146,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/progress': {
+      id: '/_app/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AppProgressRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/work': {
+      id: '/_app/work'
+      path: '/work'
+      fullPath: '/work'
+      preLoaderRoute: typeof AppWorkRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/_app/homework/$assignmentId': {
       id: '/_app/homework/$assignmentId'
       path: '/homework/$assignmentId'
@@ -99,17 +167,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHomeworkAssignmentIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/_app/learn/': {
+      id: '/_app/learn/'
+      path: '/learn'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof AppLearnIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/learn/practice': {
+      id: '/_app/learn/practice'
+      path: '/learn/practice'
+      fullPath: '/learn/practice'
+      preLoaderRoute: typeof AppLearnPracticeRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
 interface AppRouteRouteChildren {
+  AppProgressRoute: typeof AppProgressRoute
+  AppWorkRoute: typeof AppWorkRoute
   AppIndexRoute: typeof AppIndexRoute
   AppHomeworkAssignmentIdRoute: typeof AppHomeworkAssignmentIdRoute
+  AppLearnPracticeRoute: typeof AppLearnPracticeRoute
+  AppLearnIndexRoute: typeof AppLearnIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppProgressRoute: AppProgressRoute,
+  AppWorkRoute: AppWorkRoute,
   AppIndexRoute: AppIndexRoute,
   AppHomeworkAssignmentIdRoute: AppHomeworkAssignmentIdRoute,
+  AppLearnPracticeRoute: AppLearnPracticeRoute,
+  AppLearnIndexRoute: AppLearnIndexRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

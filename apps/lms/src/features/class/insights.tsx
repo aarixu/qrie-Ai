@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
 import type { ChapterStanding, ShownMisconception } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
 import { chapterTitle } from '@/lib/curriculum'
@@ -113,7 +114,9 @@ function NeedsHelp({ rows, shown }: { rows: ChapterStanding[]; shown: ShownMisco
                         <span className={cn('rounded px-1.5 py-0.5 text-xs font-medium tabular-nums', tone(s.mastery))}>
                           {pct(s.mastery)}
                         </span>
-                        <span className='font-medium'>{s.displayName}</span>
+                        <Link to='/students/$studentId' params={{ studentId: s.studentUserId }} className='font-medium hover:underline'>
+                          {s.displayName}
+                        </Link>
                         <span className='text-muted-foreground'>({s.answers} answers)</span>
                         {mistakes.length > 0 && (
                           <span className='text-muted-foreground'>
