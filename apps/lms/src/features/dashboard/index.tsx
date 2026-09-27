@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { EventDialog } from '@/features/events/event-dialog'
 import { UpcomingList } from '@/features/events/upcoming'
+import { NeedsYou } from './needs-you'
 
 export const className = (c: Pick<TaughtClass, 'grade' | 'sectionName'>) =>
   `Class ${c.grade}${c.sectionName}`
@@ -46,6 +47,7 @@ export function Dashboard() {
         )
       }
     >
+      <NeedsYou />
       {classes.isPending ? (
         <Loading what='your classes' />
       ) : classes.isError ? (

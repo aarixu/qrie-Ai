@@ -260,6 +260,22 @@ export interface UpcomingEvent {
   mine: boolean | null;
 }
 
+/** Something in the teacher's own classes waiting on them (0030). */
+export interface NeedsAttention {
+  assignmentId: string;
+  title: string;
+  kind: AssignmentKind;
+  sectionId: string;
+  subjectId: string;
+  className: string;
+  subjectName: string;
+  /** photos to mark; paper marks to enter; a closed test to release; notebooks to check. */
+  reason: 'photos' | 'marks' | 'release' | 'notebooks';
+  /** How many children it concerns (for 'release', how many handed in). */
+  count: number;
+  dueAt: string;
+}
+
 export interface McqResult {
   submissionId: string;
   /** Null on a test: its score is shown only once the teacher releases it. */
@@ -478,6 +494,7 @@ export function createLmsClient(t: Transport) {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },
 
+    needsAttention: () => rows<NeedsAttention>('needs_attention'),
     classInsights: (sectionId: string, subjectId: string) =>
       rows<ChapterStanding>('class_insights', { p_section: sectionId, p_subject: subjectId }),
     classMisconceptions: (sectionId: string, subjectId: string) =>

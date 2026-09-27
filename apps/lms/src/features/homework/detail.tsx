@@ -78,7 +78,9 @@ export function HomeworkDetail({ assignmentId }: { assignmentId: string }) {
       description={
         <span className='flex flex-wrap items-center gap-2'>
           <WorkStateBadge a={a} />
-          <span>{kindLabel(a.kind)}</span>·{className(a)} · {a.subjectName} ·{' '}
+          <span>{kindLabel(a.kind)}</span>
+          <span aria-hidden>·</span>
+          {className(a)} · {a.subjectName} ·{' '}
           {paper
             ? `on ${format(new Date(a.dueAt), 'd MMM yyyy')}, out of ${a.maxMarks}`
             : test
@@ -131,15 +133,24 @@ export function HomeworkDetail({ assignmentId }: { assignmentId: string }) {
 }
 
 function Summary({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
-  const handedIn = rows.filter((r) => r.submitted)
+  const types = a.answerTypes
+  const paper = types.includes('paper')
+  const scored = types.some((t) => t === 'mcq' || t === 'paper' || t === 'photo')
+  const onlyChecklist = types.every((t) => t === 'checklist')
+  const absent = rows.filter((r) => r.teacherStatus === 'absent')
+  const present = rows.filter((r) => r.teacherStatus !== 'absent')
+  const handedIn = present.filter((r) => r.submitted)
   const late = handedIn.filter((r) => r.late)
   const scores = handedIn.map(scoreOf).filter((s): s is number => s !== null)
   const avg = scores.length ? scores.reduce((x, y) => x + y, 0) / scores.length : null
   const closed = new Date(a.dueAt) <= new Date()
-  const missing = rows.filter((r) => !r.submitted)
+  const missing = present.filter((r) => !r.submitted)
+  const inProgress = missing.filter((r) => r.startedAt)
   const toMark = handedIn.filter((r) => r.photoSubmissionId && r.photoTeacherScore === null)
+  const checked = rows.filter((r) => r.teacherStatus === 'checked')
+  const names = (list: ResultRow[]) => list.slice(0, 4).map((r) => r.displayName).join(', ') + (list.length > 4 ? '…' : '')
   const stat = (title: string, value: string, note?: string) => (
-    <Card>
+    <Card key={title}>
       <CardHeader className='pb-2'>
         <CardDescription>{title}</CardDescription>
         <CardTitle className='text-2xl tabular-nums'>{value}</CardTitle>
@@ -147,18 +158,25 @@ function Summary({ a, rows }: { a: AssignmentOverview; rows: ResultRow[] }) {
       {note && <CardContent className='text-xs text-muted-foreground'>{note}</CardContent>}
     </Card>
   )
-  return (
-    <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-      {stat('Handed in', `${handedIn.length} / ${rows.length}`, late.length ? `${late.length} late` : undefined)}
-      {stat('Average score', avg === null ? '—' : `${Math.round(avg * 100)}%`)}
-      {stat(
+  const cards = [
+    paper
+      ? stat('Marked', `${handedIn.length} / ${present.length}`, absent.length ? `${absent.length} absent` : undefined)
+      : onlyChecklist
+        ? stat('Ticked everything', `${handedIn.length} / ${rows.length}`, 'Their own word — check the notebooks')
+        : stat('Handed in', `${handedIn.length} / ${present.length}`, late.length ? `${late.length} late` : undefined),
+    scored && stat('Average score', avg === null ? '—' : `${Math.round(avg * 100)}%`),
+    !paper &&
+      stat(
         closed ? 'Missing' : 'Not yet handed in',
-        String(missing.length),
-        missing.slice(0, 4).map((r) => r.displayName).join(', ') + (missing.length > 4 ? '…' : '')
-      )}
-      {stat('Photos to mark', String(toMark.length))}
-    </div>
-  )
+        String(missing.length - inProgress.length),
+        names(missing.filter((r) => !r.startedAt))
+      ),
+    inProgress.length > 0 && stat('Taking it now', String(inProgress.length), names(inProgress)),
+    types.includes('photo') && stat('Photos to mark', String(toMark.length)),
+    (types.includes('checklist') || onlyChecklist) && stat('Checked by you', `${checked.length} / ${rows.length}`),
+    paper && absent.length > 0 && stat('Absent', String(absent.length), names(absent)),
+  ].filter(Boolean)
+  return <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>{cards}</div>
 }
 
 function Students({
@@ -324,7 +342,7 @@ function MarkDialog({
     mutationFn: () => api.setTeacherMark(submissionId, s, m),
     onSuccess: () => {
       toast.success(`Mark saved for ${row.displayName}.`)
-      queryClient.invalidateQueries({ queryKey: ['results', assignmentId] })
+      void queryClient.invalidateQueries({ queryKey: ['results', assignmentId] }).then(() => queryClient.invalidateQueries({ queryKey: ['needs-attention'] }))
       onClose()
     },
   })
@@ -527,6 +545,7 @@ function ReleaseResults({ a }: { a: AssignmentOverview }) {
       toast.success('Results released. Students can see their scores now.')
       queryClient.invalidateQueries({ queryKey: ['overview', a.id] })
       queryClient.invalidateQueries({ queryKey: ['class-assignments', a.sectionId, a.subjectId] })
+      queryClient.invalidateQueries({ queryKey: ['needs-attention'] })
       setConfirm(false)
     },
   })
@@ -603,7 +622,7 @@ function MarkBox({ a, row }: { a: AssignmentOverview; row: ResultRow }) {
   const invalid = value.trim() !== '' && (!(n >= 0) || n > (a.maxMarks ?? 0))
   const save = useMutation({
     mutationFn: () => api.recordPaperMark(a.id, row.studentUserId, n),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['results', a.id] }),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['results', a.id] }).then(() => queryClient.invalidateQueries({ queryKey: ['needs-attention'] })),
   })
   const commit = () => {
     if (value.trim() === '' || value === saved || invalid) return
@@ -654,7 +673,7 @@ function StatusBar({ a, picked, onDone }: { a: AssignmentOverview; picked: strin
     mutationFn: (status: WorkStatus | null) => api.setWorkStatus(a.id, picked, status),
     onSuccess: (_, status) => {
       toast.success(`${picked.length} ${picked.length === 1 ? 'student' : 'students'} ${status ? `marked ${STATUS_WORDS[status].toLowerCase()}` : 'cleared'}.`)
-      queryClient.invalidateQueries({ queryKey: ['results', a.id] })
+      void queryClient.invalidateQueries({ queryKey: ['results', a.id] }).then(() => queryClient.invalidateQueries({ queryKey: ['needs-attention'] }))
       onDone()
     },
   })
@@ -682,7 +701,7 @@ function AbsentBox({ a, row }: { a: AssignmentOverview; row: ResultRow }) {
   const queryClient = useQueryClient()
   const set = useMutation({
     mutationFn: (absent: boolean) => api.setWorkStatus(a.id, [row.studentUserId], absent ? 'absent' : null),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['results', a.id] }),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: ['results', a.id] }).then(() => queryClient.invalidateQueries({ queryKey: ['needs-attention'] })),
   })
   return (
     <Checkbox

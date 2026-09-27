@@ -559,6 +559,68 @@ as $$
 $$;
 
 -- ---------------------------------------------------------------------------
+-- 4. What needs the teacher (the review's "Needs you"): in the caller's own
+--    classes, photos not yet marked, paper marks not yet entered, tests
+--    closed but not released, and notebooks past due not yet checked.
+--    Invoker: RLS and teaches_class keep it to the caller's classes.
+-- ---------------------------------------------------------------------------
+
+create or replace function lms.needs_attention()
+returns table (
+  assignment_id uuid, title text, kind text, section_id uuid, subject_id uuid,
+  class_name text, subject_name text, reason text, count integer, due_at timestamptz
+)
+language sql stable security invoker
+set search_path = public, lms
+as $$
+  with mine as (
+    select a.id, a.title, a.kind, a.section_id, a.subject_id, a.answer_types, a.due_at,
+           a.results_released_at, sec.grade || sec.name as class_name, sub.name as subject_name
+      from lms.assignment a
+      join lms.section sec on sec.id = a.section_id
+      join lms.subject sub on sub.id = a.subject_id
+     where a.published_at is not null and lms.teaches_class(a.section_id, a.subject_id)
+  ),
+  roster as (
+    select m.id, e.student_user_id
+      from mine m
+      join lms.enrolment e on e.section_id = m.section_id and e.left_on is null
+  )
+  select m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name,
+         'photos', count(*)::int, m.due_at
+    from mine m
+    join lms.submission s on s.assignment_id = m.id and s.kind = 'photo'
+    join lms.mark mk on mk.submission_id = s.id and mk.teacher_score is null
+   group by m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name, m.due_at
+  union all
+  select m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name,
+         'marks', count(*)::int, m.due_at
+    from mine m
+    join roster r on r.id = m.id
+   where 'paper' = any (m.answer_types) and m.due_at <= now()
+     and not exists (select 1 from lms.submission s
+                      where s.assignment_id = m.id and s.student_user_id = r.student_user_id and s.kind = 'paper')
+     and not exists (select 1 from lms.work_status w
+                      where w.assignment_id = m.id and w.student_user_id = r.student_user_id and w.status = 'absent')
+   group by m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name, m.due_at
+  union all
+  select m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name,
+         'release', (select count(*)::int from lms.submission s where s.assignment_id = m.id), m.due_at
+    from mine m
+   where m.kind = 'test' and m.due_at <= now() and m.results_released_at is null
+  union all
+  select m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name,
+         'notebooks', count(*)::int, m.due_at
+    from mine m
+    join roster r on r.id = m.id
+   where 'checklist' = any (m.answer_types) and m.due_at <= now()
+     and not exists (select 1 from lms.work_status w
+                      where w.assignment_id = m.id and w.student_user_id = r.student_user_id)
+   group by m.id, m.title, m.kind, m.section_id, m.subject_id, m.class_name, m.subject_name, m.due_at
+  order by 10, 2;
+$$;
+
+-- ---------------------------------------------------------------------------
 -- Grants.
 -- ---------------------------------------------------------------------------
 
@@ -569,6 +631,7 @@ revoke all on function lms.set_work_status(uuid, uuid[], text) from public, anon
 revoke all on function lms.assignment_results(uuid) from public, anon;
 revoke all on function lms.my_assignments() from public, anon;
 revoke all on function lms.my_saved_answers(uuid) from public, anon;
+revoke all on function lms.needs_attention() from public, anon;
 
 grant execute on function lms.save_test_answer(uuid, uuid, integer) to authenticated, service_role;
 grant execute on function lms.grade_mcq(uuid, uuid, jsonb) to service_role;
@@ -579,3 +642,4 @@ grant execute on function lms.set_work_status(uuid, uuid[], text) to authenticat
 grant execute on function lms.assignment_results(uuid) to authenticated, service_role;
 grant execute on function lms.my_assignments() to authenticated, service_role;
 grant execute on function lms.my_saved_answers(uuid) to authenticated, service_role;
+grant execute on function lms.needs_attention() to authenticated, service_role;

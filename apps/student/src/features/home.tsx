@@ -104,7 +104,9 @@ function EventRow({ e }: { e: UpcomingEvent }) {
           {e.source === 'event' && !e.className ? ' · Whole school' : ''}
         </p>
         <p className='truncate font-medium'>{e.title}</p>
-        <p className='text-xs text-muted-foreground'>{format(starts, 'EEE, h:mm a')}</p>
+        <p className='text-xs text-muted-foreground'>
+          {starts.getHours() === 0 && starts.getMinutes() === 0 && !e.endsAt ? format(starts, 'EEEE') : format(starts, 'EEE, h:mm a')}
+        </p>
         {e.source === 'event' && e.details && <p className='mt-1 text-xs text-muted-foreground'>{e.details}</p>}
       </div>
       {e.source === 'test' ? <ChevronRight className='size-4 shrink-0 text-muted-foreground' /> : <CalendarDays className='size-4 shrink-0 text-muted-foreground' />}

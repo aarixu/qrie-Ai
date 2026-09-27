@@ -219,3 +219,46 @@ describe("the teacher's word on each child's work", () => {
     });
   });
 });
+
+describe('what needs the teacher', () => {
+  it('lists photos to mark, paper marks to enter, tests to release and notebooks to check', async () => {
+    const past = new Date(Date.now() - DAY).toISOString();
+    const notebook = await teacher.createAssignment({
+      sectionId: one.s8a,
+      subjectId: one.maths,
+      kind: 'homework',
+      title: 'Last week, in the notebook',
+      dueAt: past,
+      answerTypes: ['checklist'],
+    });
+    await teacher.setAssignmentTasks(notebook, ['Exercise 1']);
+    await teacher.publishAssignment(notebook);
+    await teacher.setWorkStatus(notebook, [one.kid8a], 'checked');
+    const closed = await teacher.createAssignment({
+      sectionId: one.s8a,
+      subjectId: one.maths,
+      kind: 'test',
+      title: 'Closed, not released',
+      dueAt: past,
+      answerTypes: ['mcq'],
+    });
+    await teacher.setAssignmentItems(closed, items);
+    await teacher.publishAssignment(closed);
+
+    const needs = await teacher.needsAttention();
+    const find = (title: string, reason: string) => needs.find((n) => n.title === title && n.reason === reason);
+    // Paper, with an absence: Kabir is absent; Riya has no mark yet.
+    expect(find('Paper, with an absence', 'marks')).toMatchObject({ count: 1, className: '8A', subjectName: 'Mathematics' });
+    expect(find('Paper, with an absence', 'release')).toBeDefined();
+    // Kabir's notebook is not checked; Riya's is.
+    expect(find('Last week, in the notebook', 'notebooks')?.count).toBe(1);
+    expect(find('Closed, not released', 'release')).toBeDefined();
+    // Nothing for work still open.
+    expect(needs.map((n) => n.title)).not.toContain('Notebook check');
+  });
+
+  it('shows another teacher none of it', async () => {
+    const other = createLmsClient(pgliteTransport(db, one.teacherB));
+    expect((await other.needsAttention()).map((n) => n.title)).not.toContain('Last week, in the notebook');
+  });
+});

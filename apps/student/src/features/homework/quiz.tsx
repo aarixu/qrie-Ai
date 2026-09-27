@@ -209,19 +209,25 @@ export function Quiz({
   const chosen = answers[q.itemId]
   return (
     <div className='flex min-h-[70svh] flex-col'>
-      <div className='mb-3 flex items-center justify-between text-sm text-muted-foreground'>
-        <span>
-          Question {at + 1} of {qs.length}
-        </span>
-        {left !== null && <Countdown ms={left} />}
-        {isTest && (
-          <span className={cn('text-xs', unsaved ? 'text-destructive' : 'text-muted-foreground')}>
-            {unsaved ? 'Not saved — check your internet' : 'Answers saved'}
+      <div className='mb-3 space-y-1 text-sm text-muted-foreground'>
+        <div className='flex items-center justify-between gap-2'>
+          <span>
+            Question {at + 1} of {qs.length}
           </span>
-        )}
-        <button type='button' className='underline' onClick={onCancel}>
-          {endsAt ? 'Leave (the clock keeps running)' : 'Save and leave'}
-        </button>
+          {left !== null && <Countdown ms={left} />}
+        </div>
+        <div className='flex items-center justify-between gap-2 text-xs'>
+          {isTest ? (
+            <span className={cn(unsaved ? 'text-destructive' : 'text-muted-foreground')}>
+              {unsaved ? 'Not saved — check your internet' : 'Answers saved'}
+            </span>
+          ) : (
+            <span />
+          )}
+          <button type='button' className='underline' onClick={onCancel}>
+            {endsAt ? 'Leave (the clock keeps running)' : 'Save and leave'}
+          </button>
+        </div>
       </div>
       <div className='mb-4 h-1.5 overflow-hidden rounded-full bg-muted'>
         <div className='h-full bg-primary transition-all' style={{ width: `${((at + 1) / qs.length) * 100}%` }} />

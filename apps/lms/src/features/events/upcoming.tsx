@@ -16,6 +16,8 @@ export function useUpcoming() {
 
 export function when(e: Pick<UpcomingEvent, 'startsAt' | 'endsAt'>): string {
   const s = new Date(e.startsAt)
+  // Midnight with no end: an all-day event, such as a holiday.
+  if (!e.endsAt && s.getHours() === 0 && s.getMinutes() === 0) return format(s, 'EEE d MMM')
   if (!e.endsAt) return format(s, 'EEE d MMM, h:mm a')
   const end = new Date(e.endsAt)
   return isSameDay(s, end)
