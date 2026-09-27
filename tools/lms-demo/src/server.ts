@@ -234,10 +234,28 @@ export async function startDemoServer(opts: {
     });
   });
   await new Promise<void>((resolve) => server.listen(opts.port ?? 0, '127.0.0.1', resolve));
+
+  // What pg_cron does on the hosted project (0030): every half minute, hand
+  // in the test attempts whose time has run out, then let the brain read them.
+  const finalizer = setInterval(() => {
+    void (async () => {
+      const { rows } = await db.query<{ n: number }>(`select lms.finalize_tests() as n`);
+      if (!rows[0]?.n) return;
+      const { rows: kids } = await db.query<{ id: string }>(
+        `select distinct student_user_id as id from lms.submission
+          where kind = 'mcq' and submitted_at > now() - interval '2 minutes'`,
+      );
+      await think(db, kids.map((k) => k.id));
+    })().catch((e: unknown) => console.error('finalize_tests failed:', e));
+  }, 30_000);
   const { port } = server.address() as AddressInfo;
   return {
     url: `http://127.0.0.1:${port}`,
-    close: () => new Promise<void>((resolve) => server.close(() => resolve())),
+    close: () =>
+      new Promise<void>((resolve) => {
+        clearInterval(finalizer);
+        server.close(() => resolve());
+      }),
   };
 }
 

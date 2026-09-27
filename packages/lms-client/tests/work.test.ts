@@ -137,7 +137,8 @@ describe('an online test', () => {
   });
 
   it('keeps the score and answers from the child until the teacher releases them', async () => {
-    await riya.submitMcq(test, { [items[0]]: 0, [items[1]]: 1 });
+    // Not even the hand-in itself tells the child their score.
+    expect(await riya.submitMcq(test, { [items[0]]: 0, [items[1]]: 1 })).toMatchObject({ correct: null, total: null });
     expect((await teacher.assignmentResults(test)).find((r) => r.studentUserId === one.kid8a)).toMatchObject({
       machineCorrect: 1,
     });
@@ -185,6 +186,25 @@ describe('an online test', () => {
     await teacher.setAssignmentItems(unstarted, items);
     await teacher.publishAssignment(unstarted);
     await expect(riya.submitMcq(unstarted, { [items[0]]: 0 })).rejects.toThrow(/start the test/);
+  });
+});
+
+describe('changing a draft', () => {
+  it('moves its opening time, time limit and maximum marks', async () => {
+    const draft = await teacher.createAssignment({
+      sectionId: one.s8a,
+      subjectId: one.maths,
+      kind: 'test',
+      title: 'Draft test',
+      dueAt: new Date(Date.now() + 3 * DAY).toISOString(),
+      timeLimitMinutes: 30,
+      answerTypes: ['mcq'],
+    });
+    const opens = new Date(Date.now() + 2 * DAY).toISOString();
+    await teacher.updateAssignment(draft, { opensAt: opens, timeLimitMinutes: 45, maxMarks: 25 });
+    const o = (await teacher.assignmentOverview(draft))!;
+    expect(new Date(o.opensAt!).toISOString()).toBe(opens);
+    expect(o).toMatchObject({ timeLimitMinutes: 45, maxMarks: 25 });
   });
 });
 

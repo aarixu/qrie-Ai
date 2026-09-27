@@ -60,7 +60,7 @@ describe('the demo school', () => {
     expect(list.filter((a) => a.published).length).toBeGreaterThanOrEqual(3);
     expect(list.some((a) => !a.published)).toBe(true);
 
-    const past = list.find((a) => a.published && new Date(a.dueAt) < new Date())!;
+    const past = list.find((a) => a.kind === 'homework' && a.published && new Date(a.dueAt) < new Date())!;
     const results = await t.api.assignmentResults(past.id);
     const handedIn = results.filter((r) => r.submitted);
     expect(handedIn.length).toBeGreaterThan(results.length * 0.6);

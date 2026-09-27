@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import type { MyAssignment } from '@ai-tutor/lms-client'
@@ -40,7 +40,18 @@ function saveDraft(id: string, answers: Record<string, number> | null) {
 }
 
 /** One question to a screen, big buttons, then a check before handing in. */
-export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => void; onCancel: () => void }) {
+export function Quiz({
+  a,
+  endsAt,
+  onDone,
+  onCancel,
+}: {
+  a: MyAssignment
+  /** A test's end, from the server's clock (lms.start_test); the quiz hands itself in then. */
+  endsAt?: string
+  onDone: () => void
+  onCancel: () => void
+}) {
   const queryClient = useQueryClient()
   const questions = useQuery({
     queryKey: ['questions', a.id],
@@ -51,8 +62,78 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
   const [checking, setChecking] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
+  // A test saves each answer to the school's server as it is tapped (0030),
+  // so the server can hand in what was saved if the phone drops off.
+  const isTest = a.kind === 'test'
+  const [unsaved, setUnsaved] = useState(0)
+  const saved = useQuery({
+    queryKey: ['saved-answers', a.id],
+    queryFn: () => api.mySavedAnswers(a.id),
+    enabled: isTest,
+  })
+  const merged = useRef(false)
+  useEffect(() => {
+    if (!saved.data || merged.current) return
+    merged.current = true
+    const fromServer = Object.fromEntries(saved.data.map((r) => [r.itemId, r.chosenIndex]))
+    setAnswers((mine) => ({ ...fromServer, ...mine }))
+  }, [saved.data])
+  const choose = (itemId: string, index: number) => {
+    setAnswers((mine) => ({ ...mine, [itemId]: index }))
+    if (!isTest) return
+    api.saveTestAnswer(a.id, itemId, index).then(
+      () => setUnsaved(0),
+      () => setUnsaved((n) => n + 1)
+    )
+  }
 
   useEffect(() => saveDraft(a.id, answers), [a.id, answers])
+
+  // The countdown. The server enforces the limit; this only shows it, and
+  // hands in whatever is answered when it runs out.
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    if (!endsAt) return
+    const t = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(t)
+  }, [endsAt])
+  const left = endsAt ? new Date(endsAt).getTime() - now : null
+  const handedIn = useRef(false)
+
+  async function handIn() {
+    if (handedIn.current) return
+    handedIn.current = true
+    setBusy(true)
+    try {
+      const r = await api.submitMcq(a.id, answers)
+      saveDraft(a.id, null)
+      await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
+      await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
+      await queryClient.invalidateQueries({ queryKey: ['my-progress'] })
+      toast.success(
+        r.correct === null
+          ? 'Handed in! Your teacher will share the results.'
+          : `Handed in! You got ${r.correct} out of ${r.total}.`
+      )
+      onDone()
+    } catch (e) {
+      handedIn.current = false
+      toast.error(say(e))
+    } finally {
+      setBusy(false)
+      setConfirm(false)
+    }
+  }
+
+  // Time up: hand in whatever is answered. A failure (offline) leaves the
+  // answers saved on the phone and the button to try again.
+  const autoTried = useRef(false)
+  useEffect(() => {
+    if (left !== null && left <= 0 && !autoTried.current) {
+      autoTried.current = true
+      void handIn()
+    }
+  })
 
   if (questions.isPending) return <p className='text-muted-foreground'>Loading the questions…</p>
   if (questions.isError) return <p className='text-destructive'>{say(questions.error)}</p>
@@ -67,23 +148,6 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
   }
   const unanswered = qs.filter((q) => answers[q.itemId] === undefined).length
 
-  async function handIn() {
-    setBusy(true)
-    try {
-      const r = await api.submitMcq(a.id, answers)
-      saveDraft(a.id, null)
-      await queryClient.invalidateQueries({ queryKey: ['my-assignments'] })
-      await queryClient.invalidateQueries({ queryKey: ['review', a.id] })
-      await queryClient.invalidateQueries({ queryKey: ['my-progress'] })
-      toast.success(`Handed in! You got ${r.correct} out of ${r.total}.`)
-      onDone()
-    } catch (e) {
-      toast.error(say(e))
-    } finally {
-      setBusy(false)
-      setConfirm(false)
-    }
-  }
 
   if (checking) {
     return (
@@ -149,8 +213,14 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
         <span>
           Question {at + 1} of {qs.length}
         </span>
+        {left !== null && <Countdown ms={left} />}
+        {isTest && (
+          <span className={cn('text-xs', unsaved ? 'text-destructive' : 'text-muted-foreground')}>
+            {unsaved ? 'Not saved — check your internet' : 'Answers saved'}
+          </span>
+        )}
         <button type='button' className='underline' onClick={onCancel}>
-          Save and leave
+          {endsAt ? 'Leave (the clock keeps running)' : 'Save and leave'}
         </button>
       </div>
       <div className='mb-4 h-1.5 overflow-hidden rounded-full bg-muted'>
@@ -168,7 +238,7 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
               'flex w-full items-start gap-3 rounded-xl border-2 p-4 text-start transition-colors',
               chosen === i ? 'border-primary bg-primary/10' : 'border-border active:bg-accent'
             )}
-            onClick={() => setAnswers({ ...answers, [q.itemId]: i })}
+            onClick={() => choose(q.itemId, i)}
           >
             <span
               className={cn(
@@ -197,5 +267,19 @@ export function Quiz({ a, onDone, onCancel }: { a: MyAssignment; onDone: () => v
         )}
       </div>
     </div>
+  )
+}
+
+function Countdown({ ms }: { ms: number }) {
+  const secs = Math.max(0, Math.floor(ms / 1000))
+  const text = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+  return (
+    <span
+      role='timer'
+      aria-label={`${text} left`}
+      className={cn('rounded-full px-2 py-0.5 font-mono tabular-nums', secs < 60 ? 'bg-red-600 text-white' : 'bg-muted')}
+    >
+      {text}
+    </span>
   )
 }

@@ -180,6 +180,49 @@ begin
 end;
 $$;
 
+-- Rename, reword, move the dates of, or change the attempts, time limit or
+-- maximum marks of work (0026's version, plus the test fields). A null
+-- leaves that field as it is; an empty instruction clears it.
+drop function if exists lms.update_assignment(uuid, text, text, timestamptz, integer);
+create or replace function lms.update_assignment(
+  p_assignment uuid,
+  p_title text default null,
+  p_instructions text default null,
+  p_due_at timestamptz default null,
+  p_attempts_allowed integer default null,
+  p_opens_at timestamptz default null,
+  p_time_limit_minutes integer default null,
+  p_max_marks numeric default null
+)
+returns void
+language plpgsql volatile security invoker
+set search_path = public, lms
+as $$
+declare
+  a lms.assignment;
+begin
+  if not lms.can_manage_assignment(p_assignment) then
+    raise exception 'this is not your class';
+  end if;
+  select * into a from lms.assignment where id = p_assignment;
+  if p_time_limit_minutes is not null and a.kind <> 'test' then
+    raise exception 'only a test has a time limit';
+  end if;
+  if coalesce(p_opens_at, a.opens_at) >= coalesce(p_due_at, a.due_at) then
+    raise exception 'it must open before it is due';
+  end if;
+  update lms.assignment
+     set title = coalesce(p_title, title),
+         instructions = case when p_instructions is null then instructions else nullif(p_instructions, '') end,
+         due_at = coalesce(p_due_at, due_at),
+         attempts_allowed = case when kind = 'test' then 1 else coalesce(p_attempts_allowed, attempts_allowed) end,
+         opens_at = coalesce(p_opens_at, opens_at),
+         time_limit_minutes = coalesce(p_time_limit_minutes, time_limit_minutes),
+         max_marks = coalesce(p_max_marks, max_marks)
+   where id = p_assignment;
+end;
+$$;
+
 -- Replaces a draft's written tasks with these, in this order.
 create or replace function lms.set_assignment_tasks(p_assignment uuid, p_tasks text[])
 returns void
@@ -771,6 +814,7 @@ $$;
 -- ---------------------------------------------------------------------------
 
 revoke all on function lms.create_assignment(uuid, uuid, text, timestamptz, text, text, text[], integer, timestamptz, integer, numeric) from public, anon;
+revoke all on function lms.update_assignment(uuid, text, text, timestamptz, integer, timestamptz, integer, numeric) from public, anon;
 revoke all on function lms.set_assignment_tasks(uuid, text[]) from public, anon;
 revoke all on function lms.assignment_tasks(uuid) from public, anon;
 revoke all on function lms.release_results(uuid) from public, anon;
@@ -791,6 +835,7 @@ revoke all on function lms.delete_event(uuid) from public, anon;
 revoke all on function lms.upcoming_events(integer) from public, anon;
 
 grant execute on function lms.create_assignment(uuid, uuid, text, timestamptz, text, text, text[], integer, timestamptz, integer, numeric) to authenticated, service_role;
+grant execute on function lms.update_assignment(uuid, text, text, timestamptz, integer, timestamptz, integer, numeric) to authenticated, service_role;
 grant execute on function lms.set_assignment_tasks(uuid, text[]) to authenticated, service_role;
 grant execute on function lms.assignment_tasks(uuid) to authenticated, service_role;
 grant execute on function lms.release_results(uuid) to authenticated, service_role;

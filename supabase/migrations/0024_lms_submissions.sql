@@ -189,7 +189,13 @@ begin
   insert into lms.mark (submission_id, machine_correct, machine_total)
   values (sid, n_correct, n_total);
 
-  return query select sid, n_correct, n_total;
+  -- A test's score reaches the child only when the teacher releases it
+  -- (0029), so the hand-in itself does not say it.
+  if a.kind = 'test' then
+    return query select sid, null::integer, null::integer;
+  else
+    return query select sid, n_correct, n_total;
+  end if;
 end;
 $$;
 

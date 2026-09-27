@@ -3,7 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * npm run demo:all — the demo school and both apps, from one command.
+ * npm run demo:all [-- --reset] — the demo school and both apps, from one command.
  *
  * Starts the demo server (tools/lms-demo), the teacher app (apps/lms, port
  * 5180) and the student app (apps/student, port 5181), then prints the two
@@ -29,7 +29,8 @@ const PIECES: Piece[] = [
     method: 'POST',
     cwd: ROOT,
     command: process.execPath,
-    args: ['tools/lms-demo/src/cli.ts'],
+    // --reset throws the demo school away and builds it again (new PINs too).
+    args: ['tools/lms-demo/src/cli.ts', ...(process.argv.includes('--reset') ? ['--reset'] : [])],
   },
   {
     name: 'teacher app',

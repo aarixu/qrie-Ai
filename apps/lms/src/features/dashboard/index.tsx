@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { Users } from 'lucide-react'
+import { CalendarPlus, Users } from 'lucide-react'
 import type { TaughtClass } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
 import { useAuthStore } from '@/stores/auth-store'
@@ -12,7 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Loading, Page, Problem } from '@/components/layout/page'
+import { EventDialog } from '@/features/events/event-dialog'
+import { UpcomingList } from '@/features/events/upcoming'
 
 export const className = (c: Pick<TaughtClass, 'grade' | 'sectionName'>) =>
   `Class ${c.grade}${c.sectionName}`
@@ -20,11 +24,27 @@ export const className = (c: Pick<TaughtClass, 'grade' | 'sectionName'>) =>
 export function Dashboard() {
   const me = useAuthStore((s) => s.me)
   const classes = useQuery({ queryKey: ['classes'], queryFn: api.myClasses })
+  const [eventOpen, setEventOpen] = useState(false)
+  // One entry per section the teacher teaches, and the whole school for the admin.
+  const audiences = [
+    ...(me?.kind === 'admin' ? [{ sectionId: null, label: 'The whole school' }] : []),
+    ...[...new Map((classes.data ?? []).map((c) => [c.sectionId, c])).values()].map((c) => ({
+      sectionId: c.sectionId,
+      label: `${className(c)} only`,
+    })),
+  ]
 
   return (
     <Page
       title='My classes'
       description={me ? `Signed in as ${me.displayName}, ${me.schoolName}.` : undefined}
+      actions={
+        audiences.length > 0 && (
+          <Button variant='outline' onClick={() => setEventOpen(true)}>
+            <CalendarPlus /> New event
+          </Button>
+        )
+      }
     >
       {classes.isPending ? (
         <Loading what='your classes' />
@@ -42,6 +62,11 @@ export function Dashboard() {
           ))}
         </div>
       )}
+      <section className='mt-8'>
+        <h2 className='mb-2 text-lg font-semibold'>Coming up</h2>
+        <UpcomingList empty='Nothing coming up. Tests you set and events you post appear here.' />
+      </section>
+      {audiences.length > 0 && <EventDialog open={eventOpen} onOpenChange={setEventOpen} audiences={audiences} />}
     </Page>
   )
 }

@@ -30,6 +30,10 @@ import { setPin } from './auth.ts';
  *      names the error. They are returned as `planted` and written beside the
  *      logins, so that when the brain (L6) says who is stuck on what, it can
  *      be checked against a known answer instead of admired.
+ *   7. One of each other kind of work — written work as a checklist, an
+ *      online test tomorrow, a test on paper with marks, a project — and
+ *      the school's events (0029). Run before the brain, but none of it
+ *      reaches the ledger: ticks and paper marks are not answers.
  *   6. The brain (packages/lms-brain) folds every student's answers into
  *      concept_state, as the demo server does after each hand-in. It is
  *      given the ledger only, never the planted list.
@@ -307,6 +311,9 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
     }
   }
 
+  // 7. The other kinds of work, and events (0029), so each has an example.
+  await seedWorkTypes(db, { rand, at, ability, items, orgId });
+
   // 6. The brain. It is given the ledger and nothing else — not `planted`.
   await think(db, imported.created.filter((a) => a.kind === 'student').map((a) => a.userId));
 
@@ -382,4 +389,151 @@ async function backdate(db: PGlite, submissionId: string, at: Date, due: Date): 
       where id in (select session_id from public.ledger_event where payload->>'submissionId' = $1)`,
     [submissionId, at],
   );
+}
+
+interface WorkSeed {
+  rand: () => number;
+  at: (days: number, hour: number) => number;
+  ability: Map<string, number>;
+  items: Item[];
+  orgId: string;
+}
+
+async function seedWorkTypes(db: PGlite, w: WorkSeed): Promise<void> {
+  const { rand, at } = w;
+  const cls = async (login: string, grade: number, section: string, subject: string) => {
+    const { rows } = await db.query<{ teacher: string; section_id: string; subject_id: string }>(
+      `select ta.teacher_user_id as teacher, ta.section_id, ta.subject_id
+         from lms.teaching_assignment ta
+         join lms.account acc on acc.user_id = ta.teacher_user_id
+         join lms.section sec on sec.id = ta.section_id
+         join lms.subject sub on sub.id = ta.subject_id
+        where acc.login_id = $1 and sec.grade = $2 and sec.name = $3 and sub.name = $4`,
+      [login, grade, section, subject],
+    );
+    const r = rows[0];
+    return { ...r, api: createLmsClient(pgliteTransport(db, r.teacher)) };
+  };
+  const maths8a = await cls('DEMO-T01', 8, 'A', 'Mathematics');
+  const maths8b = await cls('DEMO-T01', 8, 'B', 'Mathematics');
+  const science8a = await cls('DEMO-T02', 8, 'A', 'Science');
+
+  // Written work in the notebook, as a checklist, for both of Neha's classes;
+  // about half the children have ticked everything, some a part.
+  for (const c of [maths8a, maths8b]) {
+    const hw = await c.api.createAssignment({
+      sectionId: c.section_id,
+      subjectId: c.subject_id,
+      kind: 'homework',
+      title: 'Exercise 1.2 in your notebook',
+      instructions: 'Neat work, one question per line. Bring your notebook on Monday.',
+      dueAt: new Date(at(2, 20)).toISOString(),
+      answerTypes: ['checklist'],
+    });
+    await c.api.setAssignmentTasks(hw, [
+      'Exercise 1.2, questions 1 to 4',
+      'Exercise 1.2, questions 5 to 7 (show every step)',
+      'Learn the properties of rational numbers for the class quiz',
+    ]);
+    await c.api.publishAssignment(hw);
+    await db.query(`update lms.assignment set created_at = $2, published_at = $2 where id = $1`, [hw, new Date(at(-1, 9))]);
+    const checked: string[] = [];
+    const notDone: string[] = [];
+    for (const r of await c.api.classRoster(c.section_id)) {
+      const kid = createLmsClient(pgliteTransport(db, r.studentUserId));
+      const tasks = await kid.myTasks(hw);
+      const roll = rand();
+      const upTo = roll < 0.5 ? tasks.length : roll < 0.7 ? 1 : 0;
+      for (const t of tasks.slice(0, upTo)) await kid.tickTask(t.taskId, true);
+      // The teacher has looked at some notebooks already: most ticks were
+      // true, and one or two children who ticked nothing had done nothing.
+      if (upTo === tasks.length && rand() < 0.6) checked.push(r.studentUserId);
+      if (upTo === 0 && rand() < 0.5) notDone.push(r.studentUserId);
+    }
+    if (checked.length) await c.api.setWorkStatus(hw, checked, 'checked');
+    if (notDone.length) await c.api.setWorkStatus(hw, notDone, 'not_done');
+  }
+
+  // An online test for 8A tomorrow morning: 20 minutes, eight questions.
+  const pool = w.items.filter((i) => i.grade === 8 && i.subject === 'Mathematics' && i.chapter === 'squares-and-square-roots');
+  const questions = (pool.length >= 4 ? pool : w.items.filter((i) => i.grade === 8 && i.subject === 'Mathematics')).slice(0, 8);
+  for (const q of questions) await maths8a.api.approveItem(q.id);
+  const test = await maths8a.api.createAssignment({
+    sectionId: maths8a.section_id,
+    subjectId: maths8a.subject_id,
+    kind: 'test',
+    title: 'Unit test 1: Squares and square roots',
+    instructions: 'Twenty minutes. Rough work in your notebook is fine.',
+    opensAt: new Date(at(1, 10)).toISOString(),
+    dueAt: new Date(at(1, 11)).toISOString(),
+    timeLimitMinutes: 20,
+    answerTypes: ['mcq'],
+  });
+  await maths8a.api.setAssignmentItems(test, questions.map((q) => q.id));
+  await maths8a.api.publishAssignment(test);
+
+  // A class test on paper last week, marks entered and released.
+  const paper = await maths8a.api.createAssignment({
+    sectionId: maths8a.section_id,
+    subjectId: maths8a.subject_id,
+    kind: 'test',
+    title: 'Class test: Linear equations',
+    dueAt: new Date(at(-5, 10)).toISOString(),
+    answerTypes: ['paper'],
+    maxMarks: 20,
+  });
+  await maths8a.api.publishAssignment(paper);
+  for (const r of await maths8a.api.classRoster(maths8a.section_id)) {
+    if (rand() < 0.08) {
+      await maths8a.api.setWorkStatus(paper, [r.studentUserId], 'absent');
+      continue;
+    }
+    const theta = w.ability.get(r.studentUserId) ?? 0;
+    const p = 1 / (1 + Math.exp(-(1.2 * theta + 0.6)));
+    const mark = Math.max(0, Math.min(20, Math.round((p * 20 + (rand() - 0.5) * 4) * 2) / 2));
+    await maths8a.api.recordPaperMark(paper, r.studentUserId, mark);
+  }
+  await maths8a.api.releaseResults(paper);
+
+  // A longer assignment in science: written work, a model, and a photo of it.
+  const project = await science8a.api.createAssignment({
+    sectionId: science8a.section_id,
+    subjectId: science8a.subject_id,
+    kind: 'assignment',
+    title: 'Project: a model of a plant cell',
+    instructions: 'Use things from home — clay, card, beads. Label every part.',
+    dueAt: new Date(at(7, 20)).toISOString(),
+    answerTypes: ['checklist', 'photo'],
+    maxMarks: 10,
+  });
+  await science8a.api.setAssignmentTasks(project, [
+    'Draw a labelled plant cell in your notebook',
+    'Make the model at home',
+    'Take a photo of the model and hand it in below',
+  ]);
+  await science8a.api.publishAssignment(project);
+
+  // Events: Neha's PTM for 8A, and the admin's for the whole school.
+  await maths8a.api.createEvent({
+    sectionId: maths8a.section_id,
+    kind: 'ptm',
+    title: 'Parent–teacher meeting, Class 8A',
+    details: 'Room 12. Parents may come any time in the two hours.',
+    startsAt: new Date(at(6, 10)).toISOString(),
+    endsAt: new Date(at(6, 12)).toISOString(),
+  });
+  const { rows: admins } = await db.query<{ user_id: string }>(
+    `select user_id from lms.account where org_id = $1 and kind = 'admin' limit 1`,
+    [w.orgId],
+  );
+  const admin = createLmsClient(pgliteTransport(db, admins[0].user_id));
+  const year = new Date().getFullYear();
+  const gandhi = new Date(year, 9, 2, 0, 0, 0).getTime() > Date.now() ? new Date(year, 9, 2) : new Date(year + 1, 9, 2);
+  for (const e of [
+    { kind: 'holiday' as const, title: 'Gandhi Jayanti — school closed', startsAt: gandhi.toISOString() },
+    { kind: 'exam' as const, title: 'Half-yearly exams begin', details: 'Date sheet on the notice board.', startsAt: new Date(at(14, 9)).toISOString() },
+    { kind: 'event' as const, title: 'Annual day', details: 'Parents welcome. Students in school uniform.', startsAt: new Date(at(21, 17)).toISOString() },
+  ]) {
+    await admin.createEvent({ sectionId: null, ...e });
+  }
 }

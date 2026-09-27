@@ -15,6 +15,8 @@ export type AssignmentKind = 'homework' | 'quiz' | 'test' | 'assignment';
  */
 export type AnswerType = 'mcq' | 'photo' | 'typed' | 'checklist' | 'paper';
 export type EventKind = 'event' | 'ptm' | 'exam' | 'holiday' | 'trip' | 'other';
+/** The teacher's own word on a child's work (0030); a child's ticks are only theirs. */
+export type WorkStatus = 'checked' | 'not_done' | 'absent';
 
 export interface Me {
   userId: string;
@@ -160,6 +162,9 @@ export interface ResultRow {
   /** Marks for work done on paper, entered by the teacher. */
   paperScore: number | null;
   paperMax: number | null;
+  teacherStatus: WorkStatus | null;
+  /** A test: when the child started it; null if they have not. */
+  startedAt: string | null;
 }
 
 export interface MyAssignment {
@@ -191,6 +196,7 @@ export interface MyAssignment {
   /** A test: when this student started it, and when their time ends. */
   startedAt: string | null;
   endsAt: string | null;
+  teacherStatus: WorkStatus | null;
 }
 
 export interface Question {
@@ -256,8 +262,9 @@ export interface UpcomingEvent {
 
 export interface McqResult {
   submissionId: string;
-  correct: number;
-  total: number;
+  /** Null on a test: its score is shown only once the teacher releases it. */
+  correct: number | null;
+  total: number | null;
 }
 
 export interface AssignmentOverview extends AssignmentSummary {
@@ -301,6 +308,9 @@ export interface AssignmentChanges {
   instructions?: string;
   dueAt?: string;
   attemptsAllowed?: number;
+  opensAt?: string;
+  timeLimitMinutes?: number;
+  maxMarks?: number;
 }
 
 export interface SubmissionPhoto {
@@ -427,6 +437,9 @@ export function createLmsClient(t: Transport) {
         p_instructions: c.instructions,
         p_due_at: c.dueAt,
         p_attempts_allowed: c.attemptsAllowed,
+        p_opens_at: c.opensAt,
+        p_time_limit_minutes: c.timeLimitMinutes,
+        p_max_marks: c.maxMarks,
       });
     },
     async deleteDraft(assignmentId: string): Promise<void> {
@@ -457,6 +470,10 @@ export function createLmsClient(t: Transport) {
     async deleteEvent(eventId: string): Promise<void> {
       await t.value('delete_event', { p_event: eventId });
     },
+    /** Checked, not done or absent for each named child; null clears it. */
+    async setWorkStatus(assignmentId: string, studentUserIds: string[], status: WorkStatus | null): Promise<void> {
+      await t.value('set_work_status', { p_assignment: assignmentId, p_students: studentUserIds, p_status: status });
+    },
     async setTeacherMark(submissionId: string, score: number, max: number): Promise<void> {
       await t.value('set_teacher_mark', { p_submission: submissionId, p_score: score, p_max: max });
     },
@@ -473,6 +490,12 @@ export function createLmsClient(t: Transport) {
     async tickTask(taskId: string, done: boolean): Promise<void> {
       await t.value('tick_task', { p_task: taskId, p_done: done });
     },
+    /** One answer on a test, saved as it is tapped; null clears it. */
+    async saveTestAnswer(assignmentId: string, itemId: string, chosenIndex: number | null): Promise<void> {
+      await t.value('save_test_answer', { p_assignment: assignmentId, p_item: itemId, p_chosen: chosenIndex });
+    },
+    mySavedAnswers: (assignmentId: string) =>
+      rows<{ itemId: string; chosenIndex: number }>('my_saved_answers', { p_assignment: assignmentId }),
     async startTest(assignmentId: string): Promise<TestClock> {
       const [clock] = await rows<TestClock>('start_test', { p_assignment: assignmentId });
       return clock;
