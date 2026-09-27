@@ -481,6 +481,13 @@ export interface SchoolTeacher {
   testsToRelease: number;
 }
 
+/** The school's logo (0032): a PNG or JPEG, as base64. */
+export interface SchoolLogo {
+  mime: 'image/png' | 'image/jpeg';
+  base64: string;
+  updatedAt: string;
+}
+
 /** One published piece of a class's work, for its trend. */
 export interface TrendPoint {
   assignmentId: string;
@@ -674,6 +681,14 @@ export function createLmsClient(t: Transport) {
     schoolTeachers: () => rows<SchoolTeacher>('school_teachers'),
     async setSchoolBrand(brand: { primary?: string }): Promise<void> {
       await t.value('set_school_brand', { p_brand: brand });
+    },
+    /** A PNG or JPEG as base64, or (null, null) to remove the logo. */
+    async setSchoolLogo(mime: SchoolLogo['mime'] | 'image/svg+xml' | null, base64: string | null): Promise<void> {
+      await t.value('set_school_logo', { p_mime: mime, p_data: base64 });
+    },
+    /** The caller's school's logo, or null when it has none. */
+    async schoolLogo(): Promise<SchoolLogo | null> {
+      return (await rows<SchoolLogo>('school_logo'))[0] ?? null;
     },
 
     // --- a student -----------------------------------------------------------

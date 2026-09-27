@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
 import { BarChart3, ClipboardList, House, LogOut, Sparkles } from 'lucide-react'
+import { useSchoolLogo } from '@/lib/brand'
 import { signOut, useAuthStore } from '@/stores/auth-store'
 import { cn } from '@/lib/utils'
 import {
@@ -34,15 +35,19 @@ export function Shell() {
   const queryClient = useQueryClient()
   const [leaving, setLeaving] = useState(false)
   const path = useRouterState({ select: (s) => s.location.pathname })
+  const logo = useSchoolLogo(!!me)
   const focused = path.startsWith('/homework/') || path.startsWith('/learn/practice')
 
   return (
     <div className='mx-auto flex min-h-svh max-w-md flex-col bg-background'>
       {!focused && (
         <header className='sticky top-0 z-10 flex items-center gap-3 bg-primary px-4 pt-[max(env(safe-area-inset-top),0.75rem)] pb-3 text-primary-foreground'>
-          <Link to='/' className='min-w-0 flex-1'>
-            <p className='truncate text-sm opacity-80'>{me?.schoolName}</p>
-            <p className='truncate font-semibold'>{me?.displayName}</p>
+          <Link to='/' className='flex min-w-0 flex-1 items-center gap-3'>
+            {logo && <img src={logo} alt='' className='size-10 shrink-0 rounded-xl bg-white object-contain p-0.5' />}
+            <span className='min-w-0'>
+              <span className='block truncate text-sm opacity-80'>{me?.schoolName}</span>
+              <span className='block truncate font-semibold'>{me?.displayName}</span>
+            </span>
           </Link>
           <Button
             variant='ghost'

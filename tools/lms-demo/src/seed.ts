@@ -8,6 +8,7 @@ import { readStudents, readTeachers } from '../../lms-import/src/sheet.ts';
 import { libraryItems, loadBanks, type LibraryItem } from '../../lms-library/src/library.ts';
 import { loadOutcomes, think } from '../../../packages/lms-brain/src/index.ts';
 import { setPin } from './auth.ts';
+import { demoLogoPng } from './logo.ts';
 
 /**
  * The demo school, built the way a real one will be and given a month of
@@ -76,6 +77,7 @@ export interface SeedOptions {
 
 const DATA = new URL('../data/', import.meta.url);
 const DAY = 86_400_000;
+const DEMO_COLOUR = '#0e7490';
 
 // Which students carry a planted misconception: class, subject, which of the
 // class's homeworks sets the chapter, and roll numbers.
@@ -122,6 +124,11 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
   for (const a of imported.created) await setPin(db, a.loginId, a.userId, a.pin);
   const orgId = (await db.query<{ org_id: string }>(`select org_id from lms.school where code = $1`, [DEMO_SCHOOL.code]))
     .rows[0].org_id;
+
+  // The school's look (0031, 0032), set by its admin as a real school would.
+  const office = createLmsClient(pgliteTransport(db, imported.created.find((a) => a.kind === 'admin')!.userId));
+  await office.setSchoolBrand({ primary: DEMO_COLOUR });
+  await office.setSchoolLogo('image/png', demoLogoPng(DEMO_COLOUR).toString('base64'));
 
   // 2. Questions -----------------------------------------------------------------
   const banks = loadBanks();

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { Me } from '@ai-tutor/lms-client'
 import { api, backend } from '@/lib/backend'
+import { applyBrand } from '@/lib/brand'
 
 /**
  * Who is signed in, as the school's records say (lms.me). The session token
@@ -13,7 +14,11 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()((set) => ({
   me: null,
-  setMe: (me) => set({ me }),
+  // The school's colour follows whoever is signed in.
+  setMe: (me) => {
+    applyBrand(me)
+    set({ me })
+  },
 }))
 
 export const NOT_A_TEACHER =

@@ -1,4 +1,6 @@
-import type { Me } from '@ai-tutor/lms-client'
+import { useQuery } from '@tanstack/react-query'
+import { readableOn, type Me } from '@ai-tutor/lms-client'
+import { api } from '@/lib/backend'
 
 const HEX = /^#[0-9a-f]{6}$/i
 
@@ -22,11 +24,14 @@ export function applyBrand(me: Me | null): void {
   document.title = me ? me.schoolName : 'Qrie'
 }
 
-/** Black or white, whichever reads better on `hex` (WCAG relative luminance). */
-function readableOn(hex: string): string {
-  const [r, g, b] = [1, 3, 5].map((i) => {
-    const c = parseInt(hex.slice(i, i + 2), 16) / 255
-    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+
+/** The school's logo as an address an <img> can show, or null (lms.school_logo). */
+export function useSchoolLogo(enabled = true): string | null {
+  const logo = useQuery({
+    queryKey: ['school-logo'],
+    queryFn: api.schoolLogo,
+    enabled,
+    staleTime: 10 * 60_000,
   })
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#000000' : '#ffffff'
+  return logo.data ? `data:${logo.data.mime};base64,${logo.data.base64}` : null
 }
