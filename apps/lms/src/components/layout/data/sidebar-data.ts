@@ -6,6 +6,7 @@ import {
   Palette,
   PieChart,
   School,
+  UserPlus,
   Users,
 } from 'lucide-react'
 import type { AccountKind } from '@ai-tutor/lms-client'
@@ -32,6 +33,7 @@ export function sidebarFor(kind: AccountKind | undefined): SidebarData {
             { title: 'Classes', url: '/school/classes', icon: School },
             { title: 'Students', url: '/school/students', icon: GraduationCap },
             { title: 'Teachers', url: '/school/teachers', icon: Users },
+            { title: 'Add people', url: '/school/people', icon: UserPlus },
             { title: 'School settings', url: '/school/settings', icon: BookOpenCheck },
           ],
         },

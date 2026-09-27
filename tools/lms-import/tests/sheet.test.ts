@@ -59,6 +59,20 @@ describe('readStudents', () => {
     ]);
   });
 
+  it('refuses a section that does not start with a letter, so "12 Physics" can never read as class 1, section 2', () => {
+    const { errors } = readStudents('grade,section,roll,name\n8,1,1,Riya\n');
+    expect(errors).toEqual(['students.csv row 2: section must start with a letter (like A, or B2), got "1"']);
+    const t = readTeachers('name,teaches\nMr Rao,12 Physics; 10 Mathematics\n');
+    expect(t.errors).toEqual([
+      'teachers.csv row 2: cannot read "12 Physics" — write it like "8A Mathematics"',
+      'teachers.csv row 2: cannot read "10 Mathematics" — write it like "8A Mathematics"',
+    ]);
+    expect(readTeachers('name,teaches\nMr Rao,12A Physics; 10 B2 Mathematics\n').teachers[0].teaches).toEqual([
+      { grade: 12, section: 'A', subject: 'Physics' },
+      { grade: 10, section: 'B2', subject: 'Mathematics' },
+    ]);
+  });
+
   it('refuses the same roll number twice in one section', () => {
     const { errors } = readStudents('grade,section,roll,name\n8,A,1,Riya\n8,A,1,Arjun\n');
     expect(errors).toEqual(['students.csv row 3: roll 1 is already used in 8A (row 2)']);

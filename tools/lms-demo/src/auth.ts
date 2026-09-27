@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
 import type { PGlite } from '@electric-sql/pglite';
 import { WRONG_PIN } from '../../../packages/lms-client/src/backend.ts';
 
@@ -20,15 +20,19 @@ export const LOCKED = 'This ID is locked after too many wrong PINs. Try again in
 const MAX_FAILURES = 5;
 
 // A demo of 87 accounts is rebuilt often; N=2^12 keeps that under a second.
-// Real PINs never reach this code.
-const hash = (pin: string, salt: string) => scryptSync(pin, Buffer.from(salt, 'hex'), 32, { N: 4096 });
+// Real PINs never reach this code. Asynchronous, so a school adding a few
+// hundred people does not stop the server answering everybody else.
+const hash = (pin: string, salt: string) =>
+  new Promise<Buffer>((resolve, reject) =>
+    scrypt(pin, Buffer.from(salt, 'hex'), 32, { N: 4096 }, (e, key) => (e ? reject(e) : resolve(key))),
+  );
 
 export async function setPin(db: PGlite, loginId: string, userId: string, pin: string): Promise<void> {
   const salt = randomBytes(16).toString('hex');
   await db.query(
     `insert into demo_auth.login (login_id, user_id, salt, hash) values ($1, $2, $3, $4)
      on conflict (login_id) do update set salt = excluded.salt, hash = excluded.hash, failures = 0, locked_until = null`,
-    [loginId, userId, salt, hash(pin, salt).toString('hex')],
+    [loginId, userId, salt, (await hash(pin, salt)).toString('hex')],
   );
 }
 
@@ -46,7 +50,7 @@ export async function checkPin(
   const row = rows[0];
   if (!row) return { error: WRONG_PIN };
   if (row.locked) return { error: LOCKED };
-  const ok = timingSafeEqual(hash(pin, row.salt), Buffer.from(row.hash, 'hex'));
+  const ok = timingSafeEqual(await hash(pin, row.salt), Buffer.from(row.hash, 'hex'));
   if (ok) {
     await db.query(`update demo_auth.login set failures = 0, locked_until = null where login_id = $1`, [id]);
     return { userId: row.user_id };

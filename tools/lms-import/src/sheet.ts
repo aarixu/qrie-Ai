@@ -129,6 +129,8 @@ export function readStudents(text: string): { students: Student[]; errors: strin
     if (grade === null) bad.push(`grade must be 1-12, got "${tidy(r.get('grade'))}"`);
     const section = tidy(r.get('section')).toUpperCase();
     if (!SECTION.test(section)) bad.push(`section must be letters or digits (up to 20), got "${tidy(r.get('section'))}"`);
+    // A letter first, so a class is never ambiguous: "12A", not "121".
+    else if (!/^[A-Z]/.test(section)) bad.push(`section must start with a letter (like A, or B2), got "${section}"`);
     const roll = tidy(r.get('roll'));
     if (!/^[A-Za-z0-9]{1,20}$/.test(roll)) bad.push(roll ? `roll must be letters or digits (up to 20), got "${roll}"` : 'roll is empty');
     const name = tidy(r.get('name'));
@@ -154,7 +156,9 @@ export function readStudents(text: string): { students: Student[]; errors: strin
   return { students, errors };
 }
 
-const TEACHES = /^(\d{1,2})\s*([A-Za-z0-9]{1,20})\s+(.{1,60})$/;
+// The section starts with a letter, as in the students sheet, so "12 Physics"
+// cannot be read as class 1, section 2.
+const TEACHES = /^(\d{1,2})\s*([A-Za-z][A-Za-z0-9]{0,19})\s+(.{1,60})$/;
 
 export function readTeachers(text: string): { teachers: Teacher[]; errors: string[] } {
   const file = 'teachers.csv';

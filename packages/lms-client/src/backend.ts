@@ -25,6 +25,64 @@ export interface Backend {
   uploadWork(objectName: string, file: Blob): Promise<void>;
   /** A short-lived address a signed-in person may view the photo at. */
   workUrl(objectName: string): Promise<string>;
+  /**
+   * The school admin adding students and teachers from two sheets. Without
+   * `commit` it only checks; with it, it creates the new people and returns
+   * each one's PIN — the only time a PIN is ever seen.
+   */
+  importPeople(request: ImportRequest): Promise<ImportResponse>;
+  /** The school admin giving somebody in the school a new PIN; the old one stops working. */
+  resetPin(loginId: string): Promise<{ loginId: string; displayName: string; pin: string }>;
+}
+
+export interface ImportRequest {
+  /** The text of a students CSV (tools/lms-import/src/sheet.ts). */
+  students?: string;
+  teachers?: string;
+  commit?: boolean;
+  /** Required to commit when the check found warnings. */
+  acceptWarnings?: boolean;
+  /**
+   * Chosen by the browser for one commit. A retry with the same key gets the
+   * same answer — and PINs — back for 15 minutes, if the first was lost.
+   */
+  importKey?: string;
+}
+
+export interface ImportPerson {
+  loginId: string;
+  kind: 'student' | 'teacher' | 'admin';
+  displayName: string;
+  row: number;
+  status: 'new' | 'existing';
+  className?: string;
+  roll?: string;
+  teaches?: string[];
+  /** For a teacher already on the staff: the classes this sheet adds. */
+  adds?: string[];
+}
+
+export interface ImportedAccount {
+  loginId: string;
+  kind: 'student' | 'teacher' | 'admin';
+  displayName: string;
+  className?: string;
+  roll?: string;
+  pin: string;
+}
+
+export interface ImportResponse {
+  schoolCode: string;
+  errors: string[];
+  warnings: string[];
+  people: ImportPerson[];
+  /** What a commit would change: new people, classes added, children given a class. */
+  changes: number;
+  committed: boolean;
+  /** Only after a commit: the people created, each with their PIN. */
+  created: ImportedAccount[];
+  /** Students already in another class this year, left where they are. */
+  conflicts: string[];
 }
 
 export const WRONG_PIN = "That ID and PIN don't match.";
@@ -84,6 +142,14 @@ export function supabaseBackend(supabase: SupabaseLike): Backend {
       const { data, error } = await supabase.storage.from('lms-work').createSignedUrl(objectName, 600);
       if (error || !data) throw new Error(error?.message ?? 'no address for that photo');
       return data.signedUrl;
+    },
+    async importPeople() {
+      // Creating sign-ins needs the service role, so on the hosted project
+      // this belongs in an edge function, which does not exist yet.
+      throw new Error('Adding people from the portal works in the demo school only, for now.');
+    },
+    async resetPin() {
+      throw new Error('New PINs from the portal work in the demo school only, for now.');
     },
   };
 }
@@ -190,6 +256,12 @@ export function demoBackend(baseUrl: string, session: SessionStore = memorySessi
     async workUrl(objectName) {
       const { url } = (await post(`/work-url/${objectName}`, {})) as { url: string };
       return `${base}${url}`;
+    },
+    async importPeople(request) {
+      return (await post('/admin/import', request)) as ImportResponse;
+    },
+    async resetPin(loginId) {
+      return (await post('/admin/reset-pin', { loginId })) as { loginId: string; displayName: string; pin: string };
     },
   };
 }

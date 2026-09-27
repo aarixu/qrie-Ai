@@ -20,6 +20,12 @@ describe('PINs', () => {
     expect(isWeakPin(pin)).toBe(false);
   });
 
+  it('never starts with 0, so a spreadsheet opening the ID and PIN list cannot drop the digit', () => {
+    const offers = ['049381', '493817'];
+    expect(newPin('student', () => offers.shift()!)).toBe('493817');
+    for (let i = 0; i < 200; i++) expect(newPin('student')).toMatch(/^[1-9]\d{5}$/);
+  });
+
   it('never hands out a weak PIN, even when the randomness offers one', () => {
     const offers = ['111111', '123456', '493817'];
     const pin = newPin('student', () => offers.shift()!);

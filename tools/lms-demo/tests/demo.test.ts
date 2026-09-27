@@ -193,3 +193,130 @@ describe('the two apps, joined', () => {
     await expect(other.uploadWork(name.replace(me.userId, (await other.api.me())!.userId), new Blob(['x'], { type: 'text/plain' }))).rejects.toThrow(/photo/);
   });
 });
+
+describe('adding people from the school portal', () => {
+  const students = 'grade,section,roll,name\n8,A,1,Aarohi Sen\n';
+  const fresh = 'grade,section,roll,name\n8,A,31,Kavya Iyer\n8,B,31,Dev Khanna\n';
+  const teachers = 'name,teaches\nSunita Rao,8A English\n';
+
+  it('is for the school admin only', async () => {
+    const t = await signedIn('DEMO-T01');
+    await expect(t.importPeople({ students: fresh })).rejects.toThrow(/only the school admin/i);
+    const kid = await signedIn('DEMO-8A-1');
+    await expect(kid.importPeople({ students: fresh, commit: true })).rejects.toThrow(/only the school admin/i);
+  });
+
+  it('checks the sheets on the server first, and creates nobody while checking', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const count = async () => (await db.query<{ n: number }>(`select count(*)::int as n from lms.account`)).rows[0].n;
+    const before = await count();
+    const check = await admin.importPeople({ students: fresh, teachers });
+    expect(check).toMatchObject({ committed: false, errors: [], created: [] });
+    expect(check.people.map((p) => [p.loginId, p.status])).toEqual([
+      ['DEMO-8A-31', 'new'],
+      ['DEMO-8B-31', 'new'],
+      ['DEMO-T06', 'new'],
+    ]);
+    expect(check.warnings.join('\n')).toMatch(/Subject "English" is new/);
+    expect(await count()).toBe(before);
+  });
+
+  it('refuses a sheet that would land on somebody else, even when told to go ahead', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const r = await admin.importPeople({ students, commit: true, acceptWarnings: true });
+    expect(r.committed).toBe(false);
+    expect(r.errors.join('\n')).toMatch(/DEMO-8A-1 already belongs to/);
+  });
+
+  it('will not go ahead past warnings nobody accepted', async () => {
+    const admin = await signedIn('DEMO-T05');
+    await expect(admin.importPeople({ students: fresh, teachers, commit: true })).rejects.toThrow(/warnings/);
+  });
+
+  it('creates everyone with a PIN that works, once', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const r = await admin.importPeople({ students: fresh, teachers, commit: true, acceptWarnings: true });
+    expect(r.committed).toBe(true);
+    expect(r.created.map((c) => [c.loginId, c.className ?? c.kind])).toEqual([
+      ['DEMO-8A-31', '8A'],
+      ['DEMO-8B-31', '8B'],
+      ['DEMO-T06', 'teacher'],
+    ]);
+    const kavya = r.created[0];
+    expect(kavya.pin).toMatch(/^\d{6}$/);
+    const k = demoBackend(server.url, memorySession());
+    await k.signIn(kavya.loginId, kavya.pin);
+    expect((await k.api.me())?.displayName).toBe('Kavya Iyer');
+    const sunita = demoBackend(server.url, memorySession());
+    await sunita.signIn('DEMO-T06', r.created[2].pin);
+    expect((await sunita.api.myClasses()).map((c) => `${c.grade}${c.sectionName} ${c.subjectName}`)).toEqual(['8A English']);
+
+    const again = await admin.importPeople({ students: fresh, teachers, commit: true, acceptWarnings: true });
+    expect(again.created).toEqual([]);
+    expect(again.people.every((p) => p.status === 'existing')).toBe(true);
+  });
+
+  it('gives the same PINs back when the admin retries a commit whose answer was lost', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const sheet = { students: 'grade,section,roll,name\n8,A,33,Ira Joshi\n', commit: true, importKey: 'k-retry-0001' };
+    const first = await admin.importPeople(sheet);
+    const retry = await admin.importPeople(sheet);
+    expect(first.created).toHaveLength(1);
+    expect(retry.created).toEqual(first.created);
+    // Not for anybody else holding the key.
+    const other = await signedIn('DEMO-T01');
+    await expect(other.importPeople(sheet)).rejects.toThrow(/only the school admin/i);
+  });
+
+  it('checks each of two commits made at once against the school as the other left it', async () => {
+    const admin = await signedIn('DEMO-T05');
+    const [a, b] = await Promise.all([
+      admin.importPeople({ teachers: 'name,teaches\nAsha Pillai,8A Mathematics\n', commit: true, acceptWarnings: true }),
+      admin.importPeople({ teachers: 'name,teaches\nRavi Menon,8B Mathematics\n', commit: true, acceptWarnings: true }),
+    ]);
+    const ids = [a.created[0]?.loginId, b.created[0]?.loginId];
+    expect(ids.every(Boolean)).toBe(true);
+    expect(new Set(ids).size).toBe(2);
+    const { rows } = await db.query<{ display_name: string }>(
+      `select display_name from lms.account where login_id = any($1::text[]) order by display_name`,
+      [ids],
+    );
+    expect(rows.map((r) => r.display_name)).toEqual(['Asha Pillai', 'Ravi Menon']);
+  });
+
+  it('creates nobody when a commit fails part-way', async () => {
+    const admin = await signedIn('DEMO-T05');
+    await db.exec(`
+      create function lms.test_boom() returns trigger language plpgsql as $$
+      begin
+        if new.display_name = 'Boom Boom' then raise exception 'boom'; end if;
+        return new;
+      end $$;
+      create trigger test_boom before insert on lms.account for each row execute function lms.test_boom();`);
+    try {
+      const sheet = 'grade,section,roll,name\n9,D,1,First Child\n9,D,2,Boom Boom\n';
+      await expect(admin.importPeople({ students: sheet, commit: true, acceptWarnings: true })).rejects.toThrow();
+      const { rows } = await db.query(
+        `select 1 from lms.account where display_name = 'First Child'
+         union all select 1 from lms.section where grade = 9 and name = 'D'
+         union all select 1 from demo_auth.login where login_id = 'DEMO-9D-1'`,
+      );
+      expect(rows).toEqual([]);
+    } finally {
+      await db.exec(`drop trigger test_boom on lms.account; drop function lms.test_boom();`);
+    }
+  });
+
+  it("lets the admin give anyone in the school a new PIN, and nobody else's", async () => {
+    const admin = await signedIn('DEMO-T05');
+    const { loginId, pin } = await admin.resetPin('DEMO-8A-2');
+    expect(loginId).toBe('DEMO-8A-2');
+    expect(pin).toMatch(/^[1-9]\d{5}$/);
+    const kid = demoBackend(server.url, memorySession());
+    await kid.signIn('DEMO-8A-2', pin);
+    await expect(demoBackend(server.url, memorySession()).signIn('DEMO-8A-2', login('DEMO-8A-2').pin)).rejects.toThrow();
+    const t = await signedIn('DEMO-T01');
+    await expect(t.resetPin('DEMO-8A-3')).rejects.toThrow(/only the school admin/i);
+    await expect(admin.resetPin('NOPE-1')).rejects.toThrow(/no one in your school/i);
+  });
+});

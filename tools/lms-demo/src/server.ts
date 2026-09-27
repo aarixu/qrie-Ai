@@ -7,6 +7,7 @@ import type { PGlite } from '@electric-sql/pglite';
 import { think } from '../../../packages/lms-brain/src/index.ts';
 import { pgliteTransport } from '../../../packages/lms-client/src/transport.ts';
 import { checkPin } from './auth.ts';
+import { ImportRefused, importForAdmin, resetPinForAdmin } from './import.ts';
 
 /**
  * The demo school, served to both apps over HTTP — what PostgREST, Supabase
@@ -20,6 +21,9 @@ import { checkPin } from './auth.ts';
  *   PUT  /work/<object name>           a photo of work, under 0025's policies
  *   POST /work-url/<object name>       → {url}    a 10-minute address for it
  *   GET  /work-file/<signature>        the photo
+ *   POST /admin/import {students?, teachers?, commit?, acceptWarnings?, importKey?}
+ *                                      the admin adding people (./import.ts)
+ *   POST /admin/reset-pin {loginId}    → {loginId, displayName, pin}
  *
  * Every database call runs as `authenticated` with auth.uid() set to the
  * caller, so RLS decides what each person sees, as in production. It listens
@@ -149,6 +153,20 @@ export async function startDemoServer(opts: {
       const token = tokenOf(req);
       if (token) await db.query(`delete from demo_auth.session where token_hash = $1`, [hashOf(token)]);
       return send(res, 200, {});
+    }
+
+    if (req.method === 'POST' && (route === '/admin/import' || route === '/admin/reset-pin')) {
+      const me = await caller(req);
+      try {
+        return send(
+          res,
+          200,
+          route === '/admin/import' ? await importForAdmin(db, me, json()) : await resetPinForAdmin(db, me, json().loginId),
+        );
+      } catch (e) {
+        if (e instanceof ImportRefused) throw new HttpError(e.status, e.message);
+        throw e;
+      }
     }
 
     const call = /^\/(rows|value)\/([a-z_]+)$/.exec(route);

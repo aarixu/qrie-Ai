@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { UserPlus } from 'lucide-react'
 import { api } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -12,13 +15,24 @@ import {
 } from '@/components/ui/table'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard } from '@/features/analytics/charts'
+import { ResetPinButton } from './reset-pin'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 /** The school's teachers and what each has set and has waiting (lms.school_teachers). */
 export function SchoolTeachersPage() {
   const teachers = useQuery({ queryKey: ['school', 'teachers'], queryFn: api.schoolTeachers })
   return (
-    <Page title='Teachers' description='Who teaches what, what they have set, and what is waiting on them.'>
+    <Page
+      title='Teachers'
+      description='Who teaches what, what they have set, and what is waiting on them.'
+      actions={
+        <Button asChild variant='outline'>
+          <Link to='/school/people'>
+            <UserPlus /> Add teachers
+          </Link>
+        </Button>
+      }
+    >
       {teachers.isPending ? (
         <Loading what='the teachers' />
       ) : teachers.isError ? (
@@ -50,6 +64,7 @@ export function SchoolTeachersPage() {
                   <TableHead className='text-center'>Last 30 days</TableHead>
                   <TableHead className='text-center'>Photos to mark</TableHead>
                   <TableHead className='text-center'>Tests to release</TableHead>
+                  <TableHead />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -67,6 +82,9 @@ export function SchoolTeachersPage() {
                     </TableCell>
                     <TableCell className={cn('text-center tabular-nums', t.testsToRelease > 0 && 'font-medium text-orange-600')}>
                       {t.testsToRelease}
+                    </TableCell>
+                    <TableCell className='text-end'>
+                      <ResetPinButton loginId={t.loginId} name={t.displayName} size='sm' />
                     </TableCell>
                   </TableRow>
                 ))}

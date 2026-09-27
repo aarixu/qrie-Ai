@@ -42,7 +42,9 @@ export function newPin(kind: AccountKind, draw: (length: number) => string = ran
   const length = PIN_LENGTH[kind];
   for (let attempt = 0; attempt < 1000; attempt++) {
     const pin = draw(length);
-    if (new RegExp(`^\\d{${length}}$`).test(pin) && !isWeakPin(pin)) return pin;
+    // Never a leading 0: a spreadsheet opening the list of IDs and PINs
+    // reads 049381 as the number 49381.
+    if (new RegExp(`^[1-9]\\d{${length - 1}}$`).test(pin) && !isWeakPin(pin)) return pin;
   }
   throw new Error('could not draw a PIN that is not weak');
 }
