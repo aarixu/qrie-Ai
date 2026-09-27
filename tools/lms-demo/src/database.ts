@@ -39,6 +39,17 @@ create table demo_auth.login (
 revoke all on schema demo_meta, demo_auth from public, anon, authenticated;
 `;
 
+// Added after the first demo databases were built, so made on every open
+// rather than only on a fresh one: an older demo keeps its data.
+const DEMO_SESSIONS = `
+create table if not exists demo_auth.session (
+  token_hash text primary key,
+  user_id uuid not null references auth.users on delete cascade,
+  until timestamptz not null
+);
+revoke all on demo_auth.session from public, anon, authenticated;
+`;
+
 export async function openDemoDatabase(dir?: string): Promise<PGlite> {
   const existing = dir !== undefined && fs.existsSync(path.join(dir, 'PG_VERSION'));
   const db = dir === undefined ? new PGlite() : new PGlite(dir);
@@ -53,11 +64,13 @@ export async function openDemoDatabase(dir?: string): Promise<PGlite> {
           'Start the demo again with --reset to rebuild it (the demo data is recreated).',
       );
     }
+    await db.exec(DEMO_SESSIONS);
     return db;
   }
   await migrate(db);
   await db.exec(DEMO_SCHEMAS);
   await db.query(`insert into demo_meta.info (key, value) values ('migrations', $1)`, [migrationsFingerprint()]);
+  await db.exec(DEMO_SESSIONS);
   return db;
 }
 

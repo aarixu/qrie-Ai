@@ -82,14 +82,22 @@ export async function startDemoServer(opts: {
 }): Promise<DemoServer> {
   const { db } = opts;
   const work = opts.work ?? memoryWork();
-  const sessions = new Map<string, { userId: string; until: number }>();
   const signed = new Map<string, { name: string; until: number }>();
 
-  const caller = (req: http.IncomingMessage): string => {
-    const token = /^Bearer (\S+)$/.exec(req.headers.authorization ?? '')?.[1];
-    const s = token ? sessions.get(token) : undefined;
-    if (!s || s.until < Date.now()) throw new HttpError(401, 'Please sign in again.');
-    return s.userId;
+  // Sessions live in the database (demo_auth.session), stored as a hash of
+  // the token, so restarting the demo does not sign everybody out.
+  const tokenOf = (req: http.IncomingMessage) => /^Bearer (\S+)$/.exec(req.headers.authorization ?? '')?.[1];
+  const hashOf = (token: string) => createHash('sha256').update(token).digest('hex');
+  const caller = async (req: http.IncomingMessage): Promise<string> => {
+    const token = tokenOf(req);
+    const { rows } = token
+      ? await db.query<{ user_id: string }>(
+          `select user_id from demo_auth.session where token_hash = $1 and until > now()`,
+          [hashOf(token)],
+        )
+      : { rows: [] };
+    if (!rows[0]) throw new HttpError(401, 'Please sign in again.');
+    return rows[0].user_id;
   };
 
   const asUser = <T>(userId: string, fn: (tx: Parameters<Parameters<PGlite['transaction']>[0]>[0]) => Promise<T>) =>
@@ -130,18 +138,22 @@ export async function startDemoServer(opts: {
       const r = await checkPin(db, loginId, pin);
       if ('error' in r) throw new HttpError(401, r.error);
       const token = randomBytes(24).toString('base64url');
-      sessions.set(token, { userId: r.userId, until: Date.now() + SESSION_MS });
+      await db.query(`insert into demo_auth.session (token_hash, user_id, until) values ($1, $2, $3)`, [
+        hashOf(token),
+        r.userId,
+        new Date(Date.now() + SESSION_MS),
+      ]);
       return send(res, 200, { token });
     }
     if (req.method === 'POST' && route === '/auth/sign-out') {
-      const token = /^Bearer (\S+)$/.exec(req.headers.authorization ?? '')?.[1];
-      if (token) sessions.delete(token);
+      const token = tokenOf(req);
+      if (token) await db.query(`delete from demo_auth.session where token_hash = $1`, [hashOf(token)]);
       return send(res, 200, {});
     }
 
     const call = /^\/(rows|value)\/([a-z_]+)$/.exec(route);
     if (req.method === 'POST' && call) {
-      const me = caller(req);
+      const me = await caller(req);
       const t = pgliteTransport(db, me);
       const args = json();
       let body: unknown;
@@ -158,7 +170,7 @@ export async function startDemoServer(opts: {
     }
 
     if (req.method === 'PUT' && route.startsWith('/work/')) {
-      const me = caller(req);
+      const me = await caller(req);
       const name = route.slice('/work/'.length);
       const type = (req.headers['content-type'] ?? '').split(';')[0].trim();
       const bucket = (
@@ -187,7 +199,7 @@ export async function startDemoServer(opts: {
     }
 
     if (req.method === 'POST' && route.startsWith('/work-url/')) {
-      const me = caller(req);
+      const me = await caller(req);
       const name = route.slice('/work-url/'.length);
       const visible = await asUser(
         me,

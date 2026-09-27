@@ -18,8 +18,8 @@ export default defineConfig({
   server: { port: 5180, strictPort: true },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@ai-tutor/lms-client': path.resolve(__dirname, '../../packages/lms-client/src/index.ts'),
+      '@': path.resolve(import.meta.dirname, './src'),
+      '@ai-tutor/lms-client': path.resolve(import.meta.dirname, '../../packages/lms-client/src/index.ts'),
     },
   },
 })

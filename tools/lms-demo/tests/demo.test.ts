@@ -123,6 +123,17 @@ describe('signing in', () => {
     );
     expect((await from('https://evil.example')).status).toBe(403);
   });
+
+  it('keeps people signed in when the demo server restarts', async () => {
+    const held = memorySession();
+    await demoBackend(server.url, held).signIn('DEMO-T04', login('DEMO-T04').pin);
+    const second = await startDemoServer({ db, port: 0 });
+    try {
+      expect((await demoBackend(second.url, held).api.me())?.displayName).toBe('Rohit Verma');
+    } finally {
+      await second.close();
+    }
+  });
 });
 
 describe('the two apps, joined', () => {

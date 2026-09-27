@@ -15,6 +15,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p apps/lms/tsconfig.app.json --noEmit && tsc -p apps/student/tsconfig.app.json --noEmit",
     "style-card": "node tools/teacher-clone/src/style-card.ts",
     "demo": "node tools/lms-demo/src/cli.ts",
+    "demo:all": "node tools/lms-demo/src/all.ts",
     "lms": "npm run dev --workspace @ai-tutor/lms",
     "student": "npm run dev --workspace @ai-tutor/student",
     "app:sync": "npm run build && npm run --workspace @ai-tutor/classroom cap:sync",

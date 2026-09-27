@@ -221,7 +221,7 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
         subjectId: c.subject_id,
         kind: 'homework',
         title: `${title(group)} (draft)`,
-        dueAt: new Date(now + 7 * DAY).toISOString(),
+        dueAt: new Date(at(7, 20)).toISOString(),
         answerTypes: ['mcq'],
       });
       for (const it of group) await teacher.approveItem(it.id);
@@ -234,7 +234,7 @@ export async function seedDemoSchool(db: PGlite, opts: SeedOptions = {}): Promis
         kind: 'homework',
         title: 'Draw and label a plant cell',
         instructions: 'Draw it in your notebook, label every part you know, and hand in a photo of the page.',
-        dueAt: new Date(now + 5 * DAY).toISOString(),
+        dueAt: new Date(at(5, 20)).toISOString(),
         answerTypes: ['photo'],
       });
       await teacher.publishAssignment(photo);
