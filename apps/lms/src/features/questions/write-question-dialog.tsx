@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { letter } from './question-view'
+import { TopicFilter } from './topic-filter'
 
 export type WrittenItem = {
   id: string
@@ -30,6 +31,9 @@ type WriteQuestionDialogProps = {
   onOpenChange: (open: boolean) => void
   grade: number
   subject: string
+  /** Where to file it to begin with; the teacher can change it. */
+  chapter?: string
+  outcome?: string
   /** Called with the new question once it is saved (and so approved). */
   onWritten?: (item: WrittenItem) => void
 }
@@ -43,10 +47,16 @@ export function WriteQuestionDialog({
   onOpenChange,
   grade,
   subject,
+  chapter,
+  outcome,
   onWritten,
 }: WriteQuestionDialogProps) {
   const queryClient = useQueryClient()
   const [stem, setStem] = useState('')
+  const [place, setPlace] = useState<{ chapter: string | undefined; outcome: string | undefined }>({
+    chapter,
+    outcome,
+  })
   const [options, setOptions] = useState(['', '', '', ''])
   const [correct, setCorrect] = useState<number | null>(null)
 
@@ -66,6 +76,7 @@ export function WriteQuestionDialog({
       api.writeItem({
         grade,
         subject,
+        outcomeId: place.outcome,
         stem: stem.trim(),
         options: filled,
         correctIndex: correct!,
@@ -92,6 +103,23 @@ export function WriteQuestionDialog({
           </DialogDescription>
         </DialogHeader>
         <div className='space-y-4'>
+          <div className='space-y-1.5'>
+            <Label>Topic</Label>
+            <div className='flex flex-wrap gap-2'>
+              <TopicFilter
+                mode='choose'
+                grade={grade}
+                subject={subject}
+                chapter={place.chapter}
+                outcome={place.outcome}
+                onChange={setPlace}
+              />
+            </div>
+            <p className='text-xs text-muted-foreground'>
+              Filed under a topic, it can be found by chapter, and your students’ answers to it count towards what Qrie learns
+              about them.
+            </p>
+          </div>
           <div className='space-y-1.5'>
             <Label htmlFor='stem'>Question</Label>
             <Textarea

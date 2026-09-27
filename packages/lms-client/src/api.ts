@@ -54,12 +54,27 @@ export interface LibraryItem {
   outcomeIds: string[];
   /** Approved for THIS school; only approved questions can be set. */
   approved: boolean;
+  /** Where it sits in the syllabus (0028); null for a question filed under no topic. */
+  chapter: string | null;
+  topic: string | null;
+}
+
+/** One topic of a class and subject, in syllabus order (0028). */
+export interface LibraryTopic {
+  chapter: string;
+  outcomeId: string;
+  title: string;
+  questions: number;
 }
 
 export interface LibraryQuery {
   grade?: number;
   subject?: string;
   query?: string;
+  /** A chapter slug, e.g. 'rational-numbers'. */
+  chapter?: string;
+  /** One topic (outcome id). */
+  outcome?: string;
   limit?: number;
   offset?: number;
 }
@@ -68,6 +83,8 @@ export interface NewItem {
   grade: number;
   subject: string;
   stem: string;
+  /** The topic it is filed under; must be of the same class and subject. */
+  outcomeId?: string;
   kind?: 'mcq' | 'task';
   options?: string[];
   correctIndex?: number;
@@ -278,9 +295,13 @@ export function createLmsClient(t: Transport) {
         p_grade: q.grade,
         p_subject: q.subject,
         p_query: q.query,
+        p_chapter: q.chapter,
+        p_outcome: q.outcome,
         p_limit: q.limit,
         p_offset: q.offset,
       }),
+    libraryTopics: (grade: number, subject: string) =>
+      rows<LibraryTopic>('library_topics', { p_grade: grade, p_subject: subject }),
     async approveItem(itemId: string): Promise<void> {
       await t.value('approve_item', { p_item: itemId });
     },
@@ -292,6 +313,7 @@ export function createLmsClient(t: Transport) {
         p_kind: item.kind ?? 'mcq',
         p_options: item.options,
         p_correct_index: item.correctIndex,
+        p_outcome: item.outcomeId,
       })) as string;
     },
     async createAssignment(a: NewAssignment): Promise<string> {

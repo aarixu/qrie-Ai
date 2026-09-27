@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import type { ChapterStanding, ShownMisconception } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
+import { chapterTitle } from '@/lib/curriculum'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,10 +19,6 @@ import { Loading, Problem } from '@/components/layout/page'
 const NEEDS_HELP = 0.4
 const ENOUGH_ANSWERS = 3
 
-export const chapterTitle = (slug: string) => {
-  const words = slug.replace(/-/g, ' ')
-  return words.charAt(0).toUpperCase() + words.slice(1)
-}
 
 const pct = (x: number) => `${Math.round(x * 100)}%`
 

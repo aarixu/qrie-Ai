@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { PenLine } from 'lucide-react'
 import type { LibraryItem } from '@ai-tutor/lms-client'
 import { api } from '@/lib/backend'
+import { chapterTitle } from '@/lib/curriculum'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/sheet'
 import { Problem } from '@/components/layout/page'
 import { QuestionView } from './question-view'
+import { TopicFilter } from './topic-filter'
 import { WriteQuestionDialog, type WrittenItem } from './write-question-dialog'
 
 export type PickedItem = WrittenItem
@@ -38,6 +40,10 @@ const PAGE = 30
 export function QuestionPicker({ open, onOpenChange, grade, subject, chosen, onPick }: QuestionPickerProps) {
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
+  const [place, setPlace] = useState<{ chapter: string | undefined; outcome: string | undefined }>({
+    chapter: undefined,
+    outcome: undefined,
+  })
   const [limit, setLimit] = useState(PAGE)
   const [writing, setWriting] = useState(false)
   const [adding, setAdding] = useState<string | null>(null)
@@ -45,8 +51,8 @@ export function QuestionPicker({ open, onOpenChange, grade, subject, chosen, onP
   const query = text.trim() || undefined
 
   const bank = useQuery({
-    queryKey: ['library', grade, subject, query, limit],
-    queryFn: () => api.library({ grade, subject, query, limit }),
+    queryKey: ['library', grade, subject, place.chapter, place.outcome, query, limit],
+    queryFn: () => api.library({ grade, subject, chapter: place.chapter, outcome: place.outcome, query, limit }),
     enabled: open,
     placeholderData: (prev) => prev,
   })
@@ -75,6 +81,18 @@ export function QuestionPicker({ open, onOpenChange, grade, subject, chosen, onP
             Adding a library question approves it for your school.
           </SheetDescription>
         </SheetHeader>
+        <div className='flex flex-wrap gap-2 px-4 pb-2'>
+          <TopicFilter
+            grade={grade}
+            subject={subject}
+            chapter={place.chapter}
+            outcome={place.outcome}
+            onChange={(next) => {
+              setPlace(next)
+              setLimit(PAGE)
+            }}
+          />
+        </div>
         <div className='flex gap-2 px-4 pb-3'>
           <Input
             placeholder='Search the questions…'
@@ -107,6 +125,12 @@ export function QuestionPicker({ open, onOpenChange, grade, subject, chosen, onP
                   <div className='flex flex-wrap gap-1'>
                     <Badge variant='outline'>{item.source === 'school' ? 'Your school' : 'Qrie library'}</Badge>
                     {item.approved && <Badge variant='secondary'>Approved</Badge>}
+                  {item.chapter && (
+                      <span className='text-xs text-muted-foreground'>
+                        {chapterTitle(item.chapter)}
+                        {item.topic && ` › ${item.topic}`}
+                      </span>
+                    )}
                   </div>
                   <QuestionView stem={item.stem} options={item.options} correctIndex={item.correctIndex} />
                   <Button
@@ -131,6 +155,8 @@ export function QuestionPicker({ open, onOpenChange, grade, subject, chosen, onP
           onOpenChange={setWriting}
           grade={grade}
           subject={subject}
+          chapter={place.chapter}
+          outcome={place.outcome}
           onWritten={onPick}
         />
       </SheetContent>

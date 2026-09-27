@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PenLine } from 'lucide-react'
 import { toast } from 'sonner'
 import { api } from '@/lib/backend'
+import { chapterTitle } from '@/lib/curriculum'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,6 +17,7 @@ import {
 } from '@/components/ui/select'
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { QuestionView } from '@/features/questions/question-view'
+import { TopicFilter } from '@/features/questions/topic-filter'
 import { WriteQuestionDialog } from '@/features/questions/write-question-dialog'
 
 const PAGE = 30
@@ -34,13 +36,18 @@ export function QuestionBank() {
   const current = pick ?? (pairs[0] ? `${pairs[0].grade}|${pairs[0].subjectName}` : null)
   const [grade, subject] = current ? [Number(current.split('|')[0]), current.split('|')[1]] : [undefined, undefined]
   const [text, setText] = useState('')
+  const [place, setPlace] = useState<{ chapter: string | undefined; outcome: string | undefined }>({
+    chapter: undefined,
+    outcome: undefined,
+  })
   const [limit, setLimit] = useState(PAGE)
   const [writing, setWriting] = useState(false)
   const queryClient = useQueryClient()
 
   const bank = useQuery({
-    queryKey: ['library', grade, subject, text.trim() || undefined, limit],
-    queryFn: () => api.library({ grade, subject, query: text.trim() || undefined, limit }),
+    queryKey: ['library', grade, subject, place.chapter, place.outcome, text.trim() || undefined, limit],
+    queryFn: () =>
+      api.library({ grade, subject, chapter: place.chapter, outcome: place.outcome, query: text.trim() || undefined, limit }),
     enabled: current !== null,
     placeholderData: (prev) => prev,
   })
@@ -73,7 +80,14 @@ export function QuestionBank() {
       ) : (
         <>
           <div className='mb-4 flex flex-wrap gap-2'>
-            <Select value={current!} onValueChange={(v) => { setPick(v); setLimit(PAGE) }}>
+            <Select
+              value={current!}
+              onValueChange={(v) => {
+                setPick(v)
+                setPlace({ chapter: undefined, outcome: undefined })
+                setLimit(PAGE)
+              }}
+            >
               <SelectTrigger className='w-56' aria-label='Class and subject'>
                 <SelectValue />
               </SelectTrigger>
@@ -85,6 +99,16 @@ export function QuestionBank() {
                 ))}
               </SelectContent>
             </Select>
+            <TopicFilter
+              grade={grade!}
+              subject={subject!}
+              chapter={place.chapter}
+              outcome={place.outcome}
+              onChange={(next) => {
+                setPlace(next)
+                setLimit(PAGE)
+              }}
+            />
             <Input
               className='max-w-sm'
               placeholder='Search the questions…'
@@ -106,6 +130,12 @@ export function QuestionBank() {
                     <div className='flex flex-wrap gap-1'>
                       <Badge variant='outline'>{item.source === 'school' ? 'Your school' : 'Qrie library'}</Badge>
                       {item.approved ? <Badge variant='secondary'>Approved</Badge> : <Badge variant='outline'>Not reviewed</Badge>}
+                    {item.chapter && (
+                      <span className='text-xs text-muted-foreground'>
+                        {chapterTitle(item.chapter)}
+                        {item.topic && ` › ${item.topic}`}
+                      </span>
+                    )}
                     </div>
                     <QuestionView stem={item.stem} options={item.options} correctIndex={item.correctIndex} />
                     {!item.approved && (
@@ -131,7 +161,14 @@ export function QuestionBank() {
         </>
       )}
       {grade !== undefined && subject !== undefined && (
-        <WriteQuestionDialog open={writing} onOpenChange={setWriting} grade={grade} subject={subject} />
+        <WriteQuestionDialog
+          open={writing}
+          onOpenChange={setWriting}
+          grade={grade}
+          subject={subject}
+          chapter={place.chapter}
+          outcome={place.outcome}
+        />
       )}
     </Page>
   )

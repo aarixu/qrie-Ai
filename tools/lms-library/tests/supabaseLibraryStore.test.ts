@@ -87,6 +87,7 @@ describe('supabaseLibraryStore', () => {
       subject: 'Science',
       chapter: 'cells',
       title: `Node ${i}`,
+      position: i,
     }));
     await upsertOutcomes(URL_, KEY, rows, impl);
     expect(calls.map((c) => JSON.parse(c.body!).length)).toEqual([1000, 201]);

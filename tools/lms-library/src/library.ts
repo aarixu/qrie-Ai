@@ -89,6 +89,8 @@ export interface Outcome {
   subject: string;
   chapter: string;
   title: string;
+  /** Order within the map: chapters, and topics in them, as the syllabus teaches them. */
+  position: number;
 }
 
 /**
@@ -97,12 +99,13 @@ export interface Outcome {
  */
 export function outcomes(banks: Bank[]): Outcome[] {
   return banks.flatMap((b) =>
-    b.graph.nodes.map((n) => ({
+    b.graph.nodes.map((n, position) => ({
       id: n.id,
       grade: n.klass,
       subject: n.subject,
       chapter: n.chapter ?? n.id,
       title: n.title ?? n.id,
+      position,
     })),
   );
 }
