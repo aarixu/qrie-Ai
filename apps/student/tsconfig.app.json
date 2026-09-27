@@ -22,6 +22,9 @@
       ],
       "@ai-tutor/lms-client": [
         "../../packages/lms-client/src/index.ts"
+      ],
+      "@ai-tutor/lms-report": [
+        "../../packages/lms-report/src/index.ts"
       ]
     },
     "strict": true,

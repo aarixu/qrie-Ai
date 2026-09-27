@@ -4,6 +4,7 @@ import type { StudentSubject, TimelineRow } from '@ai-tutor/lms-client'
 import { api, say } from '@/lib/backend'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth-store'
+import { MyReportCard } from './report-card'
 
 export const chapterTitle = (slug: string) => {
   const words = slug.replace(/-/g, ' ')
@@ -50,6 +51,7 @@ export function ProgressPage() {
   return (
     <div className='space-y-6'>
       <h1 className='text-2xl font-bold'>Your progress</h1>
+      <MyReportCard />
       <div className='grid grid-cols-2 gap-2'>
         <Ring label='Work handed in' value={due ? handed / due : null} hint={`${handed} of ${due}`} />
         <Ring label='Average mark' value={average} hint='Marked work' />

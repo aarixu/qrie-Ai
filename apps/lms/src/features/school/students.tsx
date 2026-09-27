@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { formatDistanceToNowStrict } from 'date-fns'
-import { Search } from 'lucide-react'
+import { FileDown, Search, UserPlus } from 'lucide-react'
+import { toast } from 'sonner'
+import { classFileName, deliverPdf, reportCardBytes } from '@ai-tutor/lms-report'
+import { useAuthStore } from '@/stores/auth-store'
 import type { SchoolStudent } from '@ai-tutor/lms-client'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
@@ -18,6 +22,7 @@ import {
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { band, pct } from '@/features/analytics/charts'
 import { initials } from '@/features/students/report'
+import { brandOf, inTurn, reportFor } from '@/features/students/report-pdf'
 import { useSchoolClasses, useSchoolStudents } from './overview'
 
 const ALL = 'all'
@@ -50,7 +55,17 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
   )
 
   return (
-    <Page title='Students' description='Every student’s card. Open one for their full report, subject by subject.'>
+    <Page
+      title='Students'
+      description='Every student’s card. Open one for their full report, subject by subject.'
+      actions={
+        <Button asChild variant='outline'>
+          <Link to='/school/people'>
+            <UserPlus /> Add students
+          </Link>
+        </Button>
+      }
+    >
       <div className='mb-4 flex flex-wrap gap-2'>
         <div className='relative'>
           <Search className='absolute top-2.5 left-2.5 size-4 text-muted-foreground' />
@@ -95,6 +110,10 @@ export function SchoolStudentsPage({ section }: { section?: string }) {
             {shown.length} of {students.data.length}
           </span>
         )}
+        <AllCards
+          students={shown}
+          name={section ? sections.find(([id]) => id === section)?.[1] ?? 'class' : 'all'}
+        />
       </div>
       {students.isPending ? (
         <Loading what='the students' />
@@ -161,5 +180,35 @@ function StudentCard({ s }: { s: SchoolStudent }) {
         </CardContent>
       </Card>
     </Link>
+  )
+}
+
+/**
+ * Every shown student's report card in one PDF, a page or more each, for
+ * printing or sending to a class's parents in one go.
+ */
+function AllCards({ students, name }: { students: SchoolStudent[]; name: string }) {
+  const me = useAuthStore((s) => s.me)
+  const [made, setMade] = useState<number | null>(null)
+  const make = async () => {
+    if (!me || students.length === 0) return
+    setMade(0)
+    try {
+      const reports = await inTurn(students, 4, (s) => reportFor(s.userId), setMade)
+      const bytes = reportCardBytes(reports, { brand: await brandOf(me), generatedAt: new Date() })
+      const file = name === 'all' ? 'All-students-report-cards.pdf' : classFileName(name)
+      await deliverPdf(bytes, file, 'download', `${me.schoolName} — report cards`)
+      toast.success(`${reports.length} report cards downloaded.`)
+    } catch (e) {
+      toast.error((e as Error).message)
+    } finally {
+      setMade(null)
+    }
+  }
+  return (
+    <Button variant='outline' className='ms-auto' disabled={made !== null || students.length === 0} onClick={make}>
+      <FileDown />{' '}
+      {made !== null ? `Making ${made} of ${students.length}…` : `Report cards for these ${students.length} (PDF)`}
+    </Button>
   )
 }

@@ -22,6 +22,7 @@ import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedSchoolIndexRouteImport } from './routes/_authenticated/school/index'
 import { Route as AuthenticatedSchoolClassesRouteImport } from './routes/_authenticated/school/classes'
+import { Route as AuthenticatedSchoolPeopleRouteImport } from './routes/_authenticated/school/people'
 import { Route as AuthenticatedSchoolSettingsRouteImport } from './routes/_authenticated/school/settings'
 import { Route as AuthenticatedSchoolStudentsRouteImport } from './routes/_authenticated/school/students'
 import { Route as AuthenticatedSchoolTeachersRouteImport } from './routes/_authenticated/school/teachers'
@@ -101,6 +102,12 @@ const AuthenticatedSchoolClassesRoute =
     path: '/school/classes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSchoolPeopleRoute =
+  AuthenticatedSchoolPeopleRouteImport.update({
+    id: '/school/people',
+    path: '/school/people',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSchoolSettingsRoute =
   AuthenticatedSchoolSettingsRouteImport.update({
     id: '/school/settings',
@@ -174,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/bank': typeof AuthenticatedBankRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/school/settings': typeof AuthenticatedSchoolSettingsRoute
   '/school/students': typeof AuthenticatedSchoolStudentsRoute
   '/school/teachers': typeof AuthenticatedSchoolTeachersRoute
@@ -197,6 +205,7 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/school/settings': typeof AuthenticatedSchoolSettingsRoute
   '/school/students': typeof AuthenticatedSchoolStudentsRoute
   '/school/teachers': typeof AuthenticatedSchoolTeachersRoute
@@ -223,6 +232,7 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/school/classes': typeof AuthenticatedSchoolClassesRoute
+  '/_authenticated/school/people': typeof AuthenticatedSchoolPeopleRoute
   '/_authenticated/school/settings': typeof AuthenticatedSchoolSettingsRoute
   '/_authenticated/school/students': typeof AuthenticatedSchoolStudentsRoute
   '/_authenticated/school/teachers': typeof AuthenticatedSchoolTeachersRoute
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/bank'
     | '/errors/$error'
     | '/school/classes'
+    | '/school/people'
     | '/school/settings'
     | '/school/students'
     | '/school/teachers'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/'
     | '/errors/$error'
     | '/school/classes'
+    | '/school/people'
     | '/school/settings'
     | '/school/students'
     | '/school/teachers'
@@ -297,6 +309,7 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
     | '/_authenticated/school/classes'
+    | '/_authenticated/school/people'
     | '/_authenticated/school/settings'
     | '/_authenticated/school/students'
     | '/_authenticated/school/teachers'
@@ -413,6 +426,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSchoolClassesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/school/people': {
+      id: '/_authenticated/school/people'
+      path: '/school/people'
+      fullPath: '/school/people'
+      preLoaderRoute: typeof AuthenticatedSchoolPeopleRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/school/settings': {
       id: '/_authenticated/school/settings'
       path: '/school/settings'
@@ -508,6 +528,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedSchoolClassesRoute: typeof AuthenticatedSchoolClassesRoute
+  AuthenticatedSchoolPeopleRoute: typeof AuthenticatedSchoolPeopleRoute
   AuthenticatedSchoolSettingsRoute: typeof AuthenticatedSchoolSettingsRoute
   AuthenticatedSchoolStudentsRoute: typeof AuthenticatedSchoolStudentsRoute
   AuthenticatedSchoolTeachersRoute: typeof AuthenticatedSchoolTeachersRoute
@@ -525,6 +546,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedSchoolClassesRoute: AuthenticatedSchoolClassesRoute,
+  AuthenticatedSchoolPeopleRoute: AuthenticatedSchoolPeopleRoute,
   AuthenticatedSchoolSettingsRoute: AuthenticatedSchoolSettingsRoute,
   AuthenticatedSchoolStudentsRoute: AuthenticatedSchoolStudentsRoute,
   AuthenticatedSchoolTeachersRoute: AuthenticatedSchoolTeachersRoute,

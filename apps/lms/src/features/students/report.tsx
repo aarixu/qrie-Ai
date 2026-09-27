@@ -30,6 +30,8 @@ import {
 import { Loading, Page, Problem } from '@/components/layout/page'
 import { ChartCard, Kpi, MasteryBars, band, pct } from '@/features/analytics/charts'
 import { kindLabel } from '@/features/homework/kinds'
+import { ResetPinButton } from '@/features/school/reset-pin'
+import { ReportCardButtons } from './report-buttons'
 
 export const initials = (name: string) =>
   name
@@ -75,6 +77,14 @@ export function StudentReport({ studentId }: { studentId: string }) {
       title={s ? s.displayName : 'Student'}
       description={s ? `Class ${s.className ?? '—'} · Roll ${s.rollNumber ?? '—'} · ${s.loginId}` : undefined}
       back={back}
+      actions={
+        card.data && (
+          <>
+            <ReportCardButtons studentId={studentId} />
+            {me?.kind === 'admin' && <ResetPinButton loginId={card.data.loginId} name={card.data.displayName} />}
+          </>
+        )
+      }
     >
       {card.isPending ? (
         <Loading what='the student' />

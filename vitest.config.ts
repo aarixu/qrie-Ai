@@ -30,6 +30,7 @@ export default defineConfig({
       '@ai-tutor/maic-adapter': pkg('maic-adapter'),
       '@ai-tutor/lms-client': pkg('lms-client'),
       '@ai-tutor/lms-brain': pkg('lms-brain'),
+      '@ai-tutor/lms-report': pkg('lms-report'),
       // The teacher app's own alias (apps/lms uses @/ for its src).
       '@': fileURLToPath(new URL('./apps/lms/src', import.meta.url)),
     },
