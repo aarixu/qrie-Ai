@@ -19,7 +19,7 @@ tests pass**, 3 skipped, typecheck clean, full suite run on 2026-09-26.
   broken · what nobody has checked · what is blocked on Aarav
 - **Part 2 — The plan:** the direction · decisions made · decisions open · the
   system · build order · **the LMS build plan (L0–L7, the current work)** ·
-  workstreams A–N · the API track (parked) · changes to the brief
+  workstreams A–N · **the AI tutor build plan (T0–T9, the tutor track)** · the API track (parked) · changes to the brief
   · what we must learn from schools
 - **Part 3 — How to work here:** traps · deploying · mistakes worth not repeating
 
@@ -33,45 +33,92 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 ---
 
-## ► NEXT SESSION STARTS HERE — finish the AI tutor
+## ► NEXT SESSION STARTS HERE — build the tutor, T0 first
 
-Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."*
+Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."* The build plan is in Part 2, "The AI tutor build plan — T0–T9". This section records what 2026-09-28 proved and what to do first.
 
-**What changed, and why the tutor is buildable again.** Google billing was
-linked on 2026-09-28 and **Vertex is live** — measured, ledger-confirmed, all
-four pipeline models answering, JSON mode included (Part 1 item 1). The block
-that froze this product for five days is gone. Cold class preparation, the
-doubt tutor and the escalated judge are all reachable for the first time since
-the prototype gate went in.
+### Proven on 2026-09-28
 
-**Do these in order. Step 1 is not optional.**
+**A cold class prepares — the first maths topic ever prepared.**
 
-1. **Prove a cold class actually prepares, end to end.** Four models answering
-   separately is not a class. Run `prepareLiveClass` for one cold topic with the
-   gate off **locally**, and check three things: the planner's output passes
-   `validateLesson`, the artist returns usable images, and the class plays. This
-   is the single fact everything below depends on and **nobody has established
-   it**. Nemotron passed simple calls and still failed here.
-2. **Fill `model_price`** (Part 1 item 3 — the table is empty, so every call
-   prices at ₹0). Until it has rows, the ₹5/student-hour ceiling is
-   unenforceable by construction and step 3 cannot be costed. Then price the
-   class from step 1 and write the number into this file.
-3. **Only then decide the gate.** `PROTOTYPE_ONLY_PREPARED` in
-   `apps/classroom/src/lib/prototype.ts` — one boolean, set it `false` and every
-   screen goes back to preparing live. 21 tests in 5 files mock it off already,
-   so they start testing the real path the moment it flips. **Do not flip it on
-   the strength of item 1's table** — flip it because step 1 passed and step 2
-   priced it.
-4. **Then the voice**, which is the oldest unfinished thing here (Part 1 item 4):
-   two of three layers are missing, every line falls to the relay, and whether a
-   student actually HEARS the 14 silent classes was never confirmed. Aarav's
-   constraint stands: **fix it as latency, not by prerecording** — a recorded
-   take for all 14 would make a live-tutor demo dishonest.
+*How it was run (main session, measured):*
+- The local dev app was pointed at the production relay (`VITE_RELAY_URL`).
+- The gate was turned off locally, and `keep()` was stubbed so nothing reached the production catalogue. Both edits were reverted afterwards.
+- Topic: `class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method`.
 
-**The other track.** The LMS (Part 2, L0–L7) is real, built and demo-ready, in
-worktree `.claude/worktrees/lms`. It is not paused by this; the two run side by
-side, and the tutor joins the student app later. Do not let a tutor session
-quietly rewrite LMS decisions.
+*What it produced:*
+- **Timing.** `prepareLiveClass` took totalMs **43,093** and planMs **23,573**.
+- **Validation.** The first plan failed `validateLesson`: a spoken question had no question written on the board. The plan was repaired and passed, and `saveable()` = true.
+- **The lesson.** 14 beats, 34 elements and 4 asks. All 4 asks are open. Each has 2–3 whyProbe options, and each option carries a why and a hint. Language: en.
+- **The artist never ran.** `visuals: []` and `visualsMs: 0`, so "the artist returns usable images" is **still unproven**. Two graphic nouns were drawn as pencilled circles, because production `/api/icons` answers 501 by design.
+- **It played.** The board drew beat by beat, from 1/14 to 4/14 in about 32 s.
+- **Speech.** Through the production relay (OpenRouter → Deepgram aura-2), each line took 5,263 / 3,481 / 3,341 / 4,585 ms. These are whole-fetch times from the Performance API; the requests are cross-origin, so time-to-first-byte is hidden.
+- **The mic dialog was wrong.** It told the tester "Nothing is recorded or kept". A12 is a live defect.
+- **Cost: NOT MEASURED.** `model_price` is still empty, and reading `usage_event` was declined.
+
+**What the lesson got wrong, each traced to code (re-checked by hand 2026-09-28).**
+
+- **Every question was written twice.** All 4 of 4 asks carry two question lines (b1_9/b1_10, b2_8/b2_9, b3_10/b3_11, b4_4/b4_5). `saidButNotWritten` does not count an ask as written ink, so the repair adds a `write`, and the layout writes the question as well (`layout.ts:398`).
+- **The held question is never spoken.** The question the class holds on is not said aloud; the spoken one is worded differently.
+- **The answer is on the board during the hold,** on all 4 asks. For example, b3_4 shows "Solution: x = 49/29, y = 19/29" while it asks how to find x.
+- **b3_12 overlaps b3_7** by 17.4 units, because equation blocks ignore their page's x (`layout.ts:589, 677`).
+- **0 of 14 beats carry an outcome tag,** so the fold would drop every answer (`fold.ts:197`). This is probably plumbing: `outcomesForTopic` returns [] when no current class is set (`topicOutcomes.ts:33-41`). UNVERIFIED until T1.3's test.
+- **The arithmetic is right.** 11 of 11 equation lines hold under x = 49/29, y = 19/29 (hand check). The opening puzzle (x + y = 50, y = x + 30) is never solved.
+
+**Vertex speech, measured.** Model `gemini-3.1-flash-tts-preview`, voice Sulafat, project `project-dd876d44`, location `global`.
+
+| Call | Result |
+|---|---|
+| Streamed (`streamGenerateContent?alt=sse`), 3 runs | first audio 1.38–1.48 s; whole line 3.0–3.6 s |
+| Unstreamed (`generateContent`), 5.5 s line | 4.2–4.9 s |
+| Audio | PCM `audio/l16`, 24 kHz mono; ~32 audio tokens per second |
+
+At $20/M audio tokens, that is ≈ ₹0.061 per second of speech, 1.4–1.8× aura-2 (DERIVED).
+
+**The voice fallback is built, committed and DEPLOYED.** Commit `53ccb37`, relay redeployed 2026-09-28 (function only, no `db push`). Verified on production: normal speech 200 `audio/mpeg`; a line forced to fail at OpenRouter (bogus `model=` on `/api/speech`) answered 200 `audio/wav` that a browser decoded as 5.72 s; a warm class played with voice. What it does:
+
+- `packages/relay/src/vertexSpeech.ts` collects the Vertex stream into one WAV. It times out after 20 s, and a 200 with no audio becomes a 502.
+- Both hosts fall back on any upstream failure.
+- OpenRouter speech is now booked when the vendor answers (`onServed`), so a fallback line is not counted twice.
+- `model_price.sql` carries the TTS rows.
+
+The main session reported 322 relay tests and 68 prewarm tests passing, with typecheck clean. Two limits remain: a fallback line is spoken by Sulafat while normal lines are Thalia, and the meter charges it at the aura-2 rate (`gate.ts:104`).
+
+### Do these in order
+
+1. **Build T0a, offline, running only the touched tests:**
+   - `haltSession()` on every path (A5);
+   - A8: the stub only on model failure, no name in the planner prompt, a fixed fallback line;
+   - A13;
+   - A7;
+   - A12: the mic copy, `/privacy`, the stale claims;
+   - T0.1: doubt cost controls.
+
+   Nothing here calls production.
+2. **Aarav deploys T0a.**
+   - The site: `node tools/bin/build-site.mjs`, then `cd landing && npx vercel deploy --prod --yes`.
+   - The relay: `npx supabase functions deploy relay --no-verify-jwt --project-ref ueemqirxyrltdmqgnidy --use-api` — function only, never `npm run relay:deploy` (it bundles `db push`). Run from this CLI on 2026-09-28 and it worked; the Vertex fallback (T0.2) is already live.
+
+   If T0a cannot ship at once, deploy T0.0 first, so raise-hand says "not available right now". A read-only fetch then confirms the new mic sentence is in the served JS.
+3. **Aarav decides four things, which unblock T1–T3:**
+   - TD3: is caching fixed lesson audio "prerecording"?
+   - TD5a: do browser keeps get a 403?
+   - TD10: who does a distress alert go to?
+   - TD14: send the DPDP §9(3) question to the lawyer.
+4. **Fill the prices (A9).**
+   1. Correct the nova-3 row to the `multi` rate.
+   2. Aarav runs `SUPABASE_SERVICE_ROLE_KEY=... node tools/bin/apply-prices.mjs` and reads the diff.
+   3. He runs it again with `--yes`.
+5. **T0b, offline:** prefetch (T0.5), the books (T0.3), the latency harness (T0.4), and `measure-class` adapted to maths.
+6. **The costed proof (T0.6), once Aarav agrees to the spend.**
+   1. Play two classes to the last beat through the production relay.
+   2. For each class, Aarav runs `npx supabase db query --linked "select * from public.session_cost('<session id>')"`.
+   3. Write the numbers into this file.
+7. **T0.7:** send 10 recorded Hinglish distress sentences through `/api/hear`. Every one must screen to support.
+
+Then T1. **Do not flip `PROTOTYPE_ONLY_PREPARED`.** TD5b is decided at T1's exit, and the recommendation is to keep it on for students, filling the catalogue by prewarm.
+
+**The other track.** The LMS (Part 2, L0–L7) is real, built and demo-ready, in worktree `.claude/worktrees/lms`. It is not paused by this. The two tracks run side by side, and the tutor joins the student app later. Do not let a tutor session quietly rewrite LMS decisions. The tutor asks the LMS lane for every table it needs (decision 9).
 
 ---
 
@@ -241,6 +288,8 @@ right now**, on either provider. This should be filled before or alongside any
 provider switch, or the switch is unmeasurable by construction.
 
 ### 4. Voice: the two fast layers are missing
+
+**Since 2026-09-28 the relay layer has a fallback:** when OpenRouter fails (no credit, down, any non-2xx or no network) the line is spoken on Vertex Gemini TTS instead (`packages/relay/src/vertexSpeech.ts`, commit `53ccb37`, deployed and verified on production — see T0.2). It is a different voice (Sulafat, not Thalia) and ~1.4× dearer per second. The table below is unchanged by it.
 
 `apps/classroom/src/lib/lessonVoice.ts` tries three sources, best first, then a
 browser fallback:
@@ -430,12 +479,7 @@ class", but live preparation passes no reviewer (`liveClass.ts:336-356`).
 
 Listed so the next session does not mistake silence for evidence.
 
-- **THE BIG ONE, newly testable: whether a cold class actually prepares.**
-  Vertex answers and all four pipeline models return 200 with valid JSON
-  (item 1), but `prepareLiveClass` has not been run end to end since billing
-  returned. Nothing yet shows the planner's output passes `validateLesson`, that
-  the artist returns usable images, or what one class costs. This is step 1 of
-  the next session and the precondition for turning the gate off.
+- ~~Whether a cold class actually prepares~~ — **answered 2026-09-28 for one maths topic**: it prepared in 43 s after one repair and played (see "► NEXT SESSION STARTS HERE"). Still unchecked: that the artist returns usable images (that class asked for none), what a class costs (`model_price` empty), and the lesson defects listed there.
 - Whether a real student on a real phone **hears** any of the 14 classes (see 4).
 - Whether OpenRouter's pricing keeps a class under **₹5/student-hour**.
 - What a class costs on either provider — unmeasurable while `model_price` is
@@ -618,8 +662,8 @@ a measurement. So only the doubt agent threatens the ₹5 ceiling.
 | 3 | **N1** — school, section, subject, roster, ID + PIN, section-scoped teacher access | No |
 | 4 | **The LMS:** N2–N3 + C2–C4 + C6–C8 + J1 | **Yes** |
 | 5 | **The student app's closed loop:** E + F + G + D4–D7 + K1–K2 + M1–M4, plus school branding | **Yes** |
-| 6 | **The text tutor, behind a gate:** H + I + L + K3 + M5–M6 | Later |
-| Later | Voice (H7) and AI reading of photos (J2), once their cost is measured | — |
+| 6 | **The tutor track — superseded 2026-09-28** by "The AI tutor build plan — T0–T9" below, which orders H, I, L, K3 and M5–M6 with the rest for the live tutor | No (T4b waits on LMS L6) |
+| Later | Voice (H7) is now T5/T7 of the tutor plan; AI reading of photos (J2) stays deferred until its cost is measured | — |
 
 No durations are given, because none could be stated with a basis.
 
@@ -903,6 +947,581 @@ the [appendix](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
 | N2 | Assignments scoped to outcomes with due dates; submissions; teacher marks | — |
 | N3 | Class view: unassisted mastery, the assisted/unassisted gap, top confirmed misconceptions, who is behind | — |
 | N4 | Exam calendar per school (the sequencer boosts in-window topics); a student goals table | — |
+
+---
+
+## The AI tutor build plan — T0–T9 (the tutor track)
+
+Written 2026-09-28 at `53ccb37`, after the cold-class proof. Three critics reviewed a draft: brief coverage, feasibility and cost, and live feel and safety. Every blocking critique was either accepted or rejected with a stated reason. This track runs beside the LMS plan (L0–L7) and changes nothing in it. For the tutor, this section replaces Build-order row 6 and the row after it ("Later").
+
+**How to read it.**
+
+- **IDs.** The IDs A1–N4 are reused as they are. New items are numbered `T<phase>.<n>`. Tutor decisions are numbered **TD1–TD16**, so they never collide with decisions 1–17 above.
+- **Labels.**
+  - **✓** means re-checked by hand at `53ccb37` on 2026-09-28.
+  - **MEASURED** always carries its date and method.
+  - **DERIVED** is arithmetic on measured quantities and the rows of `tools/sql/model_price.sql`, at ₹95.6/USD. That file is **not applied** in production.
+  - **UNVERIFIED** is everything else.
+
+**Where it stands, in three lines.**
+
+1. **The brain barely acts.** Help levels are literals (✓ `ClassRoom.tsx:315, 762, 921`), and the retry budget is a literal too (✓ `:816`). A hinted answer moves `mastery` (✓ `fold.ts:260`). Today's cold maths class carried 0 outcome tags on 14 beats (✓ `lesson-substitution.json`), so the fold would drop every answer (✓ `fold.ts:197`).
+2. **The live tutor cannot write on the board.** Its only board action is `recall(beatId)` (`doubt-session/src/agent.ts:4-11`, canvas audit 2026-09-28).
+3. **With a cloud voice, ₹5 all-in is not reachable at pilot volume.** The cost model below states the volume and the hour shape that ₹5 needs.
+
+### The architecture — the LAM decides, the LLM classifies and renders, code checks
+
+| Part | What it decides | What it must never do | Where it runs |
+|---|---|---|---|
+| **Learner model**: one pure fold, `learner-model/src/fold.ts` | What the student can do alone and with help; misconceptions; memory and review dates | Talk, call a model, or let assisted `mastery` drive a decision | The server is authoritative from B3 on. The browser keeps a copy for one session. Event time comes from the relay's clock, never `Date.now()` |
+| **tutor-control**: new `packages/tutor-control` | The next action: `{kind, rung, outcomeId, contentRef or brief, mustNotReveal[], boardIntent, scheduleRetest, errorClass, because}`. It is computed for **every verdict branch before** any model call | Produce words, write belief, or read the device clock | A pure `decide()` in the browser, replayable on the server |
+| **LLM**: Vertex `gemini-3.7-flash` through `/api/llm` | It classifies first (`verdict` and `matched`), then renders only that branch's steps | Choose the rung, or emit text that fails the leak check | One streamed call per turn (T5.4). When authored content covers the branch, the call only classifies |
+| **Verifier**: code | Maths consistency: at prep (T1.4), on the judge's numeric verdict (E2/E3), and on every equation written live (T2.4). A leak check on every sentence and every board string. `validateLesson` and an overlap gate at prep | — | Deterministic, with 0 model calls. An LLM reviewer runs only at prep (C10) |
+| **Safety** | Whether a turn may happen at all | — | **In:** `fromStudent` in the browser, plus the same screen in the relay (A6). **Out:** a distress check only, by design (✓ `lib/safety.ts:57-74`), plus Vertex `safetySettings` (A7). One `haltSession()` covers every path |
+| **Board**: new `packages/live-board`, built over `board-layout` | Where ink goes | Take a coordinate from a model | In the browser, feeding `Scene` through `BoardSession` |
+| **Voice** | When the student has finished speaking, and when her audio actually starts (`onStart`) | — | Voice-activity detection in the browser; STT and TTS through the relay |
+| **Relay** | Who may call what, at what cost | Hold learning state | Supabase Edge Function |
+
+**The LLM does see the answer.** To classify an open answer, the call must see `expect`. So `mustNotReveal` is enforced by a code check on what the call emits, not by hiding the answer from the model.
+
+```
+ student speaks / taps / types
+   | EAR: endpoint after 900 ms of quiet (ear.ts:44) --> ACK: cached persona line <= 300 ms, never "right"/"wrong"
+   v
+ SAFETY in: fromStudent (browser) + relay backstop (A6) --distress--> haltSession() + webhook (L1a)
+   v
+ JUDGE: local match (lexical -> MiniLM at a margin with 0 errors both ways) --settled: branch known, 0 calls--+
+   | not settled                                                                                          |
+   v                                                                                                      |
+ decide() for EVERY branch: right / wrong-option-k / unmatched / unclear                                  |
+   v                                                                                                      |
+ ONE streamed call: verdict+matched FIRST, then that branch's steps <--------------------------------------+
+   |   authored branch -> classify only; the words come from cached or primed audio
+   v
+ per step {say, ink[]}: leak check (digits and words) . toStudent . maths check . parseBoardOps
+   v
+ MOUTH: streaming TTS --onStart--> BOARD: layoutLiveTurn (append) -> BoardSession -> Scene
+   v
+ LEDGER: helped{rung} BEFORE any content . intervened{action, because, errorClass} . answered{outcomeIds, misconceptionId, surface}
+   v in-browser fold ... session end ... SERVER FOLD (B3)
+ nextActivity(): due reviews -> misconception fixes -> prerequisite gaps -> syllabus, each with a `because`
+```
+
+**The canvas protocol (`packages/live-board`)**
+
+- **Wire format.** A turn is an ordered list of steps, `[{say, ink: BoardOp[]}]`. board-layout already reveals ink by `say` (✓ `board-layout/src/types.ts:159-167`). A worked solution is `work{steps:[{say, line}]}`.
+- **The ops.** `write`, `equation`, `note`, `list`, `card`, `work`, `mark{targetId, span?, shape}`, `arrow{fromId, toId, label?}` (same page only), `point{ids}` (transient, does not dim the board), `recall{beatId}`, `newPage`.
+- **Invariants.**
+  1. No coordinate ever comes from a model.
+  2. Every target must exist, or the op is dropped.
+  3. Text length and op count are capped.
+  4. Every string is screened and leak-checked.
+  5. Every equation is maths-checked.
+  6. Ids are namespaced `live<n>_`.
+  7. The augmented lesson passes `validateLesson` and the overlap gate.
+- **Layout.** `layoutLiveTurn` appends. It is top-anchored, never re-centres, and never moves ink that has already been revealed. Today `layoutBeat` centres any stack with no flexible block (✓ `layout.ts:1336-1340`), and its solver moves handwrite after the fact (✓ `layout.ts:1387`).
+- **Where live ink goes.**
+  - At a held ask, it goes into a **work area reserved at prep** on that page.
+  - A doubt gets a fresh page, and that page **opens with a copy of the element being explained**. The mark and the new work then share one frame. The camera window is exactly one page, and it scrolls rather than zooming out (✓ `stage/src/frame.ts:52, 138-158`).
+- **BoardSession.**
+  - It hands the augmented lesson to Scene only. The player rebuilds on a new lesson identity (✓ `usePlayer.ts:26`), so passing it there would restart the class.
+  - `visible` = the class beat's show set plus all live ids. Scene re-animates any id missing from the previous set (✓ `Scene.tsx:1238-1247, 1294`), so this is what stops the board redrawing when a doubt ends.
+  - Live pages stay recallable for the session. They are never saved into the catalogue lesson (TD13).
+
+**Reused, new, retired**
+
+- **Reused:** `board-layout`, `lesson-format`, `player`, `stage/Scene`, `learner-model`, `knowledge-graph`, the `tutor-judge` local matcher, `safety`, `ledger`, the relay, and `class-prep` with its repair loop.
+- **New:** `tutor-control`, `live-board`, a maths checker, relay streaming for text and speech, and a misconception registry.
+- **Retired:** `action-player`, `maic-adapter` and `ActionLab`. The controller takes a fixed `Action[]` with no append (`action-player/src/controller.ts:47-51`), and the model picks x and y (`reduce.ts:55-91`).
+- **Tables:** every new table goes through the LMS lane (decision 9). T0–T4a need none.
+
+### Order
+
+```
+T0a -> T0b -> T1 -> T2 -> T3 -> T4a -+-> T5 -> T6 -> T7 -> T8
+                                     +-> T4b (waits on LMS L6 hosted)
+T9's items run alongside from T1 on; its gate decides real students.
+```
+
+No durations are given, because none could be stated with a basis. Each phase ends with a **Needs Aarav** line listing what only he can do. Claude can build and test everything else offline, running only the test files a change touches.
+
+### T0 — The floor: stop the live holes, then measure
+
+**Why now.** The doubt tutor is reachable on every warm class in production:
+
+- `raiseHand` reads no gate (✓ `PROTOTYPE_ONLY_PREPARED` does not appear in `ClassRoom.tsx`).
+- Vertex has answered since 2026-09-28.
+- The doubt path discards `halted` (✓ `ClassRoom.tsx:508-510`).
+
+Whether the deployed bundle matches this tip is UNVERIFIED. Nothing can be priced yet (`model_price` is empty), and nothing can be timed: `track()` does nothing unless `VITE_POSTHOG_KEY` is set (✓ `telemetry.ts:28-31`).
+
+**T0a — the first deploy, gated on its own**
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T0.0 | **Stop-gap, used only if T0a cannot ship at once.** Raise-hand shows "not available right now" behind one build flag (`ClassRoom.tsx:906-945`) | NEW | With the flag off, raising a hand makes 0 `/api/llm` calls (test). The flag is removed once A5 is live |
+| A5 | **`haltSession()`: one halt for every path** | A5 (widened) | `speak` returns `{halted}` (`handoff.ts:40`). `haltSession()` does all of the following: pauses the player; closes the ear; cancels TTS, including the primed next line; freezes the board; disables raise-hand; skips the doubt's exit line (✓ `handoff.ts:149`); shows a support screen. Today the class path only `return`s (✓ `ClassRoom.tsx:691, 769`). One test per entry path (tap, ear, typed answer, typed doubt, model reply). Each must show 0 further speech, 0 ink, 0 `/api/llm` calls, the mic closed, and no auto-resume |
+| A8 | Start the stub only when the model fails. Take the child's name out of the planner prompt, and cap the onboarding name at 40 characters. A malformed reply speaks a fixed line | A8, H3 | **Stub:** with the real `createStubAgent` as fallback and a working fake model, raising a hand gives 1 opening line and 0 recalls until the model asks. Today's test uses a silent fallback and cannot catch this. **Name:** the planner prompt never contains `profile.name`, including a name set to "ignore your instructions". **Malformed reply:** `parseAgentReply` falls back to a fixed line; today it speaks raw text (✓ `geminiAgent.ts:204-209`) |
+| A7 | Vertex `safetySettings` on all 4 models, and a SAFETY finish maps to a fixed safe line. Model allowlists on the OpenRouter hear, speech and llm routes. `provider.data_collection:'deny'` on OpenRouter calls | A7, L6 (vendor part) | **Threshold:** the strictest setting at which a 12-line Class 10 syllabus set passes (reproduction, nervous system, alcohol, the world wars); `liveAgent.ts:213-219` chose BLOCK_ONLY_HIGH for exactly these topics. A harmful set is blocked. **Allowlists:** `/api/hear?model=x` and `/api/speech?model=x` return 400. **Data collection:** every OpenRouter JSON body carries the preference. Whether OpenRouter honours it on its audio routes stays UNVERIFIED in a vendor register |
+| A13 | Scan the whole text for distress (capped at 20,000 characters), then truncate. Rename the cap `MAX_STUDENT_CHARS` | A13 | 1,500 characters of filler followed by "mujhe marna hai" returns support (test) |
+| A12 | Make every claim a child, parent or Aarav reads true | A12, L5 (privacy part) | **Mic screen:** it says a speech service turns the words into text, and a short copy of the answer is kept for 90 days. A test fails on "Nothing is recorded" (today ✓ `MicRationale.tsx:51`). **`/privacy`:** it lists Supabase, Vercel, Google Vertex, OpenRouter, Deepgram, PostHog and Sentry, with per-table windows that match the SQL. **Stale claims fixed in docs:** this file's line 511 (its ₹17.85 prices the voice and the ear at ₹0), appendix lines 313 and 380, f-bench README 159-168, prewarm README 65. **In code comments:** `ClassRoom.tsx:481-486`, `relays.ts:281-285`, `geminiAgent.ts:232-233`, `streamingTts.ts:11-15`, `controller.ts:171-181`, class-prep `prompts.ts:102-105`, `action-player/src/controller.ts:26-29` |
+| T0.1 | Cost controls on the doubt tutor | NEW (M6) | **Thinking:** the relay transport sends `reasoning_effort:'none'`. Vertex maps that to thinking LOW, the floor on 3.x (✓ `vertex.ts:217-243`), so thinking cannot be switched off. **Turn cap:** `doubt-session` ends a doubt after a turn cap, with a closing line (test). **Tokens:** prompt, thinking and output tokens per turn are printed once through T0.4 |
+| T0.2 | ~~Deploy the Vertex speech fallback~~ **DONE 2026-09-28** | NEW | Commit `53ccb37`, relay deployed the same evening (`npx supabase functions deploy relay --no-verify-jwt --project-ref ueemqirxyrltdmqgnidy --use-api`, function only). **MEASURED on production:** a normal line answered 200 `audio/mpeg` (headers 1.7–1.9 s, whole line 2.7–3.5 s); a line forced to fail at OpenRouter (bogus `model=`) answered 200 `audio/wav`, 24 kHz, which the browser decoded as 5.72 s of audio, 4.5 s end to end; a warm class played with voice. **Still open:** that a normal line books exactly one speech row (needs a `usage_event` read), and the bogus-`model` route is also a way for any caller to force the dearer voice until A7's allowlist lands |
+
+**T0a exit gate.**
+
+1. The touched tests pass.
+2. Aarav deploys the relay and the site.
+3. A read-only fetch finds the new mic sentence in the served JS.
+4. One typed distress line in a production doubt produces 0 further `/api/llm` calls.
+
+**T0b — measure**
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| A9 | Fill `model_price` | A9 | Price nova-3 as the relay sends it: `multi`, at $0.0052/min. The file holds the mono rate (✓ `model_price.sql:78`). Check the Gemini TTS row on Google's own pricing page. After `apply-prices.mjs --yes`: 0 pending rows, and `unpriced_calls = 0` on rows written after the apply |
+| T0.3 | Books that count the whole hour | NEW (completes A9) | Browser prep calls carry a `prepId`; today they carry none (`liveClass.ts:388-418`). Piper lines book `self`. `cost-report` prints an "unattributed spend" line. The `unpriced` flag checks 5 of 7 quantities (✓ `0018:272-278`); widening it is requested from the LMS lane and is **not** part of this exit, because the three LLMs already have `thought_token` rows (✓ `model_price.sql:50-63`) |
+| T0.4 | A latency harness that needs no vendor account | NEW | **Server hops** are timed from Node in `tools/measure`, ≥ 20 calls each: STT, the first byte of `/api/speech` through the Edge Function, and `/api/llm` total time (plus first token after T5). **Browser hops** are written to an in-page buffer read through the browser pane: the `playing` event, endpoint, acknowledgement and the gap between lines. Both print p50 and p90 |
+| T0.5 | Restore next-line prefetch | NEW | `prime()` reaches the streaming layer, or the on-device layer is skipped when `/models` is absent. Today prime only synthesises locally and is never forwarded (✓ `onDeviceTts.ts:139-141`). Line N+1's request starts before line N ends, and the gap between lines is ≤ 300 ms p50 over one class |
+| T0.6 | The cold-class proof, costed and shaped | NEW (next-session steps 1–2; the first M6 number) | Adapt `measure-class`, which hard-codes a science topic (✓ `measure-class.test.ts:62`). Play two classes to the last beat through the production relay: the substitution class, and one cold science topic that exercises the artist. The maths class returned `visuals: []` and `visualsMs: 0` (✓ `prep-substitution.json`). Per class, using `session_cost(p_session)` (✓ `0008_usage.sql:159-168`), record: prep ₹, narration characters, seconds of her speech, seconds of student audio, judge calls (local vs model), the ₹ and tokens of one 3-turn typed doubt, and active minutes. `keep()` stays stubbed and the gate stays on |
+| T0.7 | Spoken Hinglish distress through the real ear | NEW | 10 recorded sentences sent through `/api/hear` all screen to `support`. `DISTRESS` contains 0 Devanagari characters (✓ node count of `screen.ts`), and the claim that `multi` answers in Latin script is only a code comment (`relays.ts:290-298`), UNVERIFIED. If any transcript comes back in Devanagari, add transliteration before `screen()`, with unit tests. **This blocks H2, T7.1 and H7** |
+
+**Decisions taken in T0:** TD3, TD5a, TD10 and TD14.
+
+**T0b exit gate.**
+
+1. Prices are applied, with `unpriced_calls = 0`.
+2. Both classes are costed per session, and the hour shape is recorded.
+3. Server-hop p50 and p90 are printed over ≥ 20 calls each.
+4. The gap between lines is ≤ 300 ms p50 over one class.
+5. T0.7 passes.
+
+**Demo after T0.** The same prototype, now safe and honest. Distress stops everything. The mic screen tells the truth. A voice-vendor outage no longer drops her to the robot voice. And one real cold maths class has a rupee cost and a wait time for each hop.
+
+**Needs Aarav:**
+
+- Both deploys.
+- `apply-prices.mjs --yes` and every `session_cost` read (both need the service key).
+- Approval to spend on T0.6 and T0.7, and recording T0.7's sentences.
+- Decisions TD3, TD5a, TD10 and TD14.
+
+### T1 — The prepared class is right, and safe to keep
+
+**Why now.** The proof lesson shows every defect, and each comes from code (✓ lesson JSON; canvas audit):
+
+- All 4 asks write their question twice (b1_9/b1_10, b2_8/b2_9, b3_10/b3_11, b4_4/b4_5). `saidButNotWritten` does not count an `ask` as ink (`saidNotWritten.ts:27-44`), and the layout writes the question as well (✓ `layout.ts:398`).
+- The question the class holds on is never spoken.
+- Answer ink is on the board during the hold. For example, b3_4 shows "Solution: x = 49/29, y = 19/29".
+- b3_12 lands on b3_7's page because equation and note blocks ignore their page's x (`layout.ts:589, 677`), which gives a 17.4-unit overlap.
+- A browser keep is anonymous and permanent (`classStore.ts:100-117`).
+
+**These rules go in class-prep's gate before `keep()`, not in load-time `validateLesson`.** The app validates every lesson at load, and a lesson that fails is shown as "not available" (✓ `content.ts:224-233`). A new load-time rule would take kept classes offline.
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T1.1 | Place blocks relative to their own page, and add an overlap gate | NEW | `layout.ts:589, 677` place blocks relative to `r.x`. A beat with 9 equations gives 0 unbonded overlaps on every page (test). `assertNoOverlap` runs in class-prep before keep. Re-laying the substitution blueprint gives 0 (today b3_7 and b3_12 overlap) |
+| T1.2 | One question per ask: spoken once, written once, and the answer hidden until it is answered | NEW | `saidButNotWritten` counts an `ask` as written ink. The prompt drops "write the question" for asks (`prompts.ts:463-465, 489-491`). The held beat's narration ends with `ask.question`. Ink placed after an ask moves into a follow-on beat, revealed after the answer. The gate fails a held beat that writes more than 1 question element, or whose spoken question ≠ `ask.question`. **Options bug:** `byInstruction` is keyed by the expanded item index while reveal reads by board index (✓ `layout.ts:358-368, 450-458` vs `:1450-1459`), so ink after an ask with options is attributed one step late. Tests include an ask with options |
+| T1.3 | Every ask carries real outcome ids | NEW | A unit test on a Class 10 maths profile checks the plumbing. `outcomesForTopic` returns [] when no current class is set (✓ `topicOutcomes.ts:33-41`), while prewarm passes outcomes regardless (✓ `tools/prewarm/lib/main.mjs:279-285`). When outcomes exist, tags are mandatory: an untagged plan is repaired or fails, and is never kept. On re-prep, every ask has 1–2 of the topic's 4 map ids, and answering files non-empty `outcomeIds` |
+| T1.4 | A deterministic maths check at prep | I3 (part), I4 | Exact rational arithmetic. It strips labels, handles chained `=`, implicit multiplication and fractions, finds the claimed solutions, and checks every equation against them. A failure feeds the repair loop and fails closed. On the proof lesson, 11 of 11 lines pass (safety audit's hand check). Changing b3_8 to 19/28, or b3_7 to −17, fails and names the element id. 0 model calls |
+| T1.5 | A work area on every held-ask page; notation is never spoken | NEW | Prep reserves a rectangle beside the held question, and the overlap gate keeps prepared ink out of it. The gate rejects narration containing `=`, `/`, `^` or digit-operator-digit. Today b3_1 reads "7x - 15y = 2" aloud (✓) |
+| C10 | The reviewer runs in live prep, and `keep()` keeps only what it passed | C10 | `liveClass.ts:380-400` passes a reviewer, and `keep()` sets `requireReviewed`. A prep with no review is not kept (test). One dated run records the review's ms and ₹ |
+| T1.6 | Audit the 6 kept classes | NEW | Fetch each kept lesson read-only and run it through the T1.1, T1.2, T1.4 and T1.5 gates. Each either passes or is retracted and re-prewarmed. Retraction needs no migration: `review_status='retracted'` and `retracted_at` already exist (✓ `0018:309-322`) |
+| I1 | Close the catalogue to anonymous and unreviewed writes | I1, C10 (relay side) | Under TD5a, a browser `POST /api/class` returns 403. `content.ts:112` has no status filter today (✓); it reads only `published`, non-retracted rows. The relay runs `validateLesson` and `screenSpine` before storing. A new `tools/bin/retract-class.mjs` retracts a row. **Code only; no migration.** On production, an anonymous POST is refused |
+| A6 | A relay backstop screen on student text | A6 | The relay screens the last `user` message of every `/api/llm` body and every `/api/hear` transcript. On support it returns the support reply with 0 upstream calls and makes one webhook POST (test with a hand-built POST) |
+| L1a | Distress reaches a person, with no new table | L1, L2 (part) | On support, a relay route above the kill switch POSTs `{kind, lessonId, at}` to `OPS_ALERT_WEBHOOK`, with no words. It reuses the report seam (✓ `handler.ts:144-150`, `supabase/functions/relay/index.ts:179-182`). The secret is set in production and proven with one test POST. The `safety_event` table follows as L1b (T9) |
+| T1.7 | Per-feature switches, as relay environment variables first | NEW (part of L4) | `LIVE_PREP_ENABLED`, `DOUBT_ENABLED` and `VOICE_ENABLED`, on the pattern of `RELAY_DISABLED`. Calls carry `x-call-kind`. Turning one switch off refuses only that feature (test), and the app says "not available right now" |
+| T1.8 | A typed answer for a held open ask | C5 (extends) | With the mic denied, a typed answer goes through `resolveSpokenAnswer` (local match first), gets the same help, and files `answered` with surface `text`. Today the only control records nothing (`ClassRoom.tsx:298-302, 1151-1158`), and all 4 of today's asks are open (✓) |
+| T1.9 | A held-ask controller that runs without a screen | NEW | Move the held-ask and raise-hand logic (`ClassRoom.tsx:283-325, 598-825, 906-945`) into a module with the ear, judge, TTS, ledger and clock injected, and test it with no DOM. No test renders the 1,377-line `ClassRoom.tsx` today (✓ grep of `apps/classroom/tests`). Every later "scripted class" check runs here |
+
+**T1 exit gate.**
+
+1. **Re-prep.** Re-prepare the substitution topic and one unprepared Class 10 maths topic, with the gate off locally and `keep()` stubbed. Both must show:
+   - 0 unbonded overlaps;
+   - exactly 1 question element per ask, and 0 post-ask ink in the held show;
+   - outcome tags on 100% of asks;
+   - a passed review;
+   - a passed maths check, while the mutated copy fails;
+   - 0 spoken notation.
+2. **Kept classes.** Each of the 6 kept rows passes or is retracted.
+3. **Production.** An anonymous `POST /api/class` is refused. A hand-built distress `/api/llm` call makes 0 upstream calls and 1 webhook POST.
+4. **Decision.** Aarav records TD5b.
+
+**Demo after T1.** A cold Class 10 maths class a teacher can watch without wincing. It asks one question at a time, never with the answer already on the board. Code checks the working. Every answer, spoken or typed, reaches the learner model.
+
+**Needs Aarav:** the deploys; the `OPS_ALERT_WEBHOOK` secret; retracting any failed kept row; TD5b.
+
+### T2 — The first live slice: she decides with what exists, and writes on the board
+
+**Goal.** Bring Aarav's two asks forward: the live feel, and the canvas in real time. This phase needs no LMS, no migration, no gate flip and no streaming. It works on the typed doubt path and at held asks.
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| B4/B5/B6/B8 | Fold correctness; every decision reads unassisted mastery | B4, B5, B6, B8 | **Tests:** mastery is monotone over rungs 0–8; attempt ≥ 2 files rung ≥ 1; a retake of a revealed item files rung ≥ 7, or nothing; `masteredAt` is set only after unassisted mastery ≥ 0.8 on ≥ 2 distinct items ≥ 24 h apart. **Readers:** every reader uses `unassistedMastery` — `decide()`, `nextActivity`, `adaptPlan.ts:82`, `student.ts:141` and the LMS views. `unassistedObservations = 0` means "unknown" and leads to a diagnostic item, never to blended mastery, which becomes display-only. An outcome answered right only at rung ≥ 1 is never secure, never mastered and never skipped (test). `MODEL_VERSION` is bumped |
+| E1a | `decide()` over the content that already exists | E1, E3, E10 | Pure, with `now` injected. **Rungs:** L0 → L1 (a persona rethink line) → L3 (`ask.hint` or `option.hint`) → L8 (`expect` plus why). The reveal files L8. It opens at 0, deleting `chooseAsk`'s rung-1 start (`ask.ts:62`). **Logging:** every action that adds content files `helped` at its rung **before** it speaks or writes, and every action files `intervened {action, rung, because, errorClass}`. After L8, a retest on a different item is scheduled. Response-time rules are built but stay off until TD14. Table tests cover every branch, and 100% of actions carry `because` |
+| T2.1 | BoardOp v1 | NEW | `packages/live-board` holds the ordered steps `[{say, ink}]`, the closed op list and `parseBoardOps(json, onScreenIds)`. Unknown ops and ids are dropped; text and op count are capped; malformed JSON never throws; ids are namespaced |
+| T2.2 | `layoutLiveTurn` in append mode | NEW | Held-ask ink goes into T1.5's work area. A page without one, such as the 6 old classes, gets a fresh page. A doubt page opens with a copy of the element it refers to. Marks and arrows stay on one page, and `lesson.canvas.w` is widened. Property test over 200 random sequences: 0 unbonded overlaps, 0 validation errors, and the boxes of steps 1..k−1 do not change when step k lands |
+| T2.3 | `BoardSession` | NEW | Passes the augmented lesson to Scene only. `visible` = the class beat's show set plus the live ids, and the camera moves through Scene's `frame` prop. After a doubt: 0 prepared elements re-animated, 0 player restarts, and the class resumes on the same beat |
+| T2.4 | The typed doubt agent sees the board and writes on it | H1 (part), I4 | **Context:** it carries `onScreen: id → {kind, text, author}`. Student-authored text goes through `quoteForPrompt` (✓ `screen.ts:412`). **Reply:** `{steps, recallBeatId, done}`, sanitised the way recall is. When the ink carries the notation, `say` uses persona surface `voice`; today it uses `text` (✓ `geminiAgent.ts:191`). **Checks:** every string passes `toStudent` and the leak check (numbers normalised, as digits and as words). Every op containing `=` passes the T1.4 check; a failing step is dropped together with its sentence. **At a held ask:** a doubt raised there goes through `decide()` with that ask's `mustNotReveal`, so "what is x?" gets a hint-rung reply with 0 leak (test). **When ink is dropped:** if the turn fails layout, all its ink is dropped; a sentence that points at dropped ink is not spoken (regex test); `inkDropped` is logged |
+| T2.5 | The board at held asks | E2, C6 (board form) | A wrong answer writes the student's screened answer into the work area and marks the relevant prepared element; the mark is filed as L3. A hint rung writes the hint. In a scripted test (T1.9), a wrong spoken answer adds ≥ 1 element to the work area with 0 model calls on the local path |
+| T2.6 | Waits that feel human | NEW | **Acknowledgement:** within 300 ms of the endpoint, a cached persona line plays; it never implies right or wrong. **Priming:** when an ask surfaces, its authored reply lines (`ask.hint`, and each option's `why` and `hint`) are primed, so a local match speaks from a buffer. Lines primed but never spoken are still billed. That cost is recorded in the books, and is free only under TD3(b) |
+| I5 | Raise f, safely | I5, M6 | Add `wrongAnswersCalledRightLocally` to f-bench and `embed-sweep.mjs`, which counts one direction today (✓ `:107`). Choose the MiniLM margin at which **both** error directions are 0 on the blind set. Today that is margin 0.25, giving f = 34.5% (✓ recomputed from `embed-sweep.json`). Margin 0.10 gives 60.1%, but 3 of the 14 wrong or off-target answers it settles land on the correct option. Load and match times on a 4 GB Android phone are recorded |
+| T2.7 | Prewarm the first chapter | C10, TD5b, TD7 | Run `tools/prewarm --syllabus class10-mathematics --chapter pair-of-linear-equations-in-two-variables --spend` (flags ✓ `main.mjs:105-111`), with the reviewer and the T1 gates on. Record ₹ per topic |
+
+**T2 exit gate.**
+
+1. **Scripted class (T1.9).** Scripted wrong answers give rungs 0, 1, 3 and 8, in that order. Each files `helped` before speech, and each files `intervened` with `because` and `errorClass`. The fold tests pass.
+2. **Live doubts.** Through the production relay, 20 typed doubts on the substitution class. At least 16 add ≥ 1 element, with 0 restarts, 0 prepared elements re-animated, 0 incorrect equations and 0 leaks.
+3. **Waits and f.** Acknowledgement p50 is ≤ 300 ms (T0.4). f-bench shows 0 errors in either direction.
+4. **Cost.** ₹ per doubt turn, with ink, is recorded via `session_cost`.
+
+**Demo after T2.** A wrong answer gets a rethink, then the hint written beside her question, then the answer and why. A typed "why does 7(3 − 2y) become 21 − 14y?" gets a fresh page that opens with that line, marks it, and writes the expansion under it.
+
+**Needs Aarav:** the deploys, and approval to spend on T2.7 and the 20-doubt run.
+
+### T3 — The ladder and the diagnosis (brief P0)
+
+**Why now.** T2 decides over thin content. The brief's P0 needs three more things:
+
+- **Authored ladder content** for every ask.
+- **Stable misconception ids.** Today 13,986 of 14,091 labels are unique free text (brain audit node count, 2026-09-28).
+- **Misconceptions filed from class answers.** Today no class answer files one (`ClassRoom.tsx:301, 731-747`).
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| C6/C7 | Per-ask ladder content, authored at prep | C6, C7, I3 | For TD1's rungs, each ask carries: a rethink line; a hint (now mandatory); a sibling worked example with different numbers, written as `work{steps:[{say, line}]}` and checked by T1.4; the answer and why; a follow-up question on each distractor; and `expectedValue` (an exact rational) on maths asks. It lives in the gate before keep, not at load. On the substitution re-prep, 4 of 4 asks are complete. planMs and prep ₹ are recorded before and after; the content may be made by a second call after `warm.onDraft` |
+| E1 | The full `decide()` | E1, E2, E4, D6 | Delivers TD1's rungs, escalating at most 1 rung per wrong attempt. **Silence:** a content-free nudge (filed L1) or a smaller step (filed L3). **Reduce difficulty:** when L5 fails, an easier template or the prerequisite item. **Reteach prerequisite:** after ≥ 2 cold misses on an outcome whose prerequisite has unassisted mastery < 0.5. It also builds the branch table used on the model path (T5.4). Table tests cover every branch |
+| E2/E3 | Wire it in; the judge only classifies | E2, E3, I3 | Grep finds no literal rung in `ClassRoom.tsx` or the T1.9 module. The judge returns `{verdict, matched}`, and renders words only when the branch has no authored line. The T1.4 engine checks numbers taken from a spoken answer against `expectedValue`; if they disagree, the verdict is `unclear` and no evidence is filed (test) |
+| E4/H6 | Wait time and endpointing that suit children | E4 (part), H6 | **Silence:** the STUDENT_SILENT nudge comes at 7 ± 1 s and is filed as help; its text offers "a smaller step or one hint" (✓ `moments.ts:77-78`). No held ask stays silent for more than 20 s. **Endpointing:** "explain why" prompts get a longer window than today's 10 s `maxSpeechMs` (✓ `ear.ts:45`). A premature-cut counter must stay ≤ 5%. Audio is uploaded as Opus/WebM instead of WAV. **Timing:** `onsetMs` and `speechMs` are captured, but used as evidence only after TD14. **Fillers:** `fillerCount` is captured only if `filler_words` reaches Deepgram through OpenRouter (UNVERIFIED); the relay sends only model, language and file (`web.ts:146-154`) |
+| D1 | A misconception registry | D1 | TD7's scope first. Each entry is `{key, chapter, nodeIds, label, sayings[]}`. Every distractor label maps to exactly one key, aligned as in `probes.test.ts:55-66`. Keys are append-only. The clustering's ₹ is measured on one chapter before the rest. With T4a's items, every in-scope key appears on ≥ 3 items |
+| D2 | Registry keys on live distractors; `misconceptionId` on every class answer | D2 | The planner is shown the topic's keys, and unknown keys are dropped. `readLocally` returns `optionIndex`, and the judge returns `matched`. Taps, local voice and model-judged voice each file `misconceptionId` (test). The LMS lane is told that its insights group misconceptions by raw label (lms `0027_lms_insights.sql:116`) |
+| D3-D7 | Misconception state, a 5-class diagnosis, and acting on it | D3–D7, B9 (hint dependency) | **State (pure fold):** `misconceptions[key] = {outcomeId, timesObserved, distinctItems, lastSeen, status, confidence}`. **Lifecycle:** a **suspected** key triggers its C7 follow-up in the same turn, and that answer counts as the second observation. A key is confirmed after 2 distinct items, and **resolved after 2 unassisted correct answers ≥ 24 h apart, on items that offer that key as a distractor**. **Classes:** as set by TD2. **Action:** a confirmed key gets a fix-it and a retest on a different item. `intervened` carries `errorClass` and its confidence. **Test:** a scripted 2-session student, with back-dated event times |
+| G1/G3 | "How sure are you?" and "Which mistake do you think you made?" | G1, G3 (P1, cheap) | A 3-level confidence tap on about 1 in 4 items, stored on `AnsweredPayload`. Calibration is computed in the fold per concept and per student. After a wrong answer, the wrong options are offered as the choices. A teach-back line closes the lesson |
+| T3.1 | Taps first, without losing recall | NEW | `answered` records `surface` and the option count. The fold uses guess = 1/n for taps and a lower guess for open answers; today it is 0.25 for everything (✓ `params.ts:26`). `masteredAt` and the metric require ≥ 1 open-recall item |
+| T3.2 | A route to f ≥ 90% | NEW (M6) | Per-distractor cross-questions (C7) plus taps wherever options exist. f-bench must show ≥ 90% with 0 errors in either direction. If it does not, the judge line in the cost model is repriced and another line is cut to match |
+
+**T3 exit gate.**
+
+1. The fold, `decide()` and diagnosis tests pass.
+2. A scripted class (T1.9) with wrong answers shows ≥ 4 distinct rungs. Every help carries `intervened` with `because` and `errorClass`.
+3. Every `answered` row has `outcomeIds`, plus a `misconceptionId` wherever the option has a key.
+4. Unassisted mastery does not move on hinted answers.
+5. There is one test per rung-0 leak: the silence nudge, a mark, a recallable live page, a recap before the warm-up, and an alternate explanation.
+6. A numeric disagreement gives `unclear`.
+7. f-bench is as T3.2 requires.
+
+**Demo after T3.** The whole ladder: a rethink, a hint, a worked sibling problem written step by step, then the answer and why, never the same line twice. A wrong answer from a known misconception gets "what did you get after expanding?" before any explanation.
+
+**Needs Aarav:** TD1 and TD2; approving the registry's ₹ after the one-chapter measurement.
+
+### T4 — Memory, items and what comes next (brief P0)
+
+**T4a — needs no LMS**
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| C3/C9 | Enough different items | C3, C9, C1 | **Per in-scope outcome (TD7):** ≥ 1 diagnostic, ≥ 1 retest, 2–4 review and ≥ 1 transfer item, as **parameterised maths templates** with `expectedValue` checked by T1.4. "Novel" means a template the student has not seen. Each outcome also gets a transfer tag and a "how could you check?" line. **Count check:** every in-scope outcome has ≥ 6 distinct templates; the chapter has 24 outcomes (✓), so ≥ 144. **Banks:** all 13 are wired; 3 are today (✓ `quiz.ts:128-141`). **Review:** items carry a reviewed flag. The reviewer is the LLM reviewer plus the maths check plus Aarav's spot check (TD5b) |
+| C8 | Prerequisites below Class 10 | C8 | Links for the chapter's prerequisite closure across the Class 6–9 maths maps. **Why they are needed:** the graph has 0 cross-map edges. The chapter's closure inside the Class 10 map is 35 nodes, 11 of them outside the chapter, in real-numbers and polynomials (✓ node count). The distributive-law nodes exist only in the Class 7 and 8 maps (✓ grep). **Test:** reteach-prerequisite reaches them |
+| C4 | Use difficulty | C4, E6 | Nodes already carry difficulty 1–5 (✓ `knowledge-graph/src/types.ts:29-30`). `nextActivity` picks items near a predicted p ≈ 0.7; difficulty is refitted from responses later |
+| F1-F3 | Memory state in the pure fold | F1, F2, F3, F4 | **Boxes:** 0–5 on the 1/2/5/12/30/60-day ladder. An unassisted success moves up a box, a failure resets it, and a hinted success holds. The first taught or answered event sets box 0 and a review in +1 day. **Exposure vs retrieval:** `lastExposedAt` (set by rung ≥ 5, live pages and recaps) is kept separate from `lastRetrievedAt`. A retrieval is unassisted and ≥ 24 h after the last exposure. Answers after an exposure in the same session never count toward `masteredAt` or the metric. **Clock:** event time comes from the relay. `/api/ticket` returns `expiresAt` = server now + `TICKET_TTL_MS` (✓ `handler.ts:280-284`, `ticket.ts:29`). A `Date` header cannot be read cross-origin unless the relay exposes it |
+| M2v2 | The primary metric, defined right | M1, M2, M3 | **Today:** it sums the posterior's movement and baselines untouched outcomes at the prior (✓ `metric.ts:17-40, 32`). **New definition, from observed outcomes:** per student and outcome, baseline = the unassisted diagnostic result (no result: the outcome is excluded); result = the first unassisted attempt on an unseen template ≥ 24 h after the last exposure; gain = Σ(result − baseline) ÷ active learning minutes in the window. The denominator counts all sessions, reviews included, because no per-event time attribution exists. **Build:** a per-student exposure log (item ids, template ids, reveals, recaps), and a golden replay test that does not depend on `MODEL_VERSION`. **Secondary metrics,** each with a formula: 7- and 30-day retention, transfer, time to mastery, misconceptions resolved, hint dependency, accuracy alone, completion, calibration |
+| E6-E8/F5 | `nextActivity` routes Home and "next lesson" | E6, E7, E8, F5 | Order: due reviews (2–3, never the last-seen item) → confirmed-misconception fixes → prerequisite gaps → the next syllabus topic, each with `because`. It replaces `nextLessonAfter` (✓ `content.ts:253`). When a review is due, the class opens with a 1–2 item warm-up, **before any recap line**. Tests cover each branch |
+| G2 | Calibration acts | G2 | An overconfident student is routed to transfer items (test) |
+| G6-local | She remembers, on the device | G6, K2 (part) | Kept on the device: the last class (`lastClass.ts`), the last confirmed misconception key, and a commitment chosen at session end. The next session's first line names the last topic and the commitment, for warm classes too. It does not name the child, so no PII travels in a speech URL before T5.3 |
+
+**T4b — waits on LMS L6 being hosted**
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| B3 | The server is the learner model | B3; B1, B2 and B7 via LMS L6 | `think.ts` is ported to an Edge Function that runs on session end, plus a pg_cron sweep. Its params are injected at the call site to match the browser (`opts.params ?? emptyParams()`, ✓ lms `think.ts:99`). It uses `received_at`, a 3-part cursor, `misconception_state` and `purge_safe_before`, and keys on `learner` (TD6). **Replay test:** server = browser on the same events and params. The class loads `concept_state` at start, and localStorage becomes a cache |
+| K1 | Session summary | K1 | A deterministic server job writes `session_summary`: before and after, gain per minute, weak outcomes, misconceptions seen, what is due |
+
+**T4a exit gate.**
+
+1. The count check passes: ≥ 6 templates per in-scope outcome, and every key on ≥ 3 items.
+2. A scripted 2-session student runs in the test harness with back-dated event times, never a device clock. The key goes confirmed → fix-it → retest on an unseen template → resolved.
+3. `nextActivity` never returns syllabus order while a review is due or a misconception is confirmed.
+4. The Metric v2 golden replay prints its known value.
+
+**T4b exit gate.** On a test project with back-dated server rows, `concept_state` and `misconception_state` rows exist, and server = browser.
+
+**Demo after T4.** On day two she opens on yesterday's mistake, on a different problem, without help. A student who only got there with hints is not called mastered.
+
+**Needs Aarav:** TD6 and TD7; LMS L6 hosted, and its deploy (T4b).
+
+### T5 — Her voice: fast, one voice, the child's language, inside the budget
+
+**Why now.**
+
+- **Speech dominates the only priced class.** It is ₹8.51 of ₹9.90: ₹5.11 MEASURED and ₹3.40 DERIVED (✓ `node tools/measure/model-cost.mjs`, run 2026-09-28).
+- **Nothing in the reply path streams.** The judge and the doubt agent each wait for one whole JSON object, and the fallback collects a whole WAV before playing.
+- **Speech text and the ticket travel in the URL** query string (✓ `streamingTts.ts:85-95`).
+- **The voice cannot follow the child's language.** The persona has no language field (`factors.ts:56-68`), and aura-2 has no Indian voice (`lessonVoice.ts:43-48`).
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T5.1 | A voice bake-off, then TD4 | H7 (part) | **Candidates:** aura-2 through the relay; Vertex Gemini TTS streamed through the relay; Piper on a VPS through `CURIE_SPEECH_URL` (hi_IN voices only); browser speechSynthesis. **For each:** first audio p50 and p90 on production (20 lines, timed from the `playing` event); ₹/student-hour at T0.6's talk share; and a listening score on 20 Hinglish and 20 English lines (Aarav plus 2 listeners, scored 1–5). Supertonic is recorded from its existing measurement: 0.45–0.81× realtime on a 4 GB phone, English only |
+| T5.2 | Cache fixed lesson audio across students, only if TD3 = (b) | NEW | **Where:** in the relay, written only by `service_role`, keyed by `speechCacheKey` (`cachedTts.ts:31`). **What:** a line is cached only when its text appears verbatim in a **published** lesson, which the relay looks up itself. Audio is made lazily on the first live play, never by a batch tool, and is served through the recorded-take layer. **Tests:** a second student on a kept class produces 0 speech rows for narration and authored lines; rendered lines still produce rows; a line with the child's name is never cached |
+| T5.3 | Speech by POST, streamed | NEW | `/api/speech` takes POST `{text}` and streams `audio/mpeg`, played through MediaSource. Test: no speech request URL contains the line's text or the ticket. Whether Supabase or Vercel logs keep query strings is UNVERIFIED |
+| T5.4 | One streamed call per model-path turn, gated sentence by sentence | NEW | **The call:** Vertex `streamGenerateContent` through the relay. It takes T3's branch table and emits `verdict` and `matched` first, then that branch's steps. Code checks that the rendered branch matches the verdict. **The gate:** each sentence passes `toStudent`, the leak check and the maths check **before** TTS and before its ink is released. **Tests:** in a fake stream whose sentence 2 is distress, sentence 2 is never spoken, the support line plays, `haltSession` runs, and 0 further chunks or ink follow. A mid-stream `SAFETY` finish flushes TTS and pending ink and speaks the fixed line. **Typed doubts:** the doubt agent (`geminiAgent.ts`) streams the same way |
+| T5.5 | An audio-start event from every voice layer | NEW | `TtsAdapter` gains `onStart(text)`, fired on `playing` or on the first PCM chunk. It fires in the streaming, cached, recorded and fallback layers. Today the adapter has only speak, cancel and prime (✓ `player/src/narration.ts:5-19`). Tested with fake audio |
+| T5.6 | One voice per class, and fallback lines metered at their own rate | NEW | Under TD4, either the fallback speaks in the primary's voice or the primary moves vendor. A forced-fallback line and a normal line carry the same voice id; today they are Sulafat and Thalia (✓ `vertexSpeech.ts:40-43`). The meter charges by provider; today it charges 0.29 units a character whatever the provider (✓ `gate.ts:104`) |
+| H2 | The child's tutor language through the whole loop | H2, L7 (Hinglish) | `TutorLanguage` goes on the profile and on `StudentContext`, and is rendered into `JUDGE_SYSTEM`, `CLOSE_SYSTEM`, the render prompt and the doubt brief, with a register line by grade (brief §1A). On a 30-item labelled set: ≥ 90% of replies to hi-en students are in Hinglish, and ≥ 95% of replies to English students are in English. Depends on T0.7 |
+
+**T5 exit gate.** On production, with ≥ 20 turns each:
+
+1. From the moment the student stops to her first audio: ≤ 1.9 s p50 on the local path, and ≤ 3.0 s p50 on the model path, verdict prefix included.
+2. A typed doubt, from send to first audio: ≤ 2.5 s p50.
+3. The gap between lines is ≤ 300 ms p50.
+4. One class's fresh speech is measured against the ₹1.50 line.
+5. The 30-item language set and the mid-stream safety tests pass.
+
+**Demo after T5.** She answers soon after the student stops, never goes silent between lines, keeps one voice throughout, and speaks Hinglish to a child who chose it.
+
+**Needs Aarav:** TD4, the listening scores, the deploys, and approval to spend on the bake-off.
+
+### T6 — The live board in real time
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T6.1 | Streamed ink, step by step | NEW | T5.4's stream is parsed one step at a time: gate → `layoutLiveTurn` in append mode → TTS → the step's ink revealed on its own `onStart`. Property test: once step k lands, steps 1..k−1 do not change |
+| T6.2 | Ink in step with her voice | NEW | Over a scripted 5-step `work`, step k's ink starts within 300 ms of step k's audio on ≥ 18 of 20 runs. Handwriting keeps its pace: 46 ms a character, 480–2600 ms a line (`geometry.ts:46-51`) |
+| T6.3 | Marks on part of a line, and a pointer that does not dim | NEW | `mark{targetId, span}` boxes a substring. It is exact for monospace formulas via `textWidth` (unit test on b3_2). `point{ids}` is transient and does not dim; focus dims the rest of the board today (✓ `Scene.tsx:1265`) |
+| T6.4 | Typeset maths | NEW | Fractions, powers and roots. `boxOf` measures the typeset size without a DOM (`geometry.ts:268` is pure). **The typesetter:** an in-house SVG one, or MathJax v3's SVG output with its lite adaptor. KaTeX is not installed (✓ no `node_modules/katex`), and its documented `output` modes are HTML and MathML, with no SVG (UNVERIFIED here). **Tests:** a snapshot renders `(87 - 38)/29` as a fraction, and the overlap gate stays at 0 |
+| T6.5 | Retire the dead canvas path | NEW | `action-player`, `maic-adapter` and `ActionLab` are deleted, or folded into `live-board` with `@openmaic/dsl` listed in `NOTICE.md` |
+
+**T6 exit gate.**
+
+1. **Property test.** 200 random streams give 0 unbonded overlaps, 0 validation errors, and no change to earlier steps.
+2. **Live doubts.** Through the production relay, 20 doubts. At least 16 add ink, with 0 restarts, 0 incorrect equations and 0 leaks, and the mark and the new work appear in one frame.
+3. **Sync.** Per-step sync holds on ≥ 18 of 20 runs.
+4. **Maths check.** In a mutated stream, the wrong step is dropped together with its sentence.
+5. **Cost.** ₹ per doubt turn is recorded.
+
+**Demo after T6.** A student asks "why does 7(3 − 2y) become 21 − 14y?". She circles 7(3 − 2y) inside the line, writes the expansion one typeset step at a time as she says each step, and returns to the class where it paused.
+
+**Needs Aarav:** the deploys, and approval to spend on the 20-doubt run.
+
+### T7 — A natural conversation
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T7.1 | Barge-in | H7 (part) | **Speed:** on a production build, student speech during her line cancels her audio within 300 ms p50. **Resume:** the cancelled step's ink stays, the unfinished sentence is not replayed whole, and she re-anchors in one short line. **Safety:** every barge-in transcript goes through `fromStudent` before `decide()`, and a barge-in distress line triggers `haltSession` and 1 webhook POST (test). **False triggers:** < 5% over ≥ 100 lines on a phone speaker, including a TV and a second speaker in the room. **Honesty:** MicRationale and `/privacy` say the mic stays on during the class and only speech segments are sent; barge-in transcripts that are not answers are not stored (test). Depends on A6, L1a and T0.7 |
+| H7 | Spoken doubts in production | H7, H3, M6 | Under TD11, the pipeline: the same screen, meter, `decide()`, board ops and cache. No key in the bundle, a turn cap, and ₹ per doubt measured. No board tools are added to the DEV-only Gemini Live agent |
+| G6 | Continuity on the server | G6, K2 | Through the LMS lane: missed sessions, a server streak counted in IST days, and a revision list. The commitment is checked at the next start (test, plus one live run) |
+| E5/G4 | Three detectors feed `decide()` | E5, G4 | Only once TD14 allows it. Today's thresholds: hint abuse under 3,000 ms; wheel-spin at 3 cold misses |
+| H4/H5 | Another way to explain it | H4, H5 | 2–3 mode-tagged alternate explanations per beat, authored at prep, offered after 2 misses or on request, and filed as L7. Events carry a strategy tag. Effectiveness is reported across the whole population only |
+
+**T7 exit gate.**
+
+1. Barge-in stops her within 300 ms p50, with < 5% false triggers over ≥ 100 lines.
+2. A spoken doubt works on a production build with 0 keys in the bundle, and ₹ per doubt is recorded.
+3. A second session's first line names the last topic and the commitment.
+
+**Demo after T7.** The student can cut in mid-sentence, and she stops and listens. A spoken doubt works on the real site. She remembers yesterday's promise.
+
+**Needs Aarav:** TD11, TD14's legal answer (for E5/G4), and the LMS lane's work for G6.
+
+### T8 — The student's workspace
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T8.1 | Typed steps, checked by code | I3, D5 (procedural and arithmetic classes) | The student types one line per step on a maths keypad. Each step is written as handwrite on the student's page, and the T1.4 engine checks it against the previous step. **For 3(x+4) = 21:** "3x+4 = 21" is flagged as procedural at step 1; "3x+12 = 21" is accepted; "3x = 21−12 = 8" is flagged as arithmetic. The flagged step gets `mark{cross}` on the student's own line, with her question written beside it. 0 model calls. Steps go to the ledger |
+| T8.2 | Student ink on a "my work" page | J1 path | A pointer layer maps the screen to the board through the SVG's inverse screen CTM (unit test). Strokes are stored as `pen` elements on a page per ask, with undo and submit. They are evidence for the teacher, with no AI reading (TD12). Checked by hand on an Android phone |
+| J3 | Count answer changes | J3 | Each `answered` event carries the number of changes (test) |
+
+**T8 exit gate.**
+
+1. On 20 hand-labelled wrong typed solutions, the engine's class for each step agrees with the label on ≥ 18.
+2. On a named Android phone, a stroke stays within 4 board units of where it was drawn after a camera pan.
+
+**Needs Aarav:** TD12, and the manual check on his phone.
+
+### T9 — Inside ₹5, measured, ready for real students
+
+| ID | Change | Maps to | Acceptance |
+|---|---|---|---|
+| T9.1 | Settle the ear | NEW | Run the `tools/stt-spike` protocol: WER on Hinglish plus 10 real phone recordings, with its ₹ recorded. Choose one or more of: VAD trimming, a per-ask audio cap, taps first wherever options exist, or a cheaper ear. The measured ear must come in at ≤ ₹0.75/student-hour |
+| T9.2 | A meter sized for a live hour, and an automatic halt | NEW | Caps are set from the measured hour. Today they are 12,000 units per identity a day (✓ `gate.ts:398`) and 50,000 per project (✓ `:160`). `migrations.test.ts` stays green. A scheduled check sets `relay_control.halted` above a configured daily ₹; today nothing sets it automatically (cost audit) |
+| L1b | `safety_event`, triage, and a record of what she said | L1, L2 | A `safety_event` table: no words, RLS on, zero policies, written only by the relay. A triage view, and a 24 h response. Doubt replies are kept as ≤ 400 characters of screened text for 30 days. One distress sentence produces exactly 1 row and 1 webhook POST (test) |
+| A3/A4/L5 | Retention and deletion that keep safety evidence | A3, A4, L5 | After LMS L0 is live. **Windows:** each table gets its own (`usage_event`; `otp_send` at 1 day; `contest_signup` after the contest; `student_report` after it is actioned plus N days). **Deletion:** a self-delete moves the child's open reports to a retained table with `user_id` nulled. Migration tests pin every window |
+| L3/L8 | Consent before processing | L3, L8 | The lawyer's answers are recorded. For a self-serve child, live LLM features check for a `consent_record`, which has no reader today |
+| M1-M5 | The metric on real students, with a bar set in advance | M1–M5, E9 | Metric v2 over ≥ 20 students, each with ≥ 2 sessions ≥ 24 h apart. **The bar, pre-registered:** delayed novel unassisted accuracy above baseline, printed with its confidence interval. **Per-rung and per-strategy report:** delayed unassisted success, the only evidence that can earn TD1's extra rungs. A founder dashboard |
+| T9.3 | The ₹5 ship gate | M6 | A computed figure with its inputs declared: measured per-student variable cost (`session_cost` over ≥ 20 closed sessions), plus per-topic costs ÷ a **declared S**, plus fixed costs ÷ **declared monthly hours**. Reported at pilot volume and at design volume, naming the volume at which it falls below ₹5. T1.7's switches stay off for any feature over its budget line |
+
+**T9 exit gate.**
+
+1. T9.3 prints ≤ ₹5.00 at the declared design volume, with `unpriced_calls = 0`, and with voice, ear, prep and doubts all included. The pilot-volume figure is printed beside it.
+2. M1–M5 are computed for the same cohort.
+
+**Demo after T9.** A measured cost per student-hour, with the volume it holds at, beside the same students' unassisted gain per minute.
+
+**Needs Aarav:** the lawyer; the LMS L0 deploy; the declared volume; the pilot students.
+
+### Cost model — ₹ per student-hour
+
+**The ceiling is not met, and at pilot volume it cannot be met with a cloud voice.**
+
+- **Fixed costs alone** are ₹4,194 a month without the Piper box and ₹6,194 with it (PRD 6:1750-1756, ESTIMATE ✓). Getting them to ≤ ₹1 an hour needs about **4,200 student-hours a month** (6,200 with Piper).
+- **Variable cost** reaches about ₹4.7–5.1 only when all of the following hold:
+  - fixed text is cached (TD3 = b);
+  - f ≥ 90%;
+  - ≤ 2 minutes of student audio an hour;
+  - S ≥ 82 at 3 topics an hour;
+  - doubt turns are few and short.
+
+**Measured**
+
+| What | Value | Source |
+|---|---|---|
+| The only priced class: 2026-09-13, science, 18 beats, 4 asks, 3.6 active min | Cached **₹9.90 a class = ₹164/student-hour**; cold ₹18.98. Of the speech's ₹8.51, narration is ₹5.11 MEASURED and her replies ₹3.40 DERIVED. The ear cost ₹0.27 for 40 s; the judge ₹1.13 for 8 calls | ✓ `node tools/measure/model-cost.mjs`, run 2026-09-28 |
+| Prep with the reviewer, 19 Sep | ₹65.48 ÷ 6 kept = **₹10.91 per kept topic**. A floor: 14 of 69 calls went unmeasured | `tools/prewarm/state/class10-science.json` (cost audit) |
+| Local judge rate f | Lexical: 23.2%. MiniLM at margin 0.10: 60.1%, with 3 wrong answers settled as correct. At margin 0.25: **34.5%, with 0 errors either way** | ✓ `f-bench/result.json`; ✓ recomputed from `embed-sweep.json` |
+| Today's maths lesson | 1,035 narration characters + 922 of "why" + 644 of hints = 2,601 fixed characters. Its cost is **NOT MEASURED** | ✓ `lesson-substitution.json` |
+| Vertex TTS | ~32 audio tokens a second | main session, 2026-09-28 |
+
+**Unit costs (DERIVED)**
+
+- **Voice.**
+  - aura-2: ₹0.00287 a character, or ₹0.034–0.043 a second at 12–15 characters a second (Thalia's real rate is UNVERIFIED).
+  - Vertex TTS: ₹0.061 a second.
+- **Ear.** nova-3 multi: ₹0.497 a minute. The price file has the mono rate, ₹0.411.
+- **Judge.** One call at thinking LOW ≈ ₹0.0975, so one model-path ask (judge plus close) ≈ ₹0.195.
+- **LLM tokens.** gemini-3.7-flash: prompt ₹0.0000717 a token; output and thinking ₹0.000359 a token.
+- **A doubt turn.** A 4,000-token doubt prompt costs ≈ ₹0.29 before thinking and output. The prompt is resent with the whole history every turn (✓ `geminiAgent.ts:87-104, 239-245`). Thinking cannot go below LOW.
+- **Board vs voice.** Text on the board costs ≈ ₹0.00009 a character in output tokens, against ₹0.00287 spoken on aura-2: about 1/32. Board text still costs tokens; the saving is the TTS it avoids.
+- **Per topic:** prep ₹10.91 + first-play synthesis of the fixed text ₹7.46 = ₹18.37, divided by S.
+
+**Scenarios (DERIVED; the hour shape is UNVERIFIED unless stated; fixed costs excluded unless stated)**
+
+| # | Scenario | ₹ / student-hour |
+|---|---|---|
+| 0 | **MEASURED baseline:** the 2026-09-13 class × 16.55 | **164** |
+| 1 | Live as built: aura-2 at 60% talk, lexical f, 30 asks, 6 min of audio, S = 10 | 85.0–103.6 (cost audit) |
+| 2 | **Plan target:** T = 3, S = 100, TD3 = (b), 40 s of fresh speech (doubt replies included), 2 min of audio, 20 asks at f 90%, 4 doubt turns at ₹0.35 (UNVERIFIED) | **4.71–5.06 variable**; **6.39–7.54** with fixed ₹1.68–2.48 at 2,500 h/month |
+| 3 | Row 2 at the safe measured f of 34.5% / at f 60.1% | 6.88–7.22 / 5.88–6.22 |
+| 4 | Row 2 at the one measured class shape (3.6-min classes: T = 16.55, 66 asks, 11 min of audio) | 12.57–12.91 |
+| 5 | Row 2 with TD3 = no (fixed text synthesised for every student) | ≈ +22 |
+| 6 | A zero-marginal voice (Piper VPS or on device), cloud ear, S = 100, f 91.9% | 3.78 variable, plus fixed (cost audit) |
+
+Row 2 = per-topic 0.55 + fresh speech 1.38–1.72 + ear 0.99 + judge 0.39 + doubts 1.40.
+
+**The budget each phase is held to**
+
+| Line | ₹/student-hour | What it forces |
+|---|---|---|
+| Fresh per-student speech: rendered replies, doubt replies, named lines | ≤ 1.50 | ≤ ~520 characters, which is **35–44 s of aura-2** (or ≤ 24 s of Vertex TTS) an hour. A doubt reply speaks one short sentence and writes the rest |
+| Cached fixed speech | ≤ 0.30 | 7.46 × T ÷ S ≤ 0.30, so S ≥ 25·T |
+| Ear | ≤ 0.75 | ≤ 1.5 minutes of student audio an hour. The one measured class ran at ~11 |
+| Judge | ≤ 0.40 | f ≥ 90% at 20 asks an hour |
+| Doubts, LLM and board ops | ≤ 0.60 | About ≤ 3 turns at ≤ ₹0.20: a prompt of ≤ ~1,000 tokens, thinking LOW, ≤ 150 output tokens (UNVERIFIED) |
+| Prep, amortised | ≤ 0.40 | S ≥ 27·T: **≥ 82 at T = 3**, and ~450 at today's class length |
+| Fixed platform | ≤ 1.00 | ≥ ~4,200 student-hours a month (TD9) |
+| **Total** | **≤ 4.95** | |
+
+**Levers, largest first**
+
+1. TD3: cache fixed text.
+2. Speak less and write more.
+3. The ear: taps first, trimming, a cap per ask.
+4. f: cross-questions and taps.
+5. S and T: prewarm only, one chapter first (TD7), ≤ 3 new topics an hour (TD16).
+6. Volume, which comes from schools through the LMS.
+7. Count fixed costs honestly (TD9).
+
+**Pressures that push cost up**
+
+- gemini-3.7-flash's intro rate doubles on 2027-01-01 (✓ `model_price.sql:50-51` note).
+- The TTS model is a preview.
+- The price file under-prices the ear by ~21%.
+- A fallback line is metered at the aura-2 rate (✓ `gate.ts:104`).
+- `cost_per_student_hour` counts only closed sessions, so it is a floor (✓ `0008:176-210`).
+
+### Latency budget — what the student waits for
+
+Targets are p50 on production, measured with T0.4. First audio is timed from `playing`, because cross-origin timing hides time-to-first-byte.
+
+| Hop | Measured today | Budget | Owner |
+|---|---|---|---|
+| Cold prep | totalMs 43,093, planMs 23,573 (2026-09-28, one run, ✓ `prep-substitution.json`) | None: students get prewarmed classes (TD5b) | — |
+| One narration line, whole fetch (aura-2 through the relay) | 5,263 / 3,481 / 3,341 / 4,585 ms (2026-09-28, Performance API; time-to-first-byte hidden) | — | — |
+| Gap between lines | NOT MEASURED. The prime is swallowed. Beats 1→4 of 14 took ~32 s | ≤ 300 ms | T0.5 |
+| aura-2 first audio through the relay | NOT MEASURED. The 0.36 s in `streamingTts.ts:11-12` was measured against OpenRouter directly | ≤ 400 ms | T0.4, T5.1 |
+| Vertex TTS first audio | Streamed direct: 1.38–1.48 s (3 runs, 2026-09-28, service account, not through the relay). As the fallback serves it, as a whole WAV: 3.0–3.6 s | ≤ 1.5 s, if chosen | T5.3 |
+| Endpoint | 900 ms of quiet (✓ `ear.ts:44`); gives up after 7 s | 900 ms; longer for "explain why" prompts | E4/H6 |
+| Acknowledgement after the endpoint | None | ≤ 300 ms | T2.6 |
+| STT (nova-3, batch) | NOT MEASURED | ≤ 500 ms (a guess) | T0.4, T9.1 |
+| Local match, and `decide()` for every branch | NOT MEASURED / does not exist | ≤ 50 ms / ≤ 20 ms | I5, E1 |
+| LLM → verdict plus first sentence | NOT MEASURED; nothing streams. A whole JSON call took 2.6 s (2026-09-28, Part 1 table) | ≤ 1,100 ms, UNVERIFIED that it is reachable | T5.4 |
+| Ink vs her audio start | Ink appears when the fetch starts; there is no audio-start event | ≤ 300 ms per step | T5.5, T6.2 |
+| Barge-in | Not available in production | ≤ 300 ms | T7.1 |
+
+| Turn | Today | Target p50 / p90 | Budget sum |
+|---|---|---|---|
+| Tap → first audio | NOT MEASURED | ≤ 0.5 / 1.0 s | A primed line |
+| Spoken answer, local path | NOT MEASURED | ≤ 1.9 / 3.0 s | 900 + 500 + 50 + 20 + 400 = 1,870 ms; ~1,570 ms when primed |
+| Spoken answer, authored branch (classify only) | — | ≤ 2.5 s | 900 + 500 + ~900 (classify, UNVERIFIED) + 100 = 2,400 ms |
+| Spoken answer, model renders | ≈ 4–6 s, an ESTIMATE, UNVERIFIED | ≤ 3.0 / 4.5 s | 900 + 500 + 1,100 + 400 = 2,900 ms |
+| What the student feels on any path | — | Acknowledgement ≤ 300 ms after the endpoint | T2.6 |
+| Typed doubt → first audio | NOT MEASURED | ≤ 2.5 / 4.0 s | First sentence plus 400 ms; the larger prompt's first-token time is UNVERIFIED |
+
+**What this implies.**
+
+- If Vertex TTS becomes primary, every model-path target rises by about 1 s, unless cached lines cover the turn.
+- The STT and first-token figures are guesses until T0.4 and T5.4 measure them. If they come in higher, the targets move, and this file says so.
+- Raising f moves answers from the ~2.9 s path to the ~1.9 s path, so f is a latency lever as well as a cost lever.
+
+### Decisions for this track (TD1–TD16)
+
+| # | Question | Recommendation | Why | Blocks |
+|---|---|---|---|---|
+| TD1 | The ladder: 9 rungs or fewer? | Record all 9; the ledger already defines rungs 0–8 (✓ `ledger/src/types.ts:55-64`). Deliver L0, L1, L3, L5 and L8 in T3, and L7 (an alternate explanation) in T7. Add L2, L4 and L6 only when T9's per-rung report shows they help | Every delivered rung needs authored, reviewed content on every ask. C6 already adds at least 3 new pieces per ask (a rethink, a worked example, distractor follow-ups) plus `expectedValue`. Nine rungs would roughly double that, with no evidence yet that the extra three help | T3 |
+| TD2 | Error classes: 9 or fewer? | 5 at T3: misconception (covering conceptual and incorrect reasoning), missing prerequisite, slip, memory failure, and guessing (only after TD14). Procedural and arithmetic come at T8. Misread is tested with a re-read prompt and never stored | Procedural and arithmetic errors cannot be told apart without seeing the steps. Labelling a cause nobody observed would put a guess into a child's record | T3, T8 |
+| TD3 | Is caching the synthesised audio of a kept class's **fixed** text "prerecording" (decision 10)? | (b), cache it, under 4 conditions: (1) the class was planned live by the LLM; (2) the audio is made on the first live play, in the relay; (3) only fixed lesson text and authored lines are cached, never a rendered reply and never a line with the child's name; (4) `/privacy` says so. **Aarav's call** | TTS is deterministic for the same text, voice and model, and the lesson text is already reused. It is worth about ₹22 an hour (DERIVED). **The risk:** the audio is byte-identical to the recorded-take layer that decision 10 refused for the 14 demo classes. The difference is that nothing is recorded in advance to fake liveness | T5.2, T9.3 |
+| TD4 | Which voice is primary? | No switch before T5.1. Keep aura-2, with the Vertex fallback deployed. If aura-2 fails the Hinglish listening test, make Vertex streamed primary for Hinglish students, but only if its first audio through the relay is ≤ 1.5 s p50. One class speaks in one voice | aura-2 costs ₹124–155 per hour of talk; Vertex ₹220, which is 1.4–1.8×. aura-2's 0.36 s was never measured on production, while Vertex measured 1.38–1.48 s. aura-2 has no Indian voice | T5 |
+| TD5a | Browser keeps: refuse them, or queue them? | Refuse with 403. Only prewarm (reviewer plus maths check plus Aarav's spot check) publishes | First write wins and is permanent. The proof's first plan failed validation, and it leaked the answer on 4 of 4 asks | I1 (T1) |
+| TD5b | Flip `PROTOTYPE_ONLY_PREPARED` after T1? | No: keep it true for students, and let prewarm fill the catalogue. **Flag for Aarav:** if prewarm reads to you as "prerecording", say so | A student who prepares a class alone pays ≥ ₹10.91 (a floor), twice the hourly ceiling. The live feel comes from the conversation, the judging, the doubts and the board | T2.7 onward |
+| TD6 | Key the brain on `auth.users` or on `learner`? | Ratify `public.learner` as built on the lms branch (✓ table `0021:199`, backfill `:242`) before the server fold writes its first row | The change is free while `concept_state` has 0 rows (measured 2026-09-24) | T4b |
+| TD7 | Subject scope for the first students | Class 10 Maths, "Pair of linear equations in two variables": 24 outcomes, 4 topics (✓), plus its prerequisite closure in the Class 6–9 maps. Science's warm classes stay as they are | Maths answers and working can be checked by code (§15). A narrow scope keeps the registry and the templates small, and raises S | T1–T4 |
+| TD8 | The order | As drawn above: brief P0 (T3–T4a) before streamed voice and board (T5–T6), with the early canvas slice in T2. **A departure for Aarav to confirm:** his 2026-09-28 ask puts voice and the real-time canvas (brief P2) ahead of the brief's remaining P1 (detectors, alternate explanations, the Learning Scientist's narrative). The cheap P1 pieces are pulled forward into T3–T4 | A fast voice with no diagnosis is a better-sounding chatbot. T2 answers "canvas last" without waiting on the LMS | Phase order |
+| TD9 | What does ₹5 count? | Everything, credits included. Report variable and all-in side by side. Ship on T9.3's computed figure with S and monthly hours declared, and state the break-even volume | Credits are real cost that ends (PRD 6:1780-1790 ✓). Fixed costs are ₹1.68–2.48 an hour at 2,500 h/month (ESTIMATE), and far more at pilot volume | T9 |
+| TD10 | Who does a distress alert go to? | Aarav, or a named operator, in writing. The alert reaches a phone through `OPS_ALERT_WEBHOOK`, with a 24 h response. "Nobody until schools exist" is not acceptable | Today no adult ever hears of a disclosure, and the doubt tutor is live | L1a (T1) |
+| TD11 | Spoken doubts: Gemini Live, or the pipeline? | The pipeline first. Gemini Live only once it is priced and its words can be screened | Live queues PCM for the speaker before any transcript exists (✓ `liveAgent.ts:208-211`) | H7 |
+| TD12 | Student input: typed steps or ink first? | Typed steps first. Ink second, as evidence for the teacher only. No AI reading of ink until it is costed | Steps are checked by code for free, and they tell procedural errors from arithmetic ones | T8 |
+| TD13 | Live pages after a doubt: keep or remove? | Keep them for the session, recallable. Never save them into the shared lesson | Saving would put one child's doubt into every later child's class | T2.3 |
+| TD14 | Does DPDP §9(3) cover response time and hesitation? | Ask the lawyer now (blocked-on-Aarav item 11). Until the answer comes: the fast-wrong rule, the rapid-guess class, hesitation capture and the detectors are built but switched off, and never used as evidence | The rules in T2 and T3 depend on these signals. Asking only at T9 would block the phases before it | E1, D5, E4/H6, E5 |
+| TD15 | Brief items not built: say so rather than drop them silently | **Not built yet:** per-student strategy profiles (§12; measured population-wide instead); `ENGAGEMENT_STATE` and affect (replaced by the detectors, under TD14); `LEARNING_PREFERENCE`; "which step was hardest" (waits for T8); `STUDENT.goals` and the exam calendar (N4, later). **Kept:** teach-back (T3), "how could you check" (T4a), streak and missed sessions (T7) | A silent cut reads later as an oversight | — |
+| TD16 | The shape of an hour | At most 3 new topics a student-hour; the rest is practice, retrieval, review and doubts | Per-topic cost scales with topics per hour. At the one measured 3.6-minute class length (16.55 topics an hour), per-topic lines alone are ₹3.04 an hour even at S = 100 | Cost model |
+
+### Deferred
+
+- **AI reading of photos and handwriting (J2):** its cost is unmeasured. **Gemini Live in production:** TD11.
+- **Per-student strategy profiles and affect estimation:** TD15 and TD14.
+- **The LLM narrative (K3):** it waits for the deterministic summary. **Withholding help (E9):** it waits for T9's per-rung data.
+- **On-device voice in the website:** Supertonic is 263 MB, English only, and ran at 0.45–0.81× realtime on a 4 GB phone. It belongs in the Android app.
+- **A cloned Indian voice:** only after T5.1 and T9.3.
+- **A parent view:** decision 14. **Push notifications to children:** F6.
+- **Faster cold prep:** it is off a student's path under TD5b.
+- **The tutor inside `apps/student`:** after T9 (decision 8).
+- **Pronunciation and programming checks:** J4. **The partner API:** decision 11.
+- **Board tools on the DEV-only Gemini Live agent.**
+
+### Risks
+
+1. **Voice.** A tutor limited to 35–44 s of fresh aura-2 speech an hour barely talks. If TD3 is "no", ₹5 needs a zero-marginal Hinglish voice, and none has been measured working on a phone.
+2. **The ear.** At the measured audio density it costs ≈ ₹5.5 an hour on its own. No free Hinglish ear has been measured working (cost audit: Moonshine returned an empty string, and CPU faster-whisper fails on Hinglish).
+3. **Volume.** At pilot volume, ₹5 all-in fails by construction. T9.3 says so rather than hiding it.
+4. **Doubts.** They are the one open-ended per-student cost. Prompt size is unmeasured, and thinking cannot go below LOW.
+5. **f.** The safe measured f is 34.5%. The route to 90% is unproven.
+6. **The shape of an hour.** It rests on one 3.6-minute science class.
+7. **The LMS lane is on the critical path.** T4b, L1b, A3/A4 and the T9.2 migrations wait on it, as does every deploy only Aarav can run.
+8. **The renderer can paraphrase an answer.** The leak check normalises digits and words, but it is still lexical.
+9. **Latency.** The targets rest on unmeasured hops: STT, first-token time, aura-2's first byte through the Edge Function, and MiniLM on a phone.
+10. **Child safety today.** Until T0a ships, the doubt tutor ignores `halted`. A spoken distress line in Devanagari may pass until T0.7. No adult is told until L1a.
+11. **Price shocks.** Flash's intro rate doubles on 2027-01-01, the TTS model is a preview, and the Google credits will end.
+12. **Phone performance.** Streaming audio, VAD, MiniLM, a live SVG board and ink capture have never been measured together on a 4 GB phone.
+13. **Content load.** One chapter needs ≥ 144 reviewed templates plus ladder content for every ask, and review throughput is unmeasured.
+14. **DPDP.** Anonymous children use a live LLM, and no consent is read. The legal answer may reshape T3, T7 and who may use the tutor at all.
+15. **Scope against capacity.** Ten phases for a solo founder, with the LMS running in parallel. Each phase is gated by a measurement, so a phase that is not finished shows.
 
 ---
 
@@ -1266,6 +1885,14 @@ These are the questions that change the plan:
 node tools/bin/build-site.mjs      # classroom with VITE_BASE=/app/, staged into landing/public/app, then next build
 cd landing && npx vercel deploy --prod --yes
 ```
+
+The relay (Supabase Edge Function), **function only** — never `npm run relay:deploy`, which bundles `supabase db push`:
+
+```bash
+npx supabase functions deploy relay --no-verify-jwt --project-ref ueemqirxyrltdmqgnidy --use-api
+```
+
+Check it with real requests afterwards: unauthenticated `/api/llm` 401, `/api/icons` 501, preflight allows `x-prep-id`.
 
 ---
 
