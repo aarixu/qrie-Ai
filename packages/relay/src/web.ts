@@ -88,10 +88,10 @@ export async function toResponse(
       );
     }
     call.onServed?.();
-    return new Response(upstream.body, {
+    return new Response(call.transform ? upstream.body.pipeThrough(call.transform()) : upstream.body, {
       status: 200,
       headers: {
-        'content-type': upstream.headers.get('content-type') ?? call.fallbackContentType,
+        'content-type': call.contentType ?? upstream.headers.get('content-type') ?? call.fallbackContentType,
         ...headers,
       },
     });

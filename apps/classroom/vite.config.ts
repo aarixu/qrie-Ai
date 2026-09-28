@@ -142,7 +142,7 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
   };
   console.log(
     vertex
-      ? '  relays: models on Vertex, speech on OpenRouter'
+      ? '  relays: models and speech on Vertex'
       : '  relays: everything on OpenRouter (no service account file found)',
   );
 

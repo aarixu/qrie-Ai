@@ -93,6 +93,13 @@ export {
 } from './utterance';
 
 export { createStreamingTts, type StreamingTtsOptions, type SpeechElement } from './streamingTts';
+export {
+  createPcmStreamTts,
+  createWebAudioOutput,
+  pcmBytesToFloat32,
+  type PcmOutput,
+  type PcmStreamTtsOptions,
+} from './pcmStreamTts';
 export { encodeWav, wavUrl } from './wav';
 export {
   createOnDeviceTts,

@@ -2,17 +2,11 @@ import { useEffect, useState } from 'react';
 import { currentSpeechTicket, relayUrl, speechTicket } from './relay';
 import { currentSessionId } from '../stores/ledger';
 import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
-import {
-  MANIFEST_FILE,
-  createOnDeviceTts,
-  createStreamingTts,
-  createRecordedTts,
-  parseManifest,
-} from '@ai-tutor/voice';
-import { onDeviceSynth } from './onDeviceSpeech';
+import { MANIFEST_FILE, createPcmStreamTts, createRecordedTts, parseManifest } from '@ai-tutor/voice';
+import { tutorLanguage } from './workspace';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import { lessonAudioUrl, type CatalogEntry } from './content';
-import { announceLine, avatarAudio } from '../avatar/avatarBus';
+import { announceLine, avatarPcmOutput } from '../avatar/avatarBus';
 
 /**
  * The voice a lesson is narrated in — three layers, best first.
@@ -28,24 +22,11 @@ import { announceLine, avatarAudio } from '../avatar/avatarBus';
  * @ai-tutor/voice, from the manifest and from what the API returns.
  */
 /**
- * WHO MEERA SOUNDS LIKE. One place, so changing her is one line.
- *
- * Deepgram's Aura will not speak without a named voice, and that is exactly
- * why it is here: Fish S2.1 with no reference voice picks a new speaker on
- * every call — the same sentence, sent three times, came back as three
- * different people — and every line of a class is its own call.
- *
- * `thalia` is Deepgram's "clear, confident, energetic, enthusiastic", chosen
- * because clarity on a phone speaker matters more than warmth, and a tutor who
- * asks questions needs some energy. `helena` and `cordelia` are the warmer
- * ones if that turns out to be the wrong trade.
- *
- * The honest gap: Aura-2 has no INDIAN English voice at all — American,
- * British, Australian, Irish and several others, but not ours. That is what
- * cloning Meera's own voice through Fish is meant to fix, once the rest of the
- * framework stands.
+ * WHO MEERA SOUNDS LIKE: Gemini TTS's Sulafat on Vertex, the persona's own
+ * voice (TUTOR.speechVoiceName), chosen server-side in the relay
+ * (packages/relay/src/vertexSpeech.ts). Until 2026-09-28 it was Deepgram's
+ * aura-2 Thalia, which had no Indian English voice and no Hinglish.
  */
-const TUTOR_VOICE = { model: 'deepgram/aura-2', voice: 'aura-2-thalia-en' } as const;
 
 export function useLessonVoice(
   entry: CatalogEntry | null,
@@ -59,6 +40,7 @@ export function useLessonVoice(
   // room sat on "Loading…" because this hook never resolved.
   const audioUrl = entry ? lessonAudioUrl(entry) : null;
   const title = lesson?.title;
+  const lessonLanguage = lesson?.language;
   const enabled = opts.enabled;
 
   useEffect(() => {
@@ -104,14 +86,22 @@ export function useLessonVoice(
        * falls back to the browser's own voice, which is what the fallback is
        * for — a class that keeps its lesson and loses its voice, not silence.
        */
-      live = createStreamingTts({
+      /**
+       * HER VOICE IS GEMINI ON VERTEX, STREAMED AS PCM (Aarav, 2026-09-28).
+       *
+       * Deepgram's aura-2 had no Indian voice and could not speak Hinglish.
+       * The relay now streams Gemini TTS's raw PCM and this plays each chunk
+       * as it lands (first audio 1.2-2.1 s measured on Vertex), through the
+       * avatar's analyser so the mouth moves to what the student hears. The
+       * language is the child's onboarding choice, or the lesson's own when
+       * it was prepared in Hinglish.
+       */
+      live = createPcmStreamTts({
         endpoint: relayUrl('/api/speech'),
         ticket: currentSpeechTicket,
         session: currentSessionId,
-        ...TUTOR_VOICE,
-        // Her face listens in: the avatar builds the audio elements, taps
-        // their loudness, and lipsyncs to the same clock the student hears.
-        audio: avatarAudio,
+        lang: () => (tutorLanguage() === 'hi-en' || lessonLanguage === 'hi-en' ? 'hi-en' : 'en'),
+        output: avatarPcmOutput,
         fallback: browser,
       });
       void speechTicket();
@@ -126,29 +116,18 @@ export function useLessonVoice(
         : null;
 
       /**
-       * HER OWN VOICE, ON THE PHONE, ABOVE THE CLOUD ONE.
-       *
-       * Free, private, and it works with no network at all — which for a
-       * student in India is most of the ways a class gets taken. The cloud
-       * voice stays UNDER it rather than beside it: three hundred megabytes
-       * arrive once, and the first class on a cold install must not open with
-       * a minute of silence while they do.
-       *
-       * The avatar's own audio factory, so the mouth still moves to the clock
-       * the student hears rather than to ours.
+       * NO ON-DEVICE LAYER (2026-09-28). Supertonic was never shipped — there
+       * is no `public/models`, so every line 404'd there first and its prime
+       * never reached the cloud voice, which put the whole fetch time between
+       * sentences — and it speaks English only, which a Hinglish tutor cannot
+       * use. The recorded take (class10-blood) stays on top.
        */
-      const onDevice = createOnDeviceTts({
-        synth: onDeviceSynth(),
-        audio: avatarAudio,
-        fallback: live,
-      });
-
       if (cancelled) return;
       setTts(
         withFace(
           manifest && audioUrl
-            ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: onDevice })
-            : onDevice,
+            ? createRecordedTts({ manifest, baseUrl: audioUrl, fallback: live })
+            : live,
         ),
       );
     })().catch(() => {
@@ -159,7 +138,7 @@ export function useLessonVoice(
       cancelled = true;
       live?.cancel();
     };
-  }, [audioUrl, title, enabled]);
+  }, [audioUrl, title, enabled, lessonLanguage]);
 
   return tts;
 }

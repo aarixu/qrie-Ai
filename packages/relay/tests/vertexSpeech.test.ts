@@ -5,11 +5,15 @@ import { createMemoryLedger, type Gate } from '../src/gate';
 import { createMemoryUsage } from '../src/usage';
 import type { RelayRequest, RelayResponse } from '../src/relays';
 import {
+  PCM_CONTENT_TYPE,
   VERTEX_SPEECH_MODEL,
   VERTEX_SPEECH_VOICE,
   pcmToWav,
   speakOnVertex,
+  speechPrompt,
+  sseToPcm,
 } from '../src/vertexSpeech';
+import { SPEECH_PREAMBLE, TRANSCRIPT_LABEL } from '@ai-tutor/voice';
 
 /**
  * HER VOICE DOES NOT DIE WITH ONE VENDOR.
@@ -92,7 +96,7 @@ describe('speakOnVertex', () => {
     );
     expect((seen[0].init.headers as Record<string, string>).authorization).toBe('Bearer tok');
     const sent = JSON.parse(String(seen[0].init.body));
-    expect(sent.contents[0].parts[0].text).toBe('Now substitute y.');
+    expect(sent.contents[0].parts[0].text.trimEnd().endsWith('Now substitute y.')).toBe(true);
     expect(sent.generationConfig.responseModalities).toEqual(['AUDIO']);
     expect(sent.generationConfig.speechConfig.voiceConfig.prebuiltVoiceConfig.voiceName).toBe(VERTEX_SPEECH_VOICE);
 
@@ -197,62 +201,142 @@ const streamOf = (out: RelayResponse) => {
   return out.body.from;
 };
 
-describe('the speech relay falls back to Vertex', () => {
-  it('hands the host a Vertex answer to use if OpenRouter fails', async () => {
+describe('the speech relay speaks on Vertex (Aarav, 2026-09-28: no OpenRouter for speech)', () => {
+  it('streams raw PCM from Vertex when the app asks for format=pcm', async () => {
     const { usage, deps: d } = deps({ vertex: vertexDeps() });
-    const out = await handleRelay(req(), d);
+    const out = await handleRelay(req({ url: '/api/speech?text=hello%20there&session=sess-3&format=pcm&lang=hi-en' }), d);
 
     const from = streamOf(out);
-    expect(from.url).toContain('openrouter.ai');
-    expect(from.orElse).toBeTypeOf('function');
+    expect(from.url).toBe(
+      'https://aiplatform.googleapis.com/v1/projects/proj-1/locations/global' +
+        `/publishers/google/models/${VERTEX_SPEECH_MODEL}:streamGenerateContent?alt=sse`,
+    );
+    expect(from.url).not.toContain('openrouter');
+    expect(from.headers.authorization).toBe('Bearer tok');
+    expect(from.contentType).toBe(PCM_CONTENT_TYPE);
+    const sent = JSON.parse(String(from.body));
+    expect(sent.contents[0].parts[0].text).toContain('hello there');
+    expect(sent.contents[0].parts[0].text).toContain('Hinglish');
 
+    // The host pipes Vertex's SSE through the transform; its flush books usage.
+    const pcm = await pipe(sse([audioEvent(new Uint8Array([1, 2, 3, 4])), usageEvent]), from.transform!());
+    expect([...pcm]).toEqual([1, 2, 3, 4]);
+    expect(usage.events).toContainEqual(
+      expect.objectContaining({ relay: 'speech', provider: 'vertex', model: VERTEX_SPEECH_MODEL, outputTokens: 169, sessionId: 'sess-3' }),
+    );
+    expect(usage.events.filter((e) => e.provider === 'openrouter')).toHaveLength(0);
+  });
+
+  it('retries once, collected, if the Vertex stream refuses to start', async () => {
+    const { deps: d } = deps({ vertex: vertexDeps() });
+    const from = streamOf(await handleRelay(req({ url: '/api/speech?text=hi&format=pcm' }), d));
     const instead = await from.orElse!();
     expect(instead.status).toBe(200);
-    expect(instead.headers['content-type']).toBe('audio/wav');
-    expect([...bytesOf(instead).slice(44)]).toEqual([7, 7]);
-    expect(usage.events).toContainEqual(
-      expect.objectContaining({
-        relay: 'speech',
-        provider: 'vertex',
-        model: VERTEX_SPEECH_MODEL,
-        status: 200,
-        promptTokens: 19,
-        outputTokens: 169,
-        sessionId: 'sess-3',
-      }),
-    );
+    expect(instead.headers['content-type']).toBe(PCM_CONTENT_TYPE);
+    expect([...bytesOf(instead)]).toEqual([7, 7]);
   });
 
-  it('books the OpenRouter line only once the vendor actually served it', async () => {
-    // Booked at dispatch, a line OpenRouter refused and Vertex then spoke would
-    // be written down twice — and the ceiling would read high on exactly the
-    // day the fallback is doing its job.
+  it('answers an old <audio> client with a whole WAV from Vertex, never OpenRouter', async () => {
     const { usage, deps: d } = deps({ vertex: vertexDeps() });
-    const from = streamOf(await handleRelay(req(), d));
-    expect(usage.events.filter((e) => e.provider === 'openrouter')).toHaveLength(0);
-
-    from.onServed!();
-    expect(usage.events).toContainEqual(
-      expect.objectContaining({ relay: 'speech', provider: 'openrouter', characters: 11, sessionId: 'sess-3' }),
-    );
+    const out = await handleRelay(req(), d);
+    expect(out.status).toBe(200);
+    expect(out.headers['content-type']).toBe('audio/wav');
+    expect([...bytesOf(out).slice(44)]).toEqual([7, 7]);
+    expect(usage.events).toContainEqual(expect.objectContaining({ provider: 'vertex', status: 200, sessionId: 'sess-3' }));
   });
 
-  it('speaks on Vertex straight away when there is no OpenRouter key at all', async () => {
+  it('speaks on Vertex even when there is no OpenRouter key at all', async () => {
     const { deps: d } = deps({ key: '', vertex: vertexDeps() });
     const out = await handleRelay(req(), d);
     expect(out.status).toBe(200);
     expect(out.headers['content-type']).toBe('audio/wav');
   });
 
-  it('changes nothing for a host with no Vertex', async () => {
-    const { deps: d } = deps();
+  it('keeps the OpenRouter voice only for a host with no Vertex (a laptop without the service account)', async () => {
+    const { usage, deps: d } = deps();
     const from = streamOf(await handleRelay(req(), d));
-    expect(from.orElse).toBeUndefined();
+    expect(from.url).toContain('openrouter.ai');
+    from.onServed!();
+    expect(usage.events).toContainEqual(expect.objectContaining({ provider: 'openrouter', characters: 11 }));
   });
 
   it('still refuses an empty line rather than paying Vertex to say nothing', async () => {
     const { deps: d } = deps({ vertex: vertexDeps() });
-    const out = await handleRelay(req({ url: '/api/speech?text=%20' }), d);
+    const out = await handleRelay(req({ url: '/api/speech?text=%20&format=pcm' }), d);
     expect(out.status).toBe(400);
+  });
+});
+
+// ------------------------------------------------ the stream transform ----
+
+/** Feed text through a transform in awkward pieces, return every byte out. */
+async function pipe(text: string, transform: TransformStream<Uint8Array, Uint8Array>, cut = 7): Promise<Uint8Array> {
+  const bytes = new TextEncoder().encode(text);
+  const source = new ReadableStream<Uint8Array>({
+    start(c) {
+      for (let i = 0; i < bytes.length; i += cut) c.enqueue(bytes.slice(i, i + cut));
+      c.close();
+    },
+  });
+  const out: number[] = [];
+  const reader = source.pipeThrough(transform).getReader();
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    out.push(...value);
+  }
+  return new Uint8Array(out);
+}
+
+describe('sseToPcm', () => {
+  it('turns Vertex SSE into raw PCM however the network cuts it', async () => {
+    const pcm = new Uint8Array(Array.from({ length: 300 }, (_, i) => i % 256));
+    const text = sse([audioEvent(pcm.slice(0, 101)), audioEvent(pcm.slice(101)), usageEvent]);
+    for (const cut of [1, 3, 7, 64, 4096]) {
+      const out = await pipe(text, sseToPcm(), cut);
+      expect([...out]).toEqual([...pcm]);
+    }
+  });
+
+  it('never emits half a sample, so the player never plays static', async () => {
+    const reads: number[] = [];
+    const t = sseToPcm();
+    const text = sse([audioEvent(new Uint8Array([1, 2, 3])), audioEvent(new Uint8Array([4, 5, 6]))], String.fromCharCode(10, 10));
+    const source = new ReadableStream<Uint8Array>({
+      start(c) {
+        c.enqueue(new TextEncoder().encode(text));
+        c.close();
+      },
+    });
+    const reader = source.pipeThrough(t).getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      reads.push(value.byteLength);
+    }
+    expect(reads.every((n) => n % 2 === 0)).toBe(true);
+    expect(reads.reduce((a, b) => a + b, 0)).toBe(6);
+  });
+
+  it('reports what Vertex billed when the stream ends', async () => {
+    let seen: { promptTokens?: number; outputTokens?: number; audioBytes: number } | null = null;
+    await pipe(sse([audioEvent(new Uint8Array([1, 2])), usageEvent]), sseToPcm((u) => (seen = u)));
+    expect(seen).toEqual({ promptTokens: 19, outputTokens: 169, audioBytes: 2 });
+  });
+});
+
+describe('speechPrompt', () => {
+  it('uses the shape the recorded class uses, so the live voice is the same teacher', () => {
+    const p = speechPrompt('Chalo, heart ko dekhte hain.', 'hi-en');
+    expect(p.startsWith(SPEECH_PREAMBLE)).toBe(true);
+    expect(p).toContain(TRANSCRIPT_LABEL);
+    expect(p.trimEnd().endsWith('Chalo, heart ko dekhte hain.')).toBe(true);
+    expect(p).toContain('Hinglish');
+  });
+
+  it('asks for Indian English when the class is in English', () => {
+    const p = speechPrompt('Let us look at the heart.', 'en');
+    expect(p).toContain('Indian English');
+    expect(p).not.toContain('Hinglish');
   });
 });

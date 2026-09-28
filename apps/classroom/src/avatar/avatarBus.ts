@@ -1,4 +1,4 @@
-import type { SpeechElement } from '@ai-tutor/voice';
+import { createWebAudioOutput, type PcmOutput, type SpeechElement } from '@ai-tutor/voice';
 
 /**
  * THE BUS BETWEEN HER VOICE AND HER FACE.
@@ -57,9 +57,45 @@ export function avatarAudio(src: string): SpeechElement {
   return el as unknown as SpeechElement;
 }
 
+/**
+ * HER VOICE AS WEB AUDIO (2026-09-28): the Gemini PCM stream is scheduled as
+ * buffers, not played by an element, so the face listens to the same
+ * analyser through this output instead. `pcmStartedAt` is the line's first
+ * sample on the audio clock — the mouth's clock for that line.
+ */
+let pcmStartedAt: number | null = null;
+
+export function avatarPcmOutput(): PcmOutput | null {
+  try {
+    if (audioCtx === null) {
+      audioCtx = new AudioContext();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      samples = new Uint8Array(analyser.fftSize);
+      analyser.connect(audioCtx.destination);
+    }
+    const out = createWebAudioOutput(audioCtx, analyser!);
+    const ctx = audioCtx;
+    return {
+      ...out,
+      play(s, rate, at) {
+        if (pcmStartedAt === null) pcmStartedAt = at;
+        return out.play(s, rate, at);
+      },
+      resume() {
+        if (ctx.state === 'suspended') void ctx.resume().catch(() => undefined);
+      },
+    };
+  } catch {
+    // No Web Audio (an old WebView): the line falls back to the browser voice.
+    return null;
+  }
+}
+
 /** The lesson adapter says what is being spoken; empty text is silence. */
 export function announceLine(text: string): void {
   line = { text: text.trim(), startedAt: performance.now() };
+  pcmStartedAt = null;
   if (text.trim() === '') currentEl = null;
 }
 
@@ -72,6 +108,9 @@ export interface LineProgress {
 
 export function progress(): LineProgress {
   if (line.text === '') return { text: '', elapsedMs: 0, durationMs: null };
+  if (pcmStartedAt !== null && audioCtx) {
+    return { text: line.text, elapsedMs: Math.max(0, (audioCtx.currentTime - pcmStartedAt) * 1000), durationMs: null };
+  }
   if (currentEl && !currentEl.paused && Number.isFinite(currentEl.currentTime)) {
     const dur = Number.isFinite(currentEl.duration) ? currentEl.duration * 1000 : null;
     return { text: line.text, elapsedMs: currentEl.currentTime * 1000, durationMs: dur };
@@ -81,7 +120,8 @@ export function progress(): LineProgress {
 
 /** Loudness right now, 0..1 — or null when nothing of ours is playing. */
 export function level(): number | null {
-  if (!analyser || !samples || !currentEl || currentEl.paused) return null;
+  const pcmSpeaking = pcmStartedAt !== null && audioCtx !== null && audioCtx.currentTime >= pcmStartedAt;
+  if (!analyser || !samples || (!pcmSpeaking && (!currentEl || currentEl.paused))) return null;
   analyser.getByteTimeDomainData(samples);
   let sum = 0;
   for (let i = 0; i < samples.length; i += 1) {

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { ServerResponse } from 'node:http';
+import { PassThrough } from 'node:stream';
 import { toResponse } from '../src/web';
 import { sendRelayResponse } from '../src/node';
 import type { RelayResponse, UpstreamCall } from '../src/relays';
@@ -125,5 +126,37 @@ describe('the node host (npm run dev)', () => {
     const { res, sent } = stub();
     await sendRelayResponse(res, streamed({ orElse: async () => wav }));
     expect(sent.statusCode).toBe(200);
+  });
+});
+
+describe('a transformed stream (Vertex SSE in, PCM out)', () => {
+  const upper = () =>
+    new TransformStream<Uint8Array, Uint8Array>({
+      transform(chunk, c) {
+        c.enqueue(new TextEncoder().encode(new TextDecoder().decode(chunk).toUpperCase()));
+      },
+    });
+
+  it('the web host pipes the upstream through it and names the content type', async () => {
+    upstreamSays(200, 'data: abc');
+    const res = await toResponse(streamed({ transform: upper, contentType: 'audio/L16;rate=24000;channels=1' }));
+    expect(res.headers.get('content-type')).toBe('audio/L16;rate=24000;channels=1');
+    expect(await res.text()).toBe('DATA: ABC');
+  });
+
+  it('the node host does the same', async () => {
+    upstreamSays(200, 'data: abc');
+    const chunks: Buffer[] = [];
+    const headers: Record<string, string> = {};
+    const res = new PassThrough() as unknown as ServerResponse & { statusCode: number };
+    (res as unknown as { setHeader: (k: string, v: string) => void }).setHeader = (k, v) => {
+      headers[k] = v;
+    };
+    const done = new Promise<void>((r) => (res as unknown as PassThrough).on('finish', () => r()));
+    (res as unknown as PassThrough).on('data', (c: Buffer) => chunks.push(c));
+    await sendRelayResponse(res, streamed({ transform: upper, contentType: 'audio/L16;rate=24000;channels=1' }));
+    await done;
+    expect(headers['content-type']).toBe('audio/L16;rate=24000;channels=1');
+    expect(Buffer.concat(chunks).toString()).toBe('DATA: ABC');
   });
 });

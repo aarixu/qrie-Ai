@@ -22,7 +22,7 @@ import {
   type VertexOptions,
 } from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
-import { VERTEX_SPEECH_MODEL, speakOnVertex } from './vertexSpeech.ts';
+import { PCM_CONTENT_TYPE, VERTEX_SPEECH_MODEL, speakOnVertex, sseToPcm, vertexSpeechCall } from './vertexSpeech.ts';
 import {
   usageFromClass,
   usageFromHear,
@@ -432,29 +432,61 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return out;
   }
   if (relay === 'speech') {
-    const out = speechRelay(req, deps.key, deps.speechUrl);
     const asked = new URL(req.url, 'http://relay.local').searchParams;
     const text = asked.get('text')?.trim() ?? '';
     /**
-     * VERTEX SPEAKS WHEN THE VENDOR CANNOT (Aarav, 2026-09-28).
-     *
-     * OpenRouter is prepaid: out of credit, or down, and every line of every
-     * class fails to the browser's robot voice. With Vertex configured, the
-     * host is handed `orElse` and uses it on any upstream failure — a 402, a
-     * 5xx, no network — because only the host sees that status. With no
-     * OpenRouter key at all, Vertex is simply the voice. An empty line is
-     * refused by speechRelay either way and never reaches Vertex. See
-     * vertexSpeech.ts for what it measured and what it costs.
+     * HER VOICE IS GEMINI ON VERTEX (Aarav, 2026-09-28): no OpenRouter and no
+     * Deepgram for speech wherever Vertex is configured — aura-2 has no Indian
+     * voice and cannot speak Hinglish. `format=pcm` streams raw PCM to the
+     * app's Web Audio player as Vertex makes it; anything else (an old
+     * bundle's `<audio src>`) gets the line collected into one WAV. The client
+     * cannot choose the model or the voice here — both are fixed server-side,
+     * which also closes the `?model=` route that let a caller pick a vendor.
+     * See vertexSpeech.ts for what it measured and what it costs.
      */
     const vertex = deps.vertex;
-    const onVertex =
-      vertex && text
-        ? async (): Promise<RelayResponse> => {
-            const spoken = await speakOnVertex(text, vertex);
-            note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, spoken));
-            return spoken.response;
-          }
-        : null;
+    if (vertex) {
+      if (!text) return fail(400, 'nothing to say');
+      const lang = asked.get('lang') === 'hi-en' ? 'hi-en' : 'en';
+      const collected = async (format: 'pcm' | 'wav'): Promise<RelayResponse> => {
+        const spoken = await speakOnVertex(text, vertex, { format, lang });
+        note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, spoken));
+        return spoken.response;
+      };
+      if (asked.get('format') !== 'pcm') return collected('wav');
+
+      let call: Awaited<ReturnType<typeof vertexSpeechCall>>;
+      try {
+        call = await vertexSpeechCall(text, lang, vertex);
+      } catch (e) {
+        return fail(502, `Google auth failed: ${(e as Error).message}`);
+      }
+      return {
+        status: 200,
+        headers: {},
+        body: {
+          kind: 'stream',
+          from: {
+            url: call.url,
+            method: 'POST',
+            headers: call.headers,
+            body: call.body,
+            fallbackContentType: PCM_CONTENT_TYPE,
+            contentType: PCM_CONTENT_TYPE,
+            // Booked when the stream ends, from Vertex's own counts.
+            transform: () =>
+              sseToPcm((u) =>
+                note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, { status: u.audioBytes > 0 ? 200 : 502, ...u })),
+              ),
+            // A stream that will not start (a 429, a 5xx) gets one collected retry.
+            orElse: () => collected('pcm'),
+          },
+        },
+      };
+    }
+
+    // No service account (a laptop): the OpenRouter voice, as before.
+    const out = speechRelay(req, deps.key, deps.speechUrl);
     if (out.body.kind === 'stream') {
       const model = asked.get('model') ?? DEFAULT_SPEECH_MODEL;
       return {
@@ -463,17 +495,12 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
           kind: 'stream',
           from: {
             ...out.body.from,
-            // Booked when the host sees the vendor answer, not at dispatch: a
-            // refused line then costs nothing in the books, and the Vertex
-            // line that replaced it is not counted twice.
+            // Booked when the host sees the vendor answer, not at dispatch.
             onServed: () => note(usageFromSpeech(base, model, text, 200)),
-            ...(onVertex ? { orElse: onVertex } : {}),
           },
         },
       };
     }
-    // No OpenRouter key and no voice box of our own: speechRelay's 503.
-    if (out.status === 503 && onVertex) return onVertex();
     return out;
   }
 

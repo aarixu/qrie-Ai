@@ -89,8 +89,9 @@ export async function sendRelayResponse(res: ServerResponse, out: RelayResponse)
     }
     call.onServed?.();
     res.statusCode = 200;
-    res.setHeader('content-type', upstream.headers.get('content-type') ?? call.fallbackContentType);
-    Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]).pipe(res);
+    res.setHeader('content-type', call.contentType ?? upstream.headers.get('content-type') ?? call.fallbackContentType);
+    const body = call.transform ? upstream.body.pipeThrough(call.transform()) : upstream.body;
+    Readable.fromWeb(body as Parameters<typeof Readable.fromWeb>[0]).pipe(res);
   } catch (e: unknown) {
     if (call.orElse) return await instead();
     res.statusCode = 502;

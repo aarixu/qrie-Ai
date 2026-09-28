@@ -60,6 +60,14 @@ export interface UpstreamCall {
    * It must answer json or bytes, never another stream.
    */
   orElse?: () => Promise<RelayResponse>;
+  /**
+   * Rewrites the upstream body on its way through, chunk by chunk — Vertex's
+   * SSE into raw PCM for her voice (vertexSpeech.ts `sseToPcm`). A factory,
+   * because a TransformStream can carry exactly one body.
+   */
+  transform?: () => TransformStream<Uint8Array, Uint8Array>;
+  /** The content type to answer with, overriding the upstream's (which describes what went IN to the transform). */
+  contentType?: string;
 }
 
 const json = (status: number, value: unknown): RelayResponse => ({
