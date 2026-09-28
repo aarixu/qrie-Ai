@@ -1,0 +1,764 @@
+/**
+ * THE CHECK — does the working on the board agree with the answer it reaches?
+ *
+ * Deterministic, exact, and 0 model calls. Given the equation-like lines of a
+ * lesson in the order the class writes them, it:
+ *
+ *   1. READS each line (parse.ts). A line it cannot read is SKIPPED, with a
+ *      reason — never failed.
+ *
+ *   2. FINDS THE CLAIMED ANSWERS. A claim is a statement with a lone variable
+ *      at one end and a constant at the other: `y = 19 / 29`,
+ *      `x = 3 - 2(19/29) = (87 - 38)/29 = 49 / 29`, or either half of
+ *      `Solution: x = 49/29, y = 19/29`.
+ *
+ *   3. SPLITS THE LINES INTO PROBLEMS. A problem runs up to and including a
+ *      run of claims; a line of working after that run starts the next one.
+ *      Two neighbouring problems are joined back into one when their claims
+ *      agree, or when joining them leaves no more failing lines than keeping
+ *      them apart — so a wrong "y = 19/28" in the middle of a derivation is
+ *      one problem with a bad line, while two worked examples with answers
+ *      x = 2 and x = 3 stay two problems. A line labelled as a practice
+ *      question ("Try:", "Your turn:" — parse.ts) is a problem of its own
+ *      wherever it stands, never joined to a neighbour, so it is held to no
+ *      worked example's answer. Lines after the last claim have no answer to
+ *      be held to either; their variable steps are skipped.
+ *
+ *   4. PICKS ONE ANSWER PER PROBLEM. When claims disagree, the combinations
+ *      of the values they offer are tried — every constant side of a claim
+ *      chain counts, so `x = 8/2 = 5` offers 4 and 5 — and the one under
+ *      which the fewest lines fail is kept. Ties go to the answer on a line
+ *      labelled "Solution:"/"Answer:", else to the last one written; the
+ *      label never outvotes the working. Past 64 combinations only that
+ *      preferred answer is tried.
+ *
+ *      ROOTS. A variable that some line of the problem uses at degree 2 or
+ *      more, as a polynomial (`x² - 5x + 6 = 0`, `(x - 2)(x - 3) = 0`), may
+ *      have several values at once. Its claims are not rivals: the answers
+ *      tried for it are SETS of the values offered — every value claimed
+ *      first, then every other set of them, largest first (past 6 distinct
+ *      values, only the claimed set). Under a set of roots, a statement with
+ *      a pair that uses the variable at degree 2 or more — or that mentions
+ *      it and is not a polynomial, such as a variable in a divisor — must
+ *      hold for EVERY root; any other statement must hold for AT LEAST ONE,
+ *      and statements joined by `⇒` on one line for the same one
+ *      (`x - 2 = 0 ⇒ x = 3` fails). A claimed root the quadratic does not
+ *      hold for fails the problem either way: under a set that includes it
+ *      that line fails, and under a set without it the root's own claim
+ *      fails. A root set is reported in `roots`, not `solutions`; one claimed
+ *      value is an ordinary answer.
+ *
+ *   5. CHECKS EVERY ADJACENT PAIR of every chain. A pair that is equal as
+ *      polynomials holds whatever the values (`7(3 - 2y) - 15y = 21 - 14y -
+ *      15y`); a pair of constants is equal or not (`2 - 21 = -17` fails);
+ *      a pair with variables is held to the problem's answer; a pair that
+ *      divides by zero fails; a pair whose variables have no answer is left
+ *      open. A line fails if any pair fails, passes if some pair held and
+ *      none failed, and is skipped when every pair was left open.
+ *
+ * ONE SHAPE IS EXCUSED, and only when the lines carry pages (`section`):
+ * a page that comes before every page holding an answer or a line that holds
+ * under it; whose equations pin an answer of their own in two or more
+ * variables (a determined linear system of two or more equations); under
+ * whose own answer nothing off that page holds; and whose problem is stated
+ * again where it is worked — the lines of working off that page that hold
+ * (claims do not count) pin the problem's answer by themselves. That is an
+ * opening puzzle the class never solves — the proof lesson's
+ * "x + y = 50, y = x + 30", followed by a page that states and works
+ * "7x - 15y = 2, x + 2y = 3" — and its lines that fail only under the
+ * problem's answer are skipped as a separate problem. So these still fail:
+ * a lone line on such a page, which pins no answer; a one-variable problem
+ * stated on its own page ("3x + 5 = 20") and worked on the next with a slip
+ * in the first step; a stated system followed by pages that write only an
+ * answer; a page whose answer the later working does follow; and a numeric
+ * slip on such a page ("50 - 30 = 25"), which is never excused.
+ *
+ * KNOWN BLIND SPOT: a system in two or more variables stated alone on its
+ * own page, followed on later pages by working that restates it with every
+ * equation changed — so that nothing on either side holds under the other
+ * side's answer — looks exactly like an unsolved opening puzzle followed by
+ * a new problem, and is skipped. Nothing in the maths tells the two apart;
+ * the page boundary is the only cue used.
+ */
+
+import { toPoly, valueOf, variablesIn, type Expr, type Values } from './expr.ts';
+import { parseLine, type ParsedLine, type Side } from './parse.ts';
+import * as P from './poly.ts';
+import { DivisionByZero, equals, formatRational, type Rational } from './rational.ts';
+
+/** One line of board text. `section` groups lines by page; see the header. */
+export interface Line {
+  id: string;
+  text: string;
+  section?: string;
+}
+
+export interface Failure {
+  id: string;
+  text: string;
+  reason: string;
+}
+
+export interface Skipped {
+  id: string;
+  text: string;
+  reason: string;
+}
+
+export interface Passed {
+  id: string;
+  text: string;
+}
+
+export interface Problem {
+  /** The lines held to this answer: every line of the problem that passed or failed. */
+  ids: string[];
+  /** One value per variable. A variable with a set of roots is in `roots` instead. */
+  solutions: Record<string, Rational>;
+  /** Each variable kept with two or more roots (header, step 4), in board order. */
+  roots: Record<string, Rational[]>;
+}
+
+export interface CheckResult {
+  /**
+   * True when no line failed. A result with nothing checked is also ok — the
+   * caller decides whether that is enough.
+   */
+  ok: boolean;
+  /**
+   * The answers of the LAST problem that has any (the board's final answer).
+   * Every problem, with its own answers, is in `problems`.
+   */
+  solutions: Record<string, Rational>;
+  /** The root sets of that same last problem; empty when it has none. */
+  roots: Record<string, Rational[]>;
+  failures: Failure[];
+  skipped: Skipped[];
+  passed: Passed[];
+  /** Each problem that claims an answer, in board order. */
+  problems: Problem[];
+}
+
+// ------------------------------------------------------------ preparing --
+
+interface Claim {
+  name: string;
+  /** The answer this claim states: the constant at the far end from the variable. */
+  stated: Rational;
+  /** Every constant side of the chain, in order — `x = 8/2 = 5` offers 4 and 5. */
+  offered: Rational[];
+  final: boolean;
+}
+
+interface Pair {
+  left: Side;
+  right: Side;
+  /** left - right with no values put in; or why it could not be built. */
+  sym: P.Poly | 'div-zero' | 'not-poly';
+  vars: Set<string>;
+}
+
+interface Prepared {
+  line: Line;
+  parsed: ParsedLine | null;
+  parseReason: string;
+  pairs: Pair[][]; // per statement
+  claims: Claim[];
+  kind: 'claim' | 'work' | 'other';
+  /** Labelled as a practice question: a problem of its own (header, step 3). */
+  practice: boolean;
+}
+
+function symbolic(a: Expr, b: Expr): Pair['sym'] {
+  try {
+    return toPoly({ k: 'sub', a, b });
+  } catch (e) {
+    if (e instanceof DivisionByZero) return 'div-zero';
+    if (e instanceof P.NotPolynomial) return 'not-poly';
+    throw e;
+  }
+}
+
+function claimOf(sides: Side[], final: boolean): Claim | null {
+  for (const ordered of [sides, [...sides].reverse()]) {
+    const head = ordered[0].expr;
+    const tail = ordered[ordered.length - 1].expr;
+    if (head.k !== 'var') continue;
+    const stated = variablesIn(tail).size === 0 ? valueOf(tail) : null;
+    if (stated === null) continue;
+    const offered = ordered
+      .slice(1)
+      .filter((s) => variablesIn(s.expr).size === 0)
+      .map((s) => valueOf(s.expr))
+      .filter((v): v is Rational => v !== null);
+    return { name: head.name, stated, offered, final };
+  }
+  return null;
+}
+
+function prepare(line: Line): Prepared {
+  const read = parseLine(line.text);
+  if (!read.ok) {
+    return { line, parsed: null, parseReason: read.reason, pairs: [], claims: [], kind: 'other', practice: false };
+  }
+  const pairs = read.line.statements.map((st) =>
+    st.sides.slice(1).map((right, i) => {
+      const left = st.sides[i];
+      return {
+        left,
+        right,
+        sym: symbolic(left.expr, right.expr),
+        vars: variablesIn(right.expr, variablesIn(left.expr)),
+      };
+    }),
+  );
+  const claims = read.line.statements
+    .map((st) => claimOf(st.sides, read.line.final))
+    .filter((c): c is Claim => c !== null);
+  const hasVars = pairs.some((ps) => ps.some((p) => p.vars.size > 0));
+  return {
+    line,
+    parsed: read.line,
+    parseReason: '',
+    pairs,
+    claims,
+    kind: claims.length > 0 ? 'claim' : hasVars ? 'work' : 'other',
+    practice: read.line.practice,
+  };
+}
+
+// -------------------------------------------------------------- judging --
+
+/**
+ * An answer being tried for one problem: the values each variable may take.
+ * One value for most variables; two or more only for a set of roots
+ * (header, step 4).
+ */
+type Answer = Readonly<Record<string, readonly Rational[]>>;
+
+const showValues = (values: Values, only?: Iterable<string>): string => {
+  const names = only ? [...new Set(only)].filter((v) => v in values) : Object.keys(values);
+  return names
+    .sort()
+    .map((v) => `${v} = ${formatRational(values[v])}`)
+    .join(', ');
+};
+
+/** `x = 2 or x = 3, y = 1` — an answer, roots and all. */
+const showAnswer = (answer: Answer, only?: ReadonlySet<string>): string =>
+  Object.keys(answer)
+    .filter((v) => !only || only.has(v))
+    .sort()
+    .map((v) => answer[v].map((r) => `${v} = ${formatRational(r)}`).join(' or '))
+    .join(', ');
+
+type PairVerdict =
+  | { kind: 'holds'; usedValues: boolean }
+  | { kind: 'fails'; usedValues: boolean; reason: string }
+  | { kind: 'open'; free: string[] };
+
+function describeMismatch(pair: Pair, values: Values, used: boolean): string {
+  const lv = valueOf(pair.left.expr, values);
+  const rv = valueOf(pair.right.expr, values);
+  const when = used ? `, when ${showValues(values, pair.vars)}` : '';
+  // "y = <something>" that disagrees with the answer kept for the problem
+  // (the one step 4 of the header picked): say it in those words.
+  for (const [lone, other, otherValue] of [
+    [pair.left, pair.right, rv],
+    [pair.right, pair.left, lv],
+  ] as const) {
+    if (lone.expr.k === 'var' && otherValue !== null && lone.expr.name in values) {
+      const v = lone.expr.name;
+      const otherVars = variablesIn(other.expr);
+      const from =
+        otherVars.size > 0 ? ` (from \`${other.source}\`, when ${showValues(values, otherVars)})` : '';
+      return (
+        `this line gives ${v} = ${formatRational(otherValue)}${from}, ` +
+        `but the answer kept for this problem is ${v} = ${formatRational(values[v])}`
+      );
+    }
+  }
+  if (lv !== null && rv !== null) {
+    return `\`${pair.left.source}\` is ${formatRational(lv)}, not ${formatRational(rv)}${when}`;
+  }
+  return `\`${pair.left.source}\` and \`${pair.right.source}\` differ${when}`;
+}
+
+function judgePair(pair: Pair, values: Values): PairVerdict {
+  if (pair.sym === 'div-zero') {
+    const reason = `\`${pair.left.source} = ${pair.right.source}\` divides by zero`;
+    return { kind: 'fails', usedValues: false, reason };
+  }
+  let needed: Set<string>;
+  if (pair.sym === 'not-poly') {
+    needed = pair.vars;
+  } else {
+    if (P.isZero(pair.sym)) return { kind: 'holds', usedValues: false };
+    needed = P.variablesOf(pair.sym);
+    if (needed.size === 0) {
+      return { kind: 'fails', usedValues: false, reason: describeMismatch(pair, {}, false) };
+    }
+  }
+  const free = [...needed].filter((v) => !(v in values));
+  if (free.length > 0) return { kind: 'open', free };
+  let diff: Rational | null;
+  try {
+    diff = P.constantValue(toPoly({ k: 'sub', a: pair.left.expr, b: pair.right.expr }, values));
+  } catch (e) {
+    if (e instanceof DivisionByZero) {
+      const when = showValues(values, pair.vars);
+      const reason = `\`${pair.left.source} = ${pair.right.source}\` divides by zero when ${when}`;
+      return { kind: 'fails', usedValues: true, reason };
+    }
+    if (e instanceof P.NotPolynomial) return { kind: 'open', free: [] };
+    throw e;
+  }
+  if (diff === null) return { kind: 'open', free: [] };
+  if (diff.n === 0n) return { kind: 'holds', usedValues: true };
+  return { kind: 'fails', usedValues: true, reason: describeMismatch(pair, values, true) };
+}
+
+/** One statement (a chain of `=`) under one set of values. */
+interface StatementVerdict {
+  outcome: 'held' | 'failed' | 'open';
+  reasons: string[];
+  /** How many of `reasons` came from pairs that failed with no values put in. */
+  plain: number;
+  free: string[];
+  /** Some pair held only because of the values put in. */
+  heldOnValues: boolean;
+  /** Every failing pair failed only because of the values put in (true when none failed). */
+  failedOnValuesOnly: boolean;
+}
+
+function judgeStatement(pairs: readonly Pair[], values: Values): StatementVerdict {
+  const reasons: string[] = [];
+  const free: string[] = [];
+  let plain = 0;
+  let held = false;
+  let heldOnValues = false;
+  for (const pair of pairs) {
+    const v = judgePair(pair, values);
+    if (v.kind === 'holds') {
+      held = true;
+      if (v.usedValues) heldOnValues = true;
+    } else if (v.kind === 'fails') {
+      reasons.push(v.reason);
+      if (!v.usedValues) plain++;
+    } else {
+      free.push(...v.free);
+    }
+  }
+  return {
+    outcome: reasons.length > 0 ? 'failed' : held ? 'held' : 'open',
+    reasons,
+    plain,
+    free,
+    heldOnValues,
+    failedOnValuesOnly: plain === 0,
+  };
+}
+
+const openVerdict = (free: string[]): StatementVerdict => ({
+  outcome: 'open',
+  reasons: [],
+  plain: 0,
+  free,
+  heldOnValues: false,
+  failedOnValuesOnly: true,
+});
+
+interface Judged {
+  status: 'passed' | 'failed' | 'skipped';
+  reason: string;
+  /** Some pair held only because of the values put in. */
+  heldOnValues: boolean;
+  /** Every failing pair failed only because of the values put in. */
+  failedOnValuesOnly: boolean;
+}
+
+/** A line's verdict from its statements' — step 5 of the header. */
+function lineVerdict(p: Prepared, verdicts: readonly StatementVerdict[]): Judged {
+  const reasons = verdicts.flatMap((v) => v.reasons);
+  const heldOnValues = verdicts.some((v) => v.heldOnValues);
+  if (reasons.length > 0) {
+    const failedOnValuesOnly = verdicts.every((v) => v.failedOnValuesOnly);
+    return { status: 'failed', reason: reasons.join('; '), heldOnValues, failedOnValuesOnly };
+  }
+  if (verdicts.some((v) => v.outcome === 'held')) {
+    return { status: 'passed', reason: '', heldOnValues, failedOnValuesOnly: false };
+  }
+  const names = [...new Set(verdicts.flatMap((v) => v.free))].sort().join(', ');
+  const why = names
+    ? `it depends on ${names}, which no answer written for its problem gives a value`
+    : 'nothing in it could be worked out to a number';
+  return {
+    status: 'skipped',
+    reason: p.practice ? `a practice question for the student, held to no worked example's answer: ${why}` : why,
+    heldOnValues: false,
+    failedOnValuesOnly: false,
+  };
+}
+
+/** The line under one value per variable. */
+function judgeLine(p: Prepared, values: Values): Judged {
+  if (!p.parsed) {
+    const reason = `not read as an equation: ${p.parseReason}`;
+    return { status: 'skipped', reason, heldOnValues: false, failedOnValuesOnly: false };
+  }
+  return lineVerdict(
+    p,
+    p.pairs.map((statement) => judgeStatement(statement, values)),
+  );
+}
+
+/** Every way of picking one value per variable from `answer`. */
+function assignmentsOf(answer: Answer): Values[] {
+  let out: Record<string, Rational>[] = [{}];
+  for (const [name, vals] of Object.entries(answer)) {
+    out = out.flatMap((a) => vals.map((v) => ({ ...a, [name]: v })));
+  }
+  return out;
+}
+
+/** A pair that must hold for every root: it uses a root variable at degree 2 or more, or divides by it. */
+function mustHoldForEveryRoot(pair: Pair, roots: ReadonlySet<string>): boolean {
+  if (pair.sym === 'div-zero') return false;
+  if (pair.sym === 'not-poly') return [...pair.vars].some((v) => roots.has(v));
+  const sym = pair.sym;
+  return [...roots].some((v) => P.degreeIn(sym, v) >= 2);
+}
+
+/** A statement that must hold under every assignment: the first failure, else held or open. */
+function forEveryRoot(pairs: readonly Pair[], assignments: readonly Values[]): StatementVerdict {
+  const each = assignments.map((a) => judgeStatement(pairs, a));
+  const failed = each.find((v) => v.outcome === 'failed');
+  if (failed) return failed;
+  const held = each.filter((v) => v.outcome === 'held');
+  if (held.length > 0) return { ...held[0], heldOnValues: held.some((v) => v.heldOnValues) };
+  return openVerdict(each.flatMap((v) => v.free));
+}
+
+/**
+ * Statements joined by `⇒` that must hold together under at least one
+ * assignment. Returns one verdict per member, in order.
+ */
+function forSomeRoot(
+  members: readonly { pairs: readonly Pair[]; sides: readonly Side[] }[],
+  assignments: readonly Values[],
+  answer: Answer,
+  roots: ReadonlySet<string>,
+): StatementVerdict[] {
+  const table = assignments.map((a) => members.map((m) => judgeStatement(m.pairs, a)));
+  const holds = table.find(
+    (row) => row.every((v) => v.outcome !== 'failed') && row.some((v) => v.outcome === 'held'),
+  );
+  if (holds) return holds;
+  if (!table.every((row) => row.some((v) => v.outcome === 'failed'))) {
+    // No root settles it either way.
+    return members.map((_, j) => openVerdict(table.flatMap((row) => row[j].free)));
+  }
+  // It fails for every root. The row with the fewest reasons explains it;
+  // a slip no root can mend (`(5 + 1)/2 = 4`) is reported as itself.
+  const count = (row: StatementVerdict[]) => row.reduce((n, v) => n + v.reasons.length, 0);
+  const best = table.reduce((a, b) => (count(b) < count(a) ? b : a));
+  const usesRoots = members.some((m) => m.pairs.some((pair) => [...pair.vars].some((v) => roots.has(v))));
+  if (!usesRoots || best.every((v) => v.reasons.length === v.plain)) return best;
+  const kept = showAnswer(answer, roots);
+  const claim = members.length === 1 ? claimOf([...members[0].sides], false) : null;
+  const reason =
+    claim && roots.has(claim.name)
+      ? `this line gives ${claim.name} = ${formatRational(claim.stated)}, ` +
+        `which is not one of the roots kept for this problem (${kept})`
+      : `\`${members.map((m) => m.sides.map((s) => s.source).join(' = ')).join(' ⇒ ')}\` ` +
+        `holds for none of the roots kept for this problem (${kept})`;
+  return members.map((_, j) =>
+    j === 0
+      ? { outcome: 'failed', reasons: [reason], plain: 0, free: [], heldOnValues: false, failedOnValuesOnly: true }
+      : openVerdict([]),
+  );
+}
+
+/** The line under an answer that may hold root sets (header, step 4). */
+function judgeUnder(p: Prepared, answer: Answer): Judged {
+  const assignments = assignmentsOf(answer);
+  if (assignments.length === 1 || !p.parsed) return judgeLine(p, assignments[0]);
+  const roots = new Set(Object.keys(answer).filter((v) => answer[v].length > 1));
+  const statements = p.parsed.statements;
+  const verdicts: StatementVerdict[] = new Array(statements.length);
+  const groups: number[][] = [];
+  statements.forEach((st, i) => {
+    if (p.pairs[i].some((pair) => mustHoldForEveryRoot(pair, roots))) {
+      verdicts[i] = forEveryRoot(p.pairs[i], assignments);
+      return;
+    }
+    const last = groups[groups.length - 1];
+    if (st.implied && last) last.push(i);
+    else groups.push([i]);
+  });
+  for (const g of groups) {
+    const members = g.map((i) => ({ pairs: p.pairs[i], sides: statements[i].sides }));
+    forSomeRoot(members, assignments, answer, roots).forEach((v, j) => {
+      verdicts[g[j]] = v;
+    });
+  }
+  return lineVerdict(p, verdicts);
+}
+
+// ------------------------------------------------------------- problems --
+
+interface Evaluation {
+  answer: Answer;
+  judged: Judged[];
+  failCount: number;
+}
+
+/** Linear rows from the pairs of these lines that are equations, not identities; null on any other shape. */
+function linearRows(lines: readonly Prepared[]): P.LinearRow[] | null {
+  const rows: P.LinearRow[] = [];
+  for (const p of lines) {
+    for (const pair of p.pairs.flat()) {
+      if (pair.sym === 'div-zero' || pair.vars.size === 0) continue;
+      if (pair.sym === 'not-poly') return null;
+      if (P.isZero(pair.sym)) continue;
+      const row = P.linearRow(pair.sym);
+      if (!row) return null;
+      rows.push(row);
+    }
+  }
+  return rows;
+}
+
+/**
+ * The page rule from the header: which pages before the first anchored page
+ * are an opening puzzle of their own. Mutates `judged` for those lines.
+ */
+function excuseSeparatePages(seg: Prepared[], judged: Judged[], answer: Answer): void {
+  if (Object.keys(answer).length === 0) return;
+  const sections: (string | undefined)[] = [];
+  for (const p of seg) if (!sections.includes(p.line.section)) sections.push(p.line.section);
+  const anchoredAt = sections.findIndex((s) =>
+    seg.some((p, i) => p.line.section === s && (p.claims.length > 0 || judged[i].heldOnValues)),
+  );
+  for (const s of sections.slice(0, Math.max(anchoredAt, 0))) {
+    const idx = seg.flatMap((p, i) => (p.line.section === s ? [i] : []));
+    const excusable = idx.filter((i) => judged[i].status === 'failed' && judged[i].failedOnValuesOnly);
+    if (excusable.length === 0) continue;
+
+    // Its own determined system in two or more variables. That takes two or
+    // more equations — one cannot pin two variables — so the first test only
+    // exits early; the variable count is the one that decides.
+    const rows = linearRows(idx.map((i) => seg[i]));
+    if (!rows || rows.length < 2) continue;
+    const own = P.solveLinear(rows);
+    if (own.kind !== 'unique' || Object.keys(own.values).length < 2) continue;
+
+    // Does anything off this page follow from this page's own answer?
+    const followed = seg.some((p) => p.line.section !== s && judgeLine(p, own.values).heldOnValues);
+    if (followed) continue;
+
+    // Is the problem stated again where it is worked? The working off this
+    // page that holds — claims excluded — must pin every variable by itself.
+    const working = seg.filter(
+      (p, i) => p.line.section !== s && p.kind === 'work' && judged[i].status === 'passed',
+    );
+    const workingRows = linearRows(working);
+    const stated = workingRows ? P.solveLinear(workingRows) : null;
+    if (!stated || stated.kind !== 'unique' || !Object.keys(own.values).every((v) => v in stated.values)) continue;
+
+    for (const i of excusable) {
+      judged[i] = {
+        status: 'skipped',
+        reason:
+          `a separate problem on its own page (its equations give ${showValues(own.values)}), ` +
+          `which nothing else on the board follows from, so it is not held to ${showAnswer(answer)}`,
+        heldOnValues: false,
+        failedOnValuesOnly: false,
+      };
+    }
+  }
+}
+
+function evaluate(seg: Prepared[], answer: Answer): Evaluation {
+  const judged = seg.map((p) => judgeUnder(p, answer));
+  excuseSeparatePages(seg, judged, answer);
+  return { answer, judged, failCount: judged.filter((j) => j.status === 'failed').length };
+}
+
+/** More combinations than this and only the preferred answer is tried. A guard, not a measurement. */
+const MAX_CANDIDATES = 64;
+/** More distinct values than this for one root variable and only the claimed set is tried. A guard, not a measurement. */
+const MAX_ROOT_VALUES = 6;
+
+/** The variables some line of the problem uses at degree 2 or more — step 4 of the header. */
+function squaredVariables(seg: Prepared[]): Set<string> {
+  const out = new Set<string>();
+  for (const p of seg) {
+    for (const pair of p.pairs.flat()) {
+      if (typeof pair.sym === 'string') continue;
+      for (const v of P.variablesOf(pair.sym)) if (P.degreeIn(pair.sym, v) >= 2) out.add(v);
+    }
+  }
+  return out;
+}
+
+/** Root sets to try: every value claimed first, then each other non-empty set of the values offered, largest first. */
+function rootSets(claimed: Rational[], offered: Rational[]): Rational[][] {
+  if (offered.length > MAX_ROOT_VALUES) return [claimed];
+  const others: Rational[][] = [];
+  for (let mask = 1; mask < 1 << offered.length; mask++) {
+    const set = offered.filter((_, i) => mask & (1 << i));
+    const same = set.length === claimed.length && set.every((v) => claimed.some((w) => equals(v, w)));
+    if (!same) others.push(set);
+  }
+  others.sort((a, b) => b.length - a.length);
+  return [claimed, ...others];
+}
+
+function candidates(seg: Prepared[]): Answer[] {
+  const claims = seg.flatMap((p) => p.claims);
+  if (claims.length === 0) return [{}];
+  const squared = squaredVariables(seg);
+  // Per variable: the last claim written, or the last "Solution:"-labelled
+  // one when there is any — later claims overwrite earlier ones in this
+  // loop. For a squared variable: every distinct value claimed, in order.
+  const preferred = new Map<string, Rational[]>();
+  for (const c of claims) {
+    if (squared.has(c.name)) {
+      const set = preferred.get(c.name) ?? [];
+      if (!set.some((w) => equals(w, c.stated))) set.push(c.stated);
+      preferred.set(c.name, set);
+      continue;
+    }
+    const labelledExists = claims.some((d) => d.name === c.name && d.final);
+    if (!labelledExists || c.final) preferred.set(c.name, [c.stated]);
+  }
+  const options = new Map<string, Rational[][]>();
+  for (const [name, claimed] of preferred) {
+    const offered = [...claimed];
+    for (const c of claims) {
+      if (c.name !== name) continue;
+      for (const v of c.offered) if (!offered.some((w) => equals(w, v))) offered.push(v);
+    }
+    options.set(name, squared.has(name) ? rootSets(claimed, offered) : offered.map((v) => [v]));
+  }
+  let combos: Answer[] = [{}];
+  for (const [name, list] of options) {
+    combos = combos.flatMap((c) => list.map((v) => ({ ...c, [name]: v })));
+    if (combos.length > MAX_CANDIDATES) return [Object.fromEntries(preferred)];
+  }
+  return combos;
+}
+
+function best(seg: Prepared[]): Evaluation {
+  let out: Evaluation | null = null;
+  for (const answer of candidates(seg)) {
+    const e = evaluate(seg, answer);
+    if (!out || e.failCount < out.failCount) out = e;
+  }
+  return out!;
+}
+
+const hasClaims = (seg: Prepared[]) => seg.some((p) => p.claims.length > 0);
+const isPractice = (seg: Prepared[]) => seg.some((p) => p.practice);
+
+function agree(a: Prepared[], b: Prepared[]): boolean {
+  const seen = new Map<string, Rational>();
+  for (const c of [...a, ...b].flatMap((p) => p.claims)) {
+    const had = seen.get(c.name);
+    if (had && !equals(had, c.stated)) return false;
+    seen.set(c.name, c.stated);
+  }
+  return true;
+}
+
+function problemsOf(prepared: Prepared[]): Prepared[][] {
+  // A run of claims closes a problem; the next line of working opens another.
+  // A practice question is a run of its own.
+  const runs: Prepared[][] = [];
+  let cur: Prepared[] = [];
+  let inClaims = false;
+  const close = () => {
+    if (cur.length > 0) runs.push(cur);
+    cur = [];
+    inClaims = false;
+  };
+  for (const p of prepared) {
+    if (p.practice) {
+      close();
+      runs.push([p]);
+      continue;
+    }
+    if (p.kind === 'work' && inClaims) close();
+    cur.push(p);
+    if (p.kind === 'claim') inClaims = true;
+  }
+  close();
+
+  // Join neighbours that are one problem after all (see the header, step 3).
+  const out: Prepared[][] = [];
+  let acc: Prepared[] | null = null;
+  for (const run of runs) {
+    if (!acc) {
+      acc = run;
+    } else if (isPractice(acc) || isPractice(run) || !hasClaims(acc) || !hasClaims(run)) {
+      out.push(acc);
+      acc = run;
+    } else if (agree(acc, run)) {
+      acc = [...acc, ...run];
+    } else {
+      const joined: Prepared[] = [...acc, ...run];
+      if (best(joined).failCount <= best(acc).failCount + best(run).failCount) acc = joined;
+      else {
+        out.push(acc);
+        acc = run;
+      }
+    }
+  }
+  if (acc) out.push(acc);
+  return out;
+}
+
+// ------------------------------------------------------------------ API --
+
+/**
+ * Check a list of board lines. See the header for exactly what is checked,
+ * what is skipped, and the one shape that is excused.
+ */
+export function checkLines(lines: readonly Line[]): CheckResult {
+  const prepared = lines.map(prepare);
+  const verdict = new Map<Prepared, Judged>();
+  const problems: Problem[] = [];
+  let solutions: Record<string, Rational> = {};
+  let roots: Record<string, Rational[]> = {};
+
+  for (const seg of problemsOf(prepared)) {
+    const e = best(seg);
+    seg.forEach((p, i) => verdict.set(p, e.judged[i]));
+    if (hasClaims(seg)) {
+      solutions = {};
+      roots = {};
+      for (const [name, vals] of Object.entries(e.answer)) {
+        if (vals.length === 1) solutions[name] = vals[0];
+        else roots[name] = [...vals];
+      }
+      problems.push({
+        ids: seg.filter((_, i) => e.judged[i].status !== 'skipped').map((p) => p.line.id),
+        solutions,
+        roots,
+      });
+    }
+  }
+
+  const failures: Failure[] = [];
+  const skipped: Skipped[] = [];
+  const passed: Passed[] = [];
+  for (const p of prepared) {
+    const j = verdict.get(p)!;
+    const { id, text } = p.line;
+    if (j.status === 'failed') failures.push({ id, text, reason: j.reason });
+    else if (j.status === 'skipped') skipped.push({ id, text, reason: j.reason });
+    else passed.push({ id, text });
+  }
+  return { ok: failures.length === 0, solutions, roots, failures, skipped, passed, problems };
+}
