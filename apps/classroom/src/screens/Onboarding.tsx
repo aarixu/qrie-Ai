@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
+import { capName, MAX_NAME_CHARS } from '../lib/student';
 import { loadDiagnosticData } from '../lib/diagnosticData';
 import { Icon } from '../ui/Icon';
 import {
@@ -174,7 +175,7 @@ export function Onboarding() {
 
   const finish = (toDiagnostic: boolean) => {
     if (klass === null) return;
-    profileStore.update((p) => ({ ...p, name: name.trim(), klass, subjects }));
+    profileStore.update((p) => ({ ...p, name: capName(name), klass, subjects }));
     /**
      * The workspace, written into the same profile row — the one shape this
      * door and the contest door both leave behind. `consent` is deliberately
@@ -324,12 +325,17 @@ export function Onboarding() {
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                 What should I call you?
               </h1>
+              {/* The class planner is not told the name (lib/student.ts), so
+                  this no longer promises to use it in class. */}
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                I'll use your name in class — like any teacher would.
+                Just your first name is enough.
               </p>
+              {/* Capped in the handler as well as by maxLength, which stops
+                  typing but not a value set by paste or autofill. */}
               <input
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                maxLength={MAX_NAME_CHARS}
+                onChange={(e) => setName(e.target.value.slice(0, MAX_NAME_CHARS))}
                 onKeyDown={(e) => e.key === 'Enter' && name.trim() && setStep('class')}
                 placeholder="Your first name"
                 aria-label="Your first name"

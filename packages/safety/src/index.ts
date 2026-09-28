@@ -12,6 +12,9 @@
 export {
   HELPLINES,
   MASK,
+  MAX_DISTRESS_SCAN_CHARS,
+  MAX_STUDENT_CHARS,
+  /** @deprecated Use MAX_STUDENT_CHARS; the same number under its old, wrong name. */
   MAX_STUDENT_WORDS,
   REDIRECT_REPLY,
   SUPPORT_REPLY,

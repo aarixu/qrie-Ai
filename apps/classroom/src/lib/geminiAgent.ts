@@ -23,7 +23,8 @@ import { masteryFromModel } from './learnerModel';
  * and must not be written twice.
  *
  * Reliability rules, in order of importance:
- *  1. The class must NEVER get stuck — any API failure says a friendly line
+ *  1. The class must NEVER get stuck — any API failure hands the question to
+ *     the scripted relief (`fallback`), or, with none, says a friendly line
  *     and hands back to the recording (io.done()).
  *  2. After stop(), no io calls — same discipline the stub proves in tests.
  *  3. recallBeatId is only trusted if it names a beat the student has seen.
@@ -49,8 +50,74 @@ export interface GeminiAgentOptions {
    * A raised hand that ends in "having trouble connecting" is worse than a
    * short scripted answer that at least belongs to the lesson — and until the
    * relay is deployed, a built app has nothing behind /api/llm at all.
+   *
+   * Started on the FIRST failed call and not before; see `start` below.
    */
   fallback?: AgentAdapter;
+  /**
+   * Told what each turn cost in tokens, when the reply says. Relay transport
+   * only: the direct dev transports do not read it.
+   */
+  onUsage?: (usage: TurnUsage) => void;
+}
+
+/**
+ * One turn's token counts, as the relay's reply reported them.
+ *
+ * A count the reply did not carry is ABSENT, not zero — a zero here would be
+ * read later as a turn that was free.
+ */
+export interface TurnUsage {
+  prompt?: number;
+  output?: number;
+  thinking?: number;
+}
+
+/**
+ * The relay's `usage` block, in either vocabulary it arrives in.
+ *
+ * Vertex's `usageMetadata` is passed through under `usage` as-is
+ * (packages/relay/src/vertex.ts, toOpenAiReply), so its names are Google's.
+ * The OpenRouter path answers in OpenAI's names. Null when there is nothing
+ * countable in it.
+ *
+ * THE TWO VOCABULARIES COUNT THINKING DIFFERENTLY. Vertex's
+ * `candidatesTokenCount` leaves thoughts out and reports them separately as
+ * `thoughtsTokenCount`. OpenAI's `completion_tokens` INCLUDES them, itemised
+ * under `completion_tokens_details.reasoning_tokens`. So when that item is
+ * there, it is reported as thinking and taken out of output, which keeps
+ * `output` meaning the same thing whichever path answered.
+ */
+export function readUsage(usage: unknown): TurnUsage | null {
+  if (usage === null || typeof usage !== 'object') return null;
+  const u = usage as Record<string, unknown>;
+  const finite = (v: unknown): number | undefined =>
+    typeof v === 'number' && Number.isFinite(v) ? v : undefined;
+  const count = (...keys: string[]): number | undefined => {
+    for (const key of keys) {
+      const v = finite(u[key]);
+      if (v !== undefined) return v;
+    }
+    return undefined;
+  };
+  const read: TurnUsage = {};
+  const prompt = count('promptTokenCount', 'prompt_tokens');
+  let output = count('candidatesTokenCount');
+  let thinking = count('thoughtsTokenCount');
+  const completion = finite(u.completion_tokens);
+  if (output === undefined && completion !== undefined) {
+    const details = u.completion_tokens_details;
+    const reasoning =
+      details !== null && typeof details === 'object'
+        ? finite((details as Record<string, unknown>).reasoning_tokens)
+        : undefined;
+    output = reasoning !== undefined ? Math.max(0, completion - reasoning) : completion;
+    if (thinking === undefined && reasoning !== undefined) thinking = reasoning;
+  }
+  if (prompt !== undefined) read.prompt = prompt;
+  if (output !== undefined) read.output = output;
+  if (thinking !== undefined) read.thinking = thinking;
+  return Object.keys(read).length > 0 ? read : null;
 }
 
 /** One turn of the conversation, in this file's own vocabulary. */
@@ -59,8 +126,27 @@ export interface Turn {
   text: string;
 }
 
-/** What a transport must do: a system prompt and the turns so far, in, reply text out. */
-export type Transport = (system: string, turns: readonly Turn[], signal: AbortSignal) => Promise<string>;
+/**
+ * What a transport hands back: the reply's text, and whether the provider's
+ * own filter stopped it.
+ *
+ * `filtered` is true when the reply's finish_reason is 'content_filter', which
+ * is how the relay answers a Vertex policy stop (packages/relay/src/vertex.ts,
+ * BLOCKED_FINISH): a 200 whose content is the relay's fixed line rather than
+ * an answer. The session must be able to tell the two apart, because a
+ * filtered turn is handled differently from an answer (see `call` below), and
+ * a filtered reply's text is never spoken (FILTERED_REPLY_LINE).
+ */
+export interface TransportReply {
+  text: string;
+  filtered: boolean;
+}
+
+/** What a transport must do: a system prompt and the turns so far, in, the reply out. */
+export type Transport = (system: string, turns: readonly Turn[], signal: AbortSignal) => Promise<TransportReply>;
+
+/** OpenAI's finish_reason for a reply a content filter stopped. */
+const FILTERED_FINISH = 'content_filter';
 
 const DEFAULT_MODEL = {
   // The relay speaks OpenRouter's shape today and Gemini's tomorrow; either
@@ -94,6 +180,13 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
           model,
           response_format: { type: 'json_object' },
           temperature: 0.7,
+          // THINKING AT ITS FLOOR (T0.1). One doubt turn is one short line
+          // for a child, and with no effort named the relay leaves Vertex on
+          // the model's default thinking (packages/relay/src/vertex.ts sets
+          // thinkingConfig only when this field is present). 'none' maps to
+          // thinking LOW there, which is the floor on a 3.x model: thinking
+          // cannot be switched off, only kept this low.
+          reasoning_effort: 'none',
           messages: [
             { role: 'system', content: system },
             ...turns.map((t) => ({
@@ -107,13 +200,19 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
       // body is often HTML or empty, and letting JSON.parse throw first would
       // replace a useful "LLM 502" with a SyntaxError.
       const data = (await res.json().catch(() => ({}))) as {
-        choices?: { message?: { content?: string } }[];
+        choices?: { message?: { content?: string }; finish_reason?: string }[];
         error?: { message?: string };
+        usage?: unknown;
       };
       if (!res.ok) throw new Error(`LLM ${res.status}: ${data.error?.message ?? 'no detail'}`);
       // A 200 carrying an error body is how upstream failures arrive.
       if (data.error) throw new Error(data.error.message ?? 'unknown LLM error');
-      return data.choices?.[0]?.message?.content ?? '';
+      // Reported for a filtered turn too: the relay passes Vertex's counts
+      // through on a block as well (vertex.ts, toOpenAiReply).
+      const usage = readUsage(data.usage);
+      if (usage !== null) opts.onUsage?.(usage);
+      const choice = data.choices?.[0];
+      return { text: choice?.message?.content ?? '', filtered: choice?.finish_reason === FILTERED_FINISH };
     };
   }
 
@@ -142,12 +241,14 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
       });
       if (!res.ok) throw new Error(`OpenRouter ${res.status}`);
       const data = (await res.json()) as {
-        choices?: { message?: { content?: string } }[];
+        choices?: { message?: { content?: string }; finish_reason?: string }[];
         error?: { message?: string };
       };
       // OpenRouter reports upstream failures as a 200 with an error body.
       if (data.error) throw new Error(`OpenRouter: ${data.error.message ?? 'unknown error'}`);
-      return data.choices?.[0]?.message?.content ?? '';
+      // The same OpenAI field the relay path reads, read the same way.
+      const choice = data.choices?.[0];
+      return { text: choice?.message?.content ?? '', filtered: choice?.finish_reason === FILTERED_FINISH };
     };
   }
 
@@ -168,7 +269,13 @@ export function createTransport(opts: GeminiAgentOptions): Transport {
     const data = (await res.json()) as {
       candidates?: { content?: { parts?: { text?: string }[] } }[];
     };
-    return data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '';
+    // This dev-only path does not read Google's block signals (finishReason,
+    // promptFeedback), so it never reports a filter: a blocked reply here
+    // reaches parseAgentReply as whatever text it carried, as it always has.
+    return {
+      text: data.candidates?.[0]?.content?.parts?.map((p) => p.text ?? '').join('') ?? '',
+      filtered: false,
+    };
   };
 }
 
@@ -200,10 +307,43 @@ export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContex
   ].join('\n');
 }
 
-/** Parse + sanitise a model reply. Unknown recall ids are dropped, never trusted. */
+/**
+ * What she says when the model's reply is not the JSON it was asked for.
+ *
+ * Fixed, because the alternative was reading the raw reply aloud: a model that
+ * broke format has already stopped following its instructions, and whatever
+ * it wrote instead — half an object, a refusal, a monologue — is the least
+ * checked text on the path to a child. It asks the student to try again rather
+ * than pretending to have answered, and it does not end the doubt.
+ */
+export const MALFORMED_REPLY_LINE =
+  "Sorry, I got muddled saying that. Could you ask me once more, maybe in different words?";
+
+/**
+ * What she says when the provider's own filter stopped the turn.
+ *
+ * Not MALFORMED_REPLY_LINE. That one invites the student to say it again "in
+ * different words", which after a filter is an invitation to rephrase exactly
+ * what was blocked. This one steers back to the lesson and invites a question
+ * about it, and the doubt stays open — the same way ClassRoom handles an
+ * off-limits typed question (screens/ClassRoom.tsx, `sendText`).
+ *
+ * The wording is the relay's BLOCKED_LINE (packages/relay/src/vertex.ts),
+ * spelled here rather than imported because @ai-tutor/relay is server code the
+ * client bundle does not import. tests/geminiAgent.test.ts fails if the two
+ * drift apart. Spoken from here, never from the reply: a filtered reply that
+ * reached us some other way could carry the partial text the filter stopped.
+ */
+export const FILTERED_REPLY_LINE = "Let's keep our class on the lesson — ask me anything about it!";
+
+/**
+ * Parse + sanitise a model reply. Unknown recall ids are dropped, never
+ * trusted; a reply that is not the asked-for shape becomes
+ * MALFORMED_REPLY_LINE, never its own text.
+ */
 export function parseAgentReply(raw: string, canRecall: (beatId: string) => boolean): AgentReply {
   const fallback: AgentReply = {
-    say: raw.replace(/```(?:json)?|```/g, '').trim().slice(0, 400),
+    say: MALFORMED_REPLY_LINE,
     recallBeatId: null,
     done: false,
   };
@@ -229,20 +369,46 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
       let stopped = false;
       const controller = new AbortController();
       const history: Turn[] = [];
-      // Started only if the model actually fails, so the ordinary path costs
-      // nothing for a safety net it never touches.
+      /**
+       * STARTED ON THE FIRST FAILED CALL, AND NOT BEFORE.
+       *
+       * It used to be started here, with the session — and starting an agent
+       * is what makes it speak: the scripted stub greets and demonstrates a
+       * recall the moment it starts. So every raised hand heard the handoff's
+       * bridge line, then the stub's own opening and an old beat pulled onto
+       * the board, while the model was working perfectly and about to answer
+       * too. Started lazily, a doubt the model handles never meets it; one
+       * relief, once started, takes every later failure in this doubt.
+       */
       let relief: AgentSession | null = null;
-      if (opts.fallback) relief = opts.fallback.start(ctx, io);
+      const reliefFor = (): AgentSession | null => {
+        if (relief === null && opts.fallback) relief = opts.fallback.start(ctx, io);
+        return relief;
+      };
 
+      /**
+       * A FILTERED TURN LEAVES NO TRACE IN THE HISTORY.
+       *
+       * Every turn sends the whole history again, and a Vertex prompt block
+       * (promptFeedback.blockReason) is a verdict on the prompt as a whole. So
+       * a blocked question left in `history` travels in every later prompt and
+       * can trip the same block on every question after it, however harmless.
+       * The blocked question is taken back out and the reply to it is never
+       * added; the turns answered before it stay.
+       */
       const call = async (userText: string): Promise<AgentReply> => {
         history.push({ role: 'user', text: userText });
-        const text = await transport(
+        const reply = await transport(
           buildDoubtSystemPrompt(ctx, opts.student),
           history,
           controller.signal,
         );
-        history.push({ role: 'model', text });
-        return parseAgentReply(text, (id) => isRecallable(ctx, id));
+        if (reply.filtered) {
+          history.pop();
+          return { say: FILTERED_REPLY_LINE, recallBeatId: null, done: false };
+        }
+        history.push({ role: 'model', text: reply.text });
+        return parseAgentReply(reply.text, (id) => isRecallable(ctx, id));
       };
 
       const deliver = async (reply: AgentReply): Promise<void> => {
@@ -263,11 +429,12 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           .catch(async () => {
             // Rule 1: a failed call must hand the room back, never hold it.
             if (stopped) return;
-            if (relief) {
+            const scripted = reliefFor();
+            if (scripted) {
               // The scripted tutor takes the question instead. Same persona,
               // same room, and the student gets an answer rather than an
               // apology about our plumbing.
-              relief.sendUserText(userText);
+              scripted.sendUserText(userText);
               return;
             }
             await io.say("Hmm, I'm having trouble connecting right now. Let's continue the class — try raising your hand again in a bit.");

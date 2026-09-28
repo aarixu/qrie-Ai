@@ -31,16 +31,20 @@
 // handleRelay.
 //
 // Secrets it needs (supabase secrets set ...):
-//   OPENROUTER_API_KEY   still needed: the tutor's VOICE is Deepgram aura-2
-//                        through OpenRouter, and Google's voices are a
-//                        different person. Also transcription.
+//   OPENROUTER_API_KEY   needed only where GOOGLE_SERVICE_ACCOUNT_JSON is
+//                        absent. With a service account set — working or
+//                        not — the relay never hands this key to the
+//                        handler (packages/relay/src/vendors.ts), so it is
+//                        not required and not used.
 //   RELAY_TICKET_SECRET  any long random string; signs speech tickets
 //   GOOGLE_SERVICE_ACCOUNT_JSON
 //                        the whole service account key file, as one string.
-//                        Present: the planner, the artist, the vision calls
-//                        and image generation all go to Vertex on Google
-//                        Cloud credits. Absent: OpenRouter serves them, as
-//                        before. Set it with
+//                        Present: thinking (/api/llm), her voice
+//                        (/api/speech) and her hearing (/api/hear) all go to
+//                        Vertex on Google Cloud credits, and if it is present
+//                        but unusable those three answer 503 rather than
+//                        fall back to OpenRouter. Absent: OpenRouter serves
+//                        them, as on a laptop. Set it with
 //                          supabase secrets set --env-file <(printf 'GOOGLE_SERVICE_ACCOUNT_JSON=%s' "$(cat key.json)")
 //                        rather than on a command line, where the private key
 //                        would land in shell history.
@@ -61,7 +65,7 @@ import {
   createSupabaseConsentStore,
   createSupabaseOtpGate,
 } from '../../../packages/relay/src/enroll.ts';
-import { createTokenSource, readServiceAccount } from '../../../packages/relay/src/googleAuth.ts';
+import { modelVendors } from '../../../packages/relay/src/vendors.ts';
 import { toRelayRequest, toResponse, transcribeViaFormData } from '../../../packages/relay/src/web.ts';
 
 const env = (name: string): string => Deno.env.get(name) ?? '';
@@ -74,25 +78,29 @@ const TICKET_SECRET = env('RELAY_TICKET_SECRET');
 const SERVICE_ACCOUNT_JSON = env('GOOGLE_SERVICE_ACCOUNT_JSON');
 
 /**
- * GOOGLE CLOUD, WHEN THERE IS A KEY FOR IT.
+ * GOOGLE CLOUD, WHEN THERE IS A KEY FOR IT — AND NO QUIET WAY BACK.
  *
  * Built ONCE, at module scope, because the token it mints is cached inside it:
  * rebuilding per request would sign a fresh RSA assertion and make a round
  * trip to Google on every single model call.
  *
- * A bad key must not take the whole function down. Speech, transcription and
- * class-keeping have nothing to do with Google, and a truncated paste into a
- * secret should cost the models rather than the lesson — so it is caught,
- * logged with the reason, and the relay falls back to OpenRouter.
+ * A bad key still does not take the whole function down: reports, class
+ * keeping and enrolment have nothing to do with Google. But it no longer
+ * falls back to OpenRouter either. It used to, which sent thinking, her voice
+ * and a child's spoken answers to the vendors /privacy says are no longer
+ * used, on nothing more than a typo in a secret. With a service account set,
+ * `vendors.openRouterKey` is '', so those three routes answer 503 until the
+ * key is fixed — except her voice when CURIE_SPEECH_URL is set, which then
+ * comes from our own box, not a vendor. See packages/relay/src/vendors.ts.
  */
-let vertex: { tokens: ReturnType<typeof createTokenSource> } | undefined;
-if (SERVICE_ACCOUNT_JSON) {
-  try {
-    vertex = { tokens: createTokenSource(readServiceAccount(SERVICE_ACCOUNT_JSON)) };
-  } catch (e) {
-    console.error('GOOGLE_SERVICE_ACCOUNT_JSON is set but unusable:', (e as Error).message);
-  }
+const vendors = modelVendors({ serviceAccountJson: SERVICE_ACCOUNT_JSON, openRouterKey: OPENROUTER_API_KEY });
+if (vendors.unusable) {
+  console.error(
+    'GOOGLE_SERVICE_ACCOUNT_JSON is set but unusable; /api/llm, /api/speech and /api/hear answer 503 until it is fixed:',
+    vendors.unusable,
+  );
 }
+const vertex = vendors.vertex;
 
 /**
  * The browser calls this from its own origin in production and from
@@ -134,7 +142,7 @@ const usage = createSupabaseUsage(SUPABASE_URL, SERVICE_ROLE_KEY);
  * and the router it feeds, instead of a 500 in production.
  */
 const deps: HandlerDeps = {
-  key: OPENROUTER_API_KEY,
+  key: vendors.openRouterKey,
   /**
    * The switch. `supabase secrets set RELAY_DISABLED=1` and every relay answers
    * 503 within a restart — no deploy, no migration, no table edited by hand.
@@ -160,7 +168,7 @@ const deps: HandlerDeps = {
     // never degrade to no check.
     ...(TICKET_SECRET ? { ticketSecret: TICKET_SECRET } : {}),
   },
-  transcribe: (call) => transcribeViaFormData(OPENROUTER_API_KEY, call),
+  transcribe: (call) => transcribeViaFormData(vendors.openRouterKey, call),
   usage,
   /**
    * The files go to a public Storage bucket and the catalogue row to Postgres,
@@ -226,7 +234,9 @@ Deno.serve(async (request: Request) => {
     ['SUPABASE_URL', SUPABASE_URL],
     ['SUPABASE_ANON_KEY', ANON_KEY],
     ['SUPABASE_SERVICE_ROLE_KEY', SERVICE_ROLE_KEY],
-    ['OPENROUTER_API_KEY', OPENROUTER_API_KEY],
+    // Required only where it can be used: with a service account set the
+    // handler is never given it (see `vendors` above).
+    ...(SERVICE_ACCOUNT_JSON ? [] : [['OPENROUTER_API_KEY', OPENROUTER_API_KEY]]),
   ]
     .filter(([, value]) => !value)
     .map(([name]) => name);

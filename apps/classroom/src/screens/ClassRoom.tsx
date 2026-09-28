@@ -13,7 +13,7 @@ import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { useLessonAssets } from '../lib/diagrams';
 import { buildStudentContext } from '../lib/student';
-import { createGeminiAgent } from '../lib/geminiAgent';
+import { createGeminiAgent, type TurnUsage } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
 import {
   micExplained,
@@ -40,13 +40,14 @@ import { preferencesStore, setPreference } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
-import { fromStudent, screenedSpeech } from '../lib/safety';
+import { createSessionHalt } from '../lib/sessionHalt';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
 import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
+import { SupportScreen } from '../ui/SupportScreen';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
@@ -211,6 +212,7 @@ function ToolButton({
  *   what's on the canvas   → stage (computeVisible / Scene)
  *   when beats advance     → player
  *   the raise-hand handoff → doubt-session
+ *   when the class stops   → lib/sessionHalt (distress in the student's words or a model's)
  */
 export function ClassRoom({
   lesson,
@@ -257,6 +259,76 @@ export function ClassRoom({
    */
   const ledger = useClassLedger(lesson, player.state === 'playing', player.state === 'ended');
 
+  // Refs so the (stable) handoff and the halt always reach the latest controls.
+  const playerRef = useRef(player);
+  playerRef.current = player;
+  const ttsRef = useRef(tts);
+  ttsRef.current = tts;
+  const lessonIdRef = useRef(lesson.id);
+  lessonIdRef.current = lesson.id;
+
+  /**
+   * THE SUPPORT LINE, once the class has halted — and then the room is
+   * replaced by the support screen. Null for every ordinary moment of a class.
+   */
+  const [support, setSupport] = useState<string | null>(null);
+
+  /**
+   * ONE HALT, FOR EVERY WAY INTO THE CLASS, AND EVERYTHING SHE SAYS GOES
+   * THROUGH IT.
+   *
+   * `halt.say` is the screened voice: her words are looked at before the
+   * student hears them, and a line the screen replaces with the support reply
+   * stops the class. `halt.heard` and `halt.typedDoubt` do the same for the
+   * student's own words. Whichever path finds distress, the same thing
+   * happens (lib/sessionHalt.ts): the doubt ends with no exit line, the ear
+   * closes, the recording pauses, she stops mid-sentence, the support line is
+   * said, and this room becomes the support screen. Nothing resumes it.
+   *
+   * WHAT IT SCREENS. Her words where a model wrote them and they are said
+   * NOW — the doubt tutor, the judge's and the close's replies to a spoken
+   * answer — through `halt.say`, where a line the screen replaces halts the
+   * class.
+   *
+   * THE LESSON'S OWN WORDS said now — the why or hint for a tapped option, a
+   * whyProbe's reply matched on the device — go through `halt.sayAuthored`
+   * instead. Refused after a halt like everything else, but a line there that
+   * trips the screen is WITHHELD and the class carries on: those lines were
+   * screened where the lesson was made, by a screen with a reader that lets a
+   * curriculum line through (a character in a story saying something
+   * distressing; class-prep's distressReading.ts), and this screen has no
+   * reader. Halting on one put a student who had only tapped onto the
+   * helpline screen. lib/sessionHalt.ts has the rest.
+   *
+   * The narration the player speaks beat by beat does not come through here.
+   * It is screened where it is made: `prepareClass` runs `screenSpine` over
+   * the whole lesson before the draft reaches the first student
+   * (packages/class-prep/src/prepare.ts), and the relay runs its check again
+   * when a class is kept (`checkSavedClass`, packages/relay/src/relays.ts).
+   *
+   * Made ONCE per room, not per render: `halted` is the one fact about this
+   * class that must never be forgotten by a re-render. It reaches the player,
+   * the voice, the handoff and the ear through refs, so it always acts on the
+   * current ones.
+   */
+  const [halt] = useState(() =>
+    createSessionHalt({
+      tts: {
+        speak: (text) => ttsRef.current.speak(text),
+        cancel: () => ttsRef.current.cancel(),
+        // The line primed for the next beat, on a voice that primes.
+        drop: () => ttsRef.current.drop?.(),
+      },
+      player: { pause: () => playerRef.current.pause() },
+      // The listen in flight polls `halt.halted` on every chunk (see the ear
+      // below) and closes the mic on the next one; this clears its status.
+      ear: { close: () => setEar('off') },
+      doubt: { halt: () => handoffRef.current.halt() },
+      showSupport: (line) => setSupport(line),
+      lessonId: () => lessonIdRef.current,
+    }),
+  );
+
   /**
    * The student answers a held question.
    *
@@ -281,6 +353,7 @@ export function ClassRoom({
    * nothing here to rewire.
    */
   const answerAsk = async (index: number) => {
+    if (halt.halted) return;
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
     const option = ask.options?.[index];
@@ -302,9 +375,19 @@ export function ClassRoom({
     }
     setAskBusy(true);
     try {
+      // The why and the hint are the LESSON'S words, so they go through the
+      // halt's voice for the lesson (`sayAuthored`): refused once the class
+      // has halted — the gate does not open and the retry clock does not
+      // start, because there is no class left to continue — and a line that
+      // trips the distress screen is withheld rather than said, without
+      // halting a class whose student has only tapped. lib/sessionHalt.ts
+      // says why.
       if (correct) {
         const why = option?.why;
-        if (why) await tts.speak(`And why is that the right one? ${why}`);
+        if (why) {
+          const spoken = await halt.sayAuthored(`And why is that the right one? ${why}`);
+          if (spoken.halted) return;
+        }
         player.answer(index);
       } else {
         player.answer(index);
@@ -313,7 +396,8 @@ export function ClassRoom({
           // Recorded BEFORE it is spoken, so the next attempt is already
           // standing on rung 3 rather than being mistaken for an unassisted one.
           ledger.helped(beatId, 3, false);
-          await tts.speak(nudge);
+          const spoken = await halt.sayAuthored(nudge);
+          if (spoken.halted) return;
           // And the clock on the retry starts when she stops, not when they
           // missed: the chips come back now. Same rule as the spoken path.
           ledger.reopened(beatId, Date.now());
@@ -323,10 +407,6 @@ export function ClassRoom({
       setAskBusy(false);
     }
   };
-
-  // Refs so the (stable) handoff always calls the latest player controls.
-  const playerRef = useRef(player);
-  playerRef.current = player;
 
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
@@ -461,53 +541,30 @@ export function ClassRoom({
     // The scripted tutor stays the FLOOR beneath it. The relay is not live in
     // a deployed build until the Edge Function ships, and a raised hand that
     // ends in "having trouble connecting" is worse than a short scripted
-    // answer that at least belongs to the lesson.
-    return createGeminiAgent({ student, fallback: createStubAgent() });
+    // answer that at least belongs to the lesson. It is started only when a
+    // call fails, and with no opening of its own: by then the bridge line has
+    // been said and the student has already asked.
+    return createGeminiAgent({
+      student,
+      fallback: createStubAgent({ opening: false }),
+      // What each typed turn cost, in the dev console only. Counts come from
+      // the relay's reply; a turn whose reply carried none prints nothing.
+      ...(import.meta.env.DEV
+        ? { onUsage: (usage: TurnUsage) => console.info('[doubt] tokens this turn', usage) }
+        : {}),
+    });
   }, [liveVoiceKey, voiceMode, student]);
-
-  /**
-   * ANYTHING SHE IS ABOUT TO SAY, LOOKED AT FIRST.
-   *
-   * It matters most exactly where a model is most likely to go wrong —
-   * repeating a child's disclosure back at them as if it were teaching — so
-   * this is on the path from a MODEL's words to the student's ears, and
-   * nowhere else. The lesson's own narration does not come through here: it is
-   * screened once on the SERVER when the class is kept
-   * (`relay/src/relays.ts`, `checkSavedClass`), rather than re-checked on every
-   * beat of a fixed recording forever. That is where it belongs, because a
-   * class is served to every later student and a browser-side gate protects
-   * only the traffic that chooses to walk through it.
-   *
-   * THE ONE STUDENT IT DOES NOT COVER, written down rather than hidden: a
-   * cold topic starts teaching at about fourteen seconds, and is kept when the
-   * class ends. So the FIRST student on a new topic hears narration the gate
-   * has not seen yet. Every student after them is covered. Closing that needs
-   * the screen to run inside `class-prep` as well, and it is a real gap until
-   * it does.
-   *
-   * IT SITS ABOVE THE HANDOFF ON PURPOSE. It used to be declared fifty lines
-   * BELOW it, and the handoff was therefore built with a raw
-   * `speak: (text) => tts.speak(text)` — so the one model that converses freely
-   * with a child on any subject was the one whose words were never looked at,
-   * while this docblock claimed the opposite. The screen now wraps the speaker
-   * (`lib/safety.ts`) instead of being a function callers must remember, and it
-   * is declared before the first thing that needs it.
-   */
-  const speakSafely = useMemo(
-    () => screenedSpeech((text: string) => tts.speak(text), lesson.id),
-    [tts, lesson.id],
-  );
 
   const handoff = useMemo(
     () =>
       createHandoff({
         agent,
-        // The SCREENED line goes back, so the caption and the text-mode
-        // transcript show what the room actually heard. Returning nothing here
-        // is what let a replaced line be spoken safely and displayed verbatim.
-        speak: async (text, onSaid) => {
-          await speakSafely(text, onSaid);
-        },
+        // Her lines go through the halt's screened voice. The SCREENED line
+        // goes back through `onSaid`, so the caption and the text-mode
+        // transcript show what the room actually heard, and `{ halted }` goes
+        // back to the machine, which stops on it: no agent line after the
+        // support reply, no exit bridge, no resume.
+        speak: (text, onSaid) => halt.say(text, 'model-reply', onSaid),
         onPause: () => playerRef.current.pause(),
         onResume: () => {
           // Recall view ends with the doubt; play() re-speaks the current beat,
@@ -517,7 +574,7 @@ export function ClassRoom({
         },
         onRecall: (beatId) => setRecallBeatId(beatId),
       }),
-    [lesson, tts, agent],
+    [agent, halt],
   );
 
   // raiseHand defers by a tick so the freshly-selected agent is in place; it
@@ -559,7 +616,10 @@ export function ClassRoom({
    * ear rests and the chips carry it — a mic that reopens forever nags.
    */
   const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
-  const heldAskBeat = player.pendingAsk && !inDoubt ? (player.beat?.id ?? null) : null;
+  // A halted class holds no question: blanking it here is also what runs the
+  // ear effect's cleanup below.
+  const heldAskBeat =
+    player.pendingAsk && !inDoubt && support === null ? (player.beat?.id ?? null) : null;
 
   /**
    * The beat whose question has already been filed as asked.
@@ -598,6 +658,14 @@ export function ClassRoom({
   useEffect(() => {
     if (!heldAskBeat) return;
     let cancelled = false;
+    /**
+     * Over when this effect is torn down OR the class has halted. The halt
+     * is checked on its own as well because it can land in the middle of an
+     * await — a model call, her line — before React has re-rendered and run
+     * the cleanup, and nothing after a halt may open the mic, call the judge
+     * or speak.
+     */
+    const over = (): boolean => cancelled || halt.halted;
     (async () => {
       if ((await askForMic()) !== 'granted') return;
       /**
@@ -608,11 +676,12 @@ export function ClassRoom({
        */
       let probe: { answer: string; question: string; askedAt: number } | null = null;
       let tries = 0;
-      while (!cancelled) {
+      while (!over()) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
         setEar('listening');
-        const heard = await listenOnce({ isCancelled: () => cancelled });
+        // Polled on every chunk: a halt closes the mic on the next one.
+        const heard = await listenOnce({ isCancelled: over });
         /**
          * WHEN THE ANSWER LANDED — not when the judge had finished with it.
          *
@@ -626,7 +695,7 @@ export function ClassRoom({
          * endpointer, and only `Heard` could carry it out here.
          */
         const heardAt = Date.now();
-        if (cancelled) return;
+        if (over()) return;
 
         if (probe) {
           // Their reasoning — or their silence — closes it either way. The
@@ -639,7 +708,7 @@ export function ClassRoom({
             heard.text ?? '(said nothing)',
           ).catch(() => null);
           setEar('off');
-          if (cancelled) return;
+          if (over()) return;
           /**
            * THE ONLY EVIDENCE THIS SYSTEM EVER GETS THAT THEY CAN JUSTIFY IT.
            *
@@ -682,12 +751,18 @@ export function ClassRoom({
             askedAt: probe.askedAt,
             reasonedAt: heardAt,
           });
-          const spoken = close ? await speakSafely(close.say) : null;
-          if (cancelled) return;
-          // She has just told them to talk to somebody. Resolving the question
-          // and moving the class on would be the app talking over that —
-          // whether the halt came from the student's words (close.halt) or
-          // from her own reply being swapped for the support line.
+          // Distress in their reasoning stops the whole class, on the one halt
+          // every path shares — which says the support line itself. `close.halt`
+          // alone is not that: an off-limits reply sets it too, and that only
+          // ends this exchange. The flag was written by the screen inside
+          // resolveCrossQuestion; `heard` only asks which of the two it was.
+          if (close?.halt && heard.text !== null && halt.heard(heard.text, 'ear')) return;
+          const spoken = close ? await halt.say(close.say, 'ear') : null;
+          if (over()) return;
+          // She has just declined to go somewhere (close.halt), or her own
+          // reply was swapped for the support line and the class has halted
+          // (spoken.halted). Resolving the question and moving the class on
+          // would be the app talking over either.
           if (close?.halt || spoken?.halted) return;
           const options = ask.options ?? [];
           playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
@@ -706,10 +781,19 @@ export function ClassRoom({
          * contract; see lib/judge.ts for what that buys and what it gives up.
          */
         const resolved = await resolveSpokenAnswer(ask, heard.text).catch(() => null);
-        if (cancelled) return;
+        if (over()) return;
         // A judge that failed says nothing and leaves the chips standing.
         if (resolved === null) return;
         const judged = resolved.verdict;
+        /**
+         * DISTRESS IN THE ANSWER STOPS THE CLASS HERE, before anything is
+         * tracked or said, on the one halt every path shares — which says the
+         * support line itself. `judged.halt` alone is not that: an off-limits
+         * answer sets it too, and that only rests the ear (below). The screen
+         * inside resolveSpokenAnswer wrote the flag and made no model call;
+         * `heard` only asks which of the two it was.
+         */
+        if (judged.halt && halt.heard(heard.text, 'ear')) return;
         /**
          * WHICH PATH RESOLVED IT — so the saving is measured rather than
          * asserted. Enums and our own lesson id only; `clean()` drops anything
@@ -761,11 +845,19 @@ export function ClassRoom({
         if (judged.verdict === 'wrong') {
           ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false);
         }
-        const spoken = await speakSafely(judged.say);
-        if (cancelled) return;
-        // The student said something that needs a person. She has just said so;
-        // reopening the mic and asking the question again would be the app
-        // talking straight over them.
+        // A whyProbe matched on the device answers with the lesson's own
+        // why or hint, so it is the lesson speaking (`sayAuthored`, like a
+        // tap); anything the judge's model wrote is screened as a model's.
+        const spoken =
+          resolved.path === 'local'
+            ? await halt.sayAuthored(judged.say)
+            : await halt.say(judged.say, 'ear');
+        if (over()) return;
+        // An off-limits answer (judged.halt): she has just declined it, and
+        // reopening the mic to ask the question again would talk over her —
+        // the chips carry it. A model reply swapped for the support line, or
+        // a class halted while she spoke (spoken.halted): `over()` already
+        // caught it.
         if (judged.halt || spoken.halted) return;
         if (judged.verdict === 'right') {
           /**
@@ -847,9 +939,10 @@ export function ClassRoom({
   }, [canHideControls]);
 
   // The class clock: ticking whenever the room is doing something — the
-  // recording playing, or the live tutor talking a doubt through.
+  // recording playing, or the live tutor talking a doubt through. A halted
+  // class is doing neither.
   const [elapsed, setElapsed] = useState(0);
-  const clockRunning = player.state === 'playing' || inDoubt;
+  const clockRunning = (player.state === 'playing' || inDoubt) && support === null;
   useEffect(() => {
     if (!clockRunning) return;
     const timer = setInterval(() => setElapsed((s) => s + 1), 1_000);
@@ -904,6 +997,8 @@ export function ClassRoom({
    * first sentence. A refused mic silently falls back to the typed path.
    */
   const raiseHand = async () => {
+    // A halted class takes no hand: there is no doubt left to open.
+    if (halt.halted) return;
     const ctx = buildContext(lesson, player.beatIndex);
     logDoubt(lesson.id, ctx.beatId);
     // Located precisely: this hand is about the outcomes THIS beat teaches,
@@ -932,7 +1027,11 @@ export function ClassRoom({
       }
       // The agent is rebuilt from voiceMode, so hand off on the next tick with
       // the correct one in place.
-      setTimeout(() => handoffRef.current.raiseHand(ctx), 0);
+      // Checked again on the tick: the mic prompt above is awaited, and the
+      // class can halt in that time. A rebuilt handoff has not been halted.
+      setTimeout(() => {
+        if (!halt.halted) handoffRef.current.raiseHand(ctx);
+      }, 0);
       return;
     }
     track('doubt_raised', {
@@ -949,6 +1048,7 @@ export function ClassRoom({
   const canResume =
     player.state === 'idle' && savedBeat > 0 && !isCompleted(progressStore.get(), lesson.id);
   const startClass = () => {
+    if (halt.halted) return;
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
@@ -998,24 +1098,31 @@ export function ClassRoom({
    * The student sees their own words on screen either way — deleting what
    * somebody typed under them is worse than anything it might contain — but
    * what LEAVES the device is the cleaned version, and a sentence that needs a
-   * person gets her answer instead of a model's.
+   * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
    */
   const sendText = (text: string) => {
+    if (halt.halted) return;
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
-    const screened = fromStudent(text, lesson.id);
-    if (screened.text === null) {
-      const say = screened.say ?? '';
-      setTextLines((prev) => [...prev, { role: 'tutor', text: say, final: true }]);
-      void speakSafely(say);
-      return;
+    const out = halt.typedDoubt(text);
+    // An off-limits question: her redirect, and the doubt carries on.
+    if (out.reply !== null) {
+      const reply = out.reply;
+      setTextLines((prev) => [...prev, { role: 'tutor', text: reply, final: true }]);
+      void halt.say(reply, 'typed-doubt');
     }
+    // Null after that redirect, or after distress — which halted the class
+    // inside typedDoubt, said the support line and put the support screen up.
+    // Either way nothing leaves the device.
+    if (out.forward === null) return;
     // Its length, never its words. clean() would drop the text anyway; not
     // writing it is the clearer statement.
     track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
-    handoff.sendUserText(screened.text);
+    handoff.sendUserText(out.forward);
   };
 
-  const endDoubt = () => handoff.endDoubt();
+  const endDoubt = () => {
+    if (!halt.halted) handoff.endDoubt();
+  };
 
   // The doubt conversation: the live session's transcript, or the typed one.
   const doubtLines = voiceMode ? transcript : textLines;
@@ -1053,6 +1160,11 @@ export function ClassRoom({
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';
+
+  // The class has halted. The room is replaced rather than covered, so no
+  // control under it — play, raise hand, the answer chips — can be reached by
+  // a stray tap or a keyboard. Its one way out is the way out of the class.
+  if (support !== null) return <SupportScreen line={support} onLeave={onExit} />;
 
   return (
     <div

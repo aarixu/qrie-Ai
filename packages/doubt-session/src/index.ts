@@ -1,5 +1,11 @@
 // Public surface of @ai-tutor/doubt-session. See README.md for the contract.
-export { createHandoff, type HandoffState } from './handoff';
+export {
+  createHandoff,
+  DEFAULT_MAX_STUDENT_TURNS,
+  type Handoff,
+  type HandoffState,
+  type SpeakResult,
+} from './handoff';
 export { buildContext, type DoubtContext } from './context';
 export {
   buildDoubtBrief,
@@ -10,7 +16,7 @@ export {
   type DoubtBriefOptions,
   type RecallTarget,
 } from './brief';
-export { entryLine, exitLine } from './bridge';
+export { closingLine, entryLine, exitLine } from './bridge';
 export {
   createStubAgent,
   type AgentAdapter,

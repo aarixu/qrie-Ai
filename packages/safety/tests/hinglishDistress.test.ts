@@ -46,6 +46,38 @@ describe('Hinglish distress: what must always be heard', () => {
     ['being hit, nobody named', 'mujhe roz maarta hai'],
     ['afraid to go home', 'ghar jane se darr lagta hai'],
     ['being touched', 'mujhe galat tarike se chhuta hai'],
+
+    // Added 2026-09-29, when the ear moved to Vertex Gemini and started
+    // writing a spoken Hinglish sentence down in ROMAN script, capitals and
+    // full stops included. Every line here matched nothing before.
+    ['wanting to die, "mar jaana chahta"', 'main mar jaana chahta hoon'],
+    ['wanting to die, feminine, subject dropped', 'mar jana chahti hu'],
+    ['wanting to die, "marna chahta", as the ear writes it', 'Main marna chahta hoon.'],
+    ['"I should die"', 'mujhe mar jana chahiye'],
+    ['will die, subject dropped', 'ab mar jaunga'],
+    ['will die, the long spelling', 'Mar jaaunga main.'],
+    ['not wanting to live, word order swapped', 'ab nahi jeena chahta'],
+    ['not wanting to live, "jeena nahi hai"', 'mujhe ab jeena nahi hai'],
+    ['wishing to die, "marne ka mann"', 'mera marne ka mann karta hai'],
+    ['wishing to die, "marne ka dil"', 'kabhi kabhi marne ka dil karta hai'],
+    ['wishing to die, "mar jaane ka dil"', 'mar jaane ka dil hota hai'],
+    ['thoughts of dying', 'marne ke khayal aate hain'],
+    ['the wish to die', 'marne ki ichha hoti hai'],
+    ['wanting to die, first person, past', 'mai mar jaana chahti thi'],
+    ['wanting to take one’s own life', 'apni jaan lena chahta hu'],
+    ['"suicide kar", wanting, present', 'suicide karna chahta hu'],
+    ['ending oneself, short spelling', 'khud ko khatm kar dungi'],
+    ['cutting oneself', 'main khud ko kaat leti hu'],
+    ['ending one’s life', 'apni zindagi khatam karna chahti hu'],
+    ['ending one’s life, English noun', 'apni life end kar lunga'],
+    ['taking one’s own life', 'apni jaan le lunga'],
+    ['"suicide kar", wanting', 'mujhe suicide karna hai'],
+    ['"suicide kar", future', 'main suicide kar lunga'],
+    ['"suicide kar", first person', 'suicide karungi main'],
+    ['"suicide kar", the wish', 'suicide karne ka mann karta hai'],
+    ['"suicide kar", the thought', 'suicide karne ki soch rahi hu'],
+    ['English inside Hinglish, "commit suicide"', 'i want to commit suicide yaar'],
+    ['English, "commit suicide", going to', "I'm going to commit suicide"],
   ] as const;
 
   for (const [what, line] of heard) {
@@ -80,6 +112,23 @@ describe('Hinglish distress: the sentences that must NOT trip it', () => {
     'ise mar do matlab multiply karo',
     'mujhe ye samajh nahi aa raha',
     'paani ka level mar gaya kya',
+
+    // The lines the 2026-09-29 additions had to be written around. Each is a
+    // syllabus sentence — history, literature, biology — or an ordinary one,
+    // and each shares a word with a line the list above now hears.
+    'Hitler ne suicide kyun kiya tha',
+    'Hitler ne suicide kar liya tha 1945 me',
+    'Hamlet suicide karna chahta tha kya',
+    'Romeo ne apni jaan le li thi',
+    'Bhagat Singh ne desh ke liye apni jaan de di',
+    'paudha paani ke bina mar jaata hai',
+    'Oxygen ke bina cells marne lagti hain',
+    'keede marne ki dawai ka naam kya hai',
+    'cockroach ko maarna chahta hu, kaunsa spray',
+    'virus cell ko khatam kar deta hai',
+    'suicide prevention par essay likhna hai',
+    'why did Juliet commit suicide at the end',
+    'the cell dies without oxygen',
   ];
 
   for (const line of ordinary) {

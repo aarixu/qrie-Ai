@@ -10,15 +10,29 @@ machine. **No AI inside** — the agent sits behind an adapter.
 
 ```
 PLAYING → PAUSING → AGENT_ENTERING → LIVE → AGENT_LEAVING → RESUMING → PLAYING
+
+any state → HALTED   (terminal)
 ```
 
 `AGENT_ENTERING` / `AGENT_LEAVING` exist **only** to carry the bridging lines. They
 are what make the seam invisible, so they are first-class states, not transitions.
 
+`HALTED` is where a doubt goes when the caller's safety screen stops the class:
+either `speak` resolves `{ halted: true }` (her line was replaced with the support
+reply), or the caller calls `halt()` (the student's own words were distress). The
+session is stopped, nothing further is spoken, the exit line is skipped, `onResume`
+is never called and no new hand is accepted. Nothing leads out of it.
+
+A doubt also closes itself after `maxStudentTurns` student messages (default
+`DEFAULT_MAX_STUDENT_TURNS`, 6): after her answer to the last allowed turn she says
+`closingLine` instead of the exit line and hands back. A message past the cap is
+never forwarded to the agent, and does not cut short an answer to the last
+allowed turn that is still on its way: that answer is said, then the closing line.
+
 ## Public API
 
 ```ts
-type HandoffState = 'PLAYING' | 'PAUSING' | 'AGENT_ENTERING' | 'LIVE' | 'AGENT_LEAVING' | 'RESUMING'
+type HandoffState = 'PLAYING' | 'PAUSING' | 'AGENT_ENTERING' | 'LIVE' | 'AGENT_LEAVING' | 'RESUMING' | 'HALTED'
 
 interface DoubtContext {
   lessonId: string
@@ -38,7 +52,9 @@ interface AgentIO {
 interface AgentAdapter { start(ctx: DoubtContext, io: AgentIO): AgentSession }
 interface AgentSession { sendUserText(text: string): void; stop(): void }
 
-createStubAgent(): AgentAdapter     // deterministic scripted agent for dev/tests
+createStubAgent(options?: { opening?: boolean }): AgentAdapter
+                                    // deterministic scripted agent for dev/tests;
+                                    // opening: false skips its greeting and recall (a relief)
 
 // --- brief.ts : the live tutor's system prompt ---------------------------
 // StudentContext, and every word of her character, come from @ai-tutor/persona.
@@ -56,20 +72,25 @@ interface RecallTarget { readonly id: string; readonly topic: string }
 recallTargets(ctx: DoubtContext): readonly RecallTarget[]   // what the prompt lists
 isRecallable(ctx: DoubtContext, beatId: string): boolean    // what the adapter checks
 
-entryLine(ctx: DoubtContext): string   // Hinglish bridge, deterministic per beatId
+entryLine(ctx: DoubtContext): string   // bridge in, deterministic per beatId
 exitLine(ctx: DoubtContext): string
+closingLine(ctx: DoubtContext): string // said instead of exitLine at the turn cap
 
 createHandoff(opts: {
   agent: AgentAdapter
-  speak(text: string): Promise<void>     // how bridge lines + agent lines get voiced
+  // how bridge lines + agent lines get voiced; onSaid reports the line that
+  // actually came out (the caption), { halted: true } halts the machine
+  speak(text: string, onSaid: (said: string) => void): Promise<{ halted: boolean } | void>
   onPause(): void                        // pause the recording
-  onResume(): void                       // resume the recording
+  onResume(): void                       // resume the recording (never once HALTED)
   onRecall?(beatId: string): void        // canvas jump during LIVE
+  maxStudentTurns?: number               // default DEFAULT_MAX_STUDENT_TURNS (6)
 }): {
   readonly state: HandoffState
   raiseHand(ctx: DoubtContext): void     // legal only from PLAYING; else no-op
-  sendUserText(text: string): void       // forwarded to the live session
+  sendUserText(text: string): void       // forwarded to the live session, up to the cap
   endDoubt(): void                       // manual end (agent's done() also ends)
+  halt(): void                           // stop for good, from any state
   on(event: 'statechange' | 'agent-say', cb: (payload?: string) => void): () => void
 }
 ```

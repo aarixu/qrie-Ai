@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   HELPLINES,
-  MAX_STUDENT_WORDS,
+  MAX_STUDENT_CHARS,
   REDIRECT_REPLY,
   SUPPORT_REPLY,
   quoteForPrompt,
@@ -31,6 +31,23 @@ describe('distress: the sentence that matters most', () => {
     'my uncle touches me',
     'i am afraid to go home',
     'there is no point in living',
+    // Contractions, found 2026-09-29 while widening the Hinglish list: every
+    // pattern wanted a SPACE after "i", so "I'm" and "I'll" — the way these
+    // sentences are actually typed — matched nothing, and "wanna" was only
+    // heard as "wanna to".
+    "I'm going to kill myself",
+    "I'll kill myself",
+    "i'm gonna kill myself",
+    'im going to kill myself',
+    'i just wanna die',
+    'i wanna to die', // how the old pattern wanted it, and how some children do write it
+    'i dont wanna live anymore',
+    // A phone keyboard's curly apostrophe (iOS types it by default).
+    'I’m going to kill myself',
+    'I don’t want to live anymore',
+    'I want to commit suicide',
+    'i will commit suicide',
+    'i wish i was never born',
   ];
 
   it.each(said)('stops the class for "%s"', (text) => {
@@ -78,6 +95,11 @@ describe('distress: the sentences that must NOT trip it', () => {
     'the reaction is exothermic and can hurt you if you touch it',
     'napoleon ended his life in exile',
     'i want to die-cast the metal, what is that process',
+    "i'm going to die-cast it next",
+    'i could die of embarrassment, i got the formula wrong',
+    "I'll explain why the cell dies",
+    'why did Hitler commit suicide in 1945',
+    'the ill patient may die without treatment',
   ];
 
   it.each(ordinary)('teaches straight through "%s"', (text) => {
@@ -230,7 +252,7 @@ describe('quoteForPrompt', () => {
   it('caps a transcriber that ran away with background noise', () => {
     const long = 'na '.repeat(2000);
 
-    expect(quoteForPrompt(long).length).toBeLessThanOrEqual(MAX_STUDENT_WORDS + 1);
+    expect(quoteForPrompt(long).length).toBeLessThanOrEqual(MAX_STUDENT_CHARS + 1);
   });
 
   it('leaves an ordinary answer exactly as it was said', () => {

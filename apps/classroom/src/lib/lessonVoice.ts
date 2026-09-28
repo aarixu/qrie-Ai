@@ -157,8 +157,13 @@ function createSilentTts(): TtsAdapter {
  * For the streamed voice the avatar also hears the real audio (avatarAudio);
  * for the recorded take and the browser robot this announcement is all it
  * gets, and the mouth runs shape-only on wall time — quieter, never wrong.
+ *
+ * `prime` and `drop` pass straight through when the voice underneath has
+ * them. `drop` is how a halted class (lib/sessionHalt.ts) reaches the line
+ * the streamed voice primed for the next beat; without it here, the halt's
+ * call would stop at this wrapper. Exported for that test.
  */
-function withFace(inner: TtsAdapter): TtsAdapter {
+export function withFace(inner: TtsAdapter): TtsAdapter {
   return {
     speak: (text: string) => {
       announceLine(text);
@@ -169,5 +174,6 @@ function withFace(inner: TtsAdapter): TtsAdapter {
       inner.cancel();
     },
     ...(inner.prime ? { prime: inner.prime.bind(inner) } : {}),
+    ...(inner.drop ? { drop: inner.drop.bind(inner) } : {}),
   };
 }

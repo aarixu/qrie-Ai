@@ -206,6 +206,40 @@ describe('createPcmStreamTts', () => {
     expect(relay.aborted).toContain('a');
   });
 
+  /**
+   * THE PRIMED LINE, ON A CLASS THAT HAS STOPPED.
+   *
+   * `cancel` ends the line being spoken and leaves the prefetch alone, which
+   * is right for a seek: the next line is still wanted. After the class halts
+   * nothing is wanted, and the prefetch is a request still being paid for.
+   * `drop` is the way to throw it away.
+   */
+  it('cancel leaves a primed line fetching; drop aborts it', async () => {
+    const { out } = fakeOutput();
+    const relay = fakeRelay({ next: { chunks: [[0, 0], [0, 0], [0, 0], [0, 0]] } });
+    const tts = createPcmStreamTts({ endpoint: '/s', output: () => out, fetch: relay.fetchImpl, sleep: sleepNow });
+    tts.prime!('next');
+    await new Promise((r) => setTimeout(r, 0));
+
+    tts.cancel();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(relay.aborted).not.toContain('next');
+
+    tts.drop!();
+    await new Promise((r) => setTimeout(r, 0));
+    expect(relay.aborted).toContain('next');
+  });
+
+  it('after drop, the dropped line is fetched afresh if it is ever spoken', async () => {
+    const { out } = fakeOutput();
+    const relay = fakeRelay({ next: { chunks: [[0, 0]] } });
+    const tts = createPcmStreamTts({ endpoint: '/s', output: () => out, fetch: relay.fetchImpl, sleep: sleepNow });
+    tts.prime!('next');
+    tts.drop!();
+    await tts.speak('next');
+    expect(relay.asked.filter((u) => u.includes('text=next'))).toHaveLength(2);
+  });
+
   it('tells the caller when her voice actually starts', async () => {
     const { out } = fakeOutput();
     const relay = fakeRelay({ go: { chunks: [[0, 0]] } });

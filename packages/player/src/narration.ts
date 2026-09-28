@@ -16,6 +16,16 @@ export interface TtsAdapter {
    * ahead you hear the whole time-to-first-byte as silence between sentences.
    */
   prime?(text: string): void;
+  /**
+   * Throw away whatever `prime` got ready, and stop fetching it.
+   *
+   * Separate from `cancel` on purpose: cancel runs on every pause and seek,
+   * where the primed line is still the next one wanted. This is for a class
+   * that will not speak that line at all — one that has halted — so a request
+   * nobody will hear is not left running and being paid for. Optional, like
+   * `prime`: a voice that primes nothing has nothing to drop.
+   */
+  drop?(): void;
 }
 
 /** Rough speech duration used for fallback timing and progress estimates. */

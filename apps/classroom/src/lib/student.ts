@@ -76,12 +76,34 @@ export function buildStudentContext(input: {
 }
 
 /**
+ * The longest name onboarding keeps, in characters.
+ *
+ * A first name is a word or two. Anything past this is not a name, and a
+ * field with no limit is a field somebody pastes a paragraph into — which the
+ * app then prints on every greeting.
+ */
+export const MAX_NAME_CHARS = 40;
+
+/** A typed name as it is stored: trimmed, then cut at MAX_NAME_CHARS. */
+export function capName(name: string): string {
+  return name.trim().slice(0, MAX_NAME_CHARS).trimEnd();
+}
+
+/**
  * The student, written down for the class PLANNER.
  *
  * Same discipline as `buildStudentContext`, same reason: every line comes from
  * something the app really recorded, and a signal nobody measured produces no
  * line at all. `statement` turns outcome ids into words a planner can teach
  * to — injected, because this file must not care where the map lives.
+ *
+ * THE NAME IS NOT HERE, ON PURPOSE. It used to be the first line — "The
+ * student's name is …" — which sent a child's name to a model vendor with
+ * every class prepared, and put a string the child typed, unscreened, inside
+ * a prompt: a name set to "ignore your instructions" was an instruction. The
+ * planner teaches to what the student got wrong and what they hold; their
+ * name tells it nothing about either. The cost: the planner's `fill` lines,
+ * which the player speaks in front of a beat, can no longer use their name.
  */
 export function studentLinesForPlanner(input: {
   profile: StudentProfile;
@@ -106,8 +128,6 @@ export function studentLinesForPlanner(input: {
   today?: Date;
 }): string[] {
   const lines: string[] = [];
-
-  if (input.profile.name) lines.push(`The student's name is ${input.profile.name}.`);
 
   const streak = computeStreak(input.progress, input.today);
   if (streak >= 2) lines.push(`They have studied ${streak} days in a row.`);

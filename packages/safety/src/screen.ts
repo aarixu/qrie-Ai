@@ -113,13 +113,29 @@ const DISTRESS: RegExp[] = [
   // "die" is followed by (?![\w-]) rather than a bare \b: a word boundary sits
   // happily before a hyphen, so "I want to die-cast the metal" — a real Class
   // 10 metallurgy question — stopped the class and offered a helpline.
-  /\bi\s+(?:want|wanna|need|am going|'m going|plan)\s+to\s+(?:die(?![\w-])|kill\s+myself|end\s+(?:it|my\s+life)|hurt\s+myself|harm\s+myself)/i,
-  /\bi\s+(?:will|'ll|might|may)\s+(?:kill\s+myself|end\s+(?:it|my\s+life)|hurt\s+myself)/i,
+  //
+  // THE SUBJECT IS WRITTEN THE WAY IT IS TYPED. These two used to demand a
+  // space after "i" — `\bi\s+(?:...|'m going|...)`, `\bi\s+(?:...|'ll)` — so
+  // "I'm going to kill myself" and "I'll kill myself", the commonest way those
+  // sentences are written, matched nothing; "i wanna die" was only heard as
+  // "i wanna to die" (both are heard now). `i\s*'?m` takes "I'm", "im" and
+  // "i m"; `i\s*'?ll` takes "I'll" and "ill". A curly apostrophe is
+  // straightened before any of this runs (see `screen`). One adverb may sit
+  // between: "i just wanna die".
+  //
+  // Wanting, needing, planning or being about to: "die" counts here.
+  /\bi(?:\s+(?:just|really|honestly|seriously|sometimes|actually))?(?:\s+(?:want|need|plan)\s+to|\s+wanna(?:\s+to)?|\s+am\s+(?:going\s+to|gonna)|\s*'?m\s+(?:going\s+to|gonna))\s+(?:just\s+)?(?:die(?![\w-])|kill\s+myself|end\s+(?:it(?![\w-])|my\s+life)|hurt\s+myself|harm\s+myself|(?:commit\s+)?suicide(?![\w-]))/i,
+  // "will", "might", "may", "should": NOT "die" — "I will die of boredom" and
+  // "I might die if the exam is tomorrow" are a Class 8 student being
+  // dramatic, and the list has never counted them.
+  /\bi(?:\s+(?:just|really|honestly|seriously|sometimes|actually))?(?:\s+(?:will|might|may|should)|\s*'?ll)\s+(?:just\s+)?(?:kill\s+myself|end\s+(?:it(?![\w-])|my\s+life)|hurt\s+myself|(?:commit\s+)?suicide(?![\w-]))/i,
   // Any tense, because a child says "I have been cutting myself" far more
-  // often than "I cut myself".
-  /\b(?:killing|hurting|harming|cutting|cut|harm|hurt)\s+myself\b/i,
-  /\bi\s+(?:do\s*n[o']?t|don'?t)\s+want\s+to\s+(?:live|be\s+alive|be\s+here)\b/i,
+  // often than "I cut myself". "kill" joined this list with the contractions:
+  // "gonna kill myself lol" has no "i" in it at all.
+  /\b(?:kill|killing|hurting|harming|cutting|cut|harm|hurt)\s+myself\b/i,
+  /\bi\s+(?:do\s*n[o']?t|don'?t)\s+(?:want\s+to|wanna)\s+(?:live|be\s+alive|be\s+here)\b/i,
   /\bi\s+(?:wish|want)\s+i\s+(?:was|were)\s+dead\b/i,
+  /\bi\s+wish\s+i\s+(?:was|were|had)\s+(?:never|not)\s+(?:been\s+)?born\b/i,
   /\bno\s+(?:point|reason)\s+in\s+living\b/i,
   /\bend\s+my\s+life\b/i,
   // Being hurt by someone.
@@ -156,22 +172,81 @@ const DISTRESS: RegExp[] = [
    * A false negative is a child who asked for help in their own language and
    * was answered with a physics explanation.
    */
-  // Intent about oneself: "mujhe marna hai", "mujhe mar jana hai".
-  /\b(?:mujhe|muje|mujhy|mjhe)\s+(?:ab\s+)?(?:mar|maar)(?:\s*na|\s+jana|\s+jaana)\s+(?:hai|hain|h)\b/i,
-  // "main mar jaunga", "mai mar jaungi", "ab mar jaunga".
-  /\b(?:main|mai|m)\s+(?:mar|maar)\s+ja(?:a)?(?:unga|ungi|un|au)\b/i,
+  /**
+   * ROMAN SCRIPT IS NOW THE COMMON CASE, NOT THE TYPED ONE. Since 2026-09-29
+   * the ear (Vertex Gemini) writes a spoken Hinglish sentence down in Roman
+   * letters, capitals and full stops included, so everything a child SAYS in
+   * Hinglish arrives here in the spellings below. The additions of that date
+   * are marked; each one is a phrase that matched nothing before.
+   *
+   * Written around the syllabus, which says the same words about other
+   * people: "Hitler ne suicide kar liya tha", "Hamlet suicide karna chahta
+   * tha", "Bhagat Singh ne desh ke liye apni jaan de di", "paudha mar jaata
+   * hai". hinglishDistress.test.ts holds those lines and they must stay
+   * quiet. Where a phrase is only distress in the first person, the pattern
+   * asks for a first person — a subject, a first-person verb ending, or a
+   * present tense — rather than for the word alone.
+   */
+  // Intent about oneself: "mujhe marna hai", "mujhe mar jana hai", and
+  // (2026-09-29) "mujhe mar jana chahiye".
+  /\b(?:mujhe|muje|mujhy|mjhe)\s+(?:ab\s+)?(?:mar|maar)(?:\s*na|\s+jana|\s+jaana)\s+(?:hai|hain|h|chahiye|chahie)\b/i,
+  // "main mar jaunga", "mai mar jaungi", "main mar jaun".
+  /\b(?:main|mai|m|ab)\s+(?:mar|maar)\s+ja(?:a)?(?:unga|ungi|un|au)/i,
+  // "ab mar jaunga", "Mar jaaunga main." (2026-09-29). "-unga"/"-ungi" is
+  // first person on its own, so no subject is asked for. It also hears the
+  // idiom "hass hass ke mar jaunga" (I will die laughing), which the
+  // asymmetry above accepts: a warm sentence, not a missed child.
+  /\b(?:mar|maar)\s+ja(?:a|o)?(?:unga|ungi|onga|ongi)\b/i,
+  // "main marna chahta hoon", "mai mar jaana chahti thi" — first person, any
+  // tense (2026-09-29).
+  /\b(?:main|mai|m)\s+(?:ab\s+)?(?:marna|mrna|mar\s+ja(?:a)?na)\s+chaht[aie]/i,
+  // "mar jana chahti hu", "marna chahta hoon" with the subject dropped — the
+  // present only, because "wo desh ke liye marna chahta tha" is a history
+  // lesson about someone else (2026-09-29). "maarna" (to kill, to hit) is
+  // left out: "cockroach ko maarna chahta hu" is a question about a spray.
+  /\b(?:marna|mrna|mar\s+ja(?:a)?na)\s+chaht[aie](?!\s+th[aie]\b)/i,
   // "jeena nahi chahta", "jina nhi chahti".
   /\b(?:jee?na|jina|jeene|jine)\s+(?:nahi+n?|nhi|nai)\s+chaht?(?:a|i|e)\b/i,
+  // "ab nahi jeena chahta", "mujhe ab jeena nahi hai" (2026-09-29).
+  /\b(?:nahi+n?|nhi|nai)\s+(?:jee?na|jina)\s+(?:chaht[aie]|hai|h)\b/i,
+  /\b(?:jee?na|jina)\s+(?:nahi+n?|nhi|nai)\s+(?:hai|h)\b/i,
   // "jeene ka mann nahi", "jine ka dil nahi karta".
   /\b(?:jee?ne|jine)\s+ka\s+(?:mann?|dil)\s+(?:nahi+n?|nhi|nai)\b/i,
+  // "marne ka mann karta hai", "mar jaane ka dil hota hai", "marne ke khayal
+  // aate hain", "marne ki ichha" (2026-09-29). "marne ka mann NAHI karta" is
+  // not heard: the word after "mann" has to be the feeling, not its denial.
+  /\b(?:marne|mar\s+ja(?:a)?ne)\s+ka\s+(?:mann?|dil|khayal|khyal)\s+(?:karta|karti|kar\s+rah[aie]|hota|hoti|aata|aati|hai|h)\b/i,
+  /\bmarne\s+(?:ke|ka)\s+(?:khayal|khyal|vichar|vichaar)\b/i,
+  /\bmarne\s+ki\s+(?:ichha|ichchha|iccha|ichcha|soch)\b/i,
   // "zinda nahi rehna", "zinda rehna nahi chahta".
   /\bzinda\s+(?:nahi+n?|nhi|nai)\s+reh/i,
   /\bzinda\s+reh(?:na)?\s+(?:nahi+n?|nhi|nai)\b/i,
   // The nouns, and ONLY with intent attached — "suicide" alone matches nothing
   // above for the same reason: a history chapter is not a helpline.
   /\b(?:khud\s*kushi|khudkhushi|atmahatya|aatmhatya|aatmahatya)\b[^.!?]{0,30}\b(?:kar|karna|karunga|karungi|karni|kr)\b/i,
-  // "apne aap ko maar", "khud ko nuksan".
-  /\b(?:apne\s+aap|khud)\s+ko\s+(?:maar|mar|nuksan|chot|khatam)/i,
+  // The English noun in a Hindi sentence, "suicide kar" (2026-09-29). Unlike
+  // the line above it asks for more than a nearby "kar", because "Hitler ne
+  // suicide kar liya tha" is a Class 9 history answer. So: a first-person
+  // subject straight before it ("main suicide kar lunga", "mujhe suicide
+  // karna hai") in any tense ...
+  /\b(?:main|mai|m|mujhe|muje|mujhy|mjhe)\s+(?:ab\s+)?suicide\s+kar/i,
+  // ... or, with no subject, a first-person or wanting form of "kar":
+  // "suicide karungi", "suicide kar lunga", "suicide karna hai", "suicide
+  // karne ka mann", and "suicide karna chahta" in the present only, which is
+  // what keeps "Hamlet suicide karna chahta tha kya" quiet.
+  /\bsuicide\s+(?:karna\s+(?:hai|h|chahiye|chaht[aie](?!\s+th[aie]\b))\b|karni\s+(?:hai|h)\b|karu(?:n|nga|ngi)?\b|karoon(?:ga|gi)?\b|kar\s+(?:lu|lun|loon|lunga|lungi|loonga|loongi)\b|karne\s+(?:ka|ki|ke)\s+(?:mann?|dil|soch|khayal|khyal|vichar|irada))/i,
+  // "apne aap ko maar", "khud ko nuksan", and (2026-09-29) "khud ko khatm",
+  // "khud ko kaat". "hurt" and "harm" are NOT here: "lab me khud ko hurt mat
+  // karna" is a safety line a tutor says out loud. ("chot" carries the same
+  // exposure — "khud ko chot mat lagana" — and was here first; left as it was.)
+  /\b(?:apne\s+aap|khud)\s+ko\s+(?:maar|mar|nuksan|nuksaan|chot|khatam|khatm|khtm|kaat)/i,
+  // "apni zindagi khatam karna chahti hu", "apni life end kar lunga"
+  // (2026-09-29) — an intent form of "kar" only, so that a story's "usne apni
+  // zindagi khatam kar li" is not a helpline.
+  /\b(?:apni|meri)\s+(?:zindagi|zindgi|jindagi|life)\s+(?:khatam|khatm|khtm|end)\s+(?:karna|karni|karunga|karungi|karu|karun|kar\s+(?:lu|lun|loon|lunga|lungi|du|dun|doon|dunga|dungi))\b/i,
+  // "apni jaan le lunga", "apni jaan lena chahta hu" (2026-09-29). Taking,
+  // not giving: "desh ke liye apni jaan de di" is Bhagat Singh.
+  /\bapni\s+jaan\s+(?:le\s+(?:lu|lun|loon|lunga|lungi|loonga|loongi)|lena\s+(?:chaht[aie]|hai|h))\b/i,
 
   // Being hurt by someone, named the way a child names them.
   /\b(?:papa|pappa|pita|mummy|mumma|maa|ammi|abbu|bhai|bhaiya|didi|chacha|chachi|mama|mami|tau|sir|madam|teacher)\s+(?:mujhe|muje|mujhy|mjhe)\s+(?:bahut\s+)?(?:maar|mar|peet|pit)/i,
@@ -270,24 +345,76 @@ const ADDRESS =
  */
 export const MASK = '[removed]';
 
-/** Trim, collapse runs of whitespace, and cap. */
-function tidy(text: string, limit: number): string {
-  const collapsed = text.replace(/\s+/g, ' ').trim();
+/** Trim and collapse runs of whitespace. No cap: see `tidy` for that. */
+function collapse(text: string): string {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+/** Cap text that is already collapsed, marking the cut with an ellipsis. */
+function cap(collapsed: string, limit: number): string {
   return collapsed.length > limit ? `${collapsed.slice(0, limit).trimEnd()}…` : collapsed;
 }
 
+/** Trim, collapse runs of whitespace, and cap. */
+function tidy(text: string, limit: number): string {
+  return cap(collapse(text), limit);
+}
+
 /**
- * How much of a student's answer is worth carrying.
+ * How much of a student's answer is worth CARRYING — into a prompt, onto a
+ * board, into a report. It is a count of characters, not words; it was named
+ * MAX_STUDENT_WORDS while comparing `.length`, which is how a long
+ * typed answer came to be cut at 1,200 characters before grading without the
+ * name ever saying so.
  *
  * A spoken answer to "what did you notice?" is a sentence or two. Anything
  * past this is a transcriber running away with background noise, or somebody
  * pasting — and either way it is not evidence about the question that was
  * asked.
+ *
+ * It is NOT how much of a child is listened to. `screen` reads for distress
+ * across MAX_DISTRESS_SCAN_CHARS first, and only then cuts to this.
  */
-export const MAX_STUDENT_WORDS = 1200;
+export const MAX_STUDENT_CHARS = 1200;
+
+/**
+ * The old name for MAX_STUDENT_CHARS, the same number.
+ *
+ * @deprecated Use MAX_STUDENT_CHARS. Nothing in this checkout imports the old
+ * name any more; it stays exported because the package index exported it, and
+ * a checkout on another branch (the LMS worktree carries its own copy of this
+ * package) may still import it.
+ */
+export const MAX_STUDENT_WORDS = MAX_STUDENT_CHARS;
+
+/**
+ * How far into a piece of text `screen` reads for distress.
+ *
+ * Until 2026-09-29 the distress scan ran on the CAPPED text, so 1,500
+ * characters of an ordinary answer followed by "mujhe marna hai" was cut
+ * before anything read the end of it, and the tutor carried on teaching. Now
+ * the scan runs first, on up to this many characters of the collapsed text, or
+ * on the caller's own limit where that is longer — so nothing is ever carried
+ * that the scan did not read.
+ *
+ * The cap exists so a transcriber that ran for an hour, or a paste of a whole
+ * chapter, cannot make every distress pattern walk all of it. A distress line
+ * that does not END before this point is NOT heard; at the default limit it is
+ * not carried either, so it reaches no model and no board. What it costs to
+ * scan 20,000 characters on a low-end phone is UNVERIFIED — no one has timed
+ * it. The distress patterns are anchored on words, and the only gap in them
+ * that can span other words is bounded at 30 characters.
+ */
+export const MAX_DISTRESS_SCAN_CHARS = 20_000;
 
 export interface ScreenOptions {
-  /** Longest text to carry forward. Defaults to MAX_STUDENT_WORDS. */
+  /**
+   * Longest text to carry forward, in characters. Defaults to
+   * MAX_STUDENT_CHARS. `screen` reads for distress past it (see
+   * MAX_DISTRESS_SCAN_CHARS); everything else — the off-limits check and the
+   * masking — runs on the carried text only, because that is the only text
+   * that travels.
+   */
   limit?: number;
 }
 
@@ -332,7 +459,7 @@ export function redact(
   options: ScreenOptions = {},
 ): Redaction {
   const removed: Removed[] = [];
-  let cleaned = tidy(text, options.limit ?? MAX_STUDENT_WORDS);
+  let cleaned = tidy(text, options.limit ?? MAX_STUDENT_CHARS);
 
   if (direction === 'from-student' && matches(INSTRUCTION, cleaned)) {
     // Every occurrence, not the first: "ignore your instructions. also ignore
@@ -367,17 +494,34 @@ export function redact(
  * something serious inside a sentence that also trips an off-limits pattern
  * gets support, not a refusal. Instructions and personal detail are cleaned
  * rather than refused, because the student did nothing wrong by typing them.
+ *
+ * LISTEN FIRST, CUT SECOND. Distress is looked for in the collapsed text
+ * BEFORE it is capped, across MAX_DISTRESS_SCAN_CHARS or the caller's limit,
+ * whichever is longer. The cap used to come first, and a child who wrote a
+ * long answer and said the serious thing at the end of it was cut off before
+ * anything read that far. Everything after the distress check — off-limits,
+ * instructions, personal detail — looks only at the capped text, because
+ * that is all that is carried anywhere.
  */
 export function screen(
   text: string,
   direction: Direction,
   options: ScreenOptions = {},
 ): Verdict {
-  const limit = options.limit ?? MAX_STUDENT_WORDS;
-  const tidied = tidy(text, limit);
-  if (tidied === '') return { kind: 'allow', text: '' };
+  const limit = options.limit ?? MAX_STUDENT_CHARS;
+  const collapsed = collapse(text);
+  if (collapsed === '') return { kind: 'allow', text: '' };
 
-  if (matches(DISTRESS, tidied)) return { kind: 'support', say: SUPPORT_REPLY };
+  // Math.max so that a caller carrying more than the scan cap (screenSpine
+  // passes each string's own length) never gets back text the scan skipped.
+  // The curly apostrophes are straightened for the scan only: a phone keyboard
+  // types "I’m", and every English pattern above is written with "'".
+  const heard = collapsed
+    .slice(0, Math.max(MAX_DISTRESS_SCAN_CHARS, limit))
+    .replace(/[\u2018\u2019\u02BC]/g, "'");
+  if (matches(DISTRESS, heard)) return { kind: 'support', say: SUPPORT_REPLY };
+
+  const tidied = cap(collapsed, limit);
 
   // Only a STUDENT can ask for something off-limits. The same pattern in her
   // own words is her declining it, and refusing her own refusal would be a
@@ -391,7 +535,7 @@ export function screen(
    *
    * `tidied` is handed in already tidied and `redact` tidies again. That is a
    * no-op rather than a second truncation: collapsing whitespace twice changes
-   * nothing, and in the over-long branch the ellipsis `tidy` appends is the
+   * nothing, and in the over-long branch the ellipsis `cap` appends is the
    * only character past the limit, so the second pass re-slices to the same
    * string. redact.test.ts pins that on a note longer than the limit rather
    * than leaving this paragraph as a claim.
@@ -409,6 +553,6 @@ export function screen(
  * read as a new turn, so both are neutralised. Combined with `screen`, this is
  * what stops an answer box being a second system prompt.
  */
-export function quoteForPrompt(text: string, limit = MAX_STUDENT_WORDS): string {
+export function quoteForPrompt(text: string, limit = MAX_STUDENT_CHARS): string {
   return tidy(text, limit).replace(/[\\"]/g, ' ').replace(/[\r\n]+/g, ' ');
 }

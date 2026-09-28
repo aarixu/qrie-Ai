@@ -54,6 +54,55 @@ describe('the llm relay', () => {
     expect(res.body.from.headers.authorization).toBe(`Bearer ${KEY}`);
     expect(JSON.parse(res.body.from.body!).max_tokens).toBe(CAP_MAX_TOKENS);
   });
+
+  /**
+   * A CHILD'S WORDS ARE NOT TRAINING DATA.
+   *
+   * OpenRouter routes a call to whichever provider serves the model, and not
+   * every provider promises not to keep or train on what it is sent.
+   * `provider.data_collection: 'deny'` is how a request refuses those. This path is
+   * reached only where Vertex is not configured, but where it is reached, it
+   * carries a student's questions.
+   */
+  describe("the vendor's use of what a student said", () => {
+    const sent = (body: string) => {
+      const res = llmRelay(req({ body: new TextEncoder().encode(body) }), KEY);
+      if (res.body.kind !== 'stream') throw new Error('expected a stream');
+      return res.body.from.body!;
+    };
+
+    it('asks every provider not to keep it', () => {
+      expect(JSON.parse(sent('{"model":"m","messages":[]}')).provider).toEqual({ data_collection: 'deny' });
+    });
+
+    it('does not let the caller ask for it to be kept', () => {
+      // The body comes from a student's phone. The preference is ours to set.
+      const out = JSON.parse(sent('{"model":"m","provider":{"data_collection":"allow"}}'));
+      expect(out.provider.data_collection).toBe('deny');
+    });
+
+    it("keeps the caller's other routing preferences", () => {
+      const out = JSON.parse(sent('{"model":"m","provider":{"order":["google-vertex"]}}'));
+      expect(out.provider).toEqual({ order: ['google-vertex'], data_collection: 'deny' });
+    });
+
+    it('replaces a provider field that is not an object rather than trusting it', () => {
+      for (const provider of ['"allow"', 'null', '[1]']) {
+        const out = JSON.parse(sent(`{"model":"m","provider":${provider}}`));
+        expect(out.provider, provider).toEqual({ data_collection: 'deny' });
+      }
+    });
+
+    it('still caps the output, and still honours a smaller ask', () => {
+      expect(JSON.parse(sent('{"model":"m"}')).max_tokens).toBe(CAP_MAX_TOKENS);
+      expect(JSON.parse(sent('{"model":"m","max_tokens":100}')).max_tokens).toBe(100);
+    });
+
+    it('forwards a body that is not a JSON object untouched, for upstream to refuse', () => {
+      expect(sent('not json')).toBe('not json');
+      expect(sent('[1,2]')).toBe('[1,2]');
+    });
+  });
 });
 
 describe('the speech relay', () => {
@@ -85,6 +134,16 @@ describe('the speech relay', () => {
   it('uses the same voice the classroom does', () => {
     // The default and the app must be the same person, not two.
     expect(DEFAULT_SPEECH_VOICE).toBe('aura-2-thalia-en');
+  });
+
+  /**
+   * What she is asked to say was written for one child, in one class. The
+   * same preference llmRelay sets.
+   */
+  it('asks the vendor not to keep what it is asked to say', () => {
+    const res = speechRelay(req({ url: '/api/speech?text=hi' }), KEY);
+    if (res.body.kind !== 'stream') throw new Error('expected a stream');
+    expect(JSON.parse(res.body.from.body!).provider).toEqual({ data_collection: 'deny' });
   });
 });
 

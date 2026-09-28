@@ -126,6 +126,54 @@ export function capMaxTokens(rawBody: string): string {
   }
 }
 
+/**
+ * A CHILD'S WORDS ARE NOT TRAINING DATA.
+ *
+ * OpenRouter sends a call to whichever provider serves the model, and it lets
+ * a request say which providers it will accept. `data_collection: 'deny'`
+ * accepts only providers that do not store or train on what they are sent —
+ * and what this route sends is a student's questions and answers.
+ *
+ * Set on the relay, over whatever the caller sent: the body comes from a
+ * student's phone, and whether the vendor may keep it is not the phone's call.
+ * The caller's other routing preferences are kept. A `provider` that is not an
+ * object is replaced, not merged into.
+ *
+ * Only reached where the relay has no Vertex credential in use (handler.ts
+ * sends /api/llm to Vertex whenever it has one): the vite dev server with no
+ * service account file or one it could not read, or a deployed Edge Function
+ * with GOOGLE_SERVICE_ACCOUNT_JSON unset. An Edge Function whose key is set
+ * but will not parse does NOT land here: vendors.ts hands the handler an
+ * empty OpenRouter key, and this answers 503. UNVERIFIED, and never measured
+ * from this repo: that OpenRouter honours the preference, and that some
+ * provider of each model this app names still qualifies under it.
+ * OpenRouter documents a call no provider qualifies for as refused rather
+ * than routed elsewhere, so the failure to watch for is an error, not a leak.
+ *
+ * This function is llmRelay's. speechRelay's OpenRouter body sets the same
+ * field itself, and there it is even less proven: whether OpenRouter's
+ * /audio/speech route reads `provider` at all is UNVERIFIED. hearRelay's call
+ * is a multipart form, not JSON, and carries no such preference. Neither do
+ * the dev-only direct transports that call OpenRouter from outside this
+ * package.
+ */
+export function denyDataCollection(rawBody: string): string {
+  try {
+    const parsed = JSON.parse(rawBody) as unknown;
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return rawBody;
+    const body = parsed as { provider?: unknown };
+    const theirs =
+      typeof body.provider === 'object' && body.provider !== null && !Array.isArray(body.provider)
+        ? body.provider
+        : {};
+    body.provider = { ...theirs, data_collection: 'deny' };
+    return JSON.stringify(body);
+  } catch {
+    // Not JSON. Forward it and let upstream complain in its own words.
+    return rawBody;
+  }
+}
+
 /** Chat completions. The planner, the artist, the judge, the doubt tutor. */
 export function llmRelay(req: RelayRequest, key: string): RelayResponse {
   if (req.method !== 'POST') return fail(405, 'POST only');
@@ -139,7 +187,7 @@ export function llmRelay(req: RelayRequest, key: string): RelayResponse {
         url: `${OPENROUTER}/chat/completions`,
         method: 'POST',
         headers: { 'content-type': 'application/json', ...authHeaders(key) },
-        body: capMaxTokens(new TextDecoder().decode(req.body)),
+        body: denyDataCollection(capMaxTokens(new TextDecoder().decode(req.body))),
         fallbackContentType: 'application/json',
       },
     },
@@ -243,6 +291,8 @@ export function speechRelay(req: RelayRequest, key: string, own?: string): Relay
           // mp3, because an audio element plays it straight from the wire at
           // a tenth of the bytes of raw PCM.
           response_format: 'mp3',
+          // The same preference llmRelay sets; see denyDataCollection.
+          provider: { data_collection: 'deny' },
         }),
         fallbackContentType: 'audio/mpeg',
       },

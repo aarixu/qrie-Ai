@@ -193,14 +193,24 @@ export function TrialConsent() {
                 copy says "a new class", never "this costs nothing".
 
                 TWO: we are told no phone and no school, so there is nobody to
-                tell — but ui/ReportSheet.tsx:131 POSTs a report's note to
-                /api/report under a verified user id, and report.ts:48 keeps it
+                tell — but two things do leave the page, and the copy names
+                both. It used to name only the report, and said it was "the
+                one thing", which was false on the first spoken answer.
+
+                The child's words: a trial plays the same ClassRoom, so
+                lib/ear.ts posts each spoken answer to /api/hear, and a typed
+                or spoken doubt goes to /api/llm. Wherever the relay has a
+                Google service account, packages/relay/src/handler.ts sends
+                both to Vertex. Neither request carries a name or a phone
+                number, and a trial asks for neither — hence "it is not told
+                who you are".
+
+                The report: ui/ReportSheet.tsx POSTs a report's note to
+                /api/report under a verified user id, and report.ts keeps it
                 verbatim and permanently. ReportSheet is mounted inside the
-                lesson a trial may reach (ClassRoom.tsx:1360), so a line saying
-                nothing is sent would be false the moment a child taps report.
-                The copy names that one exception instead. HANDOFF: fileReport
-                should skip the POST while !mayPersist() and keep the local
-                copy, returning 'kept'.
+                lesson a trial may reach. HANDOFF: fileReport should skip the
+                POST while !mayPersist() and keep the local copy, returning
+                'kept'.
 
                 THREE: sessionStorage, which the tab takes with it.
 
@@ -218,9 +228,11 @@ export function TrialConsent() {
               <li className="flex gap-2">
                 <Icon name="close" className="text-[18px] text-on-surface-variant shrink-0 mt-0.5" />
                 Nobody is told who you are. We have no phone number for you and no school of
-                yours, so there is nobody to tell. The one thing that does leave this page is
-                a report: if you tell us something in the class is wrong, we keep what you
-                typed so a person can read it and fix it.
+                yours, so there is nobody to tell. Two things do leave this page. What you say
+                out loud, and any question you type to the tutor, goes to Google's AI
+                service, which turns your voice into text and helps her reply — it is not told
+                who you are. And a report: if you tell us something in the class is wrong, we
+                keep what you typed so a person can read it and fix it.
               </li>
               <li className="flex gap-2">
                 <Icon name="close" className="text-[18px] text-on-surface-variant shrink-0 mt-0.5" />

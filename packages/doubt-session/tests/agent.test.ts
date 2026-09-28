@@ -133,3 +133,36 @@ describe('createStubAgent', () => {
     expect(log.length).toBe(len);
   });
 });
+
+/**
+ * THE STUB AS A RELIEF, NOT AS THE TUTOR.
+ *
+ * When the typed tutor's model fails mid-doubt, the stub takes the question
+ * that failed. The student has already heard the bridge line and has already
+ * asked — greeting them again ("What would you like to ask?") and pulling an
+ * old beat onto the board would be a second opening to a doubt that is well
+ * under way. So a relief starts at the answer.
+ */
+describe('createStubAgent({ opening: false })', () => {
+  it('says nothing and recalls nothing until the student speaks', async () => {
+    const { io, log } = makeIo();
+    createStubAgent({ opening: false }).start(ctxWithHistory(), io);
+    await flush();
+    expect(log).toEqual([]);
+  });
+
+  it('answers the first message it is handed, then closes on the second', async () => {
+    const { io, log, finish } = makeIo();
+    const session = createStubAgent({ opening: false }).start(ctxWithHistory(), io);
+    session.sendUserText('valve kya hota hai?');
+    await flush();
+    expect(log).toHaveLength(1);
+    expect(log[0]).toContain('chambers of the heart');
+    await finish();
+
+    session.sendUserText('ok');
+    await finish();
+    expect(log[log.length - 1]).toBe('done');
+    expect(log.some((l) => l.startsWith('recall:'))).toBe(false);
+  });
+});

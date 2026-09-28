@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Icon } from '../../ui/Icon';
 import { TutorTile } from '../../ui/TutorTile';
 import { subjectsAvailable } from '../../lib/content';
+import { MAX_NAME_CHARS } from '../../lib/student';
 import { profileStore } from '../../stores/profile';
 import { settingsStore } from '../../stores/settings';
 import { markConsented, type TutorLanguage } from '../../lib/workspace';
@@ -301,14 +302,18 @@ export function Enrol({ initialStep = 'student' }: { initialStep?: EnrolStep }) 
                 What is the student's name?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                I'll use it in class — like any teacher would.
+                Just their first name is enough.
               </p>
+              {/* Forty, the same cap as the onboarding door (lib/student.ts),
+                  held in the handler too: maxLength stops typing, not a paste
+                  or an autofill. The class planner is not told the name, so
+                  this no longer promises to use it in class. */}
               <input
                 value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
+                onChange={(e) => setStudentName(e.target.value.slice(0, MAX_NAME_CHARS))}
                 placeholder="First name"
                 aria-label="Student's first name"
-                maxLength={80}
+                maxLength={MAX_NAME_CHARS}
                 className={`${FIELD} text-center`}
               />
               <button
@@ -544,13 +549,19 @@ export function Enrol({ initialStep = 'student' }: { initialStep?: EnrolStep }) 
                       posts every spoken answer to our relay to be transcribed —
                       that file's own docblock says "the relay hears
                       everything" — and a typed doubt goes the same way to be
-                      answered. A consent taken on a false account of the
-                      processing is not a consent, so this says what happens
-                      rather than what would be reassuring. */}
+                      answered. The relay does not do either itself: wherever
+                      it has a Google service account, packages/relay/src/
+                      handler.ts sends /api/hear and /api/llm to Vertex. This
+                      used to say the words went to nobody else, which was
+                      false from the day Vertex went live. A consent taken on
+                      a false account of the processing is not a consent, so
+                      this says what happens rather than what would be
+                      reassuring; /privacy lists every service by name. */}
                   We keep your name and this phone number so we can reach you about your child.
                   What {studentName.trim() || 'the student'} says or types in class is sent to
-                  us so it can be understood and answered. We do not sell it, we do not hand it
-                  to anybody else, and we do not use it to work out who they are.
+                  us, and from us to Google's AI service, which turns speech into text and
+                  helps the tutor reply. We do not sell it, nobody else is given it, and we do
+                  not use it to work out who they are.
                 </p>
                 <p>
                   {/* NOT VERIFIED that there is a way to ask: this repo has no

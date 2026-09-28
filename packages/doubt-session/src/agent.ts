@@ -30,8 +30,15 @@ export interface AgentAdapter {
  * Script: greet on the current topic; if an earlier beat exists, recall it
  * unprompted (the product's party trick, demonstrated on every run); answer
  * the first student message; close and hand back on the second.
+ *
+ * `opening: false` drops the greeting and the recall, so the script starts at
+ * the answer. That is the stub as a RELIEF: started by the typed tutor only
+ * when its model fails, by which point the bridge line has been said and the
+ * student has already asked. Greeting them again would be a second opening to
+ * a doubt that is under way.
  */
-export function createStubAgent(): AgentAdapter {
+export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapter {
+  const opening = options.opening ?? true;
   return {
     start(ctx: DoubtContext, io: AgentIO): AgentSession {
       let stopped = false;
@@ -51,10 +58,12 @@ export function createStubAgent(): AgentAdapter {
       const prev =
         ctx.recentBeats.length >= 2 ? ctx.recentBeats[ctx.recentBeats.length - 2] : null;
 
-      enqueue(() =>
-        io.say(`I'm listening. What would you like to ask about '${ctx.beatTopic}'? Go ahead.`),
-      );
-      if (prev !== null) {
+      if (opening) {
+        enqueue(() =>
+          io.say(`I'm listening. What would you like to ask about '${ctx.beatTopic}'? Go ahead.`),
+        );
+      }
+      if (opening && prev !== null) {
         enqueue(async () => {
           io.recall(prev.id);
           await io.say(

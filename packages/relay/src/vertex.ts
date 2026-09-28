@@ -68,6 +68,101 @@ export const CAP_OUTPUT_TOKENS = 24_000;
  */
 export const MAX_REQUEST_BYTES = 256 * 1024;
 
+/**
+ * THE PROVIDER'S OWN HARM FILTERS, NAMED ON EVERY CALL THIS RELAY MAKES.
+ *
+ * This block was absent, so every category ran at whatever Vertex's default
+ * is for that model — a setting nobody in this repo chose, wrote down or can
+ * point to, on the path the planner, the judge, the doubt tutor and the artist
+ * all take. The live voice path had already named its own on purpose
+ * (apps/classroom/src/lib/liveAgent.ts, `buildSetupFrame`), so the same child
+ * got a stated filter in one mode and an unstated one in the other.
+ *
+ * BLOCK_ONLY_HIGH, and deliberately no stricter, for the reason liveAgent.ts
+ * gives: these students study reproduction, the nervous system, the effects of
+ * alcohol and the history of two world wars. A filter tuned to spare a general
+ * audience every mention of harm refuses a Class 10 Biology chapter, and a
+ * tutor who will not teach the syllabus is not safer, only useless. This is
+ * for the narrow, serious cases; the persona and the screen in packages/safety
+ * are the other layers, not this one.
+ *
+ * On EVERY body `toVertexBody` builds, the image model included. What that
+ * covers on the image model is UNVERIFIED: these are the four TEXT
+ * categories. Vertex is reported to take a separate set for a drawn picture —
+ * HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT, _IMAGE_HATE, _IMAGE_HARASSMENT and
+ * _IMAGE_DANGEROUS_CONTENT — which this list does not name. Nobody has
+ * confirmed from this repo that those exist or what they change, so the
+ * filter on the picture itself may still run at a default nobody chose. The
+ * live image call due before deploy should also try those four at
+ * BLOCK_ONLY_HIGH on gemini-3.1-flash-image, and they belong here if Vertex
+ * accepts them.
+ *
+ * UNVERIFIED, and both are the plan's own acceptance test for A7: that a set
+ * of ordinary Class 10 syllabus lines passes at this threshold while a harmful
+ * set is blocked, and that gemini-3.1-flash-image accepts the field at all
+ * rather than refusing the request. Neither has been run against Vertex; this
+ * was built offline.
+ */
+export const SAFETY_SETTINGS: readonly { category: string; threshold: string }[] = [
+  { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_ONLY_HIGH' },
+  { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_ONLY_HIGH' },
+  { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_ONLY_HIGH' },
+  { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_ONLY_HIGH' },
+];
+
+/**
+ * WHAT THE RELAY ANSWERS WHEN A FILTER FIRES.
+ *
+ * Before this, a blocked call reached the browser as an empty reply (a
+ * refused prompt carries no candidate at all) or as the half-written text the
+ * filter stopped — and that half is precisely the part judged unfit to finish.
+ * Now the relay always answers this line instead, with finish_reason
+ * BLOCKED_FINISH below: fixed, kind, and steering back to the lesson, with
+ * nothing of what was blocked in it.
+ *
+ * WHO SPEAKS IT. The one client that reads BLOCKED_FINISH is the typed doubt
+ * tutor, which then says its own copy of this line
+ * (apps/classroom/src/lib/geminiAgent.ts, FILTERED_REPLY_LINE). Nothing else
+ * in apps/classroom reads the finish_reason, so every other caller gets this
+ * line as ordinary reply text and handles it by its own rules; for the JSON
+ * callers, that is the next paragraph.
+ *
+ * NO BRACES, and that is load-bearing. The class planner asks for JSON and
+ * rescues a messy reply by slicing between its outermost braces (class-prep
+ * `parsePlan`; the reviewer's `parseVerdict` does the same). A line with none
+ * in it gives them nothing to slice, so they read it as unreadable, ask once
+ * more, and then throw the plain error they already throw on garbled JSON —
+ * the planner never builds a lesson out of it. The test that says so runs the
+ * real `prepareClass`.
+ */
+export const BLOCKED_LINE = "Let's keep our class on the lesson — ask me anything about it!";
+
+/**
+ * How a client tells a block from an answer: OpenAI's own finish_reason for
+ * exactly this. The typed doubt tutor reads it (geminiAgent.ts,
+ * `createTransport`): on it, she says her own copy of BLOCKED_LINE instead of
+ * parsing the reply, and takes the blocked question out of the history she
+ * sends with the next one. Nothing else in apps/classroom reads it yet.
+ */
+export const BLOCKED_FINISH = 'content_filter';
+
+/**
+ * The finish reasons that are a policy stop rather than an answer.
+ *
+ * SAFETY is the four categories above. The rest are Google's other harm and
+ * policy stops, which SAFETY_SETTINGS does not control. RECITATION is NOT here: it
+ * is a copyright stop, not a harm one, and MAX_TOKENS is an answer that ran
+ * long. Both pass through as they always have.
+ */
+const BLOCKING_FINISH: ReadonlySet<string> = new Set([
+  'SAFETY',
+  'PROHIBITED_CONTENT',
+  'BLOCKLIST',
+  'SPII',
+  'IMAGE_SAFETY',
+  'IMAGE_PROHIBITED_CONTENT',
+]);
+
 /** Location, not region. Every regional host 404s on these models. */
 export const LOCATION = 'global';
 export const HOST = 'https://aiplatform.googleapis.com';
@@ -129,6 +224,7 @@ export interface VertexBody {
   systemInstruction?: { parts: VertexPart[] };
   contents: { role: string; parts: VertexPart[] }[];
   generationConfig: Record<string, unknown>;
+  safetySettings: { category: string; threshold: string }[];
 }
 
 /**
@@ -252,6 +348,8 @@ export function toVertexBody(chat: OpenAiChat): VertexBody {
     ...(system.length > 0 ? { systemInstruction: { parts: system } } : {}),
     contents,
     generationConfig,
+    // A fresh copy per body, so nothing holding one body can loosen the next.
+    safetySettings: SAFETY_SETTINGS.map((s) => ({ ...s })),
   };
 }
 
@@ -260,8 +358,22 @@ interface VertexReply {
     content?: { parts?: { text?: string; inlineData?: { mimeType?: string; data?: string } }[] };
     finishReason?: string;
   }[];
+  /** Present when the PROMPT was refused; there is then no candidate at all. */
+  promptFeedback?: { blockReason?: string };
   usageMetadata?: Record<string, number>;
   error?: { message?: string };
+}
+
+/**
+ * Whether Vertex stopped this call on policy: the prompt refused outright, or
+ * the reply stopped for one of BLOCKING_FINISH. An UNSPECIFIED prompt verdict
+ * is Google's zero value, not a verdict.
+ */
+function isBlocked(reply: VertexReply): boolean {
+  const prompt = reply.promptFeedback?.blockReason;
+  if (prompt && prompt !== 'BLOCKED_REASON_UNSPECIFIED') return true;
+  const finish = reply.candidates?.[0]?.finishReason;
+  return finish !== undefined && BLOCKING_FINISH.has(finish);
 }
 
 export interface OpenAiReply {
@@ -274,6 +386,22 @@ export interface OpenAiReply {
 }
 
 export function toOpenAiReply(reply: VertexReply, model: string): OpenAiReply {
+  /**
+   * A block answers as a normal 200 carrying BLOCKED_LINE, never an error,
+   * because an error is what the browser treats as the call breaking — and a
+   * child who asked about a chapter did not break anything. Whatever text or
+   * picture came back with the stop is dropped, unread, so the image artist
+   * sees no picture (one fewer on the board) rather than a blocked one. The
+   * usage is kept: Vertex's count of what it was sent is the books' business.
+   */
+  if (isBlocked(reply)) {
+    return {
+      model,
+      choices: [{ message: { role: 'assistant', content: BLOCKED_LINE }, finish_reason: BLOCKED_FINISH }],
+      ...(reply.usageMetadata ? { usage: reply.usageMetadata } : {}),
+    };
+  }
+
   const parts = reply.candidates?.[0]?.content?.parts ?? [];
 
   const text = parts.map((p) => p.text ?? '').join('');

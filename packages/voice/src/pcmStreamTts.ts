@@ -220,8 +220,17 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
       primed = start(words);
     },
 
+    /**
+     * Only the line being spoken. The primed one is left fetching, because a
+     * pause or a seek still wants it next; `drop` is what abandons it.
+     */
     cancel(): void {
       stopCurrent();
+    },
+
+    drop(): void {
+      primed?.abort.abort();
+      primed = null;
     },
   };
 }

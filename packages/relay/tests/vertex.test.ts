@@ -1,8 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
+import { prepareClass } from '@ai-tutor/class-prep';
 import {
   ALLOWED_MODELS,
+  BLOCKED_LINE,
   CAP_OUTPUT_TOKENS,
   MAX_REQUEST_BYTES,
+  SAFETY_SETTINGS,
   bareModel,
   completeOnVertex,
   inlineFromDataUrl,
@@ -10,6 +13,7 @@ import {
   toOpenAiReply,
   toVertexBody,
   vertexUrl,
+  type OpenAiReply,
 } from '../src/vertex.ts';
 
 /**
@@ -489,3 +493,207 @@ describe('how hard the model is asked to think', () => {
     ).toBeUndefined();
   });
 })
+
+/**
+ * THE PROVIDER'S OWN HARM FILTERS, AND WHAT A CHILD HEARS WHEN ONE FIRES.
+ *
+ * Nothing here named a safety setting, so every call ran at whatever Vertex's
+ * default is for that model — a setting nobody in this repo chose or can
+ * point to. The live voice path chose BLOCK_ONLY_HIGH on purpose
+ * (apps/classroom/src/lib/liveAgent.ts, buildSetupFrame) and this is the same
+ * choice, made for the same syllabus, on the path most of a class runs on.
+ */
+describe("the provider's own harm filters", () => {
+  const CATEGORIES = [
+    'HARM_CATEGORY_HARASSMENT',
+    'HARM_CATEGORY_HATE_SPEECH',
+    'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+    'HARM_CATEGORY_DANGEROUS_CONTENT',
+  ];
+
+  it('names all four categories, at BLOCK_ONLY_HIGH, for every model this relay serves', () => {
+    // The image model included: a picture drawn for a child is exactly where
+    // SEXUALLY_EXPLICIT has to be on.
+    for (const model of ALLOWED_MODELS) {
+      const body = toVertexBody({ model: `google/${model}`, messages: [{ role: 'user', content: 'hi' }] });
+      expect(body.safetySettings, model).toEqual(
+        CATEGORIES.map((category) => ({ category, threshold: 'BLOCK_ONLY_HIGH' })),
+      );
+    }
+  });
+
+  it('is no stricter than BLOCK_ONLY_HIGH, because the syllabus is not a general audience', () => {
+    // Reproduction, the nervous system, alcohol and two world wars are Class
+    // 10 chapters. A stricter threshold refuses the lesson, not the harm.
+    for (const s of SAFETY_SETTINGS) {
+      expect(['BLOCK_LOW_AND_ABOVE', 'BLOCK_MEDIUM_AND_ABOVE']).not.toContain(s.threshold);
+      // ...and never off.
+      expect(['BLOCK_NONE', 'OFF']).not.toContain(s.threshold);
+    }
+  });
+
+  it('puts them on the wire, not just on the body', async () => {
+    let sent: { safetySettings?: unknown } = {};
+    const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
+      sent = JSON.parse(String(init.body));
+      return { ok: true, status: 200, json: async () => ({ candidates: [] }) } as unknown as Response;
+    });
+    await completeOnVertex(
+      { model: 'google/gemini-3.8-flash', messages: [{ role: 'user', content: 'hi' }] },
+      { tokens, fetch: fetchMock as never },
+    );
+    expect(sent.safetySettings).toEqual(SAFETY_SETTINGS);
+  });
+
+  it('hands each body its own copy, so one caller cannot loosen the next', () => {
+    const first = toVertexBody({ model: 'gemini-3.7-flash', messages: [] });
+    first.safetySettings[0].threshold = 'BLOCK_NONE';
+    expect(toVertexBody({ model: 'gemini-3.7-flash', messages: [] }).safetySettings[0].threshold)
+      .toBe('BLOCK_ONLY_HIGH');
+  });
+});
+
+describe('when a filter fires', () => {
+  const content = (out: OpenAiReply) => out.choices[0].message.content;
+  const answering = (value: unknown) =>
+    (async () => ({ ok: true, status: 200, json: async () => value }) as unknown as Response) as never;
+
+  it('speaks the fixed line, never the half-written reply the filter stopped', () => {
+    // Vertex can return the text it had written before the stop. That text is
+    // precisely the part a filter judged unfit for a child.
+    const out = toOpenAiReply(
+      {
+        candidates: [
+          { content: { parts: [{ text: 'Here is the part the filter stopped' }] }, finishReason: 'SAFETY' },
+        ],
+      },
+      'google/gemini-3.7-flash',
+    );
+    expect(content(out)).toBe(BLOCKED_LINE);
+    expect(content(out)).not.toContain('filter stopped');
+  });
+
+  it("says so in OpenAI's own word, so a client can tell a block from an answer", () => {
+    const out = toOpenAiReply({ candidates: [{ finishReason: 'SAFETY' }] }, 'm');
+    expect(out.choices[0].finish_reason).toBe('content_filter');
+  });
+
+  it('treats a refused PROMPT the same way, which arrives with no candidate at all', () => {
+    // A blocked prompt is a 200 with promptFeedback and nothing else. Before
+    // this it read as an empty reply, which createBrowserLlm throws on as
+    // "The model replied with nothing".
+    const out = toOpenAiReply({ promptFeedback: { blockReason: 'SAFETY' } }, 'm');
+    expect(content(out)).toBe(BLOCKED_LINE);
+    expect(out.choices[0].finish_reason).toBe('content_filter');
+  });
+
+  it('covers the policy stops that are not called SAFETY', () => {
+    for (const finishReason of ['PROHIBITED_CONTENT', 'BLOCKLIST', 'SPII', 'IMAGE_SAFETY', 'IMAGE_PROHIBITED_CONTENT']) {
+      const out = toOpenAiReply({ candidates: [{ content: { parts: [{ text: 'x' }] }, finishReason }] }, 'm');
+      expect(content(out), finishReason).toBe(BLOCKED_LINE);
+      expect(out.choices[0].finish_reason, finishReason).toBe('content_filter');
+    }
+    for (const blockReason of ['OTHER', 'BLOCKLIST', 'PROHIBITED_CONTENT']) {
+      expect(content(toOpenAiReply({ promptFeedback: { blockReason } }, 'm')), blockReason).toBe(BLOCKED_LINE);
+    }
+  });
+
+  it('passes no picture through from a stopped image call', () => {
+    const out = toOpenAiReply(
+      {
+        candidates: [
+          {
+            content: { parts: [{ inlineData: { mimeType: 'image/png', data: 'AAAB' } }] },
+            finishReason: 'IMAGE_SAFETY',
+          },
+        ],
+      },
+      'google/gemini-3.1-flash-image',
+    );
+    // The artist reads images?.[0] and takes absent as "one fewer picture".
+    expect(out.choices[0].message.images).toBeUndefined();
+  });
+
+  it('keeps the usage, so a blocked call is still on the books', () => {
+    const out = toOpenAiReply(
+      { promptFeedback: { blockReason: 'SAFETY' }, usageMetadata: { promptTokenCount: 812 } },
+      'm',
+    );
+    expect(out.usage).toEqual({ promptTokenCount: 812 });
+  });
+
+  it('leaves an ordinary stop alone', () => {
+    // RECITATION is Google's copyright stop, not a harm filter, and a reply
+    // cut at the token cap is an answer that ran long. Neither is a block.
+    const long = toOpenAiReply(
+      { candidates: [{ content: { parts: [{ text: 'a b' }] }, finishReason: 'MAX_TOKENS' }] },
+      'm',
+    );
+    expect(content(long)).toBe('a b');
+    expect(long.choices[0].finish_reason).toBe('max_tokens');
+    const recited = toOpenAiReply(
+      { candidates: [{ content: { parts: [{ text: 'c' }] }, finishReason: 'RECITATION' }] },
+      'm',
+    );
+    expect(recited.choices[0].finish_reason).toBe('recitation');
+    // An unspecified prompt verdict is not a verdict.
+    const unspecified = toOpenAiReply(
+      {
+        promptFeedback: { blockReason: 'BLOCKED_REASON_UNSPECIFIED' },
+        candidates: [{ content: { parts: [{ text: 'd' }] } }],
+      },
+      'm',
+    );
+    expect(content(unspecified)).toBe('d');
+  });
+
+  it('answers 200 end to end, in the shape the browser already reads', async () => {
+    const out = await completeOnVertex(
+      { model: 'google/gemini-3.7-flash', messages: [{ role: 'user', content: 'hi' }] },
+      { tokens, fetch: answering({ candidates: [{ finishReason: 'SAFETY' }] }) },
+    );
+    expect(out.status).toBe(200);
+    expect(content(out.body as OpenAiReply)).toBe(BLOCKED_LINE);
+    expect((out.body as OpenAiReply).choices[0].finish_reason).toBe('content_filter');
+  });
+
+  /**
+   * A JSON CALLER MUST FAIL CLEANLY ON THE LINE, NOT CRASH AND NOT KEEP IT.
+   *
+   * The planner asks for `json_object` and gets this line back like any other
+   * text. It must never parse as a plan — a lesson built out of it would be
+   * kept and served to every later student on that topic — and it must not
+   * throw anything stranger than prep already throws on a garbled plan.
+   */
+  it('reads as no plan at all to the class planner, which asks once more and then gives up plainly', async () => {
+    const blocked = await completeOnVertex(
+      {
+        model: 'google/gemini-3.7-flash',
+        messages: [{ role: 'user', content: 'plan it' }],
+        response_format: { type: 'json_object' },
+      },
+      { tokens, fetch: answering({ candidates: [{ finishReason: 'SAFETY' }] }) },
+    );
+    const line = content(blocked.body as OpenAiReply);
+    expect(line).toBe(BLOCKED_LINE);
+    // No brace anywhere: parsePlan and parseVerdict both rescue JSON by
+    // slicing between the outermost braces, and there must be nothing to slice.
+    expect(line).not.toMatch(/[{}]/);
+
+    let asked = 0;
+    const planner = {
+      complete: async () => {
+        asked += 1;
+        return line;
+      },
+    };
+    const artist = {
+      complete: async (): Promise<string> => {
+        throw new Error('the artist is never reached');
+      },
+    };
+    await expect(prepareClass({ topic: 'How do organisms reproduce?', klass: 10, planner, artist }))
+      .rejects.toThrow('The planner did not return readable JSON, twice.');
+    expect(asked).toBe(2);
+  });
+});

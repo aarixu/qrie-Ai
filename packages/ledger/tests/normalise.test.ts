@@ -46,8 +46,21 @@ describe('normaliseAnswer', () => {
   it('caps a long answer and marks it as cut', () => {
     const long = 'a'.repeat(50) + ' ' + 'b'.repeat(400);
     const out = normaliseAnswer(long)!;
-    expect(out.length).toBeLessThanOrEqual(MAX_ANSWER_CHARS + 1); // +1 for the ellipsis
+    // The ellipsis counts. The cap is what a column may hold, and the LMS
+    // lane's ledger_event_answer_length check refuses a row past it.
+    expect(out.length).toBeLessThanOrEqual(MAX_ANSWER_CHARS);
     expect(out.endsWith('…')).toBe(true);
+  });
+
+  it('never exceeds the cap, even with no space to cut on', () => {
+    // The case that returned 201: a 200-character hard cut plus the ellipsis.
+    for (const long of ['x'.repeat(MAX_ANSWER_CHARS + 1), 'x'.repeat(400), `${'y'.repeat(150)} ${'z'.repeat(300)}`]) {
+      const out = normaliseAnswer(long)!;
+      expect(out.length, long.slice(0, 20)).toBeLessThanOrEqual(MAX_ANSWER_CHARS);
+      expect(out.endsWith('…')).toBe(true);
+    }
+    // And an answer exactly at the cap is kept whole, with no ellipsis.
+    expect(normaliseAnswer('x'.repeat(MAX_ANSWER_CHARS))).toBe('x'.repeat(MAX_ANSWER_CHARS));
   });
 
   it('cuts on a word boundary when one is near the limit', () => {
@@ -66,8 +79,11 @@ describe('normaliseAnswer', () => {
     expect(out.length).toBeGreaterThan(MAX_ANSWER_CHARS * 0.9);
   });
 
-  it('honours a tighter cap when one is asked for', () => {
-    expect(normaliseAnswer('one two three four five', { maxChars: 7 })).toBe('one two…');
+  it('honours a tighter cap when one is asked for, ellipsis included', () => {
+    // Was maxChars 7 expecting 'one two…', which is eight: the test asserted
+    // the overrun rather than the cap.
+    expect(normaliseAnswer('one two three four five', { maxChars: 8 })).toBe('one two…');
+    expect(normaliseAnswer('one two three four five', { maxChars: 7 })!.length).toBeLessThanOrEqual(7);
   });
 });
 
@@ -83,7 +99,7 @@ describe('normaliseAnswer', () => {
 describe('the tutor’s own text', () => {
   it('is capped, because model output into an unbounded column grows until something breaks', () => {
     const out = normaliseTutorText('why '.repeat(300));
-    expect(out.length).toBeLessThanOrEqual(MAX_TUTOR_CHARS + 1); // +1 for the ellipsis
+    expect(out.length).toBeLessThanOrEqual(MAX_TUTOR_CHARS);
     expect(out.endsWith('…')).toBe(true);
   });
 

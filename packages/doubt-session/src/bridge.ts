@@ -39,10 +39,26 @@ const EXIT: readonly string[] = [
   `And if anything else comes up, just raise your hand again — I'm right here. Let's move on.`,
 ];
 
+/**
+ * The way out when a doubt reaches the turn cap (handoff.ts), said INSTEAD of
+ * an exit line rather than before one. It does not claim the doubt is solved —
+ * the cap knows how many turns were taken, not whether any of them landed — so
+ * it offers the lesson as the next thing to try and the raised hand as still
+ * open.
+ */
+const CLOSING: readonly string[] = [
+  `We have talked this one through properly now. Let's go back to the class — it often clicks once you see the next part. Raise your hand again any time.`,
+  `That was a good long look at it. Let's carry on with the class from where we paused, and if it still feels unclear, raise your hand again.`,
+];
+
 export function entryLine(ctx: DoubtContext): string {
   return pick(ENTRY, ctx.beatId)(ctx.beatTopic);
 }
 
 export function exitLine(ctx: DoubtContext): string {
   return pick(EXIT, ctx.beatId);
+}
+
+export function closingLine(ctx: DoubtContext): string {
+  return pick(CLOSING, ctx.beatId);
 }
