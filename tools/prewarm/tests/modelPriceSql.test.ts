@@ -22,9 +22,17 @@ describe('parsing tools/sql/model_price.sql', () => {
     expect(parsed.rate).toBe(95.6);
     expect(parsed.checked).toBe('2026-09-13');
     // 4 Gemini models x 3 units, plus the deliberate zero image row, plus the
-    // two speech rows. Counting exactly is the point: a row the parser drops
-    // is a price apply-prices would silently never apply.
-    expect(parsed.rows).toHaveLength(14);
+    // two Vertex TTS rows (the speech fallback), plus the two OpenRouter
+    // speech rows. Counting exactly is the point: a row the parser drops is a
+    // price apply-prices would silently never apply.
+    expect(parsed.rows).toHaveLength(16);
+  });
+
+  it('prices the Vertex speech fallback per audio token', () => {
+    const tts = parseModelPriceSql(REAL).rows.find(
+      (r) => r.provider === 'vertex' && r.model === 'gemini-3.1-flash-tts-preview' && r.unit === 'output_token',
+    );
+    expect(tts?.inrPerUnit).toBeCloseTo((20 / 1e6) * 95.6, 12);
   });
 
   it('evaluates the psql arithmetic to rupees per unit', () => {

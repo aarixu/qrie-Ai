@@ -124,17 +124,41 @@ export function usageFromSpeech(
   base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,
   text: string,
+  status = 0,
 ): UsageEvent {
-  // Dispatched, not confirmed: the stream is carried by the host and the relay
-  // never sees whether it completed. Billing is per character of INPUT either
-  // way, so this overcounts only the calls the provider itself failed.
+  // handler.ts books this from the host's `onServed`, i.e. once the vendor
+  // answered 2xx — so a refused line is no longer booked, and the Vertex line
+  // that replaced it is not counted twice. Whether the stream then COMPLETED
+  // is still unseen; billing is per character of input, so that is no error.
   return {
     ...base,
     relay: 'speech',
     provider: 'openrouter',
     model,
-    status: 0,
+    status,
     characters: [...text].length,
+  };
+}
+
+/**
+ * A line spoken on Vertex because the vendor could not. Priced in tokens
+ * like every Vertex call (model_price: prompt_token, output_token); no
+ * `characters`, because no character price exists for this model and a
+ * quantity nobody prices only shows up as UNPRICED noise.
+ */
+export function usageFromVertexSpeech(
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
+  model: string,
+  spoken: { status: number; promptTokens?: number; outputTokens?: number },
+): UsageEvent {
+  return {
+    ...base,
+    relay: 'speech',
+    provider: 'vertex',
+    model,
+    status: spoken.status,
+    ...(spoken.promptTokens !== undefined ? { promptTokens: spoken.promptTokens } : {}),
+    ...(spoken.outputTokens !== undefined ? { outputTokens: spoken.outputTokens } : {}),
   };
 }
 

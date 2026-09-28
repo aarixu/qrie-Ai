@@ -66,6 +66,13 @@ insert into public.model_price (provider, model, unit, inr_per_unit, note) value
   ('vertex', 'gemini-3.1-flash-image', 'output_token', 2.00 / 1e6 * :rate, 'a generated picture is believed to be billed HERE, as tokens'),
   ('vertex', 'gemini-3.1-flash-image', 'image',        0,                    'ZERO on purpose - see the header; raise only if measurement shows images are not token-billed'),
 
+  -- Gemini 3.1 Flash TTS — her voice on Vertex, ONLY when OpenRouter's fails
+  -- (packages/relay/src/vertexSpeech.ts). $1/M text in, $20/M audio out,
+  -- checked 2026-09-28 (openrouter.ai/google/gemini-3.1-flash-tts-preview,
+  -- getmaxim.ai/bifrost Vertex calculator). Measured ~32 audio tokens/second.
+  ('vertex', 'gemini-3.1-flash-tts-preview', 'prompt_token', 1.00 / 1e6 * :rate, 'speech fallback; text in'),
+  ('vertex', 'gemini-3.1-flash-tts-preview', 'output_token', 20.00 / 1e6 * :rate, 'speech fallback; audio out, ~32 tokens/s'),
+
   -- Speech, through OpenRouter (Vertex is credits; this is real money)
   ('openrouter', 'deepgram/aura-2', 'character',    30 / 1e6 * :rate,        'the tutor voice, per character of text'),
   ('openrouter', 'deepgram/nova-3', 'audio_second', 0.0043 / 60 * :rate,     'the ear, per second of audio; multilingual is $0.0052/min');

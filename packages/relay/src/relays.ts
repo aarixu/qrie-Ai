@@ -46,6 +46,20 @@ export interface UpstreamCall {
   body?: string;
   /** Content type to send back if upstream does not say. */
   fallbackContentType: string;
+  /**
+   * Called by the host once the upstream has answered 2xx with a body — the
+   * first moment anyone knows a streamed call was actually served. Usage for a
+   * streamed call is booked here, not at dispatch, so a call the vendor refused
+   * is not written down as spent.
+   */
+  onServed?: () => void;
+  /**
+   * The answer to give instead when the upstream fails: a non-2xx status, no
+   * body, or no network at all. The host makes the fetch, so the host is the
+   * only place that can see the failure; the relay prepares this for it.
+   * It must answer json or bytes, never another stream.
+   */
+  orElse?: () => Promise<RelayResponse>;
 }
 
 const json = (status: number, value: unknown): RelayResponse => ({

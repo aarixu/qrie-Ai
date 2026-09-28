@@ -22,12 +22,14 @@ import {
   type VertexOptions,
 } from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
+import { VERTEX_SPEECH_MODEL, speakOnVertex } from './vertexSpeech.ts';
 import {
   usageFromClass,
   usageFromHear,
   usageFromOpenRouterLlm,
   usageFromSpeech,
   usageFromVertex,
+  usageFromVertexSpeech,
   type Usage,
 } from './usage.ts';
 
@@ -49,9 +51,11 @@ export interface HandlerDeps {
    * The OpenRouter key. Never leaves the server.
    *
    * Still needed for SPEECH even when Vertex serves the models: the tutor's
-   * voice is Deepgram aura-2 through OpenRouter, and Google's own voices are
-   * a different person. Speech is on its way to being on-device anyway, so
-   * moving it now would be work spent on something being replaced.
+   * voice is Deepgram aura-2 through OpenRouter. When that call fails — out
+   * of credit, down — and `vertex` is set, the line is spoken on Vertex
+   * instead (vertexSpeech.ts), in the persona's Gemini voice, which is a
+   * different woman from aura-2's Thalia. Empty here with `vertex` set means
+   * every line is spoken on Vertex.
    */
   key: string;
   /**
@@ -429,10 +433,47 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   }
   if (relay === 'speech') {
     const out = speechRelay(req, deps.key, deps.speechUrl);
-    if (out.status === 200) {
-      const asked = new URL(req.url, 'http://relay.local').searchParams;
-      note(usageFromSpeech(base, asked.get('model') ?? DEFAULT_SPEECH_MODEL, asked.get('text') ?? ''));
+    const asked = new URL(req.url, 'http://relay.local').searchParams;
+    const text = asked.get('text')?.trim() ?? '';
+    /**
+     * VERTEX SPEAKS WHEN THE VENDOR CANNOT (Aarav, 2026-09-28).
+     *
+     * OpenRouter is prepaid: out of credit, or down, and every line of every
+     * class fails to the browser's robot voice. With Vertex configured, the
+     * host is handed `orElse` and uses it on any upstream failure — a 402, a
+     * 5xx, no network — because only the host sees that status. With no
+     * OpenRouter key at all, Vertex is simply the voice. An empty line is
+     * refused by speechRelay either way and never reaches Vertex. See
+     * vertexSpeech.ts for what it measured and what it costs.
+     */
+    const vertex = deps.vertex;
+    const onVertex =
+      vertex && text
+        ? async (): Promise<RelayResponse> => {
+            const spoken = await speakOnVertex(text, vertex);
+            note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, spoken));
+            return spoken.response;
+          }
+        : null;
+    if (out.body.kind === 'stream') {
+      const model = asked.get('model') ?? DEFAULT_SPEECH_MODEL;
+      return {
+        ...out,
+        body: {
+          kind: 'stream',
+          from: {
+            ...out.body.from,
+            // Booked when the host sees the vendor answer, not at dispatch: a
+            // refused line then costs nothing in the books, and the Vertex
+            // line that replaced it is not counted twice.
+            onServed: () => note(usageFromSpeech(base, model, text, 200)),
+            ...(onVertex ? { orElse: onVertex } : {}),
+          },
+        },
+      };
     }
+    // No OpenRouter key and no voice box of our own: speechRelay's 503.
+    if (out.status === 503 && onVertex) return onVertex();
     return out;
   }
 

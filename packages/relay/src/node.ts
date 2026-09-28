@@ -61,6 +61,18 @@ export async function sendRelayResponse(res: ServerResponse, out: RelayResponse)
   }
 
   const call = out.body.from;
+  /** The same fallback the web host takes — see toResponse in web.ts. */
+  const instead = async (): Promise<void> => {
+    try {
+      const other = await call.orElse!();
+      if (other.body.kind === 'stream') throw new Error('a fallback may not be another stream');
+      await sendRelayResponse(res, other);
+    } catch (e: unknown) {
+      res.statusCode = 502;
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ error: { message: String(e) } }));
+    }
+  };
   try {
     const upstream = await fetch(call.url, {
       method: call.method,
@@ -69,15 +81,18 @@ export async function sendRelayResponse(res: ServerResponse, out: RelayResponse)
     });
     if (!upstream.ok || !upstream.body) {
       const why = await upstream.text().catch(() => '');
+      if (call.orElse) return await instead();
       res.statusCode = upstream.status;
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ error: { message: `upstream ${upstream.status}: ${why.slice(0, 300)}` } }));
       return;
     }
+    call.onServed?.();
     res.statusCode = 200;
     res.setHeader('content-type', upstream.headers.get('content-type') ?? call.fallbackContentType);
     Readable.fromWeb(upstream.body as Parameters<typeof Readable.fromWeb>[0]).pipe(res);
   } catch (e: unknown) {
+    if (call.orElse) return await instead();
     res.statusCode = 502;
     res.setHeader('content-type', 'application/json');
     res.end(JSON.stringify({ error: { message: String(e) } }));

@@ -56,6 +56,23 @@ export async function toResponse(
   }
 
   const call = out.body.from;
+  /**
+   * The upstream failed and the relay prepared another answer — Vertex's voice
+   * when OpenRouter's is out of credit or down. A throw from it, or a stream
+   * where the contract promises none, is a 502 rather than a loop.
+   */
+  const instead = async (): Promise<Response> => {
+    try {
+      const other = await call.orElse!();
+      if (other.body.kind === 'stream') throw new Error('a fallback may not be another stream');
+      return await toResponse(other, extraHeaders);
+    } catch (e: unknown) {
+      return new Response(JSON.stringify({ error: { message: String(e) } }), {
+        status: 502,
+        headers: { 'content-type': 'application/json', ...headers },
+      });
+    }
+  };
   try {
     const upstream = await fetch(call.url, {
       method: call.method,
@@ -64,11 +81,13 @@ export async function toResponse(
     });
     if (!upstream.ok || !upstream.body) {
       const why = await upstream.text().catch(() => '');
+      if (call.orElse) return await instead();
       return new Response(
         JSON.stringify({ error: { message: `upstream ${upstream.status}: ${why.slice(0, 300)}` } }),
         { status: upstream.status, headers: { 'content-type': 'application/json', ...headers } },
       );
     }
+    call.onServed?.();
     return new Response(upstream.body, {
       status: 200,
       headers: {
@@ -77,6 +96,7 @@ export async function toResponse(
       },
     });
   } catch (e: unknown) {
+    if (call.orElse) return await instead();
     return new Response(JSON.stringify({ error: { message: String(e) } }), {
       status: 502,
       headers: { 'content-type': 'application/json', ...headers },

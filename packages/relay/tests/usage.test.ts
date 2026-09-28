@@ -168,7 +168,11 @@ describe('the handler records every admitted call', () => {
       d,
     );
     expect(out.status).toBe(200);
-    expect(usage.events[0]).toMatchObject({ relay: 'speech', sessionId: 'sess-3', characters: 11 });
+    // Booked when the host sees the vendor serve it, which the host signals
+    // through onServed — see tests/hostFallback.test.ts for the host half.
+    if (out.body.kind !== 'stream') throw new Error('speech should stream');
+    out.body.from.onServed?.();
+    expect(usage.events[0]).toMatchObject({ relay: 'speech', sessionId: 'sess-3', characters: 11, status: 200 });
   });
 
   it('a transcription, with the bytes it was handed', async () => {
