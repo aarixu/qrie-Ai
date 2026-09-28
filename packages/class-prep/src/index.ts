@@ -41,7 +41,16 @@ export {
   type PictureResult,
   type VisionAdapter,
 } from './picture.ts';
-export { saveable, idFor, type SavedClass, type SavedEntry, type SavedFile, type SaveMeta } from './save.ts';
-export { saidButNotWritten } from './saidNotWritten.ts';
+export { saveable, whyNotSaveable, idFor, type SavedClass, type SavedEntry, type SavedFile, type SaveMeta } from './save.ts';
+export { saidButNotWritten, inkWaitsForALine } from './saidNotWritten.ts';
+export {
+  gateLesson,
+  checkLessonMaths,
+  spokenNotation,
+  type GateProblem,
+  type GateRule,
+  type GateOptions,
+  type MathsCheck,
+} from './gate.ts';
 export * from './fromWeb.ts';
 export * from './commons.ts';

@@ -21,6 +21,11 @@ const graph = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'class9-science.jso
   nodes: { id: string; outcome: string; topicRef?: string; difficulty: number }[];
 };
 
+const maths = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'class10-mathematics.json'), 'utf8')) as {
+  nodes: { id: string; topicRef?: string }[];
+};
+const SUBSTITUTION = 'class10-mathematics/pair-of-linear-equations-in-two-variables/substitution-method';
+
 /** A topic the committed map actually covers, chosen from the data itself. */
 const knownRef = graph.nodes.find((n) => n.topicRef)!.topicRef!;
 const nodesUnder = graph.nodes.filter((n) => n.topicRef === knownRef);
@@ -76,10 +81,35 @@ describe('outcomesForTopic', () => {
     expect(outcomesForTopic('class9-science/no-such-chapter/no-such-topic')).toEqual([]);
   });
 
-  it('is empty for a class with no map, so the prompt stays silent', () => {
+  it('is empty for a syllabus with no map, so the prompt stays silent', () => {
+    expect(outcomesForTopic('class12-physics/electric-charges-and-fields/coulombs-law')).toEqual([]);
+  });
+
+  /**
+   * T1.3. The topic's OWN syllabus decides, not the student's current class.
+   *
+   * This used to read the map for whatever class the student had set — and
+   * return nothing when none was set. The first maths class ever prepared was
+   * made that way: 0 of its 14 beats carried an outcome id, so every answer
+   * in it was evidence about nothing. The rule these tests replace ("empty
+   * for a class with no map") encoded the defect: a Class 3 student opening a
+   * Class 9 topic is still taught a Class 9 topic.
+   */
+  it('gives a Class 10 maths topic its outcomes when no current class is set', () => {
+    localStorage.clear();
+    profileStore.set({ name: null, klass: null, subjects: [], diagnostic: null, diagnosedAt: null });
+    settingsStore.update((s) => ({ ...s, klass: null }));
+    const got = outcomesForTopic(SUBSTITUTION).map((o) => o.id);
+    expect(got).toHaveLength(4);
+    expect(new Set(got)).toEqual(new Set(maths.nodes.filter((n) => n.topicRef === SUBSTITUTION).map((n) => n.id)));
+  });
+
+  it('gives the topic its own outcomes whatever class and subject the student has set', () => {
+    // beforeEach made this a Class 9 Science student.
+    expect(outcomesForTopic(SUBSTITUTION)).toHaveLength(4);
     profileStore.update((p) => ({ ...p, klass: 3 }));
     settingsStore.update((s) => ({ ...s, klass: 3 }));
-    expect(outcomesForTopic(knownRef)).toEqual([]);
+    expect(outcomesForTopic(knownRef).length).toBeGreaterThan(0);
   });
 
   it('is empty when the caller has no topicRef to join on', () => {

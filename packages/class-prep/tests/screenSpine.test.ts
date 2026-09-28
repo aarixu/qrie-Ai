@@ -61,12 +61,13 @@ describe('screenSpine', () => {
   });
 
   it('catches a distress line buried past 1,200 characters — the truncation trap', () => {
-    // relays.ts documents this: screen() truncates at MAX_STUDENT_WORDS by
-    // default, so the default limit checks the opening and waves the rest
-    // through — worse than no gate, because it reads like one.
+    // screen() used to truncate at MAX_STUDENT_WORDS BEFORE the distress scan,
+    // so the default limit checked the opening and waved the rest through.
+    // Since A13 (2026-09-29) it scans the whole text first, so the trap is
+    // closed in screen() itself as well as here.
     const long = `${'The nephron filters the blood. '.repeat(200)}I want to kill myself.`;
-    expect(screen(long, 'to-student').kind).toBe('allow'); // the trap is real
-    expect(screenSpine(lessonWith([long]))).toHaveLength(1); // and closed here
+    expect(screen(long, 'to-student').kind).toBe('support');
+    expect(screenSpine(lessonWith([long]))).toHaveLength(1);
   });
 
   it('screens what an ask carries, not only narration', () => {

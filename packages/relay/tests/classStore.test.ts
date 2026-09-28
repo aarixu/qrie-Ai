@@ -12,6 +12,22 @@ import type { SavedClass } from '../src/relays';
  * re-prepared every topic they touched.
  */
 
+/**
+ * A lesson the relay will take: it validates, and nothing in it reads as
+ * distress. Since I1 the relay reads lesson.json before storing anything, so
+ * a body of '{"formatVersion":1}' — which this file posted for years — is now
+ * refused, as it should always have been.
+ */
+const lessonBody = JSON.stringify({
+  formatVersion: 1,
+  id: 'class9-science-tissues-animal-tissues',
+  title: 'Animal Tissues',
+  language: 'en',
+  canvas: { w: 1000, h: 620 },
+  elements: [{ kind: 'text', id: 't1', x: 500, y: 300, text: 'Tissues are groups of cells' }],
+  beats: [{ id: 'b1', topic: 'tissues', narration: 'A tissue is a group of similar cells.', show: ['t1'] }],
+});
+
 const saved: SavedClass = {
   id: 'class9-science-tissues-animal-tissues',
   entry: {
@@ -24,7 +40,7 @@ const saved: SavedClass = {
     topicRef: 'class9-science/tissues/animal-tissues',
   },
   files: [
-    { path: 'lesson.json', body: '{"formatVersion":1}', encoding: 'utf8' },
+    { path: 'lesson.json', body: lessonBody, encoding: 'utf8' },
     { path: 'generated/neuron.png', body: 'aGVsbG8=', encoding: 'base64' },
   ],
 };
@@ -116,7 +132,20 @@ describe('keepClass', () => {
       subtitle: 'Class 9 · Tissues',
       klass: 9,
       subject: 'Science',
+      // I1: kept, not published. An operator publishes after the spot check.
+      review_status: 'pending',
     });
+  });
+
+  it('never publishes what it keeps', async () => {
+    // Whoever posted it — a student's browser or the prewarm runner, which
+    // arrive with the same kind of bearer token — the row goes in 'pending',
+    // and the catalogue serves only 'published' (apps/classroom content.ts).
+    const { calls, fetchImpl } = recorder();
+    await keepClass(saved, opts(fetchImpl));
+    const row = JSON.parse(String(calls.at(-1)!.body)) as Record<string, unknown>;
+    expect(row.review_status).toBe('pending');
+    expect(row).not.toHaveProperty('published_at');
   });
 
   it('uses the service role key, which never leaves the server', async () => {
@@ -166,6 +195,43 @@ describe('readSavedClass', () => {
     const free = { ...saved, entry: { ...saved.entry, topicRef: '' } };
 
     expect(readSavedClass(bytes(free)).ok).toBe(false);
+  });
+
+  // ---- I1: the lesson itself is read before anything is stored ----
+
+  const withLesson = (body: string) => ({
+    ...saved,
+    files: [{ path: 'lesson.json', body, encoding: 'utf8' }, saved.files[1]],
+  });
+
+  it('refuses a class with no lesson in it', () => {
+    const out = readSavedClass(bytes({ ...saved, files: [saved.files[1]] }));
+    expect(!out.ok && out.response.status).toBe(400);
+  });
+
+  it('refuses a lesson that would not play (validateLesson)', () => {
+    const out = readSavedClass(bytes(withLesson('{"formatVersion":1}')));
+    expect(out.ok).toBe(false);
+    expect(!out.ok && JSON.stringify(out.response.body)).toMatch(/not a playable lesson/);
+  });
+
+  it('refuses a lesson that names a different class than the one it is kept as', () => {
+    const other = JSON.parse(lessonBody) as { id: string };
+    other.id = 'somebody-elses-class';
+    expect(readSavedClass(bytes(withLesson(JSON.stringify(other)))).ok).toBe(false);
+  });
+
+  it('refuses a spine line that reads as distress, even one the whole-file screen cannot see', () => {
+    // A line broken mid-sentence: stringified, the newline is the two
+    // characters backslash and n, so the screen over the raw file reads
+    // "to\nkill" as text and passes it. The spine screen reads each string as
+    // the student hears it.
+    const lesson = JSON.parse(lessonBody) as { beats: { narration: string }[] };
+    lesson.beats[0].narration = 'Some days I want to\nkill myself.';
+    const out = readSavedClass(bytes(withLesson(JSON.stringify(lesson))));
+    expect(out.ok).toBe(false);
+    // Named by place, never quoted.
+    expect(!out.ok && JSON.stringify(out.response.body)).not.toContain('kill myself');
   });
 });
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { saveable } from '../src/save';
+import { saveable, whyNotSaveable } from '../src/save';
 import type { PrepReport } from '../src/types';
 
 /**
@@ -232,5 +232,99 @@ describe('requireReviewed — reviewed or not kept', () => {
     // The default is unchanged behaviour: a flag nobody sets must not
     // silently stop the app keeping the classes it keeps today.
     expect(saveable({ lesson: lesson(), assets: assets(), report: clean }, meta)).not.toBeNull();
+  });
+});
+
+/**
+ * THE KEEP GATE'S VERDICT (gate.ts), read at the keep.
+ *
+ * prepareClass teaches a class that fails the keep gate — a worse class, not
+ * a wrong one — and records what it found on `report.gate`. This is where
+ * "taught, never kept" is enforced.
+ */
+describe('the keep gate — passed, or not kept', () => {
+  const passed: PrepReport = { ...clean, gate: { problems: [] } };
+  const failed: PrepReport = {
+    ...clean,
+    gate: { problems: [{ rule: 'notation', where: 'b3_1', message: 'reads "=" aloud' }] },
+  };
+
+  it('keeps a class the gate passed', () => {
+    expect(saveable({ lesson: lesson(), assets: assets(), report: passed }, meta)).not.toBeNull();
+  });
+
+  it('refuses one it failed, whatever else is true of it', () => {
+    expect(saveable({ lesson: lesson(), assets: assets(), report: failed }, meta)).toBeNull();
+  });
+
+  it('refuses a report with no gate on it when the caller asks for the gate', () => {
+    expect(saveable({ lesson: lesson(), assets: assets(), report: clean }, { ...meta, requireGate: true })).toBeNull();
+    expect(
+      saveable({ lesson: lesson(), assets: assets(), report: passed }, { ...meta, requireGate: true }),
+    ).not.toBeNull();
+  });
+});
+
+describe('why a class was not kept — said to the operator who paid for it', () => {
+  const passed: PrepReport = { ...clean, gate: { problems: [] } };
+  const gateFailed: PrepReport = {
+    ...clean,
+    gate: {
+      problems: [
+        { rule: 'notation', where: 'b3_1', message: 'reads "=" aloud' },
+        { rule: 'unspoken', where: 'b4_3', message: 'no line after the ask' },
+      ],
+    },
+  };
+  const pictureFailed: PrepReport = {
+    ...passed,
+    visuals: [{ id: 'lungs', ok: false, attempts: 2, ms: 12_000, problems: ['blank'] }],
+  };
+  const noArt = (): Record<string, string> => {
+    const a = assets();
+    delete a.g1;
+    return a;
+  };
+  const remembering = (): Lesson => {
+    const l = lesson();
+    l.beats[0].narration = 'Last time we did the nucleus.';
+    return l;
+  };
+
+  it('names nothing for a class it keeps', () => {
+    expect(whyNotSaveable({ lesson: lesson(), assets: assets(), report: passed }, meta)).toEqual([]);
+  });
+
+  it('names each gate rule and where it failed — not "a picture failed"', () => {
+    const why = whyNotSaveable({ lesson: lesson(), assets: assets(), report: gateFailed }, meta).join(' ');
+    expect(why).toContain('notation@b3_1');
+    expect(why).toContain('unspoken@b4_3');
+    expect(why).not.toMatch(/picture/);
+  });
+
+  it('names the picture that failed and the artwork that is missing', () => {
+    expect(whyNotSaveable({ lesson: lesson(), assets: assets(), report: pictureFailed }, meta).join(' ')).toContain(
+      'lungs',
+    );
+    expect(whyNotSaveable({ lesson: lesson(), assets: noArt(), report: passed }, meta).join(' ')).toContain('g1');
+  });
+
+  it('names a spine that claims a past session', () => {
+    expect(whyNotSaveable({ lesson: remembering(), assets: assets(), report: passed }, meta)).toHaveLength(1);
+  });
+
+  it('agrees with saveable on every one of them', () => {
+    const cases: [Lesson, Record<string, string>, PrepReport, typeof meta & { requireGate?: boolean }][] = [
+      [lesson(), assets(), passed, meta],
+      [lesson(), assets(), gateFailed, meta],
+      [lesson(), assets(), pictureFailed, meta],
+      [lesson(), noArt(), passed, meta],
+      [remembering(), assets(), passed, meta],
+      [lesson(), assets(), clean, { ...meta, requireGate: true }],
+    ];
+    for (const [l, a, report, m] of cases) {
+      const refused = saveable({ lesson: l, assets: a, report }, m) === null;
+      expect(whyNotSaveable({ lesson: l, assets: a, report }, m).length > 0).toBe(refused);
+    }
   });
 });

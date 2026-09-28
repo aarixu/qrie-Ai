@@ -1,4 +1,6 @@
-import type { Beat, Element, Lesson, Point } from './types';
+// With its extension: the relay's keep route (packages/relay/src/classStore.ts)
+// runs this file in Deno, which resolves no extensionless specifier.
+import type { Beat, Element, Lesson, Point } from './types.ts';
 
 /**
  * Runtime validation of a lesson document.

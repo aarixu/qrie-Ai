@@ -109,7 +109,25 @@ async function fetchKeptClasses(): Promise<CatalogEntry[]> {
   if (!db) return [];
 
   const mine = profileStore.get().klass;
-  let query = db.from('prepared_class').select('id, topic_ref, title, subtitle, klass, subject');
+  /**
+   * PUBLISHED AND NOT RETRACTED, OR NOT SERVED (I1).
+   *
+   * 0018 gave prepared_class `review_status` ('pending' | 'published' |
+   * 'retracted', DEFAULT 'published') and `retracted_at`. The relay now keeps
+   * a class 'pending' until an operator publishes it, and a retraction is a
+   * status plus a date — this read used to ask for neither, so both were
+   * served to every student on the topic. Both conditions, because a row
+   * whose date is set and whose status was never moved is still a retraction.
+   *
+   * Every row kept before the relay stored 'pending' reads 'published' with
+   * no retracted_at (the column default, filled in by 0018 when it ran), so
+   * the classes already live stay live.
+   */
+  let query = db
+    .from('prepared_class')
+    .select('id, topic_ref, title, subtitle, klass, subject')
+    .eq('review_status', 'published')
+    .is('retracted_at', null);
   if (mine !== null) query = query.lte('klass', mine).gte('klass', mine - LOOK_BACK_CLASSES);
 
   const answered = await Promise.race([

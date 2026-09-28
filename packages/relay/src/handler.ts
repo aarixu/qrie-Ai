@@ -116,7 +116,10 @@ export interface HandlerDeps {
    */
   transcribe(call: HeardAudio): Promise<RelayResponse>;
   /**
-   * Keep a class the tutor just made, so the next student gets it free.
+   * Keep a class the tutor just made, so the next student gets it free —
+   * once an operator publishes it: the Edge Function's keeper (classStore.ts
+   * keepClass) stores every class 'pending', and the app serves only
+   * 'published' rows.
    *
    * Optional because the dev server writes into content/ with its own plugin
    * and has no Storage to reach. Absent means the relay says so rather than
@@ -507,6 +510,9 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   }
 
   if (relay === 'class') {
+    // I1: readSavedClass validates lesson.json and screens its spine before
+    // anything is written, and the Edge Function's keeper stores the class
+    // 'pending' — kept, not published (classStore.ts).
     const saved = readSavedClass(req.body);
     if (!saved.ok) return saved.response;
     const kept = await deps.keep!(saved.value);

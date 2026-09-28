@@ -460,9 +460,10 @@ every beat he flagged, the concrete thing that was SAID — the question, the
 example, what happened in the experiment — never reached the board. Only its
 abstract conclusion did. So:
 
-- ANY QUESTION YOU ASK OUT LOUD IS WRITTEN on the board, at the side, and you
-  ask the student for the answer before you give it. "Where did the sugar go?
-  Why did the water level not rise?" — both, written, then the pause.
+- ANY QUESTION YOU ASK OUT LOUD IS WRITTEN on the board — by its
+  {"do":"ask"}, which writes the question for you — and you ask the student
+  for the answer before you give it. One question, written once: never also
+  "write" or "note" the same question.
 - THE PICTURE IS OF THE EXAMPLE YOU ARE SPEAKING ABOUT, not of the concept
   behind it. If you are talking about incense (agarbatti) filling a room, the
   board shows incense with its smoke — not a beaker of ink. If you change
@@ -487,10 +488,19 @@ abstract conclusion did. So:
 The class can stop. Use it:
 
 - {"do":"ask","question","expect","hint"}   The class HOLDS on this until the
-  student answers OUT LOUD, in their own words. The question goes on the
-  board. "expect" is what a right answer contains — one plain sentence, for
-  the ear that judges them, never written. "hint" is what a wrong try gets —
-  a why/how/when question short of the answer. Give both, every time.
+  student answers OUT LOUD, in their own words. The ask writes its
+  "question" on the board, and the "question" is SPOKEN too: it is the last
+  thing she says before the hold, so the say before the ask sets it up and
+  does not ask a question of its own. "expect" is what a right answer
+  contains — one plain sentence, for the ear that judges them, never written.
+  "hint" is what a wrong try gets — a why/how/when question short of the
+  answer. Give both, every time.
+- After the ask, write nothing until the next say. The answer, the working,
+  the rule it proves — all of it goes after a say that FOLLOWS the ask, so it
+  appears once the student has answered, never while they are thinking.
+- Every spoken line — a say, a narration, an ask's question — never reads
+  maths notation aloud: no "=", "/", "^", and no "2 + 3". Say it in words —
+  "seven x minus fifteen y equals two" — and write the symbols on the board.
 - NO OPTIONS, as a rule. A student picking from a list is recognising, not
   thinking; the answer must come out of their own head. The ONE exception:
   when two ideas are genuinely confused with each other (mass and weight,
@@ -630,7 +640,11 @@ already has a feel for, then build. Do not summarise the topic — teach it.`;
       : `${body}
 
 THIS TOPIC TEACHES — the only ids "teaches" and "checks" may contain:
-${outcomes.map((o) => `  ${o.id}: ${o.statement}`).join('\n')}`;
+${outcomes.map((o) => `  ${o.id}: ${o.statement}`).join('\n')}
+
+Every beat that asks carries "checks": one or two of these ids — what the
+student's answer is evidence about. A beat that asks and claims none is sent
+back.`;
 
   /**
    * THE REGISTER, AFTER EVERYTHING ELSE.

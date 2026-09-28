@@ -1,4 +1,8 @@
 import { fail, checkSavedClass, type RelayResponse, type SavedClass } from './relays.ts';
+// By relative path with the extension, like relays.ts reaches the safety
+// screen: this file runs unchanged in Deno, which has no workspace aliases.
+import { validateLesson } from '../../lesson-format/src/validate.ts';
+import { screenSpine } from '../../class-prep/src/screenSpine.ts';
 
 /**
  * KEEPING A CLASS THE TUTOR JUST MADE.
@@ -21,6 +25,21 @@ import { fail, checkSavedClass, type RelayResponse, type SavedClass } from './re
  * a later student must not be able to replace the recording an earlier one
  * made, and two students arriving at the same cold topic within a minute of
  * each other is an ordinary Tuesday.
+ *
+ * KEPT IS NOT PUBLISHED (I1). Every class this route keeps goes into the
+ * catalogue as review_status 'pending', and the app serves only 'published'
+ * rows that carry no retracted_at (apps/classroom/src/lib/content.ts), as does
+ * the preparation lock's 'ready' (prep.ts). Publishing is an operator's act,
+ * done by hand after the spot check — nothing in this checkout does it. What
+ * that costs, said plainly:
+ *   - EVERY keep lands pending, the prewarm runner's included: it posts with
+ *     a bearer token like any student's, and nothing here tells the two apart.
+ *   - A pending row still holds its topic_ref. The row write ignores
+ *     duplicates and a file already stored answers 409, so a LATER keep of
+ *     the same topic — a reviewed prewarm after a student's — is swallowed
+ *     until an operator deletes or publishes the row that is there.
+ *   - Until a topic is published, every student who opens it prepares it
+ *     again, at the full preparation price.
  */
 
 const BUCKET = 'classes';
@@ -113,6 +132,9 @@ export async function keepClass(
         subtitle: saved.entry.subtitle ?? null,
         klass: saved.entry.class,
         subject: saved.entry.subject,
+        // Kept, not published: see the header. The column's own default is
+        // 'published' (0018), so leaving this out would publish on keep.
+        review_status: 'pending',
       }),
     });
   } catch (e) {
@@ -152,5 +174,46 @@ export function readSavedClass(body: Uint8Array): { ok: true; value: SavedClass 
     // saying the same thing rather than trusting the client to have.
     return { ok: false, response: fail(400, 'a class with no topic is not kept') };
   }
+  const lessonChecked = checkLesson(checked.value);
+  if (lessonChecked !== null) return { ok: false, response: lessonChecked };
   return { ok: true, value: checked.value };
+}
+
+/**
+ * THE LESSON ITSELF, READ BEFORE ANYTHING IS STORED (I1).
+ *
+ * `checkSavedClass` reads the envelope — ids, paths, sizes, markup, and a
+ * distress screen over each file as raw text. Nothing read the LESSON: a
+ * browser could keep a lesson.json the app would refuse to play (the app
+ * validates at load and shows "not available", content.ts fetchLesson), and
+ * it would still hold its topic's one row. So:
+ *   - lesson.json must be there, and must pass `validateLesson` — the same
+ *     function the app loads it with;
+ *   - it must name the class it is kept as (saveable writes that id);
+ *   - its SPINE is screened string by string (class-prep's screenSpine),
+ *     which catches what a screen over the raw file cannot: a line broken
+ *     mid-sentence is "to\nkill" in the file and "to kill" to the student.
+ * A refusal names the place and never quotes the line.
+ *
+ * The keep gate's other rules (class-prep's gate.ts: overlap, one question
+ * per ask, notation, outcome ids, maths) are NOT re-run here; the report that
+ * says whether they passed is not part of what a class posts.
+ */
+function checkLesson(saved: SavedClass): RelayResponse | null {
+  const file = saved.files.find((f) => f.path === 'lesson.json');
+  if (!file || file.encoding !== 'utf8') return fail(400, 'a class needs its lesson.json');
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(file.body);
+  } catch {
+    return fail(400, 'lesson.json is not JSON');
+  }
+  const valid = validateLesson(parsed);
+  if (!valid.ok) return fail(400, `lesson.json is not a playable lesson: ${valid.errors[0]}`);
+  if (valid.lesson.id !== saved.id) return fail(400, 'the lesson inside names a different class');
+  const distressed = screenSpine(valid.lesson);
+  if (distressed.length > 0) {
+    return fail(400, `lesson.json carries a line that reads as distress (at ${distressed[0].where})`);
+  }
+  return null;
 }

@@ -11,11 +11,13 @@
  * TWO DELIBERATE DIVERGENCES FROM THE APP, both named so neither is mistaken
  * for drift:
  *
- *   1. THE FACTUAL REVIEWER IS ON. The app passes no reviewer (liveClass.ts
- *      calls prepareClass without one); here every kept class is reviewed,
- *      because a class the app makes is watched once by the student who paid
- *      for it, and a class this runner keeps is served to every later student
- *      forever. `--no-review` turns it off, and in a spending run it demands
+ *   1. THE FACTUAL REVIEWER IS ON — and since C10 the app's is too
+ *      (liveClass.ts passes one with the same model id, and its keep()
+ *      refuses a report with no review), so this is no longer a divergence
+ *      unless it is turned off. A kept class is stored 'pending' by the
+ *      relay (classStore.ts, I1) and served to no student until an operator
+ *      publishes it; once published it is served to every later student
+ *      until retracted. `--no-review` turns it off, and in a spending run it demands
  *      `--i-accept-unreviewed` on top, because that flag industrialises
  *      whatever the reviewer would have caught. It is NOT free: it adds a
  *      planner-grade call per topic (plus a repair plan and a second review
@@ -54,6 +56,7 @@ import {
   pickIcons,
   prepareClass,
   saveable,
+  whyNotSaveable,
 } from '../../../packages/class-prep/src/index.ts';
 import { candidatesFor, pencilGlyph } from '../../../packages/graphics/src/resolve.ts';
 
@@ -74,7 +77,7 @@ const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 const IMAGE_MODEL = 'google/gemini-3.1-flash-image';
 const VISION_MODEL = 'google/gemini-3.7-flash';
 /** The factual gate reads more than it writes; same planner-grade model.
- *  The app has no equivalent — divergence 1 in the header above. */
+ *  liveClass.ts declares the same id since C10 — see the header above. */
 const REVIEWER_MODEL = 'google/gemini-3.7-flash';
 
 const inr = (n) => `Rs ${Number(n).toFixed(2)}`;
@@ -315,7 +318,7 @@ async function warmOne(row, opts, client) {
   }
   Object.assign(made.assets, graphics);
 
-  const saved = saveable(made, {
+  const meta = {
     topicRef: row.path,
     klass: row.klass,
     subject: row.subject,
@@ -324,10 +327,18 @@ async function warmOne(row, opts, client) {
     // studentLines, so the name check has nothing to catch. Stated so the
     // empty array is a decision, not an omission.
     studentNames: [],
-  });
+  };
+  const saved = saveable(made, meta);
   if (!saved) {
-    throw new Error(
-      'prepared but NOT saveable — a picture failed or the spine reads personal; nothing was kept',
+    // WHICH rule refused it, from the same function saveable refuses by, and
+    // the report itself carried on the error: this topic is already paid for,
+    // and the state file is the only place left to diagnose it from.
+    const why = whyNotSaveable(made, meta);
+    throw Object.assign(
+      new Error(
+        `prepared but NOT kept — ${why.length > 0 ? why.join('; ') : 'saveable named no reason'}; nothing was kept`,
+      ),
+      { issues: made.report.issues, gateProblems: made.report.gate?.problems ?? [] },
     );
   }
 
@@ -425,8 +436,9 @@ export async function main(argv) {
     );
   }
   if (!opts.review && !opts.acceptUnreviewed) {
-    // A kept class is served to every later student forever and topic_ref is
-    // unique, so a wrong one is not quietly replaced later. review.ts:5-14
+    // A kept class, once published, is served to every later student until
+    // it is retracted, and topic_ref is unique, so a wrong one is not quietly
+    // replaced later. review.ts:5-14
     // puts it plainly: pre-warming without the gate is industrialising the
     // error. One flag should not be able to do that to a catalogue silently.
     throw new Error(
@@ -511,7 +523,7 @@ export async function main(argv) {
           });
           consecutiveFailures = 0;
           console.log(
-            `  done      ${row.path}  ${inr(spend.inr)} across ${client.calls.length} relay calls` +
+            `  done      ${row.path}  kept (pending publish)  ${inr(spend.inr)} across ${client.calls.length} relay calls` +
               `${spend.unmeasured > 0 ? ` (${spend.unmeasured} unmeasured — the figure is a floor)` : ''}`,
           );
         } catch (e) {
@@ -534,6 +546,12 @@ export async function main(argv) {
             calls: client.calls.length,
             unmeasured: spend.unmeasured,
             reviewed: opts.review,
+            // What the prepared class's report said, when there was one: the
+            // keep gate's problems (or the maths that refused the class) and
+            // the issues the repair rounds wrote down. Without them the only
+            // way to learn why is to pay for the topic again.
+            ...(e?.issues?.length ? { issues: e.issues } : {}),
+            ...((e?.gateProblems ?? e?.mathsProblems)?.length ? { gate: e.gateProblems ?? e.mathsProblems } : {}),
           });
           if (gate) stoppedBy = gate;
           else consecutiveFailures += 1;

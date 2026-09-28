@@ -4,3 +4,10 @@ export type { Instruction, InstructionKind, ScriptBeat, LaidOutBeat } from './ty
 export { layoutScene, connectElements, annotateElement, type Placed } from './scene';
 export type { RevealStep } from './layout';
 export { resolveOverlaps, type Bond, type Leash } from './collide';
+export {
+  assertNoOverlap,
+  findOverlaps,
+  OverlapError,
+  type Overlap,
+  type OverlapOptions,
+} from './overlap';

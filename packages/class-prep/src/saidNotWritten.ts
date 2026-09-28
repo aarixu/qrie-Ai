@@ -38,6 +38,13 @@ const writtenTextOf = (step: Instruction): string => {
       return step.text;
     case 'list':
       return `${step.heading ?? ''} ${step.items.map((i) => `${i.term} ${i.meaning ?? ''}`).join(' ')}`;
+    // An ask IS written ink: the layout writes its question on the board
+    // (board-layout's layoutBeat expands it into a `write`). Not counting it
+    // here sent every plan that asked properly to repair for an "unwritten"
+    // question, and the repair wrote a second copy — all four asks of the
+    // first maths class carried two question lines.
+    case 'ask':
+      return step.question;
     default:
       return '';
   }
@@ -61,8 +68,8 @@ export function saidButNotWritten(beats: readonly ScriptBeat[]): string[] {
       if (!questionWritten) {
         errors.push(
           `${beat.id}: the line "${say.text.slice(0, 60)}…" asks a question, but no question is ` +
-            `written on the board in that step. Write the question itself (a "write" or "note" ` +
-            `ending in ?), then ask the student for the answer.`,
+            `written on the board in that step. Put it up with {"do":"ask"}, which writes the ` +
+            `question for you and waits for the answer — once, never also as a "write".`,
         );
       }
     }
@@ -80,6 +87,57 @@ export function saidButNotWritten(beats: readonly ScriptBeat[]): string[] {
     }
   }
 
+  return errors;
+}
+
+/**
+ * WHAT IS WRITTEN AFTER AN ASK NEEDS A LINE TO ARRIVE UNDER.
+ *
+ * The board holds back everything a beat writes after an ask until a `say`
+ * opens a LATER moment than the one the ask is held on, so the answer is not
+ * on the board while the class waits for it (board-layout's revealSteps). The
+ * ask is held on the moment of the line before it — or, written before the
+ * first line, on the first line's moment, which that line therefore does not
+ * release. When no such line comes, the ink has no spoken moment of its own:
+ * assemble (prepare.ts) gives it a moment after the answer with a stand-in
+ * line, so the student in the room still sees it, and the keep gate's
+ * `unspoken` rule (gate.ts) keeps that class from ever being kept.
+ *
+ * This is the same judgement made on the PLAN, before anything is laid out,
+ * so the one repair round can be told even when the first plan does not
+ * validate and the gate never ran (prepare.ts). A picture whose artwork later
+ * fails is still counted here, so it can name a beat the gate would not.
+ */
+export function inkWaitsForALine(beats: readonly ScriptBeat[]): string[] {
+  const errors: string[] = [];
+  for (const beat of beats) {
+    let saysSeen = 0;
+    /** The moment an ask is held on, by the index of its line; null when nothing is held. */
+    let heldAt: number | null = null;
+    let waiting = 0;
+    for (const step of beat.board) {
+      if (step.do === 'say') {
+        saysSeen += 1;
+        // This line opens moment `saysSeen - 1`.
+        if (heldAt !== null && saysSeen - 1 > heldAt) {
+          heldAt = null;
+          waiting = 0;
+        }
+        continue;
+      }
+      if (heldAt !== null) {
+        if (step.do !== 'point') waiting += 1;
+        continue;
+      }
+      if (step.do === 'ask') heldAt = Math.max(0, saysSeen - 1);
+    }
+    if (waiting === 0) continue;
+    errors.push(
+      `${beat.id}: ${waiting} thing(s) are written after the ask, with nothing said after it. ` +
+        `After the line that asks, add a {"do":"say"} that goes through the answer, and put that ink ` +
+        `after the say — it appears only once the student has answered.`,
+    );
+  }
   return errors;
 }
 

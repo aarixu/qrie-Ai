@@ -9,6 +9,7 @@ export type {
   Lesson,
   WhyProbe,
   AskOption,
+  WorkArea,
 } from './types';
 export { CANVAS_W, CANVAS_H, PAGE_STRIDE } from './types';
 export { validateLesson, findBeat, elementsForBeat, splitPartRef, PART_SEPARATOR } from './validate';

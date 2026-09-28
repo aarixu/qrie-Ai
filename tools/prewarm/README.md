@@ -8,13 +8,26 @@ student gets it as a download.
 
 It drives the SAME pipeline the app does — `packages/class-prep`, imported by
 path — with the same models `apps/classroom/src/lib/liveClass.ts` measured and
-chose. Two things differ from the app, both deliberate:
+chose. Two things are worth naming against the app:
 
-- **Every class is fact-checked** (`reviewLesson`) before it is kept. The app
-  passes no reviewer; a class the app makes is watched once by the student who
-  paid for it, and a class this runner keeps is served to every later student
-  forever. `--no-review` turns it off and, in a spending run, demands
+- **Every class is fact-checked** (`reviewLesson`) before it is kept. Since
+  C10 the app does the same (liveClass.ts passes a reviewer, and its keep()
+  refuses an unreviewed class), so this only differs when it is turned off.
+  `--no-review` turns it off and, in a spending run, demands
   `--i-accept-unreviewed` as well.
+- **Kept is not published.** Since I1 the relay stores every class it keeps
+  as `review_status 'pending'` (`packages/relay/src/classStore.ts`), this
+  runner's included, and the app serves only published, unretracted rows
+  (`apps/classroom/src/lib/content.ts`). So a topic this runner reports as
+  `done` — "kept (pending publish)" — is served to NO student until an
+  operator publishes it by hand, after the spot check:
+
+  ```sql
+  update prepared_class set review_status = 'published', published_at = now() where id = '<keptId>';
+  ```
+
+  Once published, it is served to every later student until it is
+  retracted. The `keptId` is in the state file beside the topic.
 - **A graphics failure does not throw the class away**, exactly as the app
   survives one ("the board shows what it has"). Here it is also a money rule:
   the lesson is already bought.

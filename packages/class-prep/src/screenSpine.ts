@@ -20,7 +20,10 @@
  * a physics word problem is the keep gate's judgement call, not a reason to
  * refuse the first student a class the second student would get.
  */
-import type { Lesson } from '@ai-tutor/lesson-format';
+// The type import is relative too: the relay's keep route
+// (packages/relay/src/classStore.ts) runs this file in Deno, which has no
+// workspace aliases.
+import type { Lesson } from '../../lesson-format/src/types.ts';
 import { screen } from '../../safety/src/screen.ts';
 
 /** One line that screened as distress, and where in the spine it sits. */

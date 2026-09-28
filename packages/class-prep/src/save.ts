@@ -74,6 +74,16 @@ export interface SaveMeta {
    * one cold prep. Keeping wrong teaching costs every student after that.
    */
   requireReviewed?: boolean;
+  /**
+   * KEEP ONLY WHAT THE KEEP GATE CHECKED (gate.ts).
+   *
+   * A report whose gate found anything is refused whether or not this is set:
+   * that is the gate's whole purpose. This flag decides the OTHER case — a
+   * report with no gate on it at all, which `prepareClass` never produces but
+   * a hand-built report or an older build can. On, that absence is refused
+   * rather than read as a pass.
+   */
+  requireGate?: boolean;
 }
 
 /** Every element that cannot be drawn without artwork handed in. */
@@ -250,12 +260,23 @@ export function remembersASession(lesson: Lesson): string[] {
   return REMEMBERS_A_SESSION.filter((pattern) => pattern.test(spine)).map((p) => p.source);
 }
 
-export function saveable(
-  prep: { lesson: Lesson; assets: Record<string, string>; report: PrepReport },
-  meta: SaveMeta,
-): SavedClass | null {
+type Prepared = { lesson: Lesson; assets: Record<string, string>; report: PrepReport };
+
+/**
+ * EVERY REASON `saveable` WOULD REFUSE THIS CLASS, in words an operator can
+ * act on — empty when it would keep it. `saveable` refuses exactly when this
+ * is non-empty, so the two cannot disagree.
+ *
+ * A caller that pays for a class (the prewarm runner) needs to know WHICH
+ * rule stopped it: "a picture failed" said of a class the keep gate refused
+ * for notation sends the operator to the wrong fix, and paying again is the
+ * only other way to find out. Gate problems are named as `rule@where`. A
+ * student's name found in the spine is counted, never quoted.
+ */
+export function whyNotSaveable(prep: Prepared, meta: SaveMeta): string[] {
+  const why: string[] = [];
   const { topicRef } = meta;
-  if (!topicRef) return null;
+  if (!topicRef) why.push('no topicRef to keep it under');
 
   /**
    * A class planned FOR somebody is not a class to keep.
@@ -267,11 +288,30 @@ export function saveable(
    */
   // Before anything else: a class nothing fact-checked is not a class to
   // install permanently, when the caller has said it wants the gate.
-  if (meta.requireReviewed && prep.report.review === undefined) return null;
+  if (meta.requireReviewed && prep.report.review === undefined) {
+    why.push('no factual review ran, and the caller requires one');
+  }
+
+  /**
+   * A class the keep gate failed is taught once and never kept: an overlap on
+   * its board, a question written twice or spoken differently, notation read
+   * aloud, an ask that files no outcome, or ink after an ask left with no line
+   * of its own (gate.ts). Wrong maths never gets this far — prepareClass
+   * refuses it outright.
+   */
+  if (prep.report.gate && prep.report.gate.problems.length > 0) {
+    why.push(
+      `the keep gate failed it: ${prep.report.gate.problems.map((p) => `${p.rule}@${p.where}`).join(', ')}`,
+    );
+  }
+  if (meta.requireGate && prep.report.gate === undefined) {
+    why.push('the keep gate never ran, and the caller requires it');
+  }
 
   const personal = namesInSpine(prep.lesson, meta.studentNames ?? []);
-  if (personal.length > 0) return null;
-  if (remembersASession(prep.lesson).length > 0) return null;
+  if (personal.length > 0) why.push(`the spine names the student it was planned for (${personal.length} place(s))`);
+  const remembered = remembersASession(prep.lesson);
+  if (remembered.length > 0) why.push(`the spine claims a session it never had (${remembered.length} pattern(s))`);
 
   /**
    * A CLASS TAUGHT IN ONE STUDENT'S CHOSEN LANGUAGE IS ALSO A CLASS PLANNED
@@ -300,16 +340,24 @@ export function saveable(
    * neither of which belongs in this function. Until it lands, refusing is the
    * only answer that cannot teach a child in a language they did not pick.
    */
-  if (prep.lesson.language !== 'en') return null;
+  if (prep.lesson.language !== 'en') why.push(`taught in "${prep.lesson.language}", and only English is kept`);
   // A picture that never drew was already reported. Its beat may have been
   // dropped, but the class is one demonstration short of the one that was
   // planned, and that is not the one to keep forever.
-  if (prep.report.visuals.some((v) => !v.ok)) return null;
+  const failed = prep.report.visuals.filter((v) => !v.ok).map((v) => v.id);
+  if (failed.length > 0) why.push(`picture(s) that failed to draw: ${failed.join(', ')}`);
 
   const needing = prep.lesson.elements.filter((el) => NEEDS_ART.has(el.kind));
   // The report is written before the assets are gathered, so it can be clean
   // while the board is still short a drawing.
-  if (needing.some((el) => !prep.assets[el.id])) return null;
+  const bare = needing.filter((el) => !prep.assets[el.id]).map((el) => el.id);
+  if (bare.length > 0) why.push(`no artwork for: ${bare.join(', ')}`);
+  return why;
+}
+
+export function saveable(prep: Prepared, meta: SaveMeta): SavedClass | null {
+  const { topicRef } = meta;
+  if (!topicRef || whyNotSaveable(prep, meta).length > 0) return null;
 
   const id = idFor(topicRef);
   const files: SavedFile[] = [];

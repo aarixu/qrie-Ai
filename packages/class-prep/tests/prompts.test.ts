@@ -280,3 +280,28 @@ describe("planning in a real teacher's style", () => {
     expect(p.indexOf('TEACH AS')).toBeGreaterThan(p.indexOf('Ananya'));
   });
 });
+
+describe('one question per ask, in words (T1.2, T1.5)', () => {
+  /**
+   * The first maths class wrote every question twice — the planner was told
+   * to write each question it asked AND to put it in an ask, and the ask
+   * writes its own — and read "7x - 15y = 2" aloud.
+   */
+  it('no longer asks for the question to be written as well as asked', () => {
+    expect(PLANNER_SYSTEM).not.toContain('The question goes on the board.');
+    expect(PLANNER_SYSTEM).toMatch(/never\s+also\s+"write"\s+or\s+"note"\s+the\s+same\s+question/i);
+  });
+
+  it('says the question is the last thing spoken before the hold', () => {
+    expect(PLANNER_SYSTEM).toMatch(/"question" is SPOKEN/);
+  });
+
+  it('keeps the answer back until a line after the ask', () => {
+    expect(PLANNER_SYSTEM).toMatch(/after the ask, write nothing until the next say/i);
+  });
+
+  it('forbids reading notation aloud', () => {
+    expect(PLANNER_SYSTEM).toMatch(/never\s+reads?\s+maths\s+notation\s+aloud/i);
+    expect(PLANNER_SYSTEM).toContain('seven x minus fifteen y equals two');
+  });
+});

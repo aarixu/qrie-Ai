@@ -35,6 +35,23 @@ const { lesson, assets, report } = await prepareClass({
    always match the brief the artist was given. A picture that failed is simply
    absent and every reference to it is trimmed. Invented outcome ids are
    dropped and `checks` on an ask beat is capped at two, both deterministically.
+   **The keep gate** (`gate.ts`, `gateLesson`) then reads the assembled
+   lesson: nothing on the board overlaps, and no prepared ink sits in a held
+   question's work area; each held moment writes its question once and its
+   narration ends with that question; when the map has outcomes for the
+   topic, every moment that asks files at least one; no beat's narration
+   (a held beat's ends with its question) reads notation (`=`, `/`, `^`,
+   digit-operator-digit) — hints and option or whyProbe whys are spoken too
+   and are not checked yet; every equation line holds
+   (`@ai-tutor/maths-check`); and nothing written after an ask is left with
+   no line of the planner's to arrive under (assemble shows it after the
+   answer over a stand-in line, and names it for the gate). Its problems feed
+   the one repair round.
+   Wrong maths left after it REFUSES the class before the room opens;
+   anything else is taught, recorded on `report.gate`, and never kept by
+   `saveable`. These rules are deliberately NOT in `validateLesson`: the app
+   validates every lesson at load, and a new load-time rule would take kept
+   classes offline.
 3. **Screen.** `screenSpine` runs the shared child-safety screen
    (`packages/safety`) over every spoken and written string **in the spine** —
    title, subtitle, beat narration, every ask string, every option and

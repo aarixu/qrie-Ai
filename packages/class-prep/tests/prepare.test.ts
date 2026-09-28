@@ -445,6 +445,14 @@ describe('the shape of a picture reaches the board', () => {
 });
 
 describe('a question she asks reaches the board, or the repair round hears about it', () => {
+  /**
+   * The spoken question with nothing on the board for it. This used to be an
+   * ASK followed by an observation, and the "fix" wrote the question a second
+   * time — because the check did not count the ask's own question as ink.
+   * That fix is exactly how the first maths class came to write all four of
+   * its questions twice (T1.2), so the unwritten case is now a question with
+   * no ask at all, and the fix is the ask.
+   */
   const asking: Blueprint = {
     ...blueprint,
     beats: [
@@ -454,7 +462,6 @@ describe('a question she asks reaches the board, or the repair round hears about
         narration: '',
         board: [
           { do: 'say', text: 'Where did the sugar go?' },
-          { do: 'ask', question: 'What do you think happened to the sugar?' },
           { do: 'write', text: 'Observation: the level did not rise' },
           { do: 'say', text: 'It slips into the spaces between particles.' },
           { do: 'write', text: 'Particles have spaces between them' },
@@ -470,9 +477,9 @@ describe('a question she asks reaches the board, or the repair round hears about
         ...asking.beats[0],
         board: [
           { do: 'say', text: 'Where did the sugar go?' },
-          { do: 'ask', question: 'What do you think happened to the sugar?' },
-          { do: 'write', text: 'Where did the sugar go?' },
+          { do: 'ask', question: 'Where did the sugar go?' },
           { do: 'say', text: 'It slips into the spaces between particles.' },
+          { do: 'write', text: 'Observation: the level did not rise' },
           { do: 'write', text: 'Particles have spaces between them' },
         ],
       },

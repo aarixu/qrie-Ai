@@ -281,16 +281,17 @@ export function createSupabasePrepLocks(
       // list, so no caller can add members to it or malform the filter.
       const list = `(${topicRefs.map((r) => `"${r}"`).join(',')})`;
       const inList = `topic_ref=in.${encodeURIComponent(list)}`;
-      // Only a PUBLISHED class is ready: a retracted one must send the next
-      // student to prepare, not to a recording that was pulled on purpose.
-      //
-      // HONESTLY, THOUGH: nothing writes review_status yet. 0018 added the
-      // column with default 'published' and backfilled it; keepClass does
-      // not set it, and no route, tool or script can retract. So this
-      // filter is a no-op TODAY and retraction is a hand-written UPDATE by
-      // an operator. It is written this way now so that the day a reviewer
-      // can retract, the badge follows with no relay change.
-      const prepared = await select(`prepared_class?${inList}&review_status=eq.published&select=topic_ref`);
+      // Only a class the app would SERVE is ready, by the same two conditions
+      // the app serves by (apps/classroom/src/lib/content.ts): published, and
+      // not retracted. keepClass (classStore.ts) stores every new class as
+      // 'pending', so this filter hides each one until an operator publishes
+      // it by hand; rows kept before 0018 read 'published' by its default. A
+      // retracted row sends the next student to prepare, not to a recording
+      // that was pulled on purpose. No route, tool or script here publishes
+      // or retracts: both are a hand-written UPDATE by an operator.
+      const prepared = await select(
+        `prepared_class?${inList}&review_status=eq.published&retracted_at=is.null&select=topic_ref`,
+      );
       if (prepared === null) return null;
       const locked = await select(
         `prep_lock?${inList}&expires_at=gt.${encodeURIComponent(new Date().toISOString())}&select=topic_ref`,

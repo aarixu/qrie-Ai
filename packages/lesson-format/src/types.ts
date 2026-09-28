@@ -334,6 +334,15 @@ export type Element =
 
 export type ElementKind = Element['kind'];
 
+/** A rectangle of board reserved for writing later. See `Beat.workArea`. */
+export interface WorkArea {
+  id: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface Beat {
   /** Stable id. The doubt agent recalls a moment of the class by this id. */
   id: string;
@@ -394,6 +403,25 @@ export interface Beat {
     whyProbe?: WhyProbe;
   };
   teaches?: string[];
+  /**
+   * BOARD KEPT CLEAR BESIDE THE HELD QUESTION, for the student's working.
+   *
+   * Present only on a beat that carries an `ask`, and only when the layout
+   * found room for it on the question's own page (board-layout's layoutBeat
+   * reserves it; class-prep's overlap gate checks no prepared ink is inside
+   * it). Absent is an ordinary state: every lesson written before this field
+   * existed has none, and a live board that wants to write there opens a
+   * fresh page instead.
+   *
+   * `id` names the area, so a later writer and an overlap report can refer to
+   * it; the box is in the same canvas units as every element. NOTHING READS
+   * THIS AT PLAYBACK YET — it is the prepared half of a live board that does
+   * not exist in this checkout.
+   *
+   * Optional and unvalidated on purpose: the classroom validates every lesson
+   * it loads, and a new load-time rule would take kept classes offline.
+   */
+  workArea?: WorkArea;
   /**
    * Node ids this beat CHECKS rather than teaches — a question about something
    * already covered. Kept separate from `teaches` because a check that raised

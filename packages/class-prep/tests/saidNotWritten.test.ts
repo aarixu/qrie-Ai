@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ScriptBeat } from '@ai-tutor/board-layout';
-import { saidButNotWritten } from '../src/saidNotWritten';
+import { inkWaitsForALine, saidButNotWritten } from '../src/saidNotWritten';
 
 /**
  * THE CHECK BEHIND THE RULE.
@@ -108,5 +108,91 @@ describe('the line that lands the beat writes something', () => {
       beat('b0', [{ do: 'title', text: 'Matter' }, { do: 'note', text: 'One breath, one board.' }]),
     ]);
     expect(errors).toEqual([]);
+  });
+});
+
+describe('an ask is the written question (T1.2)', () => {
+  /**
+   * The first maths class wrote every question twice. The layout writes an
+   * ask's question on the board by itself, and this check did not count the
+   * ask as ink — so it sent the plan to repair for an "unwritten" question,
+   * and the repair dutifully wrote a second copy (b1_9, b2_8, b3_10, b4_4).
+   */
+  it('passes a spoken question whose only ink is the ask', () => {
+    const errors = saidButNotWritten([
+      beat('b1', [
+        { do: 'say', text: 'How could you find the cost of the pen without guessing?' },
+        { do: 'ask', question: 'What can you do with the y in the first equation?' },
+        { do: 'say', text: 'Put x plus thirty in its place.' },
+        { do: 'write', text: 'Substitute y = x + 30 into x + y = 50' },
+      ]),
+    ]);
+    expect(errors).toEqual([]);
+  });
+});
+
+describe('the answer after an ask needs a line to arrive under (T1.2)', () => {
+  it('flags ink written after the last ask with nothing said after it', () => {
+    const errors = inkWaitsForALine([
+      beat('b3', [
+        { do: 'say', text: 'We have found our first value!' },
+        { do: 'ask', question: 'How do we find x now that we know y?' },
+        { do: 'equation', text: 'x = 3 - 2(19/29) = 49/29' },
+      ]),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(/b3/);
+    expect(errors[0]).toMatch(/say/);
+  });
+
+  it('passes the same ink once a line follows the ask', () => {
+    const errors = inkWaitsForALine([
+      beat('b3', [
+        { do: 'say', text: 'We have found our first value!' },
+        { do: 'ask', question: 'How do we find x now that we know y?' },
+        { do: 'say', text: 'Put y back into the rearranged equation.' },
+        { do: 'equation', text: 'x = 3 - 2(19/29) = 49/29' },
+      ]),
+    ]);
+    expect(errors).toEqual([]);
+  });
+
+  it('flags ink after an ask written before the first line, when only that line follows', () => {
+    // The ask is held on the first line's moment, so that line does not
+    // release what was written after the ask (board-layout's revealSteps).
+    const errors = inkWaitsForALine([
+      beat('b2', [
+        { do: 'ask', question: 'What is x?' },
+        { do: 'equation', text: 'x = 5' },
+        { do: 'say', text: 'Think about what x must be.' },
+      ]),
+    ]);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatch(/b2/);
+  });
+
+  it('passes it once a second line follows', () => {
+    const errors = inkWaitsForALine([
+      beat('b2', [
+        { do: 'ask', question: 'What is x?' },
+        { do: 'equation', text: 'x = 5' },
+        { do: 'say', text: 'Think about what x must be.' },
+        { do: 'say', text: 'It is five.' },
+      ]),
+    ]);
+    expect(errors).toEqual([]);
+  });
+
+  it('flags ink after the ask in a beat that never says a line', () => {
+    const errors = inkWaitsForALine([
+      { id: 'b5', topic: 't', narration: 'Try this.', board: [{ do: 'ask', question: 'What is x?' }, { do: 'equation', text: 'x = 5' }] },
+    ]);
+    expect(errors).toHaveLength(1);
+  });
+
+  it('says nothing when the ask is the last thing on the board', () => {
+    expect(
+      inkWaitsForALine([beat('b1', [{ do: 'say', text: 'So?' }, { do: 'ask', question: 'Why?' }])]),
+    ).toEqual([]);
   });
 });

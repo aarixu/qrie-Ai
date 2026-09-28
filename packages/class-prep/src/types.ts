@@ -1,6 +1,7 @@
 import type { ScriptBeat } from '@ai-tutor/board-layout';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import type { ReviewProblem } from './review.ts';
+import type { GateProblem } from './gate.ts';
 
 /**
  * Everything the artwork author needs to draw one picture, and everything the
@@ -139,6 +140,20 @@ export interface PrepReport {
    * thirteen-year-old is being taught from. This travels with the saved class.
    */
   credits?: Record<string, string>;
+  /**
+   * THE KEEP GATE'S ACCOUNT (gate.ts), on the lesson that comes back — the
+   * re-fitted one, which is the copy that gets kept.
+   *
+   * `prepareClass` always writes it; empty `problems` means the class passed.
+   * A class with any problem left after its one repair round is still taught
+   * to the student who is waiting, and `saveable` refuses to keep it. Wrong
+   * maths never reaches here: it throws before the room opens.
+   *
+   * Absent on a report that did not come from `prepareClass` (hand-built in a
+   * test, or from a build before the gate existed), and `saveable` reads
+   * absent as "not checked", not as "passed" — see SaveMeta.requireGate.
+   */
+  gate?: { problems: GateProblem[] };
 }
 
 export interface PrepResult {

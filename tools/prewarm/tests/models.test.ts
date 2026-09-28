@@ -30,10 +30,8 @@ describe('the runner and the app agree on models', () => {
   });
 
   for (const { name, id } of declared) {
-    // REVIEWER_MODEL is the one that may differ: the app passes no reviewer at
-    // all (divergence 1 in main.mjs's header), so there is nothing to compare
-    // it against. Every other id must appear verbatim in liveClass.ts.
-    if (name === 'REVIEWER_MODEL') continue;
+    // Every id, REVIEWER_MODEL included since C10 put a reviewer in the app,
+    // must appear verbatim in liveClass.ts.
     it(`${name} is the id liveClass.ts uses`, () => {
       expect(app).toContain(`const ${name} = '${id}';`);
     });

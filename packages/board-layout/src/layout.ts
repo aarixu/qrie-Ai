@@ -15,6 +15,7 @@ import {
   listBoxHeight,
   type Element,
   type Beat,
+  type WorkArea,
 } from '@ai-tutor/lesson-format';
 import type { Instruction, LaidOutBeat, ScriptBeat } from './types';
 import {
@@ -76,6 +77,16 @@ const MIN_FLEXIBLE_H = 150;
 const EQUATION_H = 52;
 const WRITE_H = 62;
 const CARD_H = 128;
+/**
+ * The work area under a held question: room for three lines of handwriting at
+ * the default handwriting size (26, what `boxOf` assumes for a `handwrite`),
+ * and never less than two. Below two lines there is no working to hold, so no area is reserved and
+ * a live board opens a fresh page instead (see `Beat.workArea`).
+ *
+ * Functions rather than constants because `handLead` is declared further down.
+ */
+const workFull = (): number => 3 * handLead(26);
+const workLeast = (): number => 2 * handLead(26);
 
 /**
  * A figure with the key points written under it.
@@ -129,11 +140,20 @@ interface Block {
    * arrangement: a picture with written points belongs BESIDE them, not above
    * them, and recognising that shape needs to know which block is which.
    */
-  kind: Instruction['do'];
+  kind: Instruction['do'] | 'work';
   /** The artwork this block places, when it places artwork. */
   ref?: string;
   /** Fixed height, or null to share whatever is left over. */
   height: number | null;
+  /**
+   * Must share a page with the block before it.
+   *
+   * Set on the pieces of a held question — its lettered options and the work
+   * area under it — so the stacker never turns the page between a question
+   * and the room reserved for answering it. When a glued block does not fit,
+   * the blocks it is glued to move to the next page WITH it.
+   */
+  glued?: boolean;
   /**
    * Whether this can be drawn in half a board without becoming unreadable.
    *
@@ -346,15 +366,24 @@ export function layoutBeat(
    * assembler has to know how far to slide whatever comes next.
    */
   pages: number;
-  /** The questions this beat stops on, by the index of the say that asks. */
-  asks: { step: number; ask: NonNullable<Beat['ask']> }[];
+  /**
+   * The questions this beat stops on, by the index of the say that asks — and
+   * the board kept clear under each one for the student's working, when the
+   * question's page had room for it.
+   */
+  asks: { step: number; ask: NonNullable<Beat['ask']>; workArea?: WorkArea }[];
 } {
   const elements: Element[] = [];
   const show: string[] = [];
   const focus: string[] = [];
   const blocks: Block[] = [];
 
-  /** Which element ids each instruction produced, so reveal can follow the words. */
+  /**
+   * Which element ids each ITEM produced, keyed by the item's index in the
+   * expanded list below. Reveal reads by BOARD index, and an ask with options
+   * is one board instruction but two items, so `origin` maps one onto the
+   * other before reveal ever sees it (see the end of this function).
+   */
   const byInstruction = new Map<number, string[]>();
   let current = -1;
   const emit = (el: Element, focused = false): void => {
@@ -377,15 +406,29 @@ export function layoutBeat(
    * The marker records WHICH spoken moment carries the question, for the
    * assembler to pin on the lesson beat the player will hold.
    */
-  const asks: { step: number; ask: NonNullable<Beat['ask']> }[] = [];
+  const asks: { step: number; ask: NonNullable<Beat['ask']>; workArea?: WorkArea }[] = [];
   const items: Instruction[] = [];
+  /** The board index each item came from: `origin[item] = board index`. */
+  const origin: number[] = [];
+  /** Item index of each ask's written question, by ask number. */
+  const questionItem = new Map<number, number>();
+  /** Items that must share a page with the item before them. */
+  const gluedItems = new Set<number>();
+  /** The last item of an ask, after which its work area goes, by ask number. */
+  const workAfter = new Map<number, number>();
+  /** How tall each ask's work area is; absent when its page has no room. */
+  const workHeight = new Map<number, number>();
+  /** Where each work area landed, by ask number, filled in as blocks are placed. */
+  const workRects = new Map<number, Rect>();
   let saysSeen = 0;
-  for (const step of beat.board) {
+  beat.board.forEach((step, boardIndex) => {
     if (step.do === 'say') saysSeen += 1;
     if (step.do !== 'ask') {
       items.push(step);
-      continue;
+      origin.push(boardIndex);
+      return;
     }
+    const n = asks.length;
     asks.push({
       step: Math.max(0, saysSeen - 1),
       ask: {
@@ -396,16 +439,46 @@ export function layoutBeat(
       },
     });
     items.push({ do: 'write', text: step.question, tone: 'accent' });
+    origin.push(boardIndex);
+    questionItem.set(n, items.length - 1);
+    /** What the question and its options take, so the work area gets the rest of a page. */
+    let taken = WRITE_H;
     if (step.options && step.options.length > 0) {
-      items.push({
-        do: 'list',
-        items: step.options.map((option, n) => ({
-          term: String.fromCharCode(65 + n),
-          meaning: option.text,
-        })),
-      });
+      const lettered = step.options.map((option, k) => ({
+        term: String.fromCharCode(65 + k),
+        meaning: option.text,
+      }));
+      items.push({ do: 'list', items: lettered });
+      origin.push(boardIndex);
+      gluedItems.add(items.length - 1);
+      taken += GUTTER + listBoxHeight(lettered, undefined, WIDTH * 0.82);
     }
-  }
+    const room = Math.min(workFull(), MAIN.h - taken - GUTTER);
+    if (room >= workLeast()) {
+      workAfter.set(items.length - 1, n);
+      workHeight.set(n, room);
+    }
+  });
+
+  /**
+   * THE WORK AREA: board kept clear under a held question.
+   *
+   * A block with no ink of its own. It is glued to the question (and the
+   * options, when there are any) so it always lands on the question's page,
+   * and where it lands is recorded for the assembler to put on the lesson
+   * beat. Nothing is ever placed in it here; the overlap gate in class-prep
+   * checks that nothing else was either.
+   */
+  const workBlock = (n: number, height: number): Block => ({
+    kind: 'work',
+    at: null,
+    height,
+    glued: true,
+    place: (r) => {
+      workRects.set(n, { x: r.x, y: r.y, w: r.w, h: r.h });
+      return [];
+    },
+  });
 
   // The scene is laid out as ONE block, because a connector cannot be drawn
   // until both of its ends have somewhere to be. Collecting the places first is
@@ -582,11 +655,16 @@ export function layoutBeat(
           kind: item.do,
           at: index,
           height: EQUATION_H,
+          // Centred in the rectangle it was GIVEN, never on the first page's
+          // middle. `r.x` carries the page: a block the stacker moved to page
+          // two gets page two's x. Centring on CANVAS_W / 2 drew an overflowed
+          // equation back on page one, over the lines already there — b3_12
+          // over b3_7 in the first maths class ever prepared.
           place: (r) => [
             {
               kind: 'formula',
               id: idFor(beat.id, index),
-              x: CANVAS_W / 2,
+              x: r.x + r.w / 2,
               y: r.y + EQUATION_H * 0.66,
               text: item.text,
             },
@@ -674,7 +752,8 @@ export function layoutBeat(
               {
                 kind: 'note',
                 id: idFor(beat.id, index),
-                x: CANVAS_W / 2 - w / 2,
+                // Its own rectangle's middle, for the equation's reason above.
+                x: r.x + (r.w - w) / 2,
                 y: r.y,
                 w,
                 text,
@@ -863,6 +942,12 @@ export function layoutBeat(
         break;
       }
     }
+
+    // A held question's options stay on its page, and so does the room under
+    // it for the student's working.
+    if (gluedItems.has(index) && blocks.length > 0) blocks[blocks.length - 1].glued = true;
+    const workFor = workAfter.get(index);
+    if (workFor !== undefined) blocks.push(workBlock(workFor, workHeight.get(workFor)!));
   }
 
   /**
@@ -896,7 +981,7 @@ export function layoutBeat(
   /** Pages the band under a labelled figure needed, when it turned one. */
   let bandSheets = 1;
 
-  const FIGURE: ReadonlySet<Instruction['do']> = new Set(['picture', 'diagram', 'chart', 'flow']);
+  const FIGURE: ReadonlySet<Block['kind']> = new Set(['picture', 'diagram', 'chart', 'flow']);
   const figures = blocks.filter((b) => FIGURE.has(b.kind));
   /** Written under a labelled figure, in the order the beat asked for them. */
   const written = blocks.filter((b) => b.kind === 'list');
@@ -1206,7 +1291,11 @@ export function layoutBeat(
     pendingWrites.forEach((point, n) => {
       current = point.at;
       const lines = band.lines[n];
-      roomFor(lines.length * bandLead);
+      // A held question keeps the room for its working on its own page, so
+      // the page turns BEFORE the question when the two do not fit together.
+      const asked = [...questionItem].find(([, item]) => item === point.at)?.[0];
+      const workH = asked === undefined ? undefined : workHeight.get(asked);
+      roomFor(lines.length * bandLead + (workH === undefined ? 0 : POINT_GAP + workH));
       const px = (sheet === 0 ? bandLeft : SIDE) + sheet * PAGE_STRIDE;
       lines.forEach((line, k) => {
         const id = k === 0 ? point.id : `${point.id}_l${k}`;
@@ -1228,6 +1317,10 @@ export function layoutBeat(
         leashes.push({ id, region: { x: x - 16, y: y - 12, w: 32, h: 24 } });
       });
       by += lines.length * bandLead + POINT_GAP;
+      if (asked !== undefined && workH !== undefined) {
+        workRects.set(asked, { x: px, y: by, w: SIDE + WIDTH + sheet * PAGE_STRIDE - px, h: workH });
+        by += workH + POINT_GAP;
+      }
     });
 
     /**
@@ -1264,7 +1357,8 @@ export function layoutBeat(
     figures.length === 1 &&
     figures[0].narrow !== false &&
     beside.length > 0 &&
-    blocks.length === 1 + beside.length
+    // A work area has no ink and does not change what shape the beat is.
+    blocks.filter((b) => b.kind !== 'work').length === 1 + beside.length
   ) {
     const GAP = 26;
     // A list needs more of the width than a key point does — it carries a
@@ -1285,7 +1379,15 @@ export function layoutBeat(
     // to three lines and ran into the next one.
     const BETWEEN_POINTS = 16;
     let ry = MAIN.y;
-    for (const block of beside) {
+    for (const block of blocks) {
+      if (block === figures[0]) continue;
+      // The room under a held question, kept in the column it was asked in.
+      if (block.kind === 'work') {
+        const h = block.height ?? 0;
+        block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h });
+        ry += h + BETWEEN_POINTS;
+        continue;
+      }
       current = block.at ?? -1;
       let bottom = ry;
       for (const el of block.place({ x: SIDE + figureW + GAP, y: ry, w: columnW, h: WRITE_H })) {
@@ -1314,8 +1416,13 @@ export function layoutBeat(
     const here = sheets[sheets.length - 1];
     const gutter = here.length > 0 ? GUTTER : 0;
     if (here.length > 0 && taken + gutter + leastOf(block) > MAIN.h) {
-      sheets.push([block]);
-      taken = leastOf(block);
+      // A glued block takes what it is glued to onto the new page with it:
+      // a held question, its options and the room under it are one piece.
+      const chain: Block[] = [block];
+      while (chain[0].glued && here.length > 0) chain.unshift(here.pop()!);
+      const onto = here.length === 0 ? here : (sheets.push([]), sheets[sheets.length - 1]);
+      onto.push(...chain);
+      taken = chain.reduce((sum, b, k) => sum + leastOf(b) + (k > 0 ? GUTTER : 0), 0);
       continue;
     }
     here.push(block);
@@ -1384,7 +1491,18 @@ export function layoutBeat(
   // BETWEEN and OVER them — a connector's label, a mark — which follow whatever
   // they refer to and so can land anywhere. Fixing those case by case fixes one
   // lesson at a time; this fixes every lesson.
-  const settled = resolveOverlaps(elements, bonds, [
+  //
+  // The work areas go in as OBSTACLES — frames with no words, which the solver
+  // never moves — so a label it nudges cannot settle in the room kept for the
+  // student's working. They come out again before anything is returned.
+  const WORK_PREFIX = '__work_area_';
+  const obstacles: Element[] = [...workRects].map(([n, r]) => ({
+    kind: 'box',
+    id: `${WORK_PREFIX}${n}`,
+    ...r,
+    label: '',
+  }));
+  const settled = resolveOverlaps([...elements, ...obstacles], bonds, [
     // A label's first room is MAIN, where its scene lives. The whole canvas
     // was once its playground, and a stuck label got parked above the lesson
     // title — clear space, wrong room.
@@ -1393,20 +1511,39 @@ export function layoutBeat(
     // label near the caption reads as a footnote; one over the heading reads
     // as a mistake.
     { x: 8, y: MAIN.y - 10, w: CANVAS_W - 16, h: CANVAS_H - MAIN.y },
-  ], leashes);
+  ], leashes).filter((el) => !el.id.startsWith(WORK_PREFIX));
 
   // A part can only be pointed at if its picture is on the board this beat.
   const shown = new Set(show);
   const keptFocus = focus.filter((f) => shown.has(f.split('#')[0]));
 
+  /**
+   * FROM ITEMS BACK TO BOARD INSTRUCTIONS, before reveal reads anything.
+   *
+   * Reveal walks `beat.board` and asks what each board instruction drew. An
+   * ask with options is ONE board instruction and TWO items (the question and
+   * the lettered list), so keyed by item every instruction after it answered
+   * for its neighbour: the options were never shown, and the next key point
+   * came one line late or not at all.
+   */
+  const byBoard = new Map<number, string[]>();
+  for (const [item, ids] of byInstruction) {
+    const n = origin[item] ?? item;
+    byBoard.set(n, [...(byBoard.get(n) ?? []), ...ids]);
+  }
+
   return {
     elements: settled,
     laid: { show, focus: keptFocus },
-    steps: revealSteps(beat, byInstruction, keptFocus),
+    steps: revealSteps(beat, byBoard, keptFocus),
     bonds,
     leashes,
     pages: sheetsUsed,
-    asks,
+    asks: asks.map((a, n) => {
+      const r = workRects.get(n);
+      if (!r) return a;
+      return { ...a, workArea: { id: `${idFor(beat.id, questionItem.get(n)!)}_work`, ...r } };
+    }),
   };
 }
 
@@ -1421,18 +1558,36 @@ export function layoutBeat(
  * `show` is cumulative because it is a complete set, not a delta: the board at
  * any moment is everything said so far, which is also what makes any moment
  * recallable on its own.
+ *
+ * AN ASK ENDS WHAT ITS MOMENT SHOWS. The player holds on the moment that asks
+ * until the student answers, so whatever the beat writes after the ask — the
+ * working, the answer — is held back and arrives with the NEXT line, after the
+ * answer. Revealed with the ask instead, it was the answer on the board during
+ * the hold (b3 of the first maths class showed "Solution: x = 49/29, y =
+ * 19/29" while asking how to find x). When no line follows the ask, that ink
+ * gets a trailing moment of its own with EMPTY narration: nothing is said over
+ * it, and the assembler decides what an unspoken moment becomes.
+ *
+ * "The next line" means the line that opens a LATER moment than the one the
+ * ask is held on. An ask written before the first word is pinned to the first
+ * line's moment (layoutBeat: `Math.max(0, saysSeen - 1)`), so that first line
+ * does not release what waits — releasing it there put the answer back on the
+ * held board. And a beat that asks but never says a line is split the same
+ * way: its one spoken moment (the beat's own narration) shows the board up to
+ * the ask, and what follows the ask goes in the trailing unspoken moment.
  */
 function revealSteps(
   beat: ScriptBeat,
-  byInstruction: ReadonlyMap<number, string[]>,
+  byBoard: ReadonlyMap<number, string[]>,
   focus: readonly string[],
 ): RevealStep[] {
   const says = beat.board.filter((it) => it.do === 'say');
-  if (says.length === 0) {
+  const asks = beat.board.some((it) => it.do === 'ask');
+  if (says.length === 0 && !asks) {
     return [
       {
         narration: beat.narration,
-        show: [...new Set([...byInstruction.values()].flat())],
+        show: [...new Set([...byBoard.values()].flat())],
         focus: [...focus],
       },
     ];
@@ -1440,8 +1595,23 @@ function revealSteps(
 
   const steps: RevealStep[] = [];
   const cumulative: string[] = [];
-  let narration: string | null = null;
+  // A beat with no line of its own speaks its narration over its one moment,
+  // which is open from the first board instruction.
+  let narration: string | null = says.length === 0 ? beat.narration : null;
+  /**
+   * The moment an ask is held on, by the index it will have in `steps`; null
+   * while nothing is held. Ink drawn while it is set waits for the answer.
+   * Before the first word that index is 0, the first line's moment, which is
+   * also `steps.length` then — so one expression serves both cases.
+   */
+  let heldAt: number | null = null;
+  const waiting: string[] = [];
+  /** Board instructions drawn before the first word, which every moment shows. */
+  const early: string[] = [];
 
+  const add = (ids: readonly string[]): void => {
+    for (const id of ids) if (!cumulative.includes(id)) cumulative.push(id);
+  };
   const flush = (): void => {
     if (narration === null) return;
     steps.push({ narration, show: [...cumulative], focus: [] });
@@ -1451,25 +1621,41 @@ function revealSteps(
     if (item.do === 'say') {
       flush();
       narration = item.text;
+      // The line opens moment `steps.length`. Only a moment AFTER the held one
+      // lets the waiting ink in.
+      if (heldAt !== null && steps.length > heldAt) {
+        heldAt = null;
+        add(waiting.splice(0));
+      }
       return;
     }
-    for (const id of byInstruction.get(n) ?? []) {
-      if (!cumulative.includes(id)) cumulative.push(id);
+    const ids = byBoard.get(n) ?? [];
+    if (heldAt !== null) {
+      waiting.push(...ids);
+      return;
     }
+    add(ids);
+    if (narration === null) early.push(...ids);
+    if (item.do === 'ask') heldAt = steps.length;
   });
   flush();
+  if (waiting.length > 0) {
+    add(waiting);
+    steps.push({ narration: '', show: [...cumulative], focus: [] });
+  }
 
   // Anything drawn before the first word still belongs on the board from the
   // start — a title written above the scene should not wait for a sentence.
   if (steps.length > 0) {
-    const early = beat.board
-      .slice(0, beat.board.findIndex((it) => it.do === 'say'))
-      .flatMap((_, n) => byInstruction.get(n) ?? []);
     for (const step of steps) {
       for (const id of early) if (!step.show.includes(id)) step.show.unshift(id);
     }
-    // The beat's emphasis belongs to its last moment, where the point is made.
-    steps[steps.length - 1].focus = [...focus];
+    // The beat's emphasis belongs to its last SPOKEN moment, where the point
+    // is made — not to the unspoken trailing one, which has no line of the
+    // planner's to make it over.
+    let last = steps.length - 1;
+    while (last > 0 && steps[last].narration.trim() === '') last -= 1;
+    steps[last].focus = [...focus];
   }
   return steps;
 }

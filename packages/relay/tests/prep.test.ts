@@ -367,6 +367,10 @@ describe('createSupabasePrepLocks', () => {
     // And only a published class is announced ready — a retracted one must
     // send the next student to prepare, not to a class that was pulled.
     expect(calls.find((c) => c.url.includes('prepared_class'))!.url).toMatch(/review_status=eq\.published/);
+    // The same two conditions the app serves by (content.ts): a row marked
+    // retracted is not announced ready even while its status still reads
+    // 'published'.
+    expect(calls.find((c) => c.url.includes('prepared_class'))!.url).toMatch(/retracted_at=is\.null/);
   });
 
   it('releases through the definer function and reads the boolean back', async () => {

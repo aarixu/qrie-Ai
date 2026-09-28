@@ -1,4 +1,4 @@
-import { layoutBeat, offsetElement, PAGE_STRIDE, type Instruction } from '@ai-tutor/board-layout';
+import { layoutBeat, offsetElement, PAGE_STRIDE, type Bond, type Instruction } from '@ai-tutor/board-layout';
 import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture.ts';
 import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
@@ -25,7 +25,8 @@ import {
   type TutorLanguage,
 } from './prompts.ts';
 import { verifySvg } from './verify.ts';
-import { classMustAsk, saidButNotWritten } from './saidNotWritten.ts';
+import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
+import { gateLesson, type GateProblem, type MathsCheck } from './gate.ts';
 import type {
   Blueprint,
   PrepProgress,
@@ -90,8 +91,10 @@ export interface PrepOptions {
    *
    * Optional so existing callers keep compiling, and that optionality is a
    * hole, not a feature: a prep run without a reviewer produces a class
-   * nothing has fact-checked, and the keep path stores it forever. The
-   * classroom's live-prep caller must pass one (recorded as a handoff).
+   * nothing has fact-checked. Both callers that keep what they make pass
+   * one: the classroom's live prep (apps/classroom/src/lib/liveClass.ts, whose
+   * keep() also refuses a report with no review) and the prewarm runner unless
+   * it is told `--no-review`.
    *
    * When present it runs IN-PIPELINE, before onDraft — the reconciled
    * design: the room opens LATER, and in exchange the first student is
@@ -143,6 +146,13 @@ export interface PrepOptions {
    * taught, tested and recorded as having taught nothing.
    */
   outcomes?: readonly TopicOutcome[];
+  /**
+   * THE MATHS CHECK the keep gate runs (gate.ts). Absent means the real one,
+   * @ai-tutor/maths-check's `checkLesson` — there is no way to turn it off
+   * from here, only to stand something else in for it, which is what the
+   * tests do.
+   */
+  mathsCheck?: MathsCheck;
   onProgress?: (p: PrepProgress) => void;
   /**
    * THE CLASS, AS SOON AS THE TEACHING HOLDS — before a picture exists.
@@ -227,6 +237,50 @@ function reuseId(ref: string, beatId: string): string {
   return `${ref}@${beatId}`;
 }
 
+/**
+ * THE HELD MOMENT ENDS WITH THE QUESTION THE CLASS HOLDS ON.
+ *
+ * The player speaks a beat's narration and then waits; nothing else speaks
+ * `ask.question`. So when the planner's line asked its own, differently worded
+ * question — "What is our final step to find x?" over an ask that reads "How
+ * do we find the value of x now that we know y?" — the student heard one
+ * question and was held on another, and the one on the board was never said.
+ *
+ * Rewritten here, deterministically: the sentences of the line that end in a
+ * question mark are dropped and the ask's own question is said last. What the
+ * line said before its question stays word for word. A line that already ends
+ * with the ask's question, and asks nothing before it, is left alone.
+ */
+export function heldLine(said: string, question: string): string {
+  const normal = (text: string): string => text.toLowerCase().replace(/\s+/g, ' ').trim();
+  const q = question.trim();
+  const lead = normal(said).endsWith(normal(q)) ? normal(said).slice(0, -normal(q).length) : null;
+  if (lead !== null && !lead.includes('?')) return said;
+  // Split after sentence-ending punctuation followed by a space, so a decimal
+  // like "2.5" is never cut in two. What is kept is rejoined with one space.
+  const kept = said
+    .split(/(?<=[.!?])\s+/)
+    .filter((sentence) => sentence.trim() !== '' && !sentence.trim().endsWith('?'));
+  return [...kept, q].join(' ');
+}
+
+/**
+ * WHAT SHE SAYS OVER INK THAT CAME AFTER THE LAST ASK WITH NO LINE OF ITS OWN.
+ *
+ * The board holds back what a beat writes after an ask until a later line
+ * (board-layout's revealSteps). When the planner wrote no later line, that ink
+ * — usually the answer and its working — used to be shown by no moment of its
+ * beat at all, and on the last beat of a class by no moment ever. So assemble
+ * gives it a moment of its own after the answer, spoken over with this line,
+ * and reports that moment in `unspoken`: the class is taught, and the keep
+ * gate's `unspoken` rule (gate.ts) keeps it from ever being kept. The line
+ * names nothing on the board, because it cannot know what the ink says.
+ */
+export const AFTER_THE_ANSWER: Readonly<Record<TutorLanguage, string>> = {
+  en: 'Now look at the board.',
+  'hi-en': 'Ab board par dekho.',
+};
+
 export function assemble(
   blueprint: Blueprint,
   drawn: ReadonlySet<string>,
@@ -245,8 +299,27 @@ export function assemble(
    * voice picker that will need it, not a behaviour change.
    */
   language: TutorLanguage = 'en',
-): { lesson: unknown; dropped: string[]; aliases: Record<string, string> } {
+): {
+  lesson: unknown;
+  dropped: string[];
+  aliases: Record<string, string>;
+  /**
+   * Every pair the layout MEANT to overlap, from every beat. Element ids do
+   * not change when a page is slid into place, so these hold for the
+   * assembled lesson as they did for each page — which is what the keep
+   * gate's overlap rule (gate.ts) needs to tell a card's frame from a
+   * collision.
+   */
+  bonds: Bond[];
+  /**
+   * The lesson beats spoken over with `AFTER_THE_ANSWER` because the planner
+   * gave their ink no line — for the keep gate's `unspoken` rule.
+   */
+  unspoken: string[];
+} {
   const dropped = blueprint.visuals.map((v) => v.id).filter((id) => !drawn.has(id));
+  const bonds: Bond[] = [];
+  const unspoken: string[] = [];
   const briefs = new Map(blueprint.visuals.map((v) => [v.id, v]));
   /** A copy of a picture is described by the same brief the original was. */
   const briefFor = (id: string) => briefs.get(aliases.get(id) ?? id);
@@ -320,11 +393,13 @@ export function assemble(
       steps,
       pages: sheets,
       asks,
+      bonds: meant,
     } = layoutBeat({ ...beat, board }, partsByRef, shapesByRef);
+    bonds.push(...meant);
 
     /**
      * Re-attach each ask's whyProbe. The layout engine copies an ask FIELD BY
-     * FIELD (board-layout/src/layout.ts:389-396) and has never heard of the
+     * FIELD (board-layout/src/layout.ts, the ask expansion in layoutBeat) and has never heard of the
      * whyProbe, so the judgement the planner authored would silently vanish
      * between the blueprint and the lesson — authored, prompted for, and
      * never played. The nth marker in `asks` is the nth ask instruction on
@@ -400,6 +475,18 @@ export function assemble(
     // making it one means the player, the camera and the doubt agent all keep
     // working unchanged — a moment the tutor can be interrupted in is exactly
     // the moment the board should be recallable at.
+    /**
+     * WHERE `checks` GO. A check is evidence from an ANSWER, and an answer is
+     * filed against the beat that holds the ask (answeredOutcomesAtBeat in
+     * apps/classroom/src/stores/outcomes.ts reads that beat's checks). They
+     * used to ride on the beat's last moment like `teaches` — which, on a beat
+     * whose ask came before its landing line, is a moment nobody answers on,
+     * so the answer was filed against nothing. A beat that asks puts its
+     * checks on each moment that holds an ask; a beat that does not keeps them
+     * on its last moment, as before.
+     */
+    const asksHere = asks.some((a) => usable.some(({ stepIndex }) => stepIndex === a.step));
+
     usable.forEach(({ step, stepIndex }, n) => {
       const last = n === usable.length - 1;
       // A line spoken over a board that has nothing new on it keeps the camera
@@ -408,12 +495,17 @@ export function assemble(
       if (frame) lastFrame = frame;
       // The question lands on the very moment that asks it — the beat the
       // player will hold until the student answers.
-      const ask = asks.find((a) => a.step === stepIndex)?.ask;
+      const held = asks.find((a) => a.step === stepIndex);
+      const ask = held?.ask;
+      const checksHere = asksHere ? ask !== undefined : last;
       beats.push({
         id: usable.length === 1 ? beat.id : `${beat.id}_${n + 1}`,
         topic: beat.topic,
-        narration: step.narration,
+        // A held moment ends by saying the question it holds on — see heldLine.
+        narration: ask ? heldLine(step.narration, ask.question) : step.narration,
         ...(ask ? { ask } : {}),
+        // The board kept clear under the question, slid with its page.
+        ...(held?.workArea ? { workArea: { ...held.workArea, x: held.workArea.x + dx } } : {}),
         // Everything ever drawn, plus this page so far. Old pages stay on the
         // board; the frame is what keeps the class looking here. Deduplicated,
         // because a beat may look again at a picture an earlier page drew.
@@ -423,11 +515,38 @@ export function assemble(
         // Outcomes belong to the moment the point lands, not to every breath
         // on the way there — otherwise one idea would raise belief four times.
         ...(last && beat.teaches ? { teaches: beat.teaches } : {}),
-        ...(last && beat.checks ? { checks: beat.checks } : {}),
+        ...(checksHere && beat.checks ? { checks: beat.checks } : {}),
         ...(last && beat.minMs !== undefined ? { minMs: beat.minMs } : {}),
       });
     });
-    shownSoFar.push(...usable[usable.length - 1].step.show);
+    /**
+     * INK HELD BACK FOR AFTER THE ANSWER, WITH NO LINE TO ARRIVE UNDER.
+     *
+     * board-layout's revealSteps puts it in a trailing moment with EMPTY
+     * narration, which `usable` above leaves out. Left out and nothing else,
+     * no moment of this beat showed it — and on a class's last beat, no moment
+     * at all. So it becomes a lesson beat of its own after the held one,
+     * framed on everything this beat has drawn (as the held moment is),
+     * spoken over with `AFTER_THE_ANSWER`, and named in `unspoken` so the
+     * keep gate refuses to keep the class. Only a beat that asks can hold ink
+     * back, so only such a beat is read this way.
+     */
+    const trailing = steps[steps.length - 1];
+    if (asks.length > 0 && steps.length > 1 && trailing.narration.trim() === '') {
+      const id = `${beat.id}_${usable.length + 1}`;
+      unspoken.push(id);
+      beats.push({
+        id,
+        topic: beat.topic,
+        narration: AFTER_THE_ANSWER[language],
+        show: [...new Set([...shownSoFar, ...trailing.show])],
+        frame: [...new Set(trailing.show)],
+      });
+      lastFrame = [...trailing.show];
+    }
+    // Everything this beat drew stays on the board for later beats, the ink
+    // held back for after an answer included.
+    shownSoFar.push(...steps[steps.length - 1].show);
     for (const step of board) if ('ref' in step) shownArt.add(aliases.get(step.ref) ?? step.ref);
   }
 
@@ -462,6 +581,8 @@ export function assemble(
     dropped,
     /** A later copy's element id, to the artwork it shares. */
     aliases: Object.fromEntries(aliases),
+    bonds,
+    unspoken,
   };
 }
 
@@ -636,6 +757,38 @@ function usableProbe(probe: unknown): boolean {
   return right === 1;
 }
 
+/**
+ * WRONG MATHS IS REFUSED, NOT TAUGHT (T1.4).
+ *
+ * Every other keep-gate rule marks a WORSE class — taught to the student who
+ * is waiting, never kept. A line of working that does not hold is a WRONG
+ * class, and a child copying it down learns the mistake. So after its one
+ * repair round a class with wrong maths throws, before the room opens, the
+ * same posture the factual reviewer takes. A maths check that could not run
+ * counts as wrong (gate.ts): nothing unchecked is passed.
+ *
+ * COUNTED AND LOCATED, NEVER QUOTED — the message is rendered to the student
+ * (ClassRoom renders `e.message`), so it names element ids and not the wrong
+ * working. The lines and reasons ride on the error for the operator's log.
+ */
+function refuseWrongMaths(
+  gate: readonly GateProblem[],
+  say: (phase: PrepProgress['phase'], message: string, done: number) => void,
+): void {
+  const wrong = gate.filter((p) => p.rule === 'maths');
+  if (wrong.length === 0) return;
+  say('failed', 'The working on the board did not add up.', 1);
+  throw Object.assign(
+    new Error(
+      `The class's working does not add up (lines: ${wrong
+        .slice(0, 8)
+        .map((p) => p.where)
+        .join(', ')}).`,
+    ),
+    { mathsProblems: wrong },
+  );
+}
+
 export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const { topic, klass, minutes = 2, planner, artist, imageArtist, eyes, maxArtAttempts = 2 } =
     opts;
@@ -772,9 +925,32 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const sources = new Map<string, string>();
 
   say('checking', 'Checking the class holds together…', 0.15);
-  let { lesson: candidate, aliases } = assemble(blueprint, promised, pictureParts, pictureShapes, language);
+  let { lesson: candidate, aliases, bonds, unspoken } = assemble(blueprint, promised, pictureParts, pictureShapes, language);
 
   let validated = validateLesson(candidate);
+
+  /**
+   * THE KEEP GATE (gate.ts), on every assembled candidate that validates.
+   *
+   * Its problems feed the same one repair round a validation error does, and
+   * they go FIRST in what the planner is told, wrong maths first of all: the
+   * repair prompt reads ten named problems, and the one rule a class is
+   * refused for should never be the one cut off.
+   */
+  const gateOf = (
+    checked: ReturnType<typeof validateLesson>,
+    made: { bonds: readonly Bond[]; unspoken: readonly string[] },
+  ): GateProblem[] =>
+    checked.ok
+      ? gateLesson(checked.lesson as Lesson, {
+          bonds: made.bonds,
+          unspoken: made.unspoken,
+          outcomes: opts.outcomes,
+          mathsCheck: opts.mathsCheck,
+        })
+      : [];
+  let gate = gateOf(validated, { bonds, unspoken });
+  const wrongMaths = (problems: readonly GateProblem[]): boolean => problems.some((p) => p.rule === 'maths');
 
   /**
    * Said but never written — the deterministic check behind the prompt rule.
@@ -786,13 +962,28 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    * to repair on its own — but unlike a structural failure it is never fatal:
    * a class with one unwritten question is a worse class, not no class.
    */
-  let unwritten = [...saidButNotWritten(blueprint.beats), ...classMustAsk(blueprint.beats)];
+  const unwrittenIn = (beats: Blueprint['beats']): string[] => [
+    ...saidButNotWritten(beats),
+    ...classMustAsk(beats),
+  ];
+  let unwritten = unwrittenIn(blueprint.beats);
 
   // One repair round. The model fixes what the validator NAMED, keeping the
   // teaching it already worked out; a regenerated plan would be a different
   // lesson that might break elsewhere.
-  if (!validated.ok || unwritten.length > 0) {
-    const named = [...(validated.ok ? [] : validated.errors), ...unwritten];
+  if (!validated.ok || unwritten.length > 0 || gate.length > 0) {
+    /**
+     * Ink after the last ask with no line after it is named ONCE: by the
+     * gate's `unspoken` rule, which reads the layout itself, whenever the
+     * plan validated; by inkWaitsForALine, which reads the plan, when it did
+     * not and the gate never ran. Both at once filled two of the ten places
+     * with one problem.
+     */
+    const named = [
+      ...(validated.ok ? [] : [...validated.errors, ...inkWaitsForALine(blueprint.beats)]),
+      ...gate.map((p) => p.message),
+      ...unwritten,
+    ];
     issues.push(`The first plan failed validation: ${named[0]}`);
     say('checking', 'Fixing the plan…', 0.2);
     try {
@@ -833,11 +1024,18 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
 
       const rebuilt = assemble(fixed, promised, pictureParts, pictureShapes, language);
       const revalidated = validateLesson(rebuilt.lesson);
-      if (revalidated.ok) {
+      const regate = gateOf(revalidated, rebuilt);
+      // A repair that validates is taken, as it always was — unless it BROKE
+      // the maths of a plan whose maths held, which would turn a class that
+      // could be taught into one that must be refused.
+      if (revalidated.ok && !(validated.ok && !wrongMaths(gate) && wrongMaths(regate))) {
         validated = revalidated;
         aliases = rebuilt.aliases;
+        bonds = rebuilt.bonds;
+        unspoken = rebuilt.unspoken;
         blueprint = fixed;
-        unwritten = [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)];
+        gate = regate;
+        unwritten = unwrittenIn(fixed.beats);
         issues.push('The plan was repaired and passed.');
       }
     } catch (e) {
@@ -853,6 +1051,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     say('failed', 'The plan did not hold together.', 1);
     throw new Error(`The planned lesson is not valid:\n${validated.errors.slice(0, 8).join('\n')}`);
   }
+
+  // Wrong maths after the repair: refused before the room opens.
+  refuseWrongMaths(gate, say);
 
   let lesson = validated.lesson as Lesson;
 
@@ -1016,9 +1217,14 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         if (verdict.ok) {
           blueprint = fixed;
           aliases = rebuilt.aliases;
+          bonds = rebuilt.bonds;
+          unspoken = rebuilt.unspoken;
           lesson = revalidated.lesson as Lesson;
           repaired = true;
-          for (const miss of [...saidButNotWritten(fixed.beats), ...classMustAsk(fixed.beats)]) {
+          // The corrected plan is fresh model output: the keep gate reads it
+          // again, and wrong maths in it is refused just below.
+          gate = gateOf(revalidated, rebuilt);
+          for (const miss of unwrittenIn(fixed.beats)) {
             issues.push(`Still unwritten after factual repair: ${miss}`);
           }
           issues.push('The teaching was corrected and passed review.');
@@ -1056,6 +1262,9 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
       );
     }
     review = { flagged, repaired, ms: Date.now() - r0 };
+    // Only a factual correction changes the lesson here; the class it made
+    // is held to the maths rule like the first one was.
+    if (repaired) refuseWrongMaths(gate, say);
   }
 
   /**
@@ -1214,11 +1423,15 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
    */
   const beats = blueprint.beats;
   let final = lesson;
+  let finalBonds = bonds;
+  let finalUnspoken = unspoken;
   if (pictureShapes.size > 0 || pictureParts.size > 0) {
     const refitted = assemble({ ...blueprint, beats }, promised, pictureParts, pictureShapes, language);
     const revalidated = validateLesson(refitted.lesson);
     if (revalidated.ok) {
       final = revalidated.lesson as Lesson;
+      finalBonds = refitted.bonds;
+      finalUnspoken = refitted.unspoken;
       // A copy of a picture needs the markup under its own id, and the copy
       // ids are decided by this second layout rather than the first.
       for (const [copy, original] of Object.entries(refitted.aliases) as [string, string][]) {
@@ -1231,6 +1444,22 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     }
   }
 
+  /**
+   * THE KEEP GATE, ON THE COPY THAT GETS KEPT.
+   *
+   * Run again on `final` because the re-fit above lays pictures out at their
+   * measured shapes, and a layout that moved can overlap where the draft did
+   * not. What is left here is a class that is taught but not kept: saveable
+   * refuses any report whose gate found something.
+   */
+  const keepGate = gateLesson(final, {
+    bonds: finalBonds,
+    unspoken: finalUnspoken,
+    outcomes: opts.outcomes,
+    mathsCheck: opts.mathsCheck,
+  });
+  for (const problem of keepGate) issues.push(`Fails the keep gate, so it is not kept: ${problem.message}`);
+
   const report: PrepReport = {
     topic,
     totalMs: Date.now() - t0,
@@ -1240,6 +1469,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
     visuals,
     ...(review ? { review } : {}),
     ...(sources.size > 0 ? { credits: Object.fromEntries(sources) } : {}),
+    gate: { problems: keepGate },
   };
   say('done', 'Ready.', 1);
   return { lesson: final, assets, report };

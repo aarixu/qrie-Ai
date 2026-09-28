@@ -57,6 +57,19 @@ const PICKER_MODEL = 'google/gemini-3.1-flash-lite';
 const IMAGE_MODEL = 'google/gemini-3.1-flash-image';
 /** Looks at a generated picture to find where its named parts are. */
 const VISION_MODEL = 'google/gemini-3.7-flash';
+/**
+ * CHECKS THE TEACHING IS TRUE before the room opens (class-prep's
+ * reviewLesson, run inside prepareClass). The same planner-grade model the
+ * prewarm runner reviews with (tools/prewarm/lib/main.mjs, REVIEWER_MODEL),
+ * because a class this app keeps is served to every later student exactly as
+ * a pre-warmed one is.
+ *
+ * WHAT IT COSTS IS NOT MEASURED HERE. One more planner-grade call per cold
+ * topic when the lesson passes, three when it is flagged (review, a repair
+ * plan, a second review); `report.review.ms` records the wait on each
+ * preparation, and no rupee figure has been measured for it. UNVERIFIED.
+ */
+const REVIEWER_MODEL = 'google/gemini-3.7-flash';
 
 /**
  * The pictures for the nouns a lesson places.
@@ -387,6 +400,13 @@ export async function prepareLiveClass(
     outcomes: ask.outcomes,
     planner: createBrowserLlm(PLANNER_MODEL, { json: true }),
     artist: createBrowserLlm(ARTIST_MODEL),
+    // THE FACTUAL GATE, ON (C10). Without it the class a live student
+    // prepared was kept unreviewed and served to everyone after them;
+    // screens/LiveClass.tsx keep() now refuses any preparation whose report
+    // carries no review. A reviewer that cannot be reached fails the
+    // preparation (class-prep's posture), so the student sees an error
+    // rather than an unchecked class.
+    reviewer: createBrowserLlm(REVIEWER_MODEL, { json: true }),
     imageArtist: createBrowserImageArtist(IMAGE_MODEL),
     eyes: createBrowserVision(VISION_MODEL),
     // ON by default. The whole rung reaches no student unless something

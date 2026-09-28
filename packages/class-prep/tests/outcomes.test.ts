@@ -181,3 +181,14 @@ describe('the repair round is checked too', () => {
   });
 });
 
+
+describe('every ask carries real outcome ids (T1.3)', () => {
+  it('tells the planner a beat that asks must claim one or two of the listed ids', () => {
+    const prompt = plannerUser('Matter', 9, 4, undefined, undefined, outcomes);
+    expect(prompt).toMatch(/every beat that asks carries "checks"/i);
+  });
+
+  it('says nothing of the kind when the map has no outcomes for this topic', () => {
+    expect(plannerUser('Matter', 9, 4)).not.toMatch(/every beat that asks carries "checks"/i);
+  });
+});

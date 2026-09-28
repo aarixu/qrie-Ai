@@ -162,8 +162,14 @@ function screened(text: string, limit?: number): Carried | Refused {
  * Never allowed to fail the lesson: the student is in the room being taught.
  * Whether a later student gets this class for free is a bonus on top of that,
  * not a condition of it.
+ *
+ * Exported so a test can hold it to its gates without rendering the screen.
  */
-async function keep(made: LivePrep, ask: Ask, names: readonly string[]): Promise<void> {
+export async function keep(
+  made: LivePrep,
+  ask: Pick<Ask, 'topicRef' | 'klass' | 'subject' | 'subtitle'>,
+  names: readonly string[],
+): Promise<void> {
   const saved = saveable(made, {
     topicRef: ask.topicRef,
     klass: ask.klass,
@@ -173,6 +179,13 @@ async function keep(made: LivePrep, ask: Ask, names: readonly string[]): Promise
     // somebody else. The name is the one that actually leaks; the rest of the
     // notes are outcomes and scores, which the planner is forbidden to recite.
     studentNames: names,
+    // REVIEWED OR NOT KEPT (C10). lib/liveClass.ts passes a reviewer, so a
+    // preparation with no `report.review` is one whose review never ran, and
+    // the first class kept on a topic is the one every later student gets.
+    requireReviewed: true,
+    // And checked by the keep gate (class-prep's gate.ts): a report with no
+    // gate on it is refused, not read as a pass.
+    requireGate: true,
   });
   if (!saved) return;
   try {
