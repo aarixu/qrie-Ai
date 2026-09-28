@@ -33,6 +33,48 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 ---
 
+## ► NEXT SESSION STARTS HERE — finish the AI tutor
+
+Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."*
+
+**What changed, and why the tutor is buildable again.** Google billing was
+linked on 2026-09-28 and **Vertex is live** — measured, ledger-confirmed, all
+four pipeline models answering, JSON mode included (Part 1 item 1). The block
+that froze this product for five days is gone. Cold class preparation, the
+doubt tutor and the escalated judge are all reachable for the first time since
+the prototype gate went in.
+
+**Do these in order. Step 1 is not optional.**
+
+1. **Prove a cold class actually prepares, end to end.** Four models answering
+   separately is not a class. Run `prepareLiveClass` for one cold topic with the
+   gate off **locally**, and check three things: the planner's output passes
+   `validateLesson`, the artist returns usable images, and the class plays. This
+   is the single fact everything below depends on and **nobody has established
+   it**. Nemotron passed simple calls and still failed here.
+2. **Fill `model_price`** (Part 1 item 3 — the table is empty, so every call
+   prices at ₹0). Until it has rows, the ₹5/student-hour ceiling is
+   unenforceable by construction and step 3 cannot be costed. Then price the
+   class from step 1 and write the number into this file.
+3. **Only then decide the gate.** `PROTOTYPE_ONLY_PREPARED` in
+   `apps/classroom/src/lib/prototype.ts` — one boolean, set it `false` and every
+   screen goes back to preparing live. 21 tests in 5 files mock it off already,
+   so they start testing the real path the moment it flips. **Do not flip it on
+   the strength of item 1's table** — flip it because step 1 passed and step 2
+   priced it.
+4. **Then the voice**, which is the oldest unfinished thing here (Part 1 item 4):
+   two of three layers are missing, every line falls to the relay, and whether a
+   student actually HEARS the 14 silent classes was never confirmed. Aarav's
+   constraint stands: **fix it as latency, not by prerecording** — a recorded
+   take for all 14 would make a live-tutor demo dishonest.
+
+**The other track.** The LMS (Part 2, L0–L7) is real, built and demo-ready, in
+worktree `.claude/worktrees/lms`. It is not paused by this; the two run side by
+side, and the tutor joins the student app later. Do not let a tutor session
+quietly rewrite LMS decisions.
+
+---
+
 # Part 1 — Where it stands
 
 ## Where everything lives
@@ -47,7 +89,7 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 | LMS work | worktree `.claude/worktrees/lms`, branch `lms` at `a695b1d`, no commits of its own yet. Fast-forward it to `phase3-completion` before LMS code starts |
 | Evidence behind Part 2 | `docs/superpowers/specs/2026-09-25-lam-audit-appendix.md` — 311 requirement rows, with file:line and refuter verdicts |
 | Teacher interview sheet | `docs/research/2026-09-25-teacher-questions.md` (Hinglish) |
-| Google Cloud project (Vertex) | `project-dd876d44-2dc1-40de-935` — no billing account linked |
+| Google Cloud project (Vertex) | `project-dd876d44-2dc1-40de-935` — **billing linked 2026-09-28, models live**. The id comes from `project_id` inside the `GOOGLE_SERVICE_ACCOUNT_JSON` secret, so this is the only project that can ever be the right one to pay for |
 
 **One origin is deliberate**, not tidiness: a Supabase session lives in
 localStorage, which is per-origin. Across two hostnames the contest form's
@@ -101,42 +143,65 @@ To turn it all off when the models come back: set the flag `false`. 21 tests in
 
 ## What is BROKEN — measured 2026-09-26
 
-### 1. Vertex / Google models — 403, still
+### 1. Vertex / Google models — ~~403~~ **FIXED 2026-09-28**
+
+**Aarav linked a billing account and Vertex is live.** Measured through the
+deployed relay, same call that had refused for five days:
 
 ```
-POST /api/llm  →  403  (816 ms)
-This API method requires billing to be enabled. Please enable billing on
-project #project-dd876d44-2dc1-40de-935
+POST /api/llm  →  200  (3,742 ms)   reply: "OK"
 ```
 
-Aarav verified **2FA and tax info** on 2026-09-26 and it did **not** clear this.
-Those belong to the Google *payments profile*; this error is asking for a
-**billing account linked to that specific project**. Different thing. The link
-in the error text is the one that has to be opened, for that project.
+Confirmed it is really Vertex and not the OpenRouter fallback — the relay's own
+ledger recorded the call:
 
-**Re-checked 2026-09-27, same call through the deployed relay: still 403**,
-byte-identical message, 1,466 ms. Nothing has changed.
+```
+usage_event → { relay: "llm", provider: "vertex",
+                model: "gemini-3.7-flash", status: 200 }
+```
 
-**WHICH project must be paid for, exactly.** `packages/relay/src/googleAuth.ts:204`
-takes `projectId` from the **`project_id` field inside the
+**Every model the class pipeline needs answers 200**, JSON mode included — which
+matters because JSON-schema conformance is exactly where Nemotron failed
+([[curie-nemotron-evaluated]]):
+
+| Model | Used by | Result |
+|---|---|---|
+| `google/gemini-3.7-flash` | planner, artist, judge, vision | 200, valid JSON, 2.6 s |
+| `google/gemini-3.1-flash-lite` | picker | 200, valid JSON, 3.1 s |
+| `google/gemini-3.1-flash-image` | images | 200, 1.7 s |
+
+**STILL UNVERIFIED — do not skip this before turning the gate off.** Four models
+answering separately is not the same as a cold class preparing. Nobody has run
+`prepareLiveClass` end to end since billing returned, so nothing yet shows the
+planner's output passes `validateLesson`, that the artist returns usable images,
+or what one class costs. **That run is the gate to turning
+`PROTOTYPE_ONLY_PREPARED` off, not this table.**
+
+And `model_price` is still empty (item 3), so the first live class cannot be
+costed against the ₹5 ceiling. Fill it before the gate comes off, or the ceiling
+is unenforceable by construction.
+
+**Kept because it cost five days:** `packages/relay/src/googleAuth.ts:204` takes
+`projectId` from the **`project_id` field inside the
 `GOOGLE_SERVICE_ACCOUNT_JSON` secret**, and `vertex.ts:306` builds the request
-URL from it. So the relay always calls the project *the service-account key was
-created in* — `project-dd876d44-2dc1-40de-935` — no matter what any console is
-showing. **Enabling billing on a different, nicer-named project will never clear
-this 403.** Either link a billing account to that exact project, or mint a new
-service-account key inside a project that already has one and replace the secret.
+URL from it. The relay always calls the project *the service-account key was
+created in* — `project-dd876d44-2dc1-40de-935` — whatever any console is
+showing. 2FA and tax info are the *payments profile* and clear nothing here;
+only a billing account linked to that exact project does. If this 403 ever
+returns, check the project id in the error against the one in the secret before
+anything else.
 
-Consequence: cold class preparation, the doubt tutor and the escalated judge are
-all dead. This is what the gate exists to hide from children.
+### 2. The one-secret unlock — kept as an ESCAPE HATCH, no longer needed
 
-### 2. The one-secret unlock — LIVE CLASSES DO NOT NEED VERTEX
-
-This is the most actionable item in this file.
+**Superseded 2026-09-28**: Vertex works, so this is not the way out of anything
+today. It stays written down because it is the answer if Google ever refuses
+again — a billing lapse, a suspended project, a rotated key — and rediscovering
+it took most of a session.
 
 `packages/relay/src/handler.ts:400`:
 
 ```
-if (deps.vertex)  →  Vertex        (403 today)
+if (deps.vertex)  →  Vertex        (200 since 2026-09-28)
 else              →  llmRelay()    →  OpenRouter
 ```
 
@@ -151,13 +216,15 @@ speech proves. So:
 npx supabase secrets unset GOOGLE_SERVICE_ACCOUNT_JSON --project-ref ueemqirxyrltdmqgnidy
 ```
 
-would put `/api/llm` on OpenRouter and unblock live classes **today**, with no
-Google billing at all. Fully reversible by setting the secret back.
+would put `/api/llm` on OpenRouter with no Google dependency at all. Fully
+reversible by setting the secret back.
 
-**NOT DONE — waiting on Aarav's decision**, because it starts spending on his
-OpenRouter account and the cost per class is currently unmeasurable (see next
-item). UNVERIFIED: whether OpenRouter's price for `google/gemini-3.7-flash`
-keeps a class under the ₹5/student-hour ceiling.
+**NOT DONE, and now deliberately so.** Vertex is the cheaper path and it works.
+Two things still stand against flipping this in an emergency, so read them
+before reaching for it: it lacks the model allowlist, size cap and `max_tokens`
+guard the Vertex path has (workstream **A7**), and UNVERIFIED whether
+OpenRouter's price for `google/gemini-3.7-flash` keeps a class under the
+₹5/student-hour ceiling.
 
 **If you flip it, flip it together with workstream A7, not alone.** The
 2026-09-24 audit reported three guards on the Vertex path that the OpenRouter
@@ -252,8 +319,9 @@ dashboard cannot read a number that lives inside one child's browser.
 - **The 15 bundled lessons record no answers.** Their 22 questions carry
   `question`/`expect`/`hint` and **no `options` and no `whyProbe`** ✓. A tap with
   no option is not evidence (`ClassRoom.tsx` `isEvidence = Boolean(option)`,
-  ~:298 ✓). A spoken answer goes to the model judge, which 403s (item 1). The 6
-  Supabase classes do carry options, so taps there count.
+  ~:298 ✓). A spoken answer goes to the model judge, which **now answers** since
+  billing returned (item 1) — so this specific gap is newly testable and has not
+  been retested. The 6 Supabase classes do carry options, so taps there count.
 - **Nothing decides anything from the model.** There is no
   `packages/tutor-control` ✓. `chooseAsk` has no caller
   (`learner-model/src/ask.ts:35`). Help levels are literals
@@ -362,6 +430,12 @@ class", but live preparation passes no reviewer (`liveClass.ts:336-356`).
 
 Listed so the next session does not mistake silence for evidence.
 
+- **THE BIG ONE, newly testable: whether a cold class actually prepares.**
+  Vertex answers and all four pipeline models return 200 with valid JSON
+  (item 1), but `prepareLiveClass` has not been run end to end since billing
+  returned. Nothing yet shows the planner's output passes `validateLesson`, that
+  the artist returns usable images, or what one class costs. This is step 1 of
+  the next session and the precondition for turning the gate off.
 - Whether a real student on a real phone **hears** any of the 14 classes (see 4).
 - Whether OpenRouter's pricing keeps a class under **₹5/student-hour**.
 - What a class costs on either provider — unmeasurable while `model_price` is
@@ -389,8 +463,8 @@ Listed so the next session does not mistake silence for evidence.
 
 ## Blocked on Aarav — nobody else can do these
 
-1. **Link a billing account to the Google project** (or decide to abandon Vertex
-   and take the OpenRouter route above).
+1. ~~**Link a billing account to the Google project.**~~ **DONE 2026-09-28** —
+   verified live, `/api/llm` → 200, ledger says `provider: "vertex"`.
 2. **Delete the superseded Vercel projects** `curie-webapp` and
    `curie-landing-page`. Auto mode refuses irreversible project deletion.
 3. **Rotate the NVIDIA key** at build.nvidia.com. It was pasted into a session,
