@@ -162,6 +162,29 @@ export function usageFromVertexSpeech(
   };
 }
 
+/**
+ * An answer heard on Vertex (vertexHear.ts). Tokens as Vertex counted them —
+ * audio is billed as input tokens — plus the bytes, so a report can still say
+ * how much listening there was.
+ */
+export function usageFromVertexHear(
+  base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
+  model: string,
+  heard: { status: number; promptTokens?: number; outputTokens?: number },
+  audio: Uint8Array,
+): UsageEvent {
+  return {
+    ...base,
+    relay: 'hear',
+    provider: 'vertex',
+    model,
+    status: heard.status,
+    audioBytes: audio.byteLength,
+    ...(heard.promptTokens !== undefined ? { promptTokens: heard.promptTokens } : {}),
+    ...(heard.outputTokens !== undefined ? { outputTokens: heard.outputTokens } : {}),
+  };
+}
+
 export function usageFromHear(
   base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,

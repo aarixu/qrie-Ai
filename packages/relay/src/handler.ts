@@ -23,12 +23,14 @@ import {
 } from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
 import { PCM_CONTENT_TYPE, VERTEX_SPEECH_MODEL, speakOnVertex, sseToPcm, vertexSpeechCall } from './vertexSpeech.ts';
+import { VERTEX_HEAR_MODEL, hearOnVertex } from './vertexHear.ts';
 import {
   usageFromClass,
   usageFromHear,
   usageFromOpenRouterLlm,
   usageFromSpeech,
   usageFromVertex,
+  usageFromVertexHear,
   usageFromVertexSpeech,
   type Usage,
 } from './usage.ts';
@@ -512,8 +514,15 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return kept;
   }
 
-  const heard = hearRelay(req, deps.key);
+  // HER EAR IS GEMINI ON VERTEX wherever Vertex is configured (vertexHear.ts);
+  // the same guards as before, then no OpenRouter call at all.
+  const heard = hearRelay(req, deps.key, !deps.vertex);
   if (!heard.ok) return heard.response;
+  if (deps.vertex) {
+    const transcript = await hearOnVertex(heard.audio, heard.contentType, deps.vertex);
+    note(usageFromVertexHear(base, VERTEX_HEAR_MODEL, transcript, heard.audio));
+    return transcript.response;
+  }
   const { model, language, contentType, audio } = heard;
   const transcribed = await deps.transcribe({ model, language, contentType, audio });
   note(usageFromHear(base, heard.model, transcribed.status, heard.audio));

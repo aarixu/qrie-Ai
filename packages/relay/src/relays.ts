@@ -335,9 +335,11 @@ export interface HeardAudio {
 export function hearRelay(
   req: RelayRequest,
   key: string,
+  /** False when Vertex is the ear (vertexHear.ts) and no OpenRouter key is involved. */
+  needsKey = true,
 ): ({ ok: true } & HeardAudio) | { ok: false; response: RelayResponse } {
   if (req.method !== 'POST') return { ok: false, response: fail(405, 'POST only') };
-  if (!key) return { ok: false, response: fail(503, 'The server has no OpenRouter key configured.') };
+  if (needsKey && !key) return { ok: false, response: fail(503, 'The server has no OpenRouter key configured.') };
   if (req.body.byteLength === 0) return { ok: false, response: fail(400, 'no audio') };
 
   /**
