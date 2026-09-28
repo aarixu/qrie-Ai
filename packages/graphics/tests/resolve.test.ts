@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pencilGlyph, resolveNoun, slug, type IconSet } from '../src/resolve';
+import { candidatesFor, pencilGlyph, resolveNoun, slug, type IconSet } from '../src/resolve';
 
 const set = (prefix: string, names: string[]): IconSet => ({
   prefix,
@@ -88,5 +88,37 @@ describe('slug', () => {
   it('makes a stable key out of anything narration throws at it', () => {
     expect(slug('Two Boys Walking!')).toBe('two-boys-walking');
     expect(slug('  spaced  out  ')).toBe('spaced-out');
+  });
+});
+
+describe('an icon the relay would refuse is never offered', () => {
+  /**
+   * 2026-09-29: the prewarm of class10 maths "introduction" was prepared,
+   * reviewed and paid for, then refused at keep — "assets.json contains an
+   * embedding tag" — because a library icon's body used <use href="#a">.
+   * The relay's markup gate (packages/relay/src/markup.ts) refuses <use> and
+   * <image> outright. A candidate it would refuse must not be picked at all,
+   * so the next candidate (or the pencil) stands in and the class is kept.
+   */
+  const risky: IconSet = {
+    prefix: 'risky',
+    width: 128,
+    height: 128,
+    icons: {
+      school: { body: '<defs><path id="a" d="M0 0"/></defs><use href="#a"/>' },
+      'school-bus': { body: '<image href="x.png"/>' },
+    },
+  };
+
+  it('skips a <use> icon and falls through to the next set', () => {
+    const r = resolveNoun('school', [risky, colour])!;
+    expect(r.source.set).toBe('noto');
+  });
+
+  it('never lists a refused icon as a candidate', () => {
+    const names = candidatesFor('school', [risky, colour]).map((c) => `${c.source.set}:${c.source.icon}`);
+    expect(names).not.toContain('risky:school');
+    expect(names).not.toContain('risky:school-bus');
+    expect(names).toContain('noto:school');
   });
 });

@@ -10,6 +10,9 @@
  * never reach a browser.
  */
 
+import { unsafeMarkup } from '../../relay/src/markup.ts';
+
+
 /** One drawable icon, as the sets store them: a body plus its own viewBox size. */
 export interface Glyph {
   body: string;
@@ -150,6 +153,23 @@ function take(set: IconSet, icon: string, how: Resolved['how']): Resolved {
  * next strategy while a narrower one is still finding matches, because
  * "school" matching `preschool` is fine and `old-school-tie` is not.
  */
+/**
+ * AN ICON THE RELAY WOULD REFUSE IS NOT AN ICON (2026-09-29).
+ *
+ * Every picture is inlined with dangerouslySetInnerHTML, so the relay's markup
+ * gate (packages/relay/src/markup.ts — one implementation, imported here the
+ * way class-prep imports it) refuses <use>, <image>, <script> and the rest at
+ * keep. Some library icons draw with <use href="#a">. Picked here, such an icon
+ * made a whole prepared class unkeepable after it had been paid for — the
+ * class10 maths "introduction" prewarm, refused with "assets.json contains an
+ * embedding tag". So a refused body is treated as absent: the search moves on
+ * to the next candidate, and the pencil is still the last resort.
+ */
+function usable(set: IconSet, name: string): boolean {
+  const icon = set.icons[name];
+  return Boolean(icon) && unsafeMarkup(icon.body).length === 0;
+}
+
 export function resolveNoun(noun: string, sets: readonly IconSet[]): Resolved | null {
   const key = bare(noun);
   if (key === '') return null;
@@ -158,19 +178,19 @@ export function resolveNoun(noun: string, sets: readonly IconSet[]): Resolved | 
 
   for (const set of sets) {
     for (const [i, name] of candidates.entries()) {
-      if (set.icons[name]) return take(set, name, i === 0 ? 'exact' : 'synonym');
+      if (usable(set, name)) return take(set, name, i === 0 ? 'exact' : 'synonym');
     }
   }
   for (const set of sets) {
     const names = Object.keys(set.icons);
-    const starts = names.find((n) => n === key || n.startsWith(`${key}-`));
+    const starts = names.find((n) => (n === key || n.startsWith(`${key}-`)) && usable(set, n));
     if (starts) return take(set, starts, 'prefix');
   }
   for (const set of sets) {
     const names = Object.keys(set.icons);
     // Shortest containing name: `school` beats `school-bus` for "school".
     const contains = names
-      .filter((n) => n.includes(key))
+      .filter((n) => n.includes(key) && usable(set, n))
       .sort((a, b) => a.length - b.length)[0];
     if (contains) return take(set, contains, 'contains');
   }
@@ -200,7 +220,7 @@ export function candidatesFor(
   const seen = new Set<string>();
   const add = (set: IconSet, icon: string, how: Resolved['how']) => {
     const id = `${set.prefix}:${icon}`;
-    if (seen.has(id) || !set.icons[icon]) return;
+    if (seen.has(id) || !usable(set, icon)) return;
     seen.add(id);
     found.push(take(set, icon, how));
   };
