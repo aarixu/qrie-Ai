@@ -17,6 +17,7 @@ import { setRemindersEnabled, setStudyDays, setStudyMinute } from '../stores/sch
 import { askForNotifications } from '../lib/reminders';
 import { TutorTile } from '../ui/TutorTile';
 import { writeWorkspace, type EntryPath, type TutorLanguage } from '../lib/workspace';
+import { INTERESTS, setInterests } from '../lib/studentMemory';
 
 const CLASSES = [6, 7, 8, 9, 10, 11, 12];
 
@@ -36,6 +37,7 @@ export const ONBOARDING_STEPS = [
   'class',
   'subjects',
   'language',
+  'interests',
   'when',
   'ready',
 ] as const;
@@ -154,6 +156,8 @@ export function Onboarding() {
   const [name, setName] = useState('');
   const [klass, setKlass] = useState<number | null>(null);
   const [subjects, setSubjects] = useState<string[]>([]);
+  /** What they enjoy, from a fixed list — kept on this device for her examples (lib/studentMemory.ts). */
+  const [interests, setInterestChoice] = useState<string[]>([]);
 
   const index = STEPS.indexOf(step);
   const available = klass !== null ? subjectsAvailable(klass) : [];
@@ -476,8 +480,52 @@ export function Onboarding() {
               {/* No "you can change this later" line: there is no setting for
                   it yet, and a promise the app cannot keep is worse than a
                   question asked once. */}
-              <button onClick={() => setStep('when')} className={`mt-stack-lg ${PRIMARY}`}>
+              <button onClick={() => setStep('interests')} className={`mt-stack-lg ${PRIMARY}`}>
                 Continue
+              </button>
+            </div>
+          )}
+
+          {/* WHAT THEY ENJOY (2026-09-29). A tutor who knows a student loves
+              cricket explains averages with run rates. A fixed list, never
+              free text, kept on this device only; skipping is a real answer. */}
+          {step === 'interests' && (
+            <div className="text-center">
+              <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
+                What do you enjoy{name.trim() ? `, ${name.trim().split(/s+/)[0]}` : ''}?
+              </h1>
+              <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
+                Pick any. Meera uses them for examples in class. It stays on this phone.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {INTERESTS.map((it) => {
+                  const on = interests.includes(it.id);
+                  return (
+                    <button
+                      key={it.id}
+                      aria-pressed={on}
+                      onClick={() =>
+                        setInterestChoice((prev) => (on ? prev.filter((x) => x !== it.id) : [...prev, it.id]))
+                      }
+                      className={`min-h-[44px] rounded-full px-4 py-2 border-2 font-label-md text-label-md transition-all ${
+                        on
+                          ? 'bg-primary-fixed border-primary text-on-surface'
+                          : 'bg-surface-container-lowest border-transparent text-on-surface hover:border-primary-fixed-dim'
+                      }`}
+                    >
+                      <span aria-hidden>{it.emoji}</span> {it.label}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => {
+                  setInterests(interests);
+                  setStep('when');
+                }}
+                className={`mt-stack-lg ${PRIMARY}`}
+              >
+                {interests.length > 0 ? 'Continue' : 'Skip for now'}
               </button>
             </div>
           )}

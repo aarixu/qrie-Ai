@@ -57,6 +57,8 @@ export function buildStudentContext(input: {
    * help is absent, so it never lifts the persona's mastery reading.
    */
   mastery?: Mastery;
+  /** What she remembers about them, as private notes (lib/studentMemory.ts `memoryNotes`). */
+  notes?: readonly string[];
   today?: Date;
 }): StudentContext | null {
   const klass = input.klass ?? input.profile.klass;
@@ -75,6 +77,8 @@ export function buildStudentContext(input: {
 
   const mastery = masteryForLesson(input.mastery ?? null, input.nodeIds ?? []);
   if (mastery !== undefined) ctx.mastery = mastery;
+
+  if (input.notes && input.notes.length > 0) ctx.notes = [...input.notes];
 
   return ctx;
 }

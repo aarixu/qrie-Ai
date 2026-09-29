@@ -46,6 +46,14 @@ import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
 import { decide } from '@ai-tutor/tutor-control';
+import {
+  greetingMemory,
+  memoryNotes,
+  recordDoubtTopic,
+  recordStruggle,
+  recordWin,
+  setLastSession,
+} from '../lib/studentMemory';
 import type { AssistanceRung } from '@ai-tutor/ledger';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
@@ -71,9 +79,6 @@ const CONTROLS_IDLE_MS = 3_500;
 const PREPARE_MS = 5_000;
 
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
-/** The last class sat on this device, for her greeting next time. Local only. */
-const LAST_CLASS_KEY = 'qrie:last-class';
-
 export function LessonRoute() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
@@ -475,6 +480,11 @@ export function ClassRoom({
       tapRung.current.set(beatId, action.rung);
       if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested);
       if (action.say) recentLines.current = [...recentLines.current.slice(-8), action.say];
+      // Her notebook (lib/studentMemory.ts): a miss marks the topic hard; a
+      // right answer with no help at all marks it a win.
+      const where = { topic: player.beat.topic, lessonId: lesson.id };
+      if (!correct) recordStruggle(where);
+      else if ((tapRung.current.get(beatId) ?? 0) === 0 && attempt === 1) recordWin(where);
       if (correct) {
         if (action.say) {
           const spoken = await halt.sayAuthored(action.say);
@@ -607,6 +617,9 @@ export function ClassRoom({
         // would have fed it read the stale placement blob.
         nodeIds: outcomesOf(lesson),
         mastery: masteryFromModel(),
+        // What she remembers about them (lib/studentMemory.ts): interests,
+        // hard topics, wins, past doubts, last class, their commitment.
+        notes: memoryNotes(tutorLanguage()),
       }),
     [profile, settings.klass, doubts, lesson.id],
   );
@@ -964,6 +977,12 @@ export function ClassRoom({
           probed: ask.whyProbe !== undefined,
         });
         // "unclear" is not evidence about the student — nothing is recorded.
+        // Her notebook: the same marks for a spoken answer as for a tap.
+        {
+          const where = { topic: playerRef.current.beat?.topic ?? lesson.title, lessonId: lesson.id };
+          if (judged.verdict === 'wrong') recordStruggle(where);
+          else if (judged.verdict === 'right' && tries === 0 && (tapRung.current.get(heldAskBeat) ?? 0) === 0) recordWin(where);
+        }
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
           // The ledger keeps what the counter cannot: their actual words, the
@@ -1152,6 +1171,8 @@ export function ClassRoom({
     // What the board must not give away, and a fresh doubt on the board.
     heldAskRef.current = player.pendingAsk ?? null;
     board.beginDoubt();
+    // Her notebook: the topic they raised a hand about — never their words.
+    recordDoubtTopic({ topic: player.beat?.topic ?? lesson.title, lessonId: lesson.id });
     logDoubt(lesson.id, ctx.beatId);
     // Located precisely: this hand is about the outcomes THIS beat teaches,
     // not about the chapter it happens to sit in.
@@ -1211,29 +1232,48 @@ export function ClassRoom({
   const greetingLine = (): string | null => {
     const first = (profileStore.get().name ?? '').trim().split(/\s+/)[0] ?? '';
     const hi = tutorLanguage() === 'hi-en';
-    let last: { id: string; title: string } | null = null;
-    try {
-      const raw = localStorage.getItem(LAST_CLASS_KEY);
-      last = raw ? (JSON.parse(raw) as { id: string; title: string }) : null;
-    } catch {
-      last = null;
-    }
+    const memory = greetingMemory();
     const title = lesson.title;
     const who = first ? ` ${first}` : '';
+    // Their own promise from last time comes first — a tutor who remembers it
+    // is a tutor who noticed them.
+    const promise = memory.commitment
+      ? hi
+        ? ` Pichhli baar tumne khud se promise kiya tha: "${memory.commitment.text}" — aaj try karte hain!`
+        : ` Last time you promised yourself: "${memory.commitment.text}" — let's try it today!`
+      : '';
     if (canResume) {
       return hi
-        ? `Welcome back${who}! Chalo, ${title} wahi se aage badhaate hain jahan chhoda tha.`
-        : `Welcome back${who}! Let's pick up ${title} right where we left off.`;
+        ? `Welcome back${who}! Chalo, ${title} wahi se aage badhaate hain jahan chhoda tha.${promise}`
+        : `Welcome back${who}! Let's pick up ${title} right where we left off.${promise}`;
     }
-    if (last && last.id !== lesson.id && last.title) {
+    if (memory.lastTitle && memory.lastLessonId !== lesson.id) {
+      const hard = memory.struggle
+        ? hi
+          ? ` "${memory.struggle}" thoda tricky laga tha — koi baat nahi, woh bhi pakka karenge.`
+          : ` "${memory.struggle}" felt tricky — no worries, we'll make that solid too.`
+        : '';
       return hi
-        ? `Welcome back${who}! Pichhli baar humne ${last.title} padha tha. Aaj hum ${title} karenge — chalo shuru karein.`
-        : `Welcome back${who}! Last time we did ${last.title}. Today it's ${title} — let's begin.`;
+        ? `Welcome back${who}! Pichhli baar humne ${memory.lastTitle} padha tha.${hard} Aaj hum ${title} karenge.${promise}`
+        : `Welcome back${who}! Last time we did ${memory.lastTitle}.${hard} Today it's ${title}.${promise}`;
     }
     return hi
       ? `Hi${who}! Main Meera hoon. Aaj hum ${title} padhenge — koi bhi doubt ho toh haath uthana. Chalo shuru karein!`
       : `Hi${who}! I'm Meera. Today we're doing ${title} — raise your hand any time you have a doubt. Let's begin!`;
   };
+
+  // Her notebook: where this class has got to, every beat — so the next
+  // greeting knows the last class even when the student left halfway.
+  const classStarted = player.state !== 'idle';
+  useEffect(() => {
+    if (!classStarted || halt.halted) return;
+    setLastSession({
+      lessonId: lesson.id,
+      title: lesson.title,
+      beatsDone: player.state === 'ended' ? lesson.beats.length : player.beatIndex,
+      total: lesson.beats.length,
+    });
+  }, [classStarted, player.beatIndex, player.state, lesson, halt]);
 
   const startClass = async () => {
     if (halt.halted) return;
@@ -1241,11 +1281,6 @@ export function ClassRoom({
     if (!greeted.current) {
       greeted.current = true;
       const line = greetingLine();
-      try {
-        localStorage.setItem(LAST_CLASS_KEY, JSON.stringify({ id: lesson.id, title: lesson.title }));
-      } catch {
-        // A private window: she simply will not remember next time.
-      }
       if (line) {
         const spoken = await halt.sayAuthored(line);
         if (spoken.halted) return;

@@ -207,6 +207,15 @@ export function handOverDevice(ownerId: string): number {
 }
 
 /**
+ * A per-student record kept outside a Store (lib/studentMemory.ts) joins the
+ * same wipe: a phone handed to the next student, or a student deleted, must not
+ * carry the last child's notebook into the new one's class.
+ */
+export function registerDeviceReset(key: string, reset: () => void): void {
+  resets.set(key, reset);
+}
+
+/**
  * Empty this device, now, whoever it belongs to.
  *
  * `handOverDevice` clears when the NEXT student arrives. This is the other

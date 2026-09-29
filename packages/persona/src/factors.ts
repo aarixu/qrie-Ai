@@ -81,6 +81,15 @@ export interface StudentContext {
    * still says nothing, like every other field here.
    */
   language?: TutorLanguage;
+  /**
+   * WHAT SHE REMEMBERS ABOUT THIS STUDENT (2026-09-29): interests, topics that
+   * were hard or went well, what they asked about, the last class, their
+   * commitment — plain-fact lines the app builds on the device
+   * (apps/classroom/src/lib/studentMemory.ts `memoryNotes`). Rendered with the
+   * other private notes, which she is told never to read out. Absent or empty
+   * says nothing.
+   */
+  notes?: readonly string[];
 }
 
 // --- Thresholds -------------------------------------------------------------
@@ -189,6 +198,14 @@ export const FACTORS: Record<keyof StudentContext, FactorSpec> = {
       'absent: unknown. Produces NO line, like every other factor. Rendered beside the speaking rules rather than in the private notes, because it is how she speaks rather than something she knows.',
     ],
   },
+  notes: {
+    observedFrom:
+      "the device's student memory (apps/classroom/src/lib/studentMemory.ts): interests from a fixed list, hard topics, wins, doubt topics, last class, commitment — never names, answers or transcripts",
+    values: [
+      'each line: passed through trimmed, capped at 300 characters, at most six',
+      'absent or empty: unknown. Produces NO line.',
+    ],
+  },
 };
 
 /** A finite number inside [0, 1], or null. Anything else is treated as unknown. */
@@ -283,6 +300,13 @@ export function describeFactors(ctx: StudentContext): string[] {
   if (ctx.attendance !== undefined) {
     const line = attendanceLine(ctx.attendance);
     if (line !== null) lines.push(line);
+  }
+
+  // What she remembers: trimmed, blank lines dropped, each capped so memory can
+  // never crowd out the lesson. At most six.
+  for (const note of (ctx.notes ?? []).slice(0, 6)) {
+    const line = note.replace(/\s+/g, ' ').trim().slice(0, 300);
+    if (line !== '') lines.push(line);
   }
 
   return lines;

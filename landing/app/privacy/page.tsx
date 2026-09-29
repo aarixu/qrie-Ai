@@ -125,6 +125,15 @@ export default function PrivacyPage() {
           flags an answer, we keep none of its words. A note of what the safety
           check noticed stays on your device and is not sent to us.
         </p>
+        <p>
+          To teach you better, the tutor keeps a small notebook about you on your
+          device: the hobbies you picked from a list, which topics felt hard or
+          went well, what you raised your hand about (the topic, not your words),
+          your last class, and the promise you chose at the end of it. It is not
+          sent to us as a notebook — a few of its lines go along with your
+          questions to the tutor so she can use them. Deleting your account, or
+          another student signing in on the same phone, clears it.
+        </p>
       </Section>
 
       <Section title="How long it is kept">

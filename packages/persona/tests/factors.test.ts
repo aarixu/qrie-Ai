@@ -164,6 +164,7 @@ describe('FACTORS catalogue', () => {
       'lastAnswer',
       'attendance',
       'language',
+      'notes',
     ]);
     for (const spec of Object.values(FACTORS)) {
       expect(spec.observedFrom.trim().length).toBeGreaterThan(0);
@@ -178,5 +179,22 @@ describe('FACTORS catalogue', () => {
     for (const key of Object.keys(FACTORS)) {
       expect(invented).not.toContain(key.toLowerCase());
     }
+  });
+});
+
+describe('what she remembers about the student (notes, 2026-09-29)', () => {
+  it('passes the memory notes through as private notes, capped and trimmed', () => {
+    const lines = describeFactors({
+      klass: 8,
+      notes: ['They enjoy cricket.', '   ', 'x'.repeat(400), 'Recently found hard: "Substitution".'],
+    });
+    expect(lines).toContain('They enjoy cricket.');
+    expect(lines).toContain('Recently found hard: "Substitution".');
+    expect(lines.some((l) => l.trim() === '')).toBe(false);
+    expect(lines.every((l) => l.length <= 300)).toBe(true);
+  });
+
+  it('says nothing when there is nothing remembered', () => {
+    expect(describeFactors({ klass: 8 })).toEqual(describeFactors({ klass: 8, notes: [] }));
   });
 });

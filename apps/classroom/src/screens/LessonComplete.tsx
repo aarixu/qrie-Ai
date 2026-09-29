@@ -7,6 +7,12 @@ import { quizHistoryStore, bestScore } from '../stores/quizHistory';
 import { preferencesStore } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
+import { setCommitment } from '../lib/studentMemory';
+import { tutorLanguage } from '../lib/workspace';
+
+/** The promises a student can pick at the end of a class — short, doable, theirs. */
+const PROMISES_EN = ['3 questions without hints', 'Revise this for 10 minutes', 'Explain it to someone at home'];
+const PROMISES_HI = ['3 sawaal bina hint ke', '10 minute revision', 'Ghar pe kisi ko samjhaana'];
 
 /**
  * The moment of celebration after a lesson — the screen every learning app
@@ -33,6 +39,8 @@ export function LessonComplete() {
   const preferences = useStore(preferencesStore);
   const [secondsLeft, setSecondsLeft] = useState(AUTOPLAY_SECONDS);
   const [stayHere, setStayHere] = useState(false);
+  const [promise, setPromise] = useState<string | null>(null);
+  const hinglish = tutorLanguage() === 'hi-en';
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [next, setNext] = useState<CatalogEntry | null>(null);
 
@@ -97,6 +105,39 @@ export function LessonComplete() {
             {streak}-day streak
           </div>
         )}
+
+        {/* A TINY PROMISE FOR NEXT TIME (G6-local, 2026-09-29). One tap; the
+            next class opens by remembering it (lib/studentMemory.ts). Picking
+            one stops the countdown, because they are choosing, not leaving. */}
+        <div className="w-full rounded-xl bg-surface-container-lowest px-4 py-3 shadow-sm text-left">
+          {promise ? (
+            <p aria-live="polite" className="font-label-md text-label-md text-on-surface">
+              {hinglish ? 'Pakka! Agli class mein Meera yaad dilayegi: ' : "Done! Meera will remind you next class: "}
+              <span className="font-semibold">{promise}</span>
+            </p>
+          ) : (
+            <>
+              <p className="font-label-md text-label-md text-on-surface mb-2">
+                {hinglish ? 'Agli baar ke liye ek chhota sa promise?' : 'A small promise for next time?'}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {(hinglish ? PROMISES_HI : PROMISES_EN).map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => {
+                      setStayHere(true);
+                      setCommitment({ text: p, lessonTitle: entry?.title ?? '' });
+                      setPromise(p);
+                    }}
+                    className="min-h-[44px] rounded-full bg-primary-fixed px-3.5 py-2 font-label-md text-[13px] text-on-surface"
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
 
         <div className="grid gap-3 w-full mt-2">
           {autoplaying && (

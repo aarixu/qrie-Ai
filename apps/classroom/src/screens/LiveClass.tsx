@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { interestLine } from '../lib/studentMemory';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { saveable, type PrepProgress } from '@ai-tutor/class-prep';
 import type { Lesson } from '@ai-tutor/lesson-format';
@@ -688,7 +689,14 @@ export function LiveClassRoute() {
       const outcomes = outcomesForTopic(ask.topicRef);
 
       const made = await prepareLiveClass(
-        { ...ask, studentLines, outcomes },
+        {
+          ...ask,
+          // What they enjoy (lib/studentMemory.ts, a fixed list): a real-life
+          // example drawn from it lands better. Not personal data about the
+          // child beyond a hobby, and never their name.
+          studentLines: [...studentLines, ...interestLine()],
+          outcomes,
+        },
         (p) => {
           if (!cancelled) setProgress(p);
         },
