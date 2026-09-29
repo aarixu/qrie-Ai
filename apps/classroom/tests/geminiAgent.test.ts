@@ -784,4 +784,19 @@ describe('thinking out loud', () => {
     const said = await run(0);
     expect(said).toEqual(['Here is why.']);
   });
+
+  // Round-8 review: said as the end of an answer, the thinking line closed a
+  // doubt at its turn cap and the answer that followed was never heard.
+  it('marks the thinking line as not the end of her answer', async () => {
+    answerAfter(150);
+    const flags: (boolean | undefined)[] = [];
+    const s = createGeminiAgent({ student: { klass: 10 } as never, thinkingMs: 30 }).start(ctx, {
+      say: async (_t: string, o?: { more?: boolean }) => void flags.push(o?.more),
+      recall: () => {},
+      done: () => {},
+    });
+    s.sendUserText('why four chambers?');
+    await new Promise((r) => setTimeout(r, 230));
+    expect(flags[0]).toBe(true);
+  });
 });

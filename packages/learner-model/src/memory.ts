@@ -77,10 +77,14 @@ export function onAnswer(prev: ConceptState, at: string, rung: number, correct: 
   }
 
   // Rescheduled only when something changed — first meeting, a miss, a
-  // climb. A right answer that holds keeps the date it was due: resetting it
-  // pushed the review away every time a keen child practised early, and the
-  // box never climbed (seventh review, 2026-09-29).
-  const held = correct && prev.box !== null && box === prev.box && prev.nextReviewAt !== null;
+  // climb, or a due retrieval at the top box, which cannot climb (eighth
+  // review: holding its date kept a mastered outcome due forever). Any other
+  // right answer that holds keeps the date it was due: resetting it pushed the
+  // review away every time a keen child practised early, and the box never
+  // climbed (seventh review, 2026-09-29).
+  const dueNow = prev.nextReviewAt !== null && Date.parse(at) >= Date.parse(prev.nextReviewAt);
+  const held =
+    correct && prev.box !== null && box === prev.box && prev.nextReviewAt !== null && !(retrieval && dueNow && box === TOP_BOX);
   const out: Partial<ConceptState> = { box, nextReviewAt: held ? prev.nextReviewAt : reviewAt(at, box) };
   if (rung >= EXPOSURE_RUNG) out.lastExposedAt = at;
   if (retrieval) {

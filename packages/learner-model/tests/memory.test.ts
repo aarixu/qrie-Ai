@@ -137,3 +137,22 @@ describe('the review ladder, seventh review', () => {
     expect(m.states.a.box).toBe(4);
   });
 });
+
+describe('the review ladder, eighth review', () => {
+  // At the top box a due right answer cannot climb, and holding the old due
+  // date kept a mastered outcome due forever, at the head of every review card.
+  it('reschedules a due right answer at the top box instead of leaving it due', () => {
+    const d0 = day(0);
+    const top = {
+      ...emptyConceptState('a'),
+      box: 5,
+      nextReviewAt: at(d0, 0),
+      lastExposedAt: at(d0, -90),
+      lastRetrievedAt: at(d0, -60),
+    };
+    const d1 = day(1);
+    const m = foldSession({ ...emptyModel(), states: { a: top } }, d1, [answer(d1, true)], index, params);
+    expect(m.states.a.box).toBe(5);
+    expect(Date.parse(m.states.a.nextReviewAt!)).toBeGreaterThan(Date.parse(d1.startedAt));
+  });
+});

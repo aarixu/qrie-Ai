@@ -555,13 +555,18 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
              * few seconds, and a person does not sit in silence while they
              * think about a child's question: if the model has not answered
              * within THINKING_ALOUD_MS she says so — "Hmm, let me think about
-             * that." — and the reply follows that line. A quick reply gets no
+             * that." — and the reply is said after it. A quick reply gets no
              * such line.
+             *
+             * `more`: the line is not the end of her answer. Without it the
+             * handoff took it as the answer to a doubt's last allowed turn,
+             * closed the doubt when it ended, and the reply was never heard
+             * (round-8 review).
              */
             const pending = call(userText);
             let thinking: Promise<void> | null = null;
             const timer = setTimeout(() => {
-              if (!stopped) thinking = io.say(thinkingLine(tutorLanguage(), userText));
+              if (!stopped) thinking = io.say(thinkingLine(tutorLanguage(), userText), { more: true });
             }, opts.thinkingMs ?? THINKING_ALOUD_MS);
             let reply: Awaited<typeof pending>;
             try {
