@@ -88,6 +88,9 @@ function voice(): TtsAdapter {
   return {
     speak(text) {
       spoken.push(text);
+      // Her greeting (2026-09-29) is said before the first beat; the line held
+      // is the first line of the CLASS, as before.
+      if (/^(Hi|Welcome back)\b/.test(text)) return Promise.resolve();
       if (!first) return Promise.resolve();
       first = false;
       return new Promise<void>((resolve) => waiting.push(resolve));
@@ -343,7 +346,9 @@ describe('a tapped option whose why trips the distress screen', () => {
 
     await tapFour(host);
 
-    expect(spoken).toContain(`And why is that the right one? ${RIGHT_WHY}`);
+    // Since 2026-09-29 the praise is decide()'s (a short persona line) with
+    // the authored why inside it — so the why itself is what must be heard.
+    expect(spoken.some((line) => line.includes(RIGHT_WHY))).toBe(true);
     expect(spoken).toContain(lesson.beats[1].narration);
   });
 });

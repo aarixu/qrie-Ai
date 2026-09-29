@@ -2,6 +2,16 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+/**
+ * THE GATE IS OFF IN THE APP SINCE 2026-09-29 (Aarav: full tutor first). These
+ * tests keep proving what it does when it is turned back on, so they turn it on
+ * here — the constant and the one helper that reads it inside the module.
+ */
+vi.mock('../src/lib/prototype', async (real) => ({
+  ...(await real<typeof import('../src/lib/prototype')>()),
+  PROTOTYPE_ONLY_PREPARED: true,
+  isFrozen: (r: string) => r === 'not-yet',
+}));
 import { Chapter } from '../src/screens/Chapter';
 import { AskBox } from '../src/ui/AskBox';
 import { LiveClassRoute } from '../src/screens/LiveClass';

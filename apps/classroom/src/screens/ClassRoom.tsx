@@ -45,6 +45,8 @@ import { useBoardSession } from '../lib/boardSession';
 import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
+import { decide } from '@ai-tutor/tutor-control';
+import type { AssistanceRung } from '@ai-tutor/ledger';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
@@ -69,6 +71,9 @@ const CONTROLS_IDLE_MS = 3_500;
 const PREPARE_MS = 5_000;
 
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
+/** The last class sat on this device, for her greeting next time. Local only. */
+const LAST_CLASS_KEY = 'qrie:last-class';
+
 export function LessonRoute() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
@@ -356,6 +361,48 @@ export function ClassRoom({
    * nothing: the hint is spoken and the chips stay, because wrong gets a
    * nudge and another try, never the solution on the first miss.
    */
+  /**
+   * "Give me a hint" (a quick reply). The next rung up to the hint, decided by
+   * decide() like every other help, filed as ASKED-FOR help before it is said,
+   * and written into the question's work area.
+   */
+  const requestHint = async () => {
+    if (halt.halted) return;
+    const ask = player.pendingAsk;
+    if (!ask || !player.beat) return;
+    const beatId = player.beat.id;
+    setAskBusy(true);
+    try {
+      const action = decide({
+        verdict: 'hintRequest',
+        attempt: (tapTries.current.get(beatId) ?? 0) + 1,
+        rungSoFar: tapRung.current.get(beatId) ?? 0,
+        ask,
+        lang: tutorLanguage(),
+        now: Date.now(),
+        recentLines: recentLines.current,
+      });
+      tapRung.current.set(beatId, action.rung);
+      if (action.helped !== null) ledger.helped(beatId, action.helped, true);
+      const hintText = action.boardIntent?.text ?? ask.hint;
+      if (hintText) board.writeHeld(beatId, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }]);
+      if (action.say) {
+        recentLines.current = [...recentLines.current.slice(-8), action.say];
+        const spoken = await halt.sayAuthored(action.say);
+        if (spoken.halted) return;
+      }
+      ledger.reopened(beatId, Date.now());
+    } finally {
+      setAskBusy(false);
+    }
+  };
+
+  /** Per held question: taps so far, and the highest ladder rung delivered (decide()). */
+  const tapTries = useRef(new Map<string, number>());
+  const tapRung = useRef(new Map<string, AssistanceRung>());
+  /** Her recent fixed lines, so decide() never says the same one twice in a row. */
+  const recentLines = useRef<string[]>([]);
+
   // True while an answer is being weighed or spoken about — the choices hide
   // AT ONCE on a tap or a heard answer, so nothing on screen suggests the
   // class did not register it. They return only if the answer was wrong.
@@ -393,33 +440,66 @@ export function ClassRoom({
     }
     setAskBusy(true);
     try {
-      // The why and the hint are the LESSON'S words, so they go through the
-      // halt's voice for the lesson (`sayAuthored`): refused once the class
-      // has halted — the gate does not open and the retry clock does not
-      // start, because there is no class left to continue — and a line that
-      // trips the distress screen is withheld rather than said, without
-      // halting a class whose student has only tapped. lib/sessionHalt.ts
-      // says why.
+      // An open ask's "carry on" is not an answer: it only opens the gate.
+      if (!option) {
+        player.answer(index);
+        return;
+      }
+      /**
+       * THE LADDER, DECIDED BY THE LAM, NOT BY A LITERAL (E2/E3, 2026-09-29).
+       *
+       * `decide()` (@ai-tutor/tutor-control) picks the action from this ask's
+       * attempt and the help already given: a first miss gets a content-free
+       * "look again" (L1), a second the authored hint (L3), a third the answer
+       * and why (L8); a right answer gets brief praise with the authored why.
+       * Its words are the lesson's own or fixed persona lines — never invented
+       * — in the child's language. The help is filed BEFORE it is said or
+       * written, so the next attempt already stands on the right rung.
+       *
+       * They go through the halt's voice for the lesson (`sayAuthored`):
+       * refused once the class has halted, and a line that trips the distress
+       * screen is withheld rather than said (lib/sessionHalt.ts).
+       */
+      const attempt = (tapTries.current.get(beatId) ?? 0) + 1;
+      tapTries.current.set(beatId, attempt);
+      const action = decide({
+        verdict: correct ? 'right' : 'wrong',
+        attempt,
+        rungSoFar: tapRung.current.get(beatId) ?? 0,
+        ask,
+        matchedOption: index,
+        lang: tutorLanguage(),
+        now: Date.now(),
+        recentLines: recentLines.current,
+      });
+      tapRung.current.set(beatId, action.rung);
+      if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested);
+      if (action.say) recentLines.current = [...recentLines.current.slice(-8), action.say];
       if (correct) {
-        const why = option?.why;
-        if (why) {
-          const spoken = await halt.sayAuthored(`And why is that the right one? ${why}`);
+        if (action.say) {
+          const spoken = await halt.sayAuthored(action.say);
           if (spoken.halted) return;
         }
         player.answer(index);
       } else {
         player.answer(index);
-        const nudge = option?.hint ?? option?.why;
-        if (nudge) {
-          // Recorded BEFORE it is spoken, so the next attempt is already
-          // standing on rung 3 rather than being mistaken for an unassisted one.
-          ledger.helped(beatId, 3, false);
-          const spoken = await halt.sayAuthored(nudge);
+        /**
+         * THE BOARD AT A HELD QUESTION (T2.5): their pick goes into the work
+         * area under the question, and the hint or the answer beside it — the
+         * way a tutor writes the student's attempt down before helping with it.
+         */
+        const written = action.boardIntent?.text ?? (action.kind === 'hint' ? (option.hint ?? ask.hint) : undefined);
+        board.writeHeld(beatId, [
+          { author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${option.text}` }] }] },
+          ...(written ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: written }] }] }] : []),
+        ]);
+        if (action.say) {
+          const spoken = await halt.sayAuthored(action.say);
           if (spoken.halted) return;
-          // And the clock on the retry starts when she stops, not when they
-          // missed: the chips come back now. Same rule as the spoken path.
-          ledger.reopened(beatId, Date.now());
         }
+        // And the clock on the retry starts when she stops, not when they
+        // missed: the chips come back now. Same rule as the spoken path.
+        ledger.reopened(beatId, Date.now());
       }
     } finally {
       setAskBusy(false);
@@ -722,6 +802,7 @@ export function ClassRoom({
        */
       let probe: { answer: string; question: string; askedAt: number } | null = null;
       let tries = 0;
+      let silences = 0;
       while (!over()) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
@@ -815,7 +896,37 @@ export function ClassRoom({
           return;
         }
 
-        if (heard.text === null) return; // silence — the chips carry it
+        if (heard.text === null) {
+          /**
+           * SILENCE GETS A GENTLE NUDGE, NOT A DEAD END (E4, 2026-09-29).
+           *
+           * A tutor who asked and heard nothing does not just wait forever: she
+           * says "take your time — want a hint?" once (content-free, filed as
+           * L1 help), listens again, and on a second silence gives the authored
+           * hint (L3). After that the chips carry it. A mic that failed
+           * ('error') is not a quiet student and gets no nudge.
+           */
+          if (heard.reason !== 'silence' || silences >= 2) return;
+          silences += 1;
+          const nudge = decide({
+            verdict: silences === 1 ? 'silent' : 'hintRequest',
+            attempt: tries + 1,
+            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            ask,
+            lang: tutorLanguage(),
+            now: Date.now(),
+            recentLines: recentLines.current,
+          });
+          tapRung.current.set(heldAskBeat, nudge.rung);
+          if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, nudge.requested);
+          if (!nudge.say) return;
+          recentLines.current = [...recentLines.current.slice(-8), nudge.say];
+          setEar('off');
+          const spokenNudge = await halt.sayAuthored(nudge.say);
+          if (over() || spokenNudge.halted) return;
+          ledger.reopened(heldAskBeat, Date.now());
+          continue;
+        }
         setEar('thinking');
         /**
          * THE CLASS JUDGES ITS OWN ASK WHEN IT CAN AFFORD TO.
@@ -1088,9 +1199,58 @@ export function ClassRoom({
   const savedBeat = progressStore.get().lessons[lesson.id]?.beatIndex ?? 0;
   const canResume =
     player.state === 'idle' && savedBeat > 0 && !isCompleted(progressStore.get(), lesson.id);
-  const startClass = () => {
+  /**
+   * SHE GREETS THEM, BY NAME, AND REMEMBERS LAST TIME (G6-local, 2026-09-29).
+   *
+   * One warm line before the first beat: the student's first name (at most
+   * once a class), and the last class they sat on this device when there was
+   * one. Kept on the device only (`lastClassKey`) and never written into a
+   * shared lesson; the name travels only in this one spoken line.
+   */
+  const greeted = useRef(false);
+  const greetingLine = (): string | null => {
+    const first = (profileStore.get().name ?? '').trim().split(/\s+/)[0] ?? '';
+    const hi = tutorLanguage() === 'hi-en';
+    let last: { id: string; title: string } | null = null;
+    try {
+      const raw = localStorage.getItem(LAST_CLASS_KEY);
+      last = raw ? (JSON.parse(raw) as { id: string; title: string }) : null;
+    } catch {
+      last = null;
+    }
+    const title = lesson.title;
+    const who = first ? ` ${first}` : '';
+    if (canResume) {
+      return hi
+        ? `Welcome back${who}! Chalo, ${title} wahi se aage badhaate hain jahan chhoda tha.`
+        : `Welcome back${who}! Let's pick up ${title} right where we left off.`;
+    }
+    if (last && last.id !== lesson.id && last.title) {
+      return hi
+        ? `Welcome back${who}! Pichhli baar humne ${last.title} padha tha. Aaj hum ${title} karenge — chalo shuru karein.`
+        : `Welcome back${who}! Last time we did ${last.title}. Today it's ${title} — let's begin.`;
+    }
+    return hi
+      ? `Hi${who}! Main Meera hoon. Aaj hum ${title} padhenge — koi bhi doubt ho toh haath uthana. Chalo shuru karein!`
+      : `Hi${who}! I'm Meera. Today we're doing ${title} — raise your hand any time you have a doubt. Let's begin!`;
+  };
+
+  const startClass = async () => {
     if (halt.halted) return;
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
+    if (!greeted.current) {
+      greeted.current = true;
+      const line = greetingLine();
+      try {
+        localStorage.setItem(LAST_CLASS_KEY, JSON.stringify({ id: lesson.id, title: lesson.title }));
+      } catch {
+        // A private window: she simply will not remember next time.
+      }
+      if (line) {
+        const spoken = await halt.sayAuthored(line);
+        if (spoken.halted) return;
+      }
+    }
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
   };
@@ -1320,6 +1480,26 @@ export function ClassRoom({
                   {option.text}
                 </button>
               ))}
+              {/* QUICK REPLIES (2026-09-29): what a student says to a tutor
+                  who is waiting on them — ask for a hint, or say they are
+                  lost. A hint goes through decide() like any other help; "not
+                  sure" opens a doubt with Meera about this very question. */}
+              {!askChoicesHidden && (
+                <span className="w-full flex justify-center gap-2">
+                  <button
+                    onClick={() => void requestHint()}
+                    className="min-h-[44px] rounded-full bg-stage-primary px-4 py-2 font-label-md text-[13px] font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
+                  >
+                    💡 {tutorLanguage() === 'hi-en' ? 'Hint do' : 'Give me a hint'}
+                  </button>
+                  <button
+                    onClick={() => void raiseHand()}
+                    className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
+                  >
+                    🙋 {tutorLanguage() === 'hi-en' ? 'Samajh nahi aaya' : "I'm not sure"}
+                  </button>
+                </span>
+              )}
             </div>
           )}
 

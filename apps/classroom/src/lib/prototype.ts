@@ -20,7 +20,13 @@ import { useState } from 'react';
  * to be remembered or unpicked. That is the whole reason it is a constant and
  * not a scattering of conditions.
  */
-export const PROTOTYPE_ONLY_PREPARED = true;
+/**
+ * OFF SINCE 2026-09-29 (Aarav: build the full tutor first, cost later). Vertex
+ * is live and a cold class was proven to prepare end to end (43 s, one repair,
+ * played); live prep now runs the reviewer and the T1 gates, and a class it
+ * keeps is stored PENDING until published. Set true again to freeze cold topics.
+ */
+export const PROTOTYPE_ONLY_PREPARED = false;
 
 /**
  * WHETHER A TOPIC CAN BE OPENED — and 'loading' is not 'no'.
