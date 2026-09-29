@@ -25,7 +25,9 @@ vi.mock('../src/lib/graphContext', async () => {
   return { currentIndex: () => index, currentParams: () => kg.emptyParams() };
 });
 
-const { loadModel, masteryFromModel, recordLocally } = await import('../src/lib/learnerModel');
+const { learnerModelStore, loadModel, masteryFromModel, recordLocally } = await import(
+  '../src/lib/learnerModel'
+);
 
 const session: LearningSession = {
   id: 's1',
@@ -77,6 +79,30 @@ describe('the model as the store', () => {
     await recordLocally(session, [answer]);
     expect(masteryFromModel().n1).toBe(once);
     expect(loadModel().states.n1.unassistedObservations).toBe(1);
+  });
+
+  /**
+   * B6. Every reader of `masteryFromModel` makes a decision — the plan's gaps,
+   * the doubt tutor's secure/shaky marks, the planner's "they hold securely"
+   * line — so it hands them what the student did ALONE. An outcome answered
+   * right only with a hint is unknown there, never secure.
+   */
+  it('hands decisions unassisted belief, and nothing for an outcome only answered with help', async () => {
+    // The store caches in memory; an earlier test's answer must not be here.
+    learnerModelStore.set(emptyModel());
+    const later: LearningSession = { id: 's2', source: 'quiz', startedAt: '2026-09-15T10:00:00.000Z' };
+    const hinted = {
+      ...answer,
+      id: 'e2',
+      sessionId: 's2',
+      payload: { ...(answer.payload as object), assistanceRung: 3, hintsShown: 1 },
+    } as unknown as LedgerEvent;
+    await recordLocally(later, [hinted]);
+    expect(loadModel().states.n1.mastery).toBeGreaterThan(0.5);
+    expect(masteryFromModel().n1).toBeUndefined();
+
+    await recordLocally(later, [{ ...answer, id: 'e3', sessionId: 's2', seq: 1 } as LedgerEvent]);
+    expect(masteryFromModel().n1).toBe(loadModel().states.n1.unassistedMastery);
   });
 
   it('survives storage being unreadable rather than taking the class down', async () => {

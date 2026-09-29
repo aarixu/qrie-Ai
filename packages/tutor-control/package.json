@@ -1,0 +1,13 @@
+{
+  "name": "@ai-tutor/tutor-control",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "@ai-tutor/knowledge-graph": "*",
+    "@ai-tutor/ledger": "*",
+    "@ai-tutor/lesson-format": "*"
+  }
+}

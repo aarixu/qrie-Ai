@@ -1,6 +1,6 @@
 import { learnFromQuiz } from '@ai-tutor/diagnostic';
 import type { Answer, GraphIndex } from '@ai-tutor/knowledge-graph';
-import { evidenceSet } from '@ai-tutor/learner-model';
+import { unassistedEvidence } from '@ai-tutor/learner-model';
 import { loadModel, masteryFromModel } from './learnerModel';
 import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
@@ -78,6 +78,11 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
    * it as live. The model has folded every class, quiz and placement answer
    * since; a stale 0.99 from test day must not veto a gap the student just
    * demonstrated, and a stale 0.30 must not resurrect one they have closed.
+   *
+   * UNASSISTED belief (B6): `masteryFromModel()` holds only outcomes answered
+   * cold. A gap is a decision, and a hinted answer — right or wrong — says
+   * nothing about what the student can do alone, so an outcome with no cold
+   * answer is unknown here and never becomes a step on the strength of help.
    */
   const belief = { ...before, mastery: masteryFromModel() };
   // The same trained slip/guess and edge trust the placement test uses. A
@@ -85,9 +90,12 @@ export function adaptToQuiz(outcome: QuizOutcome): PlanChange | null {
   // calibration here meant ignoring it almost everywhere.
   const adapted = learnFromQuiz(belief, answersFrom(outcome), index, {
     params: modelStore.get(),
-    // What the model has seen of this student beyond this quiz, so a break
-    // found in a class is eligible to become a step here.
-    knownEvidence: evidenceSet(loadModel()),
+    // What the model has seen of this student COLD beyond this quiz, so a
+    // break found in a class is eligible to become a step here. The gate that
+    // belongs with the view above: an outcome outside it is absent from that
+    // view, sits at the prior, and so cannot be a gap either way today — the
+    // pairing keeps it so if the view ever stops defaulting to the prior.
+    knownEvidence: unassistedEvidence(loadModel()),
   });
 
   /**

@@ -14,7 +14,9 @@ import type {
   HelpedPayload,
   LedgerEvent,
 } from '@ai-tutor/ledger';
-import { deriveRung } from './rung.ts';
+import { defaultCredit } from './assistance.ts';
+import { recordColdWin, stampMastery } from './mastered.ts';
+import { atLeastANudge, deriveRung } from './rung.ts';
 import {
   MODEL_VERSION,
   emptyConceptState,
@@ -92,7 +94,7 @@ export function foldSession(
 
     switch (event.kind) {
       case 'answered':
-        next = foldAnswer(next, event, help, index, params);
+        next = foldAnswer(next, session, event, help, index, params);
         break;
       case 'taught':
         next = foldTaught(next, event);
@@ -147,6 +149,22 @@ function askKey(
 }
 
 /**
+ * WHICH ITEM AN ANSWER WAS TO, for B8's "two distinct items".
+ *
+ * A probe id names one bank question wherever it is asked. A beat id is only
+ * unique inside its lesson — "b3_4" exists in many classes — so it is qualified
+ * by the event's `topicRef` where there is one. An answer with neither falls
+ * back to the ask key's outcome list, so all such answers on one outcome are
+ * ONE item: they can never make up the two distinct items on their own, which
+ * is the safe direction to be wrong in.
+ */
+function itemKey(event: LedgerEvent, payload: AnsweredPayload): string {
+  if (payload.probeId) return `probe:${payload.probeId}`;
+  if (payload.beatId) return `beat:${event.topicRef ?? ''}/${payload.beatId}`;
+  return `outcomes:${event.outcomeIds.join(',')}`;
+}
+
+/**
  * A number `applyEvidence` will read as an ANSWER rather than as a skip. Never
  * an option index — no surface has one — and never used for anything but the
  * null test at mastery.ts:157.
@@ -186,6 +204,7 @@ function chosenIndexFor(event: LedgerEvent, payload: AnsweredPayload): number | 
 
 function foldAnswer(
   model: LearnerModel,
+  session: FoldSession,
   event: LedgerEvent,
   help: Record<string, number>,
   index: GraphIndex,
@@ -197,8 +216,31 @@ function foldAnswer(
   if (event.outcomeIds.length === 0) return model;
 
   const key = askKey(payload.beatId, payload.probeId, event.outcomeIds);
-  const rung = deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung);
+  const rung = atLeastANudge(
+    deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung),
+    payload.attempt,
+  );
   const unassisted = rung === 0;
+
+  /**
+   * HELP IS DISCOUNTED, AND ONLY WHERE IT FLATTERS (B4).
+   *
+   * A RIGHT answer moves belief `defaultCredit(rung)` of the way the same
+   * answer given cold would: all of it at rung 0, 0.7 of it after a hint, 0.2
+   * of it with the answer on screen. `assistance.ts` has stated that invariant
+   * since 3.7 — a correct answer at rung k never credits more than at k-1 —
+   * while this fold applied every answer at full weight, so a right answer
+   * read off a reveal moved `mastery` exactly as far as a cold one. The
+   * discount applies to every node the answer reaches, propagation included.
+   *
+   * A WRONG answer is not discounted. Failing with help in hand is at least as
+   * much evidence against as failing cold, and softening it would err toward
+   * mastery the child does not have — the direction `deriveRung` names as the
+   * one error nothing downstream corrects. `assistedPerformance` is not
+   * discounted either: it is the record of how they do WITH help, and help is
+   * the condition it measures, not a reason to trust it less.
+   */
+  const credit = payload.correct ? defaultCredit(rung) : 1;
 
   const states = { ...model.states };
 
@@ -259,13 +301,16 @@ function foldAnswer(
     // are.
     const after = applyEvidence(before, index, answer, { probed: asked, params });
 
-    for (const [id, value] of Object.entries(after)) {
+    for (const [id, raw] of Object.entries(after)) {
       // `before` is sparse: a node nobody has met yet is absent from it, and
       // absent means PRIOR, not "did not move". Reading it as "did not move" is
       // how the first version of this merge silently dropped every result on a
       // fresh model, which is every first answer a student ever gives.
       const prior = before[id] ?? PRIOR;
-      if (value === prior) continue;
+      if (raw === prior) continue;
+      // Scaled before the merge, by one factor for the whole answer, so the
+      // merge's "furthest from where it started" still picks the same result.
+      const value = credit === 1 ? raw : prior + (raw - prior) * credit;
       const best = merged[id];
       if (best === undefined || Math.abs(value - prior) > Math.abs(best - prior)) {
         merged[id] = value;
@@ -316,7 +361,12 @@ function foldAnswer(
       const moved = applyEvidence({ [nodeId]: prev.unassistedMastery }, index, answer, { params });
       updated.unassistedMastery = moved[nodeId] ?? prev.unassistedMastery;
       updated.unassistedObservations = prev.unassistedObservations + 1;
-      if (payload.correct) updated.lastUnassistedSuccessAt = event.at;
+      if (payload.correct) {
+        updated.lastUnassistedSuccessAt = event.at;
+        updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+      }
+      // B8, on the session clock: the stamp and the spacing read the same time.
+      updated.masteredAt = stampMastery(updated, session.startedAt);
     } else {
       const moved = applyEvidence({ [nodeId]: prev.assistedPerformance }, index, answer, { params });
       updated.assistedPerformance = moved[nodeId] ?? prev.assistedPerformance;

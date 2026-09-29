@@ -1,3 +1,5 @@
+import type { TutorLanguage } from '@ai-tutor/persona';
+
 /**
  * THE SOCRATIC JUDGE — one spoken answer, weighed.
  *
@@ -164,6 +166,24 @@ export interface CrossQuestionClose {
   heard?: string;
   /** Stop here. Set only by the safety screen. */
   halt?: true;
+}
+
+/**
+ * What is true of THIS student that changes how she speaks, rather than what
+ * she needs to be able to speak at all — which is why it is not in `JudgeDeps`.
+ */
+export interface JudgeOptions {
+  /**
+   * The child's tutor language, chosen at onboarding
+   * (apps/classroom/src/lib/workspace.ts, `tutorLanguage()`).
+   *
+   * It decides the one register line `JUDGE_SYSTEM` and `CLOSE_SYSTEM` carry,
+   * so her reply is in the language the child chose, not in whatever language
+   * one answer happened to be in. It does not touch how an answer is READ:
+   * the idea is judged, not the wording and not the language. Absent means
+   * unknown, and renders no register line at all.
+   */
+  language?: TutorLanguage;
 }
 
 /**

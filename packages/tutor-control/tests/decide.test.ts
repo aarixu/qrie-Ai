@@ -1,0 +1,455 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+  FAST_WRONG_MS,
+  LINES,
+  decide,
+  leaks,
+  type Action,
+  type AskInput,
+  type DecideInput,
+  type Verdict,
+} from '../src/index';
+
+/**
+ * THE LADDER, AS A TABLE (E1a, TD1).
+ *
+ * L0 alone → L1 a rethink line → L3 the authored hint → L5 a worked example
+ * (only where one is authored) → L8 the answer and why. Right at any rung is
+ * praise. Silence is a content-free nudge. A hint request climbs to L3 and no
+ * further. Every action says why, for the ledger.
+ */
+
+const OPEN: AskInput = {
+  question: 'Solve 2x + 3 = 11. What is x?',
+  expect: 'x = 4',
+  hint: 'Take 3 from both sides first.',
+};
+
+const OPTIONS: AskInput = {
+  question: 'Which of these is a prime number?',
+  options: [
+    { text: '9', correct: false, why: 'Nine is three threes, so it has a factor besides itself.', hint: 'Can 9 be split into equal groups?' },
+    { text: '7', correct: true, why: 'Seven has only two factors: one and itself.' },
+    { text: '15', correct: false, why: 'Fifteen is three fives.' },
+  ],
+};
+
+const NO_HINT: AskInput = { question: 'Which gas do leaves take in?', expect: 'carbon dioxide' };
+
+const LEAKY_HINT: AskInput = { ...OPEN, hint: 'It is four — just check it.' };
+
+const WITH_EXAMPLE: AskInput = {
+  ...OPEN,
+  workedExample: {
+    steps: [
+      { say: 'Here is a similar one: three y plus five is twenty.', line: '3y + 5 = 20' },
+      { say: 'Take five from both sides.', line: '3y = 15' },
+      { say: 'Then divide both sides by three.', line: 'y = 5' },
+    ],
+  },
+};
+
+const LEAKY_EXAMPLE: AskInput = {
+  ...OPEN,
+  workedExample: { steps: [{ say: 'Watch: x becomes four.', line: 'x = 4' }] },
+};
+
+const OPEN_WITH_PROBE: AskInput = {
+  question: 'Why does the sugar seem to disappear in water?',
+  expect: 'it dissolves',
+  whyProbe: {
+    askedAs: 'open',
+    options: [
+      { text: 'it dissolves', correct: true, why: 'The sugar breaks into pieces too small to see and spreads through the water.' },
+      { text: 'it melts', correct: false, why: 'Melting needs heat; nothing here heated the sugar.' },
+    ],
+  },
+};
+
+const NOTHING_TO_REVEAL: AskInput = { question: 'What would you try first?' };
+
+const base = (over: Partial<DecideInput> = {}): DecideInput => ({
+  verdict: 'wrong',
+  attempt: 1,
+  rungSoFar: 0,
+  ask: OPEN,
+  lang: 'en',
+  now: 1_000_000,
+  ...over,
+});
+
+const say = (a: Action): string => a.say ?? '';
+
+describe('decide: the wrong-answer ladder (TD1)', () => {
+  it('meets a first wrong answer with a rethink line, L1', () => {
+    const a = decide(base());
+    expect(a.kind).toBe('rethink');
+    expect(a.rung).toBe(1);
+    expect(a.helped).toBe(1);
+    expect(LINES.rethink.en).toContain(say(a));
+    expect(a.mustNotReveal).toContain('x = 4');
+    expect(a.scheduleRetest).toBe(false);
+    expect(a.errorClass).toBe('unclassified');
+  });
+
+  it('meets the second with the authored hint, L3, written in the work area', () => {
+    const a = decide(base({ attempt: 2, rungSoFar: 1 }));
+    expect(a.kind).toBe('hint');
+    expect(a.rung).toBe(3);
+    expect(a.helped).toBe(3);
+    expect(say(a)).toContain(OPEN.hint);
+    expect(a.boardIntent).toEqual({ kind: 'writeInWorkArea', text: OPEN.hint });
+  });
+
+  it('prefers the chosen wrong option’s own hint over the ask’s', () => {
+    const a = decide(base({ ask: OPTIONS, attempt: 2, rungSoFar: 1, matchedOption: 0 }));
+    expect(a.kind).toBe('hint');
+    expect(say(a)).toContain('Can 9 be split into equal groups?');
+    expect(a.mustNotReveal).toContain('7');
+  });
+
+  it('meets the third with the answer and why, L8, when no worked example is authored', () => {
+    const a = decide(base({ attempt: 3, rungSoFar: 3 }));
+    expect(a.kind).toBe('reveal');
+    expect(a.rung).toBe(8);
+    expect(a.helped).toBe(8);
+    expect(say(a)).toContain('x = 4');
+    expect(a.boardIntent).toEqual({ kind: 'writeInWorkArea', text: 'x = 4' });
+    expect(a.mustNotReveal).toEqual([]);
+    expect(a.scheduleRetest).toBe(true);
+  });
+
+  it('reveals the correct option and its why on an options ask', () => {
+    const a = decide(base({ ask: OPTIONS, attempt: 3, rungSoFar: 3, matchedOption: 2 }));
+    expect(a.kind).toBe('reveal');
+    expect(say(a)).toContain('7');
+    expect(say(a)).toContain('Seven has only two factors');
+  });
+
+  it('reveals with the why-probe’s reason on an open ask that has one', () => {
+    const a = decide(base({ ask: OPEN_WITH_PROBE, attempt: 3, rungSoFar: 3 }));
+    expect(say(a)).toContain('it dissolves');
+    expect(say(a)).toContain('too small to see');
+  });
+
+  it('offers the worked example, L5, only where one is authored', () => {
+    const a = decide(base({ ask: WITH_EXAMPLE, attempt: 3, rungSoFar: 3 }));
+    expect(a.kind).toBe('workedExample');
+    expect(a.rung).toBe(5);
+    expect(a.helped).toBe(5);
+    expect(say(a)).toContain('Take five from both sides.');
+    expect(a.boardIntent).toEqual({ kind: 'writeInWorkArea', text: '3y + 5 = 20\n3y = 15\ny = 5' });
+    expect(a.mustNotReveal).toContain('x = 4');
+  });
+
+  it('reveals after the worked example', () => {
+    const a = decide(base({ ask: WITH_EXAMPLE, attempt: 4, rungSoFar: 5 }));
+    expect(a.kind).toBe('reveal');
+    expect(a.rung).toBe(8);
+  });
+
+  it('moves on, and schedules a retest, when they miss again after the reveal', () => {
+    const a = decide(base({ attempt: 4, rungSoFar: 8 }));
+    expect(a.kind).toBe('moveOn');
+    expect(a.rung).toBe(8);
+    expect(a.helped).toBeNull();
+    expect(a.scheduleRetest).toBe(true);
+    expect(LINES.moveOn.en).toContain(say(a));
+  });
+
+  it('skips a rung with nothing authored for it rather than inventing one', () => {
+    const a = decide(base({ ask: NO_HINT, attempt: 2, rungSoFar: 1 }));
+    expect(a.kind).toBe('reveal');
+    expect(a.because).toMatch(/no usable hint/i);
+  });
+
+  it('refuses an authored hint that gives the answer away', () => {
+    const a = decide(base({ ask: LEAKY_HINT, attempt: 2, rungSoFar: 1 }));
+    expect(a.kind).not.toBe('hint');
+    expect(say(a)).not.toContain('It is four');
+    expect(a.because).toMatch(/leak/i);
+  });
+
+  it('refuses a worked example that gives the answer away', () => {
+    const a = decide(base({ ask: LEAKY_EXAMPLE, attempt: 3, rungSoFar: 3 }));
+    expect(a.kind).toBe('reveal');
+    expect(a.because).toMatch(/leak/i);
+  });
+
+  it('moves on without pretending when there is no answer to reveal', () => {
+    const a = decide(base({ ask: NOTHING_TO_REVEAL, attempt: 3, rungSoFar: 3 }));
+    expect(a.kind).toBe('moveOn');
+    expect(a.helped).toBeNull();
+    expect(a.scheduleRetest).toBe(true);
+    expect(a.because).toMatch(/no authored answer/i);
+  });
+
+  it('treats an answer the judge could not place like a wrong one', () => {
+    const a = decide(base({ verdict: 'unmatched' }));
+    expect(a.kind).toBe('rethink');
+    expect(a.because).toMatch(/unmatched/);
+  });
+
+  it('counts a second attempt as at least a nudge even with no rung recorded (B4)', () => {
+    const a = decide(base({ attempt: 2, rungSoFar: 0 }));
+    expect(a.kind).toBe('hint');
+  });
+});
+
+describe('decide: a right answer', () => {
+  it('is praised warmly and briefly when it came cold, with no retest', () => {
+    const a = decide(base({ verdict: 'right' }));
+    expect(a.kind).toBe('praise');
+    expect(a.rung).toBe(0);
+    expect(a.helped).toBeNull();
+    expect(LINES.praise.en.some((line) => say(a).startsWith(line))).toBe(true);
+    expect(a.scheduleRetest).toBe(false);
+    expect(a.errorClass).toBe('none');
+    expect(a.mustNotReveal).toEqual([]);
+  });
+
+  it('is praised for sticking with it, and retested on another item, after help', () => {
+    const a = decide(base({ verdict: 'right', attempt: 3, rungSoFar: 3 }));
+    expect(a.kind).toBe('praise');
+    expect(a.rung).toBe(3);
+    expect(LINES.praiseAfterHelp.en.some((line) => say(a).startsWith(line))).toBe(true);
+    expect(a.scheduleRetest).toBe(true);
+  });
+
+  /**
+   * "You worked it out" is not true of an answer read back off the reveal, and
+   * a child hears the difference.
+   */
+  it('does not claim they worked it out when the answer had just been shown', () => {
+    const a = decide(base({ verdict: 'right', attempt: 4, rungSoFar: 8 }));
+    expect(a.kind).toBe('praise');
+    expect(LINES.praiseAfterReveal.en.some((line) => say(a).startsWith(line))).toBe(true);
+    expect(say(a)).not.toMatch(/worked it out|got there/i);
+    const hi = decide(base({ verdict: 'right', attempt: 4, rungSoFar: 8, lang: 'hi-en' }));
+    expect(LINES.praiseAfterReveal['hi-en'].some((line) => say(hi).startsWith(line))).toBe(true);
+  });
+
+  it('says what was right about it, from the authored why', () => {
+    const a = decide(base({ verdict: 'right', ask: OPTIONS, matchedOption: 1 }));
+    expect(say(a)).toContain('Seven has only two factors');
+  });
+
+  it('retests a cold right answer that goes against a weak record', () => {
+    expect(decide(base({ verdict: 'right', mastery: { unassisted: 0.3 } })).scheduleRetest).toBe(true);
+    expect(decide(base({ verdict: 'right', mastery: { unassisted: 0.9 } })).scheduleRetest).toBe(false);
+    expect(decide(base({ verdict: 'right', mastery: {} })).scheduleRetest).toBe(false);
+  });
+
+  it('does not praise when the judge’s verdict and its match disagree', () => {
+    const a = decide(base({ verdict: 'right', ask: OPTIONS, matchedOption: 0 }));
+    expect(a.kind).not.toBe('praise');
+    expect(LINES.sayAgain.en).toContain(say(a));
+    const b = decide(base({ verdict: 'wrong', ask: OPTIONS, matchedOption: 1 }));
+    expect(LINES.sayAgain.en).toContain(say(b));
+  });
+});
+
+describe('decide: silence, a request, and an answer nobody could hear', () => {
+  it('meets silence with a content-free nudge, filed as L1 help', () => {
+    const a = decide(base({ verdict: 'silent' }));
+    expect(a.kind).toBe('nudge');
+    expect(a.helped).toBe(1);
+    expect(LINES.nudge.en).toContain(say(a));
+    expect(say(a)).not.toContain(OPEN.hint);
+  });
+
+  /**
+   * The nudge is help for the RECORD — the next answer is not cold — but it is
+   * not a step on the ladder: nothing about the answer was said. So the first
+   * wrong answer after a silence still gets the rethink, not the hint.
+   */
+  it('does not spend the rethink on a silence', () => {
+    const nudge = decide(base({ verdict: 'silent' }));
+    expect(nudge.rung).toBe(0);
+    const next = decide(base({ verdict: 'wrong', rungSoFar: nudge.rung }));
+    expect(next.kind).toBe('rethink');
+  });
+
+  it('never climbs the ladder on silence', () => {
+    const a = decide(base({ verdict: 'silent', rungSoFar: 3, attempt: 2 }));
+    expect(a.kind).toBe('nudge');
+    expect(a.rung).toBe(3);
+  });
+
+  it('asks to hear an unclear answer again, and gives no help for it', () => {
+    const a = decide(base({ verdict: 'unclear', rungSoFar: 1, attempt: 2 }));
+    expect(a.kind).toBe('nudge');
+    expect(a.helped).toBeNull();
+    expect(a.rung).toBe(1);
+    expect(LINES.sayAgain.en).toContain(say(a));
+  });
+
+  it('answers a hint request with the hint, L3, marked as asked for', () => {
+    const a = decide(base({ verdict: 'hintRequest' }));
+    expect(a.kind).toBe('hint');
+    expect(a.rung).toBe(3);
+    expect(a.requested).toBe(true);
+    expect(say(a)).toContain(OPEN.hint);
+  });
+
+  it('restates the hint on a second request rather than climbing past L3', () => {
+    const a = decide(base({ verdict: 'hintRequest', rungSoFar: 3 }));
+    expect(a.kind).toBe('hint');
+    expect(a.rung).toBe(3);
+  });
+
+  it('never lets a request pull out the worked example or the answer', () => {
+    for (const rungSoFar of [0, 1, 3, 5, 7] as const) {
+      for (const ask of [OPEN, OPTIONS, NO_HINT, WITH_EXAMPLE]) {
+        const a = decide(base({ verdict: 'hintRequest', rungSoFar, ask }));
+        expect(['reveal', 'workedExample']).not.toContain(a.kind);
+        // A request climbs to L3 and no further; above it, it adds nothing.
+        expect(a.rung).toBeLessThanOrEqual(Math.max(rungSoFar, 3));
+        if (a.helped !== null) expect(a.helped).toBeLessThanOrEqual(3);
+      }
+    }
+  });
+
+  it('asks for a first step when a hint is requested and none is authored', () => {
+    const cold = decide(base({ verdict: 'hintRequest', ask: NO_HINT }));
+    expect(cold.kind).toBe('rethink');
+    const again = decide(base({ verdict: 'hintRequest', ask: NO_HINT, rungSoFar: 1 }));
+    expect(again.kind).toBe('nudge');
+    expect(LINES.haveAGo.en).toContain(say(again));
+  });
+});
+
+describe('decide: her language and her lines', () => {
+  it('speaks the child’s language: Hinglish in Roman script', () => {
+    const a = decide(base({ lang: 'hi-en' }));
+    expect(LINES.rethink['hi-en']).toContain(say(a));
+    expect(say(a)).not.toMatch(/[ऀ-ॿ]/);
+  });
+
+  it('keeps several lines for every persona moment, in both languages', () => {
+    for (const [moment, byLang] of Object.entries(LINES)) {
+      for (const lang of ['en', 'hi-en'] as const) {
+        const lines = (byLang as Record<string, readonly unknown[]>)[lang];
+        expect(lines.length, `${moment} ${lang}`).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it('never says the same line twice in a row', () => {
+    const verdicts: Verdict[] = ['wrong', 'silent', 'unclear', 'right', 'hintRequest'];
+    for (const verdict of verdicts) {
+      for (const lang of ['en', 'hi-en'] as const) {
+        for (const question of ['a', 'b', 'c', 'd', 'e', 'f']) {
+          const ask = { ...OPEN, question };
+          const input = base({ verdict, lang, ask, rungSoFar: verdict === 'hintRequest' ? 3 : 0 });
+          const first = decide(input);
+          const second = decide({ ...input, recentLines: [say(first)] });
+          expect(say(second), `${verdict} ${lang} ${question}`).not.toBe(say(first));
+        }
+      }
+    }
+  });
+
+  it('is deterministic: the same input gives the same action', () => {
+    expect(decide(base({ attempt: 2, rungSoFar: 1 }))).toEqual(decide(base({ attempt: 2, rungSoFar: 1 })));
+  });
+});
+
+describe('decide: response-time rules, built and off until TD14', () => {
+  const fast = { askedAt: 1_000_000 - (FAST_WRONG_MS - 500) };
+
+  it('ignores how fast the answer came while the rules are off', () => {
+    const a = decide(base({ attempt: 2, rungSoFar: 1, timing: { ...fast, rules: false } }));
+    expect(a.kind).toBe('hint');
+    expect(decide(base({ attempt: 2, rungSoFar: 1, timing: fast })).kind).toBe('hint');
+  });
+
+  it('asks a fast wrong answer to re-read, without climbing, once they are on', () => {
+    const a = decide(base({ attempt: 2, rungSoFar: 1, timing: { ...fast, rules: true } }));
+    expect(a.kind).toBe('rethink');
+    expect(a.rung).toBe(1);
+    expect(LINES.reread.en).toContain(say(a));
+    expect(a.because).toMatch(/fast/i);
+  });
+
+  it('lets a slow wrong answer climb as usual with the rules on', () => {
+    const slow = { askedAt: 1_000_000 - (FAST_WRONG_MS + 500), rules: true };
+    expect(decide(base({ attempt: 2, rungSoFar: 1, timing: slow })).kind).toBe('hint');
+  });
+});
+
+/**
+ * EVERY BRANCH, EVERY RUNG: the properties no single row can prove.
+ */
+describe('decide: over every branch', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  const verdicts: Verdict[] = ['right', 'wrong', 'unmatched', 'unclear', 'silent', 'hintRequest'];
+  const asks = { OPEN, OPTIONS, NO_HINT, LEAKY_HINT, WITH_EXAMPLE, LEAKY_EXAMPLE, OPEN_WITH_PROBE, NOTHING_TO_REVEAL };
+  const grid = (): Array<[string, DecideInput]> => {
+    const rows: Array<[string, DecideInput]> = [];
+    for (const verdict of verdicts) {
+      for (const [name, ask] of Object.entries(asks)) {
+        for (let rungSoFar = 0; rungSoFar <= 8; rungSoFar += 1) {
+          for (const attempt of [1, 2, 3]) {
+            for (const lang of ['en', 'hi-en'] as const) {
+              for (const matchedOption of [undefined, 0, 1]) {
+                rows.push([
+                  `${verdict} ${name} rung ${rungSoFar} attempt ${attempt} ${lang} match ${matchedOption}`,
+                  base({ verdict, ask, rungSoFar: rungSoFar as DecideInput['rungSoFar'], attempt, lang, matchedOption }),
+                ]);
+              }
+            }
+          }
+        }
+      }
+    }
+    return rows;
+  };
+
+  it('gives a reason on 100% of actions', () => {
+    for (const [label, input] of grid()) {
+      expect(decide(input).because.trim().length, label).toBeGreaterThan(0);
+    }
+  });
+
+  it('never says or writes the answer before the reveal', () => {
+    for (const [label, input] of grid()) {
+      const a = decide(input);
+      if (a.kind === 'reveal' || a.kind === 'praise') continue;
+      expect(leaks(say(a), a.mustNotReveal), `${label}: ${say(a)}`).toBe(false);
+      expect(leaks(a.boardIntent?.text ?? '', a.mustNotReveal), label).toBe(false);
+    }
+  });
+
+  it('never moves the rung backwards, and never files more help than it gives', () => {
+    for (const [label, input] of grid()) {
+      const a = decide(input);
+      const floor = Math.max(input.rungSoFar, input.attempt > 1 ? 1 : 0);
+      expect(a.rung, label).toBeGreaterThanOrEqual(floor);
+      // A content-free nudge is filed at L1 without moving the ladder; nothing
+      // else files help above the rung it leaves in force.
+      if (a.helped !== null) expect(a.helped, label).toBeLessThanOrEqual(Math.max(a.rung, 1));
+    }
+  });
+
+  it('climbs at most one delivered step per wrong answer', () => {
+    const order = [0, 1, 3, 5, 8];
+    for (const [label, input] of grid()) {
+      if (input.verdict !== 'wrong' && input.verdict !== 'unmatched') continue;
+      const a = decide(input);
+      if (a.helped === null) continue;
+      const floor = Math.max(input.rungSoFar, input.attempt > 1 ? 1 : 0);
+      const skipped = order.filter((r) => r > floor && r < a.helped!);
+      // Only rungs with nothing usable authored for them may be skipped.
+      for (const r of skipped) expect([3, 5], `${label} skipped ${r}`).toContain(r);
+    }
+  });
+
+  it('never reads the clock', () => {
+    vi.spyOn(Date, 'now').mockImplementation(() => {
+      throw new Error('decide read the clock');
+    });
+    for (const [, input] of grid().slice(0, 500)) expect(() => decide(input)).not.toThrow();
+  });
+});

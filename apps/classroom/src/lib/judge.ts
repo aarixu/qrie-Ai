@@ -12,6 +12,7 @@ import {
 import type { WhyProbe } from '@ai-tutor/lesson-format';
 import { fromStudent } from './safety';
 import { createBrowserLlm } from './browserLlm';
+import { tutorLanguage } from './workspace';
 
 /**
  * The judge's wiring, and nothing else.
@@ -78,15 +79,31 @@ const deps: JudgeDeps = {
   screen: (text) => fromStudent(text),
 };
 
+/**
+ * THE LANGUAGE SHE ANSWERS IN — the one the child chose, read at every call.
+ *
+ * `tutorLanguage()` is the workspace's record of the onboarding choice
+ * (lib/workspace.ts), and it decides the register line the judge and the close
+ * carry (packages/tutor-judge/src/prompts.ts). Until this was passed, only the
+ * class planner heard the choice, so a Hinglish class narrated in Hinglish and
+ * then answered the child's first answer in whatever language the model liked.
+ *
+ * READ PER CALL, never captured at module load: a student can change it in the
+ * middle of a session, and the next answer should hear the new choice. It
+ * decides what she SAYS only; how an answer is READ is unchanged — the idea is
+ * judged, not the language it came in.
+ */
+const spokenIn = () => ({ language: tutorLanguage() });
+
 export const judgeSpokenAnswer = (ask: SpokenAsk, heard: string): Promise<SpokenVerdict> =>
-  judge(ask, heard, deps);
+  judge(ask, heard, deps, spokenIn());
 
 export const resolveCrossQuestion = (
   ask: SpokenAsk,
   answered: string,
   probe: string,
   reasoning: string,
-): Promise<CrossQuestionClose> => resolveClose(ask, answered, probe, reasoning, deps);
+): Promise<CrossQuestionClose> => resolveClose(ask, answered, probe, reasoning, deps, spokenIn());
 
 /**
  * ==========================================================================
@@ -389,6 +406,6 @@ export async function resolveSpokenAnswer(
   // The judge, with the screening already done. `() => screened` is not a
   // bypass: it is the SAME verdict this function already reached, handed on
   // rather than recomputed.
-  const verdict = await judge(ask, said, { ...deps, screen: () => screened });
+  const verdict = await judge(ask, said, { ...deps, screen: () => screened }, spokenIn());
   return { verdict, path: 'model' };
 }

@@ -10,6 +10,7 @@ import {
   type JudgeDeps,
   type SpokenAsk,
 } from '../src/index';
+import { REGISTER, TUTOR_LANGUAGES } from '@ai-tutor/persona';
 
 /**
  * This decides right from wrong for every answer a student speaks aloud, and
@@ -618,5 +619,138 @@ describe('the judgement the planner already authored', () => {
     await resolveCrossQuestion(probed, 'four chambers', 'why four?', 'two circuits', d);
     const [, user] = d.complete.mock.calls[0];
     expect(user).toContain('Yes - two atria on top, two ventricles below.');
+  });
+});
+
+/**
+ * THE LANGUAGE THE CHILD CHOSE, IN THE TWO CALLS THAT TALK BACK TO AN ANSWER.
+ *
+ * Every word she says in reply to a spoken answer is written here, and until
+ * this existed neither prompt said which language to say it in. The planner
+ * was told (packages/class-prep, HINGLISH_REGISTER), so a Hinglish class
+ * narrated in Hinglish and could answer the child's first answer in English;
+ * and the close told her to "meet them in kind", which put an English child who
+ * reasons in Hindi into Hindi. The line is persona's, so the judge, the close
+ * and the doubt tutor all carry the same words.
+ */
+describe('the language the child chose', () => {
+  it('carries exactly its own register line into both prompts, for each language', () => {
+    for (const language of TUTOR_LANGUAGES) {
+      const other = language === 'en' ? 'hi-en' : 'en';
+      for (const sys of [JUDGE_SYSTEM(language), CLOSE_SYSTEM(language)]) {
+        expect(sys).toContain(REGISTER[language]);
+        expect(sys).not.toContain(REGISTER[other]);
+      }
+    }
+  });
+
+  it('asks for Roman-script Hinglish for a Hinglish child', () => {
+    expect(JUDGE_SYSTEM('hi-en')).toContain(
+      'Speak Hinglish the way a friendly Delhi tutor talks to a Class 6-10 student: Hindi sentence structure in Roman script with English science and maths terms; never Devanagari.',
+    );
+  });
+
+  it('gives an English child no Hinglish line at all', () => {
+    for (const sys of [JUDGE_SYSTEM('en'), CLOSE_SYSTEM('en')]) {
+      expect(sys).toMatch(/plain Indian English/);
+      expect(sys).not.toMatch(/hinglish/i);
+      expect(sys).not.toMatch(/devanagari/i);
+    }
+  });
+
+  it('no longer mirrors the language the student happened to reason in', () => {
+    // The child chose the tutor's language once, at onboarding. Following
+    // whatever they mixed into one answer overrode that choice turn by turn.
+    expect(CLOSE_SYSTEM('en')).not.toMatch(/meet them in kind/i);
+    expect(CLOSE_SYSTEM()).not.toMatch(/meet them in kind/i);
+  });
+
+  it('still judges the idea and not the language, whichever she speaks', () => {
+    // What she SAYS follows the child's choice; how she READS an answer does
+    // not. An English child who answers in Hindi is still right if the idea is.
+    for (const language of TUTOR_LANGUAGES) {
+      expect(JUDGE_SYSTEM(language)).toMatch(/Judge the IDEA, not the wording or the language/);
+    }
+  });
+
+  it('says nothing about language when nobody named one', () => {
+    for (const sys of [JUDGE_SYSTEM(), CLOSE_SYSTEM()]) {
+      expect(sys).not.toContain(REGISTER.en);
+      expect(sys).not.toContain(REGISTER['hi-en']);
+    }
+  });
+
+  it('reaches the judge call itself, not just the formatter', async () => {
+    const d = deps('{"verdict":"right","say":"Kyun?"}');
+    await judgeSpokenAnswer(ask, 'every cell', d, { language: 'hi-en' });
+    const [system] = d.complete.mock.calls[0];
+    expect(system).toContain(REGISTER['hi-en']);
+  });
+
+  it('reaches the close call itself', async () => {
+    const d = deps('{"say":"Har cell khud respire karta hai.","held":true}');
+    await resolveCrossQuestion(ask, 'every cell', 'why?', 'each one respires', d, { language: 'hi-en' });
+    const [system] = d.complete.mock.calls[0];
+    expect(system).toContain(REGISTER['hi-en']);
+  });
+
+  it('sends an English child English on both calls', async () => {
+    const judged = deps('{"verdict":"right","say":"Why is that?"}');
+    await judgeSpokenAnswer(ask, 'every cell', judged, { language: 'en' });
+    const closed = deps('{"say":"Each cell respires on its own.","held":true}');
+    await resolveCrossQuestion(ask, 'every cell', 'why?', 'each one', closed, { language: 'en' });
+    for (const [system] of [judged.complete.mock.calls[0], closed.complete.mock.calls[0]]) {
+      expect(system).toContain(REGISTER.en);
+      expect(system).not.toMatch(/hinglish/i);
+    }
+  });
+});
+
+/**
+ * A TUTOR, NOT A CHATBOT.
+ *
+ * Aarav's bar (2026-09-29) is a warm, proactive human tutor for a Class 6-10
+ * child. What gives a model away is length, praise that carries no
+ * information, and telling before asking. Each is pinned on both prompts.
+ */
+describe('how she sounds when she answers an answer', () => {
+  it('bans stock praise by name on the judge and the close', () => {
+    for (const sys of [JUDGE_SYSTEM(), CLOSE_SYSTEM()]) {
+      expect(sys).toMatch(/never "Great job!"/i);
+    }
+  });
+
+  it('keeps the close to one or two sentences, like the judge', () => {
+    expect(JUDGE_SYSTEM()).toMatch(/1-2 short/);
+    expect(CLOSE_SYSTEM()).toMatch(/1-2 short/);
+    expect(CLOSE_SYSTEM()).not.toMatch(/1-3/);
+  });
+
+  it('asks before it tells', () => {
+    expect(JUDGE_SYSTEM()).toMatch(/Ask before you tell/);
+  });
+
+  it('answers the child in their own words, the way a person across a desk would', () => {
+    expect(JUDGE_SYSTEM()).toMatch(/their own words back/i);
+  });
+});
+
+/**
+ * BOTH PROMPTS RIDE ON EVERY ESCALATED CALL, SO THEIR SIZE IS A NUMBER.
+ *
+ * MEASURED 2026-09-29 (prompts.ts carries the arithmetic): the judge is 1,688
+ * characters with the English register line and 1,686 with the Hinglish one,
+ * and the close 1,147 and 1,145. The ceilings sit a little above those, so a
+ * rule can still be reworded but not quietly doubled.
+ */
+describe('what the language and the human rules cost', () => {
+  const JUDGE_CEILING = 1_750;
+  const CLOSE_CEILING = 1_200;
+
+  it('keeps each prompt inside a ceiling somebody has priced, in either language', () => {
+    for (const language of TUTOR_LANGUAGES) {
+      expect(JUDGE_SYSTEM(language).length).toBeLessThanOrEqual(JUDGE_CEILING);
+      expect(CLOSE_SYSTEM(language).length).toBeLessThanOrEqual(CLOSE_CEILING);
+    }
   });
 });

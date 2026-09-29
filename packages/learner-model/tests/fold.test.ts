@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { GraphIndex, emptyParams } from '@ai-tutor/knowledge-graph';
 import type { LedgerEvent } from '@ai-tutor/ledger';
-import { emptyModel, evidenceSet, foldSession } from '../src/index';
+import {
+  MODEL_VERSION,
+  emptyConceptState,
+  emptyModel,
+  evidenceSet,
+  foldSession,
+  unassistedEvidence,
+  unassistedView,
+  type ConceptState,
+} from '../src/index';
 
 /**
  * Two nodes, `b` resting on `a` — the smallest graph with an edge in it.
@@ -258,8 +267,27 @@ describe('foldSession', () => {
     const stale = { ...emptyModel(), version: 0 };
     stale.states.b = { ...emptyModel().states.b, outcomeId: 'b' } as never;
     const m = foldSession(stale, S1, [answered(0)], index, params);
-    expect(m.version).toBe(1);
+    expect(m.version).toBe(MODEL_VERSION);
     expect(m.states.b.unassistedObservations).toBe(1);
+  });
+
+  /**
+   * VERSION 1 HAD NO `masteredAt`, AND ITS BELIEF WAS NOT DISCOUNTED FOR HELP.
+   *
+   * A stored v1 model is a cache of a fold whose arithmetic was wrong (B4) and
+   * whose shape lacks the mastery stamp (B8). Folding new rules into it would
+   * leave every old hinted answer credited at full weight and every state with
+   * an undefined stamp, so it must be rebuilt, not continued.
+   */
+  it('rebuilds a version-1 model instead of folding into it', () => {
+    seq = 0;
+    const v1 = { ...emptyModel(), version: 1 };
+    const { masteredAt: _dropped, ...oldShape } = emptyConceptState('b') as ConceptState;
+    v1.states.b = { ...oldShape, mastery: 0.99, observations: 40 } as never;
+    const m = foldSession(v1, S1, [answered(0)], index, params);
+    expect(m.version).toBe(MODEL_VERSION);
+    expect(m.states.b.observations).toBe(1);
+    expect(m.states.b.masteredAt).toBeNull();
   });
 
   it('is the same state for the same events, every time', () => {
@@ -505,5 +533,218 @@ describe('a beat that checks more than one outcome', () => {
       expect(m.states[id]?.answerObservations, id).toBe(1);
       expect(m.states[id]?.unassistedObservations, id).toBe(1);
     }
+  });
+});
+
+/**
+ * B4 — HELP IS DISCOUNTED, AND THE DISCOUNT NEVER RUNS BACKWARDS.
+ *
+ * `assistance.ts` has claimed the invariant since 3.7 — a correct answer at
+ * rung k never credits more than the same answer at rung k-1 — while the fold
+ * applied every answer at full weight whatever the rung. A right answer given
+ * with the answer itself on screen moved `mastery` exactly as far as a cold
+ * one. These tests hold the fold to the claim.
+ */
+describe('help is discounted (B4)', () => {
+  const RUNGS = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const;
+
+  const gainAt = (rung: number): number => {
+    seq = 0;
+    const m = foldSession(emptyModel(), S1, [answered(rung, true)], index, params);
+    return m.states.b.mastery - 0.5;
+  };
+
+  it('never credits a right answer more for having needed more help', () => {
+    const gains = RUNGS.map(gainAt);
+    for (let k = 1; k < gains.length; k += 1) {
+      expect(gains[k], `rung ${k} against rung ${k - 1}`).toBeLessThanOrEqual(gains[k - 1]);
+    }
+    // And strictly less once any help was given: a discount that never bites is
+    // not a discount.
+    expect(gains[3]).toBeLessThan(gains[0]);
+  });
+
+  it('still credits a right answer given with the answer in hand, a little', () => {
+    // defaultCredit(8) is 0.2: they did learn something, less than cold.
+    expect(gainAt(8)).toBeGreaterThan(0);
+    expect(gainAt(8)).toBeCloseTo(gainAt(0) * 0.2, 10);
+  });
+
+  it('discounts what propagates to the prerequisite too', () => {
+    seq = 0;
+    const cold = foldSession(emptyModel(), S1, [answered(0, true)], index, params);
+    seq = 0;
+    const revealed = foldSession(emptyModel(), S1, [answered(8, true)], index, params);
+    expect(revealed.states.a.mastery - 0.5).toBeLessThan(cold.states.a.mastery - 0.5);
+  });
+
+  /**
+   * FAILING WITH HELP IN HAND IS NOT FORGIVEN. Discounting a wrong answer too
+   * would err toward the mastery a child does not have — the one direction
+   * `deriveRung` says nothing downstream corrects.
+   */
+  it('does not soften a wrong answer because help had been given', () => {
+    seq = 0;
+    const cold = foldSession(emptyModel(), S1, [answered(0, false)], index, params);
+    seq = 0;
+    const hinted = foldSession(emptyModel(), S1, [answered(3, false)], index, params);
+    expect(hinted.states.b.mastery).toBeCloseTo(cold.states.b.mastery, 10);
+  });
+
+  /**
+   * A SECOND TRY IS NOT A COLD TRY. The student has been told the first one
+   * was wrong, which is at least a nudge — rung 1, "asked to rethink" — even
+   * when no surface filed a `helped` row for it.
+   */
+  it('counts a second attempt as at least a nudge', () => {
+    seq = 0;
+    const second = ev('answered', ['b'], {
+      correct: true, ms: 4000, attempt: 2, assistanceRung: 0, hintsShown: 0, chosenIndex: 0,
+    });
+    const m = foldSession(emptyModel(), S1, [second], index, params);
+    expect(m.states.b.unassistedObservations).toBe(0);
+    expect(m.states.b.unassistedMastery).toBe(0.5);
+    expect(m.states.b.mastery - 0.5).toBeCloseTo(gainAt(1), 10);
+  });
+});
+
+/**
+ * B8 — ONE MASTERY RULE: unassisted belief at or above 0.8, on at least two
+ * DISTINCT items answered right cold, at least a day apart.
+ *
+ * One lucky answer is not mastery, the same question twice is memory of that
+ * question, and two items in one sitting are one sitting. `masteredAt` is the
+ * stamp of the moment all three held.
+ */
+describe('mastered (B8)', () => {
+  const DAY1 = { id: 'd1', startedAt: '2026-09-14T10:00:00.000Z' };
+  const DAY2 = { id: 'd2', startedAt: '2026-09-15T10:00:00.000Z' };
+  const DAY2_EARLY = { id: 'd2e', startedAt: '2026-09-15T09:00:00.000Z' };
+
+  const onItem = (
+    session: { id: string },
+    n: number,
+    probeId: string,
+    correct = true,
+    rung = 0,
+  ): LedgerEvent =>
+    ({
+      id: `${session.id}-${n}`,
+      sessionId: session.id,
+      seq: n,
+      at: '2026-09-14T10:00:00.000Z',
+      kind: 'answered',
+      source: 'quiz',
+      surface: 'tap',
+      outcomeIds: ['b'],
+      payload: { probeId, correct, ms: 4000, attempt: 1, assistanceRung: rung, hintsShown: 0, chosenIndex: 0 },
+    }) as unknown as LedgerEvent;
+
+  it('starts unmastered', () => {
+    expect(emptyConceptState('x').masteredAt).toBeNull();
+  });
+
+  it('stamps mastery after two distinct items, cold, a day apart', () => {
+    let m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1')], index, params);
+    expect(m.states.b.masteredAt).toBeNull();
+    m = foldSession(m, DAY2, [onItem(DAY2, 0, 'p2')], index, params);
+    expect(m.states.b.unassistedMastery).toBeGreaterThanOrEqual(0.8);
+    expect(m.states.b.masteredAt).toBe(DAY2.startedAt);
+  });
+
+  it('does not count two items in one sitting as two days', () => {
+    const m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1'), onItem(DAY1, 1, 'p2')], index, params);
+    expect(m.states.b.unassistedMastery).toBeGreaterThanOrEqual(0.8);
+    expect(m.states.b.masteredAt).toBeNull();
+  });
+
+  it('does not count the same question twice as two items', () => {
+    let m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1')], index, params);
+    m = foldSession(m, DAY2, [onItem(DAY2, 0, 'p1')], index, params);
+    expect(m.states.b.unassistedMastery).toBeGreaterThanOrEqual(0.8);
+    expect(m.states.b.masteredAt).toBeNull();
+  });
+
+  it('wants a full day, not the next morning an hour short of one', () => {
+    let m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1')], index, params);
+    m = foldSession(m, DAY2_EARLY, [onItem(DAY2_EARLY, 0, 'p2')], index, params);
+    expect(m.states.b.masteredAt).toBeNull();
+  });
+
+  it('wants the belief at the line, not just two spaced right answers', () => {
+    // right, wrong, then a day later right on another item: spaced, distinct,
+    // and still well short of 0.8.
+    let m = foldSession(
+      emptyModel(), DAY1, [onItem(DAY1, 0, 'p1'), onItem(DAY1, 1, 'p3', false)], index, params);
+    m = foldSession(m, DAY2, [onItem(DAY2, 0, 'p2')], index, params);
+    expect(m.states.b.unassistedMastery).toBeLessThan(0.8);
+    expect(m.states.b.masteredAt).toBeNull();
+  });
+
+  /**
+   * THE RULE THIS WHOLE ITEM EXISTS FOR: an outcome answered right only with
+   * help is never mastered, never in the decision view, never secure.
+   */
+  it('never masters an outcome answered right only with help', () => {
+    let m = emptyModel();
+    for (let day = 0; day < 5; day += 1) {
+      const s = { id: `h${day}`, startedAt: `2026-09-${14 + day}T10:00:00.000Z` };
+      m = foldSession(m, s, [onItem(s, 0, `p${day}`, true, 3)], index, params);
+    }
+    expect(m.states.b.mastery).toBeGreaterThan(0.8);
+    expect(m.states.b.masteredAt).toBeNull();
+    expect(unassistedView(m).b).toBeUndefined();
+    expect(unassistedEvidence(m).has('b')).toBe(false);
+  });
+
+  it('takes the stamp away when a cold miss drops belief below the line', () => {
+    let m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1')], index, params);
+    m = foldSession(m, DAY2, [onItem(DAY2, 0, 'p2')], index, params);
+    expect(m.states.b.masteredAt).toBe(DAY2.startedAt);
+    const DAY3 = { id: 'd3', startedAt: '2026-09-16T10:00:00.000Z' };
+    m = foldSession(m, DAY3, [onItem(DAY3, 0, 'p4', false)], index, params);
+    expect(m.states.b.unassistedMastery).toBeLessThan(0.8);
+    expect(m.states.b.masteredAt).toBeNull();
+  });
+
+  it('keeps the first stamp while the rule keeps holding', () => {
+    let m = foldSession(emptyModel(), DAY1, [onItem(DAY1, 0, 'p1')], index, params);
+    m = foldSession(m, DAY2, [onItem(DAY2, 0, 'p2')], index, params);
+    const DAY3 = { id: 'd3', startedAt: '2026-09-16T10:00:00.000Z' };
+    m = foldSession(m, DAY3, [onItem(DAY3, 0, 'p5')], index, params);
+    expect(m.states.b.masteredAt).toBe(DAY2.startedAt);
+  });
+
+  it('remembers only as many items as the rule can ever need', () => {
+    let m = emptyModel();
+    for (let day = 0; day < 12; day += 1) {
+      const s = { id: `k${day}`, startedAt: `2026-09-${10 + day}T10:00:00.000Z` };
+      m = foldSession(m, s, [onItem(s, 0, `item${day}`)], index, params);
+    }
+    expect(Object.keys(m.states.b.coldWins).length).toBeLessThanOrEqual(4);
+    expect(m.states.b.masteredAt).toBe('2026-09-11T10:00:00.000Z');
+  });
+});
+
+/**
+ * B6 — DECISIONS READ UNASSISTED BELIEF, AND "NEVER ASKED COLD" IS UNKNOWN.
+ */
+describe('the decision view (B6)', () => {
+  it('holds unassisted belief, and only where a cold answer produced it', () => {
+    seq = 0;
+    const m = foldSession(
+      emptyModel(), S1, [answered(0, true, ['b']), answered(3, true, ['a'], 'X')], index, params);
+    const view = unassistedView(m);
+    expect(view.b).toBe(m.states.b.unassistedMastery);
+    // `a` has belief -- it was answered with a hint, and `b`'s answer
+    // propagated to it -- but no cold answer, so for a decision it is unknown.
+    expect(m.states.a.mastery).not.toBe(0.5);
+    expect(view.a).toBeUndefined();
+    expect([...unassistedEvidence(m)]).toEqual(['b']);
+  });
+
+  it('is empty for a student nobody has asked cold', () => {
+    expect(unassistedView(emptyModel())).toEqual({});
+    expect(unassistedEvidence(emptyModel()).size).toBe(0);
   });
 });

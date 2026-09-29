@@ -1,9 +1,27 @@
 import type { DoubtContext } from './context';
 
+/**
+ * What an agent may say about one line besides its words.
+ *
+ * `onStart` is called when her voice actually starts the line — the board
+ * reveals that step's ink then (T2.4). The handoff hands it to the speaker and
+ * never calls it itself, so a line that is not spoken (the handoff halted, the
+ * screen replaced it) reveals nothing. When a voice cannot tell when its sound
+ * starts, the app's speaker decides the fallback (apps/classroom
+ * lib/voiceStart.ts).
+ *
+ * `more` says another line of the SAME reply follows, so the turn cap does
+ * not close the doubt between two sentences of one answer.
+ */
+export interface SayOptions {
+  onStart?: () => void;
+  more?: boolean;
+}
+
 /** How an agent talks back to the room. Implemented by the app / handoff. */
 export interface AgentIO {
   /** Speak a line (routed to TTS). Resolves when spoken. */
-  say(text: string): Promise<void>;
+  say(text: string, options?: SayOptions): Promise<void>;
   /** Jump the canvas to an earlier beat's state. */
   recall(beatId: string): void;
   /** Signal that the doubt is resolved — triggers the exit bridge. */

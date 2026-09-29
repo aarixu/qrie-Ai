@@ -3,6 +3,7 @@ import {
   emptyModel,
   foldSession,
   masteryView,
+  unassistedView,
   type LearnerModel,
 } from '@ai-tutor/learner-model';
 import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
@@ -34,8 +35,27 @@ export const learnerModelStore = modelStore;
 
 export const loadModel = (): LearnerModel => modelStore.get();
 
-/** What every existing reader of `profile.diagnostic.mastery` asks for instead. */
-export const masteryFromModel = (): Mastery => masteryView(modelStore.get());
+/**
+ * WHAT A DECISION MAY BELIEVE ABOUT THIS STUDENT: unassisted mastery, and only
+ * where they have been asked cold (B6, `unassistedView`).
+ *
+ * The name is older than the rule, and kept so its readers switched without an
+ * edit. Every one of them decides something: `adaptPlan.ts` (which gaps join
+ * the plan), `geminiAgent.ts` and `liveAgent.ts` (the doubt tutor's
+ * secure/shaky marks), `ClassRoom.tsx` (the persona's student context) and
+ * `LiveClass.tsx` (the outcome lookup and the planner's "they hold securely /
+ * the ground is shaky" lines). A blend of cold and hinted answers told all of
+ * them a student held what they had only managed with help. An outcome never
+ * asked cold is ABSENT here — unknown — which each of those readers already
+ * treats as "no belief".
+ */
+export const masteryFromModel = (): Mastery => unassistedView(modelStore.get());
+
+/**
+ * The blended belief, cold and hinted together, for DISPLAY only — a progress
+ * picture, never an input to a decision. See `masteryView`.
+ */
+export const blendedMasteryForDisplay = (): Mastery => masteryView(modelStore.get());
 
 /**
  * Fold what just happened into the replica.

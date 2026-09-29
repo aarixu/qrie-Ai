@@ -10,6 +10,7 @@ import type { StudentContext } from '@ai-tutor/persona';
 import { relayFetch } from './relay';
 import { createOutcomeLookup } from './outcomeLookup';
 import { masteryFromModel } from './learnerModel';
+import { tutorLanguage } from './workspace';
 
 /**
  * The real TYPED doubt tutor, behind the same AgentAdapter the stub
@@ -290,10 +291,20 @@ interface AgentReply {
  * shape this transport needs back. Her character, her rules and the legal
  * recall targets all come from @ai-tutor/persona — nothing about who she is
  * is written here.
+ *
+ * THE LANGUAGE THE CHILD CHOSE is the one thing added to `student` on the way
+ * past. `buildStudentContext` (lib/student.ts) does not carry it, so without
+ * this the brief had no language at all and a Hinglish class answered its
+ * doubts in whatever language the model liked. It is read from the workspace
+ * (`tutorLanguage()`, the onboarding choice) every time a turn's prompt is
+ * built, so a change reaches the next turn. A language the caller already put
+ * on `student` is kept: whoever built the context measured it, and the
+ * workspace is the fallback, not an override.
  */
 export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext): string {
+  const spokenTo: StudentContext = { ...student, language: student.language ?? tutorLanguage() };
   return [
-    buildDoubtBrief(ctx, student, {
+    buildDoubtBrief(ctx, spokenTo, {
       moment: 'answering',
       surface: 'text',
       // She is told the outcome this beat is for, and what it rests on.

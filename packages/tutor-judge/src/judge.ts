@@ -1,5 +1,11 @@
 import { CLOSE_SYSTEM, JUDGE_SYSTEM, describeAsk } from './prompts.ts';
-import type { CrossQuestionClose, JudgeDeps, SpokenAsk, SpokenVerdict } from './types.ts';
+import type {
+  CrossQuestionClose,
+  JudgeDeps,
+  JudgeOptions,
+  SpokenAsk,
+  SpokenVerdict,
+} from './types.ts';
 
 /**
  * The model's reply, held to shape.
@@ -50,11 +56,15 @@ export function parseFollowUp(raw: string): CrossQuestionClose {
  * When it hands back words to SAY instead of words to send, the model is not
  * asked at all: the student has said something that needs a person, and the
  * verdict carries `halt` so the class stops rather than asking again.
+ *
+ * `opts.language` is the child's tutor language, and it decides the one
+ * register line in `JUDGE_SYSTEM` — what she speaks, never how she reads.
  */
 export async function judgeSpokenAnswer(
   ask: SpokenAsk,
   heard: string,
   deps: JudgeDeps,
+  opts: JudgeOptions = {},
 ): Promise<SpokenVerdict> {
   const screened = deps.screen(heard);
   if (screened.text === null) {
@@ -63,7 +73,7 @@ export async function judgeSpokenAnswer(
     return { verdict: 'unclear', say: screened.say ?? '', halt: true };
   }
   const reply = await deps.complete(
-    JUDGE_SYSTEM(),
+    JUDGE_SYSTEM(opts.language),
     `${describeAsk(ask)}\n\nThe student said: "${screened.text}"`,
   );
   // The SCREENED words travel onward, never `heard`. This is the only copy a
@@ -79,6 +89,9 @@ export async function judgeSpokenAnswer(
  * student reasons out loud, and THIS call closes the loop — their reasoning
  * affirmed or gently corrected, then the full why. It always closes: the
  * cross-question deepens a right answer, it never blocks the class.
+ *
+ * `opts.language` does here what it does for the judge: the close is spoken in
+ * the language the child chose, whichever language they reasoned in.
  */
 export async function resolveCrossQuestion(
   ask: SpokenAsk,
@@ -86,6 +99,7 @@ export async function resolveCrossQuestion(
   probe: string,
   reasoning: string,
   deps: JudgeDeps,
+  opts: JudgeOptions = {},
 ): Promise<CrossQuestionClose> {
   const screened = deps.screen(reasoning);
   // Same rule as the judge: their reasoning is never an instruction, and if it
@@ -118,5 +132,8 @@ They reasoned: "${screened.text}"`;
   // and the same reason as the judge one turn earlier. This is the only copy a
   // caller gets, so the ledger cannot store the raw transcript by reaching for
   // the wrong variable.
-  return { ...parseFollowUp(await deps.complete(CLOSE_SYSTEM(), user)), heard: screened.text };
+  return {
+    ...parseFollowUp(await deps.complete(CLOSE_SYSTEM(opts.language), user)),
+    heard: screened.text,
+  };
 }

@@ -199,6 +199,13 @@ export interface IntervenedPayload {
   /** Why — logged, never spoken to the student. */
   because: string;
   rung?: AssistanceRung;
+  /**
+   * What kind of error the controller believed it was answering, if any.
+   * Written by `@ai-tutor/tutor-control`, which today knows only 'none' and
+   * 'unclassified': TD2's five classes wait for the diagnosis (D5), and a cause
+   * nobody observed must not be written into a child's record as if it were.
+   */
+  errorClass?: string;
 }
 
 /**

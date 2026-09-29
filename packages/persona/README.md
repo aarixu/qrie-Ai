@@ -50,6 +50,7 @@ interface StudentContext {
   doubtCount?: number             // hands raised in THIS lesson
   lastAnswer?: AnswerSignal       // how the last check question went
   attendance?: Attendance
+  language?: TutorLanguage        // 'en' | 'hi-en', the tutor language chosen at onboarding
 }
 
 describeFactors(ctx: StudentContext): string[]      // one instruction line per ACTIVE factor
@@ -63,6 +64,13 @@ const MASTERY_SHAKY = 0.4
 const DOUBT_PACE_THRESHOLD = 3
 const STREAK_MIN_DAYS = 2
 const SLOW_ANSWER_MS = 25_000
+
+// --- language.ts : the language she speaks --------------------------------
+type TutorLanguage = 'en' | 'hi-en'
+const TUTOR_LANGUAGES: readonly TutorLanguage[]
+const REGISTER: Record<TutorLanguage, string>   // one register line per language
+registerLine(language: TutorLanguage): string
+isTutorLanguage(value: unknown): value is TutorLanguage
 
 // --- moments.ts : the distinct situations --------------------------------
 const MOMENTS: readonly Moment[]
@@ -121,6 +129,7 @@ WHO YOU ARE / YOU ALWAYS / YOU NEVER
 THIS STUDENT — private notes
 THIS MOMENT — <MOMENT>
 THIS LESSON / WHAT THE CLASS HAS COVERED SO FAR / MOMENTS YOU CAN BRING BACK
+WHICH LANGUAGE YOU SPEAK — only when `student.language` is set
 HOW TO SPEAK — VOICE | TEXT | NARRATION
 ```
 
@@ -150,8 +159,13 @@ HOW TO SPEAK — VOICE | TEXT | NARRATION
   teacher waiting to take over the room. Do not confuse it with `TUTOR.voice`,
   which is prose for humans and is never sent to a synthesiser.
 - The surface decides physical form only. `voice` bans screen formatting and
-  caps a turn at 20-60 words; `text` allows short paragraphs; `narration` is the
-  authored 30-60 word beat voice of the recorded class.
+  keeps a turn to one or two short sentences; `text` keeps the same length and
+  puts a formula on its own line; `narration` is the authored 30-60 word beat
+  voice of the recorded class.
+- The language is the child's choice, not the surface's. `student.language`
+  renders one register line (`src/language.ts`) as its own section above the
+  speaking rules — the same line `@ai-tutor/tutor-judge` puts in the judge and
+  the close. Absent, it renders nothing.
 
 ## For the developer: what to change, and where
 

@@ -7,6 +7,7 @@ import { tutorLanguage } from './workspace';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import { lessonAudioUrl, type CatalogEntry } from './content';
 import { announceLine, avatarPcmOutput } from '../avatar/avatarBus';
+import { announceStart, withStartOnSpeak } from './voiceStart';
 
 /**
  * The voice a lesson is narrated in — three layers, best first.
@@ -50,7 +51,9 @@ export function useLessonVoice(
     // player still needs an adapter to time the beats, and the timer adapter
     // inside createBrowserTts does exactly that when speech is unavailable.
     if (!enabled) {
-      setTts(createSilentTts());
+      // Announces each line as it is asked for, so the board's ink still
+      // appears with its sentence when the voice is switched off.
+      setTts(withStartOnSpeak(createSilentTts()));
       return;
     }
 
@@ -58,7 +61,9 @@ export function useLessonVoice(
     let live: TtsAdapter | null = null;
 
     (async () => {
-      const browser = createBrowserTts({ lang: 'en-IN' });
+      // Reveal-on-speak: the browser's voice cannot say when its sound starts
+      // (lib/voiceStart.ts), so it announces a line when asked to speak it.
+      const browser = withStartOnSpeak(createBrowserTts({ lang: 'en-IN' }));
       /**
        * Streamed through our own relay, so the key stays on the server and the
        * first sound arrives while the rest is still being made — 0.36 s to the
@@ -95,6 +100,10 @@ export function useLessonVoice(
        * avatar's analyser so the mouth moves to what the student hears. The
        * language is the child's onboarding choice, or the lesson's own when
        * it was prepared in Hinglish.
+       *
+       * `onStart` fires when a line's first sample reaches the speaker. It is
+       * what the live board waits for before revealing that sentence's ink
+       * (lib/voiceStart.ts, T2.4).
        */
       live = createPcmStreamTts({
         endpoint: relayUrl('/api/speech'),
@@ -103,6 +112,7 @@ export function useLessonVoice(
         lang: () => (tutorLanguage() === 'hi-en' || lessonLanguage === 'hi-en' ? 'hi-en' : 'en'),
         output: avatarPcmOutput,
         fallback: browser,
+        onStart: announceStart,
       });
       void speechTicket();
 
@@ -131,7 +141,7 @@ export function useLessonVoice(
         ),
       );
     })().catch(() => {
-      if (!cancelled) setTts(createBrowserTts({ lang: 'en-IN' }));
+      if (!cancelled) setTts(withStartOnSpeak(createBrowserTts({ lang: 'en-IN' })));
     });
 
     return () => {

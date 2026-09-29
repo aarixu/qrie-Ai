@@ -1,5 +1,6 @@
 import { TUTOR } from './traits';
 import { describeFactors, type StudentContext } from './factors';
+import { isTutorLanguage, registerLine } from './language';
 import { momentGuidance, type Moment } from './moments';
 
 /**
@@ -69,13 +70,24 @@ export interface PromptInput {
 
 const bullets = (lines: readonly string[]): string => lines.map((l) => `- ${l}`).join('\n');
 
+/**
+ * HOW THE WORDS PHYSICALLY COME OUT, per surface.
+ *
+ * ONE OR TWO SHORT SENTENCES A TURN, on both live surfaces. The voice rule used
+ * to allow 20 to 60 words and the text rule "short paragraphs of two or three
+ * sentences", which is a lecture's rhythm, not a tutor's: a tutor across a desk
+ * says one thing and hands the turn back. The typed doubt uses `text`, and its
+ * reply is not only read — apps/classroom hands the screened line to the
+ * class's voice as well (lib/sessionHalt.ts, `say`) — so it is held to the
+ * same length as the spoken one.
+ */
 const SPEAKING: Record<Surface, string> = {
   voice: [
     'HOW TO SPEAK — VOICE',
     'Your words are spoken out loud and heard, never read.',
     bullets([
       'Short spoken sentences, the way a person actually talks.',
-      '20 to 60 words per turn. Say one thing, then stop and let them answer.',
+      'One or two short sentences per turn. Say one thing, then stop and let them answer.',
       'No markdown, no bullet points, no numbered lists, no headings, no emoji.',
       'No stage directions, and never describe your own tone.',
       'Speak notation out in words: "H two O", "two thirds", "x squared".',
@@ -86,8 +98,7 @@ const SPEAKING: Record<Surface, string> = {
     'HOW TO SPEAK — TEXT',
     'Your words are read on a phone screen.',
     bullets([
-      'Short paragraphs of two or three sentences, with a blank line between them.',
-      'One idea per paragraph, and finish with the question that moves them forward.',
+      'One or two short sentences at a time, the length you would say them across a desk: one idea, then the question that moves them forward.',
       'Put a formula on its own line so it stays readable on a narrow screen.',
     ]),
   ].join('\n'),
@@ -174,6 +185,14 @@ function lessonSection(lesson: LessonContext | undefined): string | null {
  * meets her character before it meets today's details, which is what stops the
  * details from overwriting her.
  *
+ * THE LANGUAGE THE STUDENT CHOSE is part of "how the words come out", so it
+ * sits immediately above the speaking rules as a section of its own — never in
+ * the private notes, which are things she knows and must not say. It is one
+ * line (language.ts), the same line the judge and the close carry
+ * (packages/tutor-judge/src/prompts.ts), so the live doubt and the answers
+ * around it are one voice. A language that is absent, or is not one of the two
+ * the app stores, renders nothing: unknown says nothing, as with every factor.
+ *
  * The safety block sits above the student's own notes deliberately. Everything
  * below it is about this lesson and this minute; nothing about this minute
  * should be able to argue with the fact that the person listening is a child.
@@ -195,6 +214,15 @@ export function buildSystemPrompt({ moment, student, lesson, surface }: PromptIn
 
   const lessonBlock = lessonSection(lesson);
   if (lessonBlock !== null) sections.push(lessonBlock);
+
+  // Checked at runtime as well as by type: a profile row can come back from
+  // the cloud written by an older build, and a value that is not one of the
+  // two languages must not become an instruction to speak it.
+  if (isTutorLanguage(student.language)) {
+    sections.push(
+      ['WHICH LANGUAGE YOU SPEAK — the student chose this', registerLine(student.language)].join('\n'),
+    );
+  }
 
   sections.push(SPEAKING[surface]);
 

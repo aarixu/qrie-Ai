@@ -14,9 +14,21 @@ import { PRIOR } from '@ai-tutor/knowledge-graph';
 export interface ConceptState {
   outcomeId: string;
 
-  /** All evidence, assisted or not. What the tutor's prose reads. */
+  /**
+   * All evidence, assisted or not — a right answer's move discounted by the
+   * rung it was given at (B4, `defaultCredit`).
+   *
+   * DISPLAY ONLY (B6). No decision reads this: what to ask, what to plan, what
+   * to call secure all read `unassistedMastery` through `unassistedView`,
+   * because a blend of cold and hinted answers cannot say which of the two a
+   * student can do, and a plan built on it skips what they cannot do alone.
+   */
   mastery: number;
-  /** Rung 0 only. The number that means they can do it without us. */
+  /**
+   * Rung 0 only. The number that means they can do it without us, and the ONLY
+   * belief a decision reads. Meaningless while `unassistedObservations` is 0:
+   * that is the prior, and it means "unknown", never "half known".
+   */
   unassistedMastery: number;
   /** How they perform WITH help. High here and low above is the signal. */
   assistedPerformance: number;
@@ -71,6 +83,39 @@ export interface ConceptState {
   lastUnassistedSuccessAt: string | null;
 
   /**
+   * WHEN THE ONE MASTERY RULE LAST BECAME TRUE, or null while it does not hold
+   * (B8).
+   *
+   * The rule: `unassistedMastery` at or above `MASTERY_LINE` (0.8), with right
+   * answers given COLD on at least two DISTINCT items at least
+   * `MASTERY_SPACING_MS` (24 h) apart. One lucky answer is not mastery; the
+   * same question twice is memory of that question; two items in one sitting
+   * are one sitting.
+   *
+   * It is a statement about NOW, so it is taken away again when a cold miss
+   * drops unassisted belief below the line — a stamp that outlived its evidence
+   * would tell a planner to skip what the student just showed they cannot do.
+   * While the rule keeps holding the first stamp is kept.
+   *
+   * The time is the SESSION's `startedAt` (see `FoldSession`), which is also
+   * the clock the spacing is measured on. On the server fold that is
+   * Postgres's clock; the device replica reads its own stamp until B7.
+   */
+  masteredAt: string | null;
+  /**
+   * THE COLD RIGHT ANSWERS THE MASTERY RULE NEEDS, AND NO MORE.
+   *
+   * Per item (probe id, else beat id — the fold's ask key), the session time of
+   * its first and latest right answer at rung 0. The rule asks whether ANY two
+   * distinct items are a day apart, and the widest such pair always uses one of
+   * the two items with the earliest first win and one of the two with the latest
+   * last win — so only those (at most four) are kept, and the record cannot grow
+   * with a student's history. That pruning is exact when sessions arrive in time
+   * order, which is the order the fold consumes them in.
+   */
+  coldWins: Record<string, { first: string; last: string }>;
+
+  /**
    * WRITTEN FROM DAY ONE AND NOT DRIVEN UNTIL PHASE 6. Present so that turning
    * spaced retrieval on is wiring rather than a migration across a table
    * holding every student's beliefs.
@@ -81,8 +126,22 @@ export interface ConceptState {
   retrievalAccuracy: number;
 }
 
-/** Bumped whenever `ConceptState` changes shape, so a stored model can migrate. */
-export const MODEL_VERSION = 1;
+/**
+ * Bumped whenever `ConceptState` changes shape OR the fold's arithmetic
+ * changes, so a stored model is rebuilt from the ledger rather than continued.
+ *
+ * 2 (2026-09-29): help discounted by rung (B4), a second attempt counted as at
+ * least a nudge (B4), and `masteredAt` / `coldWins` added (B8). A v1 model
+ * credited every hinted answer at full weight, so continuing one would keep
+ * that credit forever.
+ */
+export const MODEL_VERSION = 2;
+
+/** B8's line: unassisted belief at or above this, on spaced distinct items. */
+export const MASTERY_LINE = 0.8;
+
+/** B8's spacing: two distinct items answered right cold at least this far apart. */
+export const MASTERY_SPACING_MS = 24 * 60 * 60 * 1000;
 
 /**
  * HOW FAR THE FOLD HAS CONSUMED A STUDENT'S HISTORY.
@@ -150,6 +209,8 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   taughtCount: 0,
   lastPracticedAt: null,
   lastUnassistedSuccessAt: null,
+  masteredAt: null,
+  coldWins: {},
   memoryStrength: 0,
   nextReviewAt: null,
   retrievalCount: 0,

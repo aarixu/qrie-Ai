@@ -147,3 +147,20 @@ describe('assistanceScore', () => {
     }
   });
 });
+
+/**
+ * B4: a second attempt is never cold. The fold reads `attempt > 1` as at least
+ * rung 1, and this walk must agree with it — `eachAnswerWithRung` exists so
+ * the projections and the fold cannot drift about which answers were cold.
+ */
+describe('a second attempt', () => {
+  it('scores as at least a nudge, never as cold', () => {
+    const score = assistanceScore([answered('s1', 0, ['n'], { attempt: 2 })]);
+    expect(score.n).toBeCloseTo(defaultCredit(1), 10);
+  });
+
+  it('keeps a higher recorded rung', () => {
+    const score = assistanceScore([answered('s1', 0, ['n'], { attempt: 2, assistanceRung: 3 })]);
+    expect(score.n).toBeCloseTo(defaultCredit(3), 10);
+  });
+});

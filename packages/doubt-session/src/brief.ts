@@ -127,6 +127,13 @@ export function isRecallable(ctx: DoubtContext, beatId: string): boolean {
  * would look identical to a real measurement by the time it reached the model,
  * so the honest move is to pass the gaps through and let her stay silent about
  * them.
+ *
+ * THE LANGUAGE THE CHILD CHOSE rides on `student` too (`student.language`),
+ * and persona renders it as the same one register line the judge and the
+ * close carry (@ai-tutor/persona language.ts). Nothing here reads or defaults
+ * it: a caller that knows the choice sets it — apps/classroom's typed doubt
+ * agent does, from the workspace — and a caller that does not gets no language
+ * line at all rather than a guessed one.
  */
 export function buildDoubtBrief(
   ctx: DoubtContext,

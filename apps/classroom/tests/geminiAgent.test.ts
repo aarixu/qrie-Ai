@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ALLOWED_MODELS, BLOCKED_FINISH, BLOCKED_LINE, bareModel } from '@ai-tutor/relay';
 import {
   buildDoubtSystemPrompt,
@@ -14,7 +14,9 @@ import {
   entryLine,
   type DoubtContext,
 } from '@ai-tutor/doubt-session';
-import type { StudentContext } from '@ai-tutor/persona';
+import { REGISTER, type StudentContext } from '@ai-tutor/persona';
+import { profileStore } from '../src/stores/profile';
+import { setTutorLanguage } from '../src/lib/workspace';
 
 /**
  * NO PROJECT, NO SIGN-IN. These drive the real `relayFetch`, which asks
@@ -618,5 +620,73 @@ describe('token counts per turn', () => {
     const send = createTransport({ student, onUsage: (u) => seen.push(u) });
     await send('SYS', [{ role: 'user', text: 'why?' }], new AbortController().signal);
     expect(seen).toEqual([]);
+  });
+});
+
+/**
+ * THE CHILD'S LANGUAGE, IN THE TYPED DOUBT TUTOR'S BRIEF.
+ *
+ * The class planner has always been told which language the student chose at
+ * onboarding; the doubt tutor was not, so a Hinglish class could pause for a
+ * raised hand and answer it in English. The workspace's `tutorLanguage()` is
+ * read when each turn's prompt is built, and persona renders the same register
+ * line the judge and the close carry.
+ */
+describe('the language the child chose', () => {
+  const EMPTY_PROFILE = { name: null, klass: null, subjects: [], diagnostic: null, diagnosedAt: null };
+
+  beforeEach(() => {
+    localStorage.clear();
+    profileStore.set({ ...EMPTY_PROFILE });
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('briefs her in Hinglish for a child who chose Hinglish', () => {
+    setTutorLanguage('hi-en');
+    const p = buildDoubtSystemPrompt(ctx, { klass: 10 });
+    expect(p).toContain(REGISTER['hi-en']);
+    expect(p).not.toContain(REGISTER.en);
+  });
+
+  it('briefs her in plain English, with no Hinglish line, for a child who chose English', () => {
+    setTutorLanguage('en');
+    const p = buildDoubtSystemPrompt(ctx, { klass: 10 });
+    expect(p).toContain(REGISTER.en);
+    expect(p).not.toMatch(/hinglish/i);
+  });
+
+  it('keeps a language the caller already set, rather than overriding it', () => {
+    // Whoever built the student context measured this; the workspace is only
+    // the fallback for a context that does not carry one yet.
+    setTutorLanguage('hi-en');
+    const p = buildDoubtSystemPrompt(ctx, { klass: 10, language: 'en' });
+    expect(p).toContain(REGISTER.en);
+    expect(p).not.toContain(REGISTER['hi-en']);
+  });
+
+  it('sends the Hinglish brief on the wire, on the turn the child asks', async () => {
+    setTutorLanguage('hi-en');
+    const bodies: string[] = [];
+    vi.stubGlobal('fetch', async (url: string, init: RequestInit) => {
+      if (String(url).includes('/api/llm')) bodies.push(String(init.body));
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          choices: [{ message: { content: '{"say":"Chaar chambers kyun?","recallBeatId":null,"done":false}' } }],
+        }),
+      };
+    });
+    const session = createGeminiAgent({ student }).start(ctx, {
+      say: async () => {},
+      recall: () => {},
+      done: () => {},
+    });
+    session.sendUserText('chaar kyun?');
+    for (let i = 0; i < 5; i += 1) await new Promise((r) => setTimeout(r, 0));
+    expect(bodies).toHaveLength(1);
+    const system = (JSON.parse(bodies[0]) as { messages: { role: string; content: string }[] }).messages[0];
+    expect(system.role).toBe('system');
+    expect(system.content).toContain(REGISTER['hi-en']);
   });
 });

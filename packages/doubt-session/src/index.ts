@@ -21,5 +21,6 @@ export {
   createStubAgent,
   type AgentAdapter,
   type AgentIO,
+  type SayOptions,
   type AgentSession,
 } from './agent';

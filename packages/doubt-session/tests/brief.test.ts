@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { TUTOR, momentGuidance, type StudentContext } from '@ai-tutor/persona';
+import { REGISTER, TUTOR, momentGuidance, type StudentContext } from '@ai-tutor/persona';
 import { buildContext, type DoubtContext } from '../src/context';
 import { buildDoubtBrief, isRecallable, recallTargets } from '../src/brief';
 
@@ -181,6 +181,46 @@ describe('buildDoubtBrief', () => {
     expect(section).toBeDefined();
     expect(section?.split('\n').filter((line) => line.startsWith('- '))).toHaveLength(1);
     expect(section).toContain('Class 9');
+  });
+
+  /**
+   * THE CHILD'S LANGUAGE, IN THE LIVE TUTOR'S OWN BRIEF.
+   *
+   * The class planner has always been told which language a student chose;
+   * the doubt tutor was not, so a Hinglish class could pause for a raised hand
+   * and answer it in English. The choice rides on the student, like every
+   * other signal, and persona renders the one register line the judge and the
+   * close carry too.
+   */
+  it('speaks Hinglish to a child who chose Hinglish', () => {
+    const prompt = buildDoubtBrief(
+      midLesson(),
+      { klass: 9, language: 'hi-en' },
+      { moment: 'answering', surface: 'text' },
+    );
+    expect(prompt).toContain(REGISTER['hi-en']);
+    expect(prompt).not.toContain(REGISTER.en);
+  });
+
+  it('speaks plain English to a child who chose English, with no Hinglish line at all', () => {
+    const prompt = buildDoubtBrief(
+      midLesson(),
+      { klass: 9, language: 'en' },
+      { moment: 'answering', surface: 'text' },
+    );
+    expect(prompt).toContain(REGISTER.en);
+    expect(prompt).not.toContain(REGISTER['hi-en']);
+    expect(prompt).not.toMatch(/hinglish/i);
+    expect(prompt).not.toMatch(/devanagari/i);
+  });
+
+  it('invents no language when the caller did not say one', () => {
+    const prompt = buildDoubtBrief(midLesson(), KLASS_ONLY, {
+      moment: 'answering',
+      surface: 'text',
+    });
+    expect(prompt).not.toContain(REGISTER.en);
+    expect(prompt).not.toContain(REGISTER['hi-en']);
   });
 
   it('is pure: the same inputs build a byte-identical prompt', () => {

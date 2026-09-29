@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { DiagnosticResult } from '@ai-tutor/knowledge-graph';
+import { emptyConceptState, emptyModel } from '@ai-tutor/learner-model';
 import { adaptToQuiz } from '../src/lib/adaptPlan';
+import { learnerModelStore } from '../src/lib/learnerModel';
 import { loadDiagnosticDataFor } from '../src/lib/diagnosticData';
 import type { QuizOutcome } from '../src/lib/quiz';
 import { profileStore } from '../src/stores/profile';
@@ -53,6 +55,9 @@ const quiz = (correct: boolean, rows: number): QuizOutcome => ({
 
 beforeEach(() => {
   localStorage.clear();
+  // The store caches in memory, so clearing localStorage alone does not empty
+  // it: a model one test sets would otherwise be the next test's belief.
+  learnerModelStore.set(emptyModel());
   profileStore.update((p) => ({
     ...p,
     name: 'Asha',
@@ -80,6 +85,53 @@ describe('adaptToQuiz', () => {
     // And the placement stays what it was: a record of that day, not a live
     // belief store for quizzes to evolve.
     expect(stored.mastery).toEqual({ [nodeId]: 0.99 });
+  });
+
+  /**
+   * B6. The plan's gaps are decisions, so they read what the student did
+   * ALONE. An outcome whose only evidence is a hinted answer has no cold
+   * reading at all — unknown, not weak — and a blended 0.1 from help must not
+   * put it on the plan. (Finding out, with a cold item, is E6's job.)
+   */
+  it('plans no gap from belief that only help produced', () => {
+    const other = data.index.ids().find((id) => id !== nodeId && data.index.node(id)?.klass === 10);
+    if (!other) throw new Error('the map has only one Class 10 node');
+    learnerModelStore.set({
+      ...emptyModel(),
+      states: {
+        [other]: {
+          ...emptyConceptState(other),
+          mastery: 0.1,
+          assistedPerformance: 0.1,
+          observations: 1,
+          answerObservations: 1,
+        },
+      },
+    });
+
+    const change = adaptToQuiz(quiz(true, 3));
+    expect(change!.added.map((s) => s.nodeId)).not.toContain(other);
+  });
+
+  it('still plans a gap the student showed cold', () => {
+    const other = data.index.ids().find((id) => id !== nodeId && data.index.node(id)?.klass === 10);
+    if (!other) throw new Error('the map has only one Class 10 node');
+    learnerModelStore.set({
+      ...emptyModel(),
+      states: {
+        [other]: {
+          ...emptyConceptState(other),
+          mastery: 0.1,
+          unassistedMastery: 0.1,
+          observations: 1,
+          answerObservations: 1,
+          unassistedObservations: 1,
+        },
+      },
+    });
+
+    const change = adaptToQuiz(quiz(true, 3));
+    expect(change!.added.map((s) => s.nodeId)).toContain(other);
   });
 
   it('a clean quiz rewrites nothing at all', () => {

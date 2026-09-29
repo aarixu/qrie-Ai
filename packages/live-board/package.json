@@ -1,0 +1,9 @@
+{
+  "name": "@ai-tutor/live-board",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": { "@ai-tutor/board-layout": "*", "@ai-tutor/lesson-format": "*" }
+}

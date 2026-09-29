@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { misconceptionFor } from './diagnosticLedger';
 import type { QuizAnswer, QuizQuestion } from './quiz';
+import { createRevealMemory } from './quizReveal';
 import { closeSession, logAnswer, openSession } from '../stores/ledger';
+
+/** One per page: a retake remounts the quiz screen, and must still see it. */
+const reveals = createRevealMemory();
 
 /**
  * A QUIZ, WRITTEN DOWN AS IT IS TAKEN.
@@ -12,11 +16,16 @@ import { closeSession, logAnswer, openSession } from '../stores/ledger';
  * 3,242 authored probes carry those names.
  *
  * A QUIZ IS THE UNASSISTED CASE, which is why this is worth more per row than
- * anything the classroom produces. There are no hints in a quiz, no retries and
- * no tutor talking the student through it — so every answer here stands at rung
+ * anything the classroom produces. There are no hints in a quiz and no tutor
+ * talking the student through it — so a first sitting's answers stand at rung
  * 0 of the assistance ladder, and rung 0 is the only rung that can ever confirm
  * mastery. The classroom generates far more events; this generates the ones
  * that actually settle the question.
+ *
+ * EXCEPT A RETAKE RIGHT AFTER THE REVEAL (B5). Checking a question shows its
+ * answer, and "Try again" re-asks the same probes, so a probe answered again
+ * within a day of being shown is filed at rung 8 as the next attempt — see
+ * `quizReveal.ts`.
  *
  * WHICH IS WHY IT IS NO LONGER WRITTEN AT THE END. This was one call from the
  * results screen, handed the graded outcome — so a student who answered eight
@@ -204,18 +213,22 @@ export function useQuizLedger(quiz: QuizQuestion[] | null, topicRef?: string): Q
           chosenIndex: answer.chosenIndex,
           correct: answer.chosenIndex === question.correctIndex,
           ms: answer.ms,
-          // One shot each. A retake re-asks the same probes as a fresh sitting,
-          // which is what makes a retake a real retest rather than a second
-          // guess at the same question.
-          attempt: 1,
-          assistanceRung: 0,
-          hintsShown: 0,
+          /**
+           * One shot each — but NOT always cold (B5). Checking a question
+           * shows its answer, and "Try again" re-asks the same probes. A
+           * retake inside the reveal window is read-back, filed at rung 8 as
+           * the next attempt; after it, a retake is a real retest again. See
+           * `quizReveal.ts` for the window and why it is a day.
+           */
+          ...reveals.helpFor(question.id, Date.now()),
           verdict: answer.chosenIndex === question.correctIndex ? 'right' : 'wrong',
           // The same lookup the placement test does, off the same aligned
           // arrays: null on a right answer, on a skip, and where the bank
           // names none.
           misconceptionId: misconceptionFor(question, answer.chosenIndex),
         });
+        // Checked is shown: the screen marks the right option from this moment.
+        reveals.markRevealed(question.id, Date.now());
       },
       finish() {
         /**

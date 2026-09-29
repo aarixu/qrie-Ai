@@ -1,0 +1,142 @@
+import type { AssistanceRung } from '@ai-tutor/ledger';
+import type { Beat } from '@ai-tutor/lesson-format';
+
+/** The child's tutor language, as onboarding records it (`workspace.ts`). */
+export type TutorLanguage = 'en' | 'hi-en';
+
+/**
+ * WHAT THE JUDGE MADE OF THE TURN — the only thing `decide()` is told about
+ * what the student did.
+ *
+ * - `right` / `wrong`: judged, and `matchedOption` names the option if any.
+ * - `unmatched`: an answer that is not right and matches no authored option.
+ * - `unclear`: nothing usable was heard, or the judge's numbers disagreed with
+ *   the expected value (E2/E3). Not evidence either way.
+ * - `silent`: the wait ran out with nothing said.
+ * - `hintRequest`: the student asked for help.
+ */
+export type Verdict = 'right' | 'wrong' | 'unmatched' | 'unclear' | 'silent' | 'hintRequest';
+
+/**
+ * A SIMILAR PROBLEM, WORKED STEP BY STEP — L5's content, in the canvas
+ * protocol's `work{steps:[{say, line}]}` shape. Different numbers from the
+ * ask, so it teaches the method without giving the answer.
+ *
+ * NOT AUTHORED ANYWHERE YET. C6 adds it at prep (T3); until then every ask
+ * lacks one and L5 is skipped, exactly as TD1 says ("only where content
+ * exists").
+ */
+export interface WorkedExample {
+  steps: readonly { say: string; line: string }[];
+}
+
+/**
+ * The held question, as the lesson carries it (`Beat['ask']` in
+ * lesson-format), plus the worked example C6 will add.
+ */
+export type AskInput = NonNullable<Beat['ask']> & { workedExample?: WorkedExample };
+
+export interface DecideInput {
+  verdict: Verdict;
+  /** Which try at this ask this is. 1 is the first. */
+  attempt: number;
+  /** The highest rung already delivered on this ask. */
+  rungSoFar: AssistanceRung;
+  ask: AskInput;
+  /**
+   * Which option the judge matched, as an index into the list it matched
+   * against: `ask.options` when the ask shows options, otherwise
+   * `ask.whyProbe.options` (the judge's ears on an open ask). Out of range is
+   * ignored.
+   */
+  matchedOption?: number;
+  /**
+   * What the learner model believes about this ask's outcome, if the caller
+   * has it. `unassisted` absent means UNKNOWN (never asked cold, B6), never
+   * 0.5. Read only to decide a retest after a cold right answer.
+   */
+  mastery?: { unassisted?: number; assisted?: number };
+  lang: TutorLanguage;
+  /**
+   * The caller's clock, in ms. Injected — `decide()` never reads one — and
+   * used only by the response-time rules, which are off.
+   */
+  now: number;
+  /**
+   * Lines already spoken this session, newest last. The newest is never
+   * chosen again; any of them is avoided where another variant exists.
+   */
+  recentLines?: readonly string[];
+  /**
+   * RESPONSE-TIME RULES, BUILT AND OFF (TD14). Whether DPDP §9(3) lets
+   * response time be used as evidence about a child is a question for the
+   * lawyer; until it is answered, `rules` stays false and timing changes
+   * nothing. `askedAt` is when the question surfaced, on the same clock as
+   * `now`.
+   */
+  timing?: { askedAt: number; rules?: boolean };
+}
+
+export type ActionKind =
+  | 'praise'
+  | 'rethink'
+  | 'hint'
+  | 'workedExample'
+  | 'reveal'
+  | 'nudge'
+  | 'moveOn';
+
+/**
+ * Where ink should go. Never a coordinate: the live board places it (canvas
+ * protocol invariant 1). `markElement` is part of the vocabulary for T2.5;
+ * `decide()` does not emit it yet, because it is not told which prepared
+ * element a wrong answer is about.
+ */
+export interface BoardIntent {
+  kind: 'writeInWorkArea' | 'markElement';
+  text?: string;
+  targetId?: string;
+}
+
+/**
+ * What kind of error this action answers. Only two values today: TD2's five
+ * classes wait for the diagnosis (D5), and a cause nobody observed must not be
+ * written into a child's record.
+ */
+export type ErrorClass = 'none' | 'unclassified';
+
+export interface Action {
+  kind: ActionKind;
+  /**
+   * The highest ladder rung delivered on this ask once this action has
+   * happened — what the caller passes back as `rungSoFar` next turn. Never
+   * below the one before it. A content-free nudge files L1 help (`helped`)
+   * without moving this: it said nothing about the answer.
+   */
+  rung: AssistanceRung;
+  /**
+   * The rung to file as `helped` BEFORE a word is said or a line written, or
+   * null when this action gives no help. See `recordsFor`.
+   */
+  helped: AssistanceRung | null;
+  /** Whether the student asked for this help (`HelpedPayload.requested`). */
+  requested: boolean;
+  /**
+   * The line to say: a fixed persona line, or authored content inside one.
+   * Never invented. Absent only when every candidate would have leaked. The
+   * caller speaks it through the safety screen like any other line.
+   */
+  say?: string;
+  boardIntent?: BoardIntent;
+  /**
+   * What must not appear in anything said or written for this action: the
+   * expected answer and the correct option's text. Empty once the answer is
+   * out (a reveal, a right answer, anything after the reveal).
+   */
+  mustNotReveal: string[];
+  /** Ask again later, on a different item. */
+  scheduleRetest: boolean;
+  errorClass: ErrorClass;
+  /** Why, for the ledger. Never spoken. Present on every action. */
+  because: string;
+}

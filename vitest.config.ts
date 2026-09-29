@@ -29,6 +29,8 @@ export default defineConfig({
       '@ai-tutor/action-player': pkg('action-player'),
       '@ai-tutor/maic-adapter': pkg('maic-adapter'),
       '@ai-tutor/maths-check': pkg('maths-check'),
+      '@ai-tutor/tutor-control': pkg('tutor-control'),
+      '@ai-tutor/live-board': pkg('live-board'),
     },
   },
   test: {

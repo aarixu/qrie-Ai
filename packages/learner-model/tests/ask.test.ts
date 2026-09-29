@@ -48,9 +48,23 @@ describe('chooseAsk', () => {
     expect(chooseAsk(model, ['x']).rung).toBe(0);
   });
 
-  it('opens with a hint when they have already failed this cold', () => {
+  /**
+   * E10. This used to open at rung 1 on an outcome already failed cold — the
+   * rule the 2026-09-14 spec retired. Opening with help means that outcome
+   * never produces another rung-0 answer, so the one number that can show the
+   * student improving could never move. Every ask opens cold; what happens
+   * after a wrong answer is tutor-control's decision, not this one's.
+   */
+  it('opens cold even where they have already failed this cold', () => {
     const model = withStates({ outcomeId: 'x', unassistedMastery: 0.2, unassistedObservations: 2 });
-    expect(chooseAsk(model, ['x']).rung).toBe(1);
+    expect(chooseAsk(model, ['x']).rung).toBe(0);
+  });
+
+  it('opens cold on every candidate, whatever the record says', () => {
+    for (const unassistedMastery of [0.02, 0.2, 0.49, 0.5, 0.8, 0.98]) {
+      const model = withStates({ outcomeId: 'x', unassistedMastery, unassistedObservations: 3 });
+      expect(chooseAsk(model, ['x']).rung, `unassisted ${unassistedMastery}`).toBe(0);
+    }
   });
 
   it('opens cold on an outcome nobody has ever asked about', () => {

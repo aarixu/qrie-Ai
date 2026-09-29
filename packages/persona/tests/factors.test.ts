@@ -163,6 +163,7 @@ describe('FACTORS catalogue', () => {
       'doubtCount',
       'lastAnswer',
       'attendance',
+      'language',
     ]);
     for (const spec of Object.values(FACTORS)) {
       expect(spec.observedFrom.trim().length).toBeGreaterThan(0);

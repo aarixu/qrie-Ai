@@ -51,6 +51,10 @@ export function buildStudentContext(input: {
    * What we believe per outcome, from the LEARNER MODEL. Injected like the
    * planner's, and for the same reason: this file must not know where belief
    * lives, only that it is never the stored placement blob.
+   *
+   * UNASSISTED belief (B6): the caller passes `masteryFromModel()`, which holds
+   * only outcomes the student has answered cold. An outcome answered only with
+   * help is absent, so it never lifts the persona's mastery reading.
    */
   mastery?: Mastery;
   today?: Date;
@@ -118,6 +122,11 @@ export function studentLinesForPlanner(input: {
    * What we believe about each outcome, from the learner model. Used to be read
    * off `profile.diagnostic.mastery` in here — the last placement test's stored
    * result, which knew nothing about the term of classes and quizzes since.
+   *
+   * UNASSISTED belief, and only where the student was asked cold (B6): the
+   * caller passes `masteryFromModel()`. So "They hold securely" below is said
+   * only of what they did alone, and an outcome they managed only with a hint
+   * is named nowhere — the planner is not told they hold it.
    */
   mastery: Mastery;
   /**

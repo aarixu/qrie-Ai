@@ -38,10 +38,19 @@ describe('TUTOR traits', () => {
   });
 
   it('does not use the phrases it bans anywhere else in the persona', () => {
-    // The ban names three phrases verbatim. If any of them turned up in a value,
+    // The bans name these phrases verbatim. If any of them turned up in a value,
     // a moment rule or a factor line, the persona would break its own rule while
     // stating it.
-    const banned = ['as i said before', 'obviously', 'as you know'];
+    const banned = [
+      'as i said before',
+      'obviously',
+      'as you know',
+      // The stock praise the persona bans: a value or a moment rule that
+      // modelled one would be teaching the phrase while forbidding it.
+      'great job',
+      'great question',
+      'well done',
+    ];
 
     const elsewhere = [
       ...TUTOR.values,

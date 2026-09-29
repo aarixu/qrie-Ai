@@ -13,6 +13,8 @@
  *   doubtCount         <- raised hands logged in this lesson (the data spine)
  *   lastAnswer         <- correctness plus Answer.ms from the check just given
  *   attendance         <- local progress: days in a row, or days since last seen
+ *   language           <- the tutor language the student chose at onboarding
+ *                         (apps/classroom/src/lib/workspace.ts, tutorLanguage())
  *
  * DELIBERATELY NOT FACTORS — this list is as load-bearing as the one above:
  *
@@ -27,6 +29,8 @@
  * Adding a factor means adding a real signal first. If you cannot name the line
  * of code that produces it, it does not belong in StudentContext.
  */
+
+import { REGISTER, type TutorLanguage } from './language';
 
 /** School classes this product teaches. */
 export type Klass = 6 | 7 | 8 | 9 | 10 | 11 | 12;
@@ -65,6 +69,18 @@ export interface StudentContext {
   lastAnswer?: AnswerSignal;
   /** Showing up, or coming back. */
   attendance?: Attendance;
+  /**
+   * The language she speaks to THIS student — their onboarding choice, never
+   * the app's chrome, which is English for everyone.
+   *
+   * Unlike every field above it, this one is not a private note about the
+   * child: it is how every word she says comes out. So `describeFactors` does
+   * not render it into the "never read them out" notes; `buildSystemPrompt`
+   * renders it as its own section beside the speaking rules (prompt.ts), with
+   * the one register line in language.ts. Absent still means unknown and
+   * still says nothing, like every other field here.
+   */
+  language?: TutorLanguage;
 }
 
 // --- Thresholds -------------------------------------------------------------
@@ -155,7 +171,7 @@ export const FACTORS: Record<keyof StudentContext, FactorSpec> = {
       'fast-right: fluency. Confirm in one line, then stretch with a harder variation.',
       'slow-right: reconstructed, not recalled. Confirm warmly, then consolidate with one more example of the same shape.',
       'fast-wrong: a guess, not a misunderstanding. Slow them down — make them restate the question before answering again.',
-      'slow-wrong: engaged and genuinely stuck. Praise the effort, then find the exact step that broke.',
+      'slow-wrong: engaged and genuinely stuck. Name what they tried, specifically, then find the exact step that broke.',
     ],
   },
   attendance: {
@@ -163,6 +179,14 @@ export const FACTORS: Record<keyof StudentContext, FactorSpec> = {
     values: [
       `streak (>= ${STREAK_MIN_DAYS} days): acknowledge in half a sentence, then teach. Dwelling on it turns a class into a rewards screen.`,
       'returning: welcome them back in one short line with no guilt, then recap the last thing they finished.',
+    ],
+  },
+  language: {
+    observedFrom: 'the tutor language the student picked during onboarding or on the contest form',
+    values: [
+      `en: ${REGISTER.en}`,
+      `hi-en: ${REGISTER['hi-en']}`,
+      'absent: unknown. Produces NO line, like every other factor. Rendered beside the speaking rules rather than in the private notes, because it is how she speaks rather than something she knows.',
     ],
   },
 };
@@ -177,7 +201,7 @@ const asCount = (value: number | undefined): number | null =>
 
 const klassLine = (klass: Klass): string => {
   if (klass <= 8) {
-    return `Class ${klass}: vocabulary stays at everyday words. Introduce one technical term at a time, and only once the plain-English version has landed. One idea per sentence, around fifteen words. Scaffold every step and assume nothing from earlier chapters.`;
+    return `Class ${klass}: vocabulary stays at everyday words. Introduce one technical term at a time, and only once the plain-words version has landed. One idea per sentence, around fifteen words. Scaffold every step and assume nothing from earlier chapters.`;
   }
   if (klass <= 10) {
     return `Class ${klass}: use the correct NCERT vocabulary, but anchor each term to an everyday comparison the first time it appears. Sentences up to about twenty words. Scaffold the step below when they stumble, not before.`;
@@ -204,7 +228,7 @@ const answerLine = (signal: AnswerSignal): string => {
     case 'fast-wrong':
       return 'They answered wrongly almost instantly — that is a guess, not a misunderstanding. Slow them down: ask them to say what the question is actually asking before they answer again.';
     case 'slow-wrong':
-      return 'They answered wrongly after a long think — they are engaged and genuinely stuck. Praise the effort first, then find the exact step where it broke instead of starting the explanation over.';
+      return 'They answered wrongly after a long think — they are engaged and genuinely stuck. Name what they actually tried first, specifically rather than with stock praise, then find the exact step where it broke instead of starting the explanation over.';
   }
 };
 
@@ -229,6 +253,10 @@ const attendanceLine = (attendance: Attendance): string | null => {
  *
  * An absent or out-of-range field contributes nothing. That is the whole
  * contract of this function: no line means no claim.
+ *
+ * `language` is the one field this does NOT render. It is an instruction about
+ * how every word comes out rather than a note about the child, so
+ * `buildSystemPrompt` gives it a section of its own beside the speaking rules.
  */
 export function describeFactors(ctx: StudentContext): string[] {
   const lines: string[] = [klassLine(ctx.klass)];

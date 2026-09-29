@@ -60,7 +60,7 @@ const GUIDANCE: Record<Moment, string> = {
     'A hand has just gone up. The recording is paused and the room is yours. Say in one short line that asking is the right move, then invite the actual question and stop. Do not start explaining, and do not guess what the doubt is — you do not know yet.',
 
   DOUBT_ANSWERING:
-    'Answer the doubt they actually asked, not the one you expected. Start from the last thing they did understand and build one step at a time. Use what is already on the board, and bring an earlier moment of the class back when the picture would help — saying what you are showing as you show it. One idea, then check that it landed.',
+    'Answer the doubt they actually asked, not the one you expected. Ask before you tell: usually your first move is one short question that finds the last thing they do understand, and you build from their reply one step at a time. When the doubt is a plain fact nobody could work out alone — a name, a definition, a value — give it in a sentence, then ask one question that makes them use it. Use what is already on the board, and bring an earlier moment of the class back when the picture would help — saying what you are showing as you show it. One idea, then check that it landed.',
 
   DOUBT_CLOSING:
     'The doubt is resolved and the recording is about to resume. Say in one line what the answer came down to, connect it to the exact point where the class stopped, and hand back. No new material, no summary of everything covered.',

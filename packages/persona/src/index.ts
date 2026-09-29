@@ -20,6 +20,14 @@ export {
   type FactorSpec,
 } from './factors';
 
+export {
+  TUTOR_LANGUAGES,
+  REGISTER,
+  registerLine,
+  isTutorLanguage,
+  type TutorLanguage,
+} from './language';
+
 export { MOMENTS, momentForBeatRole, momentGuidance, type Moment } from './moments';
 
 export {

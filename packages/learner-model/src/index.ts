@@ -8,6 +8,8 @@
  */
 
 export {
+  MASTERY_LINE,
+  MASTERY_SPACING_MS,
   MODEL_VERSION,
   emptyConceptState,
   emptyModel,
@@ -15,7 +17,9 @@ export {
   type LearnerModel,
 } from './types.ts';
 
-export { evidenceSet, masteryView } from './project.ts';
+// `unassistedView` and `unassistedEvidence` are what decisions read (B6);
+// `masteryView` is the blended picture, for display only.
+export { evidenceSet, masteryView, unassistedEvidence, unassistedView } from './project.ts';
 
 export { deriveRung } from './rung.ts';
 

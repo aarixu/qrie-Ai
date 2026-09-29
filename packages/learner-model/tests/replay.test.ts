@@ -166,6 +166,14 @@ describe('replay', () => {
    * and two answers -- and `b` by three answers, and three is what each now
    * reads. `a`'s mastery fell by 0.0039, which is the compounded pull removed.
    */
+  /**
+   * And again on 2026-09-29, deliberately (MODEL_VERSION 2). B4: the seq-1
+   * help makes the seq-2 right answer a rung-3 answer, which now moves belief
+   * `defaultCredit(3)` = 0.7 of the way a cold one would -- so `b.mastery` fell
+   * 0.0050 and `a.mastery`, which that answer propagates to, fell 0.0615. B8
+   * added `masteredAt` and `coldWins`. Nothing else moved: every unassisted
+   * number, count and date is byte for byte what it was.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -181,7 +189,7 @@ describe('replay', () => {
       states: {
         a: {
           outcomeId: 'a',
-          mastery: 0.8633333333333332,
+          mastery: 0.8018333333333334,
           unassistedMastery: 0.32432432432432434,
           assistedPerformance: 0.5,
           observations: 3,
@@ -191,6 +199,11 @@ describe('replay', () => {
           taughtCount: 1,
           lastPracticedAt: '2026-09-15T10:00:00.000Z',
           lastUnassistedSuccessAt: '2026-09-14T10:00:00.000Z',
+          // One cold win, on B2. The seq-3 answer names `a` and `b` both.
+          masteredAt: null,
+          coldWins: {
+            'beat:/B2': { first: '2026-09-14T10:00:00.000Z', last: '2026-09-14T10:00:00.000Z' },
+          },
           memoryStrength: 0,
           nextReviewAt: null,
           retrievalCount: 0,
@@ -198,7 +211,7 @@ describe('replay', () => {
         },
         b: {
           outcomeId: 'b',
-          mastery: 0.3617204335276203,
+          mastery: 0.3567657996488772,
           unassistedMastery: 0.9283667621776505,
           assistedPerformance: 0.782608695652174,
           observations: 3,
@@ -208,6 +221,15 @@ describe('replay', () => {
           taughtCount: 0,
           lastPracticedAt: '2026-09-15T10:00:00.000Z',
           lastUnassistedSuccessAt: '2026-09-15T10:00:00.000Z',
+          // B8 holds: cold wins on two distinct items (B2, B3) a day apart, and
+          // unassisted belief 0.928. Blended `mastery` is 0.357 at the same
+          // moment -- the hint, the hand and `a`'s miss pull THAT down, and it
+          // is display only. The rule reads what they did alone.
+          masteredAt: '2026-09-15T10:00:00.000Z',
+          coldWins: {
+            'beat:/B2': { first: '2026-09-14T10:00:00.000Z', last: '2026-09-14T10:00:00.000Z' },
+            'beat:/B3': { first: '2026-09-15T10:00:00.000Z', last: '2026-09-15T10:00:00.000Z' },
+          },
           memoryStrength: 0,
           nextReviewAt: null,
           retrievalCount: 0,
@@ -216,7 +238,7 @@ describe('replay', () => {
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 1,
+      version: 2,
     });
   });
 });

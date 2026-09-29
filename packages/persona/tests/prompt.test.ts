@@ -84,15 +84,15 @@ describe('buildSystemPrompt', () => {
   describe('surfaces', () => {
     it('caps a spoken turn and bans screen formatting on voice', () => {
       const prompt = buildSystemPrompt({ moment: 'DOUBT_ANSWERING', student, surface: 'voice' });
-      expect(prompt).toContain('20 to 60 words per turn');
+      expect(prompt).toContain('One or two short sentences per turn');
       expect(prompt.toLowerCase()).toContain('no markdown');
     });
 
     it('does neither on text, which is read rather than heard', () => {
       const prompt = buildSystemPrompt({ moment: 'DOUBT_ANSWERING', student, surface: 'text' });
       expect(prompt.toLowerCase()).not.toContain('markdown');
-      expect(prompt).not.toContain('words per turn');
-      expect(prompt).toContain('Short paragraphs');
+      expect(prompt).not.toContain('per turn');
+      expect(prompt).toContain('on its own line');
     });
 
     it('uses the authored beat length for narration', () => {

@@ -44,6 +44,13 @@ which is now wiring and nothing else.
 - **"I don't know" is WRONG, not unclear.** Unclear records no evidence at all,
   and a student who says they do not know has told us something real.
 - **Judge the idea, not the language.**
+- **Speak the language the child chose.** `judgeSpokenAnswer` and
+  `resolveCrossQuestion` take `{ language }` (`'en' | 'hi-en'`), and both
+  prompts carry persona's one register line for it — never the language one
+  answer happened to be in. With no language, no line. Whether the model obeys
+  it is UNVERIFIED until the plan's 30-item labelled set is run.
+- **One or two short sentences, ask before telling, no stock praise** —
+  "Great job!" is named and banned in both prompts.
 - **A disclosure never reaches the model.** The safety screen returns words to
   say instead of words to send, the verdict carries `halt`, and the class stops
   rather than reopening the mic over a child. It is recorded as `unclear`, never

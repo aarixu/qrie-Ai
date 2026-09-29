@@ -5,7 +5,13 @@
  * the safety screen are all injected, so the pedagogy can be tested without a
  * browser, a network or a key.
  */
-export type { SpokenAsk, SpokenVerdict, CrossQuestionClose, JudgeDeps } from './types.ts';
+export type {
+  SpokenAsk,
+  SpokenVerdict,
+  CrossQuestionClose,
+  JudgeDeps,
+  JudgeOptions,
+} from './types.ts';
 export { JUDGE_SYSTEM, CLOSE_SYSTEM, describeAsk } from './prompts.ts';
 export { judgeSpokenAnswer, resolveCrossQuestion, parseVerdict, parseFollowUp } from './judge.ts';
 

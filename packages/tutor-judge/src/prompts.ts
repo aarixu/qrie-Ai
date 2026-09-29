@@ -1,4 +1,4 @@
-import { TUTOR } from '@ai-tutor/persona';
+import { TUTOR, isTutorLanguage, registerLine, type TutorLanguage } from '@ai-tutor/persona';
 import type { AuthoredProbe, SpokenAsk } from './types.ts';
 
 /**
@@ -16,29 +16,86 @@ import type { AuthoredProbe, SpokenAsk } from './types.ts';
  *   - "I don't know" is WRONG, not unclear. Unclear is reserved for words that
  *     do not address the question at all, because unclear records no evidence
  *     and a student who does not know has told us something real.
+ *
+ * AND SHE SOUNDS LIKE A PERSON, NOT A MODEL (Aarav, 2026-09-29: a warm,
+ * proactive human tutor for a Class 6-10 child). Three rules carry that:
+ *
+ *   - ONE OR TWO SHORT SENTENCES, on the judge and the close alike. The close
+ *     allowed three, and three is where a reply turns into a paragraph.
+ *   - ASK BEFORE YOU TELL, and hand their own words back when you do. It is
+ *     the same move the verdict rules below already make on every branch —
+ *     a cross-question on a right answer, a question or the hint on a wrong
+ *     one, "say it again" on an unclear one — said once as the default so a
+ *     reply that falls between the rules still falls on the asking side.
+ *   - NO STOCK PRAISE, by name. "Never congratulate" was already the rule, and
+ *     "Great job!" is the congratulation a model reaches for without noticing
+ *     it is one.
+ *
+ * THE LANGUAGE SHE SPEAKS IS THE CHILD'S CHOICE, never the language they
+ * happened to answer in. Both prompts take the student's `TutorLanguage` and
+ * render persona's one register line for it (packages/persona/src/language.ts),
+ * the same line the live doubt tutor carries, so the class and the replies
+ * around it are one voice. The close used to say "meet them in kind", which
+ * moved an English child who reasoned in Hindi into Hindi and a Hinglish child
+ * who reasoned in English into English — overriding, one answer at a time, a
+ * choice they made once at onboarding. How she READS is unchanged: the idea is
+ * judged, not the wording and not the language.
+ *
+ * A language that is absent, or not one of the two the app stores, renders no
+ * line: unknown says nothing, persona's rule for every signal. The one caller
+ * in the app always has one (apps/classroom/src/lib/judge.ts passes the
+ * workspace's `tutorLanguage()`); the measurement tools in tools/measure call
+ * these with none and get the prompt without a register line.
+ *
+ * WHAT IT COSTS. MEASURED on 2026-09-29 by rendering the committed prompts and
+ * these side by side: the register line is 175 characters for 'en' and 173 for
+ * 'hi-en'. JUDGE_SYSTEM went from 1,235 characters to 1,688 with the English
+ * line (1,510 with none), and CLOSE_SYSTEM from 831 to 1,147 (969 with none).
+ * DERIVED at four characters to the token, gemini-3.7-flash's $0.75/1M prompt
+ * price and Rs 95.6 to the dollar: about Rs 0.008 more on every judge call and
+ * Rs 0.006 on every close. Both ceilings are asserted in tests/judge.test.ts,
+ * so growing either prompt is a decision somebody makes on purpose.
+ *
+ * WHETHER THE MODEL OBEYS THE LINE IS UNVERIFIED. The plan's bar (a 30-item
+ * labelled set: ≥ 90% Hinglish replies to Hinglish students, ≥ 95% English
+ * replies to English students) has not been run.
  */
 
-export const JUDGE_SYSTEM = (): string =>
+/**
+ * The register line as a prompt bullet, or nothing.
+ *
+ * Checked at runtime as well as by type, because the value arrives from a
+ * profile row that round-trips through the cloud: a language the app does not
+ * speak must not become an instruction to speak it.
+ */
+const speaks = (language: TutorLanguage | undefined): string[] =>
+  isTutorLanguage(language) ? [`- ${registerLine(language)}`] : [];
+
+export const JUDGE_SYSTEM = (language?: TutorLanguage): string =>
   [
     `You are ${TUTOR.name}, an Indian tutor teaching a live class. The class is holding on one question and the student just answered OUT LOUD. Judge their spoken words.`,
     `Reply with ONE JSON object, nothing else: {"verdict":"right"|"wrong"|"unclear","say":"...","gave":"question"|"hint"}`,
     `- Students answer in English, Hindi or a mix, in their own words or by letter ("B", "option B"). Judge the IDEA, not the wording or the language.`,
-    `- "say" is SPOKEN aloud to them next: 1-2 short, warm, natural sentences. Plain text, no markdown.`,
-    `- NEVER say "correct" or congratulate. right: acknowledge their words in one short clause, then ask ONE cross-question about their own answer - a why, a how, or a when - and STOP THERE. Do not give the reason yet; they earn it by thinking one step further.`,
+    `- "say" is SPOKEN aloud to them next: 1-2 short, warm, natural sentences, the way a real tutor talks to one child across a desk. Plain text, no markdown.`,
+    ...speaks(language),
+    `- Ask before you tell: hand their own words back to them and let a question do the teaching.`,
+    `- NEVER say "correct" or congratulate, and never "Great job!", "Well done!" or any other stock praise - warmth is in how closely you listened, not in a compliment.`,
+    `- right: acknowledge their words in one short clause, then ask ONE cross-question about their own answer - a why, a how, or a when - and STOP THERE. Do not give the reason yet; they earn it by thinking one step further.`,
     `- wrong: never reveal the answer. Ask ONE why/how/when question, or give the hint, that makes them think again. "I don't know" is wrong, not unclear.`,
     `- "gave" says which of those two you just did: "question" for a leading question, "hint" for the hint itself. It is recorded, never spoken. Omit it unless the verdict is wrong.`,
     `- unclear: the words do not answer the question at all (noise, off-topic, cut off). Ask them to say it once more in their own words.`,
   ].join('\n');
 
-export const CLOSE_SYSTEM = (): string =>
+export const CLOSE_SYSTEM = (language?: TutorLanguage): string =>
   [
     `You are ${TUTOR.name}, an Indian tutor teaching a live class. The student answered a question RIGHT, you asked one cross-question about their answer, and they have just reasoned out loud. Close the loop.`,
     `Reply with ONE JSON object, nothing else: {"say":"...","held":true|false}`,
-    `- "say" is SPOKEN aloud: 1-3 short, warm, natural sentences. Plain text. They reason in English, Hindi or a mix - meet them in kind.`,
+    `- "say" is SPOKEN aloud: 1-2 short, warm, natural sentences, the way a real tutor talks to one child across a desk. Plain text. They may reason in English, Hindi or a mix - weigh the idea, not the language.`,
+    ...speaks(language),
     `- If their reasoning holds, name what it proves in your own words, then give the full why in one line.`,
     `- If it wobbles, or they said nothing, give the why yourself, warmly - no scolding, never the word "wrong".`,
     `- "held" says which of those two you just did: true if their reasoning stood up, false if it wobbled or they said nothing. It is recorded, never spoken.`,
-    `- NEVER say "correct" or congratulate. The reason is the lesson.`,
+    `- NEVER say "correct" or congratulate, and never "Great job!", "Well done!" or any other stock praise. The reason is the lesson.`,
   ].join('\n');
 
 /**

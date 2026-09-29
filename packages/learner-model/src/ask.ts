@@ -1,10 +1,13 @@
 import { GAP_THRESHOLD } from '@ai-tutor/knowledge-graph';
-import type { AssistanceRung } from '@ai-tutor/ledger';
 import type { LearnerModel } from './types.ts';
 
 export interface AskChoice {
   outcomeId: string;
-  rung: AssistanceRung;
+  /**
+   * Always 0, and typed so. Every ask opens cold (E10); help is what
+   * tutor-control decides AFTER an answer, never something an ask opens with.
+   */
+  rung: 0;
   /** The controller's reason. Logged on the ledger, never spoken aloud. */
   because: string;
 }
@@ -22,15 +25,17 @@ export interface AskChoice {
  * student. What this changes is which outcome id goes into a prompt that was
  * being sent anyway, which is why it costs nothing to run.
  *
- * PHASE 6, BEFORE WIRING A CALLER: the rung-1 opening below is the rule the
- * settled spec (2026-09-14, "at what rung") RETIRED — rung 1 does not exist as
- * content, and opening with help on an outcome already failed cold means it
- * never produces another rung-0 observation, so the primary metric can never
- * record it improving. The correction is "open at rung 0 always; the model
- * decides only what happens after a wrong answer." Left un-fixed here because
- * this function has NO CALLER and changing behaviour nobody runs would dress a
- * doc correction up as a feature; whoever wires the asks layer in Phase 6 must
- * change `belowTheLine ? 1 : 0` to `0` and update ask.test.ts to match.
+ * IT OPENS AT RUNG 0, ALWAYS (E10, 2026-09-29). It used to open at rung 1 on an
+ * outcome already failed cold — the rule the settled spec (2026-09-14, "at what
+ * rung") retired. Opening with help on an outcome means it never produces
+ * another rung-0 observation, so `unassistedMastery`, the one number that can
+ * show the student improving, could never move there. What happens after a
+ * wrong answer is `@ai-tutor/tutor-control`'s decision, not this one's.
+ *
+ * STILL NO CALLER in any app. It ranks on `unassistedMastery` and
+ * `observations` only; it is kept because choosing WHICH of a beat's outcomes
+ * to ask about is a real decision the asks layer will need, and it now makes
+ * it without the retired rule.
  */
 export function chooseAsk(model: LearnerModel, candidates: readonly string[]): AskChoice {
   const first = candidates[0];
@@ -55,11 +60,9 @@ export function chooseAsk(model: LearnerModel, candidates: readonly string[]): A
     const belowTheLine = doubted.score < GAP_THRESHOLD;
     return {
       outcomeId: doubted.id,
-      // Opening one rung along is not withholding anything — per decision 7 the
-      // ladder measures before it withholds. It is the difference between
-      // asking a child a question they have already failed cold, and asking it
-      // with the nudge that made it answerable last time.
-      rung: belowTheLine ? 1 : 0,
+      // Cold, even below the line: this ask is the next chance to see them do
+      // it alone, and opening with help would spend that chance.
+      rung: 0,
       because: belowTheLine
         ? `unassisted mastery ${doubted.score.toFixed(2)} is below the gap line`
         : `lowest unassisted mastery on this beat (${doubted.score.toFixed(2)})`,

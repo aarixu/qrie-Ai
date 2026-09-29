@@ -4,7 +4,7 @@ import type {
   HelpedPayload,
   LedgerEvent,
 } from '@ai-tutor/ledger';
-import { deriveRung } from './rung.ts';
+import { atLeastANudge, deriveRung } from './rung.ts';
 
 /**
  * THE ASSISTANCE-BLENDED SCORE, PER OUTCOME.
@@ -74,7 +74,12 @@ export function eachAnswerWithRung(
     const payload = event.payload as AnsweredPayload;
     const help = helpBySession.get(event.sessionId) ?? {};
     const key = askKey(payload.beatId, payload.probeId, event.outcomeIds);
-    const rung = deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung);
+    // The fold's rule exactly, including B4's "a second attempt is at least a
+    // nudge" — the two must agree about which answers were cold.
+    const rung = atLeastANudge(
+      deriveRung([(help[key] ?? 0) as AssistanceRung], payload.assistanceRung),
+      payload.attempt,
+    );
     visit(event, payload, rung);
   }
 }

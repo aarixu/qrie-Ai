@@ -1,4 +1,4 @@
-import type { AgentAdapter, AgentIO, AgentSession } from './agent';
+import type { AgentAdapter, AgentIO, AgentSession, SayOptions } from './agent';
 import type { DoubtContext } from './context';
 import { closingLine, entryLine, exitLine } from './bridge';
 
@@ -68,8 +68,17 @@ export interface HandoffOptions {
    * the screen replaced it with a support reply. The machine halts itself on
    * that report (see `halt()`), so a doubt cannot carry on over it even if the
    * caller forgets to.
+   *
+   * `onStart`, when the agent passed one, is the speaker's to call once her
+   * voice has started the line — the board reveals that step's ink then
+   * (T2.4). The machine never calls it: a line it does not speak reveals
+   * nothing. Only an agent's own lines carry one; the bridge lines do not.
    */
-  speak(text: string, onSaid: (said: string) => void): Promise<SpeakResult | void>;
+  speak(
+    text: string,
+    onSaid: (said: string) => void,
+    onStart?: () => void,
+  ): Promise<SpeakResult | void>;
   /** Pause the recording (called during PAUSING). */
   onPause(): void;
   /** Resume the recording (called during RESUMING). Never called once HALTED. */
@@ -150,7 +159,9 @@ export function createHandoff(opts: HandoffOptions): Handoff {
   const speakSafe = (
     text: string,
     onSaid: (said: string) => void,
-  ): Promise<SpeakResult | void> => opts.speak(text, onSaid).catch(() => undefined);
+    onStart?: () => void,
+  ): Promise<SpeakResult | void> =>
+    (onStart ? opts.speak(text, onSaid, onStart) : opts.speak(text, onSaid)).catch(() => undefined);
 
   /**
    * Every line the room HEARD is surfaced as an event (captions/UI).
@@ -162,18 +173,22 @@ export function createHandoff(opts: HandoffOptions): Handoff {
    * heard and a caption for an unheard line is a caption for a line nobody can
    * check.
    */
-  const voice = async (text: string): Promise<void> => {
+  const voice = async (text: string, onStart?: () => void): Promise<void> => {
     // Once halted, nothing is spoken — not a late line from an agent that had
     // not yet seen its stop(), not a bridge line.
     if (state === 'HALTED') return;
     let surfaced = false;
-    const result = await speakSafe(text, (said) => {
-      // Once per line. A speaker that reports twice must not double the
-      // transcript, and the first report is the one the screen decided.
-      if (surfaced || said === '') return;
-      surfaced = true;
-      emit('agent-say', said);
-    });
+    const result = await speakSafe(
+      text,
+      (said) => {
+        // Once per line. A speaker that reports twice must not double the
+        // transcript, and the first report is the one the screen decided.
+        if (surfaced || said === '') return;
+        surfaced = true;
+        emit('agent-say', said);
+      },
+      onStart,
+    );
     // The screen replaced this line with a support reply. Whoever is waiting
     // on it — the agent's next line, the exit bridge, the resume — must not
     // run, and halting here is what makes that true whether or not the caller
@@ -182,16 +197,20 @@ export function createHandoff(opts: HandoffOptions): Handoff {
   };
 
   const io: AgentIO = {
-    say: async (text) => {
-      await voice(text);
+    say: async (text, options?: SayOptions) => {
+      await voice(text, options?.onStart);
       // THE TURN CAP, closing after her answer to the last allowed turn rather
       // than on the next message — a student who asked a sixth question gets
       // it answered, and is then walked back to the class instead of having a
       // seventh question met with a goodbye. The first line she finishes after
-      // the cap was reached is taken as that answer, which is exact for an
-      // agent that says one line per message (the typed tutor, the stub) and
+      // the cap was reached, that is not followed by another line of the same
+      // reply (`more`), is taken as the end of that answer. That is exact for
+      // an agent that marks every line but its reply's last with `more` (the
+      // typed tutor's steps) or says one line per message (the stub), and
       // early for one that had a reply to an EARLIER turn still queued.
-      if (state === 'LIVE' && studentTurns >= maxStudentTurns) beginLeaving(closingLine);
+      if (state === 'LIVE' && studentTurns >= maxStudentTurns && options?.more !== true) {
+        beginLeaving(closingLine);
+      }
     },
     recall: (beatId) => {
       // Only meaningful while the agent holds the room; a late recall from a

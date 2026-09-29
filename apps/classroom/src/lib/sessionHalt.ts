@@ -34,6 +34,9 @@ import { fromStudent, toStudent } from './safety';
  *
  *   1. the doubt session is halted — no agent line, no exit bridge, no resume,
  *      no new hand (`Handoff.halt()` in @ai-tutor/doubt-session);
+ *   1b. the board is frozen — no ink is placed, drawn or recalled after this,
+ *      including the rest of a turn whose sentences were still being spoken
+ *      (lib/boardSession.ts `freeze`);
  *   2. the ear is closed — in ClassRoom a listen in flight polls `halted` on
  *      every chunk and closes the mic on the next one;
  *   3. the recording is paused where it stands, so the board holds still;
@@ -68,6 +71,11 @@ export interface HaltRoom {
   ear: { close(): void };
   /** End the doubt for good: no exit line, no resume, no new hand. */
   doubt: { halt(): void };
+  /**
+   * Stop the live board: nothing written or drawn after the halt. Optional
+   * for a room with no live board; ClassRoom always passes one.
+   */
+  board?: { freeze(): void };
   /** Put the support screen up with the line she said. */
   showSupport(line: string): void;
   /** Which lesson a recorded flag belongs to. */
@@ -155,6 +163,7 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
     halted = true;
     haltedBy = cause;
     room.doubt.halt();
+    room.board?.freeze();
     room.ear.close();
     room.player.pause();
     room.tts.cancel();
