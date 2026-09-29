@@ -46,7 +46,7 @@ import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
 import { LINES, asksForHint, decide } from '@ai-tutor/tutor-control';
-import { fromStudent } from '../lib/safety';
+import { fromStudent, inLanguage } from '../lib/safety';
 import { screen } from '@ai-tutor/safety';
 import {
   clearCommitment,
@@ -623,7 +623,7 @@ export function ClassRoom({
    * the typing row is opened for whatever they say next.
    */
   const notSureOpener = useRef<string | null>(null);
-  const sendTextRef = useRef<(text: string) => void>(() => undefined);
+  const sendTextRef = useRef<(text: string, opts?: { opener?: boolean }) => void>(() => undefined);
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
   const [, setRecallBeatId] = useState<string | null>(null);
 
@@ -814,6 +814,8 @@ export function ClassRoom({
           setRecallBeatId(null);
           heldAskRef.current = null;
           boardRef.current.endDoubt();
+          // A doubt step primed but never said is not what plays next (fifth review).
+          ttsRef.current.drop?.();
           playerRef.current.play();
         },
         onRecall: (beatId) => {
@@ -837,7 +839,7 @@ export function ClassRoom({
       if (handoff.state === 'LIVE' && notSureOpener.current !== null) {
         const opener = notSureOpener.current;
         notSureOpener.current = null;
-        sendTextRef.current(opener);
+        sendTextRef.current(opener, { opener: true });
       }
       if (handoff.state === 'PLAYING') notSureOpener.current = null;
       if (handoff.state === 'PLAYING') {
@@ -930,6 +932,8 @@ export function ClassRoom({
     // timer takes the question back (second review, 2026-09-29).
     let nudged = false;
     if (earHeld.current === heldAskBeat) earHeld.current = null;
+    // A follow-up is a window of one reply, and a new ear starts with none.
+    followUpOpen.current = null;
     (async () => {
       if ((await askForMic()) !== 'granted') return;
       if (over()) return;
@@ -975,9 +979,10 @@ export function ClassRoom({
         // the tap is the answer, and this one is dropped rather than recorded
         // on top of it (second review, 2026-09-29).
         if (!over() && (heard.reason === 'cancelled' || tapEpoch.current !== epoch)) {
-          // Dropped as an answer, never unread: distress in those words still
-          // stops the class (third review, 2026-09-29). `fromStudent` files
-          // the flag; `halt.heard` halts on it.
+          // Words that were transcribed before the tap landed are dropped as
+          // an answer but still screened: distress in them stops the class
+          // (third review). A listen the tap CANCELLED was never transcribed,
+          // so there are no words to screen — that audio is discarded.
           if (heard.text && fromStudent(heard.text, lesson.id).say !== null && halt.heard(heard.text, 'ear')) return;
           continue;
         }
@@ -1094,6 +1099,8 @@ export function ClassRoom({
           // Help they did not ask for: silence is not a request, even when
           // decide() was asked for the hint on its behalf.
           if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, false);
+          // A nudge closes a follow-up's window: what they say next is an answer.
+          followUpOpen.current = null;
           const nudgeHint = nudge.boardIntent?.text;
           if (nudgeHint) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: nudgeHint }] }] }]);
           if (!nudge.say) return;
@@ -1135,6 +1142,7 @@ export function ClassRoom({
           });
           tapRung.current.set(heldAskBeat, help.rung);
           if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true);
+          followUpOpen.current = null;
           const helpText = help.boardIntent?.text;
           if (helpText) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: helpText }] }] }]);
           setEar('off');
@@ -1155,9 +1163,27 @@ export function ClassRoom({
          * miss and climbed the ladder for answering what she asked. Heard,
          * screened, thanked — and the question is theirs to try again.
          */
-        if (followUpOpen.current === heldAskBeat) {
+        /**
+         * A reply that says the answer itself ("oh, it's four") is an answer,
+         * judged like any other, not reasoning to thank them for (fifth review).
+         */
+        const saysAnswer = (text: string): boolean => {
+          const norm = (t: string) => t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+          const said = ` ${norm(text)} `;
+          const answers = [ask.expect, ...(ask.options ?? []).filter((o) => o.correct === true).map((o) => o.text)];
+          return answers.some((a) => a !== undefined && norm(a) !== '' && said.includes(` ${norm(a)} `));
+        };
+        if (followUpOpen.current === heldAskBeat && !saysAnswer(heard.text)) {
           followUpOpen.current = null;
-          if (fromStudent(heard.text, lesson.id).say !== null && halt.heard(heard.text, 'ear')) return;
+          const screened = fromStudent(heard.text, lesson.id);
+          if (screened.say !== null) {
+            if (halt.heard(heard.text, 'ear')) return;
+            // Off-limits: her redirect, not "thanks" (fifth review). The ear
+            // rests; the chips carry the question.
+            setEar('off');
+            await sayLine(inLanguage(screened.say, tutorLanguage()));
+            return;
+          }
           const thanks = LINES.afterFollowUp[tutorLanguage()];
           const line = thanks.find((l) => !recentLines.current.includes(l)) ?? thanks[0];
           recentLines.current = [...recentLines.current.slice(-8), line];
@@ -1168,6 +1194,7 @@ export function ClassRoom({
           quietSince = Date.now();
           continue;
         }
+        followUpOpen.current = null;
         setEar('thinking');
         /**
          * THE CLASS JUDGES ITS OWN ASK WHEN IT CAN AFFORD TO.
@@ -1737,14 +1764,7 @@ export function ClassRoom({
     setEntryPhase('inClass');
   };
 
-  /**
-   * A typed doubt, screened on the way out.
-   *
-   * The student sees their own words on screen either way — deleting what
-   * somebody typed under them is worse than anything it might contain — but
-   * what LEAVES the device is the cleaned version, and a sentence that needs a
-   * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
-   */
+  /** The "I'm not sure" chip: raise a hand, open the typing row, and say it for them (#28). */
   const notSure = () => {
     if (halt.halted) return;
     notSureOpener.current =
@@ -1755,13 +1775,21 @@ export function ClassRoom({
     void raiseHand();
   };
 
-  const sendText = (text: string) => {
+  /**
+   * A typed doubt, screened on the way out.
+   *
+   * The student sees their own words on screen either way — deleting what
+   * somebody typed under them is worse than anything it might contain — but
+   * what LEAVES the device is the cleaned version, and a sentence that needs a
+   * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
+   */
+  const sendText = (text: string, opts?: { opener?: boolean }) => {
     if (halt.halted) return;
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
     const out = halt.typedDoubt(text);
     // An off-limits question: her redirect, and the doubt carries on.
     if (out.reply !== null) {
-      const reply = out.reply;
+      const reply = inLanguage(out.reply, tutorLanguage());
       setTextLines((prev) => [...prev, { role: 'tutor', text: reply, final: true }]);
       void halt.say(reply, 'typed-doubt');
     }
@@ -1772,7 +1800,7 @@ export function ClassRoom({
     // Its length, never its words. clean() would drop the text anyway; not
     // writing it is the clearer statement.
     track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
-    handoff.sendUserText(out.forward);
+    handoff.sendUserText(out.forward, opts);
   };
 
   sendTextRef.current = sendText;
@@ -2024,16 +2052,16 @@ export function ClassRoom({
         </aside>
       </main>
 
-      {/* On a phone Meera floats over the board, Meet PiP style — at the top
-          while a question is holding, because at the bottom she covered the
-          answer chips on a 360 px phone (overnight review #29). */}
-      <div
-        className={`lg:hidden absolute right-4 z-40 ${
-          player.pendingAsk && !inDoubt ? 'top-[64px]' : 'bottom-[96px]'
-        }`}
-      >
-        <TutorTile mode={tutorMode} variant="pip" clone={tile} />
-      </div>
+      {/* On a phone Meera floats over the board, Meet PiP style — and steps
+          out while the answer chips or the typing row are up: wherever she
+          floated she covered one of them on a small phone (overnight review
+          #29; fifth review measured option B and the send button). Her lines
+          stay in the caption. */}
+      {!((player.pendingAsk && !inDoubt) || (inDoubt && typing)) && (
+        <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
+          <TutorTile mode={tutorMode} variant="pip" clone={tile} />
+        </div>
+      )}
 
       {/* Typed doubt on a phone: a slim input row the keyboard button summons. */}
       {inDoubt && typing && (

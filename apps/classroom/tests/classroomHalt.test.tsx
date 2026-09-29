@@ -517,6 +517,29 @@ describe('the held question, in the real room', () => {
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(false);
   });
 
+  it('judges a reply to a follow-up that says the answer, and moves on (fifth review)', async () => {
+    const probed = askingLesson(RIGHT_WHY);
+    probed.beats[0].ask = {
+      ...probed.beats[0].ask!,
+      whyProbe: {
+        askedAs: 'options',
+        options: [
+          { text: 'Four', correct: true, why: RIGHT_WHY },
+          { text: 'Two', correct: false, why: 'Only two were counted.', followUp: 'Which two did you count?' },
+        ],
+      },
+    } as never;
+    const host = await openClass({ lesson: probed, tts: quickVoice() });
+    await tick();
+    // Said after the tap and her follow-up.
+    ear.queued = ['oh wait, it is Four'];
+    await tap(host, 'Two');
+    await tick(20);
+    expect(spoken).toContain('Which two did you count?');
+    expect(spoken.some((l) => /another go|once more/i.test(l))).toBe(false);
+    expect(spoken).toContain(lesson.beats[1].narration);
+  });
+
   it('does not start the class when they leave while she is greeting them', async () => {
     const held: Array<() => void> = [];
     const greetingHeld: TtsAdapter = {

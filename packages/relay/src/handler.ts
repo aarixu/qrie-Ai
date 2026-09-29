@@ -78,7 +78,8 @@ export interface HandlerDeps {
    *
    * ONLY WHERE VERTEX IS NOT CONFIGURED (overnight review #39). With a service
    * account, every line is Gemini on Vertex and this is ignored — Aarav's call
-   * on 2026-09-28: Piper speaks English only, and the tutor speaks Hinglish.
+   * on 2026-09-28: the box's Piper voices are Hindi with no Indian English one,
+   * and the tutor speaks Hinglish and Indian English.
    * In production that means it is off; turning it back on as the cost lever
    * needs a Hinglish voice on the box first.
    *

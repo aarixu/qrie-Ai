@@ -1,4 +1,4 @@
-import { quoteForPrompt, screen, type Verdict } from '@ai-tutor/safety';
+import { REDIRECT_REPLY, quoteForPrompt, screen, type Verdict } from '@ai-tutor/safety';
 import { recordFlag } from '../stores/flags';
 
 /**
@@ -51,6 +51,19 @@ const carry = (verdict: Verdict, lessonId?: string): Screened => {
  * into a template without a second thought — which is the point, because the
  * places this is called from all did exactly that with the raw transcript.
  */
+/**
+ * Her redirect, in the child's language. The screen's line is English, and a
+ * Hinglish doubt heard it in English (fifth review, 2026-09-29). Any other
+ * line — the support line included — passes through unchanged.
+ */
+export const REDIRECT_REPLY_HI =
+  'Yeh cheez main nahi padha sakti — main tumhare school subjects ke liye hoon. ' +
+  'Syllabus se kuch bhi pucho, hum turant shuru karte hain.';
+
+export function inLanguage(line: string, lang: string): string {
+  return lang === 'hi-en' && line === REDIRECT_REPLY ? REDIRECT_REPLY_HI : line;
+}
+
 export function fromStudent(text: string, lessonId?: string): Screened {
   return carry(screen(text, 'from-student'), lessonId);
 }

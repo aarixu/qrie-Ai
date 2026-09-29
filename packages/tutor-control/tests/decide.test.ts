@@ -573,3 +573,22 @@ describe('decide: a follow-up is marked as one', () => {
     expect(plain.followUp).toBeUndefined();
   });
 });
+
+describe('decide: an authored why, as written (fifth review)', () => {
+  const praisedWith = (why: string) =>
+    decide({
+      verdict: 'right', attempt: 1, rungSoFar: 0, lang: 'en', now: 0, matchedOption: 0,
+      ask: { question: 'Q?', options: [{ text: 'a', correct: true, why }, { text: 'b', correct: false, why: 'No.' }] },
+    }).say ?? '';
+
+  it('keeps the case of a why it took nothing off', () => {
+    expect(praisedWith('x = 3 because 2x = 6.')).toContain('x = 3 because 2x = 6.');
+    expect(praisedWith('pH 7 is neutral.')).toContain('pH 7 is neutral.');
+    expect(praisedWith('mRNA carries the message.')).toContain('mRNA carries the message.');
+  });
+
+  it('takes off the openers teachers really write', () => {
+    for (const opener of ['Precisely.', 'Perfect!', 'Absolutely!', "That's correct!", 'Exactly right!', 'Good job!', 'You got it!', 'Bilkul sahi!', 'Sahi hai!'])
+      expect(praisedWith(`${opener} The gaps hold it.`), opener).not.toContain(opener);
+  });
+});

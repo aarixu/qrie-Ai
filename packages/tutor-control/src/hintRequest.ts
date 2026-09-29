@@ -7,7 +7,7 @@
  * question: a wrong answer on record, and a rethink line for saying yes.
  *
  * Deliberately narrow, because a false yes here throws an answer away — it is
- * never judged and never recorded. So, at most five words, no digit, and
+ * never judged and never recorded. So, at most seven words, no digit, and
  * either
  *   - an ask for a hint or help ("hint do", "give me a hint", "help me",
  *     "madad karo") with NOTHING else in it but filler — "roots help absorb
@@ -21,8 +21,17 @@
  * hint, so routing them here left a stuck child on the hint forever.
  */
 
-/** Ways to ask. Multi-word first, so "hint do" is taken whole. */
-const ASKS = [/\bhints?\b/g, /\bhelp\b/g, /\bmadad\b/g, /\bclue\b/g];
+/** Asking for a hint by name — a word an answer does not use. */
+const HINT_ASKS = [/\bhints?\b/g, /\bclues?\b/g];
+/** Asking for help — words an answer can use too ("roots help absorb water"). */
+const HELP_ASKS = [/\bhelp\b/g, /\bmadad\b/g];
+
+/**
+ * Words that sit only around a request for a HINT ("will I get a hint",
+ * "koi hint milega", "one more hint"). Around "help" they make an answer:
+ * "it will help", "haan madad milegi" (fifth review, 2026-09-29).
+ */
+const HINT_ONLY_FILLER = new Set(['will', 'would', 'more', 'milega', 'milegi']);
 
 /** Words that can sit around an ask without making it an answer. */
 const FILLER = new Set([
@@ -33,14 +42,15 @@ const FILLER = new Set([
   // How children ask (third review, 2026-09-29): "can I have a hint", "may I",
   // "tell me", "what is the hint", "hint batao", "koi hint milega", "hint mil
   // sakta hai", "hint de sakte ho".
-  'have', 'may', 'tell', 'what', 'whats', 'will', 'would', 'shall', 'another', 'more', 'again',
-  'batao', 'bataiye', 'bata', 'bataoge', 'milega', 'milegi', 'mil', 'sakta', 'sakti', 'sakte', 'ho', 'hai', 'hain',
+  'have', 'may', 'tell', 'what', 'whats', 'shall', 'another', 'again',
+  'batao', 'bataiye', 'bata', 'bataoge', 'mil', 'sakta', 'sakti', 'sakte', 'ho', 'hai', 'hain',
   'kya', 'aur', 'phir', 'se',
 ]);
 
 const YES = new Set(['yes', 'yeah', 'yep', 'yup', 'haan', 'haa', 'han', 'ha', 'ji', 'hanji', 'haanji', 'okay', 'ok', 'sure', 'please']);
 
-const MAX_WORDS = 5;
+/** Seven, so "can you give me a hint" and "koi hint mil sakta hai kya" fit (fifth review). */
+const MAX_WORDS = 7;
 
 function words(text: string): string[] {
   return text
@@ -61,14 +71,26 @@ export function asksForHint(
 
   // An ask, and nothing left over that could be an answer.
   let rest = w.join(' ');
+  let byName = false;
   let asked = false;
-  for (const re of ASKS) {
+  for (const re of HINT_ASKS) {
+    rest = rest.replace(re, () => {
+      byName = true;
+      return ' ';
+    });
+  }
+  for (const re of HELP_ASKS) {
     rest = rest.replace(re, () => {
       asked = true;
       return ' ';
     });
   }
-  if (asked) return rest.split(/\s+/).filter(Boolean).every((x) => FILLER.has(x));
+  if (byName || asked) {
+    return rest
+      .split(/\s+/)
+      .filter(Boolean)
+      .every((x) => FILLER.has(x) || (byName && HINT_ONLY_FILLER.has(x)));
+  }
 
   if (!context.afterOffer || !w.every((x) => YES.has(x))) return false;
   // "Yes" is an answer when an option says it (or its opposite, "no"/"nahi").

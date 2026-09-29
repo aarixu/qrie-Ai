@@ -1,4 +1,4 @@
-import type { AgentAdapter, AgentIO, AgentSession, SayOptions } from './agent';
+import type { AgentAdapter, AgentIO, AgentSession, SayOptions, SendOptions } from './agent';
 import type { DoubtContext } from './context';
 import { closingLine, entryLine, exitLine } from './bridge';
 
@@ -99,7 +99,7 @@ export interface Handoff {
   /** Legal only from PLAYING; otherwise a no-op (a double-tap must not crash a class). */
   raiseHand(ctx: DoubtContext): void;
   /** Forward a student message to the live session. No-op outside LIVE. */
-  sendUserText(text: string): void;
+  sendUserText(text: string, opts?: SendOptions): void;
   /** Manual end; the agent's io.done() ends it too. */
   endDoubt(): void;
   /**
@@ -295,8 +295,13 @@ export function createHandoff(opts: HandoffOptions): Handoff {
       return state;
     },
     raiseHand,
-    sendUserText(text: string): void {
+    sendUserText(text: string, opts?: SendOptions): void {
       if (state !== 'LIVE' || session === null) return;
+      // The app's own opener is not a student turn: not capped, not counted.
+      if (opts?.opener) {
+        session.sendUserText(text, opts);
+        return;
+      }
       /**
        * Past the cap, the message is dropped — it would be one more model
        * call on a doubt that is already closing — and NOTHING ELSE happens.

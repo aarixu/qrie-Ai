@@ -155,10 +155,10 @@ const deps: HandlerDeps = {
   /**
    * Her voice, from our own box — used ONLY when no Vertex service account
    * is set (packages/relay/src/handler.ts `speechUrl`). With Vertex, every
-   * line is Gemini on Vertex and this is ignored, because the box speaks
-   * English only and the tutor speaks Hinglish. It stays the cost lever for
-   * the day the box has a Hinglish voice; it must be reachable from the edge,
-   * so a laptop will not do.
+   * line is Gemini on Vertex and this is ignored: the box's Piper voices are
+   * Hindi ones with no Indian English voice, and cannot speak the Hinglish or
+   * Indian English the tutor speaks. It stays the cost lever for the day it
+   * can; it must be reachable from the edge, so a laptop will not do.
    */
   ...(Deno.env.get('CURIE_SPEECH_URL') ? { speechUrl: Deno.env.get('CURIE_SPEECH_URL') } : {}),
   ...(vertex ? { vertex } : {}),

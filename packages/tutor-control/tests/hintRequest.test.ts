@@ -60,3 +60,14 @@ describe('asksForHint', () => {
     expect(asksForHint('haan', { afterOffer: true, answers: ['Haan', 'Nahi'] })).toBe(false);
   });
 });
+
+describe('asksForHint, fifth review', () => {
+  it('leaves an answer about helping as an answer', () => {
+    for (const said of ['yes it will help', 'it will help', 'it would help', 'haan madad milegi', 'madad milegi', 'yes more help'])
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(false);
+  });
+  it('hears a longer polite ask', () => {
+    for (const said of ['can you give me a hint', 'mam please give me a hint', 'koi hint mil sakta hai kya', 'miss can I have a hint'])
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(true);
+  });
+});

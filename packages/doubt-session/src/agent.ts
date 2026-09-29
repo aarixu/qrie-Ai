@@ -18,6 +18,11 @@ export interface SayOptions {
   more?: boolean;
 }
 
+/** How a message reached the doubt. */
+export interface SendOptions {
+  opener?: boolean;
+}
+
 /** How an agent talks back to the room. Implemented by the app / handoff. */
 export interface AgentIO {
   /** Speak a line (routed to TTS). Resolves when spoken. */
@@ -35,8 +40,13 @@ export interface AgentIO {
 }
 
 export interface AgentSession {
-  /** Forward a student message (text for now; voice lands with the live agent). */
-  sendUserText(text: string): void;
+  /**
+   * Forward a student message (text for now; voice lands with the live agent).
+   * `opener` marks words the app said FOR them (the "I'm not sure" chip):
+   * a real tutor answers it, the scripted stand-in ignores it, and it never
+   * counts toward the turn cap.
+   */
+  sendUserText(text: string, opts?: SendOptions): void;
   /** Hard-stop the session (student cancelled / teardown). */
   stop(): void;
 }
@@ -105,8 +115,11 @@ export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapt
       }
 
       return {
-        sendUserText(): void {
+        sendUserText(_text: string, opts?: SendOptions): void {
           if (stopped) return;
+          // Its script answers the child's first message and closes on the
+          // second; the app's opener is neither (fifth review, 2026-09-29).
+          if (opts?.opener) return;
           userMessages += 1;
           if (userMessages === 1) {
             enqueue(() =>

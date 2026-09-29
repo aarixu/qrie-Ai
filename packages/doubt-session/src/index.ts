@@ -22,5 +22,6 @@ export {
   type AgentAdapter,
   type AgentIO,
   type SayOptions,
+  type SendOptions,
   type AgentSession,
 } from './agent';

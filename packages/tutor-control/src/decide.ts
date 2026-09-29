@@ -447,12 +447,16 @@ function secretsOf(ask: AskInput): string[] {
  * "Good conductors" are content, not praise, and keep their first word.
  */
 const AFFIRMATION =
-  /^(?:yes|yeah|yep|exactly|right|correct|spot on|that'?s right|that'?s it|well done|good|great|nice|haan|han|bilkul|sahi|ekdum|shabash)\b\s*(?:[!.,:;—–]|\s-\s)[\s!.,:;—–-]*/i;
+  /^(?:yes|yeah|yep|exactly(?: right)?|precisely|perfect|absolutely|excellent|indeed|right|correct|spot on|that'?s (?:right|correct|it)|you got it|well done|good job|great work|good|great|nice|haan|han|bilkul(?: sahi)?|sahi(?: hai)?|ekdum|shabash)\b\s*(?:[!.,:;—–]|\s-\s)[\s!.,:;—–-]*/i;
 
 function unaffirmed(why: string | undefined): string | undefined {
-  let rest = why?.trim() ?? '';
+  const said = why?.trim() ?? '';
+  let rest = said;
   for (let i = 0; i < 3 && AFFIRMATION.test(rest); i++) rest = rest.replace(AFFIRMATION, '').trim();
   if (rest === '') return undefined;
+  // Capitalised only where an opener was taken off, and only an ordinary
+  // word: "x = 3", "pH" and "mRNA" keep their case (fifth review).
+  if (rest === said || !/^[a-z][a-z]+\b/.test(rest)) return rest;
   return rest[0].toUpperCase() + rest.slice(1);
 }
 

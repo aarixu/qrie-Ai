@@ -98,17 +98,20 @@ export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string 
  * collected path stops reading at the same budget.
  *
  * A teacher speaks about 14 characters a second (a measured 56-character
- * Hinglish line came back as 4.4 s); six a second is more than double that
- * time, with a three-second floor for a short line. Raw 24 kHz 16-bit mono is
- * 48,000 bytes a second.
+ * Hinglish line came back as 4.4 s). The budget is five characters a second,
+ * with each digit counted three times — "240" is said "two hundred forty" —
+ * and a four-second floor, so a short line with a number in it is never cut
+ * mid-number (third review). And never more than MAX_LINE_SECONDS whatever the
+ * text: a line of 2,000 digits would otherwise be allowed twenty minutes of
+ * audio against a meter that charged it for 2,000 characters (fifth review,
+ * 2026-09-29). Raw 24 kHz 16-bit mono is 48,000 bytes a second.
  */
+export const MAX_LINE_SECONDS = 120;
+
 export function maxSpeechBytes(text: string): number {
-  // A digit is said as a word or more ("240" is "two hundred forty"), so
-  // each one counts three times; four seconds at the least, so a short line
-  // with a number in it is never cut mid-number (third review, 2026-09-29).
   const chars = [...text].length;
   const digits = (text.match(/[0-9]/g) ?? []).length;
-  const seconds = Math.max(4, (chars + 2 * digits) / 5);
+  const seconds = Math.min(MAX_LINE_SECONDS, Math.max(4, (chars + 2 * digits) / 5));
   return Math.ceil(seconds * 48_000);
 }
 
@@ -463,7 +466,10 @@ export async function speakOnVertex(
     }
     if (!reader) for (const block of raw.replace(/\r/g, '').split('\n\n')) take(block);
   } catch (e) {
-    return failed(502, `Vertex speech could not be reached: ${(e as Error).message}`);
+    // A stream that failed part-way (the timeout) still sent audio that
+    // Vertex billed: keep what arrived and book it, rather than failing with
+    // nothing booked (fifth review, 2026-09-29).
+    if (size === 0) return failed(502, `Vertex speech could not be reached: ${(e as Error).message}`);
   }
 
   const kept = Math.min(size, limit);

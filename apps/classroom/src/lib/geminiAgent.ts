@@ -5,6 +5,7 @@ import {
   type AgentIO,
   type AgentSession,
   type DoubtContext,
+  type SendOptions,
 } from '@ai-tutor/doubt-session';
 import type { StudentContext } from '@ai-tutor/persona';
 import { relayFetch } from './relay';
@@ -397,6 +398,9 @@ export const malformedLine = (lang?: string): string =>
  */
 export const FILTERED_REPLY_LINE = "Let's keep our class on the lesson — ask me anything about it!";
 
+/** The same line for a child who chose Hinglish (fifth review, 2026-09-29). */
+export const FILTERED_REPLY_LINE_HI = 'Chalo class ko lesson pe hi rakhte hain — lesson ke baare mein kuch bhi pucho!';
+
 /**
  * Parse + sanitise a model reply. Unknown recall ids are dropped, never
  * trusted; a reply that is not the asked-for shape becomes
@@ -478,7 +482,11 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
         );
         if (reply.filtered) {
           history.pop();
-          return { say: FILTERED_REPLY_LINE, recallBeatId: null, done: false };
+          return {
+            say: tutorLanguage() === 'hi-en' ? FILTERED_REPLY_LINE_HI : FILTERED_REPLY_LINE,
+            recallBeatId: null,
+            done: false,
+          };
         }
         history.push({ role: 'model', text: reply.text });
         return parseAgentReply(reply.text, (id) => isRecallable(ctx, id), tutorLanguage());
@@ -517,15 +525,16 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
 
       // One promise chain so replies can never interleave out of order.
       let chain = Promise.resolve();
-      const enqueue = (userText: string): void => {
+      const enqueue = (userText: string, opts?: SendOptions): void => {
         chain = chain
           .then(async () => {
             if (stopped) return;
             const reply = await call(userText);
             /**
-             * A failure while SPEAKING the reply is not a failed call
-             * (overnight review #41): handing the question to the scripted
-             * tutor then answered it a second time over lines already said.
+             * A failure while DELIVERING the reply — laying it on the board
+             * or recalling a beat; `io.say` itself never rejects — is not a
+             * failed call (overnight review #41). Handing the question to the
+             * scripted tutor then could answer it over lines already said.
              * She says the muddled line and the doubt stays open.
              */
             try {
@@ -542,7 +551,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
               // The scripted tutor takes the question instead. Same persona,
               // same room, and the student gets an answer rather than an
               // apology about our plumbing.
-              scripted.sendUserText(userText);
+              scripted.sendUserText(userText, opts);
               return;
             }
             await io.say(
@@ -558,8 +567,8 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
       // voice before this session existed. See the same note in liveAgent.ts.
 
       return {
-        sendUserText(text: string): void {
-          if (!stopped) enqueue(text);
+        sendUserText(text: string, opts?: SendOptions): void {
+          if (!stopped) enqueue(text, opts);
         },
         stop(): void {
           stopped = true;

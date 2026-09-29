@@ -15,6 +15,7 @@ import {
   sseToPcm,
   speechRequestBody,
   maxSpeechBytes,
+  MAX_LINE_SECONDS,
 } from '../src/vertexSpeech';
 import { SPEECH_PREAMBLE, TRANSCRIPT_LABEL } from '@ai-tutor/voice';
 
@@ -392,6 +393,28 @@ describe('what one line may cost (#1)', () => {
   it('gives a line audio in proportion to its words, with a floor', () => {
     expect(maxSpeechBytes('Hi.')).toBe(4 * 48_000);
     expect(maxSpeechBytes('a'.repeat(600))).toBe(120 * 48_000);
+  });
+
+  it('never allows one line more than two minutes of audio (fifth review)', () => {
+    expect(maxSpeechBytes('9'.repeat(2000))).toBe(MAX_LINE_SECONDS * 48_000);
+  });
+
+  it('keeps and books the audio a stream sent before it failed part-way (fifth review)', async () => {
+    let pulls = 0;
+    const body = new ReadableStream<Uint8Array>({
+      pull(c) {
+        pulls += 1;
+        if (pulls === 1) c.enqueue(new TextEncoder().encode(sse([audioEvent(new Uint8Array(48_000).fill(1))])));
+        else c.error(new DOMException('timed out', 'TimeoutError'));
+      },
+    });
+    const out = await speakOnVertex(
+      'Hello there, class.',
+      { tokens, fetch: (async () => new Response(body, { status: 200 })) as unknown as typeof fetch },
+      { format: 'pcm' },
+    );
+    expect(out.status).toBe(200);
+    expect(out.outputTokens).toBe(32);
   });
 
   it('gives a digit the time its spoken words take (third review #11)', () => {

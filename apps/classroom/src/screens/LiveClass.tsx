@@ -435,6 +435,8 @@ export function LiveClassRoute() {
     setNotReady(null);
     setWaiting(null);
     setBusy(null);
+    // A new attempt starts from nothing: the last one's "failed" must not show (fifth review).
+    setProgress(null);
     const startedAt = performance.now();
     let cancelled = false;
 
@@ -1029,15 +1031,6 @@ function SomebodyIsPreparing({ topic, seconds }: { topic: string; seconds: numbe
 }
 
 /**
- * The wait, spent INSIDE the room.
- *
- * Forty seconds is a long time to look at a spinner and no time at all to
- * watch a teacher set up. So this is the dark stage the class is about to
- * happen on, with the work happening in the open — the prep already reports
- * what it is doing, and a student who can see a picture being drawn for them
- * is waiting FOR something rather than just waiting.
- */
-/**
  * Where preparation stands when the room opens: warm entry starts the class
  * at the drawing phase, which class-prep reports at 0.3 (prepare.ts).
  */
@@ -1067,8 +1060,20 @@ export function readiness(done: number | undefined, elapsedSeconds: number): num
   return Math.max(reported, creep);
 }
 
+/**
+ * The wait, spent INSIDE the room.
+ *
+ * Forty seconds is a long time to look at a spinner and no time at all to
+ * watch a teacher set up. So this is the dark stage the class is about to
+ * happen on, with the work in the open: what prep is doing, in a child's
+ * words (PHASE_LINE), the seconds waited, and a bar that only moves forward
+ * — prep reports a lower number when it retries a garbled plan, and a bar
+ * that went back would read as the class getting further away (fifth review).
+ */
 function GettingReady({ topic, progress }: { topic: string; progress: PrepProgress | null }) {
   const [elapsed, setElapsed] = useState(0);
+  const furthest = useRef(0);
+  furthest.current = Math.max(furthest.current, readiness(progress?.done, elapsed));
   useEffect(() => {
     const started = Date.now();
     const timer = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000);
@@ -1095,7 +1100,7 @@ function GettingReady({ topic, progress }: { topic: string; progress: PrepProgre
         <div className="w-56 h-1.5 rounded-full bg-white/25 overflow-hidden">
           <div
             className="h-full rounded-full bg-white transition-[width] duration-1000"
-            style={{ width: `${Math.round(readiness(progress?.done, elapsed) * 100)}%` }}
+            style={{ width: `${Math.round(furthest.current * 100)}%` }}
           />
         </div>
         <p className="font-label-md text-label-md text-white/50 tabular-nums">
