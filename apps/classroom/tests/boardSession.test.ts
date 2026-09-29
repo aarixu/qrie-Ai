@@ -312,15 +312,19 @@ describe('the board at a held ask (T2.5 writes through this)', () => {
     expect(session.canvas(1).frame).toEqual(lesson.beats[1].show);
   });
 
-  it('an ask with no work area (every class prepared before T1.5) writes on a fresh page instead', () => {
+  it('an ask with no work area (every class prepared before T1.5) writes nothing, and the camera stays on the question', () => {
+    // It used to write on a fresh page and frame THAT: a wrong tap moved the
+    // camera off the question onto a blank page (overnight review #13).
     const lesson = load();
     const session = new BoardSession(lesson);
+    const at = beatIndex(lesson, 'b1_4');
+    const before = session.canvas(at);
     const written = session.writeHeld('b1_4', [
       { author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: 'Your answer: add them' }] }] },
     ]);
-    expect(written.length).toBeGreaterThan(0);
-    const el = session.sceneLesson.elements.find((e) => e.id === written[0])!;
-    expect(pageOf(boxOf(el))).toBe(9);
+    expect(written).toEqual([]);
+    expect(session.canvas(at).frame).toEqual(before.frame);
+    expect(session.canvas(at).visible).toEqual(before.visible);
   });
 });
 

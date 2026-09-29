@@ -264,3 +264,109 @@ describe('createPcmStreamTts', () => {
     expect(said).toEqual(['x']);
   });
 });
+
+/**
+ * NOTHING HERE MAY FREEZE A CLASS, AND CANCEL MEANS CANCEL (overnight review
+ * #9, #12, #31).
+ */
+describe('createPcmStreamTts: stalls and cancels', () => {
+  /** A relay that answers headers, sends `chunks`, then never sends another byte. */
+  function stallingRelay(chunks: number[][]) {
+    const fetchImpl = async (_url: string, init: { signal: AbortSignal }): Promise<Response> => {
+      const stream = new ReadableStream<Uint8Array>({
+        start(c) {
+          for (const chunk of chunks) c.enqueue(new Uint8Array(chunk));
+          init.signal.addEventListener('abort', () => c.error(new DOMException('aborted', 'AbortError')));
+        },
+      });
+      return new Response(stream, { headers: { 'content-type': 'audio/L16;rate=24000;channels=1' } });
+    };
+    return fetchImpl;
+  }
+
+  it('speaks through the fallback when the first byte never comes', async () => {
+    const { out } = fakeOutput();
+    const { fb, said } = spyFallback();
+    const tts = createPcmStreamTts({
+      endpoint: '/speech',
+      output: () => out,
+      fallback: fb,
+      fetch: stallingRelay([]),
+      sleep: sleepNow,
+      deadlines: { firstChunkMs: 20, stallMs: 20 },
+    });
+    await tts.speak('Hello there.');
+    expect(said).toEqual(['Hello there.']);
+  });
+
+  it('ends a line whose stream stalls after it started, instead of waiting forever', async () => {
+    const { out, played } = fakeOutput();
+    const { fb, said } = spyFallback();
+    const tts = createPcmStreamTts({
+      endpoint: '/speech',
+      output: () => out,
+      fallback: fb,
+      fetch: stallingRelay([[1, 0, 2, 0]]),
+      sleep: sleepNow,
+      deadlines: { firstChunkMs: 20, stallMs: 20 },
+    });
+    await tts.speak('Hello there.');
+    expect(played).toHaveLength(1);
+    // Part of it was heard: saying it again from the top would repeat her.
+    expect(said).toEqual([]);
+  });
+
+  it('a fetch that ignores its abort signal still cannot hold the line', async () => {
+    const { out } = fakeOutput();
+    const { fb, said } = spyFallback();
+    const tts = createPcmStreamTts({
+      endpoint: '/speech',
+      output: () => out,
+      fallback: fb,
+      fetch: () => new Promise<Response>(() => {}),
+      sleep: sleepNow,
+      deadlines: { firstChunkMs: 20, stallMs: 20 },
+    });
+    await tts.speak('Hello there.');
+    expect(said).toEqual(['Hello there.']);
+  });
+
+  it('cancel stops a line the fallback voice is speaking', async () => {
+    const { out } = fakeOutput();
+    let cancelled = 0;
+    let finish: () => void = () => undefined;
+    const fb: TtsAdapter = {
+      speak: () => new Promise<void>((r) => (finish = r)),
+      cancel: () => {
+        cancelled += 1;
+        finish();
+      },
+    };
+    const { fetchImpl } = fakeRelay({ 'Hello there.': { status: 503, chunks: [] } });
+    const tts = createPcmStreamTts({ endpoint: '/speech', output: () => out, fallback: fb, fetch: fetchImpl, sleep: sleepNow });
+    const speaking = tts.speak('Hello there.');
+    await new Promise((r) => setTimeout(r, 10));
+    tts.cancel();
+    await speaking;
+    expect(cancelled).toBe(1);
+  });
+
+  it('cancel stops the fallback when there is no audio output at all', async () => {
+    let cancelled = 0;
+    let finish: () => void = () => undefined;
+    const fb: TtsAdapter = {
+      speak: () => new Promise<void>((r) => (finish = r)),
+      cancel: () => {
+        cancelled += 1;
+        finish();
+      },
+    };
+    const { fetchImpl } = fakeRelay({});
+    const tts = createPcmStreamTts({ endpoint: '/speech', output: () => null, fallback: fb, fetch: fetchImpl, sleep: sleepNow });
+    const speaking = tts.speak('Hello there.');
+    await new Promise((r) => setTimeout(r, 0));
+    tts.cancel();
+    await speaking;
+    expect(cancelled).toBe(1);
+  });
+});

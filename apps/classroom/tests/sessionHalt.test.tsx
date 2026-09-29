@@ -14,6 +14,7 @@ import {
 import { createGeminiAgent } from '../src/lib/geminiAgent';
 import { createSessionHalt } from '../src/lib/sessionHalt';
 import { withFace } from '../src/lib/lessonVoice';
+import { progress } from '../src/avatar/avatarBus';
 import { SupportScreen } from '../src/ui/SupportScreen';
 import { flagStore, recentFlags } from '../src/stores/flags';
 
@@ -342,6 +343,23 @@ describe('the voice ClassRoom is handed', () => {
   it('offers no drop over a voice that has none', () => {
     const face = withFace({ speak: async () => undefined, cancel: () => undefined });
     expect(face.drop).toBeUndefined();
+  });
+
+  it('keeps the face on a new line when the one it replaced ends after it (#17)', async () => {
+    const ends: Array<() => void> = [];
+    const face = withFace({
+      speak: () => new Promise<void>((r) => ends.push(r)),
+      cancel: () => undefined,
+    });
+    const old = face.speak('Not quite — look again.');
+    face.cancel();
+    const fresh = face.speak('Here is the support line.');
+    ends[0]();
+    await old;
+    expect(progress().text).toBe('Here is the support line.');
+    ends[1]();
+    await fresh;
+    expect(progress().text).toBe('');
   });
 });
 

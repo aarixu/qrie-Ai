@@ -128,12 +128,16 @@ export interface ConceptState {
 
 /**
  * Bumped whenever `ConceptState` changes shape OR the fold's arithmetic
- * changes, so a stored model is rebuilt from the ledger rather than continued.
+ * changes. The classroom brings a stored model of an older version forward
+ * before folding into it (apps/classroom/src/lib/learnerModel.ts
+ * `bringForward`): rebuilt from the ledger when the cloud has it, else
+ * migrated in place by `migrateModel`. `foldSession` itself starts an
+ * old-version model from empty.
  *
  * 2 (2026-09-29): help discounted by rung (B4), a second attempt counted as at
  * least a nudge (B4), and `masteredAt` / `coldWins` added (B8). A v1 model
- * credited every hinted answer at full weight, so continuing one would keep
- * that credit forever.
+ * credited every hinted answer at full weight; a migrated one keeps that
+ * credit until a rebuild replaces it.
  */
 export const MODEL_VERSION = 2;
 

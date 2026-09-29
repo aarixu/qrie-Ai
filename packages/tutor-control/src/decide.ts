@@ -22,7 +22,8 @@ export const FAST_WRONG_MS = 3000;
  * write or record — the caller does all three, in the order `recordsFor`
  * gives, and speaks `say` only through the app's safety screen
  * (`screenedSpeech` / `toStudent`) with a halted result going to
- * `haltSession()`. NOT WIRED into any app yet.
+ * `haltSession()`. Wired into the classroom's taps, hint chip, spoken answers
+ * and silence nudges (apps/classroom/src/screens/ClassRoom.tsx).
  *
  * THE LADDER (TD1), on a wrong or unmatched answer, one delivered step per
  * wrong answer:
@@ -263,16 +264,8 @@ function onHintRequest(ctx: Ctx): Action {
     });
   }
   const reason = 'reason' in hint ? hint.reason : '';
-  if (floor < 1) {
-    return act(ctx, {
-      kind: 'rethink',
-      rung: 1,
-      helped: 1,
-      requested: true,
-      lines: LINES.rethink[input.lang],
-      because: `${ctx.head}: hint asked for, no usable hint (${reason}); rethink line (L1)`,
-    });
-  }
+  // Never the rethink line here, even before any answer: "not quite" tells a
+  // child who has not answered yet that they missed (overnight review #23).
   return act(ctx, {
     kind: 'nudge',
     rung: floor,

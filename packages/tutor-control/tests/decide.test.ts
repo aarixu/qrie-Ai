@@ -312,7 +312,14 @@ describe('decide: silence, a request, and an answer nobody could hear', () => {
 
   it('asks for a first step when a hint is requested and none is authored', () => {
     const cold = decide(base({ verdict: 'hintRequest', ask: NO_HINT }));
-    expect(cold.kind).toBe('rethink');
+    // They have not answered yet, so no line that says their answer missed.
+    expect(cold.kind).toBe('nudge');
+    expect(LINES.haveAGo.en).toContain(say(cold));
+    expect(LINES.rethink.en).not.toContain(say(cold));
+    expect(cold.helped).toBe(1);
+    expect(cold.requested).toBe(true);
+    // And the request climbs nothing: their first wrong answer still gets the rethink.
+    expect(cold.rung).toBe(0);
     const again = decide(base({ verdict: 'hintRequest', ask: NO_HINT, rungSoFar: 1 }));
     expect(again.kind).toBe('nudge');
     expect(LINES.haveAGo.en).toContain(say(again));

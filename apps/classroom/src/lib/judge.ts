@@ -73,9 +73,17 @@ const JUDGE_MODEL = 'google/gemini-3.7-flash';
  * thinking: 12,030 tokens became 5,724, not none. The saving is real and it is
  * smaller than the word suggests.
  */
+/**
+ * A judge that has not answered in this long is not going to: the student is
+ * waiting with the chips hidden. The call fails, which every caller already
+ * reads as "say nothing and leave the chips standing". Measured judge calls
+ * return in 1-3 s; twelve is generous.
+ */
+const JUDGE_TIMEOUT_MS = 12_000;
+
 const deps: JudgeDeps = {
   complete: (system, user) =>
-    createBrowserLlm(JUDGE_MODEL, { json: true, effort: 'none' }).complete(system, user),
+    createBrowserLlm(JUDGE_MODEL, { json: true, effort: 'none', timeoutMs: JUDGE_TIMEOUT_MS }).complete(system, user),
   screen: (text) => fromStudent(text),
 };
 

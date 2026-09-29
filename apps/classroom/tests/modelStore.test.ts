@@ -8,6 +8,9 @@ import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
  * that it happens once — not about the belief arithmetic, which
  * packages/learner-model tests against the real thing.
  */
+/** No cloud: the ledger rebuild cannot run here, and must never reach a live project. */
+vi.mock('../src/lib/supabase', () => ({ supabase: () => null }));
+
 vi.mock('../src/lib/graphContext', async () => {
   const kg = await import('@ai-tutor/knowledge-graph');
   const node = (id: string, prerequisites: string[]) => ({
@@ -109,5 +112,33 @@ describe('the model as the store', () => {
     localStorage.setItem('ai-tutor:learner-model', 'not json');
     expect(() => loadModel()).not.toThrow();
     await expect(recordLocally(session, [answer])).resolves.toBeUndefined();
+  });
+});
+
+/**
+ * THE v2 BUMP MUST NOT WIPE A STUDENT (overnight review #14).
+ *
+ * No cloud here (the supabase client is absent in tests), so the rebuild
+ * cannot run and the stored v1 model is migrated in place: its history stays,
+ * and the new answer is folded on top of it.
+ */
+describe('a stored model from an older version', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('keeps its history when the next answer is folded', async () => {
+    const { emptyConceptState } = await import('@ai-tutor/learner-model');
+    const { masteredAt: _m, coldWins: _c, ...old } = emptyConceptState('n2');
+    learnerModelStore.set({
+      version: 1,
+      foldedThrough: null,
+      helpInFlight: null,
+      states: { n2: { ...old, mastery: 0.82, unassistedMastery: 0.8, observations: 6 } },
+    } as never);
+    await recordLocally(session, [answer]);
+    const model = loadModel();
+    expect(model.version).toBe(2);
+    expect(model.states.n2?.unassistedMastery).toBe(0.8);
+    expect(model.states.n2?.observations).toBe(6);
+    expect(model.states.n1.unassistedObservations).toBe(1);
   });
 });

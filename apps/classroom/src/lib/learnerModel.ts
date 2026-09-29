@@ -2,6 +2,8 @@ import type { Mastery } from '@ai-tutor/knowledge-graph';
 import {
   emptyModel,
   foldSession,
+  migrateModel,
+  MODEL_VERSION,
   masteryView,
   unassistedView,
   type LearnerModel,
@@ -129,13 +131,42 @@ const missed = (n: number): void => {
   }
 };
 
+/**
+ * A STORED MODEL FROM AN OLDER MODEL_VERSION IS BROUGHT FORWARD BEFORE ANYTHING
+ * IS FOLDED INTO IT (overnight review #14).
+ *
+ * `foldSession` starts an old-version model from empty, and this file then
+ * SAVED that — over the device's only copy of the student's history, on their
+ * first answer after the v2 deploy. Now: rebuilt from the ledger when the
+ * cloud has it (the rebuild's cursor means this session's events already on
+ * the server are not folded twice), else migrated in place (`migrateModel`
+ * keeps every number and fills the new fields).
+ *
+ * The rebuild is taken only when it accounts for EVERY outcome the stored
+ * model holds. A ledger read that comes back short — events never synced, a
+ * fresh anonymous identity on the same device, RLS showing nothing — is a
+ * rebuild of less than the student did, and taking it would be the same wipe
+ * by another road.
+ */
+async function bringForward(): Promise<void> {
+  const stored = modelStore.get();
+  if (stored.version === MODEL_VERSION) return;
+  const rebuilt = await import('./rebuildModel')
+    .then((m) => m.rebuildFromLedger(stored))
+    .catch(() => null);
+  // Another fold already brought it forward while the ledger was being read.
+  if (modelStore.get() !== stored) return;
+  const whole = rebuilt !== null && typeof rebuilt !== 'string' && rebuilt.events > 0 && rebuilt.onlyStored.length === 0;
+  modelStore.set(whole ? rebuilt.model : migrateModel(stored));
+}
+
 export function recordLocally(
   session: LearningSession,
   events: readonly LedgerEvent[],
 ): Promise<void> {
   if (events.length === 0) return Promise.resolve();
   const done = import('./graphContext')
-    .then(({ currentIndex, currentParams }) => {
+    .then(async ({ currentIndex, currentParams }) => {
       const index = currentIndex();
       if (!index) {
         // No class set, or a map that will not load for it. Ordinary, and NOT
@@ -144,6 +175,7 @@ export function recordLocally(
         missed(events.length);
         return;
       }
+      await bringForward();
       modelStore.set(
         foldSession(
           modelStore.get(),

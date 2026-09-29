@@ -174,12 +174,21 @@ function createSilentTts(): TtsAdapter {
  * call would stop at this wrapper. Exported for that test.
  */
 export function withFace(inner: TtsAdapter): TtsAdapter {
+  // Which line the face is on. A line cancelled and replaced in the same tick
+  // (a halt's support line, a tap over her line) used to finish AFTER the new
+  // one was announced and blank it (overnight review #17): only the newest
+  // line may clear the face.
+  let newest = 0;
   return {
     speak: (text: string) => {
+      const mine = ++newest;
       announceLine(text);
-      return inner.speak(text).finally(() => announceLine(''));
+      return inner.speak(text).finally(() => {
+        if (mine === newest) announceLine('');
+      });
     },
     cancel: () => {
+      newest += 1;
       announceLine('');
       inner.cancel();
     },

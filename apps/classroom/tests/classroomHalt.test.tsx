@@ -352,3 +352,94 @@ describe('a tapped option whose why trips the distress screen', () => {
     expect(spoken).toContain(lesson.beats[1].narration);
   });
 });
+
+/**
+ * THE HELD QUESTION'S LADDER, IN THE REAL ROOM (overnight review, 2026-09-29).
+ *
+ * decide() is tested as a table next door (packages/tutor-control). These are
+ * the wiring faults the review found in the room around it: a "let's keep
+ * going" that did not, a hint chip that wrote the leaking hint decide() had
+ * refused, a tap the open mic kept listening through, "hint do" judged as an
+ * answer, and a greeting that started the class after they had left.
+ */
+describe('the held question, in the real room', () => {
+  const tap = async (host: HTMLElement, label: string): Promise<void> => {
+    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
+    if (!chip) throw new Error(`no "${label}" on screen`);
+    await act(async () => {
+      chip.click();
+    });
+    await tick();
+  };
+
+  it('moves the class on when she says "let\'s keep going" after the reveal', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    // Look again, the hint, the answer — then a fourth miss.
+    for (let i = 0; i < 4; i += 1) await tap(host, 'Two');
+    expect(spoken.some((l) => /keep going|carry on/i.test(l))).toBe(true);
+    expect(spoken).toContain(lesson.beats[1].narration);
+  });
+
+  it('never writes a hint decide() refused for giving the answer away', async () => {
+    const leaky = askingLesson(RIGHT_WHY);
+    leaky.beats[0].ask!.hint = 'It is Four, so tap Four.';
+    const host = await openClass({ lesson: leaky, tts: quickVoice() });
+    await tick();
+    await tap(host, 'Give me a hint');
+    expect(host.textContent).not.toContain('It is Four');
+    expect(spoken.join(' ')).not.toContain('It is Four');
+  });
+
+  it('writes the hint decide() approved', async () => {
+    const fine = askingLesson(RIGHT_WHY);
+    fine.beats[0].ask!.hint = 'Count the workers on the board.';
+    const host = await openClass({ lesson: fine, tts: quickVoice() });
+    await tick();
+    await tap(host, 'Give me a hint');
+    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
+  });
+
+  it('closes the open mic the moment they tap', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    expect(ear.polls.length).toBeGreaterThan(0);
+    const listening = ear.polls[ear.polls.length - 1];
+    expect(listening()).toBe(false);
+    await tap(host, 'Two');
+    expect(listening()).toBe(true);
+  });
+
+  it('hears "hint do" as a request for the hint, not as an answer to judge', async () => {
+    const fine = askingLesson(RIGHT_WHY);
+    fine.beats[0].ask!.hint = 'Count the workers on the board.';
+    ear.queued = ['hint do'];
+    await openClass({ lesson: fine, tts: quickVoice() });
+    await tick(10);
+    expect(llmCalls).toBe(0);
+    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
+    // Not a wrong answer on record: no "not quite" for asking.
+    expect(spoken.some((l) => /not quite|not yet|miss hua/i.test(l))).toBe(false);
+  });
+
+  it('does not start the class when they leave while she is greeting them', async () => {
+    const held: Array<() => void> = [];
+    const greetingHeld: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        if (/^(Hi|Welcome back)\b/.test(text)) return new Promise<void>((resolve) => held.push(resolve));
+        return Promise.resolve();
+      },
+      cancel() {
+        for (const resolve of held.splice(0)) resolve();
+      },
+    };
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: greetingHeld });
+    expect(spoken.some((l) => /^(Hi|Welcome back)\b/.test(l))).toBe(true);
+    for (const root of roots.splice(0)) act(() => root.unmount());
+    // Whatever ends her line — the unmount's cancel, or the line running out.
+    for (const resolve of held.splice(0)) resolve();
+    await tick(10);
+    expect(spoken).not.toContain(lesson.beats[0].narration);
+  });
+});

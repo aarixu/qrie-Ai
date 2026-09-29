@@ -40,11 +40,22 @@ export function createBrowserLlm(
     json?: boolean;
     effort?: 'none' | 'low' | 'medium' | 'high';
     prepId?: string;
+    /**
+     * Give up after this long. For a call a student is waiting on in class
+     * (the judge): a hung call left the chips hidden and the class frozen
+     * (overnight review #31). Class prep sets none — its calls are long.
+     */
+    timeoutMs?: number;
   } = {},
 ): LlmAdapter {
   return {
     async complete(system: string, user: string): Promise<string> {
+      const signal =
+        opts.timeoutMs !== undefined && typeof AbortSignal.timeout === 'function'
+          ? AbortSignal.timeout(opts.timeoutMs)
+          : undefined;
       const res = await relayFetch('/api/llm', {
+        ...(signal ? { signal } : {}),
         method: 'POST',
         headers: {
           'content-type': 'application/json',

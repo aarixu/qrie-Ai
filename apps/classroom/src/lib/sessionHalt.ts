@@ -130,8 +130,11 @@ export interface SessionHalt {
    * for. A caller that filed the help as given before calling this (the
    * `ledger.helped` rung-3 record on a wrong answer) is left with a record
    * that overstates the help on the rare withheld line.
+   *
+   * `onSaid` gets the line only when it is actually going to be said — the
+   * caption never shows a withheld one.
    */
-  sayAuthored(text: string): Promise<{ halted: boolean; said: string }>;
+  sayAuthored(text: string, onSaid?: (said: string) => void): Promise<{ halted: boolean; said: string }>;
   /**
    * The student's words, AFTER the screen that records them has run.
    *
@@ -209,11 +212,12 @@ export function createSessionHalt(room: HaltRoom): SessionHalt {
       return { halted, said: text };
     },
 
-    async sayAuthored(text) {
+    async sayAuthored(text, onSaid) {
       if (halted) return { halted: true, said: '' };
       // The pure screen, not `toStudent`: that one files a 'distress' flag,
       // and a flag of that kind means the CHILD said something.
       if (screen(text, 'to-student').kind === 'support') return { halted: false, said: '' };
+      onSaid?.(text);
       await room.tts.speak(text).catch(() => undefined);
       return { halted, said: text };
     },

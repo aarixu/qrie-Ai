@@ -324,11 +324,16 @@ export class BoardSession {
    *
    * The caller files the help (`ledger.helped`) BEFORE calling this: the ink
    * is on the board the moment this returns.
+   *
+   * A beat with no prepared work area (every class prepared before T1.5)
+   * gets nothing written. The layout would put the ink on a fresh page and
+   * the camera would follow it there, off the question the student is still
+   * answering (overnight review #13). What she says carries the help instead.
    */
   writeHeld(beatId: string, blocks: readonly { author: Author; steps: unknown }[]): string[] {
     if (this.isFrozen) return [];
     const at = this.lesson.beats.findIndex((b) => b.id === beatId);
-    if (at < 0) return [];
+    if (at < 0 || !this.lesson.beats[at].workArea) return [];
     const written: string[] = [];
     for (const block of blocks) {
       const onScreen = new Set(this.canvas(at).visible);

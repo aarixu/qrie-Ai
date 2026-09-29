@@ -45,7 +45,8 @@ import { useBoardSession } from '../lib/boardSession';
 import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
-import { decide } from '@ai-tutor/tutor-control';
+import { asksForHint, decide } from '@ai-tutor/tutor-control';
+import { screen } from '@ai-tutor/safety';
 import {
   clearCommitment,
   greetingMemory,
@@ -79,6 +80,14 @@ const CONTROLS_IDLE_MS = 3_500;
  * fetch and the speech pipeline warm up behind it.
  */
 const PREPARE_MS = 5_000;
+
+/**
+ * How long a held question sits quiet before she nudges. Silence is thinking
+ * (persona `moments.ts`); the endpointer's few seconds are only how long one
+ * listen waits. A placeholder, like FAST_WRONG_MS: nobody has measured how
+ * long a Class 6-10 student thinks before they are stuck (UNVERIFIED).
+ */
+const QUIET_BEFORE_NUDGE_MS = 20_000;
 
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
 export function LessonRoute() {
@@ -367,6 +376,54 @@ export function ClassRoom({
   );
 
   /**
+   * HER OWN LINES — the greeting, praise, hints, nudges, replies to a spoken
+   * answer — as distinct from the narration the player speaks.
+   *
+   * Captioned while they are said: the caption used to keep showing the
+   * question's narration while she said "not quite" or "take your time", so a
+   * student with the sound low never saw them. And counted, so the
+   * quiet-tapper timer never talks over one (overnight review #25, #34).
+   * `modelCause` marks a model's words, which get the halting screen; the rest
+   * are the lesson's or fixed persona lines (`sayAuthored`).
+   */
+  const [tutorLine, setTutorLine] = useState<string | null>(null);
+  const speaking = useRef(0);
+  const sayLine = async (text: string, modelCause?: 'ear'): Promise<{ halted: boolean; said: string }> => {
+    speaking.current += 1;
+    try {
+      return modelCause
+        ? await halt.say(text, modelCause, setTutorLine)
+        : await halt.sayAuthored(text, setTutorLine);
+    } finally {
+      speaking.current -= 1;
+      if (speaking.current === 0) setTutorLine(null);
+    }
+  };
+
+  /**
+   * Bumped by every tap and hint request on a held question. The ear's listen
+   * polls it, so a tap closes the open mic at once — its silence timer used to
+   * run on under her feedback and the silence nudge cut her off mid-sentence
+   * (overnight review #20). `tapSettled` resolves when her reply to the tap is
+   * over, which is when the ear may listen again.
+   */
+  const tapEpoch = useRef(0);
+  const tapSettled = useRef<Promise<void>>(Promise.resolve());
+  const beginTap = (): (() => void) => {
+    tapEpoch.current += 1;
+    let settle: () => void = () => undefined;
+    tapSettled.current = new Promise<void>((resolve) => {
+      settle = resolve;
+    });
+    return settle;
+  };
+
+  /** The held question's answer as an option index, for a gate she closes herself. */
+  const correctIndex = (ask: { options?: readonly { correct?: boolean }[] }): number =>
+    // -1 when no option is marked: the player reads that as an open question and resolves it.
+    (ask.options ?? []).findIndex((o) => o.correct === true);
+
+  /**
    * The student answers a held question.
    *
    * Order matters on a RIGHT answer: the why is spoken while the class is
@@ -386,6 +443,7 @@ export function ClassRoom({
     if (!ask || !player.beat) return;
     const beatId = player.beat.id;
     setAskBusy(true);
+    const settle = beginTap();
     try {
       const action = decide({
         verdict: 'hintRequest',
@@ -398,16 +456,20 @@ export function ClassRoom({
       });
       tapRung.current.set(beatId, action.rung);
       if (action.helped !== null) ledger.helped(beatId, action.helped, true);
-      const hintText = action.boardIntent?.text ?? ask.hint;
+      // Only what decide() approved goes on the board: it has refused an
+      // authored hint that gives the answer away, and falling back to that
+      // hint here put the answer up anyway (overnight review #11/#22).
+      const hintText = action.boardIntent?.text;
       if (hintText) board.writeHeld(beatId, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }]);
       if (action.say) {
         recentLines.current = [...recentLines.current.slice(-8), action.say];
-        const spoken = await halt.sayAuthored(action.say);
+        const spoken = await sayLine(action.say);
         if (spoken.halted) return;
       }
       ledger.reopened(beatId, Date.now());
     } finally {
       setAskBusy(false);
+      settle();
     }
   };
 
@@ -455,6 +517,7 @@ export function ClassRoom({
       ledger.answered({ beatId, correct, surface: 'tap', chosenIndex: index });
     }
     setAskBusy(true);
+    const settle = beginTap();
     try {
       // An open ask's "carry on" is not an answer: it only opens the gate.
       if (!option) {
@@ -499,7 +562,7 @@ export function ClassRoom({
         recordWin(where);
       if (correct) {
         if (action.say) {
-          const spoken = await halt.sayAuthored(action.say);
+          const spoken = await sayLine(action.say);
           if (spoken.halted) return;
         }
         player.answer(index);
@@ -509,15 +572,28 @@ export function ClassRoom({
          * THE BOARD AT A HELD QUESTION (T2.5): their pick goes into the work
          * area under the question, and the hint or the answer beside it — the
          * way a tutor writes the student's attempt down before helping with it.
+         * Only what decide() approved: its leak check has already refused a
+         * hint that gives the answer away (overnight review #11/#22).
          */
-        const written = action.boardIntent?.text ?? (action.kind === 'hint' ? (option.hint ?? ask.hint) : undefined);
+        const written = action.boardIntent?.text;
         board.writeHeld(beatId, [
           { author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${option.text}` }] }] },
           ...(written ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: written }] }] }] : []),
         ]);
         if (action.say) {
-          const spoken = await halt.sayAuthored(action.say);
+          const spoken = await sayLine(action.say);
           if (spoken.halted) return;
+        }
+        /**
+         * "LET'S KEEP GOING" HAS TO MEAN IT (overnight review #10/#26). After
+         * the reveal, decide() moves on and schedules a retest; she says so,
+         * and the class used to stay on the question with the chips back.
+         * The gate opens on the answer she has already shown — nothing new is
+         * recorded, the miss above stands.
+         */
+        if (action.kind === 'moveOn') {
+          player.answer(correctIndex(ask));
+          return;
         }
         // And the clock on the retry starts when she stops, not when they
         // missed: the chips come back now. Same rule as the spoken path.
@@ -525,6 +601,7 @@ export function ClassRoom({
       }
     } finally {
       setAskBusy(false);
+      settle();
     }
   };
 
@@ -782,6 +859,8 @@ export function ClassRoom({
    * questions put, and with it the attempt a first answer was recorded at.
    */
   const askFiled = useRef<string | null>(null);
+  /** The held question the ear has taken (mic granted): its silences are the ear's to nudge. */
+  const earHeld = useRef<string | null>(null);
 
   // The question surfacing is what starts the clock on an answer. It is its own
   // effect because the ear's effect returns early on a denied mic, and a
@@ -819,6 +898,9 @@ export function ClassRoom({
     const over = (): boolean => cancelled || halt.halted;
     (async () => {
       if ((await askForMic()) !== 'granted') return;
+      if (over()) return;
+      // The ear has this question: its nudges, not the quiet-tapper timer's.
+      earHeld.current = heldAskBeat;
       /**
        * The exchange, Aarav's shape: a wrong answer gets a hint and another
        * try; a RIGHT answer is not the exit either — she asks one why/how/
@@ -828,12 +910,34 @@ export function ClassRoom({
       let probe: { answer: string; question: string; askedAt: number } | null = null;
       let tries = 0;
       let silences = 0;
+      /**
+       * When the quiet began: the question surfacing, or her last line.
+       * The endpointer gives up on a listen after a few seconds of silence,
+       * and that is not a stuck student — "take your time" at seven seconds
+       * contradicted itself. A quiet listen before QUIET_BEFORE_NUDGE_MS
+       * re-arms without a word (overnight review #24).
+       */
+      let quietSince = Date.now();
+      // Her last nudge offered a hint, so a bare "haan" now means yes please.
+      let offeredHint = false;
+      let epoch = tapEpoch.current;
       while (!over()) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
+        if (tapEpoch.current !== epoch) {
+          // A tap took this turn. Wait out her reply to it, then listen afresh.
+          setEar('off');
+          await tapSettled.current;
+          if (over()) return;
+          epoch = tapEpoch.current;
+          quietSince = Date.now();
+          offeredHint = false;
+          continue;
+        }
         setEar('listening');
-        // Polled on every chunk: a halt closes the mic on the next one.
-        const heard = await listenOnce({ isCancelled: over });
+        // Polled on every chunk: a halt, or a tap, closes the mic on the next one.
+        const heard = await listenOnce({ isCancelled: () => over() || tapEpoch.current !== epoch });
+        if (heard.reason === 'cancelled' && !over()) continue;
         /**
          * WHEN THE ANSWER LANDED — not when the judge had finished with it.
          *
@@ -909,15 +1013,14 @@ export function ClassRoom({
           // ends this exchange. The flag was written by the screen inside
           // resolveCrossQuestion; `heard` only asks which of the two it was.
           if (close?.halt && heard.text !== null && halt.heard(heard.text, 'ear')) return;
-          const spoken = close ? await halt.say(close.say, 'ear') : null;
+          const spoken = close ? await sayLine(close.say, 'ear') : null;
           if (over()) return;
           // She has just declined to go somewhere (close.halt), or her own
           // reply was swapped for the support line and the class has halted
           // (spoken.halted). Resolving the question and moving the class on
           // would be the app talking over either.
           if (close?.halt || spoken?.halted) return;
-          const options = ask.options ?? [];
-          playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
+          playerRef.current.answer(Math.max(0, correctIndex(ask)));
           return;
         }
 
@@ -931,11 +1034,13 @@ export function ClassRoom({
            * hint (L3). After that the chips carry it. A mic that failed
            * ('error') is not a quiet student and gets no nudge.
            */
-          if (heard.reason !== 'silence' || silences >= 2) return;
+          if (heard.reason !== 'silence') return;
+          if (Date.now() - quietSince < QUIET_BEFORE_NUDGE_MS) continue;
+          if (silences >= 2) return;
           silences += 1;
           const nudge = decide({
             verdict: silences === 1 ? 'silent' : 'hintRequest',
-            attempt: tries + 1,
+            attempt: (tapTries.current.get(heldAskBeat) ?? 0) + 1,
             rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
             ask,
             lang: tutorLanguage(),
@@ -943,15 +1048,61 @@ export function ClassRoom({
             recentLines: recentLines.current,
           });
           tapRung.current.set(heldAskBeat, nudge.rung);
-          if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, nudge.requested);
+          // Help they did not ask for: silence is not a request, even when
+          // decide() was asked for the hint on its behalf.
+          if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, false);
+          const nudgeHint = nudge.boardIntent?.text;
+          if (nudgeHint) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: nudgeHint }] }] }]);
           if (!nudge.say) return;
           recentLines.current = [...recentLines.current.slice(-8), nudge.say];
           setEar('off');
-          const spokenNudge = await halt.sayAuthored(nudge.say);
+          const spokenNudge = await sayLine(nudge.say);
           if (over() || spokenNudge.halted) return;
           ledger.reopened(heldAskBeat, Date.now());
+          quietSince = Date.now();
+          offeredHint = silences === 1;
           continue;
         }
+
+        /**
+         * "HINT DO" IS A REQUEST, NOT AN ANSWER (overnight review #21).
+         *
+         * Her nudge offers a hint out loud; the reply used to go to the judge
+         * as the child's answer to the question. A short ask for help — or a
+         * bare "haan" right after she offered — gets the hint, filed as asked
+         * for. The pure screen first, which records nothing: anything it does
+         * not simply allow goes the ordinary way, through the screen that
+         * files and halts.
+         */
+        if (
+          screen(heard.text, 'from-student').kind === 'allow' &&
+          asksForHint(heard.text, { afterOffer: offeredHint, answers: (ask.options ?? []).map((o) => o.text) })
+        ) {
+          offeredHint = false;
+          const help = decide({
+            verdict: 'hintRequest',
+            attempt: (tapTries.current.get(heldAskBeat) ?? 0) + 1,
+            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            ask,
+            lang: tutorLanguage(),
+            now: Date.now(),
+            recentLines: recentLines.current,
+          });
+          tapRung.current.set(heldAskBeat, help.rung);
+          if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true);
+          const helpText = help.boardIntent?.text;
+          if (helpText) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: helpText }] }] }]);
+          setEar('off');
+          if (help.say) {
+            recentLines.current = [...recentLines.current.slice(-8), help.say];
+            const spokenHelp = await sayLine(help.say);
+            if (over() || spokenHelp.halted) return;
+          }
+          ledger.reopened(heldAskBeat, Date.now());
+          quietSince = Date.now();
+          continue;
+        }
+        offeredHint = false;
         setEar('thinking');
         /**
          * THE CLASS JUDGES ITS OWN ASK WHEN IT CAN AFFORD TO.
@@ -988,6 +1139,13 @@ export function ClassRoom({
           verdict: judged.verdict,
           probed: ask.whyProbe !== undefined,
         });
+        /**
+         * One count of tries per question, whichever way they answered: a
+         * spoken miss used to be invisible to the tap ladder, so a tap after
+         * it was read as a first attempt at rung 0 (overnight review #16).
+         */
+        const priorTries = tapTries.current.get(heldAskBeat) ?? 0;
+        if (judged.verdict !== 'unclear') tapTries.current.set(heldAskBeat, priorTries + 1);
         // "unclear" is not evidence about the student — nothing is recorded.
         // Her notebook: the same marks for a spoken answer as for a tap.
         {
@@ -996,7 +1154,7 @@ export function ClassRoom({
           else if (
             remember &&
             judged.verdict === 'right' &&
-            tries === 0 &&
+            priorTries === 0 &&
             (tapRung.current.get(heldAskBeat) ?? 0) === 0 &&
             !helpedByDoubt.current.has(heldAskBeat)
           )
@@ -1049,10 +1207,11 @@ export function ClassRoom({
          * judge's own line is the fallback, screened as a model's.
          */
         let ladderLine: string | null = null;
+        let movingOn = false;
         if (judged.verdict === 'wrong') {
           const action = decide({
             verdict: 'wrong',
-            attempt: tries + 1,
+            attempt: priorTries + 1,
             rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
             ask,
             lang: tutorLanguage(),
@@ -1060,12 +1219,22 @@ export function ClassRoom({
             recentLines: recentLines.current,
           });
           tapRung.current.set(heldAskBeat, action.rung);
-          ledger.helped(heldAskBeat, action.helped ?? (judged.gave === 'hint' ? 3 : 2), false);
+          movingOn = action.kind === 'moveOn';
+          /**
+           * What decide() gave, or nothing. The old fallback filed rung 2 or 3
+           * whenever decide() gave no help (a moveOn after the reveal), which
+           * is help the student never got.
+           */
+          if (action.helped !== null) ledger.helped(heldAskBeat, action.helped, false);
+          // decide() had no line, so the judge's own reply is said below —
+          // and that reply is a question or a hint, which is help.
+          else if (!action.say && judged.gave) ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false);
           if (action.say) {
             ladderLine = action.say;
             recentLines.current = [...recentLines.current.slice(-8), action.say];
           }
-          const hintText = action.boardIntent?.text ?? (action.kind === 'hint' ? ask.hint : undefined);
+          // Only what decide() approved: it has refused a leaking hint (#11/#22).
+          const hintText = action.boardIntent?.text;
           board.writeHeld(heldAskBeat, [
             ...(judged.heard ? [{ author: 'student' as const, steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${judged.heard}` }] }] }] : []),
             ...(hintText ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }] : []),
@@ -1076,10 +1245,10 @@ export function ClassRoom({
         // tap); anything the judge's model wrote is screened as a model's.
         const spoken =
           ladderLine !== null
-            ? await halt.sayAuthored(ladderLine)
+            ? await sayLine(ladderLine)
             : resolved.path === 'local'
-              ? await halt.sayAuthored(judged.say)
-              : await halt.say(judged.say, 'ear');
+              ? await sayLine(judged.say)
+              : await sayLine(judged.say, 'ear');
         if (over()) return;
         // An off-limits answer (judged.halt): she has just declined it, and
         // reopening the mic to ask the question again would talk over her —
@@ -1107,8 +1276,7 @@ export function ClassRoom({
            * ledger.
            */
           if (resolved.path === 'local') {
-            const options = ask.options ?? [];
-            playerRef.current.answer(Math.max(0, options.findIndex((o) => o.correct === true)));
+            playerRef.current.answer(Math.max(0, correctIndex(ask)));
             return;
           }
           // Her line just ended on the cross-question; the next listen takes
@@ -1124,7 +1292,14 @@ export function ClassRoom({
           // that stood here reached for exactly the raw transcript `heard` was
           // added to make unreachable, on a path that can never need it.
           probe = { answer: judged.heard ?? '', question: judged.say, askedAt: Date.now() };
+          quietSince = Date.now();
           continue;
+        }
+        // "Let's keep going" after the reveal: she said it, so the class goes
+        // on — the gate opens on the answer already shown (overnight review #10/#26).
+        if (movingOn) {
+          playerRef.current.answer(correctIndex(ask));
+          return;
         }
         // SHE HAS FINISHED SPEAKING THE HINT, so the retry clock starts now.
         // `answered` above moved it to the moment their wrong answer landed;
@@ -1132,6 +1307,7 @@ export function ClassRoom({
         // would inflate attempt 2 by the length of a hint — worse than the
         // judge round trip this whole change exists to take out.
         ledger.reopened(heldAskBeat, Date.now());
+        quietSince = Date.now();
         tries += 1;
         // Three misses: look again, the hint, then the answer and why — after
         // that the chips wait, and a tap on the right one closes it.
@@ -1151,9 +1327,13 @@ export function ClassRoom({
    *
    * The ear's loop nudges a student who is silent at an open mic. A student
    * with no mic (denied, "not now", none on the device) only taps, and until
-   * now a held question simply waited on them forever. Twelve seconds after
-   * the question surfaces — if nothing is being listened to, answered or asked
-   * — she says one content-free line, once per question (filed as L1 help).
+   * now a held question simply waited on them forever. After
+   * QUIET_BEFORE_NUDGE_MS of quiet — counted again from their last tap — she
+   * says one content-free line, once per question (filed as L1 help).
+   *
+   * Never over her own voice, and never on a question the ear holds: it used
+   * to fire whenever the ear read 'off', which is also what the ear reads
+   * while she is SPEAKING, and cut her off mid-sentence (overnight review #25).
    */
   const earRef = useRef(ear);
   earRef.current = ear;
@@ -1164,10 +1344,24 @@ export function ClassRoom({
   useEffect(() => {
     if (!heldAskBeat) return;
     const beatId = heldAskBeat;
-    const timer = setTimeout(() => {
-      if (halt.halted || earRef.current !== 'off' || askBusyRef.current || micAskRef.current !== null) return;
+    let seen = tapEpoch.current;
+    let timer: ReturnType<typeof setTimeout>;
+    const tryNudge = (): void => {
+      if (halt.halted || earHeld.current === beatId) return;
       const ask = playerRef.current.pendingAsk;
       if (!ask || playerRef.current.beat?.id !== beatId) return;
+      // A tap since the last look: they are not stuck, so the quiet starts again.
+      if (tapEpoch.current !== seen) {
+        seen = tapEpoch.current;
+        timer = setTimeout(tryNudge, QUIET_BEFORE_NUDGE_MS);
+        return;
+      }
+      // Something is happening — she is talking, a tap is being answered, the
+      // mic question is up. Look again shortly.
+      if (speaking.current > 0 || askBusyRef.current || micAskRef.current !== null || earRef.current !== 'off') {
+        timer = setTimeout(tryNudge, 4_000);
+        return;
+      }
       const nudge = decide({
         verdict: 'silent',
         attempt: (tapTries.current.get(beatId) ?? 0) + 1,
@@ -1180,8 +1374,9 @@ export function ClassRoom({
       if (nudge.helped !== null) ledger.helped(beatId, nudge.helped, nudge.requested);
       if (!nudge.say) return;
       recentLines.current = [...recentLines.current.slice(-8), nudge.say];
-      void halt.sayAuthored(nudge.say);
-    }, 12_000);
+      void sayLine(nudge.say);
+    };
+    timer = setTimeout(tryNudge, QUIET_BEFORE_NUDGE_MS);
     return () => clearTimeout(timer);
     // Once per held question; the refs carry the live state.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1326,6 +1521,13 @@ export function ClassRoom({
    * shared lesson; the name travels only in this one spoken line.
    */
   const greeted = useRef(false);
+  const left = useRef(false);
+  useEffect(
+    () => () => {
+      left.current = true;
+    },
+    [],
+  );
   /**
    * The first line of the class, and what it used from the notebook — so the
    * promise is cleared and the struggle marked once they have been SAID
@@ -1395,8 +1597,11 @@ export function ClassRoom({
     if (!greeted.current) {
       greeted.current = true;
       const greeting = greetingLine();
-      const spoken = await halt.sayAuthored(greeting.line);
-      if (spoken.halted) return;
+      const spoken = await sayLine(greeting.line);
+      // They left while she was greeting them: unmounting stopped her voice,
+      // which ends this await — and play() here would start the class in a
+      // room nobody is in (overnight review #8).
+      if (spoken.halted || left.current) return;
       // Said once: the promise is cleared and the struggle marked, so neither
       // is repeated at every class.
       if (greeting.saidPromise) clearCommitment();
@@ -1508,7 +1713,8 @@ export function ClassRoom({
   // During a doubt the caption carries the conversation's latest line — on a
   // phone it is the only place the conversation is visible.
   const lastDoubtLine = doubtLines[doubtLines.length - 1];
-  const caption = inDoubt ? (lastDoubtLine?.text ?? '') : preferences.captions ? player.caption : '';
+  // Her own line while she says one — praise, a hint, a nudge — else the narration.
+  const caption = inDoubt ? (lastDoubtLine?.text ?? '') : preferences.captions ? (tutorLine ?? player.caption) : '';
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';

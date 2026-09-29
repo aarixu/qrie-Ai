@@ -25,6 +25,8 @@ export { deriveRung } from './rung.ts';
 
 export { foldSession } from './fold.ts';
 
+export { migrateModel } from './migrate.ts';
+
 export { chooseAsk, type AskChoice } from './ask.ts';
 
 export { gainPerLearningMinute, unassistedGain } from './metric.ts';

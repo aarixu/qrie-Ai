@@ -16,8 +16,15 @@ import type { TtsAdapter } from '@ai-tutor/player';
  * which is nearly the whole of a typical line.
  *
  * Every path out of speak() RESOLVES — a refused relay, a 200 with no audio,
- * a cancel, no audio output at all — because the board advances on it. A
- * failure with nothing heard speaks the line through `fallback` instead.
+ * a cancel, no audio output at all, a stream that stalls — because the board
+ * advances on it. A failure with nothing heard speaks the line through
+ * `fallback` instead.
+ *
+ * AND NOTHING WAITS FOREVER (overnight review #12/#31). A stream that sends
+ * no audio within `firstChunkMs`, or stops for `stallMs` once it has
+ * started, is abandoned: before any audio the line goes to the fallback voice;
+ * after some, it ends where it stopped — repeating it from the top would be
+ * worse. Before this a stalled network froze the class with the chips hidden.
  */
 
 /** Where the samples go. Web Audio in the app; a fake clock in tests. */
@@ -46,7 +53,17 @@ export interface PcmStreamTtsOptions {
   /** Fired when the line's first sample actually reaches the speaker. */
   onStart?: (text: string) => void;
   sampleRate?: number;
+  /** How long to wait for the first audio, and between chunks once it flows. */
+  deadlines?: { firstChunkMs?: number; stallMs?: number };
 }
+
+/**
+ * Vertex's first audio was measured at 1.2-2.1 s (2026-09-28), so six seconds
+ * is a stream that is not coming; a live stream sends chunks well under a
+ * second apart, so four seconds of nothing is a stalled one.
+ */
+const FIRST_CHUNK_MS = 6_000;
+const STALL_MS = 4_000;
 
 /** How far ahead of now the first chunk is scheduled; less clicks, more waits. */
 const LEAD_SEC = 0.05;
@@ -77,6 +94,8 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
   const doFetch = opts.fetch ?? ((url, init) => fetch(url, init));
   const sleep = opts.sleep ?? ((ms: number) => new Promise<void>((r) => setTimeout(r, ms)));
   const rate = opts.sampleRate ?? 24_000;
+  const firstChunkMs = opts.deadlines?.firstChunkMs ?? FIRST_CHUNK_MS;
+  const stallMs = opts.deadlines?.stallMs ?? STALL_MS;
 
   const urlFor = (words: string): string => {
     const query = new URLSearchParams({ text: words, format: 'pcm' });
@@ -91,14 +110,29 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
 
   const start = (text: string): Take => {
     const take: Take = { text, abort: new AbortController(), chunks: [], done: false, failed: false, wake: null };
+    let deadline: ReturnType<typeof setTimeout> | null = null;
+    const arm = (ms: number): void => {
+      if (deadline !== null) clearTimeout(deadline);
+      deadline = setTimeout(() => take.abort.abort(), ms);
+    };
     const settle = (failed: boolean): void => {
+      if (deadline !== null) clearTimeout(deadline);
+      deadline = null;
+      if (take.done) return;
       take.failed = failed;
       take.done = true;
       take.wake?.();
     };
+    // Rejects on abort, so a fetch or a reader that ignores its signal still
+    // lets go of the line.
+    const aborted = new Promise<never>((_, reject) => {
+      take.abort.signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+    });
+    aborted.catch(() => undefined);
+    arm(firstChunkMs);
     void (async () => {
       try {
-        const res = await doFetch(urlFor(text), { signal: take.abort.signal });
+        const res = await Promise.race([doFetch(urlFor(text), { signal: take.abort.signal }), aborted]);
         // Only raw PCM is playable here. An older relay answers mp3 to the
         // same URL, and mp3 bytes read as samples are loud static.
         const type = (res.headers?.get?.('content-type') ?? '').toLowerCase();
@@ -107,9 +141,10 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
           return settle(true);
         }
         const reader = res.body.getReader();
+        take.abort.signal.addEventListener('abort', () => void reader.cancel().catch(() => undefined), { once: true });
         let odd: number | null = null;
         for (;;) {
-          const { done, value } = await reader.read();
+          const { done, value } = await Promise.race([reader.read(), aborted]);
           if (done) break;
           let bytes = value;
           if (odd !== null) {
@@ -125,6 +160,7 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
           }
           if (bytes.byteLength > 0) {
             take.chunks.push(pcmBytesToFloat32(bytes));
+            arm(stallMs);
             take.wake?.();
           }
         }
@@ -138,12 +174,20 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
 
   let primed: Take | null = null;
   /** The line being spoken: its take, what it scheduled, and how to end it. */
-  let current: { take: Take; handles: { stop(): void }[]; cancelled: boolean; interrupt: () => void } | null = null;
+  let current: {
+    take: Take;
+    handles: { stop(): void }[];
+    cancelled: boolean;
+    interrupt: () => void;
+    /** The fallback voice has this line: cancelling it must reach that voice (overnight review #9). */
+    viaFallback: boolean;
+  } | null = null;
 
   const stopCurrent = (): void => {
     if (!current) return;
     current.cancelled = true;
     current.take.abort.abort();
+    if (current.viaFallback) opts.fallback?.cancel();
     for (const h of current.handles) {
       try {
         h.stop();
@@ -161,19 +205,26 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
       const words = text.trim();
       if (words === '') return;
 
-      const take = primed?.text === words ? primed : start(words);
+      // A primed take that already failed (a stalled prime) is fetched again,
+      // not played through the fallback voice.
+      const take = primed?.text === words && !(primed.done && primed.failed) ? primed : start(words);
       if (primed === take) primed = null;
 
       let interrupt: () => void = () => undefined;
       const interrupted = new Promise<void>((r) => (interrupt = r));
-      const line = { take, handles: [] as { stop(): void }[], cancelled: false, interrupt };
+      const line = { take, handles: [] as { stop(): void }[], cancelled: false, interrupt, viaFallback: false };
       current = line;
+      // The line stays `current` while the fallback says it, so cancel reaches it.
+      const viaFallback = async (): Promise<void> => {
+        line.viaFallback = true;
+        await opts.fallback?.speak(words);
+        if (current === line) current = null;
+      };
 
       const out = opts.output();
       if (!out) {
         take.abort.abort();
-        if (current === line) current = null;
-        await opts.fallback?.speak(words);
+        await viaFallback();
         return;
       }
       out.resume?.();
@@ -203,8 +254,7 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
       if (line.cancelled) return;
 
       if (take.failed && !heard) {
-        if (current === line) current = null;
-        await opts.fallback?.speak(words);
+        await viaFallback();
         return;
       }
 

@@ -10,12 +10,14 @@
  * the child's language, refuses any authored content that leaks the answer,
  * and says what the ledger must get for every action (E3).
  *
- * E1a of the plan. NOT WIRED: no app calls it yet. Wiring is E2/E3's job,
- * through the headless held-ask controller (T1.9), and must speak `say` only
- * through the app's safety screen with `haltSession()` covering the path.
+ * E1a of the plan, wired into the classroom's taps, hint chip, spoken answers
+ * and silence nudges (apps/classroom/src/screens/ClassRoom.tsx). Every `say`
+ * goes out only through the app's safety screen, with `haltSession()`
+ * covering the path.
  */
 
 export { FAST_WRONG_MS, decide } from './decide.ts';
+export { asksForHint } from './hintRequest.ts';
 export { leakTokens, leaks } from './leak.ts';
 export { FRAMES, LINES } from './lines.ts';
 export { recordsFor, type ActionRecord } from './records.ts';
