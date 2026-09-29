@@ -45,32 +45,59 @@ export function texToHtml(tex: string): string | null {
 }
 
 /**
+ * Abbreviations a Class 6-10 board writes as words, never as a product of
+ * letters. A three-letter one with no vowel ("GCD") is a word only because it
+ * is here; the others ("LSA", "NCERT") are words anyway, and a three-letter
+ * one here is never read as a bare point name (ninth review). "SI" is not
+ * here: "SI = PRT/100" is a formula.
+ */
+const ABBREVIATIONS = new Set([
+  'HCF', 'LCM', 'GCD', 'MRP', 'GST', 'TDS', 'CSA', 'TSA', 'LSA', 'LHS', 'RHS', 'BODMAS',
+  'SSS', 'SAS', 'ASA', 'AAS', 'CPCT', 'BPT', 'NCERT',
+  'DNA', 'ATP', 'RBC', 'WBC', 'LPG', 'CNG', 'PVC', 'CFC',
+]);
+
+/** One to three capitals right after an angle or triangle sign, a point name: "∠ABC", "ΔAOB", "△PQR". */
+const POINT_NAME = /([∠Δ△]\s*)([A-Z]{1,3})(?![A-Za-z])/g;
+
+/**
+ * "ΔABC ~ ΔDEF": a ~ between two triangle names means "is similar to". LaTeX
+ * reads a bare ~ as a space, so `formulaTex` writes it as `\sim`.
+ */
+const SIMILAR = /([Δ△]\s*[A-Z]{3})\s*~\s*(?=[Δ△]\s*[A-Z]{3}(?![A-Za-z]))/g;
+
+/**
  * Whether a FORMULA element's text is maths KaTeX will set as its author
  * meant. Formulas are plain text by the planner's contract, and plain text
  * with words in it — "Mass of Reactants = Mass of Products", "Profit % =
  * (Profit / CP) × 100", "A --> B" — comes out of KaTeX as run-together italics
- * (seventh review, 2026-09-29). So: `$…$`-delimited, or no word (a run of
- * three or more letters with a vowel in it — sin, cos, tan and log excepted),
- * no chemical formula, no %, #, &, ~, and no arrow.
+ * (seventh review, 2026-09-29). So: `$…$`-delimited, or no word (see below;
+ * sin, cos, tan, cot, sec, cosec and log excepted), no chemical formula, no
+ * power LaTeX would raise only the first character of, no %, #, &, no ~
+ * except between two triangle names ("ΔABC ~ ΔDEF"), and no arrow.
  */
-/** Abbreviations written as words on a board, never as a product of letters. */
-const ABBREVIATIONS = new Set(['HCF', 'LCM', 'MRP', 'GST', 'CSA', 'TSA', 'LHS', 'RHS', 'SSS', 'SAS', 'ASA', 'AAS', 'RHS', 'CPCT', 'BODMAS']);
-
 export function typesetsAsMaths(text: string): boolean {
   const t = text.trim();
   if (/^\$[^$]+\$$/.test(t)) return true;
-  if (/[%#&~]|->|<-|→/.test(t)) return false;
+  if (/[%#&~]|->|<-|→/.test(t.replace(SIMILAR, '$1 '))) return false;
   // A power LaTeX would raise only the first character of, without braces:
   // "10^-9", "2^10". "x^2-5x" and "I^2Rt" raise one character, as meant.
   if (/\^(?:-|\d{2,}|[A-Za-z]{2,})/.test(t)) return false;
   // "H2O", "CO2": a chemical formula would be set as italic variables.
   if (/[A-Z][a-z]?\d+[A-Z]|[A-Z]{2,}\d/.test(t)) return false;
+  // Point names are maths, vowels and all (ninth review: "∠AOB = 90°"): one
+  // to three capitals right after ∠, Δ or △, and a bare run of three capitals
+  // that is not an abbreviation and whose every letter is a point already
+  // named that way ("ar (ABC)" beside "ΔABC").
+  const points = [...t.matchAll(POINT_NAME)].map((m) => m[2]).join('');
+  const isPoints = (w: string) =>
+    /^[A-Z]{3}$/.test(w) && !ABBREVIATIONS.has(w) && [...w].every((c) => points.includes(c));
   // Letters side by side are a product ("mgh", "PRT"); a word is a run of
   // three with a vowel in it, any run of four or more ("kmph"), or one of the
-  // abbreviations a Class 6-10 board writes ("HCF", "MRP") — eighth, third
-  // and fourth reviews ("SI = PRT/100" is a formula).
-  const words = (t.match(/[A-Za-z]{3,}/g) ?? []).filter(
-    (w) => /[aeiou]/i.test(w) || w.length >= 4 || ABBREVIATIONS.has(w),
+  // abbreviations above ("HCF", "GCD") — eighth, third, fourth and ninth
+  // reviews ("SI = PRT/100" is a formula).
+  const words = (t.replace(POINT_NAME, '$1').match(/[A-Za-z]{3,}/g) ?? []).filter(
+    (w) => (/[aeiou]/i.test(w) || w.length >= 4 || ABBREVIATIONS.has(w)) && !isPoints(w),
   );
   return words.every((w) => /^(sin|cos|tan|log|cot|sec|cosec)$/i.test(w));
 }
@@ -87,7 +114,9 @@ export function formulaTex(text: string): string {
     .replace(/^\$|\$$/g, '')
     .replace(/\s*(?:-{2,}|\.{2,}|…|—)\s*\(([0-9]+|[ivx]+)\)\s*$/i, String.raw` \qquad ($1)`)
     // "a^(m+n)": LaTeX raises only the bracket; the whole power goes up.
-    .replace(/\^\(([^()]*)\)/g, '^{$1}');
+    .replace(/\^\(([^()]*)\)/g, '^{$1}')
+    // "ΔABC ~ ΔDEF": similar, not a space.
+    .replace(SIMILAR, String.raw`$1 \sim `);
   // Plain-text functions set upright, as functions, not as italic letters
   // (eighth review: "sin 30" was set as s·i·n·30). KaTeX has no \cosec.
   return tex

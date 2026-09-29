@@ -27,6 +27,7 @@ import {
   setCommitment,
   setInterests,
   setLastSession,
+  similarTitle,
 } from '../src/lib/studentMemory';
 
 const NOW = 10 * 86_400_000;
@@ -146,6 +147,29 @@ describe('the greeting', () => {
     recordStruggle({ topic: 'Substitution', lessonId: 'l1' }, NOW);
     recordStruggle({ topic: 'Substitution', lessonId: 'l1' }, NOW);
     expect(greetingMemory('en', NOW).struggle).toBeUndefined();
+  });
+});
+
+/**
+ * NINTH REVIEW: a short title inside a longer retitle was not "the same
+ * class", so she said "Last time we did Linear Equations. Today it's Solving
+ * Linear Equations in One Variable."
+ */
+describe('two titles for the same class', () => {
+  it('knows a short title inside a longer retitle, either way round', () => {
+    expect(similarTitle('Linear Equations', 'Solving Linear Equations in One Variable')).toBe(true);
+    expect(similarTitle('Solving Linear Equations in One Variable', 'Linear Equations')).toBe(true);
+    expect(similarTitle('The Kidney', 'The Human Kidney and Excretion')).toBe(true);
+    expect(similarTitle('Equations with Variables on Both Sides', 'Solving Equations with Variables on Both Sides')).toBe(true);
+    expect(similarTitle('Blood, its parts', 'Blood & Its Components')).toBe(true);
+  });
+
+  it('does not count the small words, and needs a word in common', () => {
+    expect(similarTitle('The Heart', 'Blood & Its Components')).toBe(false);
+    expect(similarTitle('The Heart', 'The Kidney')).toBe(false);
+    expect(similarTitle('The Heart and Its Work', 'Blood and Its Components')).toBe(false);
+    expect(similarTitle('The', 'The')).toBe(false);
+    expect(similarTitle('', '')).toBe(false);
   });
 });
 
