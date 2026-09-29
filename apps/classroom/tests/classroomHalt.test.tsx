@@ -1009,6 +1009,16 @@ describe('working it out, eighth review', () => {
     expect(moved()).toBe(true);
   });
 
+  // Production, on a phone: three rows of chips rode over a three-line caption.
+  it('keeps the caption to two lines under the chips, and the chips above it', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    const chips = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Give me a hint'))!.closest('div.absolute')!;
+    expect(chips.className).toContain('bottom-[76px]');
+    const caption = host.querySelector('p span.line-clamp-2, p span.line-clamp-3');
+    if (caption) expect(caption.className).toBe('line-clamp-2');
+  });
+
   it('hides the quick replies while they work', async () => {
     const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
     await tick();

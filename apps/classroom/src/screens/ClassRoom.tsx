@@ -2213,14 +2213,17 @@ export function ClassRoom({
         <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
           <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
 
-          {/* The caption: one line over the board, like Meet's captions. */}
+          {/* The caption over the board, like a call's captions: up to three
+              lines. The clamp is on the inner span — on the padded box the
+              fourth line showed through the padding (production, phone). */}
           {caption && (
             <p
-              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white line-clamp-3 ${
+              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white ${
                 inDoubt ? 'bg-stage-green-container/95' : 'bg-stage/85'
               }`}
             >
-              {caption}
+              {/* Two lines while the chips are up, so they sit clear of it. */}
+              <span className={player.pendingAsk && !inDoubt ? 'line-clamp-2' : 'line-clamp-3'}>{caption}</span>
             </p>
           )}
 
@@ -2229,7 +2232,7 @@ export function ClassRoom({
               right answer gets its why, a wrong one gets its hint and another
               try. The whys live in the lesson, not on the board. */}
           {player.pendingAsk && !inDoubt && (
-            <div className="absolute inset-x-3 bottom-16 z-30 flex flex-wrap justify-center gap-2">
+            <div className="absolute inset-x-3 bottom-[76px] z-30 flex flex-wrap justify-center gap-2">
               {/* The ear's status over the chips: red while it listens, the
                   way a call shows a hot mic. */}
               {ear !== 'off' && (
