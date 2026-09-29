@@ -403,6 +403,31 @@ describe('several worked cases on one board are each their own problem', () => {
     fails('a = 4', 'p = 4a = 16', 'a = 5', 'p = 4a = 21');
   });
 
+  /** THE THIRD REVIEW (2026-09-29): a result on its own line, a restated answer, trials. */
+  it('fails a wrong result written on its own line after the substitution', () => {
+    fails('d = st', 's = 40', 't = 3', 'd = 40(3)', 'd = 130');
+    fails('i = prt/100', 'p = 5000', 'r = 8', 't = 2', 'i = 5000(8)(2)/100', 'i = 700');
+    fails('p = 2(l + b)', 'l = 8', 'b = 5', 'p = 2(8 + 5)', 'p = 24');
+    fails('x + y = 10', 'x - y = 2', '2x = 12', 'x = 6', 'y = 10 - 6', 'y = 5');
+    fails('3x + 2y = 12', 'x + 2y = 8', '2x = 4', 'x = 2', 'y = (8 - 2)/2', 'y = 4');
+    fails('y = 2x + 3', 'x = 1', 'y = 2(1) + 3', 'y = 6');
+  });
+  it('passes the same boards when the result is right', () => {
+    ok('d = st', 's = 40', 't = 3', 'd = 40(3)', 'd = 120');
+    ok('x + y = 10', 'x - y = 2', '2x = 12', 'x = 6', 'y = 10 - 6', 'y = 4');
+    ok('y = 2x + 3', 'x = 1', 'y = 2(1) + 3', 'y = 5');
+  });
+  it('fails a wrong answer restated after a check line', () => {
+    fails('2x + 3 = 11', '2x = 8', 'x = 4', '2(4) + 3 = 11', 'So x = 5');
+    fails('x^2 - 5x + 6 = 0', '(x - 2)(x - 3) = 0', 'x = 2', '2^2 - 5(2) + 6 = 0', 'x = 4');
+  });
+  it('passes trial and error, where each try is checked and only the last one fits', () => {
+    ok('4x + 5 = 17', 'x = 1', '4x + 5 = 4(1) + 5 = 9', 'x = 2', '4x + 5 = 4(2) + 5 = 13', 'x = 3', '4x + 5 = 4(3) + 5 = 17');
+  });
+  it('passes two tables of values for the graphical method', () => {
+    ok('x + y = 5', 'x = 0', 'y = 5', 'x = 1', 'y = 4', 'x - y = 1', 'x = 1', 'y = 0', 'x = 2', 'y = 1');
+  });
+
   it('refuses a runaway nested power instead of freezing the thread', () => {
     const t0 = Date.now();
     const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));

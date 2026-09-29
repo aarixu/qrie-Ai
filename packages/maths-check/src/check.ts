@@ -672,6 +672,12 @@ function agree(a: Prepared[], b: Prepared[]): boolean {
   return true;
 }
 
+/** A line's sides, split at "=", without spaces or a leading label: "4x + 5 = 4(1) + 5" is ["4x+5", "4(1)+5"]. */
+function sidesOf(p: Prepared): string[] {
+  const text = p.line.text.replace(/^[^=]*?:/, '');
+  return text.split('=').map((side) => side.replace(/\s+/g, '').toLowerCase());
+}
+
 /** Every variable a line's working mentions. */
 function varsOf(p: Prepared): Set<string> {
   const out = new Set<string>();
@@ -718,6 +724,8 @@ function problemsOf(prepared: Prepared[]): Segment[] {
   let inClaims = false;
   let givens = false;
   let claimed = new Set<string>();
+  /** The first letter claimed in the current run of claims. */
+  let runFirst: string | null = null;
   /** The claim lines of an answer that the next working also takes as its given. */
   let passOn: Prepared[] | null = null;
   const close = () => {
@@ -727,6 +735,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     inClaims = false;
     givens = false;
     claimed = new Set();
+    runFirst = null;
   };
   /** Start the next problem on lines carried in from the one just closed. */
   const carryIn = (lines: readonly Prepared[]) => {
@@ -737,14 +746,17 @@ function problemsOf(prepared: Prepared[]): Segment[] {
   };
   /**
    * `p` gives a letter a different value from the one the problem so far gave
-   * it, with a line of something else in between. Two bare rival answers side
-   * by side ("x = 3, x = 4") are still one problem, held to the last.
+   * it, with working or an unreadable line in between. Two bare rival answers
+   * side by side ("x = 3, x = 4") are still one problem, held to the last —
+   * and so is an answer restated after a line that only checks the first one
+   * ("x = 4, 2(4) + 3 = 11, So x = 5"; "x = 2, 2^2 - 5(2) + 6 = 0, x = 4"):
+   * a line with no letter in it separates nothing (third review).
    */
   const reclaims = (p: Prepared): boolean =>
     cur.some(
       (l, k) =>
         l.claims.some((h) => p.claims.some((c) => h.name === c.name && !equals(h.stated, c.stated))) &&
-        cur.slice(k + 1).some((x) => x.kind !== 'claim'),
+        cur.slice(k + 1).some((x) => x.parsed === null || x.kind === 'work'),
     );
   /** Some of `names` appears in an equation of the problem so far that no claim in it answers. */
   const unanswered = (names: readonly string[]): boolean => {
@@ -773,15 +785,39 @@ function problemsOf(prepared: Prepared[]): Segment[] {
    */
   const substituted = (claims: readonly Claim[], next: Prepared): boolean => {
     const used = varsOf(next);
+    // Written out means inside working: a side after the first that is more
+    // than a lone number. "x - y = 1" does not show x = 1; "2(1) + 3" does
+    // (third review, 2026-09-29 — the graphical method's second table).
+    const working = sidesOf(next).slice(1).filter((side) => !/^[-+]?[0-9.]+$/.test(side));
     return claims.some((c) => {
       if (!used.has(c.name)) return false;
       const shown = formatRational(c.stated).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
-      return new RegExp(`(^|[^0-9.])${shown}([^0-9.]|$)`).test(next.line.text);
+      const at = new RegExp(`(^|[^0-9.])${shown}([^0-9.]|$)`);
+      return working.some((side) => at.test(side));
     });
   };
-  /** A table row: a variable claimed again, in a run that already names two or more, on an unlabelled line. */
+  /**
+   * A TRY, not an answer: the working after the claim evaluates the very side
+   * of the unanswered equation ("4x + 5 = 17", then "x = 1", then
+   * "4x + 5 = 4(1) + 5 = 9") and another value of the same letter is tried
+   * later. Trial and error is NCERT Class 6-7 method; holding each try to the
+   * equation failed every correct board of it (third review, 2026-09-29).
+   */
+  const isTry = (i: number, claims: readonly Claim[], next: Prepared): boolean => {
+    const first = sidesOf(next)[0];
+    const names = new Set(claims.map((c) => c.name));
+    const sameSide = cur.some((l) => l.kind === 'work' && sidesOf(l).includes(first));
+    const triedAgain = prepared.slice(i + 1).some((l) => l !== next && l.claims.some((c) => names.has(c.name)));
+    return sameSide && triedAgain;
+  };
+  /**
+   * A table row: the run's FIRST letter — the row's input — claimed again, in
+   * a run that already names two or more, on an unlabelled line. Any letter
+   * used to do: "d = 40(3)" then "d = 130" read as a new row, and the wrong
+   * result was never checked (third review, 2026-09-29).
+   */
   const newRow = (p: Prepared): boolean =>
-    claimed.size >= 2 && !p.parsed?.final && p.claims.some((c) => claimed.has(c.name));
+    claimed.size >= 2 && !p.parsed?.final && runFirst !== null && p.claims.some((c) => c.name === runFirst);
   for (let i = 0; i < prepared.length; i++) {
     const p = prepared[i];
     if (p.practice) {
@@ -811,7 +847,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
           !next.practice &&
           run.claims.some((c) => varsOf(next).has(c.name));
         if (uses) {
-          if (cur.length > 0 && unanswered(run.claims.map((c) => c.name))) {
+          if (cur.length > 0 && unanswered(run.claims.map((c) => c.name)) && !isTry(i, run.claims, next)) {
             // The answer to the problem so far; and the next one's given too
             // when that working writes the value out.
             if (substituted(run.claims, next)) passOn = [];
@@ -822,6 +858,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
         }
       }
       inClaims = true;
+      runFirst ??= p.claims[0]?.name ?? null;
       p.claims.forEach((c) => claimed.add(c.name));
       cur.push(p);
       passOn?.push(p);
@@ -833,6 +870,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
         inClaims = false;
         givens = false;
         claimed = new Set();
+        runFirst = null;
       } else {
         const given = passOn;
         close();
