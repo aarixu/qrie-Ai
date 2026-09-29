@@ -91,6 +91,37 @@ function satisfies(prev: P.Poly, name: string, value: Rational): boolean {
   return total.n === 0n;
 }
 
+/**
+ * The same equation WRITTEN THE SAME WAY — each side equal as a polynomial,
+ * in either order. Stricter than a right step: "3x + 12 = 21" is a right step
+ * towards "x = 3" but is not "x = 3". Used to tell when a step IS the answer a
+ * question asks for.
+ */
+export function sameEquation(a: string, b: string): boolean {
+  const pa = parseLine(a);
+  const pb = parseLine(b);
+  if (!pa.ok || !pb.ok) return false;
+  try {
+    const sides = (l: typeof pa.line) => {
+      const st = l.statements[l.statements.length - 1];
+      return [toPoly(st.sides[0].expr), toPoly(st.sides[st.sides.length - 1].expr)];
+    };
+    const [a1, a2] = sides(pa.line);
+    const [b1, b2] = sides(pb.line);
+    const eq = (x: P.Poly, y: P.Poly) => P.isZero(P.sub(x, y));
+    return (eq(a1, b1) && eq(a2, b2)) || (eq(a1, b2) && eq(a2, b1));
+  } catch {
+    return false;
+  }
+}
+
+/** The equation inside a sentence: "What remains is x + 3 = 7." gives "x + 3 = 7". */
+export function equationIn(sentence: string): string | null {
+  const part = sentence.match(/[^.;,:]*=[^.;,:]*/)?.[0];
+  if (!part) return null;
+  return part.replace(/^\s*(?:[A-Za-z]{2,}\s+)+/, '').trim() || null;
+}
+
 export function checkStep(previous: string, step: string): StepVerdict {
   const before = parseLine(previous);
   const now = parseLine(step);

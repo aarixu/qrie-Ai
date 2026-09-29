@@ -566,6 +566,27 @@ describe('the held question, in the real room', () => {
     expect(spoken).toContain(lesson.beats[1].narration);
   });
 
+  it('takes a step that is the equation the question asks for as the answer', async () => {
+    const worked = askingLesson(RIGHT_WHY);
+    worked.beats[0].ask = {
+      question: 'If you remove one x from both sides, what remains?',
+      written: 'If you remove one $x$ from both sides of $2x + 3 = x + 7$, what remains?',
+      expect: 'What remains is x + 3 = 7.',
+    } as never;
+    const host = await openClass({ lesson: worked, tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    const input = byLabel(host, 'Your next step') as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    await act(async () => {
+      setter.call(input, 'x + 3 = 7');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await tap(host, 'Check step');
+    await tick(10);
+    expect(spoken).toContain(lesson.beats[1].narration);
+  });
+
   it('does not start the class when they leave while she is greeting them', async () => {
     const held: Array<() => void> = [];
     const greetingHeld: TtsAdapter = {

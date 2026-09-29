@@ -67,3 +67,13 @@ describe('checkStep', () => {
     expect(checkStep('3x = 9', 'x is three').ok).toBeNull();
   });
 });
+
+describe('is this step the answer asked for?', () => {
+  it('finds the equation in a sentence and matches it written the same way', async () => {
+    const { equationIn, sameEquation } = await import('../src/index');
+    expect(equationIn('What remains is x + 3 = 7.')).toBe('x + 3 = 7');
+    expect(sameEquation('x + 3 = 7', '3 + x = 7')).toBe(true);
+    expect(sameEquation('x = 3', '3x + 12 = 21')).toBe(false);
+    expect(sameEquation('x = 3', '3 = x')).toBe(true);
+  });
+});

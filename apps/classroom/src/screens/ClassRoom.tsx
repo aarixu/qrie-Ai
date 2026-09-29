@@ -68,6 +68,7 @@ import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
 import { WorkPanel, type WorkedStep } from '../ui/WorkPanel';
 import { mathPlain } from '@ai-tutor/lesson-format';
+import { equationIn, sameEquation } from '@ai-tutor/maths-check';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
@@ -505,8 +506,13 @@ export function ClassRoom({
     const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
     board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${step.text}` }] }] }]);
     const settle = beginTap();
+    // The step IS the answer when it solves the equation, or when it is the
+    // equation the question asks for ("what remains on each side?" — the
+    // expected answer is itself an equation, and a step equal to it is it).
+    const expectedEq = ask.expect ? equationIn(ask.expect) : null;
+    const isTheAnswer = v.ok === true && (Boolean(v.solved) || (expectedEq !== null && sameEquation(expectedEq, step.text)));
     try {
-      if (v.ok === true && v.solved) {
+      if (isTheAnswer) {
         // Solved: their answer, worked out and checked line by line.
         recordAnswerAtBeat(lesson, beatId, true);
         ledger.answered({ beatId, correct: true, surface: 'text', answerText: step.text });
