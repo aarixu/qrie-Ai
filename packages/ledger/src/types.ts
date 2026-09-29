@@ -181,6 +181,14 @@ export interface HelpedPayload {
   rung: AssistanceRung;
   /** Whether the student asked, or the tutor offered. */
   requested: boolean;
+  /**
+   * HOW she helped (H5): the ladder step — 'rethink', 'followUp', 'hint',
+   * 'workedExample', 'reveal' — or, for another explanation, its mode
+   * ('analogy', 'everyday', 'visual', 'steps'). A tag for measuring which ways
+   * of helping work across ALL students, never a per-student judgement.
+   * Absent on events written before 2026-09-29.
+   */
+  strategy?: string;
 }
 
 export interface TaughtPayload {

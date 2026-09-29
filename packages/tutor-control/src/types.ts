@@ -143,6 +143,11 @@ export interface Action {
    * caller hears it as reasoning, and asks the question again.
    */
   followUp?: true;
+  /**
+   * The strategy tag for the ledger (H5): the ladder step taken, or an
+   * alternate explanation's mode.
+   */
+  strategy: string;
   errorClass: ErrorClass;
   /** Why, for the ledger. Never spoken. Present on every action. */
   because: string;

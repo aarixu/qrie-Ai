@@ -656,3 +656,12 @@ describe('decide: another way to explain it (L7)', () => {
     expect(LINES.haveAGo.en).toContain(say(a));
   });
 });
+
+describe('decide: the strategy tag (H5)', () => {
+  it('tags each help with how she helped', () => {
+    expect(decide(base({ rungSoFar: 0 })).strategy).toBe('rethink');
+    expect(decide(base({ rungSoFar: 1, attempt: 2 })).strategy).toBe('hint');
+    const alt: AskInput = { ...OPEN, alternates: [{ mode: 'everyday', say: 'Like sharing sweets fairly.' }] };
+    expect(decide(base({ verdict: 'explainRequest', ask: alt })).strategy).toBe('everyday');
+  });
+});

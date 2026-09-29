@@ -468,7 +468,7 @@ export function ClassRoom({
         recentLines: recentLines.current,
       });
       tapRung.current.set(beatId, action.rung);
-      if (action.helped !== null) ledger.helped(beatId, action.helped, true);
+      if (action.helped !== null) ledger.helped(beatId, action.helped, true, action.strategy);
       followUpOpen.current = null;
       // Only what decide() approved goes on the board: it has refused an
       // authored hint that gives the answer away, and falling back to that
@@ -633,7 +633,7 @@ export function ClassRoom({
         recentLines: recentLines.current,
       });
       tapRung.current.set(beatId, action.rung);
-      if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested);
+      if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested, action.strategy);
       if (action.say) recentLines.current = [...recentLines.current.slice(-8), action.say];
       // A follow-up asked about their pick: what they say next is reasoning.
       followUpOpen.current = action.followUp ? beatId : null;
@@ -1175,7 +1175,7 @@ export function ClassRoom({
           tapRung.current.set(heldAskBeat, nudge.rung);
           // Help they did not ask for: silence is not a request, even when
           // decide() was asked for the hint on its behalf.
-          if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, false);
+          if (nudge.helped !== null) ledger.helped(heldAskBeat, nudge.helped, false, nudge.strategy);
           // A nudge closes a follow-up's window: what they say next is an answer.
           followUpOpen.current = null;
           const nudgeHint = nudge.boardIntent?.text;
@@ -1221,7 +1221,7 @@ export function ClassRoom({
             recentLines: recentLines.current,
           });
           tapRung.current.set(heldAskBeat, help.rung);
-          if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true);
+          if (help.helped !== null) ledger.helped(heldAskBeat, help.helped, true, help.strategy);
           followUpOpen.current = null;
           const helpText = help.boardIntent?.text;
           if (helpText) board.writeHeld(heldAskBeat, [{ author: 'lesson', steps: [{ say: '', ink: [{ op: 'note', text: helpText }] }] }]);
@@ -1407,10 +1407,10 @@ export function ClassRoom({
            * whenever decide() gave no help (a moveOn after the reveal), which
            * is help the student never got.
            */
-          if (action.helped !== null) ledger.helped(heldAskBeat, action.helped, false);
+          if (action.helped !== null) ledger.helped(heldAskBeat, action.helped, false, action.strategy);
           // decide() had no line, so the judge's own reply is said below —
           // and that reply is a question or a hint, which is help.
-          else if (!action.say && judged.gave) ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false);
+          else if (!action.say && judged.gave) ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false, `judge-${judged.gave}`);
           if (action.say) {
             ladderLine = action.say;
             recentLines.current = [...recentLines.current.slice(-8), action.say];
@@ -1563,7 +1563,7 @@ export function ClassRoom({
         now: Date.now(),
         recentLines: recentLines.current,
       });
-      if (nudge.helped !== null) ledger.helped(beatId, nudge.helped, nudge.requested);
+      if (nudge.helped !== null) ledger.helped(beatId, nudge.helped, nudge.requested, nudge.strategy);
       if (!nudge.say) return;
       recentLines.current = [...recentLines.current.slice(-8), nudge.say];
       void sayLine(nudge.say);
@@ -1671,7 +1671,7 @@ export function ClassRoom({
      * worked it out alone. It is the most assisted answer the product can
      * produce, so it is recorded as rung 7: the full explanation, asked for.
      */
-    if (player.pendingAsk) ledger.helped(ctx.beatId, 7, true);
+    if (player.pendingAsk) ledger.helped(ctx.beatId, 7, true, 'doubt');
 
     if (student !== null) {
       // A mic is no use without a live voice session to carry it, and that

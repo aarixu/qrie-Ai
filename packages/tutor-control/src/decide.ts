@@ -259,6 +259,7 @@ function explainAction(
 ): Action {
   return act(ctx, {
     kind: 'explainAgain',
+    strategy: alt.mode,
     rung,
     helped: 7,
     requested,
@@ -396,6 +397,7 @@ interface Draft {
   boardIntent?: Action['boardIntent'];
   scheduleRetest?: boolean;
   followUp?: true;
+  strategy?: string;
 }
 
 /**
@@ -416,6 +418,8 @@ function act(ctx: Ctx, d: Draft): Action {
   const say = clean.find((line) => !recent.includes(line)) ?? clean[0];
 
   const action: Action = {
+    // H5: the mode of another explanation, the follow-up question, or the step.
+    strategy: d.strategy ?? (d.followUp ? 'followUp' : d.kind),
     kind: d.kind,
     rung: d.rung,
     helped: d.helped,

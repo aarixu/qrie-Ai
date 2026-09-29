@@ -121,7 +121,7 @@ export interface ClassLedger {
   /** The answer was right, she asked why, and they reasoned. */
   reflected(input: ReflectedInput): void;
   /** A rung of the ladder was handed over. */
-  helped(beatId: string, rung: AssistanceRung, requested: boolean): void;
+  helped(beatId: string, rung: AssistanceRung, requested: boolean, strategy?: string): void;
   /** A hand went up. */
   confused(beatId: string): void;
 }
@@ -575,7 +575,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
         });
       },
 
-      helped(beatId, rung, requested) {
+      helped(beatId, rung, requested, strategy) {
         ensureOpen();
         const state = asks.current.get(beatId);
         if (state) {
@@ -594,7 +594,7 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
           surface: 'tap',
           outcomeIds: answeredOutcomesAtBeat(lesson, beatId),
           topicRef: lesson.topicRef,
-          payload: { beatId, rung, requested },
+          payload: { beatId, rung, requested, ...(strategy ? { strategy } : {}) },
         });
       },
 
