@@ -1,7 +1,7 @@
 import { toPoly } from './expr.ts';
 import { parseLine, type Statement } from './parse.ts';
 import * as P from './poly.ts';
-import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } from './rational.ts';
+import { DivisionByZero, TooLarge, div, equals, formatRational, isZero, mul, type Rational } from './rational.ts';
 
 /**
  * ONE STEP OF A STUDENT'S WORKING, CHECKED AGAINST THE STEP BEFORE IT (T8.1).
@@ -32,8 +32,11 @@ import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } fro
  * or an ARITHMETIC slip, and marked `aside` so it is never the next step's
  * reference.
  *
+ * A step that divides by zero is an ARITHMETIC slip.
+ *
  * What it does not judge: a step it cannot read (it says so, and the tutor
- * does not pretend), and anything past polynomial equations — a step that
+ * does not pretend), a step after a line whose equation divides by zero (that
+ * line's slip, not this one's), and anything past polynomial equations — a step that
  * squares both sides, or takes a root, reads as a changed equation.
  */
 
@@ -43,6 +46,16 @@ export type StepVerdict =
   | { ok: null; reason: string };
 
 const equationOf = (st: Statement): P.Poly => P.sub(toPoly(st.sides[0].expr), toPoly(st.sides[st.sides.length - 1].expr));
+
+/** The line before's equation, or null when working it out divides by zero — a slip that is not this step's. */
+function equationBefore(st: Statement): P.Poly | null {
+  try {
+    return equationOf(st);
+  } catch (e) {
+    if (e instanceof DivisionByZero) return null;
+    throw e;
+  }
+}
 
 /** A non-zero rational k with b = k·a, or null. */
 function proportional(a: P.Poly, b: P.Poly): Rational | null {
@@ -213,7 +226,8 @@ export function checkStep(previous: string, step: string): StepVerdict {
       return { ok: true, aside: true };
     }
     const prevStatements = before.line.statements;
-    const prev = equationOf(prevStatements[prevStatements.length - 1]);
+    const prev = equationBefore(prevStatements[prevStatements.length - 1]);
+    if (prev === null) return { ok: null, reason: 'the line before divides by zero' };
 
     // A list of roots: every one must make the line before true.
     const claims = now.line.statements.map(claimOf);
@@ -240,6 +254,8 @@ export function checkStep(previous: string, step: string): StepVerdict {
     const solved = claimOf(refSt);
     return solved ? { ok: true, solved } : { ok: true };
   } catch (e) {
+    // The line before was read on its own (equationBefore), so a zero divisor here is the step's.
+    if (e instanceof DivisionByZero) return { ok: false, kind: 'arithmetic', reason: 'division by zero' };
     if (e instanceof P.NotPolynomial || e instanceof TooLarge) return { ok: null, reason: 'this step is past what can be checked' };
     throw e;
   }

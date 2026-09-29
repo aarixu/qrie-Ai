@@ -228,7 +228,7 @@ const REQUIRED: Record<string, readonly string[]> = {
   card: ['heading', 'body'],
   note: ['text'],
   caption: ['text'],
-  place: ['id', 'noun'],
+  place: ['noun'],
   connect: ['from', 'to'],
   annotate: ['target', 'mark'],
   say: ['text'],
@@ -236,16 +236,29 @@ const REQUIRED: Record<string, readonly string[]> = {
 
 const isWords = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
 
+/**
+ * An ask's board form (T6) the board can write: words, with every $…$ closed.
+ * dropBadProbes deletes any other, so only this one can stand in for a
+ * missing question.
+ */
+const isBoardForm = (v: unknown): v is string => isWords(v) && (v.match(/\$/g) ?? []).length % 2 === 0;
+
 function wellFormedStep(step: unknown): Instruction | null {
   if (typeof step !== 'object' || step === null) return null;
   const s = { ...(step as Record<string, unknown>) };
   const kind = s.do;
   if (typeof kind !== 'string') return null;
   if (kind === 'ask') {
-    // `question` may be repaired from `written` later (dropBadProbes); one of
-    // them must be words.
-    if (!isWords(s.question) && !isWords(s.written)) return null;
+    // `question` may be repaired from a `written` that dropBadProbes keeps;
+    // one of the two must be there.
+    if (!isWords(s.question) && !isBoardForm(s.written)) return null;
     if (s.question !== undefined && typeof s.question !== 'string') delete s.question;
+    // The layout letters each option by its text, so an entry that is not an
+    // object with words goes, and options that are not a list go altogether.
+    // How many are left, and whether one is right, the validator judges.
+    if (Array.isArray(s.options)) {
+      s.options = s.options.filter((o) => typeof o === 'object' && o !== null && isWords((o as { text?: unknown }).text));
+    } else delete s.options;
     return s as unknown as Instruction;
   }
   if (kind === 'list') {
@@ -275,6 +288,26 @@ function wellFormedStep(step: unknown): Instruction | null {
   return s as unknown as Instruction;
 }
 
+/**
+ * A PLACE IS DRAWN FROM ITS NOUN; its id is only what a connect or an annotate
+ * names it by, and none can name an id that was never written. So a place with
+ * no id is kept and given one — its noun and its position on the board, made
+ * unique among the beat's place ids. Unique in the beat is enough: the layout
+ * gives a place's element an id under its beat's.
+ */
+function withPlaceIds(board: Instruction[]): Instruction[] {
+  const taken = new Set(board.flatMap((s) => (s.do === 'place' && isWords(s.id) ? [s.id] : [])));
+  return board.map((s, index) => {
+    if (s.do !== 'place' || isWords(s.id)) return s;
+    const noun = s.noun.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'place';
+    const base = `${noun}_${index}`;
+    let id = base;
+    for (let n = 2; taken.has(id); n += 1) id = `${base}_${n}`;
+    taken.add(id);
+    return { ...s, id };
+  });
+}
+
 function wellFormed(parsed: unknown): Blueprint | null {
   if (typeof parsed !== 'object' || parsed === null || !Array.isArray((parsed as { beats?: unknown }).beats)) return null;
   const plan = parsed as Blueprint;
@@ -283,9 +316,11 @@ function wellFormed(parsed: unknown): Blueprint | null {
     .map((b) => ({
       ...b,
       narration: typeof b.narration === 'string' ? b.narration : '',
-      board: (Array.isArray(b.board) ? b.board : [])
-        .map(wellFormedStep)
-        .filter((s): s is Instruction => s !== null),
+      board: withPlaceIds(
+        (Array.isArray(b.board) ? b.board : [])
+          .map(wellFormedStep)
+          .filter((s): s is Instruction => s !== null),
+      ),
     }));
   if (!Array.isArray(plan.visuals)) plan.visuals = [];
   return plan;
@@ -830,10 +865,7 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
       // A board form (T6) that is blank or has an unclosed $…$ goes on its
       // own: the board writes the spoken question instead, and the class is
       // not refused for it.
-      if (ask.written !== undefined) {
-        const w = ask.written;
-        if (typeof w !== 'string' || w.trim() === '' || (w.match(/\$/g) ?? []).length % 2 !== 0) delete ask.written;
-      }
+      if (ask.written !== undefined && !isBoardForm(ask.written)) delete ask.written;
       // A planner that wrote only the board form: she says it with its maths
       // read as symbols, rather than the preparation crashing on a missing
       // question (found in the canvas lab, 2026-09-29).

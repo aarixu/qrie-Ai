@@ -118,6 +118,25 @@ describe('checkStep, eighth review', () => {
   });
 });
 
+/**
+ * A typed step that divides by zero threw out of `checkStep`, so the "Work it
+ * out" panel's submit failed with nothing on the screen.
+ */
+describe('checkStep, a division by zero', () => {
+  it('in the step is a calculation slip, not a throw', () => {
+    const slip = { ok: false, kind: 'arithmetic', reason: 'division by zero' };
+    expect(checkStep('3x = 9', '5/0 = 1')).toEqual(slip);
+    expect(checkStep('3x + 12 = 21', '12/(3 - 3) = 4')).toEqual(slip);
+    expect(checkStep('3x = 9', 'x = 9/0')).toEqual(slip);
+  });
+
+  // The panel takes a first step with no question equation unchecked, so the
+  // line before can be the one that divides by zero.
+  it('in the line before is not called the step’s slip', () => {
+    expect(checkStep('5/0 = 1', 'x = 3')).toEqual({ ok: null, reason: 'the line before divides by zero' });
+  });
+});
+
 describe('workableEquation: what the "Work it out" panel can check', () => {
   it('is one linear equation in one unknown, not yet solved', async () => {
     const { workableEquation } = await import('../src/index');
