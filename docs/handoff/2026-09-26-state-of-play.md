@@ -57,6 +57,21 @@ Aarav's instructions that night: set the ₹5/hour ceiling aside until the tutor
 
 **Known issues found overnight:** prepared classes kept before 2026-09-29 carry their own layout, so their long questions still render small (re-prewarm to fix); raise-hand in DEV waits on a mic prompt because a live-voice key exists there (production goes straight to typing); the learner_model SQL default is still 1 — the LMS lane owes `alter table public.learner_model alter column version set default 2`.
 
+### Review rounds, 2026-09-29 (deployed; checked on production 10:55 IST)
+
+Every task was followed by a background review; each finding was fixed with a test that fails on the old code. Commits `3634e64` → `481d643`. The main things they fixed:
+- **The held question:** a tap closes the mic, and a spoken answer landing after a tap is dropped but still screened for distress. A spoken "hint do", "koi hint milega" or "Can I have a hint?" is a request; "pata nahi" is a miss, so the ladder climbs. "Let's keep going" after the reveal now moves the class on. A leaking hint never reaches the board. The C7 follow-up is actually asked, and the reply to it is heard as reasoning. Nudges come after 20 s of quiet and never talk over her. Captions show her own lines.
+- **Voice:** speech is a POST (the child's name is no longer in a URL); streams stall out to the browser voice; the judge gives up after 12 s; the mic has a watchdog. **Gemini TTS refuses `maxOutputTokens`** — setting it took her voice down for ~5 min; the audio cap now lives on the stream (`maxSpeechBytes`).
+- **maths-check:** now catches a wrong answer that the next line reuses, a wrong result on its own line, a wrong table row, and a wrong restated answer. It passes two worked examples, trial and error, and the graphical method's two tables. All 15 content lessons pass.
+- **UX:** Hinglish lines into and out of a doubt. "I'm not sure" speaks for the child. The PiP no longer covers the chips on a phone. The preparing bar fills across the whole wait. The next doubt step's audio is fetched while the current one plays. No double praise.
+- **Brain:** a v1 learner model is rebuilt from the ledger or migrated, never wiped.
+
+**Verified on production:** POST speech 200 (first chunk 2.7–3.2 s); "I'm not sure" → Meera guides on the board without giving the answer; the hint chip writes in the work area and captions her line; the class resumes on the same question.
+
+**Found on production, not fixed:** a student in the Class 6–8 band who opens a Class 10 topic by URL prepares it cold, because the catalogue query is filtered by band (`klass=gte.6&klass=lte.8`) even though that topic is published. `/api/prep/lock` answers 503 "we cannot answer this second" (the class still prepares). PostHog capture answers 401 (key).
+
+**Left for Aarav:** #40 — the keep route refuses a class whose spine trips the bare distress patterns, even when prep's reader allowed the line. Kept strict on purpose; the only cost is re-preparing. #3 — `kept_by` on `prepared_class` needs an LMS-lane migration. Speech units are still priced at 0.29/char, which was Deepgram's price; on Vertex a line costs about 0.43 paise/char.
+
 **MVP v2, decided and not built (Aarav, 2026-09-29):** a second opinion on answers — an LLM verifier now, Wolfram|Alpha and pretrained models later (I6 below). Today's `maths-check` is enough to ship: it catches the cases the review found, and all 15 content lessons pass it.
 
 **Needs Aarav:** TD10 (a Discord/Slack webhook for distress alerts — no words, just that one happened); TD14 (the DPDP §9(3) lawyer question); listen to a Hinglish class and say if the voice is right; publishing further classes is a SQL update Claude's auto mode refuses without his say-so (`update public.prepared_class set review_status='published', published_at=now() where id='…'`).
