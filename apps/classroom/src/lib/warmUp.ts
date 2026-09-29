@@ -1,4 +1,4 @@
-import { migrateModel, nextActivity, type LearnerModel } from '@ai-tutor/learner-model';
+import { migrateModel, type LearnerModel } from '@ai-tutor/learner-model';
 import type { GraphIndex, Probe } from '@ai-tutor/knowledge-graph';
 import { learnerModelStore } from './learnerModel';
 
@@ -11,11 +11,12 @@ import { learnerModelStore } from './learnerModel';
  * placement test and the practice quiz ask from, so every question already
  * carries a reviewed answer and, per wrong option, a named misconception.
  *
- * `nextActivity` decides what is due (most overdue first); this keeps at most
- * two, never on what the class is about to teach, and skips an outcome the
- * bank has no question for. The probe turns with the outcome's retrieval
- * count, so the next review of the same outcome asks a different question
- * when the bank has one.
+ * Due is `nextActivity`'s rule (a box, and its `nextReviewAt` passed), most
+ * overdue first — but taken over every due outcome, not `nextActivity`'s top
+ * three: three the bank has no question for stopped every warm-up for good
+ * (second review). This keeps at most two, never on what the class is about
+ * to teach. The probe turns with the outcome's retrieval count, so the next
+ * review of the same outcome asks a different question when the bank has one.
  */
 
 export const WARM_UP_MAX = 2;
@@ -44,10 +45,13 @@ export function pickWarmUp(input: {
   /** Outcomes this class teaches: never warmed up on. */
   justDone: readonly string[];
 }): WarmUpQuestion[] {
-  const decided = nextActivity({ model: input.model, index: input.index, now: input.now, justDone: input.justDone });
-  if (decided.kind !== 'review') return [];
+  const now = Date.parse(input.now);
+  const skip = new Set(input.justDone);
+  const due = Object.values(input.model.states)
+    .filter((s) => s.box !== null && s.nextReviewAt !== null && Date.parse(s.nextReviewAt) <= now && !skip.has(s.outcomeId))
+    .sort((a, b) => Date.parse(a.nextReviewAt!) - Date.parse(b.nextReviewAt!));
   const picked: WarmUpQuestion[] = [];
-  for (const id of decided.outcomeIds) {
+  for (const { outcomeId: id } of due) {
     if (picked.length >= WARM_UP_MAX) break;
     const node = input.index.node(id);
     const own = input.probes
@@ -70,19 +74,24 @@ export function pickWarmUp(input: {
 }
 
 /**
- * The warm-up for a class on `topicRef`, from this device's learner model.
+ * The warm-up for a class on `topicRef` that teaches `teaches`, from this
+ * device's learner model. Neither the topic's outcomes nor the lesson's own —
+ * a lesson can teach outcomes filed under another topic (second review).
  *
- * The map is imported lazily, and only when something is due, for the reason
- * `recordLocally` gives: it pulls every syllabus map, which does not belong in
- * the class screen's first load.
+ * The map is imported lazily, for the reason `recordLocally` gives: it pulls
+ * every syllabus map, which does not belong in the class screen's first load.
+ * With nothing due this returns without reaching for it.
  * Empty — never an error — when the student's class has no map, or anything
  * on the way fails: a warm-up is a nicety, and the class starts regardless.
  */
-export async function warmUpFor(topicRef: string | undefined, now: Date = new Date()): Promise<WarmUpQuestion[]> {
+export async function warmUpFor(
+  topicRef: string | undefined,
+  teaches: readonly string[] = [],
+  now: Date = new Date(),
+): Promise<WarmUpQuestion[]> {
   try {
     const model = migrateModel(learnerModelStore.get());
-    // Nothing due, and the map is never loaded: the ordinary class starts
-    // without waiting on it.
+    // Nothing due: the ordinary class starts without waiting on the map.
     const due = Object.values(model.states).some(
       (s) => s.box !== null && s.nextReviewAt !== null && Date.parse(s.nextReviewAt) <= now.getTime(),
     );
@@ -91,7 +100,7 @@ export async function warmUpFor(topicRef: string | undefined, now: Date = new Da
     const index = currentIndex();
     const bank = currentBank();
     if (!index || !bank) return [];
-    const justDone = topicRef ? index.ids().filter((id) => index.node(id)?.topicRef === topicRef) : [];
+    const justDone = [...teaches, ...(topicRef ? index.ids().filter((id) => index.node(id)?.topicRef === topicRef) : [])];
     return pickWarmUp({
       model,
       index,

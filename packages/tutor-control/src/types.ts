@@ -14,6 +14,7 @@ export type TutorLanguage = 'en' | 'hi-en';
  *   the expected value (E2/E3). Not evidence either way.
  * - `silent`: the wait ran out with nothing said.
  * - `hintRequest`: the student asked for help.
+ * - `explainRequest`: the student asked for it to be explained another way.
  */
 export type Verdict = 'right' | 'wrong' | 'unmatched' | 'unclear' | 'silent' | 'hintRequest' | 'explainRequest';
 
@@ -109,10 +110,11 @@ export type ErrorClass = 'none' | 'unclassified';
 export interface Action {
   kind: ActionKind;
   /**
-   * The highest ladder rung delivered on this ask once this action has
-   * happened — what the caller passes back as `rungSoFar` next turn. Never
-   * below the one before it. A content-free nudge files L1 help (`helped`)
-   * without moving this: it said nothing about the answer.
+   * The rung in force on this ask once this action has happened — what the
+   * caller passes back as `rungSoFar` next turn. Never below the one before
+   * it. Help that does not climb files its rung in `helped` without moving
+   * this: a content-free nudge (L1), and an explanation or hint the student
+   * asked for (a request never brings the answer nearer).
    */
   rung: AssistanceRung;
   /**

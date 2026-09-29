@@ -229,7 +229,7 @@ function beatErrors(
         errs.push(`${path}: ask workedExample needs 1 to 6 steps, each with a non-empty say and line`);
       }
     }
-    // H4: 2 or 3 re-explanations, each a known mode with something to say.
+    // H4: 1 to 3 re-explanations, each a known mode with something to say.
     const alternates = (ask as { alternates?: unknown }).alternates;
     if (alternates !== undefined) {
       if (
@@ -241,10 +241,12 @@ function beatErrors(
             isObj(a) &&
             ALTERNATE_MODES.includes((a as { mode?: unknown }).mode as AlternateMode) &&
             isStr((a as { say?: unknown }).say) &&
-            ((a as { line?: unknown }).line === undefined || isStr((a as { line?: unknown }).line)),
+            (a as { say: string }).say.trim() !== '' &&
+            ((a as { line?: unknown }).line === undefined ||
+              (isStr((a as { line?: unknown }).line) && (a as { line: string }).line.trim() !== '')),
         )
       ) {
-        errs.push(`${path}: ask alternates needs 1 to 3 entries, each with a known mode and a non-empty say`);
+        errs.push(`${path}: ask alternates needs 1 to 3 entries, each with a known mode, a non-blank say and, if it has a line, a non-blank line`);
       }
     }
     if (ask.options !== undefined) {

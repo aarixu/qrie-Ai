@@ -96,7 +96,6 @@ export interface AskOption {
   followUp?: string;
 }
 
-/** A similar problem, worked step by step (C6): what the L5 rung of the help ladder says and writes. */
 /** The ways an idea can be explained again (H4); the mode is the strategy tag (H5). */
 export type AlternateMode = 'analogy' | 'everyday' | 'visual' | 'steps';
 
@@ -109,6 +108,7 @@ export interface AskAlternate {
   line?: string;
 }
 
+/** A similar problem, worked step by step (C6): what the L5 rung of the help ladder says and writes. */
 export interface WorkedExample {
   steps: { say: string; line: string }[];
 }
@@ -439,7 +439,7 @@ export interface Beat {
      */
     workedExample?: WorkedExample;
     /**
-     * ANOTHER WAY TO EXPLAIN IT (H4, 2026-09-29) — L7 on the help ladder: 2 or
+     * ANOTHER WAY TO EXPLAIN IT (H4, 2026-09-29) — L7 on the help ladder: 1 to
      * 3 short re-explanations of the idea the question rests on, each in a
      * different mode, offered after the worked example and before the
      * answer, or when the student asks. Never the answer (tutor-control's leak

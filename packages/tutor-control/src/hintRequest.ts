@@ -127,8 +127,13 @@ export function asksForHint(
  * the idea — "explain it another way", "phir se samjhao", "doosre tareeke se
  * samjhaiye" — not an answer. Same narrow rule as a hint: at most seven words,
  * no digit, and nothing but the ask and filler around it.
+ *
+ * Bare "samjha" is "(I) understood" and is NOT a request; "samjha do" is, and
+ * so is saying they did not understand — "nahi samjha", "samajh nahi aaya",
+ * "I don't understand" (second review).
  */
-const EXPLAIN = /\b(explain|samjhao|samjha|samjhaiye|samjhaao)\b/g;
+const EXPLAIN =
+  /\b(?:explain|samjhao|samjhaiye|samjhaao|samjha (?:do|dijiye|dena)|(?:nahi|nahin|nhi) samjh?a|samajh (?:nahi|nahin|nhi) (?:aaya|aya|aa raha|aa rha)|(?:i )?(?:dont|do not|didnt|did not) (?:understand|get it)|not understood)\b/g;
 const EXPLAIN_FILLER = new Set([
   'again', 'another', 'way', 'differently', 'different', 'once', 'more', 'phir', 'dobara', 'doosre', 'dusre',
   'tareeke', 'tarike', 'tarah', 'se', 'do', 'dijiye', 'it', 'that', 'this', 'please', 'can', 'could', 'you',

@@ -21,18 +21,23 @@ describe('the warm-up on the shipped maps', () => {
 
   it('asks an authored question about the outcome that is due', async () => {
     learnerModelStore.set({ ...emptyModel(), states: { [NODE]: due } });
-    const [question] = await warmUpFor('class9-mathematics/polynomials/zeroes', now);
+    const [question] = await warmUpFor('class9-mathematics/polynomials/zeroes', [], now);
     expect(question).toMatchObject({ nodeId: NODE, title: 'Two perpendicular number lines' });
     expect(question.options[question.correctIndex]).toBeTruthy();
   });
 
   it('asks nothing on the topic the class is about to teach', async () => {
     learnerModelStore.set({ ...emptyModel(), states: { [NODE]: due } });
-    expect(await warmUpFor('class9-mathematics/coordinate-geometry/introduction', now)).toEqual([]);
+    expect(await warmUpFor('class9-mathematics/coordinate-geometry/introduction', [], now)).toEqual([]);
+  });
+
+  it('asks nothing on an outcome the lesson teaches, whatever topic it is filed under', async () => {
+    learnerModelStore.set({ ...emptyModel(), states: { [NODE]: due } });
+    expect(await warmUpFor('class9-mathematics/polynomials/zeroes', [NODE], now)).toEqual([]);
   });
 
   it('asks nothing when nothing is due', async () => {
     learnerModelStore.set(emptyModel());
-    expect(await warmUpFor(undefined, now)).toEqual([]);
+    expect(await warmUpFor(undefined, [], now)).toEqual([]);
   });
 });

@@ -28,9 +28,11 @@ export const FAST_WRONG_MS = 3000;
  * THE LADDER (TD1), on a wrong or unmatched answer, one delivered step per
  * wrong answer:
  *
- *   L0 alone → L1 a rethink line → L3 the authored hint (the chosen wrong
- *   option's `hint`, else the ask's) → L5 a worked example, ONLY where one is
- *   authored → L8 the answer and why → after that, move on and retest later.
+ *   L0 alone → L1 a rethink line (or the chosen option's follow-up question,
+ *   C7) → L3 the authored hint (the chosen wrong option's `hint`, else the
+ *   ask's) → L5 a worked example, ONLY where one is authored → L7 another way
+ *   to explain it, ONLY where alternates are authored (H4) → L8 the answer and
+ *   why → after that, move on and retest later.
  *
  * A rung with nothing usable authored for it is skipped, never filled with
  * invented words — and "usable" means it passes the leak check: an authored
@@ -45,6 +47,8 @@ export const FAST_WRONG_MS = 3000;
  *   - unclear → "say that again", which is not help and moves nothing;
  *   - hintRequest → up to L3 and no further: a request can never pull out the
  *     worked example or the answer;
+ *   - explainRequest → another way to explain it, filed as L7 help, with no
+ *     climb; with no usable alternate, answered as a hint request;
  *   - a verdict its own match contradicts (a "right" that matched a wrong
  *     option) → "say that again", never praise.
  *
@@ -222,7 +226,7 @@ function onWrong(ctx: Ctx): Action {
   // L7: the idea again, another way (H4), before the answer.
   if (floor < 7) {
     const alt = usableAlternate(ctx);
-    if ('say' in alt) return explainAction(ctx, alt, `${ctx.head}: another way to explain it (L7, ${alt.mode})`, false, 7);
+    if ('say' in alt) return explainAction(ctx, alt, withSkips(`${ctx.head}: another way to explain it (L7, ${alt.mode})`, skipped), false, 7);
     skipped.push(`no usable alternate explanation: ${alt.reason}`);
   }
 
@@ -232,22 +236,17 @@ function onWrong(ctx: Ctx): Action {
 /**
  * "Explain it another way", asked for. The ladder does not climb — a request
  * never brings the answer nearer, as with a hint asked for — but the help is
- * filed as the L7 it is. With nothing usable authored, the request gets the
- * content-free "have a go" line.
+ * filed as the L7 it is. With no usable alternate it is answered as a hint
+ * request (a class kept before H4 has a hint and no alternates — second
+ * review), and with nothing authored at all, with the "have a go" line.
  */
 function onExplainRequest(ctx: Ctx): Action {
   const alt = usableAlternate(ctx);
   if ('say' in alt) {
     return explainAction(ctx, alt, `${ctx.head}: another way asked for (L7, ${alt.mode}); the ladder does not climb`, true, ctx.floor);
   }
-  return act(ctx, {
-    kind: 'nudge',
-    rung: ctx.floor,
-    helped: 1,
-    requested: true,
-    lines: LINES.haveAGo[ctx.input.lang],
-    because: `${ctx.head}: another way asked for, none usable (${alt.reason}); ask for a first step`,
-  });
+  const asHint = onHintRequest(ctx);
+  return { ...asHint, because: `${ctx.head}: another way asked for, none usable (${alt.reason}); answered as a hint request — ${asHint.because}` };
 }
 
 function explainAction(

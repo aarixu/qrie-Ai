@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Beat, Lesson } from '@ai-tutor/lesson-format';
-import { Scene } from '@ai-tutor/stage';
+import { hasMath, type Beat, type Lesson } from '@ai-tutor/lesson-format';
+import { Scene, lineToHtml } from '@ai-tutor/stage';
 import { usePlayer, type TtsAdapter } from '@ai-tutor/player';
 import {
   buildContext,
@@ -69,8 +69,8 @@ import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
 import { WorkPanel, type WorkedStep } from '../ui/WorkPanel';
-import { mathPlain } from '@ai-tutor/lesson-format';
-import { equationIn, sameEquation } from '@ai-tutor/maths-check';
+import { sameEquation } from '@ai-tutor/maths-check';
+import { expectedEquation, isFinalValue, restates, solvesAsExpected, workStartOf } from '../lib/workAnswer';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
@@ -314,7 +314,16 @@ export function ClassRoom({
    * this one only has to start writing things down, because a class taught
    * before the record exists is a class nobody can ever learn from.
    */
-  const ledger = useClassLedger(lesson, player.state === 'playing', player.state === 'ended');
+  /** The warm-up question on screen (E6-E8), if any — see `runWarmUp`. */
+  const [warmUp, setWarmUp] = useState<{
+    question: WarmUpQuestion;
+    step: number;
+    of: number;
+    chosen: number | null;
+  } | null>(null);
+  // A warm-up is time on task: its answers are this sitting's, and so are its
+  // minutes (second review — they were answers with no time under them).
+  const ledger = useClassLedger(lesson, player.state === 'playing' || warmUp !== null, player.state === 'ended');
 
   // Refs so the (stable) handoff and the halt always reach the latest controls.
   const playerRef = useRef(player);
@@ -498,38 +507,50 @@ export function ClassRoom({
 
   /**
    * WORKING IT OUT, STEP BY STEP (T8.1). On an open question whose board form
-   * holds an equation, the student can type their working a line at a time;
-   * each step is checked against the last (maths-check `checkStep`), written
-   * on the board in their name with a tick or a cross, and answered in her
-   * words. A step that solves it is their answer, recorded as typed.
+   * holds one equation the checker can follow (`workStartOf`), the student can
+   * type their working a line at a time; each step is screened like a typed
+   * doubt, checked against the last (maths-check `checkStep`), written on the
+   * board in their name with a tick or a cross, and answered in her words. The
+   * answer asked for (`solvesAsExpected`, `expectedEquation`) is recorded as
+   * typed; a wrong final value is filed as a wrong answer (eighth review).
    */
   const [working, setWorking] = useState(false);
-  const workStart = useMemo(() => {
-    const written = player.pendingAsk?.written;
-    const eq = written?.match(/\$([^$]*=[^$]*)\$/)?.[1];
-    return eq ? mathPlain(`$${eq}$`) : null;
-  }, [player.pendingAsk]);
+  const workStart = useMemo(() => workStartOf(player.pendingAsk?.written), [player.pendingAsk]);
   const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
   useEffect(() => setWorking(false), [player.beat?.id]);
 
   const onWorkedStep = async (step: WorkedStep) => {
-    if (halt.halted) return;
+    if (halt.halted || askBusyRef.current) return;
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
     const beatId = player.beat.id;
     const hi = tutorLanguage() === 'hi-en';
+    // The student's own words: screened like a typed doubt before anything is
+    // written or said. Distress halts the class; an off-limits line gets her
+    // redirect; neither reaches the board.
+    const screened = halt.typedDoubt(step.text);
+    if (screened.forward === null) {
+      if (screened.reply !== null) await sayLine(inLanguage(screened.reply, tutorLanguage()));
+      return;
+    }
     const v = step.verdict;
     const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
     board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${step.text}` }] }] }]);
     const settle = beginTap();
-    // The step IS the answer when it solves the equation, or when it is the
-    // equation the question asks for ("what remains on each side?" — the
-    // expected answer is itself an equation, and a step equal to it is it).
-    const expectedEq = ask.expect ? equationIn(ask.expect) : null;
-    const isTheAnswer = v.ok === true && (Boolean(v.solved) || (expectedEq !== null && sameEquation(expectedEq, step.text)));
+    // The question restated is not a step; a step on the way is not the answer.
+    const restated = restates(workStart, step.text);
+    const expectedEq = expectedEquation(ask.expect, workStart);
+    const isTheAnswer =
+      v.ok === true &&
+      !restated &&
+      ((v.solved !== undefined && solvesAsExpected(ask.expect, v.solved)) ||
+        (expectedEq !== null && sameEquation(expectedEq, step.text)));
     try {
       if (isTheAnswer) {
-        // Solved: their answer, worked out and checked line by line.
+        // Solved: their answer, worked out and checked line by line. Nothing
+        // to tap while she praises it, and the question is answered once.
+        setAskBusy(true);
+        setWorking(false);
         recordAnswerAtBeat(lesson, beatId, true);
         ledger.answered({ beatId, correct: true, surface: 'text', answerText: step.text });
         const praise = decide({
@@ -541,23 +562,43 @@ export function ClassRoom({
           now: Date.now(),
           recentLines: recentLines.current,
         });
-        setWorking(false);
-        if (praise.say) {
-          const spoken = await sayLine(praise.say);
-          if (spoken.halted) return;
+        try {
+          if (praise.say) {
+            const spoken = await sayLine(praise.say);
+            if (spoken.halted) return;
+          }
+          // Still this question: a seek or a hand while she spoke has moved on.
+          if (playerRef.current.pendingAsk !== ask) return;
+          playerRef.current.answer(correctIndex(ask));
+        } finally {
+          setAskBusy(false);
         }
-        player.answer(correctIndex(ask));
         return;
       }
-      const line =
-        v.ok === true
+      // A wrong final value is their answer too, and a wrong one: filed, and
+      // the next is another try (eighth review: only the right one was).
+      if (v.ok === false && isFinalValue(step.text)) {
+        recordAnswerAtBeat(lesson, beatId, false);
+        ledger.answered({ beatId, correct: false, surface: 'text', answerText: step.text });
+        tapTries.current.set(beatId, (tapTries.current.get(beatId) ?? 0) + 1);
+      }
+      const line = restated
+        ? hi
+          ? 'Yeh toh wahi sawaal hai — ab isme ek step lo.'
+          : "That's the equation we started with — now change it by one step."
+        : v.ok === true
           ? hi ? 'Haan, yeh step sahi hai. Aage badho.' : 'Good — that step holds. Keep going.'
           : v.ok === false && v.kind === 'arithmetic'
             ? hi ? 'Method theek hai, par ek calculation galat hai — use dobara nikaalo.' : 'Your method is fine, but one calculation is off — work it out again.'
-            : v.ok === false
-              ? hi ? 'Hmm, isse equation badal gaya. Jo ek side ke saath karo, wahi doosri side ke saath bhi karo.' : 'Hmm, that changes the equation. Whatever you do to one side, do to the other.'
-              : hi ? 'Yeh step main padh nahi paayi — aise likho: 3x + 12 = 21.' : "I couldn't read that step — write it like 3x + 12 = 21.";
-      await sayLine(line);
+            : v.ok === false && v.kind === 'value'
+              ? hi
+                ? 'Yeh value pichhli line mein daal ke dekho — kya woh sahi baithti hai? Yeh step dobara karo.'
+                : 'Put that value back into the line before — does it hold? Try that step again.'
+              : v.ok === false
+                ? hi ? 'Hmm, isse equation badal gaya. Jo ek side ke saath karo, wahi doosri side ke saath bhi karo.' : 'Hmm, that changes the equation. Whatever you do to one side, do to the other.'
+                : hi ? 'Yeh step main padh nahi paayi — aise likho: 3x + 12 = 21.' : "I couldn't read that step — write it like 3x + 12 = 21.";
+      const said = await sayLine(line);
+      if (!said.halted && v.ok === false && isFinalValue(step.text)) ledger.reopened(beatId, Date.now());
     } finally {
       settle();
     }
@@ -1737,7 +1778,16 @@ export function ClassRoom({
    * promise is cleared and the struggle marked once they have been SAID
    * (lib/studentMemory.ts: named once, never at every class forever).
    */
-  const greetingLine = (): { line: string; saidPromise: boolean; saidStruggle?: { topic: string; lessonId: string } } => {
+  const greetingLine = (
+    afterWarmUp = false,
+  ): { line: string; saidPromise: boolean; saidStruggle?: { topic: string; lessonId: string } } => {
+    const said = greetingBody();
+    if (!afterWarmUp) return said;
+    // She said hello with the warm-up; the rest follows it.
+    const rest = said.line.replace(/^(?:Welcome back|Hi)[^!]*!\s*(?:I'm Meera\.\s*|Main Meera hoon\.\s*)?/, '');
+    return { ...said, line: rest.charAt(0).toUpperCase() + rest.slice(1) };
+  };
+  const greetingBody = (): { line: string; saidPromise: boolean; saidStruggle?: { topic: string; lessonId: string } } => {
     const first = firstName(profileStore.get().name);
     const hi = tutorLanguage() === 'hi-en';
     const memory = greetingMemory(hi ? 'hi-en' : 'en');
@@ -1815,40 +1865,39 @@ export function ClassRoom({
    */
   const warmUpReady = useRef<Promise<WarmUpQuestion[]> | null>(null);
   const warmUpTap = useRef<((chosen: number | null) => void) | null>(null);
-  const [warmUp, setWarmUp] = useState<{
-    question: WarmUpQuestion;
-    step: number;
-    of: number;
-    chosen: number | null;
-  } | null>(null);
   useEffect(() => {
-    warmUpReady.current = warmUpFor(lesson.topicRef);
-  }, [lesson.topicRef]);
+    warmUpReady.current = warmUpFor(lesson.topicRef, outcomesOf(lesson));
+  }, [lesson]);
   // Leaving mid-question lets the waiting class start go; it stops on `left`.
   useEffect(() => () => warmUpTap.current?.(null), []);
 
-  const runWarmUp = async (): Promise<void> => {
+  /** Runs the warm-up if one is due; whether it ran. */
+  const runWarmUp = async (): Promise<boolean> => {
     const items = await Promise.race([
       warmUpReady.current ?? Promise.resolve([]),
       new Promise<WarmUpQuestion[]>((resolve) => setTimeout(() => resolve([]), WARM_UP_WAIT_MS)),
     ]);
-    if (items.length === 0 || left.current || halt.halted) return;
+    if (items.length === 0 || left.current || halt.halted) return false;
     const hi = tutorLanguage() === 'hi-en';
+    const first = firstName(profileStore.get().name);
+    const who = first ? ` ${first}` : '';
     track('warm_up_started', { lessonId: lesson.id, items: items.length });
     for (const [step, question] of items.entries()) {
       setWarmUp({ question, step, of: items.length, chosen: null });
       const tapped = new Promise<number | null>((resolve) => {
         warmUpTap.current = resolve;
       });
-      // The clock starts when she has finished asking, or at the tap if that
-      // comes first — the same rule the class's own questions keep.
+      // The clock starts when she has finished asking; a tap before that is
+      // timed from when the card appeared.
       let clockFrom = Date.now();
       let answered = false;
+      // Never the outcome's title before the tap: in 63 of the bank's probes
+      // the title holds the answer word for word (second review).
       const lead =
         step === 0
           ? hi
-            ? `Class se pehle ek chhota sa warm-up — ${question.title}. Yaad hai?`
-            : `Before we start, a quick warm-up on ${question.title}. Do you remember this one?`
+            ? `Welcome back${who}! Class se pehle ek chhota sa warm-up — pichhli class se ek sawaal.`
+            : `Welcome back${who}! Before we start, a quick warm-up question from an earlier class.`
           : hi
             ? 'Ek aur.'
             : 'One more.';
@@ -1861,7 +1910,9 @@ export function ClassRoom({
       if (chosen === null || left.current || halt.halted) break;
       ledger.warmedUp(question, chosen, Date.now() - clockFrom);
       setWarmUp({ question, step, of: items.length, chosen });
-      const answer = question.options[question.correctIndex];
+      // A LaTeX option is named by its letter: the voice reads no LaTeX.
+      const option = question.options[question.correctIndex];
+      const answer = hasMath(option) ? String.fromCharCode(65 + question.correctIndex) : option;
       const said = await sayLine(
         chosen === question.correctIndex
           ? hi
@@ -1874,6 +1925,7 @@ export function ClassRoom({
       if (said.halted || left.current) break;
     }
     setWarmUp(null);
+    return true;
   };
 
   const startClass = async () => {
@@ -1881,7 +1933,11 @@ export function ClassRoom({
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
     if (!greeted.current) {
       greeted.current = true;
-      const greeting = greetingLine();
+      // The warm-up comes before any recap: "last time we did X" names what
+      // is due (plan T3.5). Never on a class picked up where it was left.
+      const warmed = canResume ? false : await runWarmUp();
+      if (left.current || halt.halted) return;
+      const greeting = greetingLine(warmed);
       const spoken = await sayLine(greeting.line);
       // They left while she was greeting them: unmounting stopped her voice,
       // which ends this await — and play() here would start the class in a
@@ -1891,10 +1947,6 @@ export function ClassRoom({
       // is repeated at every class.
       if (greeting.saidPromise) clearCommitment();
       if (greeting.saidStruggle) markStruggleMentioned(greeting.saidStruggle.topic, greeting.saidStruggle.lessonId);
-      if (!canResume) {
-        await runWarmUp();
-        if (left.current || halt.halted) return;
-      }
     }
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
@@ -2149,7 +2201,9 @@ export function ClassRoom({
                   who is waiting on them — ask for a hint, or say they are
                   lost. A hint goes through decide() like any other help; "not
                   sure" opens a doubt with Meera about this very question. */}
-              {!askChoicesHidden && (
+              {/* Hidden while they work: on a phone the panel and the row together
+                  covered the board (eighth review). */}
+              {!askChoicesHidden && !working && (
                 <span className="w-full flex flex-wrap justify-center gap-2">
                   <button
                     onClick={() => void requestHint()}
@@ -2181,7 +2235,7 @@ export function ClassRoom({
                   )}
                 </span>
               )}
-              {working && player.pendingAsk && (
+              {working && player.pendingAsk && !askChoicesHidden && (
                 <span className="w-full">
                   <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={() => setWorking(false)} />
                 </span>
@@ -2196,8 +2250,15 @@ export function ClassRoom({
                 <p className="font-label-sm text-[11.5px] font-bold uppercase tracking-wide text-stage-blue">
                   Warm-up · {warmUp.step + 1} of {warmUp.of}
                 </p>
-                <p className="mt-0.5 font-label-sm text-[12px] text-stage-ink-dim">{warmUp.question.title}</p>
-                <p className="mt-2 font-body-md text-[15px] leading-snug">{warmUp.question.question}</p>
+                {/* The outcome's title only once they have answered: it can hold the answer. */}
+                {warmUp.chosen !== null && (
+                  <p className="mt-0.5 font-label-sm text-[12px] text-stage-ink-dim">{warmUp.question.title}</p>
+                )}
+                {/* Bank text: words escaped, $…$ maths typeset (KaTeX, trust off). */}
+                <p
+                  className="mt-2 font-body-md text-[15px] leading-snug"
+                  dangerouslySetInnerHTML={{ __html: lineToHtml(warmUp.question.question) }}
+                />
                 <div className="mt-3 grid gap-2">
                   {warmUp.question.options.map((option, i) => {
                     const shown = warmUp.chosen !== null;
@@ -2215,7 +2276,8 @@ export function ClassRoom({
                         onClick={() => warmUpTap.current?.(i)}
                         className={`min-h-[44px] rounded-xl bg-stage/60 px-3.5 py-2 text-left font-body-md text-[14px] leading-snug ring-1 ring-white/15 transition-transform active:scale-95 ${tone}`}
                       >
-                        <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span> {option}
+                        <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span>{' '}
+                        <span dangerouslySetInnerHTML={{ __html: lineToHtml(option) }} />
                       </button>
                     );
                   })}
@@ -2301,7 +2363,7 @@ export function ClassRoom({
           floated she covered one of them on a small phone (overnight review
           #29; fifth review measured option B and the send button). Her lines
           stay in the caption. */}
-      {!((player.pendingAsk && !inDoubt) || (inDoubt && typing)) && (
+      {!((player.pendingAsk && !inDoubt) || (inDoubt && typing) || warmUp) && (
         <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
           <TutorTile mode={tutorMode} variant="pip" clone={tile} />
         </div>

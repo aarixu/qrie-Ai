@@ -24,7 +24,7 @@ describe('recordsFor', () => {
   it('files help first, then the intervention, for an action that helps', () => {
     const action = decide(input({ attempt: 2, rungSoFar: 1 }));
     expect(recordsFor(action, { beatId: 'b3_4' })).toEqual([
-      { kind: 'helped', payload: { beatId: 'b3_4', rung: 3, requested: false } },
+      { kind: 'helped', payload: { beatId: 'b3_4', rung: 3, requested: false, strategy: 'hint' } },
       {
         kind: 'intervened',
         payload: { action: 'hint', because: action.because, rung: 3, errorClass: 'unclassified' },
@@ -34,7 +34,7 @@ describe('recordsFor', () => {
 
   it('marks help the student asked for as asked for', () => {
     const [helped] = recordsFor(decide(input({ verdict: 'hintRequest' })), { probeId: 'p1' });
-    expect(helped).toEqual({ kind: 'helped', payload: { probeId: 'p1', rung: 3, requested: true } });
+    expect(helped).toEqual({ kind: 'helped', payload: { probeId: 'p1', rung: 3, requested: true, strategy: 'hint' } });
   });
 
   it('files only the intervention for an action that gives no help', () => {
@@ -45,6 +45,6 @@ describe('recordsFor', () => {
 
   it('files the silence nudge as L1 help, so the next answer is not read as cold', () => {
     const [helped] = recordsFor(decide(input({ verdict: 'silent' })), { beatId: 'b1' });
-    expect(helped).toEqual({ kind: 'helped', payload: { beatId: 'b1', rung: 1, requested: false } });
+    expect(helped).toEqual({ kind: 'helped', payload: { beatId: 'b1', rung: 1, requested: false, strategy: 'nudge' } });
   });
 });

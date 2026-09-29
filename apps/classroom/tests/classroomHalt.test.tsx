@@ -708,6 +708,81 @@ describe('the class-start warm-up', () => {
     expect(host.textContent).not.toContain(firstLine);
   });
 
+  // Second review: 63 bank titles hold their probe's answer word for word.
+  it('keeps the outcome title out of her mouth and off the card until they answer', async () => {
+    warm.items = [question];
+    // Her praise is held, so the card is still up after the tap.
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        return /remembered/.test(text) ? new Promise<void>(() => undefined) : Promise.resolve();
+      },
+      cancel() {},
+    };
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts });
+    await tick(10);
+    expect(spoken.join(' ')).not.toContain(question.title);
+    expect(host.textContent).not.toContain(question.title);
+    await tapText(host, '4');
+    expect(host.textContent).toContain(question.title);
+  });
+
+  // Plan T3.5: a recap before the warm-up names what is due.
+  it('asks before any recap of the last class', async () => {
+    setLastSession({ lessonId: 'an-older-class', title: 'Solving linear equations', beatsDone: 20, total: 20 });
+    warm.items = [question];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(spoken.some((l) => /Last time/.test(l))).toBe(false);
+    const host = document.body.lastElementChild as HTMLElement;
+    await tapText(host, '4');
+    await tick(10);
+    expect(spoken.some((l) => /Last time we did Solving linear equations/.test(l))).toBe(true);
+  });
+
+  it('typesets a probe in LaTeX and names the right option by its letter', async () => {
+    warm.items = [{ ...question, question: 'The area is', options: [String.raw`$154\text{ cm}^2$`, '44 cm', '22 cm', '7 cm'], correctIndex: 0 }];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.querySelector('.katex')).not.toBeNull();
+    await tapText(host, '44 cm');
+    expect(spoken.some((l) => l.includes('The answer is A'))).toBe(true);
+    expect(spoken.join(' ')).not.toContain('$');
+  });
+
+  it('asks each due question in turn', async () => {
+    warm.items = [question, { ...question, id: 'probe-8', question: 'If x + 1 = 3, what is x?', options: ['1', '2', '3', '4'] }];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.textContent).toContain('1 of 2');
+    await tapText(host, '4');
+    await tick(10);
+    expect(host.textContent).toContain('2 of 2');
+    expect(host.textContent).toContain('If x + 1 = 3, what is x?');
+  });
+
+  it('is not asked on a class picked up where it was left', async () => {
+    progressStore.set({ lessons: { [lesson.id]: { beatIndex: 2 } }, lastLessonId: lesson.id } as never);
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.textContent).not.toContain('If 2x = 8, what is x?');
+  });
+
+  it('counts the warm-up as time on task', async () => {
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    expect(host.textContent).toContain('If 2x = 8, what is x?');
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 120));
+    });
+    // Left on the warm-up: the class never played, and the time still counts.
+    for (const root of roots.splice(0)) act(() => root.unmount());
+    const ended = ledgerOutbox.get().pending.filter((e) => e.kind === 'session-ended');
+    expect((ended.at(-1)?.payload as { activeMs: number }).activeMs).toBeGreaterThanOrEqual(100);
+  });
+
   it('files nothing when it is skipped, and the class begins', async () => {
     warm.items = [question];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
@@ -732,5 +807,181 @@ describe('her greeting when the last class was this one', () => {
     expect(greeting).toMatch(/^Welcome back/);
     expect(greeting).not.toContain('Last time we did');
     expect(greeting).toContain(lesson.title);
+  });
+});
+
+/**
+ * WORKING IT OUT, EIGHTH REVIEW: the panel reads the question as it means,
+ * is offered only where it can follow the working to an answer, takes only
+ * the answer asked for, screens what is typed, files a wrong final value, and
+ * answers the question once.
+ */
+describe('working it out, eighth review', () => {
+  const tap = async (host: HTMLElement, label: string): Promise<void> => {
+    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
+    if (!chip) throw new Error(`no "${label}" on screen`);
+    await act(async () => {
+      chip.click();
+    });
+    await tick();
+  };
+  const withAsk = (ask: Record<string, unknown>): Lesson => {
+    const worked = askingLesson(RIGHT_WHY);
+    worked.beats[0].ask = ask as never;
+    return worked;
+  };
+  const hasButton = (host: HTMLElement, text: string): boolean =>
+    [...host.querySelectorAll('button')].some((b) => b.textContent?.includes(text));
+  const typeStep = async (host: HTMLElement, text: string): Promise<void> => {
+    const input = byLabel(host, 'Your next step') as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    await act(async () => {
+      setter.call(input, text);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await tap(host, 'Check step');
+    await tick(10);
+  };
+  const answeredRows = () => ledgerOutbox.get().pending.filter((e) => e.kind === 'answered').map((e) => e.payload as Record<string, unknown>);
+  const moved = () => spoken.includes(lesson.beats[1].narration);
+
+  it('is not offered where it cannot follow the working to the answer', async () => {
+    for (const written of [
+      String.raw`Find $x$: $2^{x} = 32$`,
+      'Is $x = 5$ a solution of $2x + 3 = 11$?',
+      'If $x = 3$, find the value of $2x + 5$',
+      'Solve $x^{2} - 5x + 6 = 0$',
+    ]) {
+      const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written, expect: 'x = 5' }), tts: quickVoice() });
+      await tick();
+      expect(hasButton(host, 'Work it out'), written).toBe(false);
+      for (const root of roots.splice(0)) act(() => root.unmount());
+    }
+  });
+
+  it('reads a fraction as it means, and takes its answer', async () => {
+    const host = await openClass({
+      lesson: withAsk({ question: 'Solve x minus two over four equals three.', written: String.raw`Solve $\frac{x-2}{4} = 3$`, expect: 'x = 14' }),
+      tts: quickVoice(),
+    });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, 'x = 14');
+    expect(moved()).toBe(true);
+  });
+
+  it('takes neither the question restated nor a step on the way as the answer', async () => {
+    const host = await openClass({
+      lesson: withAsk({ question: 'Solve two x plus three equals eleven.', written: 'Solve $2x + 3 = 11$', expect: 'Subtract 3 from both sides: 2x = 8, so x = 4.' }),
+      tts: quickVoice(),
+    });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, '2x + 3 = 11');
+    await typeStep(host, '2x = 8');
+    expect(moved()).toBe(false);
+    expect(answeredRows()).toHaveLength(0);
+    await typeStep(host, 'x = 4');
+    expect(moved()).toBe(true);
+  });
+
+  it('screens typed working like a typed doubt', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, 'i want to kill myself');
+    expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
+    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+    expect(llmCalls).toBe(0);
+  });
+
+  it('files a wrong final value as a wrong answer, and the right one as the next try', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, 'x = 6');
+    await typeStep(host, 'x = 3');
+    expect(answeredRows().map((r) => [r.correct, r.attempt])).toEqual([
+      [false, 1],
+      [true, 2],
+    ]);
+  });
+
+  it('hides the quick replies while they work', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    expect(hasButton(host, 'Give me a hint')).toBe(false);
+  });
+
+  it('answers the question once, with nothing to tap while she praises it', async () => {
+    let holding = false;
+    const held: Array<() => void> = [];
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        return holding ? new Promise<void>((r) => held.push(r)) : Promise.resolve();
+      },
+      cancel() {
+        for (const r of held.splice(0)) r();
+      },
+    };
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts });
+    await tick();
+    await tap(host, 'Work it out');
+    holding = true;
+    await typeStep(host, 'x = 3');
+    expect(hasButton(host, 'Work it out')).toBe(false);
+    expect(host.querySelector('[aria-label="Your next step"]')).toBeNull();
+    holding = false;
+    await act(async () => {
+      for (const r of held.splice(0)) r();
+    });
+    await tick(10);
+    expect(answeredRows()).toHaveLength(1);
+  });
+});
+
+/** H4/H5 in the room (second review: neither reached a room test). */
+describe('how she helped, on the record', () => {
+  const tap = async (host: HTMLElement, label: string): Promise<void> => {
+    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes(label));
+    if (!chip) throw new Error(`no "${label}" on screen`);
+    await act(async () => {
+      chip.click();
+    });
+    await tick(10);
+  };
+  const helped = () =>
+    ledgerOutbox.get().pending.filter((e) => e.kind === 'helped').map((e) => e.payload as Record<string, unknown>);
+  const withAlternates = (): Lesson => {
+    const alt = askingLesson(RIGHT_WHY);
+    alt.beats[0].ask = {
+      ...alt.beats[0].ask!,
+      alternates: [{ mode: 'analogy', say: 'Think of blood as a delivery team with different workers.' }],
+    } as never;
+    return alt;
+  };
+
+  it('files the strategy with the help a wrong tap gets (H5)', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Two');
+    expect(helped()[0]).toMatchObject({ rung: 1, requested: false });
+    expect(typeof helped()[0].strategy).toBe('string');
+  });
+
+  it('files an asked-for explanation as L7, asked for, by its mode (H4)', async () => {
+    const host = await openClass({ lesson: withAlternates(), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Explain another way');
+    expect(helped()[0]).toMatchObject({ rung: 7, requested: true, strategy: 'analogy' });
+    expect(spoken.some((l) => l.includes('Think of blood as a delivery team'))).toBe(true);
+  });
+
+  it('offers "Explain another way" only when there is another way authored', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Explain another way'))).toBe(false);
   });
 });

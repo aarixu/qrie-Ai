@@ -165,6 +165,18 @@ describe('worked example and follow-up (C6/C7)', () => {
     expect(long.ok).toBe(false);
   });
 
+  // Second review: a say of spaces passed, and the message did not name the line.
+  it('refuses an alternate with a blank say or a blank line, and takes one to three', () => {
+    const alt = (over: Record<string, unknown>) => ({ mode: 'analogy', say: 'Like a balance.', ...over });
+    const check = (alternates: unknown[]) => validateLesson(withAsk({ question: 'Q?', alternates } as LooseBeat['ask']));
+    expect(check([alt({})]).ok).toBe(true);
+    expect(check([alt({ say: '   ' })]).ok).toBe(false);
+    const blankLine = check([alt({ line: '' })]);
+    expect(blankLine.ok).toBe(false);
+    if (!blankLine.ok) expect(blankLine.errors.join(' ')).toContain('line');
+    expect(check([alt({}), alt({}), alt({}), alt({})]).ok).toBe(false);
+  });
+
   it('refuses a follow-up that is not a non-empty string', () => {
     const probe = { ...goodProbe, options: [goodProbe.options[0], { ...goodProbe.options[1], followUp: '' }] };
     expect(validateLesson(withAsk({ question: 'Q?', whyProbe: probe })).ok).toBe(false);

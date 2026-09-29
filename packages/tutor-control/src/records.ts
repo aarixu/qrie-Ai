@@ -30,7 +30,12 @@ export function recordsFor(action: Action, ref: { beatId?: string; probeId?: str
   if (action.helped !== null) {
     records.push({
       kind: 'helped',
-      payload: { ...names, rung: action.helped, requested: action.requested },
+      payload: {
+        ...names,
+        rung: action.helped,
+        requested: action.requested,
+        ...(action.strategy !== undefined ? { strategy: action.strategy } : {}),
+      },
     });
   }
   records.push({

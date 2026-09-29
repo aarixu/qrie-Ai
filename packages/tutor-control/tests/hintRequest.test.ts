@@ -91,4 +91,14 @@ describe('asksToExplainAgain (H4)', () => {
       expect(asksToExplainAgain(said), said).toBe(true);
     for (const said of ['explain why 7 is prime', 'it is explained by gravity', 'x = 3']) expect(asksToExplainAgain(said), said).toBe(false);
   });
+
+  // Second review: bare "samjha" is "(I) understood", and filing it as an L7
+  // request took rung-0 credit away from the next answer.
+  it('hears "samjha" as understood, and not understanding as a request', async () => {
+    const { asksToExplainAgain } = await import('../src/index');
+    for (const said of ['samjha', 'ji samjha', 'samjha sir', 'haan samjha'])
+      expect(asksToExplainAgain(said), said).toBe(false);
+    for (const said of ['nahi samjha', 'samajh nahi aaya', "I don't understand", 'I did not understand', 'samjha do', 'samjha dijiye'])
+      expect(asksToExplainAgain(said), said).toBe(true);
+  });
 });

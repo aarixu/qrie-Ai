@@ -651,9 +651,20 @@ describe('decide: another way to explain it (L7)', () => {
     expect(decide(base({ ask: leaky, rungSoFar: 3, attempt: 3 })).kind).toBe('reveal');
   });
 
-  it('answers a request with no alternates by asking for a first step', () => {
+  // Second review: every class kept before H4 answered "phir se samjhao" with
+  // an empty "have a go" while its hint sat unused.
+  it('answers a request with no alternates with the hint, and with nothing authored by asking for a first step', () => {
     const a = decide(base({ verdict: 'explainRequest', ask: OPEN }));
-    expect(LINES.haveAGo.en).toContain(say(a));
+    expect(a.kind).toBe('hint');
+    expect(a.requested).toBe(true);
+    expect(say(a)).toContain('Take 3 from both sides first.');
+    const bare = decide(base({ verdict: 'explainRequest', ask: { question: OPEN.question, expect: OPEN.expect } }));
+    expect(LINES.haveAGo.en).toContain(say(bare));
+  });
+
+  it('keeps the skipped rungs in the reason when L7 is earned', () => {
+    const a = decide(base({ ask: WITH_ALTERNATES, rungSoFar: 3, attempt: 3 }));
+    expect(a.because).toContain('no usable worked example');
   });
 });
 

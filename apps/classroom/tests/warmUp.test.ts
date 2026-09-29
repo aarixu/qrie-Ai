@@ -61,4 +61,20 @@ describe('the class-start warm-up (E6-E8)', () => {
     expect(at(2)).toBe('a-1');
     expect(at(3)).toBe('a-2');
   });
+
+  // Second review: nextActivity keeps the three most overdue, and three with
+  // no question in the bank stopped every warm-up for good.
+  it('finds a question past overdue outcomes the bank cannot ask about', () => {
+    const wide = new GraphIndex({ version: 1, nodes: [node('p'), node('q'), node('r'), node('a')] } as never);
+    const model = {
+      ...emptyModel(),
+      states: {
+        p: due('p', '2026-09-10T10:00:00.000Z'),
+        q: due('q', '2026-09-11T10:00:00.000Z'),
+        r: due('r', '2026-09-12T10:00:00.000Z'),
+        a: due('a', '2026-09-20T10:00:00.000Z'),
+      },
+    };
+    expect(pickWarmUp({ model, index: wide, probes, now, justDone: [] }).map((q) => q.nodeId)).toEqual(['a']);
+  });
 });

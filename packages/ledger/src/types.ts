@@ -183,10 +183,12 @@ export interface HelpedPayload {
   requested: boolean;
   /**
    * HOW she helped (H5): the ladder step — 'rethink', 'followUp', 'hint',
-   * 'workedExample', 'reveal' — or, for another explanation, its mode
-   * ('analogy', 'everyday', 'visual', 'steps'). A tag for measuring which ways
-   * of helping work across ALL students, never a per-student judgement.
-   * Absent on events written before 2026-09-29.
+   * 'workedExample', 'reveal', 'nudge' — or, for another explanation, its
+   * mode ('analogy', 'everyday', 'visual', 'steps'); 'doubt' for a hand raised
+   * on a held question, and 'judge-hint' / 'judge-question' for help the
+   * spoken-answer judge gave. A tag for measuring which ways of helping work
+   * across ALL students, never a per-student judgement. Absent on events
+   * written before 2026-09-29.
    */
   strategy?: string;
 }
