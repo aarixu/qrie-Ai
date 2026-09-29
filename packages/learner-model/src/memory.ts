@@ -6,7 +6,10 @@ import type { ConceptState } from './types.ts';
  * Each outcome sits in a box, 0 to 5, and the box decides when it comes back:
  * 1, 2, 5, 12, 30 or 60 days after the last time it was met. The rules:
  *   - the first taught or answered event opens box 0, with a review a day on;
- *   - an unassisted right answer that is a RETRIEVAL moves up one box;
+ *   - an unassisted right answer that is a RETRIEVAL, given once the review
+ *     is due, moves up one box — at most once a session (sixth review,
+ *     2026-09-29: six right answers in one sitting reached box 5, a 60-day
+ *     review, on one afternoon's evidence);
  *   - any wrong answer, helped or not, goes back to box 0;
  *   - a right answer with help, or a cold one that is not a retrieval, holds.
  *
@@ -63,8 +66,15 @@ export function onAnswer(prev: ConceptState, at: string, rung: number, correct: 
   let box = prev.box ?? 0;
   if (!correct) box = 0;
   // The first meeting opens box 0 whatever the answer; after that, only a
-  // right retrieval climbs.
-  else if (retrieval && prev.box !== null) box = Math.min(TOP_BOX, box + 1);
+  // right retrieval climbs — once a session, and only when it was due.
+  else if (
+    retrieval &&
+    prev.box !== null &&
+    (prev.lastRetrievedAt === null || Date.parse(at) > Date.parse(prev.lastRetrievedAt)) &&
+    (prev.nextReviewAt === null || Date.parse(at) >= Date.parse(prev.nextReviewAt))
+  ) {
+    box = Math.min(TOP_BOX, box + 1);
+  }
 
   const out: Partial<ConceptState> = { box, nextReviewAt: reviewAt(at, box) };
   if (rung >= EXPOSURE_RUNG) out.lastExposedAt = at;

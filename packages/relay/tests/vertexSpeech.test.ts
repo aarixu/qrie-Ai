@@ -399,7 +399,7 @@ describe('what one line may cost (#1)', () => {
     expect(maxSpeechBytes('9'.repeat(2000))).toBe(MAX_LINE_SECONDS * 48_000);
   });
 
-  it('keeps and books the audio a stream sent before it failed part-way (fifth review)', async () => {
+  it('books the audio a stream sent before it failed part-way, and answers 502 so the whole line is said', async () => {
     let pulls = 0;
     const body = new ReadableStream<Uint8Array>({
       pull(c) {
@@ -413,7 +413,7 @@ describe('what one line may cost (#1)', () => {
       { tokens, fetch: (async () => new Response(body, { status: 200 })) as unknown as typeof fetch },
       { format: 'pcm' },
     );
-    expect(out.status).toBe(200);
+    expect(out.status).toBe(502);
     expect(out.outputTokens).toBe(32);
   });
 

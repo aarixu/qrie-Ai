@@ -66,6 +66,11 @@ describe('asksForHint, fifth review', () => {
     for (const said of ['yes it will help', 'it will help', 'it would help', 'haan madad milegi', 'madad milegi', 'yes more help'])
       expect(asksForHint(said, { afterOffer: false }), said).toBe(false);
   });
+  it('hears a question about help as an ask (sixth review)', () => {
+    for (const said of ['will you help me', 'would you help me', 'kya madad milegi', 'madad milegi kya', 'mujhe madad milegi', 'more help please'])
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(true);
+  });
+
   it('hears a longer polite ask', () => {
     for (const said of ['can you give me a hint', 'mam please give me a hint', 'koi hint mil sakta hai kya', 'miss can I have a hint'])
       expect(asksForHint(said, { afterOffer: false }), said).toBe(true);

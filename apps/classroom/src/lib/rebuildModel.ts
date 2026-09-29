@@ -97,10 +97,12 @@ const toEvent = (row: EventRow): LedgerEvent =>
  * Every number a ConceptState holds, so a diff cannot quietly skip one. This
  * list broke its own promise once: it shipped without `answerObservations` —
  * the field `evidenceSet` gates the study plan on, and so the ONE divergence
- * this tool most exists to catch (2026-09-16 audit). The undriven Phase 5–6
- * fields are here too, deliberately: they cost one comparison of a default
- * against a default today, and the day something starts driving them is
- * exactly the day their divergence starts mattering.
+ * this tool most exists to catch (2026-09-16 audit). The review ladder's
+ * fields (F1-F3: box, the exposure and retrieval dates, nextReviewAt and the
+ * retrieval counts) are driven since MODEL_VERSION 3 and compared like any
+ * other; `memoryStrength` is still undriven and costs one comparison of a
+ * default against a default. `masteredAt` and `coldWins` are not numbers
+ * and are not compared here.
  */
 const FIELDS: readonly (keyof ConceptState)[] = [
   'mastery',
@@ -113,6 +115,9 @@ const FIELDS: readonly (keyof ConceptState)[] = [
   'doubtCount',
   'lastPracticedAt',
   'lastUnassistedSuccessAt',
+  'box',
+  'lastExposedAt',
+  'lastRetrievedAt',
   'memoryStrength',
   'nextReviewAt',
   'retrievalCount',

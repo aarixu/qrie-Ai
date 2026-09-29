@@ -371,7 +371,10 @@ function foldAnswer(
         }
       }
       // B8, on the session clock: the stamp and the spacing read the same time.
-      updated.masteredAt = stampMastery(updated, session.startedAt);
+      // Shown it this session: the stamp may be taken away by a miss, never
+      // given (F1-F3; sixth review, 2026-09-29).
+      const stamped = stampMastery(updated, session.startedAt);
+      updated.masteredAt = exposedThisSession(prev, session.startedAt) && stamped !== null ? prev.masteredAt : stamped;
     } else {
       const moved = applyEvidence({ [nodeId]: prev.assistedPerformance }, index, answer, { params });
       updated.assistedPerformance = moved[nodeId] ?? prev.assistedPerformance;

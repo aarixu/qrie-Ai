@@ -451,6 +451,28 @@ describe('several worked cases on one board are each their own problem', () => {
     ok('y = 2x + 3', 'x = 1', '2(1) + 3 = 5', 'x = 2', '2(2) + 3 = 7');
   });
 
+  /** THE SIXTH REVIEW (2026-09-29). */
+  it('fails a wrong final answer followed by a check line', () => {
+    fails('2x + 3 = 11', '2x = 8', 'x = 4', 'So x = 3', 'Check: 2(4) + 3 = 11');
+    fails('5x - 2 = 13', '5x = 15', 'x = 3', 'x = 2', '5(3) - 2 = 13');
+    fails('3x + 5 = 20', '3x = 15', 'x = 5', 'Therefore x = 3', '3(5) + 5 = 20');
+    fails('2x + 3 = 11', '2x = 8', 'x = 4', 'So x = 5', 'Check: 2 × 4 + 3 = 11 ✓');
+  });
+  it('reads a table written one row to a line', () => {
+    ok('y = 2x + 3', 'x = 0, y = 3', 'x = 1, y = 5', 'x = 2, y = 7');
+    ok('d = 40t', 't = 1, d = 40', 't = 2, d = 80');
+    fails('y = 2x + 3', 'x = 0, y = 3', 'x = 1, y = 6');
+  });
+  it('checks every row of a table against its givens, not just the second', () => {
+    fails('d = st', 's = 40', 't = 1', 'd = 40', 't = 2', 'd = 80', 't = 3', 'd = 130');
+    fails('y = kx', 'k = 3', 'x = 1', 'y = 3', 'x = 2', 'y = 6', 'x = 3', 'y = 10');
+    ok('y = kx', 'k = 3', 'x = 1', 'y = 3', 'x = 2', 'y = 6', 'x = 3', 'y = 9');
+  });
+  it('reads trial and error written with LHS, or with a times sign', () => {
+    ok('4x + 5 = 17', 'x = 1', '4x + 5 = 4(1) + 5 = 9', 'x = 2', 'LHS = 4(2) + 5 = 13', 'x = 3', 'LHS = 4(3) + 5 = 17');
+    ok('4x + 5 = 17', 'x = 1', '4x + 5 = 4 × 1 + 5 = 9', 'x = 2', '4 × x + 5 = 4 × 2 + 5 = 13', 'x = 3', '4x + 5 = 4 × 3 + 5 = 17');
+  });
+
   it('refuses a runaway nested power instead of freezing the thread', () => {
     const t0 = Date.now();
     const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));

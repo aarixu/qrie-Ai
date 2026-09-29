@@ -33,6 +33,13 @@ const HELP_ASKS = [/\bhelp\b/g, /\bmadad\b/g];
  */
 const HINT_ONLY_FILLER = new Set(['will', 'would', 'more', 'milega', 'milegi']);
 
+/**
+ * Words that make a sentence about help a QUESTION to her — "will you help
+ * me", "kya madad milegi", "mujhe madad milegi", "more help please" — so the
+ * hint-only words around "help" are an ask again (sixth review, 2026-09-29).
+ */
+const ASKING = new Set(['you', 'kya', 'please', 'pls', 'plz', 'mujhe', 'can', 'could', 'may']);
+
 /** Words that can sit around an ask without making it an answer. */
 const FILLER = new Set([
   'i', 'me', 'my', 'a', 'an', 'the', 'some', 'one', 'small', 'little', 'please', 'pls', 'plz',
@@ -89,7 +96,7 @@ export function asksForHint(
     return rest
       .split(/\s+/)
       .filter(Boolean)
-      .every((x) => FILLER.has(x) || (byName && HINT_ONLY_FILLER.has(x)));
+      .every((x) => FILLER.has(x) || ((byName || w.some((y) => ASKING.has(y))) && HINT_ONLY_FILLER.has(x)));
   }
 
   if (!context.afterOffer || !w.every((x) => YES.has(x))) return false;

@@ -101,3 +101,29 @@ describe('the review ladder', () => {
     expect(migrated.states.a.box).toBeNull();
   });
 });
+
+describe('the review ladder, sixth review', () => {
+  it('climbs at most one box a session, and only when the review is due', () => {
+    const d0 = day(0);
+    let m = foldSession(emptyModel(), d0, [answer(d0, true), answer(d0, true), answer(d0, true), answer(d0, true)], index, params);
+    expect(m.states.a.box).toBe(0);
+    // Next day it is due: one climb, however many right answers.
+    const d1 = day(1);
+    m = foldSession(m, d1, [answer(d1, true), answer(d1, true), answer(d1, true)], index, params);
+    expect(m.states.a.box).toBe(1);
+    // Box 1 is due two days on; a right answer a day early holds.
+    const d2 = day(2);
+    m = foldSession(m, d2, [answer(d2, true)], index, params);
+    expect(m.states.a.box).toBe(1);
+  });
+
+  it('never stamps masteredAt from answers given in the session that taught it', () => {
+    let m = emptyModel();
+    // Cold wins a day and more apart, but unassisted belief held down by misses.
+    m = foldSession(m, day(0), [answer(day(0), true), answer(day(0), false), answer(day(0), false)], index, params);
+    m = foldSession(m, day(2), [answer(day(2), true), answer(day(2), false), answer(day(2), false)], index, params);
+    const d5 = day(5);
+    m = foldSession(m, d5, [taught(d5), answer(d5, true), answer(d5, true), answer(d5, true), answer(d5, true), answer(d5, true)], index, params);
+    expect(m.states.a.masteredAt).toBeNull();
+  });
+});

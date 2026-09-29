@@ -547,7 +547,10 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
             // Rule 1: a failed call must hand the room back, never hold it.
             if (stopped) return;
             const scripted = reliefFor();
-            if (scripted) {
+            // The app's own opener is one the stand-in ignores; handing it
+            // over left the doubt silent (sixth review). She says the
+            // connection line instead.
+            if (scripted && !opts?.opener) {
               // The scripted tutor takes the question instead. Same persona,
               // same room, and the student gets an answer rather than an
               // apology about our plumbing.

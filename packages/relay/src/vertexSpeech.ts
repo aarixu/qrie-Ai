@@ -467,9 +467,14 @@ export async function speakOnVertex(
     if (!reader) for (const block of raw.replace(/\r/g, '').split('\n\n')) take(block);
   } catch (e) {
     // A stream that failed part-way (the timeout) still sent audio that
-    // Vertex billed: keep what arrived and book it, rather than failing with
-    // nothing booked (fifth review, 2026-09-29).
-    if (size === 0) return failed(502, `Vertex speech could not be reached: ${(e as Error).message}`);
+    // Vertex billed: book it (fifth review) — but answer 502, so the browser
+    // voice says the WHOLE line rather than the child hearing half a
+    // sentence (sixth review, 2026-09-29).
+    return {
+      ...failed(502, `Vertex speech could not be reached: ${(e as Error).message}`),
+      ...(promptTokens !== undefined ? { promptTokens } : {}),
+      ...(size > 0 ? { outputTokens: outputTokens ?? estimatedSpeechTokens(size) } : {}),
+    };
   }
 
   const kept = Math.min(size, limit);

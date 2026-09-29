@@ -181,7 +181,7 @@ describe('replay', () => {
    * `masteredAt` (its coldWins are now empty — masteredAt was null anyway).
    * Its day-2 cold miss is a retrieval that failed: box 0, due a day later.
    * `b` was never taught: its first answer opens box 0, and each cold right
-   * answer after that climbs (box 2, due five days on). No belief moved.
+   * answer after that climbs, once a session and only when due (box 1, due two days on). No belief moved.
    */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
@@ -240,11 +240,12 @@ describe('replay', () => {
             'beat:/B2': { first: '2026-09-14T10:00:00.000Z', last: '2026-09-14T10:00:00.000Z' },
             'beat:/B3': { first: '2026-09-15T10:00:00.000Z', last: '2026-09-15T10:00:00.000Z' },
           },
-          box: 2,
+          // Once a session, when due (sixth review): box 0 on day 1, one climb on day 2.
+          box: 1,
           lastExposedAt: null,
           lastRetrievedAt: '2026-09-15T10:00:00.000Z',
           memoryStrength: 0,
-          nextReviewAt: '2026-09-20T10:00:00.000Z',
+          nextReviewAt: '2026-09-17T10:00:00.000Z',
           retrievalCount: 2,
           retrievalAccuracy: 1,
         },

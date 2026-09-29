@@ -675,7 +675,13 @@ function agree(a: Prepared[], b: Prepared[]): boolean {
 /** A line's sides, split at "=", without spaces or a leading label: "4x + 5 = 4(1) + 5" is ["4x+5", "4(1)+5"]. */
 function sidesOf(p: Prepared): string[] {
   const text = p.line.text.replace(/^[^=]*?:/, '');
-  return text.split('=').map((side) => side.replace(/\s+/g, '').toLowerCase());
+  return text.split('=').map((side) =>
+    side
+      .replace(/\s+/g, '')
+      .toLowerCase()
+      // "4 × x + 5" is the same side as "4x + 5" (sixth review).
+      .replace(/([0-9])[×*·](?=[a-z])/g, '$1'),
+  );
 }
 
 /** Every variable a line's working mentions. */
@@ -738,10 +744,18 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     runOrder = [];
   };
   /** Start the next problem on lines carried in from the one just closed. */
-  const carryIn = (lines: readonly Prepared[]) => {
+  const carryIn = (lines: readonly Prepared[], asRow = false) => {
     for (const l of lines) {
       cur.push(l);
       carried.add(l);
+      // A table row's carried givens stay givens for the rows after it, so
+      // row three is checked against them as row two was (sixth review).
+      if (asRow) {
+        for (const c of l.claims) {
+          if (!runOrder.includes(c.name)) runOrder.push(c.name);
+          claimed.add(c.name);
+        }
+      }
     }
   };
   /**
@@ -760,11 +774,29 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     if (!rival) return false;
     const next = prepared[i + 1];
     if (next === undefined || next.practice) return false;
-    if (next.parsed === null) return true;
+    // An unreadable line is working only if it names the letter ("P = 4a" for
+    // a = 5); "Check: 2 × 4 + 3 = 11 ✓" names none (sixth review).
+    if (next.parsed === null) {
+      return (
+        p.claims.some((c) => new RegExp(`(^|[^a-z])${c.name}([^a-z]|$)`, 'i').test(next.line.text)) ||
+        substitutesValue(p.claims, next.line.text)
+      );
+    }
     if (next.kind === 'work') return p.claims.some((c) => varsOf(next).has(c.name));
-    if (next.kind === 'other') return showsValue(p.claims, sidesOf(next));
+    if (next.kind === 'other') return substitutesValue(p.claims, next.line.text);
     return false;
   };
+  /**
+   * A numbers-only line substitutes a value when it shows it in place of a
+   * letter: in brackets, "3(2) + 2", or after a times sign, "2 × 4 + 3" — not
+   * wherever the digit happens to appear. "2(4) + 3 = 11" does not substitute
+   * x = 3 because it contains a "+ 3" (sixth review, 2026-09-29).
+   */
+  const substitutesValue = (claims: readonly Claim[], text: string): boolean =>
+    claims.some((c) => {
+      const v = formatRational(c.stated).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+      return new RegExp(`\\(\\s*${v}\\s*\\)|[×*·]\\s*${v}(?![0-9.])`).test(text);
+    });
   /** Some claimed value is written inside working: a side that is more than a lone number. */
   const showsValue = (claims: readonly Claim[], sides: readonly string[]): boolean => {
     const working = sides.filter((side) => !/^[-+]?[0-9.]+$/.test(side));
@@ -830,7 +862,12 @@ function problemsOf(prepared: Prepared[]): Segment[] {
       const again = prepared[k].claims.some(
         (c) => names.has(c.name) && !claims.some((r) => r.name === c.name && equals(r.stated, c.stated)),
       );
-      if (again) return sidesOf(prepared[k + 1] ?? prepared[k])[0] === first && prepared[k + 1] !== undefined;
+      // The later try's working evaluates the same side — written out again,
+      // or as "LHS" the way NCERT sets a trial table (sixth review).
+      if (again) {
+        const after = prepared[k + 1];
+        return after !== undefined && (sidesOf(after)[0] === first || sidesOf(after)[0] === 'lhs');
+      }
     }
     return false;
   };
@@ -844,6 +881,9 @@ function problemsOf(prepared: Prepared[]): Segment[] {
    */
   const newRow = (p: Prepared): boolean => {
     if (claimed.size < 2 || p.parsed?.final) return false;
+    // A whole row on one line — "x = 1, y = 5" after "x = 0, y = 3" — is a
+    // new row whatever the line before claimed (sixth review).
+    if (p.claims.length >= 2 && p.claims.every((c) => claimed.has(c.name))) return true;
     const before = cur[cur.length - 1];
     return p.claims.some((c) => claimed.has(c.name) && !before?.claims.some((h) => h.name === c.name));
   };
@@ -868,7 +908,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
         // A new row: the table's equation and the run's earlier givens come with it.
         const carry = rowCarry(p);
         close();
-        carryIn(carry);
+        carryIn(carry, true);
       } else if (!p.parsed?.final && reclaims(p, i)) {
         // A letter given a new value, unlabelled, with nothing between that
         // the checker could read ("a = 4, P = 4a = 16, a = 5": capital P is

@@ -1061,7 +1061,7 @@ export function ClassRoom({
           // ends this exchange. The flag was written by the screen inside
           // resolveCrossQuestion; `heard` only asks which of the two it was.
           if (close?.halt && heard.text !== null && halt.heard(heard.text, 'ear')) return;
-          const spoken = close ? await sayLine(close.say, 'ear') : null;
+          const spoken = close ? await sayLine(inLanguage(close.say, tutorLanguage()), 'ear') : null;
           if (over()) return;
           // She has just declined to go somewhere (close.halt), or her own
           // reply was swapped for the support line and the class has halted
@@ -1349,8 +1349,8 @@ export function ClassRoom({
           ladderLine !== null
             ? await sayLine(ladderLine)
             : resolved.path === 'local'
-              ? await sayLine(judged.say)
-              : await sayLine(judged.say, 'ear');
+              ? await sayLine(inLanguage(judged.say, tutorLanguage()))
+              : await sayLine(inLanguage(judged.say, tutorLanguage()), 'ear');
         if (over()) return;
         // An off-limits answer (judged.halt): she has just declined it, and
         // reopening the mic to ask the question again would talk over her —
