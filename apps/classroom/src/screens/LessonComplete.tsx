@@ -8,6 +8,7 @@ import { preferencesStore } from '../stores/preferences';
 import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { PROMISES, setCommitment, type PromiseId } from '../lib/studentMemory';
+import type { BeforeNext } from '../lib/nextStep';
 
 /**
  * The moment of celebration after a lesson — the screen every learning app
@@ -37,6 +38,31 @@ export function LessonComplete() {
   const [promise, setPromise] = useState<PromiseId | null>(null);
   const [entry, setEntry] = useState<CatalogEntry | null>(null);
   const [next, setNext] = useState<CatalogEntry | null>(null);
+  /**
+   * WHAT COMES BEFORE THE NEXT LESSON (E6-E8/F5): a review that is due, or a
+   * shaky prerequisite of what comes next — the learner model's call
+   * (`nextActivity`), not syllabus order. While one stands, the next lesson
+   * does not autoplay: the plan's rule is never syllabus order while a review
+   * is due. Loaded with the map, lazily, as lib/learnerModel.ts does.
+   */
+  const [before, setBefore] = useState<BeforeNext | null>(null);
+  useEffect(() => {
+    if (!lessonId || !entry) return;
+    let cancelled = false;
+    Promise.all([import('../lib/graphContext'), import('../lib/nextStep')])
+      .then(async ([{ currentIndex }, { beforeNext }]) => {
+        const index = currentIndex();
+        if (!index) return null;
+        return beforeNext({ index, done: entry, next });
+      })
+      .then((found) => {
+        if (!cancelled) setBefore(found);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [lessonId, entry, next]);
 
   useEffect(() => {
     if (!lessonId) return;
@@ -54,7 +80,7 @@ export function LessonComplete() {
   );
   const best = lessonId ? bestScore(quizHistory, lessonId) : null;
   const practiceLeads = hasQuiz && best === null;
-  const autoplaying = preferences.autoplayNext && next !== null && !stayHere;
+  const autoplaying = preferences.autoplayNext && next !== null && !stayHere && before === null;
 
   /**
    * The preference is a promise to keep going, not a promise to hurry. The
@@ -133,6 +159,22 @@ export function LessonComplete() {
         </div>
 
         <div className="grid gap-3 w-full mt-2">
+          {before && (
+            <div className="w-full rounded-xl bg-tertiary-container text-on-tertiary-container px-4 py-3 shadow-sm text-left">
+              <p className="font-label-md text-label-md mb-1">
+                {before.kind === 'review' ? 'Quick review first' : 'Strengthen this first'}
+              </p>
+              <p className="font-body-md text-body-md mb-3">
+                {before.kind === 'review'
+                  ? `Time to bring back: ${before.titles.join(', ')}. A few questions now keeps it for weeks.`
+                  : `The next lesson builds on ${before.titles[0]}. Let's make it solid first.`}
+              </p>
+              <button onClick={() => navigate(before.route)} className={primary}>
+                <Icon name={before.kind === 'review' ? 'history' : 'foundation'} filled />
+                {before.kind === 'review' ? 'Review now' : 'Practise it'}
+              </button>
+            </div>
+          )}
           {autoplaying && (
             <div className="flex items-center justify-between gap-3 bg-surface-container-lowest rounded-xl px-4 py-3 shadow-sm">
               <p
