@@ -72,16 +72,50 @@ const isObj = (v: unknown): v is Record<string, unknown> =>
 // eslint-disable-next-line no-control-regex
 const CONTROL = /[\u0000-\u0009\u000b-\u001f\u007f]/g;
 
-/** One line: trimmed, single-spaced, no control characters. Null when not a string. */
+/**
+ * LATEX NEVER REACHES THE BOARD (2026-09-29). Seen live: a model wrote
+ * "2c = 20 \implies c = 10" and the board drew the backslash command as text.
+ * The board draws plain text, so the common commands become the symbols a
+ * teacher writes by hand, `$` delimiters go, and any other `\word` loses its
+ * backslash. Exported so a test can hold the table.
+ */
+const LATEX: readonly [RegExp, string][] = [
+  [/\\(implies|Rightarrow|rightarrow|to)\b/g, '⇒'],
+  [/\\(iff|Leftrightarrow)\b/g, '⇔'],
+  [/\\therefore\b/g, '∴'],
+  [/\\times\b/g, '×'],
+  [/\\(cdot|ast)\b/g, '·'],
+  [/\\div\b/g, '÷'],
+  [/\\pm\b/g, '±'],
+  [/\\(neq|ne)\b/g, '≠'],
+  [/\\(leq|le)\b/g, '≤'],
+  [/\\(geq|ge)\b/g, '≥'],
+  [/\\approx\b/g, '≈'],
+  [/\\pi\b/g, 'π'],
+  [/\\degree\b|\^\\circ\b|\^\{\\circ\}/g, '°'],
+];
+
+export function plainMaths(text: string): string {
+  let out = text.replace(/\$+/g, '');
+  // \frac{a}{b} -> (a)/(b), innermost first, a few rounds for nesting.
+  for (let i = 0; i < 4; i += 1) out = out.replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)');
+  for (let i = 0; i < 4; i += 1) out = out.replace(/\\sqrt\{([^{}]*)\}/g, '√($1)');
+  for (const [re, sym] of LATEX) out = out.replace(re, sym);
+  out = out.replace(/\\left|\\right/g, '').replace(/\\[,;:! ]/g, ' ');
+  out = out.replace(/\\text\{([^{}]*)\}/g, '$1').replace(/\\([A-Za-z]+)/g, '$1');
+  return out;
+}
+
+/** One line: trimmed, single-spaced, no control characters, no LaTeX. Null when not a string. */
 function line(v: unknown): string | null {
   if (typeof v !== 'string') return null;
-  return v.replace(CONTROL, ' ').replace(/\s+/g, ' ').trim();
+  return plainMaths(v.replace(CONTROL, ' ')).replace(/\s+/g, ' ').trim();
 }
 
 /** A note keeps its paragraphs: newlines survive, runs of spaces do not. */
 function paragraph(v: unknown): string | null {
   if (typeof v !== 'string') return null;
-  return v
+  return plainMaths(v)
     .replace(/\r\n?/g, '\n')
     .replace(/\t/g, ' ')
     .replace(CONTROL, '')

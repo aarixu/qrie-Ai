@@ -410,3 +410,29 @@ describe('boardStrings: every string a child could hear or see, for the safety s
     expect(boardStrings(future)).toContain('S-new-field');
   });
 });
+
+describe('LaTeX never reaches the board (2026-09-29)', () => {
+  /**
+   * Seen live: a model wrote "2c = 20 \\implies c = 10" and the board showed the
+   * backslash command as text. The board draws plain text, so common LaTeX is
+   * turned into the symbols a teacher writes by hand.
+   */
+  it('turns \\implies, \\times, \\frac and $ delimiters into plain maths', () => {
+    const out = parseBoardOps(
+      [
+        {
+          say: 'So c is ten.',
+          ink: [
+            { op: 'equation', text: '2c = 20 \\implies c = 10' },
+            { op: 'equation', text: '$3 \\times 4 = 12$' },
+            { op: 'equation', text: 'x = \\frac{49}{29}' },
+            { op: 'write', text: 'a \\neq b \\Rightarrow \\sqrt{x} \\leq 2' },
+          ],
+        },
+      ],
+      new Set(),
+    );
+    const texts = out.steps[0].ink.map((op) => ('text' in op ? op.text : ''));
+    expect(texts).toEqual(['2c = 20 ⇒ c = 10', '3 × 4 = 12', 'x = (49)/(29)', 'a ≠ b ⇒ √(x) ≤ 2']);
+  });
+});

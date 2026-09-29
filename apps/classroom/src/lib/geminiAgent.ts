@@ -11,6 +11,7 @@ import { relayFetch } from './relay';
 import { createOutcomeLookup } from './outcomeLookup';
 import { masteryFromModel } from './learnerModel';
 import { tutorLanguage } from './workspace';
+import type { DoubtBoard, RawStep } from './doubtBoard';
 
 /**
  * The real TYPED doubt tutor, behind the same AgentAdapter the stub
@@ -55,6 +56,14 @@ export interface GeminiAgentOptions {
    * Started on the FIRST failed call and not before; see `start` below.
    */
   fallback?: AgentAdapter;
+  /**
+   * THE BOARD SHE WRITES ON (T2.4, 2026-09-29). Present, she is shown what is
+   * on the board and answers in steps — a sentence and the ink that goes with
+   * it — which lib/doubtBoard.ts screens, leak-checks, maths-checks and lays
+   * out before a word is said; each step's ink is drawn as her voice starts
+   * its sentence. Absent (tests, the scripted stub), she only talks.
+   */
+  board?: DoubtBoard;
   /**
    * Told what each turn cost in tokens, when the reply says. Relay transport
    * only: the direct dev transports do not read it.
@@ -284,6 +293,37 @@ interface AgentReply {
   say: string;
   recallBeatId: string | null;
   done: boolean;
+  /** Her reply as board steps, when she was given a board to write on. */
+  steps?: RawStep[];
+}
+
+/**
+ * WHAT SHE IS TOLD ABOUT THE BOARD. The ops are the closed list in
+ * @ai-tutor/live-board; the ids are the elements on screen now. She never
+ * gives a position — the live board places everything.
+ */
+function boardBrief(board: DoubtBoard, ctx: DoubtContext): string[] {
+  const onScreen = Object.entries(board.onScreen(ctx))
+    .slice(-40)
+    .map(([id, el]) => `  ${id} (${el.kind}${el.author === 'lesson' ? '' : ', ' + el.author}): ${el.text.slice(0, 80)}`);
+  const holding = board.holding(ctx);
+  return [
+    '',
+    'THE BOARD. You teach like a real tutor at a whiteboard: while you talk, you WRITE and MARK on the board. What is on it now (id, kind: text):',
+    ...(onScreen.length > 0 ? onScreen : ['  (nothing yet)']),
+    ...(holding
+      ? [`The class is paused on this question, which the student must answer themselves: "${holding}". Do NOT give its answer, not in words and not on the board — guide with a smaller question or a hint.`]
+      : []),
+    'Answer in short steps. Each step is ONE spoken sentence (say) and the ink you write while saying it. Ink ops (never give positions):',
+    '  {"op":"equation","text":"21 - 14y - 15y = 2"}  one line of maths, correct and exact',
+    '  {"op":"write","text":"a short line of words"}',
+    '  {"op":"note","text":"a key idea in a box"}',
+    '  {"op":"work","steps":[{"say":"...","line":"7(3 - 2y)"},{"say":"...","line":"= 21 - 14y"}]}  a worked solution, one line per step',
+    '  {"op":"mark","targetId":"<an id from the board>","shape":"circle"}  shapes: circle, underline, box, cross, tick',
+    '  {"op":"arrow","fromId":"<id>","toId":"<id>","label":"optional"}',
+    'Use 1 to 4 steps. Write maths on the board rather than reading symbols aloud; say it in words.',
+    'Board text is plain text, never LaTeX: write ⇒, ×, ÷, ≠, ≤, (a)/(b), √(x) — no backslashes, no $.',
+  ];
 }
 
 /**
@@ -301,7 +341,7 @@ interface AgentReply {
  * on `student` is kept: whoever built the context measured it, and the
  * workspace is the fallback, not an override.
  */
-export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext): string {
+export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContext, board?: DoubtBoard): string {
   const spokenTo: StudentContext = { ...student, language: student.language ?? tutorLanguage() };
   return [
     buildDoubtBrief(ctx, spokenTo, {
@@ -312,8 +352,11 @@ export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContex
       // secure/shaky marking instead of arriving unmarked.
       outcomes: createOutcomeLookup(masteryFromModel()),
     }),
+    ...(board ? boardBrief(board, ctx) : []),
     '',
-    'Respond with ONLY a JSON object: {"say": string, "recallBeatId": string | null, "done": boolean}',
+    board
+      ? 'Respond with ONLY a JSON object: {"steps": [{"say": string, "ink": [op, ...]}], "recallBeatId": string | null, "done": boolean}'
+      : 'Respond with ONLY a JSON object: {"say": string, "recallBeatId": string | null, "done": boolean}',
     'Set recallBeatId to bring an earlier moment back onto the board, or null. Set done to true once the doubt is resolved.',
   ].join('\n');
 }
@@ -360,13 +403,25 @@ export function parseAgentReply(raw: string, canRecall: (beatId: string) => bool
   };
   try {
     const cleaned = raw.replace(/```(?:json)?|```/g, '').trim();
-    const parsed = JSON.parse(cleaned) as Partial<AgentReply>;
+    const parsed = JSON.parse(cleaned) as Partial<AgentReply> & { steps?: unknown };
+    // Board steps, when she was given a board: every step needs a sentence.
+    const steps: RawStep[] = Array.isArray(parsed.steps)
+      ? (parsed.steps as unknown[])
+          .filter(
+            (x): x is { say: string; ink?: unknown } =>
+              typeof (x as { say?: unknown } | null)?.say === 'string' && (x as { say: string }).say.trim() !== '',
+          )
+          .map((x) => ({ say: x.say, ink: Array.isArray(x.ink) ? (x.ink as unknown[]) : [] }))
+      : [];
+    if (steps.length > 0 && (typeof parsed.say !== 'string' || parsed.say.length === 0)) {
+      parsed.say = steps.map((x) => x.say).join(' ');
+    }
     if (typeof parsed.say !== 'string' || parsed.say.length === 0) return fallback;
     const recall =
       typeof parsed.recallBeatId === 'string' && canRecall(parsed.recallBeatId)
         ? parsed.recallBeatId
         : null;
-    return { say: parsed.say, recallBeatId: recall, done: parsed.done === true };
+    return { say: parsed.say, recallBeatId: recall, done: parsed.done === true, ...(steps.length > 0 ? { steps } : {}) };
   } catch {
     return fallback;
   }
@@ -410,7 +465,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
       const call = async (userText: string): Promise<AgentReply> => {
         history.push({ role: 'user', text: userText });
         const reply = await transport(
-          buildDoubtSystemPrompt(ctx, opts.student),
+          buildDoubtSystemPrompt(ctx, opts.student, opts.board),
           history,
           controller.signal,
         );
@@ -425,7 +480,20 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
       const deliver = async (reply: AgentReply): Promise<void> => {
         if (stopped) return;
         if (reply.recallBeatId) io.recall(reply.recallBeatId);
-        await io.say(reply.say);
+        if (opts.board && reply.steps && reply.steps.length > 0) {
+          // Checked and laid out before a word is said; null means the class
+          // halted on something in the reply (lib/doubtBoard.ts).
+          const turn = opts.board.turn(reply.steps, ctx);
+          if (turn === null) return;
+          for (const [i, line] of turn.lines.entries()) {
+            if (stopped) return;
+            if (line.recall) io.recall(line.recall);
+            // The line's ink is drawn when her voice starts the sentence.
+            await io.say(line.say, { onStart: line.show, more: i < turn.lines.length - 1 });
+          }
+        } else {
+          await io.say(reply.say);
+        }
         if (reply.done && !stopped) io.done();
       };
 

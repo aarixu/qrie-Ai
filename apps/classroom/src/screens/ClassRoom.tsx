@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { findBeat, type Lesson } from '@ai-tutor/lesson-format';
-import { Scene, computeVisible } from '@ai-tutor/stage';
+import type { Beat, Lesson } from '@ai-tutor/lesson-format';
+import { Scene } from '@ai-tutor/stage';
 import { usePlayer, type TtsAdapter } from '@ai-tutor/player';
 import {
   buildContext,
@@ -41,6 +41,10 @@ import { useStore } from '../stores/localStore';
 import { Icon } from '../ui/Icon';
 import { Skeleton } from '../ui/States';
 import { createSessionHalt } from '../lib/sessionHalt';
+import { useBoardSession } from '../lib/boardSession';
+import { createDoubtBoard } from '../lib/doubtBoard';
+import { sayRevealing } from '../lib/voiceStart';
+import { tutorLanguage } from '../lib/workspace';
 import { track } from '../lib/telemetry';
 import { ReportSheet } from '../ui/ReportSheet';
 import { MicRationale } from '../ui/MicRationale';
@@ -249,6 +253,18 @@ export function ClassRoom({
   const player = usePlayer(lesson, tts);
 
   /**
+   * THE LIVE BOARD (T2.3, 2026-09-29): the lesson Scene draws, with this
+   * session's live ink laid over it — what Meera writes and marks during a
+   * doubt, and at a held question. It is NEVER handed to the player: the
+   * player rebuilds on a new lesson identity, which would restart the class.
+   */
+  const board = useBoardSession(lesson);
+  const boardRef = useRef(board);
+  boardRef.current = board;
+  /** The question the class was holding when the hand went up — its answer must not be given away. */
+  const heldAskRef = useRef<Beat['ask'] | null>(null);
+
+  /**
    * The ledger runs alongside the outcome counters, not instead of them.
    *
    * The counters say a student got something right; the ledger says which
@@ -324,6 +340,8 @@ export function ClassRoom({
       // below) and closes the mic on the next one; this clears its status.
       ear: { close: () => setEar('off') },
       doubt: { halt: () => handoffRef.current.halt() },
+      // No ink is written, drawn or recalled after a halt.
+      board: { freeze: () => boardRef.current.freeze() },
       showSupport: (line) => setSupport(line),
       lessonId: () => lessonIdRef.current,
     }),
@@ -410,7 +428,7 @@ export function ClassRoom({
 
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
-  const [recallBeatId, setRecallBeatId] = useState<string | null>(null);
+  const [, setRecallBeatId] = useState<string | null>(null);
 
   // Live-voice session state, fed by the live agent's callbacks.
   const [liveState, setLiveState] = useState<LiveState>('connecting');
@@ -513,6 +531,23 @@ export function ClassRoom({
     [profile, settings.klass, doubts, lesson.id],
   );
 
+  /**
+   * The board as the typed tutor sees it: what is on screen, the question
+   * being held, and every reply's steps checked (safety, answer leak, maths)
+   * and laid out before a word is said (lib/doubtBoard.ts).
+   */
+  const doubtBoard = useMemo(
+    () =>
+      createDoubtBoard({
+        session: board,
+        halt,
+        heldAsk: () => heldAskRef.current,
+        lang: tutorLanguage,
+        lessonId: () => lesson.id,
+      }),
+    [board, halt, lesson.id],
+  );
+
   const agent = useMemo(() => {
     // No class on file means nothing true to tell her about the student, and a
     // guessed class is a tutor pitching a lesson at a child who is not there.
@@ -547,13 +582,15 @@ export function ClassRoom({
     return createGeminiAgent({
       student,
       fallback: createStubAgent({ opening: false }),
+      // She writes and marks on the board while she explains (T2.4).
+      board: doubtBoard,
       // What each typed turn cost, in the dev console only. Counts come from
       // the relay's reply; a turn whose reply carried none prints nothing.
       ...(import.meta.env.DEV
         ? { onUsage: (usage: TurnUsage) => console.info('[doubt] tokens this turn', usage) }
         : {}),
     });
-  }, [liveVoiceKey, voiceMode, student]);
+  }, [liveVoiceKey, voiceMode, student, doubtBoard]);
 
   const handoff = useMemo(
     () =>
@@ -564,15 +601,24 @@ export function ClassRoom({
         // transcript show what the room actually heard, and `{ halted }` goes
         // back to the machine, which stops on it: no agent line after the
         // support reply, no exit bridge, no resume.
-        speak: (text, onSaid) => halt.say(text, 'model-reply', onSaid),
+        // `onStart`, when the tutor passed one, draws that sentence's ink on
+        // the board as her voice starts it (lib/voiceStart.ts).
+        speak: (text, onSaid, onStart) =>
+          sayRevealing((t) => halt.say(t, 'model-reply', onSaid), text, onStart, () => halt.halted),
         onPause: () => playerRef.current.pause(),
         onResume: () => {
           // Recall view ends with the doubt; play() re-speaks the current beat,
-          // which doubles as a natural re-anchor into the lesson.
+          // which doubles as a natural re-anchor into the lesson. The doubt's
+          // ink stays on the board, off to the side (TD13).
           setRecallBeatId(null);
+          heldAskRef.current = null;
+          boardRef.current.endDoubt();
           playerRef.current.play();
         },
-        onRecall: (beatId) => setRecallBeatId(beatId),
+        onRecall: (beatId) => {
+          setRecallBeatId(beatId);
+          boardRef.current.recall(beatId);
+        },
       }),
     [agent, halt],
   );
@@ -949,18 +995,10 @@ export function ClassRoom({
     return () => clearInterval(timer);
   }, [clockRunning]);
 
-  // The canvas: during a recall, show the recalled beat; otherwise follow playback.
-  const recalled = recallBeatId ? findBeat(lesson, recallBeatId) : null;
-  const canvas =
-    inDoubt && recalled
-      ? {
-          visible: [...recalled.show],
-          focus: [...(recalled.focus ?? [])],
-          // Without its frame, recalling a moment on a long lesson framed the
-          // whole plane — every page at once, all of it too small to read.
-          ...(recalled.frame ? { frame: [...recalled.frame] } : {}),
-        }
-      : computeVisible(lesson, player.beatIndex);
+  // The canvas comes from the live board: the beat's own show set, anything
+  // recalled or written during a doubt, and the ink written at a held
+  // question — framed on whatever she is writing now (lib/boardSession.ts).
+  const canvas = board.canvas(player.beatIndex);
 
   // Her ear open counts as listening too: while the mic waits on a spoken
   // answer she turns to her listening pose instead of gesturing through it.
@@ -1000,6 +1038,9 @@ export function ClassRoom({
     // A halted class takes no hand: there is no doubt left to open.
     if (halt.halted) return;
     const ctx = buildContext(lesson, player.beatIndex);
+    // What the board must not give away, and a fresh doubt on the board.
+    heldAskRef.current = player.pendingAsk ?? null;
+    board.beginDoubt();
     logDoubt(lesson.id, ctx.beatId);
     // Located precisely: this hand is about the outcomes THIS beat teaches,
     // not about the chapter it happens to sit in.
@@ -1221,7 +1262,7 @@ export function ClassRoom({
       {/* The room: the board, and (wide screens) the rail with Meera + the doubt */}
       <main className="flex-1 min-h-0 flex gap-3 px-3 pb-3">
         <section className="relative flex-1 min-w-0 bg-white rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
-          <Scene lesson={lesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
+          <Scene lesson={board.sceneLesson} visible={canvas.visible} focus={canvas.focus} frame={canvas.frame} assets={diagrams} />
 
           {/* The caption: one line over the board, like Meet's captions. */}
           {caption && (

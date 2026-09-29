@@ -676,10 +676,22 @@ export function layoutBeat(
 
       case 'write': {
         pendingWrites.push({ at: index, id: idFor(beat.id, index), step: item });
+        /**
+         * A LONG LINE ON THE FULL BOARD WRAPS RATHER THAN SHRINKING (2026-09-29).
+         *
+         * Shrunk to fit one line, a held question like "When you put y equals
+         * five into x equals fourteen minus y, what value do you get for x?"
+         * came out at size 17 across the whole board — and the camera, framing
+         * that one line and the work area under it, drew it a few pixels high on
+         * a phone. Below size 28 it is written on two or more lines at 30
+         * instead, and the block is as tall as those lines.
+         */
+        const wideFit = fitText(item.text, WIDTH * 0.94, 36, 17);
+        const wideLines = wideFit >= 28 ? null : wrapText(item.text, WIDTH * 0.9, 30);
         blocks.push({
           kind: item.do,
           at: index,
-          height: WRITE_H,
+          height: wideLines ? wideLines.length * handLead(30) + 14 : WRITE_H,
           // Written on the centreline when it has the board, and inside its
           // own column when it is sharing with a picture. In a column it
           // WRAPS rather than shrinking: a key point squeezed to fit one line
@@ -687,6 +699,20 @@ export function layoutBeat(
           // is the one thing a key point may not be.
           place: (r) => {
             const narrow = r.w < WIDTH * 0.75;
+            if (!narrow && wideLines) {
+              const lead = handLead(30);
+              const top = r.y + 30 * 0.9;
+              return wideLines.map((line, n) => ({
+                kind: 'handwrite',
+                ...(n > 0 ? { after: afterLines(wideLines, n) } : {}),
+                id: n === 0 ? idFor(beat.id, index) : idFor(beat.id, index, `_l${n}`),
+                x: r.x + r.w / 2,
+                y: top + n * lead,
+                text: line,
+                size: 30,
+                ...(item.tone ? { tone: item.tone } : {}),
+              }));
+            }
             const size = narrow ? 27 : 36;
             const lines = narrow ? wrapText(item.text, r.w, size) : [item.text];
             // Wide enough that the overlap solver does not read two
