@@ -32,6 +32,12 @@ describe('latexToPlain', () => {
     expect(latexToPlain(String.raw`$10^{-2} = 0.01$`)).toBe('10^(-2) = 0.01');
     expect(latexToPlain('$3^2+4^2=5^2$')).toBe('3^2+4^2=5^2');
   });
+  it('reads the arrows a line of working is joined with', async () => {
+    const { latexToPlain } = await import('../src/index');
+    expect(latexToPlain(String.raw`$3x = 12 \Rightarrow x = 4$`)).toBe('3x = 12 ⇒ x = 4');
+    expect(latexToPlain(String.raw`$\therefore x = 4$`)).toBe('∴ x = 4');
+    expect(latexToPlain(String.raw`$2x = 8 \implies x = 4$`)).toBe('2x = 8 ⇒ x = 4');
+  });
   it('refuses a command it cannot translate', async () => {
     const { latexToPlain } = await import('../src/index');
     expect(latexToPlain(String.raw`$\int x\,dx$`)).toBeNull();

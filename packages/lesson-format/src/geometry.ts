@@ -135,6 +135,8 @@ const LATEX_SYMBOLS: Record<string, string> = {
   times: '×', div: '÷', cdot: '·', pm: '±', mp: '∓', neq: '≠', ne: '≠', leq: '≤', le: '≤', geq: '≥', ge: '≥',
   pi: 'π', theta: 'θ', alpha: 'α', beta: 'β', gamma: 'γ', infty: '∞', circ: '°', degree: '°', approx: '≈',
   percent: '%', ldots: '…', cdots: '…',
+  // The joins of a line of working, which the maths check reads as "follows".
+  Rightarrow: '⇒', implies: '⇒', therefore: '∴',
 };
 
 export function latexToPlain(text: string): string | null {

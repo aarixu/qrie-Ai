@@ -14,6 +14,7 @@ import {
 } from '../lib/liveClass';
 import { fetchCatalog, findKeptTopic, findTopic, forgetCatalog, type CatalogEntry } from '../lib/content';
 import { preparedCache, type PreparedCache } from '../lib/preparedCache';
+import { reportPrepFailure } from '../lib/prepFailure';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore } from '../stores/preferences';
@@ -759,6 +760,7 @@ export function LiveClassRoute() {
       }
     })()
       .catch((e: unknown) => {
+        reportPrepFailure(e);
         if (!cancelled) setError(e instanceof Error ? e.message : String(e));
       })
       // ON SUCCESS AND ON FAILURE BOTH. A lock held by a browser that threw
