@@ -59,6 +59,7 @@ import {
   recordWin,
   sameTitle,
   setLastSession,
+  similarTitle,
 } from '../lib/studentMemory';
 import type { AssistanceRung } from '@ai-tutor/ledger';
 import { track } from '../lib/telemetry';
@@ -519,11 +520,16 @@ export function ClassRoom({
   const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
   /**
    * While they work, the ear is paused: what a child reads out of their own
-   * working is not an answer, and the ear thinking unmounted the panel and
-   * wiped their steps (third review). Opening it takes the turn the way a tap
-   * does (`beginTap`); closing it gives the turn back.
+   * working is not an answer (third review). Opening the panel takes the turn
+   * the way a tap does (`beginTap`) and closing it gives the turn back; and the
+   * ear's loop waits while `workingRef` is set, so an ear started afresh by a
+   * pause or a hand does not listen either (fourth review).
    */
   const workTurn = useRef<(() => void) | null>(null);
+  const workingRef = useRef(false);
+  workingRef.current = working;
+  /** Their steps, held here so a pause or a hand that unmounts the panel keeps them. */
+  const [workSteps, setWorkSteps] = useState<WorkedStep[]>([]);
   const openWorking = (): void => {
     workTurn.current?.();
     workTurn.current = beginTap();
@@ -534,8 +540,11 @@ export function ClassRoom({
     workTurn.current?.();
     workTurn.current = null;
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => closeWorking(), [player.beat?.id]);
+  useEffect(() => {
+    closeWorking();
+    setWorkSteps([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player.beat?.id]);
 
   const onWorkedStep = async (step: WorkedStep) => {
     if (halt.halted || askBusyRef.current) return;
@@ -605,7 +614,12 @@ export function ClassRoom({
         tapTries.current.set(beatId, (tapTries.current.get(beatId) ?? 0) + 1);
       }
       const solvedNotTaken = v.ok === true && v.solved !== undefined && !restated;
-      const line = solvedNotTaken
+      const aside = v.ok === true && v.aside === true;
+      const line = aside
+        ? hi
+          ? 'Yeh hisaab sahi hai — ab ise apni working mein lagao.'
+          : 'That sum is right — now use it in your working.'
+        : solvedNotTaken
         ? hi
           ? 'Sahi — ab isse sawaal ka jawab nikaalo.'
           : 'Right — now use that to answer the question.'
@@ -1116,11 +1130,25 @@ export function ClassRoom({
       while (!over()) {
         const ask = playerRef.current.pendingAsk;
         if (!ask) return;
-        if (tapEpoch.current !== epoch) {
-          // A tap took this turn. Wait out her reply to it, then listen afresh.
+        // Working it out: what they read out of their own working is not an
+        // answer. A pause or a hand brings a fresh ear with the panel still
+        // open, so it waits here rather than on the turn it never saw.
+        if (workingRef.current) {
           setEar('off');
-          await tapSettled.current;
-          if (over()) return;
+          await new Promise((r) => setTimeout(r, 200));
+          continue;
+        }
+        if (tapEpoch.current !== epoch) {
+          // A tap took this turn. Wait out her reply to it, then listen afresh
+          // — and any turn taken while waiting: a step solved while the panel
+          // was open is praised after the panel closes (fourth review).
+          setEar('off');
+          let waited: Promise<void>;
+          do {
+            waited = tapSettled.current;
+            await waited;
+            if (over()) return;
+          } while (waited !== tapSettled.current);
           epoch = tapEpoch.current;
           quietSince = Date.now();
           offeredHint = false;
@@ -1838,11 +1866,15 @@ export function ClassRoom({
     }
     // The same class again: a topic prepared afresh has a new lesson id (and
     // can have a new title) but is not "last time" — she said "Last time we
-    // did X. Today it's X." Known by id, by topic, or by title.
+    // did X. Today it's X." Known by id, by title, or by topic with a title
+    // like it (two lessons can share a topic: the heart, and blood).
     const sameClass =
       memory.lastLessonId === lesson.id ||
-      (memory.lastTopicRef !== undefined && memory.lastTopicRef === lesson.topicRef) ||
-      (memory.lastTitle !== undefined && sameTitle(memory.lastTitle, title));
+      (memory.lastTitle !== undefined && sameTitle(memory.lastTitle, title)) ||
+      (memory.lastTopicRef !== undefined &&
+        memory.lastTopicRef === lesson.topicRef &&
+        memory.lastTitle !== undefined &&
+        similarTitle(memory.lastTitle, title));
     if (memory.lastTitle && sameClass) {
       return {
         line: hi
@@ -2275,11 +2307,18 @@ export function ClassRoom({
                   )}
                 </span>
               )}
-              {/* Hidden, never unmounted, while an answer is weighed: unmounting
-                  threw their steps away (third review). */}
+              {/* Hidden while an answer is weighed. Its steps are held by the room
+                  (`workSteps`), so a pause or a hand that unmounts it loses nothing
+                  (third and fourth reviews). */}
               {working && player.pendingAsk && (
                 <span className={askChoicesHidden ? 'hidden' : 'w-full'}>
-                  <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={closeWorking} />
+                  <WorkPanel
+                    start={workStart}
+                    steps={workSteps}
+                    onSteps={setWorkSteps}
+                    onStep={(step) => void onWorkedStep(step)}
+                    onClose={closeWorking}
+                  />
                 </span>
               )}
             </div>

@@ -73,6 +73,9 @@ const STOP = new Set([
 const normalise = (text: string): string =>
   text
     .toLowerCase()
+    // "don't" is "dont", not "don t": an apostrophe turned into a space and
+    // "I don't know" never matched its own phrase (fourth review).
+    .replace(/[’']/g, '')
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -103,6 +106,11 @@ const DONT_KNOW = [
   'pata nahi', 'pta nahi', 'pata nhi', 'nahi pata', 'nhi pata', 'malum nahi',
   'maloom nahi', 'nahi aata', 'nahi आता', 'i dont know', 'dont know',
   'no idea', 'not sure', 'cant say', 'cannot say', 'skip', 'next',
+  // Not understanding is the same miss (fourth review): sent to the model it
+  // could come back 'unclear', and the ladder never climbed.
+  'nahi samjha', 'nahi samjhi', 'nhi samjha', 'samjha nahi', 'samjhi nahi', 'samajh nahi aaya',
+  'samajh nahi aayi', 'samajh nahi aa raha', 'samajh nahi aa rha', 'i dont understand',
+  'i do not understand', 'i didnt understand', 'i did not understand', 'dont understand',
 ];
 
 /** "b", "option b", "bee", "the second one", "doosra". */

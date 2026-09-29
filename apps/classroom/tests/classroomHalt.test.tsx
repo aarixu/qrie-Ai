@@ -822,6 +822,15 @@ describe('her greeting when the last class was this one', () => {
 
   // Production again: a re-preparation retitled the topic ("Solving
   // Equations with…"), and she said "last time" of the same class.
+  // Fourth review: two lessons share this topic (the heart, and blood), and
+  // after the heart class she said "let's go through Blood again".
+  it('does not take another lesson on the same topic for this one', async () => {
+    setLastSession({ lessonId: 'class10-heart', title: 'The Heart', topicRef: lesson.topicRef, beatsDone: 20, total: 20 });
+    await openClass({ tts: quickVoice() });
+    const greeting = spoken.find((l) => /^(Hi|Welcome back)\b/.test(l)) ?? '';
+    expect(greeting).toContain('Last time we did The Heart');
+  });
+
   it('knows the same topic under a new title', async () => {
     setLastSession({ lessonId: 'an-earlier-preparation', title: 'Blood, its parts', topicRef: lesson.topicRef, beatsDone: 20, total: 20 });
     await openClass({ tts: quickVoice() });
@@ -970,6 +979,36 @@ describe('working it out, eighth review', () => {
     expect(hasButton(host, 'Work it out')).toBe(false);
   });
 
+  // Fourth review: a pause emptied the panel and opened the mic with it open.
+  it('keeps their working, and the mic closed, through a pause', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, '3x + 12 = 21');
+    const listened = ear.listens;
+    await act(async () => {
+      byLabel(host, 'Pause the class').click();
+    });
+    await tick(5);
+    await act(async () => {
+      byLabel(host, 'Play the class').click();
+    });
+    await tick(20);
+    expect(ear.listens).toBe(listened);
+    expect(host.querySelector('[aria-label="Work it out"]')?.textContent).toContain('3x + 12 = 21');
+  });
+
+  it('takes a sum on the side, and reads the next step against the equation', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x + 12 = 21$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, '21 - 12 = 9');
+    await typeStep(host, '3x = 9');
+    expect(spoken.some((l) => /changes the equation/.test(l))).toBe(false);
+    await typeStep(host, 'x = 3');
+    expect(moved()).toBe(true);
+  });
+
   it('hides the quick replies while they work', async () => {
     const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts: quickVoice() });
     await tick();
@@ -996,8 +1035,12 @@ describe('working it out, eighth review', () => {
     const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts });
     await tick();
     await tap(host, 'Work it out');
+    const listened = ear.listens;
     holding = true;
     await typeStep(host, 'x = 3');
+    await tick(10);
+    // Fourth review: the mic reopened while she praised the solved step.
+    expect(ear.listens).toBe(listened);
     expect(hasButton(host, 'Work it out')).toBe(false);
     expect(host.querySelector('[aria-label="Your next step"]')).toBeNull();
     holding = false;

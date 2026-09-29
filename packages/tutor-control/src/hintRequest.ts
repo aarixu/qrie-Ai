@@ -131,15 +131,17 @@ export function asksForHint(
  * Bare "samjha" is "(I) understood" and is NOT a request; "samjha do" is
  * (second review). Saying they did not understand — "nahi samjha", "samajh
  * nahi aaya", "I don't understand" — is not a request either: like "pata
- * nahi" it goes to the judge as a miss, so the ladder climbs to the worked
- * example and the answer. As a request it stopped at the hint, three times
- * over (third review).
+ * nahi" it is a miss (tutor-judge's DONT_KNOW, decided on the device), so the
+ * ladder climbs to the worked example and the answer. As a request it stopped
+ * at the hint, three times over (third review).
  */
-const EXPLAIN = /\b(?:explain|samjhao|samjhaiye|samjhaao|samjha (?:do|dijiye|dena))\b/g;
+const EXPLAIN = /\b(?:explain|samjhao|samjhaiye|samjhaao|samjhado|samjhaa? (?:do|dijiye|dena))\b/g;
 const EXPLAIN_FILLER = new Set([
   'again', 'another', 'way', 'differently', 'different', 'once', 'more', 'phir', 'dobara', 'doosre', 'dusre',
   'tareeke', 'tarike', 'tarah', 'se', 'do', 'dijiye', 'it', 'that', 'this', 'please', 'can', 'could', 'you',
   'me', 'mujhe', 'ek', 'baar', 'aur', 'ji', 'na', 'yaar', 'miss', 'mam', 'maam', 'sir', 'in', 'a', 'kuch',
+  // The everyday Hinglish around it (fourth review): "phir se explain karo".
+  'karo', 'kijiye', 'kariye', 'karein', 'fir', 'dubara', 'thoda', 'zara',
 ]);
 
 export function asksToExplainAgain(said: string): boolean {

@@ -90,6 +90,13 @@ describe('checkStep, eighth review', () => {
     expect(checkStep('3(x + 4) = 21', '3x + 12 = 21 => 3x = 9').ok).toBe(true);
   });
 
+  // Fourth review: a line of plain arithmetic is a sum on the side — right or
+  // wrong — never a step of the equation, and never the line the next is read against.
+  it('reads a line with no unknown as a sum on the side', () => {
+    expect(checkStep('3x + 12 = 21', '21 - 12 = 9')).toEqual({ ok: true, aside: true });
+    expect(checkStep('3x + 12 = 21', '21 - 12 = 8')).toMatchObject({ ok: false, kind: 'arithmetic' });
+  });
+
   // Third review: the walk refused a side sum written beside the step.
   it('lets a side calculation stand beside the step', () => {
     expect(checkStep('3x + 12 = 21', '21 - 12 = 9, 3x = 9').ok).toBe(true);

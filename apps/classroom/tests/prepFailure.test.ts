@@ -13,12 +13,14 @@ describe('a preparation refused for its maths', () => {
     vi.restoreAllMocks();
   });
 
-  it('logs the lines and reasons, and counts them for telemetry without their text', () => {
+  it('logs the lines and reasons, and sends their ids and reasons to telemetry', () => {
     const logged = vi.spyOn(console, 'error').mockImplementation(() => undefined);
     const problems = [{ rule: 'maths', where: 'b2_10', message: '`2x = 8` gives x = 4, but the next line says x = 5' }];
     reportPrepFailure(Object.assign(new Error('does not add up'), { mathsProblems: problems }));
     expect(logged).toHaveBeenCalledWith(expect.stringContaining('did not add up'), problems);
-    expect(tracked.calls).toEqual([['prep_refused', { rule: 'maths', lines: 1 }]]);
+    expect(tracked.calls).toEqual([
+      ['prep_refused', { rule: 'maths', lines: 1, problems: [{ where: 'b2_10', message: problems[0].message }] }],
+    ]);
   });
 
   it('says nothing about any other failure', () => {

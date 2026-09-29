@@ -66,6 +66,13 @@ describe('which formulas are typeset (seventh review)', () => {
     expect(typesetsAsMaths('v = 60 kmph')).toBe(false);
     expect(typesetsAsMaths('PE = mgh')).toBe(true);
   });
+  it('typesets formulas written in capitals (fourth review)', async () => {
+    const { typesetsAsMaths } = await import('../src/math');
+    expect(typesetsAsMaths('SI = PRT/100')).toBe(true);
+    expect(typesetsAsMaths('∠PQR = 60°')).toBe(true);
+    expect(typesetsAsMaths('ΔPQR ≅ ΔXYZ')).toBe(true);
+    expect(typesetsAsMaths('HCF × LCM = a × b')).toBe(false);
+  });
   it('raises a whole bracketed power', async () => {
     const { formulaTex } = await import('../src/math');
     expect(formulaTex('a^m × a^n = a^(m+n)')).toBe('a^m × a^n = a^{m+n}');

@@ -29,23 +29,28 @@ const asTyped = (key: string): string => ({ '−': '-', '×': '*', '÷': '/' })[
 
 export function WorkPanel({
   start,
+  steps,
+  onSteps,
   onStep,
   onClose,
 }: {
   start: string | null;
+  /** Held by the room, so the working outlives the panel (a pause, a hand). */
+  steps: WorkedStep[];
+  onSteps: (steps: WorkedStep[]) => void;
   onStep: (step: WorkedStep) => void;
   onClose: () => void;
 }) {
   const [draft, setDraft] = useState('');
-  const [steps, setSteps] = useState<WorkedStep[]>([]);
 
   const submit = () => {
     const text = draft.trim();
     if (!text) return;
-    const last = [...steps].reverse().find((s) => s.verdict.ok === true)?.text ?? start;
+    // The last right STEP — a sum on the side is not one (fourth review).
+    const last = [...steps].reverse().find((s) => s.verdict.ok === true && s.verdict.aside !== true)?.text ?? start;
     const verdict: StepVerdict = last ? checkStep(last, text) : { ok: true };
     const step = { text, verdict };
-    setSteps((prev) => [...prev, step]);
+    onSteps([...steps, step]);
     setDraft('');
     onStep(step);
   };

@@ -53,6 +53,9 @@ export function texToHtml(tex: string): string | null {
  * three or more letters with a vowel in it — sin, cos, tan and log excepted),
  * no chemical formula, no %, #, &, ~, and no arrow.
  */
+/** Abbreviations written as words on a board, never as a product of letters. */
+const ABBREVIATIONS = new Set(['HCF', 'LCM', 'MRP', 'GST', 'CSA', 'TSA', 'LHS', 'RHS', 'SSS', 'SAS', 'ASA', 'AAS', 'RHS', 'CPCT', 'BODMAS']);
+
 export function typesetsAsMaths(text: string): boolean {
   const t = text.trim();
   if (/^\$[^$]+\$$/.test(t)) return true;
@@ -62,11 +65,12 @@ export function typesetsAsMaths(text: string): boolean {
   if (/\^(?:-|\d{2,}|[A-Za-z]{2,})/.test(t)) return false;
   // "H2O", "CO2": a chemical formula would be set as italic variables.
   if (/[A-Z][a-z]?\d+[A-Z]|[A-Z]{2,}\d/.test(t)) return false;
-  // Letters side by side are a product ("mgh", "2ab"); a word is a run of
-  // three with a vowel in it, any run of four or more ("kmph"), or three or
-  // more capitals ("HCF", "MRP") — eighth and third reviews.
+  // Letters side by side are a product ("mgh", "PRT"); a word is a run of
+  // three with a vowel in it, any run of four or more ("kmph"), or one of the
+  // abbreviations a Class 6-10 board writes ("HCF", "MRP") — eighth, third
+  // and fourth reviews ("SI = PRT/100" is a formula).
   const words = (t.match(/[A-Za-z]{3,}/g) ?? []).filter(
-    (w) => /[aeiou]/i.test(w) || w.length >= 4 || /^[A-Z]{3,}$/.test(w),
+    (w) => /[aeiou]/i.test(w) || w.length >= 4 || ABBREVIATIONS.has(w),
   );
   return words.every((w) => /^(sin|cos|tan|log|cot|sec|cosec)$/i.test(w));
 }

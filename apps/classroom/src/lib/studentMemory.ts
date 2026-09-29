@@ -102,6 +102,21 @@ const empty = (): StudentMemory => ({ version: 1, interests: [], struggles: [], 
 const clip = (s: string, max = MAX_TOPIC_CHARS): string =>
   s.replace(/["\\`]/g, "'").replace(/\s+/g, ' ').trim().slice(0, max);
 
+/**
+ * Whether two class titles name the same class: half or more of their words in
+ * common. A topic prepared again can be retitled ("Equations with Variables on
+ * Both Sides" / "Solving Equations with Variables on Both Sides"); two lessons
+ * on one topic ("The Heart" / "Blood & Its Components") are not the same.
+ */
+export function similarTitle(a: string, b: string): boolean {
+  const words = (t: string) => new Set(t.toLowerCase().match(/[a-z0-9]+/g) ?? []);
+  const x = words(a);
+  const y = words(b);
+  const common = [...x].filter((w) => y.has(w)).length;
+  const all = new Set([...x, ...y]).size;
+  return all > 0 && common / all >= 0.5;
+}
+
 /** Whether a remembered (clipped) class title is this class's title. */
 export const sameTitle = (remembered: string, title: string): boolean =>
   clip(title).toLowerCase() === remembered.toLowerCase();
@@ -301,7 +316,7 @@ export function memoryNotes(lang: TutorLanguage, now = Date.now()): string[] {
 export function greetingMemory(lang: TutorLanguage, now = Date.now()): {
   lastTitle?: string;
   lastLessonId?: string;
-  /** The syllabus topic of the last class — a topic prepared again keeps it under a new id and title. */
+  /** The syllabus topic of the last class (a live class carries it since LiveClass.stampTopic). */
   lastTopicRef?: string;
   promise?: string;
   struggle?: { topic: string; lessonId: string };

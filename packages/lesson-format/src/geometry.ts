@@ -136,7 +136,8 @@ const LATEX_SYMBOLS: Record<string, string> = {
   pi: 'π', theta: 'θ', alpha: 'α', beta: 'β', gamma: 'γ', infty: '∞', circ: '°', degree: '°', approx: '≈',
   percent: '%', ldots: '…', cdots: '…',
   // The joins of a line of working, which the maths check reads as "follows".
-  Rightarrow: '⇒', implies: '⇒', therefore: '∴',
+  Rightarrow: '⇒', implies: '⇒', therefore: '∴', rightarrow: '⇒', Longrightarrow: '⇒', longrightarrow: '⇒',
+  to: '⇒',
 };
 
 export function latexToPlain(text: string): string | null {
@@ -155,7 +156,8 @@ export function latexToPlain(text: string): string | null {
         .replace(/\^\s*\{([^{}]*)\}/g, '^($1)');
     }
     t = t
-      .replace(/\\left|\\right/g, '')
+      // Only the sizing commands: "\rightarrow" is an arrow, not "arrow".
+      .replace(/\\(?:left|right)(?![A-Za-z])/g, '')
       .replace(/\\[,;:! ]|\\quad|\\qquad/g, ' ')
       .replace(/\\%/g, '%')
       .replace(/\\([A-Za-z]+)/g, (m, name: string) => {

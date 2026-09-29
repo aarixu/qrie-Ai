@@ -47,3 +47,32 @@ describe('what "Work it out" can check, and what its answer is (eighth review)',
     expect(isFinalValue('3x = 9')).toBe(false);
   });
 });
+
+/** Fourth review: the answer the question asks for, however the planner wrote it. */
+describe('whether a solved step is the answer asked for (fourth review)', () => {
+  const x = (n: bigint, d = 1n) => ({ name: 'x', value: { n, d } });
+  const l = (n: bigint) => ({ name: 'l', value: { n, d: 1n } });
+  it('refuses a value when the answer is another quantity', () => {
+    expect(solvesAsExpected('7, because 2 × 3 + 1 = 7', x(3n))).toBe(false);
+    expect(solvesAsExpected('The value of 2x + 1 is 7', x(3n))).toBe(false);
+    expect(solvesAsExpected('15 years (12 + 3)', x(12n))).toBe(false);
+    expect(solvesAsExpected('15 years, since 12 + 3 = 15', x(12n))).toBe(false);
+    expect(solvesAsExpected('Area = 10 × 5 = 50 cm²', l(10n))).toBe(false);
+    expect(solvesAsExpected('The larger angle is 2 × 30 = 60°', x(30n))).toBe(false);
+  });
+  it('takes the value however it is written', () => {
+    expect(solvesAsExpected('Four, since 2 × 4 + 3 = 11', x(4n))).toBe(true);
+    expect(solvesAsExpected('4, since 2 x 4 + 3 = 11', x(4n))).toBe(true);
+    expect(solvesAsExpected('The answer is 4 because 2(4) + 3 = 11.', x(4n))).toBe(true);
+    expect(solvesAsExpected('Five.', x(5n))).toBe(true);
+    expect(solvesAsExpected('The son is 12 years old and the father is 36.', x(12n))).toBe(true);
+    expect(solvesAsExpected('x = 2½', x(5n, 2n))).toBe(true);
+    expect(solvesAsExpected('x = 2 1/2', x(5n, 2n))).toBe(true);
+    expect(solvesAsExpected(String.raw`$x = 2\frac{1}{2}$`, x(5n, 2n))).toBe(true);
+    expect(solvesAsExpected('x = - 2', x(-2n))).toBe(true);
+    expect(solvesAsExpected('x = –2', x(-2n))).toBe(true);
+    expect(solvesAsExpected('x = (-2)', x(-2n))).toBe(true);
+    expect(solvesAsExpected('x = +3', x(3n))).toBe(true);
+    expect(solvesAsExpected('Answer: x = 3 cm', x(3n))).toBe(true);
+  });
+});

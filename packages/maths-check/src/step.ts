@@ -28,13 +28,17 @@ import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } fro
  * all-number part of it is true. "x = 3" after "3x = 9" is right; so is a
  * root list "x = 2, x = 3" whose every value makes the previous line true.
  *
+ * A line with no unknown at all ("21 - 12 = 9") is a sum on the side: right,
+ * or an ARITHMETIC slip, and marked `aside` so it is never the next step's
+ * reference.
+ *
  * What it does not judge: a step it cannot read (it says so, and the tutor
  * does not pretend), and anything past polynomial equations — a step that
  * squares both sides, or takes a root, reads as a changed equation.
  */
 
 export type StepVerdict =
-  | { ok: true; solved?: { name: string; value: Rational } }
+  | { ok: true; solved?: { name: string; value: Rational }; aside?: true }
   | { ok: false; kind: 'arithmetic' | 'procedural' | 'value'; reason: string }
   | { ok: null; reason: string };
 
@@ -201,6 +205,12 @@ export function checkStep(previous: string, step: string): StepVerdict {
     for (const st of now.line.statements) {
       const slip = arithmeticSlip(st);
       if (slip) return { ok: false, kind: 'arithmetic', reason: slip };
+    }
+    // A line with no unknown in it is a sum worked on the side — its
+    // arithmetic was checked just above — and never a step of the equation,
+    // nor the line the next step is read against (fourth review).
+    if (now.line.statements.every((st) => st.sides.every((side) => P.variablesOf(toPoly(side.expr)).size === 0))) {
+      return { ok: true, aside: true };
     }
     const prevStatements = before.line.statements;
     const prev = equationOf(prevStatements[prevStatements.length - 1]);

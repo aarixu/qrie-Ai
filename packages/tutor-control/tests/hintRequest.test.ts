@@ -100,6 +100,9 @@ describe('asksToExplainAgain (H4)', () => {
       expect(asksToExplainAgain(said), said).toBe(false);
     for (const said of ['samjha do', 'samjha dijiye', 'phir se samjha dena'])
       expect(asksToExplainAgain(said), said).toBe(true);
+    // Fourth review: the everyday Hinglish forms went to the judge as answers.
+    for (const said of ['phir se explain karo', 'explain kijiye', 'fir se samjhao', 'dubara samjhao', 'thoda aur samjhao', 'samjhaa do', 'samjhado'])
+      expect(asksToExplainAgain(said), said).toBe(true);
   });
 
   // Third review: as requests, "I don't understand" three times gave the hint

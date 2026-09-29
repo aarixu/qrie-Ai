@@ -34,45 +34,76 @@ export function workStartOf(ask: { question?: string; written?: string; expect?:
   return forTheUnknown || expectedEquation(ask?.expect, plain) !== null ? plain : null;
 }
 
-// Not followed by more of a number — a sentence's full stop is not a decimal.
-const SOLVED_FORM = /(?<![A-Za-z0-9])([A-Za-z])\s*=\s*(-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?)(?!\d|\.\d|\s*\/\s*\d)/g;
-const NUMBER = /-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?/g;
+/** A number as a planner writes one: a sign, a decimal, a fraction. */
+const NUM = String.raw`-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?`;
+/** Not followed by more of a number — a sentence's full stop is not a decimal. */
+const AFTER = String.raw`(?!\d|\.\d|\s*\/\s*\d)`;
+
+const NUMBER_WORDS: Record<string, number> = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17,
+  eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70,
+  eighty: 80, ninety: 90, hundred: 100,
+};
+
+/**
+ * `expect` as plain maths (fourth review): LaTeX read, a mixed number made a
+ * fraction ("2½", "2 1/2", "2\frac{1}{2}" → 5/2), every dash a minus, "- 2",
+ * "(-2)" and "+3" made plain numbers, "2 x 4" read as a product, and number
+ * words made numbers ("Four, since …").
+ */
+function plainExpect(expect: string): string {
+  const mixed = (whole: string, top: string, bottom: string): string =>
+    `${Number(whole) * Number(bottom) + Number(top)}/${bottom}`;
+  let t = expect.replace(/(\d+)\s*\\[dt]?frac\s*\{(\d+)\}\s*\{(\d+)\}/g, (_, w, a, b) => mixed(w, a, b));
+  t = latexToPlain(t) ?? t;
+  return t
+    .replace(/[−–—]/g, '-')
+    .replace(/(\d+)\s*½/g, (_, w) => mixed(w, '1', '2'))
+    .replace(/½/g, '1/2')
+    .replace(/(\d+)\s+(\d+)\s*\/\s*(\d+)/g, (_, w, a, b) => mixed(w, a, b))
+    .replace(/\((\d+)\)\/\((\d+)\)/g, '$1/$2')
+    .replace(/\(\s*(-)\s*(\d+(?:\.\d+)?)\s*\)/g, '$1$2')
+    .replace(/(=|\bis)\s*([+-])\s*(\d)/gi, (_, lead, sign, d) => `${lead} ${sign === '-' ? '-' : ''}${d}`)
+    .replace(/(\d)\s+x\s+(\d)/g, '$1 × $2')
+    .replace(new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join('|')})\\b`, 'gi'), (w) => String(NUMBER_WORDS[w.toLowerCase()]));
+}
 
 /**
  * Whether a solved step ("x = 4") is the answer `expect` describes.
  *
- * A ✓ solved step already follows from the question's own equation, so it is
- * taken unless `expect` says otherwise (third review: "x is 4, since 2x = 8",
- * "Four, since 2 × 4 + 3 = 11" and "$x = \frac{8}{2}$" all refused x = 4):
- *   - where `expect` gives this letter a value ("x = 4", "4 = x", "x is 4"),
- *     the step must be one of them;
- *   - else, where it holds an equation in the letter, that equation is the
- *     answer (`expectedEquation`) and a value is not;
- *   - else, where it holds exactly one number and nothing else to go on, it
- *     must be that number ("7" when the question asked for 2x + 1);
- *   - else the working speaks for itself.
+ * A ✓ solved step already follows from the question's own equation; what is
+ * left to settle is whether this unknown is what the question asked for
+ * (fourth review: "7, because 2 × 3 + 1 = 7" and "Area = 10 × 5 = 50 cm²"
+ * were taken for x = 3 and l = 10). In order:
+ *   1. where `expect` gives this letter a value ("x = 4", "4 = x", "x is 4"),
+ *      the step must be one of them;
+ *   2. the answer is the clause before "since", "because", "(" or ";" — an
+ *      equation in the letter there is itself the answer
+ *      (`expectedEquation`), and a value is not;
+ *   3. else the value is the number after the clause's last "=", else after
+ *      its first "is", else its first number ("Five.", "15 years");
+ *   4. with no number at all, the working speaks for itself.
  */
 export function solvesAsExpected(expect: string | undefined, solved: { name: string; value: Rational }): boolean {
   if (!expect) return true;
-  const claim = `${solved.name} = ${formatRational(solved.value)}`;
-  const plain = (latexToPlain(expect) ?? expect).replace(/−/g, '-').replace(/\((\d+)\)\/\((\d+)\)/g, '$1/$2');
   const n = solved.name;
+  const claim = `${n} = ${formatRational(solved.value)}`;
+  const same = (v: string): boolean => sameEquation(claim, `${n} = ${v.replace(/\s+/g, '')}`);
+  const plain = plainExpect(expect);
   const values = [
-    ...[...plain.matchAll(SOLVED_FORM)].filter((m) => m[1] === n).map((m) => m[2]),
-    ...[...plain.matchAll(new RegExp(`(?<![\\w.])(-?\\d+(?:\\.\\d+)?(?:\\s*/\\s*\\d+)?)\\s*=\\s*${n}(?![A-Za-z0-9])`, 'g'))].map((m) => m[1]),
-    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s+is\\s+(-?\\d+(?:\\.\\d+)?(?:\\s*/\\s*\\d+)?)`, 'gi'))].map((m) => m[1]),
+    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s*=\\s*(${NUM})${AFTER}`, 'g'))].map((m) => m[1]),
+    ...[...plain.matchAll(new RegExp(`(?<![\\w.])(${NUM})\\s*=\\s*${n}(?![A-Za-z0-9])`, 'g'))].map((m) => m[1]),
+    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s+is\\s+(${NUM})${AFTER}`, 'gi'))].map((m) => m[1]),
   ];
-  if (values.length > 0) return values.some((v) => sameEquation(claim, `${n} = ${v}`));
-  // An equation in the letter is itself the answer ("What remains is
-  // x + 3 = 7."), which `expectedEquation` matches; a value is not it. An
-  // all-number equation is a check ("2 × 4 + 3 = 11") and says nothing.
-  const equationsInLetter = plain
-    .split(/[;,:]|\.(?!\d)|\bso\b|\bsince\b|\bbecause\b/)
-    .filter((part) => part.includes('=') && new RegExp(`(?<![A-Za-z])${n}(?![A-Za-z])`).test(part));
-  if (equationsInLetter.length > 0) return false;
-  const numbers = plain.match(NUMBER) ?? [];
-  if (numbers.length === 1 && !plain.includes('=')) return sameEquation(claim, `${n} = ${numbers[0]}`);
-  return true;
+  if (values.length > 0) return values.some(same);
+  const clause = plain.split(/\bsince\b|\bbecause\b|\(|;/i)[0];
+  if (clause.includes('=') && new RegExp(`(?<![A-Za-z])${n}(?![A-Za-z])`).test(clause)) return false;
+  const eq = clause.lastIndexOf('=');
+  const is = /\bis\b/i.exec(clause);
+  const tail = eq >= 0 ? clause.slice(eq + 1) : is ? clause.slice(is.index + 2) : clause;
+  const value = tail.match(new RegExp(`${NUM}${AFTER}`));
+  return value === null || same(value[0]);
 }
 
 /**

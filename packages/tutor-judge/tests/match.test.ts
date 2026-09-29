@@ -90,7 +90,16 @@ describe('reading a spoken answer without a model', () => {
     // The pedagogy is explicit: this is WRONG, never unclear. A student who
     // says they do not know has told us something real.
     const o = ['Plasma', 'Red cells'];
-    for (const said of ['pata nahi', 'pta nahi', 'I dont know', 'no idea']) {
+    for (const said of ['pata nahi', 'pta nahi', 'I dont know', "I don't know", 'no idea']) {
+      expect(matchSpokenAnswer(said, o), said).toMatchObject({ by: 'dont-know', index: null });
+    }
+  });
+
+  // Fourth review: sent to the model judge, "nahi samjha" could come back
+  // 'unclear' — no miss, and the ladder did not climb.
+  it('hears not understanding as a miss, the way it hears "pata nahi"', () => {
+    const o = ['Plasma', 'Red cells'];
+    for (const said of ['nahi samjha', 'samjha nahi', 'samajh nahi aaya', 'kuch samajh nahi aaya', "I don't understand", 'I did not understand']) {
       expect(matchSpokenAnswer(said, o), said).toMatchObject({ by: 'dont-know', index: null });
     }
   });

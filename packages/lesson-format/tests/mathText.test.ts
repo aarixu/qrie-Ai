@@ -38,6 +38,13 @@ describe('latexToPlain', () => {
     expect(latexToPlain(String.raw`$\therefore x = 4$`)).toBe('∴ x = 4');
     expect(latexToPlain(String.raw`$2x = 8 \implies x = 4$`)).toBe('2x = 8 ⇒ x = 4');
   });
+  it('reads right arrows, and does not turn one into the word "arrow" (fourth review)', async () => {
+    const { latexToPlain } = await import('../src/index');
+    expect(latexToPlain(String.raw`$2x = 8 \rightarrow x = 4$`)).toBe('2x = 8 ⇒ x = 4');
+    expect(latexToPlain(String.raw`$2x = 8 \Longrightarrow x = 4$`)).toBe('2x = 8 ⇒ x = 4');
+    expect(latexToPlain(String.raw`$2x = 8 \to x = 4$`)).toBe('2x = 8 ⇒ x = 4');
+    expect(latexToPlain(String.raw`$\left( x + 1 \right) = 3$`)).toBe('( x + 1 ) = 3');
+  });
   it('refuses a command it cannot translate', async () => {
     const { latexToPlain } = await import('../src/index');
     expect(latexToPlain(String.raw`$\int x\,dx$`)).toBeNull();
