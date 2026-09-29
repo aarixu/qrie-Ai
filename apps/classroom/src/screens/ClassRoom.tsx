@@ -2050,7 +2050,7 @@ export function ClassRoom({
                   lost. A hint goes through decide() like any other help; "not
                   sure" opens a doubt with Meera about this very question. */}
               {!askChoicesHidden && (
-                <span className="w-full flex justify-center gap-2">
+                <span className="w-full flex flex-wrap justify-center gap-2">
                   <button
                     onClick={() => void requestHint()}
                     className="min-h-[44px] rounded-full bg-stage-primary px-4 py-2 font-label-md text-[13px] font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
