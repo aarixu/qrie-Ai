@@ -1,5 +1,6 @@
 import {
   MATCH_FLOOR,
+  dontKnowIn,
   judgeSpokenAnswer as judge,
   matchSpokenAnswer,
   resolveCrossQuestion as resolveClose,
@@ -10,6 +11,7 @@ import {
   type SpokenVerdict,
 } from '@ai-tutor/tutor-judge';
 import type { WhyProbe } from '@ai-tutor/lesson-format';
+import { LINES } from '@ai-tutor/tutor-control';
 import { fromStudent } from './safety';
 import { createBrowserLlm } from './browserLlm';
 import { tutorLanguage } from './workspace';
@@ -153,10 +155,11 @@ export const resolveCrossQuestion = (
  * options are ON SCREEN. Two of its three readings — the bare letter and the
  * position word — are readings of that list, and on a class ask nothing is
  * shown, so `readLocally` refuses both (see the `sawAList` guard). That leaves
- * the WORDS reading, plus a bare "I don't know", to carry the whole saving on
- * an open ask. The quoted ~70% local-match rate was measured with all three
- * readings against a bank that showed its options; it is NOT a measurement of
- * what this path settles, and nothing here should be read as claiming it is.
+ * the WORDS reading, plus a bare "I don't know" (settled on any ask, probe or
+ * not — see `resolveSpokenAnswer`), to carry the whole saving on an open ask.
+ * The quoted ~70% local-match rate was measured with all three readings
+ * against a bank that showed its options; it is NOT a measurement of what this
+ * path settles, and nothing here should be read as claiming it is.
  */
 
 /** How one spoken answer was resolved, so the saving can be MEASURED. */
@@ -171,7 +174,7 @@ export type AnswerPath =
 export interface ResolvedAnswer {
   verdict: SpokenVerdict;
   path: AnswerPath;
-  /** Which local reading fired — letter, position, words. Local path only. */
+  /** Which local reading fired — letter, position, words, dont-know. Local path only. */
   reading?: LocalMatch['by'];
   /** 0..1, the margin the local read won by. Local path only. */
   confidence?: number;
@@ -223,25 +226,6 @@ export interface ResolvedAnswer {
 export type PlayableAsk = SpokenAsk & { whyProbe?: WhyProbe };
 
 /**
- * Read a spoken answer against the beat's own authored options.
- *
- * Returns null for "not confident enough, and not confident enough is a
- * refusal" — the caller then pays for a model rather than guessing.
- */
-/**
- * How many words a hedge may be wrapped in before it stops being a hedge and
- * starts being an answer.
- *
- * Four, because the phrases themselves run to three ("i dont know", "cant
- * say") and a student who says only "hmm pata nahi yaar" has still told us
- * nothing. Anything longer carries content the local read cannot weigh.
- */
-const DONT_KNOW_WORDS = 4;
-
-const wordCount = (text: string): number =>
-  text.trim().split(/\s+/).filter(Boolean).length;
-
-/**
  * Two option texts, compared as a child would see them rather than as bytes.
  *
  * Only ever used to decide whether the shown list IS the indexed list. Trim and
@@ -250,6 +234,16 @@ const wordCount = (text: string): number =>
  */
 const same = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase();
 
+/**
+ * Read a spoken answer against the beat's own authored options.
+ *
+ * Returns null for "not confident enough, and not confident enough is a
+ * refusal" — the caller then pays for a model rather than guessing.
+ *
+ * A shrug never reaches here: `resolveSpokenAnswer` settles "I don't know"
+ * alone before this runs, and sends anything else that carries one to the
+ * model.
+ */
 function readLocally(
   ask: PlayableAsk,
   probe: WhyProbe,
@@ -293,36 +287,6 @@ function readLocally(
     shown.every((o, i) => same(o.text, probe.options[i].text));
 
   /**
-   * "I don't know", which the pedagogy is explicit is WRONG and not unclear:
-   * a student who says so has told us something real, and filing it as
-   * unclear throws that away. There is no option to speak a `why` from, so
-   * this needs the ask's OWN hint — and with no hint there is nothing to say,
-   * which is a reason to reach the model rather than to invent a line.
-   *
-   * ONLY WHEN THE HEDGE IS THE WHOLE UTTERANCE. `matchSpokenAnswer` matches
-   * these phrases at the start or the end as well as alone (match.ts's
-   * DONT_KNOW loop), which is right for a quiz — "pata nahi B" is a shrug at a
-   * letter. On a class ask it is how a student hedges an answer they have just
-   * given: "four chambers, two atria and two ventricles, pata nahi". Reading
-   * that as an absence of an answer discards the sentence in front of the
-   * hedge and marks a right answer wrong, locally, with nothing behind it to
-   * catch it. A student who said only "I don't know" told us something; a
-   * student who answered AND hedged told us something else, and only a model
-   * can tell those two apart.
-   */
-  if (match.by === 'dont-know') {
-    if (wordCount(said) > DONT_KNOW_WORDS) return null;
-    const hint = ask.hint?.trim();
-    if (!hint) return null;
-    return {
-      verdict: { verdict: 'wrong', say: hint, gave: 'hint', heard: said },
-      path: 'local',
-      reading: 'dont-know',
-      confidence: match.confidence,
-    };
-  }
-
-  /**
    * THE ORDINAL READINGS, REFUSED ON AN OPEN ASK.
    *
    * `letter` ("b") and `position` ("doosra", "four") both come back at
@@ -334,8 +298,8 @@ function readLocally(
    * probe whose correct answer was index 0: "four" read as index 3 at
    * confidence 1, i.e. a child who was right told they were wrong, for free.
    *
-   * `words` and `dont-know` survive, because both have a referent in what the
-   * student actually said rather than in an order they never saw.
+   * `words` survives, because it has a referent in what the student actually
+   * said rather than in an order they never saw.
    */
   if (!sawAList && (match.by === 'letter' || match.by === 'position')) return null;
 
@@ -390,6 +354,43 @@ function readLocally(
 }
 
 /**
+ * "I DON'T KNOW", AND NOTHING ELSE — WRONG, NEVER UNCLEAR, ON THE DEVICE.
+ *
+ * The pedagogy is explicit: a student who says they do not know, or that they
+ * did not understand, has told us something real, and it is a miss so the
+ * ladder climbs. Sent to the model it could come back 'unclear', which records
+ * nothing and climbs nothing (fourth and fifth reviews) — so it is not sent, on
+ * any ask, probe or not, unless a shrug is one of the ask's own answers
+ * (`shrugIsAnAnswer`).
+ *
+ * What she says is the ask's own hint where it has one. Where it has none, her
+ * fixed "have a go" line: a request for a first step, not a line invented for
+ * the moment, and neither the leading question nor the hint that `gave`
+ * records, so `gave` is left out. ClassRoom speaks decide()'s ladder line in
+ * place of either whenever it has one.
+ */
+function notKnown(ask: SpokenAsk, said: string): ResolvedAnswer {
+  const hint = ask.hint?.trim();
+  return {
+    verdict: hint
+      ? { verdict: 'wrong', say: hint, gave: 'hint', heard: said }
+      : { verdict: 'wrong', say: LINES.haveAGo[tutorLanguage()][0], heard: said },
+    path: 'local',
+    reading: 'dont-know',
+    confidence: 1,
+  };
+}
+
+/**
+ * "Can't say" is an ANSWER when it is one of the answers — the shown options,
+ * the probe's or the expected one — and then only a model may weigh it.
+ */
+const shrugIsAnAnswer = (ask: PlayableAsk): boolean =>
+  [ask.expect, ...(ask.options ?? []).map((o) => o.text), ...(ask.whyProbe?.options ?? []).map((o) => o.text)].some(
+    (text) => text !== undefined && dontKnowIn(text) === 'only',
+  );
+
+/**
  * ONE SPOKEN ANSWER, RESOLVED — locally where the class can, by the model
  * where it cannot.
  *
@@ -418,7 +419,18 @@ export async function resolveSpokenAnswer(
   }
 
   const said = screened.text;
-  if (ask.whyProbe) {
+  /**
+   * ONLY WHEN THE SHRUG IS THE WHOLE UTTERANCE — the phrase plus filler and
+   * nothing left over (`dontKnowIn`). Counting words could not tell "hmm pata
+   * nahi yaar" from "Plasma, I don't know", and filed that right answer wrong
+   * (fifth review). A student who answered AND hedged — "four chambers, two
+   * atria and two ventricles, pata nahi", "nahi samjha, plasma?" — told us
+   * something else, and only a model can weigh it, so a hedged answer skips
+   * the local read as well.
+   */
+  const shrug = dontKnowIn(said);
+  if (shrug === 'only' && !shrugIsAnAnswer(ask)) return notKnown(ask, said);
+  if (ask.whyProbe && shrug === null) {
     const local = readLocally(ask, ask.whyProbe, said);
     if (local) return local;
   }

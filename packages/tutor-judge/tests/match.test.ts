@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { MATCH_FLOOR, matchSpokenAnswer } from '../src/match';
+import { MATCH_FLOOR, dontKnowIn, matchSpokenAnswer } from '../src/match';
 
 /**
  * HOW MUCH OF THE JUDGE'S WORK NEEDS A MODEL AT ALL?
@@ -102,6 +102,51 @@ describe('reading a spoken answer without a model', () => {
     for (const said of ['nahi samjha', 'samjha nahi', 'samajh nahi aaya', 'kuch samajh nahi aaya', "I don't understand", 'I did not understand']) {
       expect(matchSpokenAnswer(said, o), said).toMatchObject({ by: 'dont-know', index: null });
     }
+  });
+
+  // Fifth review: once "don't" stopped being "don t", the start/end match
+  // fired on a right answer with a hedge after it, and the class marked it
+  // wrong on the device with no model behind it.
+  it('reads an answer with a shrug beside it as the answer, not as "I don\'t know"', () => {
+    const o = ['Plasma', 'Red cells', 'White cells', 'Platelets'];
+    for (const said of ["Plasma, I don't know", "I don't know, plasma?", "Plasma? I can't say", 'Nahi samjha, plasma?'])
+      expect(matchSpokenAnswer(said, o), said).toMatchObject({ index: 0, by: 'words' });
+    // And a sentence that is ABOUT not understanding is an answer too.
+    const why = ['They do not understand the question', 'They are tired', 'They are hungry'];
+    for (const said of ["They don't understand", 'Usne samjha nahi'])
+      expect(matchSpokenAnswer(said, why).by, said).not.toBe('dont-know');
+  });
+
+  it('hears every everyday way of not understanding, whatever filler it comes in', () => {
+    const o = ['Plasma', 'Red cells'];
+    for (const said of [
+      'mujhe samajh nahi aa raha',
+      'I did not understand sir',
+      'samajh mein nahi aaya',
+      'samajh me nahi aaya',
+      'samajh nhi aaya',
+      'nahi samajh aaya',
+      'hmm pata nahi yaar',
+      "Sorry ma'am, I really don't know",
+      'mujhe samajh nahi aa raha hai sir',
+    ])
+      expect(matchSpokenAnswer(said, o), said).toMatchObject({ by: 'dont-know', index: null });
+  });
+
+  it('tells a shrug alone from a shrug beside something else', () => {
+    for (const said of ['pata nahi', 'mujhe nahi pata', "I'm not sure", 'I have no idea', 'nahi आता', 'kuch samajh nahi aaya'])
+      expect(dontKnowIn(said), said).toBe('only');
+    // "haan" and "sahi hai" are answers on a yes-or-no ask, so never filler here.
+    for (const said of ['Plasma, I dont know', 'haan, pata nahi', 'sahi hai, pata nahi', 'pata nahi B', "They don't understand"])
+      expect(dontKnowIn(said), said).toBe('hedged');
+    // A phrase inside a sentence counts as a hedge: at worst the class pays a
+    // model call for it, and it is never filed wrong unheard.
+    expect(dontKnowIn('the next chamber')).toBe('hedged');
+    for (const said of ['plasma', '']) expect(dontKnowIn(said), said).toBeNull();
+  });
+
+  it('refuses "pata nahi B" rather than reading a letter out of a shrug', () => {
+    expect(matchSpokenAnswer('pata nahi B', ['Plasma', 'Red cells'])).toMatchObject({ index: null, by: 'unsure' });
   });
 
   it('refuses when two options are equally close, which is the whole contract', () => {

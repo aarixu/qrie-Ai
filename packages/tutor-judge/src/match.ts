@@ -100,7 +100,8 @@ const words = (text: string): string[] =>
  * The pedagogy is explicit that this is WRONG and not unclear: a student who
  * says they do not know has told us something real about what they hold, and
  * recording it as unclear throws that away. It is caught here rather than sent
- * to a model because there is nothing to weigh.
+ * to a model because there is nothing to weigh — but only when it is ALL they
+ * said (`dontKnowIn` below).
  */
 const DONT_KNOW = [
   'pata nahi', 'pta nahi', 'pata nhi', 'nahi pata', 'nhi pata', 'malum nahi',
@@ -111,7 +112,67 @@ const DONT_KNOW = [
   'nahi samjha', 'nahi samjhi', 'nhi samjha', 'samjha nahi', 'samjhi nahi', 'samajh nahi aaya',
   'samajh nahi aayi', 'samajh nahi aa raha', 'samajh nahi aa rha', 'i dont understand',
   'i do not understand', 'i didnt understand', 'i did not understand', 'dont understand',
+  // The everyday Hinglish word orders (fifth review).
+  'samajh mein nahi aaya', 'samajh me nahi aaya', 'samajh nhi aaya', 'nahi samajh aaya',
+  'samajh mein nahi aa raha', 'samajh me nahi aa raha',
 ];
+
+/**
+ * The phrases as `normalise` leaves an utterance, longest first so "i dont
+ * know" goes before "dont know" eats most of it. Normalised because the raw
+ * list is not: "nahi आता" loses its vowel sign to `normalise`, and compared
+ * raw it could never match anything a student said.
+ */
+const SHRUGS = [...new Set(DONT_KNOW.map((p) => normalise(p)))].sort((a, b) => b.length - a.length);
+
+/**
+ * What a shrug arrives wrapped in, and NOTHING that could be an answer:
+ * "hmm pata nahi yaar", "I did not understand sir", "mujhe samajh nahi aa
+ * raha hai".
+ *
+ * Not `FILLER`, on purpose: that list carries "sahi hai" and "right hai", which
+ * are answers on a yes-or-no ask. So are "haan", "no" and "nahi", and none of
+ * them is here either — "haan, pata nahi" is a hedged yes. A shrug read too
+ * widely is a right answer marked wrong on the device, with nothing behind it
+ * to catch it.
+ */
+const SHRUG_FILLER = new Set([
+  'umm', 'uhh', 'hmm', 'um', 'uh', 'hm', 'ahh', 'arre', 'sorry', 'yaar', 'bhai',
+  'sir', 'maam', 'mam', 'miss', 'didi', 'ji', 'i', 'im', 'am', 'have', 'really',
+  'actually', 'honestly', 'just', 'still', 'yet', 'about', 'this', 'that', 'it',
+  'the', 'question', 'answer', 'properly', 'mujhe', 'mujhko', 'muje', 'kuch',
+  'bilkul', 'abhi', 'bhi', 'toh', 'to', 'na', 'hai', 'ye', 'yeh', 'is', 'iska',
+  'sawaal', 'sawal', 'jawab', 'theek', 'thik', 'se',
+]);
+
+/**
+ * DID THEY SAY THEY DO NOT KNOW — AND WAS THAT ALL THEY SAID?
+ *
+ *   'only'   — every word is a DONT_KNOW phrase or shrug filler: "pata nahi",
+ *              "mujhe samajh nahi aa raha", "I did not understand sir".
+ *   'hedged' — a phrase is there, and so is something else: "Plasma, I don't
+ *              know", "nahi samjha, plasma?", and "They don't understand",
+ *              which is an answer.
+ *   null     — no phrase at all.
+ *
+ * Only 'only' is an absence of an answer. Counting words cannot tell the two
+ * apart — "Plasma, I don't know" is four words, as short as a shrug — and a
+ * phrase matched at either end under a four-word limit marked that right
+ * answer wrong (fifth review), so what is measured is what is LEFT once the
+ * phrase and the filler are gone.
+ */
+export function dontKnowIn(said: string): 'only' | 'hedged' | null {
+  let rest = ` ${normalise(said)} `;
+  let found = false;
+  for (const phrase of SHRUGS) {
+    while (rest.includes(` ${phrase} `)) {
+      rest = rest.replace(` ${phrase} `, ' ');
+      found = true;
+    }
+  }
+  if (!found) return null;
+  return rest.split(' ').every((w) => w === '' || SHRUG_FILLER.has(w)) ? 'only' : 'hedged';
+}
 
 /** "b", "option b", "bee", "the second one", "doosra". */
 const LETTER = /^(?:option\s+|choice\s+)?([a-h])$/;
@@ -133,11 +194,9 @@ export function matchSpokenAnswer(said: string, options: readonly string[]): Loc
   const clean = normalise(said);
   if (clean === '') return { index: null, confidence: 0, by: 'unsure' };
 
-  for (const phrase of DONT_KNOW) {
-    if (clean === phrase || clean.startsWith(`${phrase} `) || clean.endsWith(` ${phrase}`)) {
-      return { index: null, confidence: 1, by: 'dont-know' };
-    }
-  }
+  // A hedged answer is still an answer, and is read like one below: "pata
+  // nahi B" is no letter (that reading wants the letter alone), so it refuses.
+  if (dontKnowIn(clean) === 'only') return { index: null, confidence: 1, by: 'dont-know' };
 
   const bare = stripFiller(clean);
 

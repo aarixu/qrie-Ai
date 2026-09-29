@@ -211,15 +211,21 @@ describe('a spoken answer against an authored whyProbe', () => {
     expect(resolved.verdict.say).toBe('Think about the spaces between the particles.');
   });
 
-  it('escalates "pata nahi" when the ask authored no hint — there is nothing to say', async () => {
+  // It used to escalate here, "nothing to say" — and the model could call it
+  // 'unclear', so the ladder never climbed (fifth review). Her fixed line.
+  it('answers "pata nahi" locally as WRONG when the ask authored no hint', async () => {
     const { resolveSpokenAnswer } = await import('../src/lib/judge');
-    reply = '{"verdict":"wrong","say":"Have a guess.","gave":"question"}';
+    const { LINES } = await import('@ai-tutor/tutor-control');
     const resolved = await resolveSpokenAnswer(
       { question: 'Why?', whyProbe: probe() },
       'pata nahi',
     );
-    expect(resolved.path).toBe('model');
-    expect(completions).toHaveLength(1);
+    expect(resolved.path).toBe('local');
+    expect(completions).toHaveLength(0);
+    expect(resolved.verdict.verdict).toBe('wrong');
+    expect(LINES.haveAGo.en).toContain(resolved.verdict.say);
+    // Asking for a first step is neither a leading question nor the hint.
+    expect(resolved.verdict.gave).toBeUndefined();
   });
 });
 
@@ -294,12 +300,11 @@ describe('an open ask was never a list, so list-shaped readings must refuse', ()
 /**
  * A HEDGE IS NOT AN ABSENCE OF AN ANSWER.
  *
- * `matchSpokenAnswer` matches "pata nahi" at the START or the END of an
- * utterance, not only as the whole of it — which is right for the quiz, where
- * "pata nahi B" is a shrug at a letter. On a class ask it means a student who
- * gave a full answer and then hedged it, and reading that as "I don't know"
- * throws away the sentence in front of the hedge and marks a right answer
- * wrong, locally, with nothing behind it.
+ * "pata nahi" beside anything more is a student who gave an answer and then
+ * hedged it, and reading that as "I don't know" throws away the answer in
+ * front of the hedge and marks a right answer wrong, locally, with nothing
+ * behind it. Only the shrug ALONE is settled on the device (`dontKnowIn`);
+ * everything that carries one goes to the model.
  */
 describe('a hedged answer reaches the model', () => {
   it('escalates a right answer that ends in "pata nahi" rather than filing it wrong', async () => {
@@ -323,6 +328,102 @@ describe('a hedged answer reaches the model', () => {
     );
     expect(resolved.path).toBe('model');
     expect(completions).toHaveLength(1);
+  });
+
+  /**
+   * FIFTH REVIEW. A SHORT right answer with a shrug beside it fitted under the
+   * old four-word limit, so "Plasma, I don't know" was filed WRONG on the
+   * device — the hint said, the ladder climbed, and no model ever heard it.
+   */
+  const food = (): WhyProbe => ({
+    askedAs: 'open',
+    options: [
+      { text: 'Plasma', correct: true, why: 'Yes — plasma is the liquid that carries it.' },
+      { text: 'Red blood cells', why: 'Red cells carry oxygen, not food.', hint: 'Which part is liquid?' },
+    ],
+  });
+  const carries = () => ({
+    question: 'Which part of the blood carries digested food?',
+    hint: 'Think about the liquid part.',
+    whyProbe: food(),
+  });
+
+  it('never files a short right answer with a shrug beside it as "I don\'t know"', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    for (const said of ["Plasma, I don't know", "I don't know, plasma?", "Plasma? I can't say", 'Nahi samjha, plasma?']) {
+      completions.length = 0;
+      reply = '{"verdict":"right","say":"And why the liquid part?"}';
+      const resolved = await resolveSpokenAnswer(carries(), said);
+      expect(resolved.reading, said).not.toBe('dont-know');
+      expect(resolved.verdict.verdict, said).toBe('right');
+      expect(resolved.path, said).toBe('model');
+    }
+  });
+
+  it('leaves a sentence about not understanding to be judged as an answer', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    for (const said of ["They don't understand", 'Usne samjha nahi']) {
+      completions.length = 0;
+      reply = '{"verdict":"right","say":"Why would that make them quiet?"}';
+      const resolved = await resolveSpokenAnswer({ question: 'Why is Ravi quiet in class?', hint: 'Look at his face.' }, said);
+      expect(resolved.path, said).toBe('model');
+      expect(resolved.verdict.verdict, said).toBe('right');
+    }
+  });
+});
+
+/**
+ * "I DON'T KNOW", ALONE, IS SETTLED ON THE DEVICE — HOWEVER IT IS SAID, AND
+ * ON EVERY ASK.
+ *
+ * The pedagogy is explicit that it is WRONG and never unclear, so the ladder
+ * climbs. Sent to the model it could come back 'unclear' and the ladder did not
+ * move; and the local read used to run only on an ask with a whyProbe AND a
+ * hint, and only up to four words.
+ */
+describe('a shrug and nothing else', () => {
+  it('is wrong on the device however much filler it is wrapped in', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    for (const said of ['mujhe samajh nahi aa raha', 'I did not understand sir', 'samajh mein nahi aaya', 'nahi samajh aaya', 'hmm pata nahi yaar']) {
+      const resolved = await resolveSpokenAnswer(ask({ whyProbe: probe() }), said);
+      expect(resolved.path, said).toBe('local');
+      expect(resolved.reading, said).toBe('dont-know');
+      expect(resolved.verdict.verdict, said).toBe('wrong');
+      expect(resolved.verdict.say, said).toBe('Think about the spaces between the particles.');
+    }
+    expect(completions).toHaveLength(0);
+  });
+
+  it('is wrong on the device on an ask with no whyProbe and no hint', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    reply = '{"verdict":"unclear","say":"Say that once more?"}';
+    for (const said of ['nahi samjha', 'pata nahi', "I don't understand"]) {
+      const resolved = await resolveSpokenAnswer({ question: 'Why does the level barely move?' }, said);
+      expect(resolved.path, said).toBe('local');
+      expect(resolved.reading, said).toBe('dont-know');
+      expect(resolved.verdict.verdict, said).toBe('wrong');
+      expect(resolved.verdict.say, said).not.toBe('');
+      expect(resolved.verdict.heard, said).toBe(said);
+    }
+    expect(completions).toHaveLength(0);
+  });
+
+  it('says the ask’s own hint when it has one, whyProbe or not', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    const resolved = await resolveSpokenAnswer(ask(), 'nahi samjha');
+    expect(completions).toHaveLength(0);
+    expect(resolved.verdict).toMatchObject({ verdict: 'wrong', say: 'Think about the spaces between the particles.', gave: 'hint' });
+  });
+
+  it('goes to the model when "can’t say" is itself one of the answers on screen', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    reply = '{"verdict":"right","say":"Why can we not say?"}';
+    const resolved = await resolveSpokenAnswer(
+      { question: 'Will it rain on this day next year?', hint: 'Can anyone know that?', options: [{ text: 'Yes' }, { text: 'No' }, { text: "Can't say", correct: true }] },
+      "can't say",
+    );
+    expect(resolved.path).toBe('model');
+    expect(resolved.verdict.verdict).toBe('right');
   });
 });
 
