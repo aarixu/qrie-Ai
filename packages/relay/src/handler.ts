@@ -23,7 +23,7 @@ import {
   type VertexOptions,
 } from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
-import { PCM_CONTENT_TYPE, VERTEX_SPEECH_MODEL, speakOnVertex, sseToPcm, vertexSpeechCall } from './vertexSpeech.ts';
+import { PCM_CONTENT_TYPE, VERTEX_SPEECH_MODEL, maxSpeechBytes, speakOnVertex, sseToPcm, vertexSpeechCall } from './vertexSpeech.ts';
 import { VERTEX_HEAR_MODEL, hearOnVertex } from './vertexHear.ts';
 import {
   usageFromClass,
@@ -496,9 +496,11 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
             fallbackContentType: PCM_CONTENT_TYPE,
             contentType: PCM_CONTENT_TYPE,
             // Booked when the stream ends, from Vertex's own counts.
+            // Ended early if it runs far past what the line needs (#1).
             transform: () =>
-              sseToPcm((u) =>
-                note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, { status: u.audioBytes > 0 ? 200 : 502, ...u })),
+              sseToPcm(
+                (u) => note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, { status: u.audioBytes > 0 ? 200 : 502, ...u })),
+                { maxAudioBytes: maxSpeechBytes(text) },
               ),
             // A stream that will not start (a 429, a 5xx) gets one collected retry.
             orElse: () => collected('pcm'),

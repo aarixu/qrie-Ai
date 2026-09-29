@@ -14,6 +14,7 @@ import {
   speechPrompt,
   sseToPcm,
   speechRequestBody,
+  maxSpeechBytes,
 } from '../src/vertexSpeech';
 import { SPEECH_PREAMBLE, TRANSCRIPT_LABEL } from '@ai-tutor/voice';
 
@@ -383,12 +384,24 @@ describe('speech a child never has to put in a URL (#2)', () => {
 });
 
 describe('what one line may cost (#1)', () => {
-  it('caps the audio Vertex may send back, in proportion to the words', () => {
-    const short = JSON.parse(speechRequestBody('Hi.', 'en'));
-    const long = JSON.parse(speechRequestBody('a'.repeat(1000), 'en'));
-    expect(short.generationConfig.maxOutputTokens).toBeGreaterThan(0);
-    expect(long.generationConfig.maxOutputTokens).toBeGreaterThan(short.generationConfig.maxOutputTokens);
-    expect(long.generationConfig.maxOutputTokens).toBeLessThanOrEqual(8192);
+  it('never sends maxOutputTokens, which the TTS model refuses with a 400', () => {
+    const sent = JSON.parse(speechRequestBody('Hi.', 'en'));
+    expect(sent.generationConfig.maxOutputTokens).toBeUndefined();
+  });
+
+  it('gives a line audio in proportion to its words, with a floor', () => {
+    expect(maxSpeechBytes('Hi.')).toBe(3 * 48_000);
+    expect(maxSpeechBytes('a'.repeat(600))).toBe(100 * 48_000);
+  });
+
+  it('ends the stream, in whole samples, once a line has carried its budget, and books it once', async () => {
+    const seen: { audioBytes: number }[] = [];
+    const out = await pipe(
+      sse([audioEvent(new Uint8Array([1, 2, 3, 4])), audioEvent(new Uint8Array([5, 6, 7, 8])), audioEvent(new Uint8Array([9, 9])), usageEvent]),
+      sseToPcm((u) => seen.push(u), { maxAudioBytes: 7 }),
+    );
+    expect([...out]).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(seen).toEqual([expect.objectContaining({ audioBytes: 6 })]);
   });
 });
 

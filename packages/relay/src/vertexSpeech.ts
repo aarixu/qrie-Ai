@@ -88,15 +88,22 @@ export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string 
  * THE MOST AUDIO ONE LINE MAY COME BACK AS (overnight review #1).
  *
  * The meter charges a line by its characters, and Vertex bills the audio
- * tokens that come OUT — with no cap, a prompt that got the model to keep
- * talking would be billed far past what the meter took. Gemini TTS runs about
- * 25-32 audio tokens a second, and a teacher speaks about 14 characters a
- * second, so a line needs roughly 2.3 tokens a character. Five is double
- * that, plus a floor for a very short line, and a ceiling for the longest
- * line the relay accepts (MAX_SPEECH_CHARS).
+ * that comes OUT — with no cap, a prompt that got the model to keep talking
+ * would be billed far past what the meter took. `maxOutputTokens` is the
+ * obvious lever and the TTS model REFUSES it: every value from 100 to 16,384
+ * answered 400 "Request contains an invalid argument" (measured 2026-09-29,
+ * and it took her voice down in production for five minutes). So the cap is
+ * on the stream instead: `sseToPcm` ends the line once it has carried this
+ * much audio, which also ends the upstream request.
+ *
+ * A teacher speaks about 14 characters a second (a measured 56-character
+ * Hinglish line came back as 4.4 s); six a second is more than double that
+ * time, with a three-second floor for a short line. Raw 24 kHz 16-bit mono is
+ * 48,000 bytes a second.
  */
-export function maxSpeechTokens(text: string): number {
-  return Math.min(8192, 256 + Math.ceil([...text].length * 5));
+export function maxSpeechBytes(text: string): number {
+  const seconds = Math.max(3, [...text].length / 6);
+  return Math.ceil(seconds * 48_000);
 }
 
 export function speechRequestBody(text: string, lang: SpeechLanguage): string {
@@ -104,7 +111,6 @@ export function speechRequestBody(text: string, lang: SpeechLanguage): string {
     contents: [{ role: 'user', parts: [{ text: speechPrompt(text, lang) }] }],
     generationConfig: {
       responseModalities: ['AUDIO'],
-      maxOutputTokens: maxSpeechTokens(text),
       speechConfig: {
         voiceConfig: { prebuiltVoiceConfig: { voiceName: VERTEX_SPEECH_VOICE } },
         // A hint, not the lever: the accent note above carries it.
@@ -240,7 +246,10 @@ function readEvent(block: string): { audio: Uint8Array[]; mime: string; usage?: 
  * billed that audio. `cancel` (the reader cancelled, or the writer aborted)
  * books what was sent so far; a flag keeps it to one booking.
  */
-export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream<Uint8Array, Uint8Array> {
+export function sseToPcm(
+  onDone?: (usage: SpeechUsage) => void,
+  limits: { maxAudioBytes?: number } = {},
+): TransformStream<Uint8Array, Uint8Array> {
   const decoder = new TextDecoder();
   let text = '';
   let odd: number | null = null;
@@ -248,6 +257,7 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
   let promptTokens: number | undefined;
   let outputTokens: number | undefined;
   let booked = false;
+  let capped = false;
   const book = (): void => {
     if (booked) return;
     booked = true;
@@ -260,6 +270,7 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
 
   const emit = (chunks: Uint8Array[], controller: TransformStreamDefaultController<Uint8Array>): void => {
     for (const chunk of chunks) {
+      if (capped) return;
       let bytes = chunk;
       if (odd !== null) {
         const joined = new Uint8Array(bytes.byteLength + 1);
@@ -272,9 +283,21 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
         odd = bytes[bytes.byteLength - 1];
         bytes = bytes.slice(0, bytes.byteLength - 1);
       }
+      const room = limits.maxAudioBytes === undefined ? Infinity : limits.maxAudioBytes - audioBytes;
+      if (bytes.byteLength > room) {
+        // Whole samples only, then the line is over: the rest is not played,
+        // and ending the stream ends the request that was making it.
+        bytes = bytes.slice(0, Math.max(0, room - (room % 2)));
+        capped = true;
+      }
       if (bytes.byteLength > 0) {
         audioBytes += bytes.byteLength;
         controller.enqueue(bytes);
+      }
+      if (capped) {
+        book();
+        controller.terminate();
+        return;
       }
     }
   };
