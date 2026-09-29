@@ -73,6 +73,15 @@ Every task was followed by a background review; each finding was fixed with a te
 - **T4a F1-F3:** spaced review in the pure fold. Boxes 0-5 on the 1/2/5/12/30/60-day ladder; a box climbs once a session and only when due. Exposure is kept apart from retrieval. MODEL_VERSION 3.
 - **T4a E6-E8:** `nextActivity` checks, in order: due reviews, then a shaky prerequisite, then the next topic. The Lesson Complete screen shows "Quick review first" and holds the autoplay while a review is due. The warm-up items (C3 templates) are not built.
 - Seven rounds of background review, each finding fixed with a failing test first; maths-check was reworked four times on real Class 6-10 board shapes.
+- **T8.1 "Work it out":** the student types their working a line at a time. Each step is checked against the last (`checkStep`: right / arithmetic slip / changed the equation; 20 of 20 hand-labelled steps) and written on the board with ✓/✗. A solving step, or the very equation the question asks for, is recorded as their answer. Verified on production on a cold Class 8 topic.
+- **T5-lite:** when a doubt reply is slow she says "Hmm, let me think about that." The full T5.4 (a streamed reply gated sentence by sentence) is still open.
+- **H4/H5:** an ask carries 2 re-explanations (analogy / everyday / visual / steps), authored at prep. L7 is offered after the worked example and before the answer, or on "🔄 Explain another way" / "phir se samjhao". Every help event carries its strategy tag.
+
+**Still open, and why:**
+- T7 barge-in needs a phone to measure echo and false triggers.
+- T8.2 finger ink needs TD12 and a check on Aarav's phone.
+- C3 (≥144 question templates), and Metric v2 which depends on them, need Aarav's spot check.
+- T9.2's automatic halt is a DB job, so it belongs to the LMS lane.
 
 **Found on production, not fixed:** a student in the Class 6–8 band who opens a Class 10 topic by URL prepares it cold, because the catalogue query is filtered by band (`klass=gte.6&klass=lte.8`) even though that topic is published. `/api/prep/lock` answers 503 "we cannot answer this second" (the class still prepares). PostHog capture answers 401 (key).
 
