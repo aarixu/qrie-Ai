@@ -428,6 +428,29 @@ describe('several worked cases on one board are each their own problem', () => {
     ok('x + y = 5', 'x = 0', 'y = 5', 'x = 1', 'y = 4', 'x - y = 1', 'x = 1', 'y = 0', 'x = 2', 'y = 1');
   });
 
+  /** THE FOURTH REVIEW (2026-09-29): tries, tables with fixed givens, checks in letters. */
+  it('fails a wrong pair of answers whose check line follows', () => {
+    fails('x + y = 14', 'x - y = 4', 'x = 10', 'y = 4', 'x + y = 10 + 4 = 14');
+    fails('x + y = 10', 'x - y = 2', '2x = 12', 'x = 7', 'x + y = 7 + y = 10', 'y = 3', '2x + 1 = 7', 'x = 3');
+  });
+  it('reads tables whose first letter is a fixed given', () => {
+    ok('d = st', 's = 40', 't = 1', 'd = 40', 't = 2', 'd = 80', 't = 3', 'd = 120');
+    ok('y = kx', 'k = 3', 'x = 1', 'y = 3', 'x = 2', 'y = 6', 'x = 3', 'y = 9');
+    ok('s = 40', 't = 3', 'd = 40(3) = 120', 't = 5', 'd = 40(5) = 200');
+    ok('a = lb', 'l = 8', 'b = 5', 'a = 8(5) = 40', 'b = 6', 'a = 8(6) = 48');
+    fails('d = st', 's = 40', 't = 1', 'd = 40', 't = 2', 'd = 90');
+  });
+  it('reads the graphical method when the second equation is in y = form', () => {
+    ok('y = 5 - x', 'x = 0', 'y = 5', 'x = 1', 'y = 4', 'y = 2x - 2', 'x = 1', 'y = 0', 'x = 2', 'y = 2');
+  });
+  it('fails a wrong answer restated after a check written with letters', () => {
+    fails('2x + 3 = 11', '2x = 8', 'x = 4', '2x + 3 = 2(4) + 3 = 11', 'So x = 5');
+  });
+  it('reads examples substituted in numbers alone', () => {
+    ok('x = 1', '3(1) + 2 = 5', 'x = 2', '3(2) + 2 = 8');
+    ok('y = 2x + 3', 'x = 1', '2(1) + 3 = 5', 'x = 2', '2(2) + 3 = 7');
+  });
+
   it('refuses a runaway nested power instead of freezing the thread', () => {
     const t0 = Date.now();
     const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));

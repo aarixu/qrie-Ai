@@ -724,8 +724,8 @@ function problemsOf(prepared: Prepared[]): Segment[] {
   let inClaims = false;
   let givens = false;
   let claimed = new Set<string>();
-  /** The first letter claimed in the current run of claims. */
-  let runFirst: string | null = null;
+  /** The letters claimed in the current run, in the order they were first claimed. */
+  let runOrder: string[] = [];
   /** The claim lines of an answer that the next working also takes as its given. */
   let passOn: Prepared[] | null = null;
   const close = () => {
@@ -735,7 +735,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     inClaims = false;
     givens = false;
     claimed = new Set();
-    runFirst = null;
+    runOrder = [];
   };
   /** Start the next problem on lines carried in from the one just closed. */
   const carryIn = (lines: readonly Prepared[]) => {
@@ -746,18 +746,34 @@ function problemsOf(prepared: Prepared[]): Segment[] {
   };
   /**
    * `p` gives a letter a different value from the one the problem so far gave
-   * it, with working or an unreadable line in between. Two bare rival answers
-   * side by side ("x = 3, x = 4") are still one problem, held to the last —
-   * and so is an answer restated after a line that only checks the first one
-   * ("x = 4, 2(4) + 3 = 11, So x = 5"; "x = 2, 2^2 - 5(2) + 6 = 0, x = 4"):
-   * a line with no letter in it separates nothing (third review).
+   * it AND is followed by its own working — a new example, not a rival
+   * answer: "x = 1, 3(1) + 2 = 5, x = 2, 3(2) + 2 = 8"; "a = 4, P = 4a = 16,
+   * a = 5, P = …" (an unreadable line counts as working). A BARE re-claim with
+   * nothing after it is a rival, held to the problem it follows: "x = 3,
+   * x = 4"; "x = 4, 2x + 3 = 2(4) + 3 = 11, So x = 5"; a wrong second root
+   * (third and fourth reviews, 2026-09-29).
    */
-  const reclaims = (p: Prepared): boolean =>
-    cur.some(
-      (l, k) =>
-        l.claims.some((h) => p.claims.some((c) => h.name === c.name && !equals(h.stated, c.stated))) &&
-        cur.slice(k + 1).some((x) => x.parsed === null || x.kind === 'work'),
+  const reclaims = (p: Prepared, i: number): boolean => {
+    const rival = cur.some((l) =>
+      l.claims.some((h) => p.claims.some((c) => h.name === c.name && !equals(h.stated, c.stated))),
     );
+    if (!rival) return false;
+    const next = prepared[i + 1];
+    if (next === undefined || next.practice) return false;
+    if (next.parsed === null) return true;
+    if (next.kind === 'work') return p.claims.some((c) => varsOf(next).has(c.name));
+    if (next.kind === 'other') return showsValue(p.claims, sidesOf(next));
+    return false;
+  };
+  /** Some claimed value is written inside working: a side that is more than a lone number. */
+  const showsValue = (claims: readonly Claim[], sides: readonly string[]): boolean => {
+    const working = sides.filter((side) => !/^[-+]?[0-9.]+$/.test(side));
+    return claims.some((c) => {
+      const shown = formatRational(c.stated).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+      const at = new RegExp(`(^|[^0-9.])${shown}([^0-9.]|$)`);
+      return working.some((side) => at.test(side));
+    });
+  };
   /** Some of `names` appears in an equation of the problem so far that no claim in it answers. */
   const unanswered = (names: readonly string[]): boolean => {
     const answered = new Set(cur.flatMap((p) => p.claims.map((c) => c.name)));
@@ -788,36 +804,58 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     // Written out means inside working: a side after the first that is more
     // than a lone number. "x - y = 1" does not show x = 1; "2(1) + 3" does
     // (third review, 2026-09-29 — the graphical method's second table).
-    const working = sidesOf(next).slice(1).filter((side) => !/^[-+]?[0-9.]+$/.test(side));
-    return claims.some((c) => {
-      if (!used.has(c.name)) return false;
-      const shown = formatRational(c.stated).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
-      const at = new RegExp(`(^|[^0-9.])${shown}([^0-9.]|$)`);
-      return working.some((side) => at.test(side));
-    });
+    return showsValue(
+      claims.filter((c) => used.has(c.name)),
+      sidesOf(next).slice(1),
+    );
   };
   /**
-   * A TRY, not an answer: the working after the claim evaluates the very side
-   * of the unanswered equation ("4x + 5 = 17", then "x = 1", then
-   * "4x + 5 = 4(1) + 5 = 9") and another value of the same letter is tried
-   * later. Trial and error is NCERT Class 6-7 method; holding each try to the
-   * equation failed every correct board of it (third review, 2026-09-29).
+   * A TRY, not an answer (NCERT Class 6-7 trial and error): the working after
+   * the claim evaluates the very side of the unanswered equation ("4x + 5 =
+   * 17", "x = 1", "4x + 5 = 4(1) + 5 = 9") without reaching the equation's
+   * other side, and a DIFFERENT value of the same letter is tried later the
+   * same way. Working that reaches the other side ("x + y = 10 + 4 = 14") is
+   * an answer being checked, and is held to the equation. A lone letter is
+   * never "the same side" (fourth review, 2026-09-29).
    */
-  const isTry = (i: number, claims: readonly Claim[], next: Prepared): boolean => {
+  const isTry = (claims: readonly Claim[], next: Prepared): boolean => {
     const first = sidesOf(next)[0];
+    if (first === undefined || /^[a-z]$/.test(first)) return false;
+    const equation = cur.find((l) => l.kind === 'work' && sidesOf(l).includes(first));
+    if (!equation) return false;
+    const others = sidesOf(equation).filter((side) => side !== first);
+    if (sidesOf(next).slice(1).some((side) => others.includes(side))) return false;
     const names = new Set(claims.map((c) => c.name));
-    const sameSide = cur.some((l) => l.kind === 'work' && sidesOf(l).includes(first));
-    const triedAgain = prepared.slice(i + 1).some((l) => l !== next && l.claims.some((c) => names.has(c.name)));
-    return sameSide && triedAgain;
+    for (let k = prepared.indexOf(next) + 1; k < prepared.length; k++) {
+      const again = prepared[k].claims.some(
+        (c) => names.has(c.name) && !claims.some((r) => r.name === c.name && equals(r.stated, c.stated)),
+      );
+      if (again) return sidesOf(prepared[k + 1] ?? prepared[k])[0] === first && prepared[k + 1] !== undefined;
+    }
+    return false;
   };
   /**
-   * A table row: the run's FIRST letter — the row's input — claimed again, in
-   * a run that already names two or more, on an unlabelled line. Any letter
-   * used to do: "d = 40(3)" then "d = 130" read as a new row, and the wrong
-   * result was never checked (third review, 2026-09-29).
+   * A table row: a letter already claimed in this run comes back, and was not
+   * claimed on the line just before — "x = 0, y = 3, x = 1" is a row, while
+   * "d = 40(3), d = 130" and "y = 10 - 6, y = 5" are a result and its rival,
+   * checked against each other (third and fourth reviews, 2026-09-29). The
+   * run's givens claimed before the row's first letter are carried into the
+   * row with the table's equation: "s = 40, t = 1, d = 40, t = 2, d = 80".
    */
-  const newRow = (p: Prepared): boolean =>
-    claimed.size >= 2 && !p.parsed?.final && runFirst !== null && p.claims.some((c) => c.name === runFirst);
+  const newRow = (p: Prepared): boolean => {
+    if (claimed.size < 2 || p.parsed?.final) return false;
+    const before = cur[cur.length - 1];
+    return p.claims.some((c) => claimed.has(c.name) && !before?.claims.some((h) => h.name === c.name));
+  };
+  /** The lines a new row starts on: the table's equations, and the givens claimed before its first letter. */
+  const rowCarry = (p: Prepared): Prepared[] => {
+    const row = p.claims.find((c) => claimed.has(c.name))?.name;
+    const upTo = row === undefined ? -1 : runOrder.indexOf(row);
+    const givenNames = new Set(runOrder.slice(0, Math.max(0, upTo)));
+    return cur.filter(
+      (l) => l.kind === 'work' || (l.claims.length > 0 && l.claims.every((c) => givenNames.has(c.name))),
+    );
+  };
   for (let i = 0; i < prepared.length; i++) {
     const p = prepared[i];
     if (p.practice) {
@@ -827,11 +865,11 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     }
     if (p.kind === 'claim') {
       if (inClaims && newRow(p)) {
-        // A new row: the table's equation comes with it.
-        const equation = cur.filter((l) => l.kind === 'work');
+        // A new row: the table's equation and the run's earlier givens come with it.
+        const carry = rowCarry(p);
         close();
-        carryIn(equation);
-      } else if (!p.parsed?.final && reclaims(p)) {
+        carryIn(carry);
+      } else if (!p.parsed?.final && reclaims(p, i)) {
         // A letter given a new value, unlabelled, with nothing between that
         // the checker could read ("a = 4, P = 4a = 16, a = 5": capital P is
         // not read): a new example, not a rival answer. A "Solution:" line
@@ -847,7 +885,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
           !next.practice &&
           run.claims.some((c) => varsOf(next).has(c.name));
         if (uses) {
-          if (cur.length > 0 && unanswered(run.claims.map((c) => c.name)) && !isTry(i, run.claims, next)) {
+          if (cur.length > 0 && unanswered(run.claims.map((c) => c.name)) && !isTry(run.claims, next)) {
             // The answer to the problem so far; and the next one's given too
             // when that working writes the value out.
             if (substituted(run.claims, next)) passOn = [];
@@ -858,7 +896,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
         }
       }
       inClaims = true;
-      runFirst ??= p.claims[0]?.name ?? null;
+      for (const c of p.claims) if (!runOrder.includes(c.name)) runOrder.push(c.name);
       p.claims.forEach((c) => claimed.add(c.name));
       cur.push(p);
       passOn?.push(p);
@@ -870,7 +908,7 @@ function problemsOf(prepared: Prepared[]): Segment[] {
         inClaims = false;
         givens = false;
         claimed = new Set();
-        runFirst = null;
+        runOrder = [];
       } else {
         const given = passOn;
         close();
