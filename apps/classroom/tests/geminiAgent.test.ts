@@ -746,3 +746,42 @@ describe('a board reply', () => {
     expect(said).toEqual([MALFORMED_REPLY_LINE]);
   });
 });
+
+/** T5-lite: a slow reply gets her thinking-aloud line first; a quick one does not. */
+describe('thinking out loud', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  beforeEach(() => setTutorLanguage('en'));
+  const answerAfter = (ms: number) =>
+    vi.stubGlobal('fetch', async () => {
+      await new Promise((r) => setTimeout(r, ms));
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ choices: [{ message: { content: JSON.stringify({ say: 'Here is why.', recallBeatId: null, done: false }) }, finish_reason: 'stop' }] }),
+      };
+    });
+  const run = async (ms: number) => {
+    answerAfter(ms);
+    const said: string[] = [];
+    const s = createGeminiAgent({ student: { klass: 10 } as never, thinkingMs: 30 }).start(ctx, {
+      say: async (t: string) => void said.push(t),
+      recall: () => {},
+      done: () => {},
+    });
+    s.sendUserText('why four chambers?');
+    await new Promise((r) => setTimeout(r, ms + 80));
+    return said;
+  };
+
+  it('says she is thinking when the reply is slow, then the reply', async () => {
+    const said = await run(150);
+    expect(said).toHaveLength(2);
+    expect(said[0]).toMatch(/think|second|see/i);
+    expect(said[1]).toBe('Here is why.');
+  });
+
+  it('says nothing extra when the reply is quick', async () => {
+    const said = await run(0);
+    expect(said).toEqual(['Here is why.']);
+  });
+});

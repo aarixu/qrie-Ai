@@ -35,6 +35,11 @@ import type { DoubtBoard, RawStep } from './doubtBoard';
 
 export interface GeminiAgentOptions {
   /**
+   * How long a reply may take before she says she is thinking. Tests shorten
+   * it; the app leaves it at THINKING_ALOUD_MS.
+   */
+  thinkingMs?: number;
+  /**
    * Only the DIRECT providers need one, and those are dev-only paths now.
    * The relay carries no key at all — that is the whole point of it.
    */
@@ -378,6 +383,22 @@ export const MALFORMED_REPLY_LINE =
 export const MALFORMED_REPLY_LINE_HI =
   'Sorry, bolte-bolte main thoda uljha gayi. Ek baar phir se puchoge, shayad alag shabdon mein?';
 
+/** How long a reply may take before she says she is thinking about it. */
+export const THINKING_ALOUD_MS = 1200;
+
+const THINKING: Record<'en' | 'hi-en', readonly string[]> = {
+  en: ['Hmm, let me think about that.', 'Good question — give me a second.', "Okay, let's see."],
+  'hi-en': ['Hmm, sochne do.', 'Achha sawaal — ek second.', 'Theek hai, dekhte hain.'],
+};
+
+/** Her thinking-aloud line, varied by the question so it is not the same every time. */
+export function thinkingLine(lang: string, seed: string): string {
+  const lines = THINKING[lang === 'hi-en' ? 'hi-en' : 'en'];
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  return lines[Math.abs(h) % lines.length];
+}
+
 export const malformedLine = (lang?: string): string =>
   lang === 'hi-en' ? MALFORMED_REPLY_LINE_HI : MALFORMED_REPLY_LINE;
 
@@ -525,11 +546,30 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
 
       // One promise chain so replies can never interleave out of order.
       let chain = Promise.resolve();
-      const enqueue = (userText: string, opts?: SendOptions): void => {
+      const enqueue = (userText: string, send?: SendOptions): void => {
         chain = chain
           .then(async () => {
             if (stopped) return;
-            const reply = await call(userText);
+            /**
+             * A TUTOR THINKS OUT LOUD (T5-lite, 2026-09-29). A reply takes a
+             * few seconds, and a person does not sit in silence while they
+             * think about a child's question: if the model has not answered
+             * within THINKING_ALOUD_MS she says so — "Hmm, let me think about
+             * that." — and the reply follows that line. A quick reply gets no
+             * such line.
+             */
+            const pending = call(userText);
+            let thinking: Promise<void> | null = null;
+            const timer = setTimeout(() => {
+              if (!stopped) thinking = io.say(thinkingLine(tutorLanguage(), userText));
+            }, opts.thinkingMs ?? THINKING_ALOUD_MS);
+            let reply: Awaited<typeof pending>;
+            try {
+              reply = await pending;
+            } finally {
+              clearTimeout(timer);
+              if (thinking) await thinking;
+            }
             /**
              * A failure while DELIVERING the reply — laying it on the board
              * or recalling a beat; `io.say` itself never rejects — is not a
@@ -550,11 +590,11 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
             // The app's own opener is one the stand-in ignores; handing it
             // over left the doubt silent (sixth review). She says the
             // connection line instead.
-            if (scripted && !opts?.opener) {
+            if (scripted && !send?.opener) {
               // The scripted tutor takes the question instead. Same persona,
               // same room, and the student gets an answer rather than an
               // apology about our plumbing.
-              scripted.sendUserText(userText, opts);
+              scripted.sendUserText(userText, send);
               return;
             }
             await io.say(
