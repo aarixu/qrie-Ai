@@ -192,7 +192,7 @@ export interface PrepOptions {
 export function parsePlan(raw: string): Blueprint | null {
   const text = stripFence(raw);
   try {
-    return JSON.parse(text) as Blueprint;
+    return wellFormed(JSON.parse(text));
   } catch {
     // fall through
   }
@@ -200,10 +200,95 @@ export function parsePlan(raw: string): Blueprint | null {
   const last = text.lastIndexOf('}');
   if (first < 0 || last <= first) return null;
   try {
-    return JSON.parse(text.slice(first, last + 1)) as Blueprint;
+    return wellFormed(JSON.parse(text.slice(first, last + 1)));
   } catch {
     return null;
   }
+}
+
+/**
+ * The words each instruction cannot be drawn or said without.
+ *
+ * A PLAN IS A MODEL'S REPLY, and one in five preparations of a Class 8 topic
+ * died on production with "Cannot read properties of undefined (reading
+ * 'trim')" — a `say` with no text. A fuzz over every string in a real plan
+ * found the same crash from a title, a write, a card, a list item and a
+ * caption. An instruction missing its words is dropped here; the rest of the
+ * class is prepared as planned (and the gates still judge what is left).
+ */
+const REQUIRED: Record<string, readonly string[]> = {
+  title: ['text'],
+  diagram: ['ref'],
+  picture: ['ref'],
+  label: ['target', 'text'],
+  point: ['ref', 'part'],
+  sketch: ['ref', 'from'],
+  equation: ['text'],
+  write: ['text'],
+  card: ['heading', 'body'],
+  note: ['text'],
+  caption: ['text'],
+  place: ['id', 'noun'],
+  connect: ['from', 'to'],
+  annotate: ['target', 'mark'],
+  say: ['text'],
+};
+
+const isWords = (v: unknown): v is string => typeof v === 'string' && v.trim() !== '';
+
+function wellFormedStep(step: unknown): Instruction | null {
+  if (typeof step !== 'object' || step === null) return null;
+  const s = { ...(step as Record<string, unknown>) };
+  const kind = s.do;
+  if (typeof kind !== 'string') return null;
+  if (kind === 'ask') {
+    // `question` may be repaired from `written` later (dropBadProbes); one of
+    // them must be words.
+    if (!isWords(s.question) && !isWords(s.written)) return null;
+    if (s.question !== undefined && typeof s.question !== 'string') delete s.question;
+    return s as unknown as Instruction;
+  }
+  if (kind === 'list') {
+    const items = Array.isArray(s.items) ? s.items.filter((i) => isWords((i as { term?: unknown } | null)?.term)) : [];
+    if (items.length === 0) return null;
+    s.items = items;
+    if (s.heading !== undefined && !isWords(s.heading)) delete s.heading;
+    return s as unknown as Instruction;
+  }
+  if (kind === 'flow') {
+    const steps = Array.isArray(s.steps) ? s.steps.filter((f) => isWords((f as { label?: unknown } | null)?.label)) : [];
+    if (steps.length === 0) return null;
+    s.steps = steps;
+    return s as unknown as Instruction;
+  }
+  if (kind === 'chart') {
+    const data = Array.isArray(s.data)
+      ? s.data.filter((d) => isWords((d as { label?: unknown } | null)?.label) && Number.isFinite((d as { value?: unknown }).value))
+      : [];
+    if (data.length === 0) return null;
+    s.data = data;
+    return s as unknown as Instruction;
+  }
+  const needs = REQUIRED[kind];
+  // A kind this list does not know goes on as it came: the layout decides.
+  if (needs && !needs.every((field) => isWords(s[field]))) return null;
+  return s as unknown as Instruction;
+}
+
+function wellFormed(parsed: unknown): Blueprint | null {
+  if (typeof parsed !== 'object' || parsed === null || !Array.isArray((parsed as { beats?: unknown }).beats)) return null;
+  const plan = parsed as Blueprint;
+  plan.beats = plan.beats
+    .filter((b) => typeof b === 'object' && b !== null)
+    .map((b) => ({
+      ...b,
+      narration: typeof b.narration === 'string' ? b.narration : '',
+      board: (Array.isArray(b.board) ? b.board : [])
+        .map(wellFormedStep)
+        .filter((s): s is Instruction => s !== null),
+    }));
+  if (!Array.isArray(plan.visuals)) plan.visuals = [];
+  return plan;
 }
 
 const stripFence = (s: string): string =>
