@@ -679,32 +679,78 @@ function varsOf(p: Prepared): Set<string> {
   return out;
 }
 
-function problemsOf(prepared: Prepared[]): Prepared[][] {
+/** One problem's lines, and those of them carried in from the problem before it. */
+interface Segment {
+  lines: Prepared[];
+  /** A table's equation, or an answer used as the next problem's given. Never this problem's to fail. */
+  carried: Set<Prepared>;
+}
+
+function problemsOf(prepared: Prepared[]): Segment[] {
   /**
    * A run of claims closes a problem; the next line of working opens another.
    * A practice question is a run of its own.
    *
-   * TWO MORE RULES (review, 2026-09-29) — each ordinary Class 6-10 shape was
-   * failed as wrong maths, and a failed class is refused:
-   *   - GIVENS. A run of claims followed straight away by working that USES
-   *     those variables opens a new problem rather than closing the last one:
-   *     "x = 4, 2x + 3 = 11, x = 5, 2x + 3 = 13" is two problems. A claim whose
-   *     next working does not use it still closes (so a wrong final answer after
-   *     its own working is still caught).
+   * MORE RULES (two reviews, 2026-09-29) — each ordinary Class 6-10 shape was
+   * failed as wrong maths (and a failed class is refused), or wrong maths was
+   * passed. At a run of claims followed straight away by working that USES
+   * those variables:
+   *   - AN ANSWER. If the problem so far has an equation in one of those
+   *     variables that no claim has answered yet, the run is its answer and is
+   *     checked against it: "5x = 15, x = 4" fails. When the working after it
+   *     writes the value out ("2x + 1 = 2(4) + 1"), the run is ALSO carried
+   *     into the next problem as its given — "find x, then use it".
+   *     When the working does not write it out ("x = 2" then "3x - 1 = 8"),
+   *     the next problem is a fresh one in the same letter.
+   *   - GIVENS. Otherwise — every one of those variables already answered in
+   *     the problem so far, or the board starting on them — the run opens a new
+   *     problem: "x = 4, 2x + 3 = 11, x = 5, 2x + 3 = 13" and
+   *     "a = 4, P = 4a = 16, a = 5, P = 4a = 20" are two problems each.
    *   - A TABLE. Inside a run of claims, a variable claimed again starts a new
-   *     problem: "x = 0, y = 3, x = 1, y = 5" is rows, not rival answers.
+   *     problem, and the table's own equation is carried into every row:
+   *     "y = 2x + 3, x = 0, y = 3, x = 1, y = 6" fails its second row.
+   * A carried line is never failed by the problem it was carried into: the
+   * fault is in that problem's own lines (`checkLines`).
    */
-  const runs: Prepared[][] = [];
+  const runs: Segment[] = [];
   let cur: Prepared[] = [];
+  let carried = new Set<Prepared>();
   let inClaims = false;
   let givens = false;
   let claimed = new Set<string>();
+  /** The claim lines of an answer that the next working also takes as its given. */
+  let passOn: Prepared[] | null = null;
   const close = () => {
-    if (cur.length > 0) runs.push(cur);
+    if (cur.length > 0) runs.push({ lines: cur, carried });
     cur = [];
+    carried = new Set();
     inClaims = false;
     givens = false;
     claimed = new Set();
+  };
+  /** Start the next problem on lines carried in from the one just closed. */
+  const carryIn = (lines: readonly Prepared[]) => {
+    for (const l of lines) {
+      cur.push(l);
+      carried.add(l);
+    }
+  };
+  /**
+   * `p` gives a letter a different value from the one the problem so far gave
+   * it, with a line of something else in between. Two bare rival answers side
+   * by side ("x = 3, x = 4") are still one problem, held to the last.
+   */
+  const reclaims = (p: Prepared): boolean =>
+    cur.some(
+      (l, k) =>
+        l.claims.some((h) => p.claims.some((c) => h.name === c.name && !equals(h.stated, c.stated))) &&
+        cur.slice(k + 1).some((x) => x.kind !== 'claim'),
+    );
+  /** Some of `names` appears in an equation of the problem so far that no claim in it answers. */
+  const unanswered = (names: readonly string[]): boolean => {
+    const answered = new Set(cur.flatMap((p) => p.claims.map((c) => c.name)));
+    const used = new Set(cur.filter((p) => p.kind === 'work').flatMap((p) => [...varsOf(p)]));
+    return names.some((n) => used.has(n) && !answered.has(n));
   };
   /** The claims of the run starting at `i`, and the line after it. */
   const runAt = (i: number): { claims: Claim[]; next: Prepared | undefined } => {
@@ -740,23 +786,45 @@ function problemsOf(prepared: Prepared[]): Prepared[][] {
     const p = prepared[i];
     if (p.practice) {
       close();
-      runs.push([p]);
+      runs.push({ lines: [p], carried: new Set() });
       continue;
     }
     if (p.kind === 'claim') {
-      if (inClaims && newRow(p)) close();
+      if (inClaims && newRow(p)) {
+        // A new row: the table's equation comes with it.
+        const equation = cur.filter((l) => l.kind === 'work');
+        close();
+        carryIn(equation);
+      } else if (!p.parsed?.final && reclaims(p)) {
+        // A letter given a new value, unlabelled, with nothing between that
+        // the checker could read ("a = 4, P = 4a = 16, a = 5": capital P is
+        // not read): a new example, not a rival answer. A "Solution:" line
+        // that disagrees is still held to the problem it closes.
+        close();
+      }
       if (!inClaims) {
         const run = runAt(i);
         const next = run.next;
-        const opens = next !== undefined && next.kind === 'work' && !next.practice && substituted(run.claims, next);
-        if (opens) {
-          if (cur.length > 0) close();
-          givens = true;
+        const uses =
+          next !== undefined &&
+          next.kind === 'work' &&
+          !next.practice &&
+          run.claims.some((c) => varsOf(next).has(c.name));
+        if (uses) {
+          if (cur.length > 0 && unanswered(run.claims.map((c) => c.name))) {
+            // The answer to the problem so far; and the next one's given too
+            // when that working writes the value out.
+            if (substituted(run.claims, next)) passOn = [];
+          } else {
+            if (cur.length > 0) close();
+            givens = true;
+          }
         }
       }
       inClaims = true;
       p.claims.forEach((c) => claimed.add(c.name));
       cur.push(p);
+      passOn?.push(p);
       continue;
     }
     if (p.kind === 'work' && inClaims) {
@@ -766,30 +834,39 @@ function problemsOf(prepared: Prepared[]): Prepared[][] {
         givens = false;
         claimed = new Set();
       } else {
+        const given = passOn;
         close();
+        if (given) carryIn(given);
       }
+      passOn = null;
     }
     cur.push(p);
   }
   close();
 
   // Join neighbours that are one problem after all (see the header, step 3).
-  const out: Prepared[][] = [];
-  let acc: Prepared[] | null = null;
-  for (const run of runs) {
+  // A segment that carries lines in is never joined: it already says where
+  // it came from, and joining would hold a line twice.
+  const out: Segment[] = [];
+  let acc: Segment | null = null;
+  for (const seg of runs) {
     if (!acc) {
-      acc = run;
-    } else if (isPractice(acc) || isPractice(run) || !hasClaims(acc) || !hasClaims(run)) {
+      acc = seg;
+      continue;
+    }
+    const a: Prepared[] = acc.lines;
+    const r: Prepared[] = seg.lines;
+    if (seg.carried.size > 0 || isPractice(a) || isPractice(r) || !hasClaims(a) || !hasClaims(r)) {
       out.push(acc);
-      acc = run;
-    } else if (agree(acc, run)) {
-      acc = [...acc, ...run];
+      acc = seg;
+    } else if (agree(a, r)) {
+      acc = { lines: [...a, ...r], carried: acc.carried };
     } else {
-      const joined: Prepared[] = [...acc, ...run];
-      if (best(joined).failCount <= best(acc).failCount + best(run).failCount) acc = joined;
+      const joined: Prepared[] = [...a, ...r];
+      if (best(joined).failCount <= best(a).failCount + best(r).failCount) acc = { lines: joined, carried: acc.carried };
       else {
         out.push(acc);
-        acc = run;
+        acc = seg;
       }
     }
   }
@@ -810,9 +887,35 @@ export function checkLines(lines: readonly Line[]): CheckResult {
   let solutions: Record<string, Rational> = {};
   let roots: Record<string, Rational[]> = {};
 
-  for (const seg of problemsOf(prepared)) {
+  /**
+   * A line in two problems (carried: a table's equation, an answer used as a
+   * given) keeps its worst verdict — failed over passed over skipped — but is
+   * never failed by the problem it was carried INTO. There the fault is that
+   * problem's own: its claims take the reason instead, so a wrong table row is
+   * the line marked, not the equation every row shares.
+   */
+  const rank = (j: Judged) => (j.status === 'failed' ? 2 : j.status === 'passed' ? 1 : 0);
+  const settle = (p: Prepared, j: Judged) => {
+    const had = verdict.get(p);
+    if (!had || rank(j) > rank(had)) verdict.set(p, j);
+  };
+  for (const { lines: seg, carried } of problemsOf(prepared)) {
     const e = best(seg);
-    seg.forEach((p, i) => verdict.set(p, e.judged[i]));
+    const blame = seg.flatMap((p, i) => (carried.has(p) && e.judged[i].status === 'failed' ? [e.judged[i]] : []));
+    // The problem's own LAST claim takes it: in a table row "x = 1, y = 6" the
+    // x is the row's input and the y is what is wrong.
+    const own = seg.filter((p) => !carried.has(p) && p.claims.length > 0);
+    const blamed = own[own.length - 1];
+    seg.forEach((p, i) => {
+      const j = e.judged[i];
+      if (carried.has(p)) {
+        settle(p, j.status === 'failed' ? { ...j, status: 'passed' } : j);
+      } else if (blame.length > 0 && p === blamed && j.status !== 'failed') {
+        settle(p, { ...blame[0], status: 'failed' });
+      } else {
+        settle(p, j);
+      }
+    });
     if (hasClaims(seg)) {
       solutions = {};
       roots = {};

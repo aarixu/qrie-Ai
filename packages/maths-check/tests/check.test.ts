@@ -373,6 +373,36 @@ describe('several worked cases on one board are each their own problem', () => {
     expect(r.failures.map((f) => f.id)).toContain('l3');
   });
 
+  /**
+   * THE SECOND REVIEW (2026-09-29): the givens rule let "find x, then use it"
+   * through with a wrong x — the commonest multi-part shape there is — and a
+   * table checked only its first row.
+   */
+  const fails = (...t: string[]) => {
+    const r = checkLines(lines(...t));
+    expect(r.failures.length, JSON.stringify(r.failures)).toBeGreaterThan(0);
+    return r;
+  };
+  it('fails a wrong answer that the next line goes on to use', () => {
+    fails('5x = 15', 'x = 4', '2x + 1 = 2(4) + 1 = 9');
+    fails('x + 2x = 180', '3x = 180', 'x = 50', '2x = 2(50) = 100');
+    fails('x + y = 10', 'x - y = 2', 'x = 7', 'y = 3', 'xy = 7(3) = 21');
+  });
+  it('passes the same shape when the answer is right', () => {
+    ok('5x = 15', 'x = 3', '2x + 1 = 2(3) + 1 = 7');
+    ok('x + y = 10', 'x - y = 2', 'x = 6', 'y = 4', 'xy = 6(4) = 24');
+  });
+  it('checks every row of a table against its equation, and blames the row', () => {
+    const r = fails('y = 2x + 3', 'x = 0', 'y = 3', 'x = 1', 'y = 6');
+    expect(r.failures.map((f) => f.id)).toEqual(['l4']);
+  });
+  it('reads a second example that does not write the value out', () => {
+    ok('a = 4', 'P = 4a = 16', 'a = 5', 'P = 4a = 20');
+    ok('a = 4', 'p = 4a = 16', 'a = 5', 'p = 4a = 20');
+    ok('x = 4', '2x + 3 = 11', 'x = 5', '2x + 3 = 13');
+    fails('a = 4', 'p = 4a = 16', 'a = 5', 'p = 4a = 21');
+  });
+
   it('refuses a runaway nested power instead of freezing the thread', () => {
     const t0 = Date.now();
     const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));
