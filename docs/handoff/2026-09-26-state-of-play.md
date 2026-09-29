@@ -37,6 +37,28 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."* The build plan is in Part 2, "The AI tutor build plan — T0–T9". This section records what 2026-09-28 proved and what to do first.
 
+### Shipped overnight, 2026-09-28 → 29 (all deployed to production and checked there)
+
+Aarav's instructions that night: set the ₹5/hour ceiling aside until the tutor is built; speech and hearing on Vertex (no OpenRouter/Deepgram — Hinglish); take the gate off; build a human, proactive tutor that uses the canvas live.
+
+| Area | What is live | Checked on production |
+|---|---|---|
+| Voice | Gemini TTS (`gemini-3.1-flash-tts-preview`, Sulafat) on Vertex, streamed as PCM, played through Web Audio; English or Hinglish from onboarding (`4a637d0`) | first chunk 1.5–2.2 s; lines play back-to-back |
+| Ear | Gemini (`gemini-3.1-flash-lite`) transcribes, Hinglish in Roman script (`4005eb2`) | "Pata nahi mujhe lagta hai answer 20 hai." |
+| T0a safety | one `haltSession()` for every path + support screen; stub only on model failure; no name in the planner; full-text distress scan; truthful mic copy and `/privacy`; Vertex `safetySettings` (`50fcd21`) | mic dialog and `/privacy` show the new copy |
+| T1 prepared class | page-relative layout + overlap gate; one question per ask, answer hidden during the hold; outcome tags; `@ai-tutor/maths-check` in the gate; reviewer in live prep; keeps stored `pending`, catalogue serves `published` only (`d5ea464`, `a4fac8d`) | — |
+| Catalogue | "Pair of Linear Equations" chapter prewarmed (4 topics, ₹36) and published | all 4 serve |
+| Live board (T2.3/T2.4) | Meera writes, marks, ticks and solves on the board during a doubt; ink drawn as her voice starts each sentence; every line safety-, leak- and maths-checked; the class resumes on the same beat (`e6b4b17`) | verified through the local relay; same code in production |
+| Human layer | `decide()` ladder on taps (look again → hint → answer + why; praise with why); silence nudge; "Give me a hint" / "I'm not sure" chips; wrong pick and hint written in the work area; greeting by name + last class (`40a5c08`) | greeting "Hi Riya! I'm Meera…"; hint chip wrote the hint under the question |
+| Gate | `PROTOTYPE_ONLY_PREPARED = false` — any topic prepares live | a cold Real Numbers topic prepared in ~80 s and played |
+| Brain | fold discounts help by rung (B4), mastery needs unassisted + spaced (B8), MODEL_VERSION 2; `@ai-tutor/tutor-control`; `@ai-tutor/live-board` (`21f0a30`) | — |
+
+**Still to do, in plan order** (none of it started): the spoken-answer path still uses the judge's own hint rather than `decide()`; T3 (authored ladder content at prep, misconception registry, 5 error classes, confidence taps); T4 (spaced review, `nextActivity`, server fold via LMS L6); T5 (one voice everywhere is done; relay cache, POST speech, streamed LLM reply); T6 (streamed ink, typeset maths, partial-line marks); T7 (barge-in, spoken doubts in production); T8 (student writes steps); T9 (measure cost and the metric). The end-of-class commitment (G6) and the tap-only silence nudge were not built.
+
+**Known issues found overnight:** prepared classes kept before 2026-09-29 carry their own layout, so their long questions still render small (re-prewarm to fix); raise-hand in DEV waits on a mic prompt because a live-voice key exists there (production goes straight to typing); the learner_model SQL default is still 1 — the LMS lane owes `alter table public.learner_model alter column version set default 2`.
+
+**Needs Aarav:** TD10 (a Discord/Slack webhook for distress alerts — no words, just that one happened); TD14 (the DPDP §9(3) lawyer question); listen to a Hinglish class and say if the voice is right; publishing further classes is a SQL update Claude's auto mode refuses without his say-so (`update public.prepared_class set review_status='published', published_at=now() where id='…'`).
+
 ### Proven on 2026-09-28
 
 **A cold class prepares — the first maths topic ever prepared.**
@@ -539,6 +561,32 @@ Listed so the next session does not mistake silence for evidence.
     service role key. Claude's auto mode refuses production deploys. Details
     are under "Progress" in the LMS build plan.
 
+    **⚠ NOT YET — 0021 must be amended first (found in the A12 review,
+    2026-09-29).** As written, 0021 rewrites `purge_old_ledger` to delete a
+    `ledger_event` only where `learner_model.purge_safe_before` is set, and
+    its own comment says nothing writes that yet. So from the night it is
+    pushed, the purge deletes **no answers at all**, and "deleted after 90
+    days" — on the mic screen a child reads and on `/privacy` — becomes false.
+    No test here can catch it: `privacyClaims.test.tsx` reads this checkout's
+    migrations, and 0021 is only in the worktree.
+
+    **Choice recorded: (a), amend 0021** — not (b), change the copy to "kept
+    until the class has been counted". Until the server fold (L6) exists, (b)
+    means a child's answer text is kept with no end date at all. The
+    amendment, for the LMS lane: keep `purge_old_ledger` deleting every
+    `ledger_event` with `received_at < cutoff`, exactly as 0009 does today,
+    whether or not a fold has read it; the fold, when L6 builds it, has 90
+    days to read an event. Then this step can run.
+
+    Two more things for the same push. 0021 also adds a CHECK that
+    `answerNormalised` is at most 200 characters. `normaliseAnswer` could
+    return 201 (a 200-character cut plus "…") until the A12 fix on
+    2026-09-29, and a CHECK validates the rows already there. So before
+    pushing, count them: `select count(*) from ledger_event where
+    char_length(payload->>'answerNormalised') > 200;`. If it is not 0, the push
+    fails until those rows are trimmed. And deploy the site with the fix
+    first, so no new 201-character row arrives after the count.
+
 ---
 
 # Part 2 — The plan
@@ -746,6 +794,10 @@ production deploys (tried twice, 2026-09-26):
 
 1. **`npx supabase db push --linked`, run from the LMS worktree folder** — it
    applies 0021–0025. The main checkout does not have those files yet.
+   **Not until 0021 is amended:** as written it stops the nightly purge
+   deleting any answer, which makes "deleted after 90 days" false on the mic
+   screen and `/privacy`. The amendment and the reason for it are under
+   "Blocked on Aarav", step 14.
 2. **Add `lms` to the project's exposed schemas** (dashboard: Project Settings →
    Data API). Until then no browser, and not the import tool, can reach it.
 3. **Load the library**: `node tools/lms-library/src/cli.ts --apply`, with the
@@ -789,7 +841,7 @@ the [appendix](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
 | A4 | Refuse or tombstone self-deletion for school members; hold open safety reports | A failing student can erase every mark, irreversibly | `0002_deleted_account.sql:9-26`; `supabase.ts:380`; cascades at `0001:7`, `0003:22`, `0005:43` ✓, `0006:31`, `0006:61`, `0008:21`, `0013:26`, `0013:71`, `0019:38` |
 | A5 | Honour `halted` in the doubt path — stop the session after distress | Live child-safety hole | `phase3-completion` tip `ClassRoom.tsx:509` ✓ discards `speakSafely`'s result; `c3b604b` ✓ fixed display, not this |
 | A6 | Run `packages/safety` `screen()` inside the relay on student text and `/api/hear` transcripts | A browser-only filter is one modified build away from absent | `relay/src/relays.ts:511` — the only `screen()` call in the relay, outbound |
-| A7 | Model allowlist on `hear`/`speech`/`llm`; OpenRouter `data_collection:'deny'`; Vertex `safetySettings` | No unknown models; no vendor training on children's words | `relay/src/vertex.ts` (`completeOnVertex`); `supabase/functions/relay/index.ts:89-95` (a malformed Google key silently falls through to OpenRouter) |
+| A7 | Model allowlist on `hear`/`speech`/`llm`; OpenRouter `data_collection:'deny'`; Vertex `safetySettings` | No unknown models; no vendor training on children's words | `relay/src/vertex.ts` (`completeOnVertex`); ~~`supabase/functions/relay/index.ts:89-95` (a malformed Google key silently falls through to OpenRouter)~~ fixed 2026-09-29 in the A12 review: a set-but-broken key now answers 503 on llm/speech/hear (`relay/src/vendors.ts`, `relay/tests/vendors.test.ts`). **Not deployed** |
 | A8 | Screen or quote the child's name before prompting; start the scripted stub only on failure | A PII leak, and a double opening on every doubt | `student.ts:110`; `geminiAgent.ts:232-235`; `doubt-session/src/agent.ts:54-83` |
 | A9 | Seed `model_price` | Every cost report reads zero | live `model_price` = 0 rows ✓; `tools/sql/model_price.sql:48`; `tools/bin/apply-prices.mjs:5-7`; table at `0008_usage.sql:48-54` |
 | A10 | Server-side insert checks on `ledger_event`: payload size, `active_ms` ≤ wall clock, a derivable rung | Today a student can post "correct, unassisted" | `0006_ledger.sql:135-156` (insert RLS on `auth.uid()` only; `0006:135-141` says this stops being acceptable once a row is worth a mark) |
