@@ -228,6 +228,30 @@ describe('the route, which is the gate that actually counts', () => {
     // prep lock or a ticket is not.
     expect(asked.some((u) => /\/api\/(llm|prep|ticket|speech)/.test(u))).toBe(false);
   });
+  // lib/preparedCache.ts: a class prepared on this device before, and not yet
+  // published, plays from the device — no notice, no preparation, no spend.
+  it('plays a class this device prepared before, for nothing', async () => {
+    const { preparedCache } = await import('../src/lib/preparedCache');
+    await preparedCache.remember(COLD, {
+      formatVersion: 1,
+      id: 'kept-here',
+      title: 'Kept here',
+      language: 'en',
+      canvas: { w: 1000, h: 620 },
+      elements: [{ kind: 'text', id: 't', x: 500, y: 300, text: 'On the board' }],
+      beats: [{ id: 'b1', topic: 'x', narration: 'Kept on this device.', show: ['t'] }],
+    }, {});
+    const asked: string[] = [];
+    vi.stubGlobal('fetch', (url: string) => {
+      asked.push(String(url));
+      return String(url).includes('index.json')
+        ? Promise.resolve(respond({ lessons: [] }))
+        : Promise.resolve(respond({ states: {} }));
+    });
+    const host = await openRoute(`/class/${COLD}`);
+    expect(host.querySelector('[role="dialog"]')?.textContent ?? '').not.toContain(PROTOTYPE_NOTICE.title);
+    expect(asked.some((u) => /\/api\/(llm|prep|ticket)/.test(u))).toBe(false);
+  });
 });
 
 describe('search, when nothing matches', () => {

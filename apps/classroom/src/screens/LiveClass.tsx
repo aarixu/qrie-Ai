@@ -13,6 +13,7 @@ import {
   type LivePrep,
 } from '../lib/liveClass';
 import { fetchCatalog, findKeptTopic, findTopic, forgetCatalog, type CatalogEntry } from '../lib/content';
+import { preparedCache, type PreparedCache } from '../lib/preparedCache';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore } from '../stores/preferences';
@@ -170,6 +171,7 @@ export async function keep(
   made: LivePrep,
   ask: Pick<Ask, 'topicRef' | 'klass' | 'subject' | 'subtitle'>,
   names: readonly string[],
+  device: PreparedCache = preparedCache,
 ): Promise<void> {
   const saved = saveable(made, {
     topicRef: ask.topicRef,
@@ -189,6 +191,10 @@ export async function keep(
     requireGate: true,
   });
   if (!saved) return;
+  // And on this device, until an operator publishes it: the catalogue serves
+  // only published classes, so the student who had it made paid for it again
+  // on every reload (lib/preparedCache.ts).
+  if (ask.topicRef) await device.remember(ask.topicRef, made.lesson, made.assets);
   try {
     const res = await relayFetch('/api/class', {
       method: 'POST',
@@ -495,6 +501,15 @@ export function LiveClassRoute() {
         if (cancelled) return;
         if (existing) {
           navigate(`/lesson/${existing.id}`, { replace: true });
+          return;
+        }
+        // Prepared here before and not yet published: played from the device,
+        // for nothing, with no wait (lib/preparedCache.ts).
+        const onDevice = await preparedCache.find(ask.topicRef);
+        if (cancelled) return;
+        if (onDevice) {
+          track('class_from_device', { beats: onDevice.lesson.beats.length });
+          setDraft({ lesson: onDevice.lesson, assets: onDevice.assets });
           return;
         }
       }

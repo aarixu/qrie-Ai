@@ -95,3 +95,32 @@ describe('keep() keeps only a reviewed class', () => {
     expect((kept[0].body as { entry: { topicRef: string } }).entry.topicRef).toBe(ask.topicRef);
   });
 });
+
+describe('keep() also keeps the class on this device', () => {
+  const lesson: Lesson = {
+    formatVersion: 1,
+    id: 'kidney',
+    title: 'The Kidney',
+    language: 'en',
+    canvas: { w: 1000, h: 620 },
+    elements: [{ kind: 'text', id: 't', x: 500, y: 300, text: 'Filters the blood' }],
+    beats: [{ id: 'b1', topic: 'kidney', narration: 'The kidney filters the blood.', show: ['t'] }],
+  };
+  const passed: PrepReport = {
+    topic: 'The Kidney', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [],
+    review: { flagged: [], repaired: false, ms: 900 }, gate: { problems: [] },
+  };
+  const ask = { topic: 'The Kidney', klass: 10, minutes: 3, subject: 'Science', topicRef: 'class10-science/life-processes/excretion' };
+
+  it('keeps on the device exactly what the catalogue would keep', async () => {
+    const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
+    const device = createPreparedCache(memoryBackend());
+    await keep({ lesson, assets: { t: '<svg/>' }, report: passed }, ask, [], device);
+    expect(await device.find(ask.topicRef)).toMatchObject({ lesson: { title: 'The Kidney' } });
+
+    // One the catalogue refuses (no review) is not kept here either.
+    const other = createPreparedCache(memoryBackend());
+    await keep({ lesson, assets: {}, report: { ...passed, review: undefined } }, ask, [], other);
+    expect(await other.find(ask.topicRef)).toBeNull();
+  });
+});
