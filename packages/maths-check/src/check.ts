@@ -84,7 +84,7 @@
 import { toPoly, valueOf, variablesIn, type Expr, type Values } from './expr.ts';
 import { parseLine, type ParsedLine, type Side } from './parse.ts';
 import * as P from './poly.ts';
-import { DivisionByZero, equals, formatRational, type Rational } from './rational.ts';
+import { TooLarge, DivisionByZero, equals, formatRational, type Rational } from './rational.ts';
 
 /** One line of board text. `section` groups lines by page; see the header. */
 export interface Line {
@@ -174,7 +174,7 @@ function symbolic(a: Expr, b: Expr): Pair['sym'] {
     return toPoly({ k: 'sub', a, b });
   } catch (e) {
     if (e instanceof DivisionByZero) return 'div-zero';
-    if (e instanceof P.NotPolynomial) return 'not-poly';
+    if (e instanceof P.NotPolynomial || e instanceof TooLarge) return 'not-poly';
     throw e;
   }
 }
@@ -310,7 +310,7 @@ function judgePair(pair: Pair, values: Values): PairVerdict {
       const reason = `\`${pair.left.source} = ${pair.right.source}\` divides by zero when ${when}`;
       return { kind: 'fails', usedValues: true, reason };
     }
-    if (e instanceof P.NotPolynomial) return { kind: 'open', free: [] };
+    if (e instanceof P.NotPolynomial || e instanceof TooLarge) return { kind: 'open', free: [] };
     throw e;
   }
   if (diff === null) return { kind: 'open', free: [] };
@@ -672,26 +672,104 @@ function agree(a: Prepared[], b: Prepared[]): boolean {
   return true;
 }
 
+/** Every variable a line's working mentions. */
+function varsOf(p: Prepared): Set<string> {
+  const out = new Set<string>();
+  for (const ps of p.pairs) for (const pair of ps) for (const v of pair.vars) out.add(v);
+  return out;
+}
+
 function problemsOf(prepared: Prepared[]): Prepared[][] {
-  // A run of claims closes a problem; the next line of working opens another.
-  // A practice question is a run of its own.
+  /**
+   * A run of claims closes a problem; the next line of working opens another.
+   * A practice question is a run of its own.
+   *
+   * TWO MORE RULES (review, 2026-09-29) — each ordinary Class 6-10 shape was
+   * failed as wrong maths, and a failed class is refused:
+   *   - GIVENS. A run of claims followed straight away by working that USES
+   *     those variables opens a new problem rather than closing the last one:
+   *     "x = 4, 2x + 3 = 11, x = 5, 2x + 3 = 13" is two problems. A claim whose
+   *     next working does not use it still closes (so a wrong final answer after
+   *     its own working is still caught).
+   *   - A TABLE. Inside a run of claims, a variable claimed again starts a new
+   *     problem: "x = 0, y = 3, x = 1, y = 5" is rows, not rival answers.
+   */
   const runs: Prepared[][] = [];
   let cur: Prepared[] = [];
   let inClaims = false;
+  let givens = false;
+  let claimed = new Set<string>();
   const close = () => {
     if (cur.length > 0) runs.push(cur);
     cur = [];
     inClaims = false;
+    givens = false;
+    claimed = new Set();
   };
-  for (const p of prepared) {
+  /** The claims of the run starting at `i`, and the line after it. */
+  const runAt = (i: number): { claims: Claim[]; next: Prepared | undefined } => {
+    const claims: Claim[] = [];
+    const vars = new Set<string>();
+    let j = i;
+    while (j < prepared.length && prepared[j].kind === 'claim' && !prepared[j].practice) {
+      const names = prepared[j].claims.map((c) => c.name);
+      if (names.some((n) => vars.has(n))) break;
+      names.forEach((n) => vars.add(n));
+      claims.push(...prepared[j].claims);
+      j++;
+    }
+    return { claims, next: prepared[j] };
+  };
+  /**
+   * Givens are SUBSTITUTED: the working right after them shows the value —
+   * "x = 4" then "2x + 3 = 2(4) + 3". An answer followed by a fresh problem in
+   * the same letter ("x = 2" then "3x - 1 = 8") shows no such thing.
+   */
+  const substituted = (claims: readonly Claim[], next: Prepared): boolean => {
+    const used = varsOf(next);
+    return claims.some((c) => {
+      if (!used.has(c.name)) return false;
+      const shown = formatRational(c.stated).replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+      return new RegExp(`(^|[^0-9.])${shown}([^0-9.]|$)`).test(next.line.text);
+    });
+  };
+  /** A table row: a variable claimed again, in a run that already names two or more, on an unlabelled line. */
+  const newRow = (p: Prepared): boolean =>
+    claimed.size >= 2 && !p.parsed?.final && p.claims.some((c) => claimed.has(c.name));
+  for (let i = 0; i < prepared.length; i++) {
+    const p = prepared[i];
     if (p.practice) {
       close();
       runs.push([p]);
       continue;
     }
-    if (p.kind === 'work' && inClaims) close();
+    if (p.kind === 'claim') {
+      if (inClaims && newRow(p)) close();
+      if (!inClaims) {
+        const run = runAt(i);
+        const next = run.next;
+        const opens = next !== undefined && next.kind === 'work' && !next.practice && substituted(run.claims, next);
+        if (opens) {
+          if (cur.length > 0) close();
+          givens = true;
+        }
+      }
+      inClaims = true;
+      p.claims.forEach((c) => claimed.add(c.name));
+      cur.push(p);
+      continue;
+    }
+    if (p.kind === 'work' && inClaims) {
+      if (givens) {
+        // The givens belong to this working: it continues the same problem.
+        inClaims = false;
+        givens = false;
+        claimed = new Set();
+      } else {
+        close();
+      }
+    }
     cur.push(p);
-    if (p.kind === 'claim') inClaims = true;
   }
   close();
 

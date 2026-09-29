@@ -131,6 +131,15 @@ export function power(a: Poly, k: number): Poly {
     if (c === null) throw new NotPolynomial('a negative power of a variable');
     return constant(rpow(c, k));
   }
+  // A number to a power goes through the size-guarded rational power
+  // (TooLarge past a few thousand bits) — "(((9^64)^64)^64)^64" used to
+  // multiply out here for minutes.
+  const c = constantValue(a);
+  if (c !== null) return constant(rpow(c, k));
+  // A variable's power: past degree 64 no board line needs it.
+  let degree = 0;
+  for (const t of a.values()) degree = Math.max(degree, Object.values(t.powers).reduce((n, p) => n + p, 0));
+  if (degree * k > 64) throw new NotPolynomial('a power past what this checker expands');
   let out = constant(ONE);
   for (let i = 0; i < k; i++) out = mul(out, a);
   return out;

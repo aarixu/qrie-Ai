@@ -212,3 +212,12 @@ export function studentLinesForPlanner(input: {
 
   return lines;
 }
+
+/**
+ * The name a tutor calls a child by: the first word of what they typed. One
+ * helper for the greeting and onboarding — a regex copied twice lost its
+ * backslash once and split "Ishaan" on the letter s.
+ */
+export function firstName(name: string | null | undefined): string {
+  return (name ?? '').trim().split(/\s+/)[0] ?? '';
+}

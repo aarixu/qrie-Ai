@@ -8,7 +8,7 @@
  */
 
 import * as P from './poly.ts';
-import { DivisionByZero, type Rational } from './rational.ts';
+import { DivisionByZero, TooLarge, type Rational } from './rational.ts';
 
 export type Expr =
   | { k: 'num'; value: Rational }
@@ -58,7 +58,7 @@ export function valueOf(e: Expr, values: Values = {}): Rational | null {
   try {
     return P.constantValue(toPoly(e, values));
   } catch (err) {
-    if (err instanceof DivisionByZero || err instanceof P.NotPolynomial) return null;
+    if (err instanceof DivisionByZero || err instanceof P.NotPolynomial || err instanceof TooLarge) return null;
     throw err;
   }
 }

@@ -133,3 +133,14 @@ describe('what the planner is told', () => {
     expect(shaky).toBe('The ground is shaky under: worst; second; third.');
   });
 });
+
+describe('firstName (one helper for the greeting and onboarding)', () => {
+  it('splits on whitespace, never on a letter', async () => {
+    const { firstName } = await import('../src/lib/student');
+    expect(firstName('Ishaan Sharma')).toBe('Ishaan');
+    expect(firstName('  Yash  ')).toBe('Yash');
+    expect(firstName('Kashvi')).toBe('Kashvi');
+    expect(firstName('')).toBe('');
+    expect(firstName(null)).toBe('');
+  });
+});

@@ -348,3 +348,36 @@ describe('checkLines — a variable with several roots', () => {
     ]);
   });
 });
+
+/**
+ * TWO EXAMPLES, A TABLE OF VALUES, "AT x = 4, THEN AT x = 5" (review,
+ * 2026-09-29). The most ordinary shapes in Class 6-10 maths; each was failed
+ * as correct maths, and a failed class is refused before the room opens.
+ */
+describe('several worked cases on one board are each their own problem', () => {
+  const lines = (...t: string[]): Line[] => t.map((text, i) => ({ id: `l${i}`, text }));
+  const ok = (...t: string[]) => {
+    const r = checkLines(lines(...t));
+    expect(r.failures, JSON.stringify(r.failures)).toEqual([]);
+  };
+
+  it('evaluates at x = 4, then at x = 5', () => ok('x = 4', '2x + 3 = 2(4) + 3 = 11', 'x = 5', '2x + 3 = 2(5) + 3 = 13'));
+  it('works two speed examples', () =>
+    ok('d = 100, t = 20', 's = d/t = 100/20 = 5', 'd = 60, t = 10', 's = d/t = 60/10 = 6'));
+  it('reads a table of values', () => ok('y = 2x + 3', 'x = 0', 'y = 3', 'x = 1', 'y = 5', 'x = 2', 'y = 7'));
+  it('works two AP examples', () =>
+    ok('a = 3', 'd = 4', 'a + 9d = 3 + 36 = 39', 'a = 5', 'd = 2', 'a + 4d = 5 + 8 = 13'));
+
+  it('still catches a wrong step inside a second example', () => {
+    const r = checkLines(lines('x = 4', '2x + 3 = 2(4) + 3 = 11', 'x = 5', '2x + 3 = 2(5) + 3 = 14'));
+    expect(r.failures.map((f) => f.id)).toContain('l3');
+  });
+
+  it('refuses a runaway nested power instead of freezing the thread', () => {
+    const t0 = Date.now();
+    const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));
+    expect(Date.now() - t0).toBeLessThan(1500);
+    expect(r.failures).toEqual([]);
+    expect(r.skipped.length).toBe(2);
+  });
+});

@@ -72,11 +72,36 @@ export const isInteger = (a: Rational): boolean => a.d === 1n;
 export const equals = (a: Rational, b: Rational): boolean => a.n === b.n && a.d === b.d;
 
 /** `a` to an integer power. A negative power of zero throws `DivisionByZero`. */
+/**
+ * A power whose result would be past what a board line ever needs. Checked on
+ * the RESULT'S size, not the exponent: nested powers multiply, and
+ * "(((9^64)^64)^64)^64" froze the thread for minutes (review, 2026-09-29).
+ * The checker reads it as a line it cannot settle — skipped, never failed.
+ */
+export class TooLarge extends Error {
+  constructor() {
+    super('a power this large is past what this checker works out');
+    this.name = 'TooLarge';
+  }
+}
+
+/** Past this many bits in the result, a power is refused (`TooLarge`). */
+const MAX_RESULT_BITS = 4096;
+const bits = (n: bigint): number => (n < 0n ? -n : n).toString(2).length;
+
 export function pow(a: Rational, k: number): Rational {
   if (!Number.isInteger(k)) throw new RangeError(`power ${k} is not a whole number`);
   if (k < 0) return pow(div(ONE, a), -k);
+  if ((bits(a.n) + bits(a.d)) * k > MAX_RESULT_BITS) throw new TooLarge();
+  // Square and multiply: log2(k) steps, not k.
   let out = ONE;
-  for (let i = 0; i < k; i++) out = mul(out, a);
+  let base = a;
+  let e = k;
+  while (e > 0) {
+    if (e & 1) out = mul(out, base);
+    e >>= 1;
+    if (e > 0) base = mul(base, base);
+  }
   return out;
 }
 

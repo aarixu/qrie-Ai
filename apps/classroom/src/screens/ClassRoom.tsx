@@ -12,7 +12,7 @@ import {
 import { findEntry, fetchLesson, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { useLessonAssets } from '../lib/diagrams';
-import { buildStudentContext } from '../lib/student';
+import { buildStudentContext, firstName } from '../lib/student';
 import { createGeminiAgent, type TurnUsage } from '../lib/geminiAgent';
 import { createLiveAgent, type LiveState, type TranscriptLine } from '../lib/liveAgent';
 import {
@@ -1332,7 +1332,7 @@ export function ClassRoom({
    * (lib/studentMemory.ts: named once, never at every class forever).
    */
   const greetingLine = (): { line: string; saidPromise: boolean; saidStruggle?: { topic: string; lessonId: string } } => {
-    const first = (profileStore.get().name ?? '').trim().split(/s+/)[0] ?? '';
+    const first = firstName(profileStore.get().name);
     const hi = tutorLanguage() === 'hi-en';
     const memory = greetingMemory(hi ? 'hi-en' : 'en');
     const title = lesson.title;

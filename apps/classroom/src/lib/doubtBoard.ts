@@ -431,7 +431,14 @@ export function prepareDoubtTurn(input: TurnInput): PreparedTurn {
   // 4. The maths check.
   const prepared = new Set(input.lesson.elements.map((el) => el.id));
   const subject = input.page.continue ? input.page.subject : firstReferenced(steps, prepared);
-  const wrong = mathsFailures(steps, input.lesson, subject);
+  // A fault in the checker itself drops every step's ink rather than throwing:
+  // this function never throws, and unchecked maths never reaches the board.
+  let wrong: Map<number, string>;
+  try {
+    wrong = mathsFailures(steps, input.lesson, subject);
+  } catch {
+    wrong = new Map(steps.flatMap((s, i) => (s.ink.length > 0 ? [[i, 'the maths check could not read this']] : [])) as [number, string][]);
+  }
   if (wrong.size > 0) {
     steps = steps.filter((step, i) => {
       const reason = wrong.get(i);

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { settingsStore } from '../stores/settings';
 import { profileStore } from '../stores/profile';
 import { subjectsAvailable } from '../lib/content';
-import { capName, MAX_NAME_CHARS } from '../lib/student';
+import { capName, firstName, MAX_NAME_CHARS } from '../lib/student';
 import { loadDiagnosticData } from '../lib/diagnosticData';
 import { Icon } from '../ui/Icon';
 import {
@@ -492,7 +492,7 @@ export function Onboarding() {
           {step === 'interests' && (
             <div className="text-center">
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
-                What do you enjoy{name.trim() ? `, ${name.trim().split(/\s+/)[0]}` : ''}?
+                What do you enjoy{name.trim() ? `, ${firstName(name)}` : ''}?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
                 Pick any. Meera uses them to choose examples for you. They are kept on this phone, and sent with your questions to the AI that runs Meera (Google's), only for that.
