@@ -57,6 +57,8 @@ Aarav's instructions that night: set the ₹5/hour ceiling aside until the tutor
 
 **Known issues found overnight:** prepared classes kept before 2026-09-29 carry their own layout, so their long questions still render small (re-prewarm to fix); raise-hand in DEV waits on a mic prompt because a live-voice key exists there (production goes straight to typing); the learner_model SQL default is still 1 — the LMS lane owes `alter table public.learner_model alter column version set default 2`.
 
+**MVP v2, decided and not built (Aarav, 2026-09-29):** a second opinion on answers — an LLM verifier now, Wolfram|Alpha and pretrained models later (I6 below). Today's `maths-check` is enough to ship: it catches the cases the review found, and all 15 content lessons pass it.
+
 **Needs Aarav:** TD10 (a Discord/Slack webhook for distress alerts — no words, just that one happened); TD14 (the DPDP §9(3) lawyer question); listen to a Hinglish class and say if the voice is right; publishing further classes is a SQL update Claude's auto mode refuses without his say-so (`update public.prepared_class set review_status='published', published_at=now() where id='…'`).
 
 ### Proven on 2026-09-28
@@ -949,6 +951,7 @@ the [appendix](../superpowers/specs/2026-09-25-lam-audit-appendix.md).
 | I3 | Maths: stored `expectedValue`/`expectedExpr`, checked by a client-side maths engine at no call cost | none exists |
 | I4 | A cheap check on numbers and units in text replies against the lesson | — |
 | I5 | Measure local-versus-model judge agreement | — |
+| I6 | **MVP v2 (Aarav, 2026-09-29).** A second opinion on every answer, for every subject. An LLM verifier on Vertex that solves each ask, hint and worked example on its own and compares; where `maths-check` fails a line the verifier can show is right, the class is not refused, and where `maths-check` passes a line the verifier can show is wrong, the line is repaired. The engine is pluggable, so Wolfram|Alpha (its LLM API) can be added for maths, and pretrained subject models later. Prep time only, so no child's words reach a new vendor. Wolfram needs an AppID from Aarav (developer.wolframalpha.com, paid). | why: maths-check's segmentation rules failed ordinary boards twice on 2026-09-29 (`3634e64`, `465c1db`) |
 
 ### J. Photos and handwriting · §13
 
