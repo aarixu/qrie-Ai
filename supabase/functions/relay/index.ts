@@ -90,8 +90,10 @@ const SERVICE_ACCOUNT_JSON = env('GOOGLE_SERVICE_ACCOUNT_JSON');
  * and a child's spoken answers to the vendors /privacy says are no longer
  * used, on nothing more than a typo in a secret. With a service account set,
  * `vendors.openRouterKey` is '', so those three routes answer 503 until the
- * key is fixed — except her voice when CURIE_SPEECH_URL is set, which then
- * comes from our own box, not a vendor. See packages/relay/src/vendors.ts.
+ * key is fixed. CURIE_SPEECH_URL (our own voice box) is used only when no
+ * service account is set at all: with Vertex configured every line is Gemini
+ * on Vertex, because the box speaks English only. See
+ * packages/relay/src/handler.ts `speechUrl` and vendors.ts.
  */
 const vendors = modelVendors({ serviceAccountJson: SERVICE_ACCOUNT_JSON, openRouterKey: OPENROUTER_API_KEY });
 if (vendors.unusable) {

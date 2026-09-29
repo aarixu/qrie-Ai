@@ -84,11 +84,27 @@ export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string 
   ].join('\n');
 }
 
-function speechBody(text: string, lang: SpeechLanguage): string {
+/**
+ * THE MOST AUDIO ONE LINE MAY COME BACK AS (overnight review #1).
+ *
+ * The meter charges a line by its characters, and Vertex bills the audio
+ * tokens that come OUT — with no cap, a prompt that got the model to keep
+ * talking would be billed far past what the meter took. Gemini TTS runs about
+ * 25-32 audio tokens a second, and a teacher speaks about 14 characters a
+ * second, so a line needs roughly 2.3 tokens a character. Five is double
+ * that, plus a floor for a very short line, and a ceiling for the longest
+ * line the relay accepts (MAX_SPEECH_CHARS).
+ */
+export function maxSpeechTokens(text: string): number {
+  return Math.min(8192, 256 + Math.ceil([...text].length * 5));
+}
+
+export function speechRequestBody(text: string, lang: SpeechLanguage): string {
   return JSON.stringify({
     contents: [{ role: 'user', parts: [{ text: speechPrompt(text, lang) }] }],
     generationConfig: {
       responseModalities: ['AUDIO'],
+      maxOutputTokens: maxSpeechTokens(text),
       speechConfig: {
         voiceConfig: { prebuiltVoiceConfig: { voiceName: VERTEX_SPEECH_VOICE } },
         // A hint, not the lever: the accent note above carries it.
@@ -118,7 +134,7 @@ export async function vertexSpeechCall(text: string, lang: SpeechLanguage, optio
   return {
     url: vertexSpeechStreamUrl(options.tokens.projectId, options.location ?? LOCATION),
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
-    body: speechBody(text, lang),
+    body: speechRequestBody(text, lang),
   };
 }
 
@@ -216,6 +232,13 @@ function readEvent(block: string): { audio: Uint8Array[]; mime: string; usage?: 
  * an event is read. Output is kept to whole 16-bit samples: an odd byte is
  * held for the next chunk, because a half sample shifts every sample after it
  * and the student hears static instead of a voice.
+ *
+ * USAGE IS BOOKED HOWEVER THE STREAM ENDS (overnight review #4/#18/#37). It
+ * used to be booked only in `flush`, which never runs when the browser walks
+ * away — and the classroom cancels constantly: every next line, a primed line
+ * dropped, a pause, a raised hand, a halt. Vertex had still generated and
+ * billed that audio. `cancel` (the reader cancelled, or the writer aborted)
+ * books what was sent so far; a flag keeps it to one booking.
  */
 export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream<Uint8Array, Uint8Array> {
   const decoder = new TextDecoder();
@@ -224,6 +247,16 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
   let audioBytes = 0;
   let promptTokens: number | undefined;
   let outputTokens: number | undefined;
+  let booked = false;
+  const book = (): void => {
+    if (booked) return;
+    booked = true;
+    onDone?.({
+      ...(promptTokens !== undefined ? { promptTokens } : {}),
+      ...(outputTokens !== undefined ? { outputTokens } : {}),
+      audioBytes,
+    });
+  };
 
   const emit = (chunks: Uint8Array[], controller: TransformStreamDefaultController<Uint8Array>): void => {
     for (const chunk of chunks) {
@@ -269,7 +302,9 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
     }
   };
 
-  return new TransformStream<Uint8Array, Uint8Array>({
+  // `cancel` is in the Streams standard and in Deno and Node 22, but not yet
+  // in TypeScript's DOM types, hence the widened type.
+  const transformer: Transformer<Uint8Array, Uint8Array> & { cancel?: (reason?: unknown) => void } = {
     transform(chunk, controller) {
       text += decoder.decode(chunk, { stream: true });
       drain(controller, false);
@@ -277,13 +312,13 @@ export function sseToPcm(onDone?: (usage: SpeechUsage) => void): TransformStream
     flush(controller) {
       text += decoder.decode();
       drain(controller, true);
-      onDone?.({
-        ...(promptTokens !== undefined ? { promptTokens } : {}),
-        ...(outputTokens !== undefined ? { outputTokens } : {}),
-        audioBytes,
-      });
+      book();
     },
-  });
+    cancel() {
+      book();
+    },
+  };
+  return new TransformStream<Uint8Array, Uint8Array>(transformer);
 }
 
 /** What one line cost and what to answer the browser with. */

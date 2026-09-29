@@ -1,3 +1,4 @@
+import { speechText } from './speechInput.ts';
 import { fail, type RelayRequest, type RelayResponse } from './relays.ts';
 import type { Verifier } from './auth.ts';
 import { readTicket } from './ticket.ts';
@@ -132,7 +133,9 @@ export function unitsFor(relay: RelayName, req: RelayRequest): number {
       // Code points, exactly as usage.ts counts them for the invoice. A meter
       // and a bill that count the same text differently are two numbers
       // nobody can reconcile afterwards.
-      const text = new URL(req.url, 'http://relay.local').searchParams.get('text') ?? '';
+      // From the body the app POSTs, or an old bundle's query string — the
+      // same reader the handler speaks from (speechInput.ts).
+      const text = speechText(req);
       return Math.max(1, Math.ceil([...text].length * price.units));
     }
     case 'second':

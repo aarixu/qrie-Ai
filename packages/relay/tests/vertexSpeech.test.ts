@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { TUTOR } from '@ai-tutor/persona';
 import { handleRelay, type HandlerDeps } from '../src/handler';
+import { MAX_SPEECH_CHARS } from '../src/speechInput';
 import { createMemoryLedger, type Gate } from '../src/gate';
 import { createMemoryUsage } from '../src/usage';
 import type { RelayRequest, RelayResponse } from '../src/relays';
@@ -12,6 +13,7 @@ import {
   speakOnVertex,
   speechPrompt,
   sseToPcm,
+  speechRequestBody,
 } from '../src/vertexSpeech';
 import { SPEECH_PREAMBLE, TRANSCRIPT_LABEL } from '@ai-tutor/voice';
 
@@ -338,5 +340,74 @@ describe('speechPrompt', () => {
     const p = speechPrompt('Let us look at the heart.', 'en');
     expect(p).toContain('Indian English');
     expect(p).not.toContain('Hinglish');
+  });
+});
+
+// ---------------------------------------- overnight review #1, #2, #4 ----
+
+describe('speech a child never has to put in a URL (#2)', () => {
+  const post = (body: unknown, headers: Record<string, string> = {}): RelayRequest => ({
+    method: 'POST',
+    url: '/api/speech',
+    headers: { authorization: 'Bearer good', 'content-type': 'application/json', 'x-session-id': 'sess-9', ...headers },
+    body: new TextEncoder().encode(JSON.stringify(body)),
+  });
+
+  it('takes the line, its language and the format from a POST body', async () => {
+    const { usage, deps: d } = deps({ vertex: vertexDeps() });
+    const from = streamOf(await handleRelay(post({ text: 'Hi Ishaan!', lang: 'hi-en', format: 'pcm' }), d));
+    const sent = JSON.parse(String(from.body));
+    expect(sent.contents[0].parts[0].text).toContain('Hi Ishaan!');
+    expect(sent.contents[0].parts[0].text).toContain('Hinglish');
+    await pipe(sse([audioEvent(new Uint8Array([1, 2])), usageEvent]), from.transform!());
+    // The session comes from the header, as on every other relay.
+    expect(usage.events).toContainEqual(expect.objectContaining({ relay: 'speech', sessionId: 'sess-9' }));
+  });
+
+  it('refuses a line too long for one breath before the meter is touched', async () => {
+    const charged: number[] = [];
+    const { deps: d } = deps({
+      vertex: vertexDeps(),
+      gate: { ...gate(), ledger: { claim: async (_u, _r, units) => (charged.push(units), { allowed: true }) } },
+    });
+    const out = await handleRelay(post({ text: 'a'.repeat(MAX_SPEECH_CHARS + 1), format: 'pcm' }), d);
+    expect(out.status).toBe(413);
+    expect(charged).toEqual([]);
+  });
+
+  it('refuses a body that is not the line it claims to be', async () => {
+    const { deps: d } = deps({ vertex: vertexDeps() });
+    expect((await handleRelay(post('just a string'), d)).status).toBe(400);
+    expect((await handleRelay({ ...post({}), body: new TextEncoder().encode('{nope') }, d)).status).toBe(400);
+  });
+});
+
+describe('what one line may cost (#1)', () => {
+  it('caps the audio Vertex may send back, in proportion to the words', () => {
+    const short = JSON.parse(speechRequestBody('Hi.', 'en'));
+    const long = JSON.parse(speechRequestBody('a'.repeat(1000), 'en'));
+    expect(short.generationConfig.maxOutputTokens).toBeGreaterThan(0);
+    expect(long.generationConfig.maxOutputTokens).toBeGreaterThan(short.generationConfig.maxOutputTokens);
+    expect(long.generationConfig.maxOutputTokens).toBeLessThanOrEqual(8192);
+  });
+});
+
+describe('a stream the browser walks away from is still booked (#4/#18/#37)', () => {
+  it('books what was sent when the reader cancels, once', async () => {
+    const seen: { audioBytes: number }[] = [];
+    const t = sseToPcm((u) => seen.push(u));
+    const writer = t.writable.getWriter();
+    const reader = t.readable.getReader();
+    void writer.write(new TextEncoder().encode(sse([audioEvent(new Uint8Array([1, 2, 3, 4]))])));
+    await reader.read();
+    await reader.cancel('the student moved on');
+    await writer.close().catch(() => undefined);
+    expect(seen).toEqual([expect.objectContaining({ audioBytes: 4 })]);
+  });
+
+  it('books once when the stream simply ends', async () => {
+    const seen: unknown[] = [];
+    await pipe(sse([audioEvent(new Uint8Array([1, 2])), usageEvent]), sseToPcm((u) => seen.push(u)));
+    expect(seen).toHaveLength(1);
   });
 });

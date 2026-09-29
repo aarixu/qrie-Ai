@@ -113,8 +113,10 @@ describe('the hear relay with Vertex configured', () => {
     const out = await handleRelay(req(), d.deps);
     expect(out.body).toEqual({ kind: 'json', value: { text: 'haan' } });
     expect(d.openRouterCalls).toHaveLength(0);
+    // Priced by its tokens; bytes on the row would read as unpriced (#36).
+    expect(d.usage.events.find((e) => e.relay === 'hear')?.audioBytes).toBeUndefined();
     expect(d.usage.events).toContainEqual(
-      expect.objectContaining({ relay: 'hear', provider: 'vertex', model: VERTEX_HEAR_MODEL, status: 200, sessionId: 'sess-5', audioBytes: 3200 }),
+      expect.objectContaining({ relay: 'hear', provider: 'vertex', model: VERTEX_HEAR_MODEL, status: 200, sessionId: 'sess-5' }),
     );
   });
 

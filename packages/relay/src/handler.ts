@@ -9,6 +9,7 @@ import {
   type SavedClass,
 } from './relays.ts';
 import { admit, type Gate, type RelayName } from './gate.ts';
+import { readSpeech } from './speechInput.ts';
 import { handleReport, isUuid, type ReportStore } from './report.ts';
 import { handlePrep, type PrepLocks } from './prep.ts';
 import { handleEnroll, handleEnrollOtp, type ConsentStore, type OtpGate, type OtpProvider } from './enroll.ts';
@@ -66,6 +67,12 @@ export interface HandlerDeps {
    * The base URL of `tools/speech` — a box running Piper. Her voice is 86% of
    * what a class costs and all of it is cash; this is the line that turns it
    * into rent. Absent, speech goes to the vendor exactly as it did.
+   *
+   * ONLY WHERE VERTEX IS NOT CONFIGURED (overnight review #39). With a service
+   * account, every line is Gemini on Vertex and this is ignored — Aarav's call
+   * on 2026-09-28: Piper speaks English only, and the tutor speaks Hinglish.
+   * In production that means it is off; turning it back on as the cost lever
+   * needs a Hinglish voice on the box first.
    *
    * No credential travels with it, because there is none to travel.
    */
@@ -199,13 +206,15 @@ export interface HandlerDeps {
 /**
  * Which learning session a call belongs to, when the app said.
  *
- * A header for the relays a fetch reaches; a query parameter for speech, which
- * is an <audio src> and cannot send one. Absent is ordinary: a call made from
- * the Home screen belongs to no sitting.
+ * A header for the relays a fetch reaches — speech POSTed by the app included —
+ * and a query parameter for an old bundle's speech GET, which is an
+ * <audio src> and cannot send one. Absent is ordinary: a call made from the
+ * Home screen belongs to no sitting.
  */
 function sessionOf(req: RelayRequest, relay: RelayName): string | null {
   if (relay === 'speech') {
-    return new URL(req.url, 'http://relay.local').searchParams.get('session');
+    const read = readSpeech(req);
+    return read.ok ? read.input.session : null;
   }
   return req.headers['x-session-id'] ?? req.headers['X-Session-Id'] ?? null;
 }
@@ -371,6 +380,12 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     if (req.method !== 'POST') return fail(405, 'POST only');
     if (!deps.keep) return fail(501, 'this host cannot keep a class');
   }
+  // A speech body that is not a line, or a line too long for one breath, is
+  // refused here: the meter prices the text, and must never price that.
+  if (relay === 'speech') {
+    const read = readSpeech(req);
+    if (!read.ok) return fail(read.status, read.why);
+  }
 
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
@@ -437,8 +452,10 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     return out;
   }
   if (relay === 'speech') {
-    const asked = new URL(req.url, 'http://relay.local').searchParams;
-    const text = asked.get('text')?.trim() ?? '';
+    const read = readSpeech(req);
+    if (!read.ok) return fail(read.status, read.why);
+    const asked = read.input;
+    const text = asked.text;
     /**
      * HER VOICE IS GEMINI ON VERTEX (Aarav, 2026-09-28): no OpenRouter and no
      * Deepgram for speech wherever Vertex is configured — aura-2 has no Indian
@@ -452,13 +469,13 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     const vertex = deps.vertex;
     if (vertex) {
       if (!text) return fail(400, 'nothing to say');
-      const lang = asked.get('lang') === 'hi-en' ? 'hi-en' : 'en';
+      const lang = asked.lang === 'hi-en' ? 'hi-en' : 'en';
       const collected = async (format: 'pcm' | 'wav'): Promise<RelayResponse> => {
         const spoken = await speakOnVertex(text, vertex, { format, lang });
         note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, spoken));
         return spoken.response;
       };
-      if (asked.get('format') !== 'pcm') return collected('wav');
+      if (asked.format !== 'pcm') return collected('wav');
 
       let call: Awaited<ReturnType<typeof vertexSpeechCall>>;
       try {
@@ -493,7 +510,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     // No service account (a laptop): the OpenRouter voice, as before.
     const out = speechRelay(req, deps.key, deps.speechUrl);
     if (out.body.kind === 'stream') {
-      const model = asked.get('model') ?? DEFAULT_SPEECH_MODEL;
+      const model = new URL(req.url, 'http://relay.local').searchParams.get('model') ?? DEFAULT_SPEECH_MODEL;
       return {
         ...out,
         body: {

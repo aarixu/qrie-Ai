@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { currentSpeechTicket, relayUrl, speechTicket } from './relay';
-import { currentSessionId } from '../stores/ledger';
+import { relayFetch, relayUrl } from './relay';
 import { createBrowserTts, type TtsAdapter } from '@ai-tutor/player';
 import { MANIFEST_FILE, createPcmStreamTts, createRecordedTts, parseManifest } from '@ai-tutor/voice';
 import { tutorLanguage } from './workspace';
@@ -75,23 +74,6 @@ export function useLessonVoice(
        * for whenever that access comes back.
        */
       /**
-       * THE PASS FOR HER VOICE — started, NOT awaited.
-       *
-       * The pass has to be asked for before the first line — a round trip
-       * mid-sentence is the one thing the streaming relay exists to avoid —
-       * but awaiting it here would hang the whole classroom on a request with
-       * no timeout: a half-open connection would leave the room on its
-       * skeleton for good, and this path never sets an error, so the Try again
-       * button could not appear. It also has to be started AFTER `live` is
-       * assigned, or the cleanup below can run against a null and leave a
-       * cancelled class still speaking.
-       *
-       * Fired here, in an effect that runs when the route mounts, it has the
-       * whole join screen to finish in. A line that still arrives without one
-       * falls back to the browser's own voice, which is what the fallback is
-       * for — a class that keeps its lesson and loses its voice, not silence.
-       */
-      /**
        * HER VOICE IS GEMINI ON VERTEX, STREAMED AS PCM (Aarav, 2026-09-28).
        *
        * Deepgram's aura-2 had no Indian voice and could not speak Hinglish.
@@ -104,17 +86,27 @@ export function useLessonVoice(
        * `onStart` fires when a line's first sample reaches the speaker. It is
        * what the live board waits for before revealing that sentence's ink
        * (lib/voiceStart.ts, T2.4).
+       *
+       * Each line is POSTed through `relayFetch` — identity and sitting in
+       * headers, her words in the body (overnight review #2): a GET put the
+       * greeting with the child's name, and their own answer read back, into
+       * the gateway's request logs as a query string. A relay older than this
+       * answers the POST 400, and the line falls back to the browser voice.
        */
       live = createPcmStreamTts({
         endpoint: relayUrl('/api/speech'),
-        ticket: currentSpeechTicket,
-        session: currentSessionId,
+        request: (text, lang, signal) =>
+          relayFetch('/api/speech', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ text, format: 'pcm', ...(lang ? { lang } : {}) }),
+            signal,
+          }),
         lang: () => (tutorLanguage() === 'hi-en' || lessonLanguage === 'hi-en' ? 'hi-en' : 'en'),
         output: avatarPcmOutput,
         fallback: browser,
         onStart: announceStart,
       });
-      void speechTicket();
 
       // A lesson with no recording is not an error — most are not recorded
       // yet, and a class made thirty seconds ago never can be.

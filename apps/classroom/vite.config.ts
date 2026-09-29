@@ -99,7 +99,10 @@ function openRouterRelays(key: string, supabaseUrl: string, anonKey: string): Pl
      * Set CURIE_SPEECH_URL=http://127.0.0.1:8123 and every spoken line in
      * development comes from Piper on this machine instead of costing money.
      * Measured here: 10.4x realtime, first audio at 0.25-0.37s, against the
-     * vendor's measured 0.36s. Unset, nothing changes.
+     * vendor's measured 0.36s. Unset, nothing changes. IGNORED whenever the
+     * Vertex service account is present (.secrets/vertex-service-account.json):
+     * her voice is then Gemini on Vertex, which speaks Hinglish and Piper does
+     * not (packages/relay/src/handler.ts `speechUrl`).
      */
     ...(process.env.CURIE_SPEECH_URL ? { speechUrl: process.env.CURIE_SPEECH_URL } : {}),
     /**

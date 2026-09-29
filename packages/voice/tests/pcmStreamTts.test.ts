@@ -370,3 +370,27 @@ describe('createPcmStreamTts: stalls and cancels', () => {
     expect(cancelled).toBe(1);
   });
 });
+
+describe('createPcmStreamTts: the line goes in a body, not a URL (overnight review #2)', () => {
+  it('asks through `request` when one is given, with the words and language, and plays the answer', async () => {
+    const { out, played } = fakeOutput();
+    const asked: { words: string; lang: string | null }[] = [];
+    const tts = createPcmStreamTts({
+      endpoint: '/speech',
+      output: () => out,
+      lang: () => 'hi-en',
+      request: async (words, lang, signal) => {
+        asked.push({ words, lang });
+        expect(signal).toBeInstanceOf(AbortSignal);
+        return new Response(new Uint8Array([1, 0, 2, 0]), { headers: { 'content-type': 'audio/L16;rate=24000;channels=1' } });
+      },
+      fetch: () => {
+        throw new Error('the GET route must not be used when `request` is given');
+      },
+      sleep: sleepNow,
+    });
+    await tts.speak('Hi Ishaan!');
+    expect(asked).toEqual([{ words: 'Hi Ishaan!', lang: 'hi-en' }]);
+    expect(played).toHaveLength(1);
+  });
+});

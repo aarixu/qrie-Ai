@@ -164,14 +164,17 @@ export function usageFromVertexSpeech(
 
 /**
  * An answer heard on Vertex (vertexHear.ts). Tokens as Vertex counted them —
- * audio is billed as input tokens — plus the bytes, so a report can still say
- * how much listening there was.
+ * audio is billed as input tokens — and NOT the bytes (overnight review #36):
+ * `usage_cost` prices any row carrying `audio_bytes` per audio second, and
+ * with no such price for this model every heard answer read as unpriced. The
+ * tokens are the whole bill. `audio` is kept in the signature so the call
+ * sites need not change when a second-priced ear comes back.
  */
 export function usageFromVertexHear(
   base: Pick<UsageEvent, 'userId' | 'sessionId' | 'prepId'>,
   model: string,
   heard: { status: number; promptTokens?: number; outputTokens?: number },
-  audio: Uint8Array,
+  _audio: Uint8Array,
 ): UsageEvent {
   return {
     ...base,
@@ -179,7 +182,6 @@ export function usageFromVertexHear(
     provider: 'vertex',
     model,
     status: heard.status,
-    audioBytes: audio.byteLength,
     ...(heard.promptTokens !== undefined ? { promptTokens: heard.promptTokens } : {}),
     ...(heard.outputTokens !== undefined ? { outputTokens: heard.outputTokens } : {}),
   };

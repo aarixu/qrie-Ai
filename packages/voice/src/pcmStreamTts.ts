@@ -48,6 +48,14 @@ export interface PcmStreamTtsOptions {
   /** Null when there is nothing to play through; the line then falls back. */
   output: () => PcmOutput | null;
   fallback?: TtsAdapter;
+  /**
+   * How to ask for one line, when the app has a better way than a GET: the
+   * classroom POSTs `{ text, lang, format }` with the student's identity in
+   * a header (overnight review #2 — a query string carrying her words and
+   * the child's name lands in the gateway's request logs). Absent, the line
+   * is a GET to `endpoint` with a ticket, as an old relay expects.
+   */
+  request?: (words: string, lang: string | null, signal: AbortSignal) => Promise<Response>;
   fetch?: (url: string, init: { signal: AbortSignal }) => Promise<Response>;
   sleep?: (ms: number) => Promise<void>;
   /** Fired when the line's first sample actually reaches the speaker. */
@@ -132,7 +140,10 @@ export function createPcmStreamTts(opts: PcmStreamTtsOptions): TtsAdapter {
     arm(firstChunkMs);
     void (async () => {
       try {
-        const res = await Promise.race([doFetch(urlFor(text), { signal: take.abort.signal }), aborted]);
+        const asked = opts.request
+          ? opts.request(text, opts.lang?.() ?? null, take.abort.signal)
+          : doFetch(urlFor(text), { signal: take.abort.signal });
+        const res = await Promise.race([asked, aborted]);
         // Only raw PCM is playable here. An older relay answers mp3 to the
         // same URL, and mp3 bytes read as samples are loud static.
         const type = (res.headers?.get?.('content-type') ?? '').toLowerCase();
