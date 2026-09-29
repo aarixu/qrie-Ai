@@ -15,16 +15,16 @@ export type TutorLanguage = 'en' | 'hi-en';
  * - `silent`: the wait ran out with nothing said.
  * - `hintRequest`: the student asked for help.
  */
-export type Verdict = 'right' | 'wrong' | 'unmatched' | 'unclear' | 'silent' | 'hintRequest';
+export type Verdict = 'right' | 'wrong' | 'unmatched' | 'unclear' | 'silent' | 'hintRequest' | 'explainRequest';
 
 /**
  * A SIMILAR PROBLEM, WORKED STEP BY STEP — L5's content, in the canvas
  * protocol's `work{steps:[{say, line}]}` shape. Different numbers from the
  * ask, so it teaches the method without giving the answer.
  *
- * NOT AUTHORED ANYWHERE YET. C6 adds it at prep (T3); until then every ask
- * lacks one and L5 is skipped, exactly as TD1 says ("only where content
- * exists").
+ * Authored at prep since C6 (class-prep asks the planner for one per ask);
+ * an ask without one — every class kept before — skips L5, exactly as TD1
+ * says ("only where content exists").
  */
 export interface WorkedExample {
   steps: readonly { say: string; line: string }[];
@@ -82,6 +82,7 @@ export type ActionKind =
   | 'rethink'
   | 'hint'
   | 'workedExample'
+  | 'explainAgain'
   | 'reveal'
   | 'nudge'
   | 'moveOn';

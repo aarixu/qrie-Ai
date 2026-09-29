@@ -45,7 +45,7 @@ import { useBoardSession } from '../lib/boardSession';
 import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
-import { LINES, asksForHint, decide } from '@ai-tutor/tutor-control';
+import { LINES, asksForHint, asksToExplainAgain, decide } from '@ai-tutor/tutor-control';
 import { fromStudent, inLanguage } from '../lib/safety';
 import { screen } from '@ai-tutor/safety';
 import {
@@ -443,7 +443,14 @@ export function ClassRoom({
    * decide() like every other help, filed as ASKED-FOR help before it is said,
    * and written into the question's work area.
    */
-  const requestHint = async () => {
+  /**
+   * "Explain it another way" (H4) goes the same road as a hint asked for:
+   * decide() picks an authored re-explanation that does not give the answer
+   * away, files it as the L7 it is, and the ladder does not climb.
+   */
+  const requestHint = () => requestHelp('hintRequest');
+  const requestExplain = () => requestHelp('explainRequest');
+  const requestHelp = async (verdict: 'hintRequest' | 'explainRequest') => {
     if (halt.halted) return;
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
@@ -452,7 +459,7 @@ export function ClassRoom({
     const settle = beginTap();
     try {
       const action = decide({
-        verdict: 'hintRequest',
+        verdict,
         attempt: (tapTries.current.get(beatId) ?? 0) + 1,
         rungSoFar: tapRung.current.get(beatId) ?? 0,
         ask,
@@ -1196,13 +1203,16 @@ export function ClassRoom({
          * not simply allow goes the ordinary way, through the screen that
          * files and halts.
          */
+        const explainAsked = screen(heard.text, 'from-student').kind === 'allow' && asksToExplainAgain(heard.text);
         if (
-          screen(heard.text, 'from-student').kind === 'allow' &&
-          asksForHint(heard.text, { afterOffer: offeredHint, answers: (ask.options ?? []).map((o) => o.text) })
+          explainAsked ||
+          (screen(heard.text, 'from-student').kind === 'allow' &&
+            asksForHint(heard.text, { afterOffer: offeredHint, answers: (ask.options ?? []).map((o) => o.text) }))
         ) {
           offeredHint = false;
           const help = decide({
-            verdict: 'hintRequest',
+            // "Phir se samjhao" is asking for another way to see it (H4).
+            verdict: explainAsked ? 'explainRequest' : 'hintRequest',
             attempt: (tapTries.current.get(heldAskBeat) ?? 0) + 1,
             rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
             ask,
@@ -2053,6 +2063,14 @@ export function ClassRoom({
                   >
                     🙋 I'm not sure
                   </button>
+                  {(player.pendingAsk.alternates ?? []).length > 0 && (
+                    <button
+                      onClick={() => void requestExplain()}
+                      className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
+                    >
+                      🔄 Explain another way
+                    </button>
+                  )}
                   {workable && (
                     <button
                       onClick={() => setWorking(true)}

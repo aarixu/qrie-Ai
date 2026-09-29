@@ -2,10 +2,13 @@ import { layoutBeat, offsetElement, PAGE_STRIDE, type Bond, type Instruction } f
 import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture.ts';
 import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
+  ALTERNATE_MODES,
   PART_SEPARATOR,
   latexToPlain,
   mathPlain,
   validateLesson,
+  type AlternateMode,
+  type AskAlternate,
   type Beat,
   type Element,
   type ImagePart,
@@ -421,6 +424,9 @@ export function assemble(
       // The worked example (C6) is copied past the layout the same way.
       const worked = (askSteps[n] as { workedExample?: WorkedExample } | undefined)?.workedExample;
       if (worked) a.ask = { ...a.ask, workedExample: worked };
+      // And the re-explanations (H4), the same way.
+      const alternates = (askSteps[n] as { alternates?: AskAlternate[] } | undefined)?.alternates;
+      if (alternates && alternates.length > 0) a.ask = { ...a.ask, alternates };
     });
 
     // A beat left with nothing to show was a beat about a picture that failed;
@@ -748,6 +754,30 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
       // question (found in the canvas lab, 2026-09-29).
       if ((typeof ask.question !== 'string' || ask.question.trim() === '') && typeof ask.written === 'string') {
         ask.question = latexToPlain(ask.written) ?? mathPlain(ask.written);
+      }
+      // H4's re-explanations: keep the well-formed ones (a known mode,
+      // something to say), at most three; none left, no field — the class is
+      // never refused over a mis-shaped extra.
+      const alts = (step as { alternates?: unknown }).alternates;
+      if (alts !== undefined) {
+        const kept = Array.isArray(alts)
+          ? alts
+              .filter(
+                (a) =>
+                  typeof a === 'object' &&
+                  a !== null &&
+                  ALTERNATE_MODES.includes((a as { mode?: unknown }).mode as AlternateMode) &&
+                  typeof (a as { say?: unknown }).say === 'string' &&
+                  (a as { say: string }).say.trim() !== '',
+              )
+              .map((a) => {
+                const { mode, say, line } = a as { mode: AlternateMode; say: string; line?: unknown };
+                return typeof line === 'string' && line.trim() !== '' ? { mode, say, line } : { mode, say };
+              })
+              .slice(0, 3)
+          : [];
+        if (kept.length > 0) (step as { alternates?: unknown }).alternates = kept;
+        else delete (step as { alternates?: unknown }).alternates;
       }
       if (ask.whyProbe === undefined) continue;
       /**

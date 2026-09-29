@@ -406,8 +406,12 @@ describe('decide: response-time rules, built and off until TD14', () => {
 describe('decide: over every branch', () => {
   afterEach(() => vi.restoreAllMocks());
 
-  const verdicts: Verdict[] = ['right', 'wrong', 'unmatched', 'unclear', 'silent', 'hintRequest'];
-  const asks = { OPEN, OPTIONS, NO_HINT, LEAKY_HINT, WITH_EXAMPLE, LEAKY_EXAMPLE, OPEN_WITH_PROBE, NOTHING_TO_REVEAL };
+  const verdicts: Verdict[] = ['right', 'wrong', 'unmatched', 'unclear', 'silent', 'hintRequest', 'explainRequest'];
+  const WITH_ALTS: AskInput = {
+    ...WITH_EXAMPLE,
+    alternates: [{ mode: 'analogy', say: 'Think of a balance: take the same from both pans.' }],
+  };
+  const asks = { OPEN, OPTIONS, NO_HINT, LEAKY_HINT, WITH_EXAMPLE, LEAKY_EXAMPLE, OPEN_WITH_PROBE, NOTHING_TO_REVEAL, WITH_ALTS };
   const grid = (): Array<[string, DecideInput]> => {
     const rows: Array<[string, DecideInput]> = [];
     for (const verdict of verdicts) {
@@ -450,13 +454,16 @@ describe('decide: over every branch', () => {
       const floor = Math.max(input.rungSoFar, input.attempt > 1 ? 1 : 0);
       expect(a.rung, label).toBeGreaterThanOrEqual(floor);
       // A content-free nudge is filed at L1 without moving the ladder; nothing
-      // else files help above the rung it leaves in force.
-      if (a.helped !== null) expect(a.helped, label).toBeLessThanOrEqual(Math.max(a.rung, 1));
+      // else files help above the rung it leaves in force — except another
+      // explanation ASKED FOR, filed as the L7 it is while the ladder stays put
+      // so a request never brings the answer nearer (H4).
+      if (a.helped !== null && !(a.kind === 'explainAgain' && a.requested))
+        expect(a.helped, label).toBeLessThanOrEqual(Math.max(a.rung, 1));
     }
   });
 
   it('climbs at most one delivered step per wrong answer', () => {
-    const order = [0, 1, 3, 5, 8];
+    const order = [0, 1, 3, 5, 7, 8];
     for (const [label, input] of grid()) {
       if (input.verdict !== 'wrong' && input.verdict !== 'unmatched') continue;
       const a = decide(input);
@@ -464,7 +471,7 @@ describe('decide: over every branch', () => {
       const floor = Math.max(input.rungSoFar, input.attempt > 1 ? 1 : 0);
       const skipped = order.filter((r) => r > floor && r < a.helped!);
       // Only rungs with nothing usable authored for them may be skipped.
-      for (const r of skipped) expect([3, 5], `${label} skipped ${r}`).toContain(r);
+      for (const r of skipped) expect([3, 5, 7], `${label} skipped ${r}`).toContain(r);
     }
   });
 
@@ -590,5 +597,62 @@ describe('decide: an authored why, as written (fifth review)', () => {
   it('takes off the openers teachers really write', () => {
     for (const opener of ['Precisely.', 'Perfect!', 'Absolutely!', "That's correct!", 'Exactly right!', 'Good job!', 'You got it!', 'Bilkul sahi!', 'Sahi hai!'])
       expect(praisedWith(`${opener} The gaps hold it.`), opener).not.toContain(opener);
+  });
+});
+
+/**
+ * H4: ANOTHER WAY TO EXPLAIN IT — L7, after the worked example and before
+ * the answer, or when the student asks. Never the answer; a request never
+ * brings the reveal nearer.
+ */
+describe('decide: another way to explain it (L7)', () => {
+  const WITH_ALTERNATES: AskInput = {
+    ...OPEN,
+    alternates: [
+      { mode: 'analogy', say: 'Think of the equation as a balance: whatever you take from one pan, take from the other.' },
+      { mode: 'everyday', say: 'If three friends share some sweets plus four extra, work back from the total.' },
+    ],
+  };
+
+  it('explains it another way after the hint, before the answer, when there is no worked example', () => {
+    const a = decide(base({ ask: WITH_ALTERNATES, rungSoFar: 3, attempt: 3 }));
+    expect(a.kind).toBe('explainAgain');
+    expect(a.rung).toBe(7);
+    expect(a.helped).toBe(7);
+    expect(say(a)).toContain('balance');
+    // And the next miss reveals.
+    expect(decide(base({ ask: WITH_ALTERNATES, rungSoFar: 7, attempt: 4 })).kind).toBe('reveal');
+  });
+
+  it('comes after the worked example when both exist', () => {
+    const both: AskInput = { ...WITH_EXAMPLE, alternates: WITH_ALTERNATES.alternates };
+    expect(decide(base({ ask: both, rungSoFar: 3, attempt: 3 })).kind).toBe('workedExample');
+    expect(decide(base({ ask: both, rungSoFar: 5, attempt: 4 })).kind).toBe('explainAgain');
+  });
+
+  it('explains it another way when asked, without climbing towards the answer', () => {
+    const a = decide(base({ verdict: 'explainRequest', ask: WITH_ALTERNATES }));
+    expect(a.kind).toBe('explainAgain');
+    expect(a.requested).toBe(true);
+    expect(a.rung).toBe(0);
+    // The next wrong answer still gets the rethink, not the answer.
+    expect(decide(base({ ask: WITH_ALTERNATES, rungSoFar: a.rung })).kind).toBe('rethink');
+  });
+
+  it('gives a different explanation the second time it is asked', () => {
+    const first = decide(base({ verdict: 'explainRequest', ask: WITH_ALTERNATES }));
+    const second = decide(base({ verdict: 'explainRequest', ask: WITH_ALTERNATES, recentLines: [first.say!] }));
+    expect(second.say).not.toBe(first.say);
+  });
+
+  it('never explains it with the answer in it', () => {
+    const leaky: AskInput = { ...OPEN, alternates: [{ mode: 'steps', say: 'Take three, then divide: x is four.' }] };
+    expect(decide(base({ verdict: 'explainRequest', ask: leaky })).kind).not.toBe('explainAgain');
+    expect(decide(base({ ask: leaky, rungSoFar: 3, attempt: 3 })).kind).toBe('reveal');
+  });
+
+  it('answers a request with no alternates by asking for a first step', () => {
+    const a = decide(base({ verdict: 'explainRequest', ask: OPEN }));
+    expect(LINES.haveAGo.en).toContain(say(a));
   });
 });

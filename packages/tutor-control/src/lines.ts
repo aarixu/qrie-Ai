@@ -159,6 +159,12 @@ const hintAgain: Framed = {
   'hi-en': [(h) => `Hint phir se: ${h}`, (h) => `Hint yaad karo: ${h}`],
 };
 
+/** L7: the idea again, another way (H4). `content` is the authored re-explanation. */
+const explainAgain: Framed = {
+  en: [(s) => `Let me put it another way. ${s}`, (s) => `Here's another way to see it. ${s}`],
+  'hi-en': [(s) => `Chalo, doosre tareeke se samjhaati hoon. ${s}`, (s) => `Isse aise bhi dekh sakte hain. ${s}`],
+};
+
 /** L5: a similar problem, worked. `content` is the steps' spoken lines. */
 const workedExample: Framed = {
   en: [
@@ -190,4 +196,4 @@ export const LINES = {
   praiseAfterReveal,
 } as const;
 
-export const FRAMES = { hint, hintAgain, workedExample, reveal } as const;
+export const FRAMES = { hint, hintAgain, workedExample, explainAgain, reveal } as const;

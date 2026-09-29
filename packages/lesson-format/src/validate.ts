@@ -1,6 +1,6 @@
 // With its extension: the relay's keep route (packages/relay/src/classStore.ts)
 // runs this file in Deno, which resolves no extensionless specifier.
-import type { Beat, Element, Lesson, Point } from './types.ts';
+import { ALTERNATE_MODES, type AlternateMode, type Beat, type Element, type Lesson, type Point } from './types.ts';
 
 /**
  * Runtime validation of a lesson document.
@@ -227,6 +227,24 @@ function beatErrors(
         !steps.every((s) => isObj(s) && isStr((s as { say?: unknown }).say) && isStr((s as { line?: unknown }).line))
       ) {
         errs.push(`${path}: ask workedExample needs 1 to 6 steps, each with a non-empty say and line`);
+      }
+    }
+    // H4: 2 or 3 re-explanations, each a known mode with something to say.
+    const alternates = (ask as { alternates?: unknown }).alternates;
+    if (alternates !== undefined) {
+      if (
+        !Array.isArray(alternates) ||
+        alternates.length < 1 ||
+        alternates.length > 3 ||
+        !alternates.every(
+          (a) =>
+            isObj(a) &&
+            ALTERNATE_MODES.includes((a as { mode?: unknown }).mode as AlternateMode) &&
+            isStr((a as { say?: unknown }).say) &&
+            ((a as { line?: unknown }).line === undefined || isStr((a as { line?: unknown }).line)),
+        )
+      ) {
+        errs.push(`${path}: ask alternates needs 1 to 3 entries, each with a known mode and a non-empty say`);
       }
     }
     if (ask.options !== undefined) {

@@ -538,6 +538,15 @@ The class can stop. Use it:
   exact); "say" is the same step in words, never reading notation aloud. It
   must NOT contain this ask's own answer: it is the help a stuck student gets
   after the hint, to copy the method, not the result.
+- EVERY ask ALSO carries "alternates": 2 short re-explanations of the IDEA
+  the question rests on, each a different way of seeing it, for a student
+  who did not get it the first way —
+    "alternates":[{"mode","say","line"?}, ...]
+  "mode" is one of "analogy" (a balance, a pizza, a race), "everyday"
+  (money, cricket, a kitchen), "visual" (what to picture) or "steps" (the
+  same idea in smaller steps). "say" is 1 to 3 spoken sentences, maths in
+  words; "line" is an optional short line she writes. Never this ask's own
+  answer, and not a repeat of the narration.
 
 Where an ask earns its place:
 - RETRIEVAL: after teaching a chunk, ask it back before moving on. Asking

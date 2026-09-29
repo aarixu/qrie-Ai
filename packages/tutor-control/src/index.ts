@@ -17,7 +17,7 @@
  */
 
 export { FAST_WRONG_MS, decide } from './decide.ts';
-export { asksForHint } from './hintRequest.ts';
+export { asksForHint, asksToExplainAgain } from './hintRequest.ts';
 export { leakTokens, leaks } from './leak.ts';
 export { FRAMES, LINES } from './lines.ts';
 export { recordsFor, type ActionRecord } from './records.ts';

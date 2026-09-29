@@ -355,3 +355,22 @@ describe('an ask the planner gave only a board form', () => {
     expect((beat.board[0] as { question?: string }).question).toBe('If x + y = 7, what is x?');
   });
 });
+
+describe('re-explanations (H4)', () => {
+  it('keeps the well-formed alternates and drops the rest, never the class', () => {
+    const beat = {
+      id: 'b1', topic: 't', narration: '',
+      board: [{ do: 'ask' as const, question: 'Q?', alternates: [
+        { mode: 'analogy', say: 'Think of a balance.' },
+        { mode: 'poem', say: 'Roses are red.' },
+        { mode: 'steps', say: '' },
+        { mode: 'everyday', say: 'Like sharing sweets.', line: '' },
+      ] }],
+    };
+    dropBadProbes([beat as never]);
+    expect((beat.board[0] as { alternates?: unknown }).alternates).toEqual([
+      { mode: 'analogy', say: 'Think of a balance.' },
+      { mode: 'everyday', say: 'Like sharing sweets.' },
+    ]);
+  });
+});

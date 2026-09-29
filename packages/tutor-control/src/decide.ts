@@ -102,6 +102,8 @@ export function decide(input: DecideInput): Action {
       });
     case 'hintRequest':
       return onHintRequest(ctx);
+    case 'explainRequest':
+      return onExplainRequest(ctx);
   }
 }
 
@@ -217,7 +219,68 @@ function onWrong(ctx: Ctx): Action {
     skipped.push(`no usable worked example: ${worked.reason}`);
   }
 
+  // L7: the idea again, another way (H4), before the answer.
+  if (floor < 7) {
+    const alt = usableAlternate(ctx);
+    if ('say' in alt) return explainAction(ctx, alt, `${ctx.head}: another way to explain it (L7, ${alt.mode})`, false, 7);
+    skipped.push(`no usable alternate explanation: ${alt.reason}`);
+  }
+
   return revealOrMoveOn(ctx, skipped);
+}
+
+/**
+ * "Explain it another way", asked for. The ladder does not climb — a request
+ * never brings the answer nearer, as with a hint asked for — but the help is
+ * filed as the L7 it is. With nothing usable authored, the request gets the
+ * content-free "have a go" line.
+ */
+function onExplainRequest(ctx: Ctx): Action {
+  const alt = usableAlternate(ctx);
+  if ('say' in alt) {
+    return explainAction(ctx, alt, `${ctx.head}: another way asked for (L7, ${alt.mode}); the ladder does not climb`, true, ctx.floor);
+  }
+  return act(ctx, {
+    kind: 'nudge',
+    rung: ctx.floor,
+    helped: 1,
+    requested: true,
+    lines: LINES.haveAGo[ctx.input.lang],
+    because: `${ctx.head}: another way asked for, none usable (${alt.reason}); ask for a first step`,
+  });
+}
+
+function explainAction(
+  ctx: Ctx,
+  alt: { say: string; line?: string; mode: string },
+  because: string,
+  requested: boolean,
+  rung: AssistanceRung,
+): Action {
+  return act(ctx, {
+    kind: 'explainAgain',
+    rung,
+    helped: 7,
+    requested,
+    lines: FRAMES.explainAgain[ctx.input.lang].map((frame) => frame(alt.say)),
+    ...(alt.line ? { boardIntent: { kind: 'writeInWorkArea' as const, text: alt.line } } : {}),
+    because,
+  });
+}
+
+/**
+ * The first authored alternate that does not give the answer away and was not
+ * just said — so a second request gets a different way of seeing it.
+ */
+function usableAlternate(ctx: Ctx): { say: string; line?: string; mode: string } | { reason: string } {
+  const all = ctx.input.ask.alternates ?? [];
+  if (all.length === 0) return { reason: 'none authored' };
+  const safe = all.filter((a) => a.say?.trim() && !leaks(a.say, ctx.secrets) && !(a.line && leaks(a.line, ctx.secrets)));
+  if (safe.length === 0) return { reason: 'every one leaks the answer' };
+  const recent = ctx.input.recentLines ?? [];
+  const fresh = safe.find((a) => !recent.some((line) => line.includes(a.say.trim())));
+  const pick = fresh ?? safe[0];
+  return { say: pick.say.trim(), ...(pick.line?.trim() ? { line: pick.line.trim() } : {}), mode: pick.mode };
 }
 
 function revealOrMoveOn(ctx: Ctx, skipped: string[]): Action {

@@ -97,6 +97,18 @@ export interface AskOption {
 }
 
 /** A similar problem, worked step by step (C6): what the L5 rung of the help ladder says and writes. */
+/** The ways an idea can be explained again (H4); the mode is the strategy tag (H5). */
+export type AlternateMode = 'analogy' | 'everyday' | 'visual' | 'steps';
+
+export const ALTERNATE_MODES: readonly AlternateMode[] = ['analogy', 'everyday', 'visual', 'steps'];
+
+/** One re-explanation: what she says, and optionally one line she writes. */
+export interface AskAlternate {
+  mode: AlternateMode;
+  say: string;
+  line?: string;
+}
+
 export interface WorkedExample {
   steps: { say: string; line: string }[];
 }
@@ -426,6 +438,14 @@ export interface Beat {
      * one that is). Optional: a class without one skips L5.
      */
     workedExample?: WorkedExample;
+    /**
+     * ANOTHER WAY TO EXPLAIN IT (H4, 2026-09-29) — L7 on the help ladder: 2 or
+     * 3 short re-explanations of the idea the question rests on, each in a
+     * different mode, offered after the worked example and before the
+     * answer, or when the student asks. Never the answer (tutor-control's leak
+     * check drops one that is). Optional: a class without them skips L7.
+     */
+    alternates?: AskAlternate[];
   };
   teaches?: string[];
   /**

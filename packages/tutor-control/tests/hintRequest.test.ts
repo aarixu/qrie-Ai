@@ -83,3 +83,12 @@ describe('asksForHint, seventh review', () => {
       expect(asksForHint(said, { afterOffer: false }), said).toBe(false);
   });
 });
+
+describe('asksToExplainAgain (H4)', () => {
+  it('hears a request to explain it another way, in English and Hinglish', async () => {
+    const { asksToExplainAgain } = await import('../src/index');
+    for (const said of ['explain it another way', 'can you explain again', 'phir se samjhao', 'doosre tareeke se samjhaiye', 'ek baar aur samjha do'])
+      expect(asksToExplainAgain(said), said).toBe(true);
+    for (const said of ['explain why 7 is prime', 'it is explained by gravity', 'x = 3']) expect(asksToExplainAgain(said), said).toBe(false);
+  });
+});

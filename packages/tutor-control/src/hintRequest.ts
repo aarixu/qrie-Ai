@@ -121,3 +121,27 @@ export function asksForHint(
   });
   return !yesNoOnBoard;
 }
+
+/**
+ * "EXPLAIN IT AGAIN", SAID OUT LOUD (H4). A request for another way to see
+ * the idea — "explain it another way", "phir se samjhao", "doosre tareeke se
+ * samjhaiye" — not an answer. Same narrow rule as a hint: at most seven words,
+ * no digit, and nothing but the ask and filler around it.
+ */
+const EXPLAIN = /\b(explain|samjhao|samjha|samjhaiye|samjhaao)\b/g;
+const EXPLAIN_FILLER = new Set([
+  'again', 'another', 'way', 'differently', 'different', 'once', 'more', 'phir', 'dobara', 'doosre', 'dusre',
+  'tareeke', 'tarike', 'tarah', 'se', 'do', 'dijiye', 'it', 'that', 'this', 'please', 'can', 'could', 'you',
+  'me', 'mujhe', 'ek', 'baar', 'aur', 'ji', 'na', 'yaar', 'miss', 'mam', 'maam', 'sir', 'in', 'a',
+]);
+
+export function asksToExplainAgain(said: string): boolean {
+  const w = words(said);
+  if (w.length === 0 || w.length > MAX_WORDS || w.some((x) => /\d/.test(x))) return false;
+  let found = false;
+  const rest = w.join(' ').replace(EXPLAIN, () => {
+    found = true;
+    return ' ';
+  });
+  return found && rest.split(/\s+/).filter(Boolean).every((x) => EXPLAIN_FILLER.has(x));
+}

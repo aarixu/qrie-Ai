@@ -587,6 +587,25 @@ describe('the held question, in the real room', () => {
     expect(spoken).toContain(lesson.beats[1].narration);
   });
 
+  it('explains it another way when asked, by tap or out loud (H4)', async () => {
+    const alt = askingLesson(RIGHT_WHY);
+    alt.beats[0].ask = {
+      ...alt.beats[0].ask!,
+      alternates: [
+        { mode: 'analogy', say: 'Think of blood as a delivery team with different workers.' },
+        { mode: 'everyday', say: 'Like a school with teachers, guards and cooks, each doing one job.' },
+      ],
+    } as never;
+    const host = await openClass({ lesson: alt, tts: quickVoice() });
+    await tick();
+    ear.queued = ['phir se samjhao'];
+    await tap(host, 'Explain another way');
+    await tick(10);
+    const explained = spoken.filter((l) => /delivery team|school with teachers/.test(l));
+    expect(explained.length).toBe(2);
+    expect(llmCalls).toBe(0);
+  });
+
   it('does not start the class when they leave while she is greeting them', async () => {
     const held: Array<() => void> = [];
     const greetingHeld: TtsAdapter = {
