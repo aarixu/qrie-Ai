@@ -20,3 +20,20 @@ describe('maths in a board line', () => {
     expect(lines.join(' ')).toContain('$x + y = 7$,');
   });
 });
+
+/** Seventh review: the checker reads what the LaTeX MEANS, or refuses to guess. */
+describe('latexToPlain', () => {
+  it('keeps powers, fractions and operators as they mean', async () => {
+    const { latexToPlain } = await import('../src/index');
+    expect(latexToPlain(String.raw`Find $x$: $2^{x} = 32$`)).toBe('Find x: 2^(x) = 32');
+    expect(latexToPlain(String.raw`$12 \div 3 = 4$`)).toBe('12 ÷ 3 = 4');
+    expect(latexToPlain(String.raw`$\frac{x+1}{2} = 4$`)).toBe('(x+1)/(2) = 4');
+    expect(latexToPlain(String.raw`$\dfrac{3}{4} = 0.75$`)).toBe('(3)/(4) = 0.75');
+    expect(latexToPlain(String.raw`$10^{-2} = 0.01$`)).toBe('10^(-2) = 0.01');
+    expect(latexToPlain('$3^2+4^2=5^2$')).toBe('3^2+4^2=5^2');
+  });
+  it('refuses a command it cannot translate', async () => {
+    const { latexToPlain } = await import('../src/index');
+    expect(latexToPlain(String.raw`$\int x\,dx$`)).toBeNull();
+  });
+});

@@ -473,11 +473,30 @@ describe('several worked cases on one board are each their own problem', () => {
     ok('4x + 5 = 17', 'x = 1', '4x + 5 = 4 × 1 + 5 = 9', 'x = 2', '4 × x + 5 = 4 × 2 + 5 = 13', 'x = 3', '4x + 5 = 4 × 3 + 5 = 17');
   });
 
+  /** THE SEVENTH REVIEW (2026-09-29): evaluating at several values, and LHS on the first try. */
+  it('reads evaluation at several values with no equation in that letter', () => {
+    ok('x = 3', '3 + 7 = 10', 'x = 5', '5 + 7 = 12');
+    ok('x = 2', '10 - 2 = 8', 'x = 4', '10 - 4 = 6');
+    ok('x = 6', '6/2 = 3', 'x = 10', '10/2 = 5');
+    ok('a = 5', '5 × 4 = 20', 'a = 7', '7 × 4 = 28');
+    ok('t = 2', '2 × 60 = 120', 't = 3', '3 × 60 = 180');
+  });
+  it('reads a trial table written with LHS on every row', () => {
+    ok('4x + 5 = 17', 'x = 1', 'LHS = 4(1) + 5 = 9', 'x = 2', 'LHS = 4(2) + 5 = 13', 'x = 3', 'LHS = 4(3) + 5 = 17');
+  });
+
   it('refuses a runaway nested power instead of freezing the thread', () => {
     const t0 = Date.now();
     const r = checkLines(lines('(((9^64)^64)^64)^64 = 1', '((9^64)^64)^64 = 1'));
     expect(Date.now() - t0).toBeLessThan(1500);
     expect(r.failures).toEqual([]);
     expect(r.skipped.length).toBe(2);
+  });
+});
+
+describe('the seventh review: the English word "a"', () => {
+  it('fails a wrong final answer whose check line says "a side"', () => {
+    const r = checkLines(['4a = 20', 'a = 5', 'So a = 6', 'Check: a side of 5 gives P = 20 ✓'].map((text, i) => ({ id: `l${i}`, text })));
+    expect(r.failures.length).toBeGreaterThan(0);
   });
 });

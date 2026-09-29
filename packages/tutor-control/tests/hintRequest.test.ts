@@ -76,3 +76,10 @@ describe('asksForHint, fifth review', () => {
       expect(asksForHint(said, { afterOffer: false }), said).toBe(true);
   });
 });
+
+describe('asksForHint, seventh review', () => {
+  it('leaves an answer that mentions "you" or follows a yes as an answer', () => {
+    for (const said of ['it will help you', 'yes it will help you', 'it would help you', 'haan mujhe madad milegi', 'you will get more help'])
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(false);
+  });
+});

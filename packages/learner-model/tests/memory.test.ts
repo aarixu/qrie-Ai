@@ -127,3 +127,13 @@ describe('the review ladder, sixth review', () => {
     expect(m.states.a.masteredAt).toBeNull();
   });
 });
+
+describe('the review ladder, seventh review', () => {
+  it('still climbs for a child who practises every day', () => {
+    const d0 = day(0);
+    let m = foldSession(emptyModel(), d0, [taught(d0)], index, params);
+    for (let n = 1; n <= 20; n++) m = foldSession(m, day(n), [answer(day(n), true)], index, params);
+    // Due on days 1, 3, 8 and 20: four climbs.
+    expect(m.states.a.box).toBe(4);
+  });
+});

@@ -22,13 +22,46 @@ import { hasMath } from '@ai-tutor/lesson-format';
 const escapeHtml = (text: string): string =>
   text.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] ?? c);
 
+/** Past this, a piece of maths is not a board line: shown as text, never typeset. */
+const MAX_TEX = 400;
+
 /** One piece of LaTeX as HTML, or null when KaTeX cannot read it. */
 export function texToHtml(tex: string): string | null {
+  if (tex.length > MAX_TEX) return null;
   try {
-    return katex.renderToString(tex, { throwOnError: true, trust: false, output: 'html', strict: 'ignore' });
+    return katex.renderToString(tex.replace(/\\dfrac/g, '\\frac'), {
+      throwOnError: true,
+      trust: false,
+      output: 'html',
+      strict: 'ignore',
+      // No \rule or size command may draw past a few ems, and no macro may
+      // expand without end (seventh review: hardening).
+      maxSize: 5,
+      maxExpand: 100,
+    });
   } catch {
     return null;
   }
+}
+
+/**
+ * Whether a FORMULA element's text is maths KaTeX will set as its author
+ * meant. Formulas are plain text by the planner's contract, and plain text
+ * with words in it — "Mass of Reactants = Mass of Products", "Profit % =
+ * (Profit / CP) × 100", "A --> B" — comes out of KaTeX as run-together italics
+ * (seventh review, 2026-09-29). So: `$…$`-delimited, or no word of two or
+ * more letters (sin, cos, tan and log excepted), no %, #, &, ~, and no arrow.
+ */
+export function typesetsAsMaths(text: string): boolean {
+  const t = text.trim();
+  if (/^\$[^$]+\$$/.test(t)) return true;
+  if (/[%#&~]|->|<-|→/.test(t)) return false;
+  // A power with more than one character and no braces ("10^-9") would raise
+  // only its first character.
+  if (/\^(?![{(])\S{2,}/.test(t)) return false;
+  // Letters side by side are a product ("mc^2", "xy"); three or more are a word.
+  const words = t.match(/[A-Za-z]{3,}/g) ?? [];
+  return words.every((w) => /^(sin|cos|tan|log|cot|sec|cosec)$/i.test(w));
 }
 
 /**

@@ -166,7 +166,8 @@ export function LessonComplete() {
               </p>
               <p className="font-body-md text-body-md mb-3">
                 {before.kind === 'review'
-                  ? `Time to bring back: ${before.titles.join(', ')}. A few questions now keeps it for weeks.`
+                  ? // The button opens the first; the rest come round on the same ladder.
+                    `Time to bring back ${before.titles[0]}${before.titles.length > 1 ? ` (and ${before.titles.length - 1} more)` : ''}. A few questions now keeps it for weeks.`
                   : `The next lesson builds on ${before.titles[0]}. Let's make it solid first.`}
               </p>
               <button onClick={() => navigate(before.route)} className={primary}>

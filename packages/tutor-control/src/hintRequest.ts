@@ -38,7 +38,21 @@ const HINT_ONLY_FILLER = new Set(['will', 'would', 'more', 'milega', 'milegi']);
  * me", "kya madad milegi", "mujhe madad milegi", "more help please" — so the
  * hint-only words around "help" are an ask again (sixth review, 2026-09-29).
  */
-const ASKING = new Set(['you', 'kya', 'please', 'pls', 'plz', 'mujhe', 'can', 'could', 'may']);
+/**
+ * In QUESTION form only: "kya" first or last, "will/can/could/may/would you|I"
+ * first, "please" or "mujhe" first — never after a yes ("haan mujhe madad
+ * milegi" answers a question), and a "you" in the middle ("it will help you")
+ * is an answer (seventh review, 2026-09-29).
+ */
+function asking(w: readonly string[]): boolean {
+  const [first, second] = w;
+  const last = w[w.length - 1];
+  if (first === 'kya' || last === 'kya') return true;
+  if (['will', 'would', 'can', 'could', 'may'].includes(first) && (second === 'you' || second === 'i')) return true;
+  if (['please', 'pls', 'plz', 'mujhe'].includes(first)) return true;
+  if (last === 'please' || last === 'pls') return !['yes', 'haan', 'han', 'ha', 'it'].includes(first);
+  return false;
+}
 
 /** Words that can sit around an ask without making it an answer. */
 const FILLER = new Set([
@@ -96,7 +110,7 @@ export function asksForHint(
     return rest
       .split(/\s+/)
       .filter(Boolean)
-      .every((x) => FILLER.has(x) || ((byName || w.some((y) => ASKING.has(y))) && HINT_ONLY_FILLER.has(x)));
+      .every((x) => FILLER.has(x) || ((byName || asking(w)) && HINT_ONLY_FILLER.has(x)));
   }
 
   if (!context.afterOffer || !w.every((x) => YES.has(x))) return false;

@@ -34,3 +34,22 @@ describe('a formula line as LaTeX', () => {
     expect(formulaTex('$v = s / t$')).toBe('v = s / t');
   });
 });
+
+describe('which formulas are typeset (seventh review)', () => {
+  it('typesets maths, and leaves words, percentages and arrows as written', async () => {
+    const { typesetsAsMaths } = await import('../src/math');
+    expect(typesetsAsMaths('2x + 3 = 11')).toBe(true);
+    expect(typesetsAsMaths('v = s / t')).toBe(true);
+    expect(typesetsAsMaths('sin 30 = 1/2')).toBe(true);
+    expect(typesetsAsMaths('$\text{Mass} = 5$')).toBe(true);
+    expect(typesetsAsMaths('Mass of Reactants = Mass of Products')).toBe(false);
+    expect(typesetsAsMaths('Profit % = (Profit / CP) × 100')).toBe(false);
+    expect(typesetsAsMaths('A --> B')).toBe(false);
+    expect(typesetsAsMaths('1 nm = 10^-9 m')).toBe(false);
+  });
+  it('will not typeset a runaway or oversized piece of maths', async () => {
+    const { texToHtml } = await import('../src/math');
+    expect(texToHtml('x'.repeat(401))).toBeNull();
+    expect(texToHtml(String.raw`\rule{5000px}{5000px}`) ?? '').not.toContain('5000');
+  });
+});

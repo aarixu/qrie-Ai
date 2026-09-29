@@ -778,12 +778,23 @@ function problemsOf(prepared: Prepared[]): Segment[] {
     // a = 5); "Check: 2 × 4 + 3 = 11 ✓" names none (sixth review).
     if (next.parsed === null) {
       return (
-        p.claims.some((c) => new RegExp(`(^|[^a-z])${c.name}([^a-z]|$)`, 'i').test(next.line.text)) ||
+        // The letter as a letter in maths — next to a number or an operator
+        // ("4a", "a + 3", "(a)") — never the English word "a" in "a side of 5"
+        // (seventh review).
+        p.claims.some((c) =>
+          new RegExp(`[0-9)×*·/+\\-=^(]\\s*${c.name}(?![A-Za-z])|(?<![A-Za-z])${c.name}\\s*[=+\\-×*·/^)0-9]`).test(next.line.text),
+        ) ||
         substitutesValue(p.claims, next.line.text)
       );
     }
     if (next.kind === 'work') return p.claims.some((c) => varsOf(next).has(c.name));
-    if (next.kind === 'other') return substitutesValue(p.claims, next.line.text);
+    // The strict reading only where the letter has an equation to answer:
+    // "x = 3, 3 + 7 = 10, x = 5, 5 + 7 = 12" evaluates at two values and has
+    // none, so a value written anywhere in the working shows it (seventh review).
+    if (next.kind === 'other') {
+      const answerable = p.claims.some((c) => cur.some((l) => l.kind === 'work' && varsOf(l).has(c.name)));
+      return answerable ? substitutesValue(p.claims, next.line.text) : showsValue(p.claims, sidesOf(next));
+    }
     return false;
   };
   /**
@@ -851,7 +862,10 @@ function problemsOf(prepared: Prepared[]): Segment[] {
    * never "the same side" (fourth review, 2026-09-29).
    */
   const isTry = (claims: readonly Claim[], next: Prepared): boolean => {
-    const first = sidesOf(next)[0];
+    let first = sidesOf(next)[0];
+    // "LHS = 4(1) + 5" stands for the equation's own left side (seventh review).
+    const onlyEquation = cur.find((l) => l.kind === 'work');
+    if (first === 'lhs' && onlyEquation) first = sidesOf(onlyEquation)[0];
     if (first === undefined || /^[a-z]$/.test(first)) return false;
     const equation = cur.find((l) => l.kind === 'work' && sidesOf(l).includes(first));
     if (!equation) return false;
@@ -924,7 +938,14 @@ function problemsOf(prepared: Prepared[]): Segment[] {
           next.kind === 'work' &&
           !next.practice &&
           run.claims.some((c) => varsOf(next).has(c.name));
-        if (uses) {
+        const trying =
+          next !== undefined && !next.practice && cur.length > 0 && unanswered(run.claims.map((c) => c.name)) && isTry(run.claims, next);
+        if (trying) {
+          // A try written as "LHS = …" is not working the parser reads, but it
+          // is a try all the same: the equation stays out of it.
+          close();
+          givens = true;
+        } else if (uses) {
           if (cur.length > 0 && unanswered(run.claims.map((c) => c.name)) && !isTry(run.claims, next)) {
             // The answer to the problem so far; and the next one's given too
             // when that working writes the value out.

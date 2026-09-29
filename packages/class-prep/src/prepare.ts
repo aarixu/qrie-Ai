@@ -3,6 +3,7 @@ import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture.ts
 import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
   PART_SEPARATOR,
+  latexToPlain,
   mathPlain,
   validateLesson,
   type Beat,
@@ -746,7 +747,7 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
       // read as symbols, rather than the preparation crashing on a missing
       // question (found in the canvas lab, 2026-09-29).
       if ((typeof ask.question !== 'string' || ask.question.trim() === '') && typeof ask.written === 'string') {
-        ask.question = mathPlain(ask.written);
+        ask.question = latexToPlain(ask.written) ?? mathPlain(ask.written);
       }
       if (ask.whyProbe === undefined) continue;
       /**

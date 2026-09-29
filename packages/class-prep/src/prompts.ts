@@ -100,8 +100,8 @@ otherwise its "why" — so an English one is an English reply in the middle of a
 Hinglish class.
 
 An ask's "question" is what she SAYS: write it in Hinglish. Its "written" is
-what the board shows, and it follows the board's rule below — English, with the
-maths in LaTeX between $…$.
+what the board shows: English, with the maths in LaTeX between $…$ — the one
+board field that takes LaTeX (an "equation" stays plain text).
 
 EVERYTHING ELSE STAYS IN ENGLISH, and this is not a matter of style:
 - Every field name, and every value that is an id: "id", "beatId", "ref",

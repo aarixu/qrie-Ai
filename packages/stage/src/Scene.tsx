@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
-import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
+import { CANVAS_H, CANVAS_W, mathPlain, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
-import { formulaTex, hasMath, lineToHtml, texToHtml } from './math';
+import { formulaTex, hasMath, lineToHtml, texToHtml, typesetsAsMaths } from './math';
 import {
   graphicLabelSize,
   textWidth,
@@ -76,7 +76,11 @@ const INK = '#3c3c3c';
 const FONT_HAND = "'Quicksand', 'Segoe UI', system-ui, sans-serif";
 const FONT_MONO = "'Cascadia Code', Consolas, Menlo, monospace";
 /** A real handwriting face, for the lines the tutor writes out rather than shows. */
-const FONT_WRITE = "'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
+// 'Caveat Variable' is the family @fontsource-variable/caveat registers
+// (apps/classroom/src/fonts.ts); asking only for 'Caveat' fell through to the
+// system's script face on every board, and every writing mask was sized for a
+// font the child never saw (seventh review, 2026-09-29).
+const FONT_WRITE = "'Caveat Variable', 'Caveat', 'Segoe Script', 'Bradley Hand', cursive";
 
 /**
  * How long a handwritten line takes to appear.
@@ -808,32 +812,42 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
   // Generously over: the shared ruler is tuned for a sans face and the
   // tutor's hand is wider, and a mask that is too wide costs nothing while a
   // mask that is too narrow eats the last word off the line.
-  const width = textWidth(el.text, size) * 1.3;
+  const math = hasMath(el.text);
+  // Typeset maths runs wider and taller than the plain characters the ruler
+  // counts: KaTeX spaces operators and stacks fractions. So a maths line gets
+  // a wider box, and a taller one when it has a fraction, root or power —
+  // the writing mask clipped "…= 5x + 20" and hid a fraction's denominator
+  // (seventh review, 2026-09-29).
+  const width = textWidth(el.text, size) * (math ? 1.9 : 1.3);
+  const tall = math && /\\[dt]?frac|\\sqrt|\^|_/.test(el.text);
+  const top = el.y - size * (tall ? 1.6 : 1);
+  const height = size * (tall ? 2.8 : 1.8);
   const left = el.x - width / 2;
   const maskId = `hw-${el.id}`;
   // One object, shared by the ink and the nib, so they can never drift apart.
+  // Paced by what it reads as, not by the length of its LaTeX source.
   const pace = {
-    ['--hw-ms' as string]: `${writeMs(el.text)}ms`,
+    ['--hw-ms' as string]: `${writeMs(math ? mathPlain(el.text) : el.text)}ms`,
     ['--hw-after' as string]: `${el.after ?? 0}ms`,
   };
 
   return (
     <>
-      <mask id={maskId} maskUnits="userSpaceOnUse" x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8}>
+      <mask id={maskId} maskUnits="userSpaceOnUse" x={left - 10} y={top} width={width + 20} height={height}>
         <rect
           className="stage-write"
           x={left - 10}
-          y={el.y - size}
+          y={top}
           width={width + 20}
-          height={size * 1.8}
+          height={height}
           fill="#fff"
           style={pace}
         />
       </mask>
-      {hasMath(el.text) ? (
+      {math ? (
         // Words in her hand, maths typeset (T6): HTML inside the board, under
         // the same writing mask, so it still appears as she writes.
-        <foreignObject x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8} mask={`url(#${maskId})`} overflow="visible">
+        <foreignObject x={left - 10} y={top} width={width + 20} height={height} mask={`url(#${maskId})`} overflow="visible">
           <div
             className="stage-math"
             style={{
@@ -843,7 +857,7 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
               color,
               textAlign: 'center',
               whiteSpace: 'nowrap',
-              lineHeight: `${size * 1.8}px`,
+              lineHeight: `${height}px`,
             }}
             dangerouslySetInnerHTML={{ __html: lineToHtml(el.text) }}
           />
@@ -1031,7 +1045,7 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
        * monospace line.
        */
       const tex = formulaTex(el.text);
-      const html = texToHtml(tex);
+      const html = typesetsAsMaths(el.text) ? texToHtml(tex) : null;
       if (html !== null) {
         const w = Math.max(80, textWidth(`$${tex}$`, 26) * 1.4);
         return (

@@ -38,6 +38,7 @@ export {
   LIST_HEADING_GAP,
   fitText,
   hasMath,
+  latexToPlain,
   mathPlain,
   writeMs,
   graphicLabelSize,

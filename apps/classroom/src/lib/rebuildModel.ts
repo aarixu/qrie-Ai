@@ -100,9 +100,9 @@ const toEvent = (row: EventRow): LedgerEvent =>
  * this tool most exists to catch (2026-09-16 audit). The review ladder's
  * fields (F1-F3: box, the exposure and retrieval dates, nextReviewAt and the
  * retrieval counts) are driven since MODEL_VERSION 3 and compared like any
- * other; `memoryStrength` is still undriven and costs one comparison of a
- * default against a default. `masteredAt` and `coldWins` are not numbers
- * and are not compared here.
+ * other, and so is `masteredAt` (a date, compared as text like the ladder's
+ * dates); `memoryStrength` is still undriven and costs one comparison of a
+ * default against a default. `coldWins` is a record and is not compared here.
  */
 const FIELDS: readonly (keyof ConceptState)[] = [
   'mastery',
@@ -115,6 +115,7 @@ const FIELDS: readonly (keyof ConceptState)[] = [
   'doubtCount',
   'lastPracticedAt',
   'lastUnassistedSuccessAt',
+  'masteredAt',
   'box',
   'lastExposedAt',
   'lastRetrievedAt',

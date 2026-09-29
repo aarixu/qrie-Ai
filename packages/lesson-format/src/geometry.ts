@@ -118,6 +118,52 @@ export function mathPlain(text: string): string {
   );
 }
 
+/**
+ * A board line's `$…$` maths as the plain maths it MEANS, for anything that
+ * reads the maths rather than measuring it — the maths check, and the spoken
+ * fallback for a question with only a board form. `mathPlain` above is for
+ * width and is lossy on purpose ("2^{x}" reads as "2x" there); this keeps the
+ * meaning: powers as "^(…)", fractions as "(a)/(b)", "\div" as "÷".
+ *
+ * Null when the maths holds a command this cannot translate faithfully — the
+ * caller then treats the line as unreadable rather than checking a guess
+ * (seventh review, 2026-09-29: "2^{x} = 32" was read as "2x = 32" and a correct
+ * class was refused).
+ */
+const LATEX_SYMBOLS: Record<string, string> = {
+  times: '×', div: '÷', cdot: '·', pm: '±', mp: '∓', neq: '≠', ne: '≠', leq: '≤', le: '≤', geq: '≥', ge: '≥',
+  pi: 'π', theta: 'θ', alpha: 'α', beta: 'β', gamma: 'γ', infty: '∞', circ: '°', degree: '°', approx: '≈',
+  percent: '%', ldots: '…', cdots: '…',
+};
+
+export function latexToPlain(text: string): string | null {
+  if (!hasMath(text)) return text;
+  let failed = false;
+  const out = text.replace(/\$([^$]+)\$/g, (_, tex: string) => {
+    let t = tex;
+    for (let i = 0; i < 4; i += 1) {
+      t = t
+        .replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)')
+        .replace(/\\sqrt\s*\{([^{}]*)\}/g, '√($1)')
+        .replace(/\\(?:text|mathrm|operatorname|mathbf|mathit)\s*\{([^{}]*)\}/g, '$1')
+        .replace(/\^\s*\{([^{}]*)\}/g, '^($1)')
+        .replace(/_\s*\{([^{}]*)\}/g, '');
+    }
+    t = t
+      .replace(/\\left|\\right/g, '')
+      .replace(/\\[,;:! ]|\\quad|\\qquad/g, ' ')
+      .replace(/\\%/g, '%')
+      .replace(/\\([A-Za-z]+)/g, (m, name: string) => {
+        const sym = LATEX_SYMBOLS[name];
+        if (sym === undefined) failed = true;
+        return sym ?? m;
+      });
+    if (/[{}\\]/.test(t)) failed = true;
+    return t;
+  });
+  return failed ? null : out.replace(/\s+/g, ' ').trim();
+}
+
 /** How wide one line of text will be drawn at this size — maths measured by what it reads as. */
 export function textWidth(text: string, size: number, mono = false): number {
   return mathPlain(text).length * size * (mono ? EM_MONO : EM_SANS);

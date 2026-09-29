@@ -19,7 +19,7 @@
  * second, starting with "=", does not parse and is skipped.
  */
 
-import { mathPlain, type Element, type Lesson } from '@ai-tutor/lesson-format';
+import { latexToPlain, type Element, type Lesson } from '@ai-tutor/lesson-format';
 import { checkLines, type CheckResult, type Line } from './check.ts';
 
 const READ_KINDS: ReadonlySet<Element['kind']> = new Set(['formula', 'handwrite', 'text', 'note']);
@@ -41,8 +41,11 @@ export function equationLines(lesson: Lesson): Line[] {
       continue;
     }
     if (!READ_KINDS.has(el.kind) || !('text' in el) || !el.text.includes('=')) continue;
-    // Maths written in LaTeX (T6) is read as what it says: "$\frac{a}{b} = 2$" is "a/b = 2".
-    const text = mathPlain(el.text);
+    // Maths written in LaTeX (T6) is read as what it MEANS — "$2^{x} = 32$" is
+    // "2^(x) = 32" — and a line with LaTeX that cannot be translated faithfully
+    // is left as it was, which the parser refuses and so skips, rather than
+    // checked as a guess (seventh review).
+    const text = latexToPlain(el.text) ?? el.text;
     out.push(section === undefined ? { id: el.id, text } : { id: el.id, text, section });
   }
   return out;
