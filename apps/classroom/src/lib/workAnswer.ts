@@ -13,16 +13,25 @@ import { equationIn, formatRational, sameEquation, workableEquation, type Ration
  * quadratic are past what the checker can follow; and "If $3x + 2 = 11$, find
  * the value of $2x + 1$" asks for something the working never reaches (third
  * review) — any other piece of maths with a letter in it, beyond the unknown
- * itself, takes the panel away.
+ * itself, takes the panel away. And the question must ask for the unknown, or
+ * expect an equation as its answer (below).
  */
-export function workStartOf(written: string | undefined): string | null {
+export function workStartOf(ask: { question?: string; written?: string; expect?: string } | null | undefined): string | null {
+  const written = ask?.written;
   if (!written) return null;
   const pieces = [...written.matchAll(/\$([^$]*)\$/g)].map((m) => m[1]);
   const equations = pieces.filter((tex) => tex.includes('='));
   if (equations.length !== 1) return null;
   if (pieces.some((tex) => !tex.includes('=') && /[A-Za-z]/.test(tex) && !/^\s*[A-Za-z]\s*$/.test(tex))) return null;
   const plain = latexToPlain(`$${equations[0]}$`);
-  return plain !== null && workableEquation(plain) ? plain : null;
+  if (plain === null || !workableEquation(plain)) return null;
+  // And the working can reach the answer: the question asks for the unknown
+  // ("solve", "find the value of y"), or its answer is itself an equation.
+  // "What remains on the left side?", answered in words, is neither — the
+  // panel ticked "x + 3 = 7" and could never finish (production, phone).
+  const asks = `${ask?.question ?? ''} ${written}`;
+  const forTheUnknown = /\bsolve\b|\bvalue of\b|\bfind\s+\$?\s*[a-z]\b/i.test(asks);
+  return forTheUnknown || expectedEquation(ask?.expect, plain) !== null ? plain : null;
 }
 
 // Not followed by more of a number — a sentence's full stop is not a decimal.

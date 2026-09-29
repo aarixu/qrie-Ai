@@ -82,7 +82,7 @@ export function WorkPanel({
           aria-label="Your next step"
           placeholder="e.g. 3x + 12 = 21"
           inputMode="text"
-          className="flex-1 min-w-0 rounded-xl bg-white/90 px-3 py-2 font-body-md text-[15px] text-stage-ink"
+          className="flex-1 min-w-0 rounded-xl bg-white/90 px-3 py-2 font-body-md text-[15px] text-stage placeholder:text-stage/40"
         />
         <button
           onClick={submit}

@@ -515,7 +515,7 @@ export function ClassRoom({
    * typed; a wrong final value is filed as a wrong answer (eighth review).
    */
   const [working, setWorking] = useState(false);
-  const workStart = useMemo(() => workStartOf(player.pendingAsk?.written), [player.pendingAsk]);
+  const workStart = useMemo(() => workStartOf(player.pendingAsk), [player.pendingAsk]);
   const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
   /**
    * While they work, the ear is paused: what a child reads out of their own
@@ -2184,7 +2184,7 @@ export function ClassRoom({
           {/* The caption: one line over the board, like Meet's captions. */}
           {caption && (
             <p
-              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white truncate ${
+              className={`absolute left-3 bottom-3 max-w-[calc(100%-128px)] lg:max-w-[calc(100%-24px)] rounded-[10px] px-3.5 py-2 font-body-md text-[13.5px] lg:text-[15px] leading-snug text-white line-clamp-3 ${
                 inDoubt ? 'bg-stage-green-container/95' : 'bg-stage/85'
               }`}
             >
@@ -2218,7 +2218,7 @@ export function ClassRoom({
                   until she can hear, one honest button stands in for the ear.
                   Without it the chips row rendered empty and the class held
                   forever on its very first question. */}
-              {!askChoicesHidden && (player.pendingAsk.options ?? []).length === 0 && (
+              {!askChoicesHidden && !working && (player.pendingAsk.options ?? []).length === 0 && (
                 <button
                   onClick={() => void answerAsk(0)}
                   className="rounded-2xl bg-stage-primary px-5 py-2.5 font-label-md text-label-md font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"

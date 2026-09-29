@@ -975,6 +975,10 @@ describe('working it out, eighth review', () => {
     await tick();
     await tap(host, 'Work it out');
     expect(hasButton(host, 'Give me a hint')).toBe(false);
+    // Production, on a phone: the "say it" button covered the question on the board.
+    expect(hasButton(host, 'Say your answer out loud')).toBe(false);
+    // And what they type is legible: dark ink on the light field.
+    expect(byLabel(host, 'Your next step').className).not.toContain('text-stage-ink');
   });
 
   it('answers the question once, with nothing to tap while she praises it', async () => {
