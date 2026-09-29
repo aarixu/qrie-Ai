@@ -1809,9 +1809,14 @@ export function ClassRoom({
         saidPromise,
       };
     }
-    // The same class again: a topic prepared afresh has a new lesson id but
-    // is not "last time" — she said "Last time we did X. Today it's X."
-    if (memory.lastTitle && (memory.lastLessonId === lesson.id || sameTitle(memory.lastTitle, title))) {
+    // The same class again: a topic prepared afresh has a new lesson id (and
+    // can have a new title) but is not "last time" — she said "Last time we
+    // did X. Today it's X." Known by id, by topic, or by title.
+    const sameClass =
+      memory.lastLessonId === lesson.id ||
+      (memory.lastTopicRef !== undefined && memory.lastTopicRef === lesson.topicRef) ||
+      (memory.lastTitle !== undefined && sameTitle(memory.lastTitle, title));
+    if (memory.lastTitle && sameClass) {
       return {
         line: hi
           ? `Welcome back${who}! Chalo, ${title} ek baar phir karte hain.${promise}`
@@ -1850,6 +1855,7 @@ export function ClassRoom({
     setLastSession({
       lessonId: lesson.id,
       title: lesson.title,
+      ...(lesson.topicRef ? { topicRef: lesson.topicRef } : {}),
       beatsDone: player.state === 'ended' ? lesson.beats.length : player.beatIndex,
       total: lesson.beats.length,
     });

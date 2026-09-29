@@ -808,6 +808,15 @@ describe('her greeting when the last class was this one', () => {
     expect(greeting).not.toContain('Last time we did');
     expect(greeting).toContain(lesson.title);
   });
+
+  // Production again: a re-preparation retitled the topic ("Solving
+  // Equations with…"), and she said "last time" of the same class.
+  it('knows the same topic under a new title', async () => {
+    setLastSession({ lessonId: 'an-earlier-preparation', title: 'Blood, its parts', topicRef: lesson.topicRef, beatsDone: 20, total: 20 });
+    await openClass({ tts: quickVoice() });
+    const greeting = spoken.find((l) => /^(Hi|Welcome back)\b/.test(l)) ?? '';
+    expect(greeting).not.toContain('Last time we did');
+  });
 });
 
 /**

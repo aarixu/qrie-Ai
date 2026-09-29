@@ -92,7 +92,7 @@ export interface StudentMemory {
   struggles: TopicMark[];
   wins: TopicMark[];
   doubts: TopicMark[];
-  lastSession?: { lessonId: string; title: string; at: number; beatsDone: number; total: number };
+  lastSession?: { lessonId: string; title: string; topicRef?: string; at: number; beatsDone: number; total: number };
   commitment?: { id: PromiseId; lessonTitle: string; at: number };
 }
 
@@ -201,7 +201,7 @@ export function recordDoubtTopic(at: { topic: string; lessonId: string }, now = 
 }
 
 export function setLastSession(
-  s: { lessonId: string; title: string; beatsDone: number; total: number },
+  s: { lessonId: string; title: string; topicRef?: string; beatsDone: number; total: number },
   now = Date.now(),
 ): void {
   const m = readMemory();
@@ -301,6 +301,8 @@ export function memoryNotes(lang: TutorLanguage, now = Date.now()): string[] {
 export function greetingMemory(lang: TutorLanguage, now = Date.now()): {
   lastTitle?: string;
   lastLessonId?: string;
+  /** The syllabus topic of the last class — a topic prepared again keeps it under a new id and title. */
+  lastTopicRef?: string;
   promise?: string;
   struggle?: { topic: string; lessonId: string };
 } {
@@ -320,6 +322,7 @@ export function greetingMemory(lang: TutorLanguage, now = Date.now()): {
     : undefined;
   return {
     ...(last ? { lastTitle: last.title, lastLessonId: last.lessonId } : {}),
+    ...(last && typeof last.topicRef === 'string' ? { lastTopicRef: last.topicRef } : {}),
     ...(m.commitment ? { promise: PROMISES[m.commitment.id][lang] } : {}),
     ...(struggle ? { struggle: { topic: struggle.topic, lessonId: struggle.lessonId } } : {}),
   };
