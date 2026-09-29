@@ -15,10 +15,12 @@
  *   - a bare yes ("haan", "yes", "okay") — only right after she offered a
  *     hint, and never when yes or no is itself one of the answers on screen.
  *
- * "I don't know" and "pata nahi" are NOT requests: the judge reads them as a
- * wrong answer (apps/classroom/src/lib/judge.ts), which is what lets the
- * ladder climb to the worked example and the answer. A request stops at the
- * hint, so routing them here left a stuck child on the hint forever.
+ * "I don't know" and "pata nahi" are NOT requests: said alone, they are a wrong
+ * answer, decided on the device on any ask that does not offer one as an
+ * answer (`resolveSpokenAnswer`, apps/classroom/src/lib/judge.ts), which is
+ * what lets the ladder climb to the worked example and the answer. A request
+ * stops at the hint, so routing them here left a stuck child on the hint
+ * forever.
  */
 
 /** Asking for a hint by name — a word an answer does not use. */
@@ -131,17 +133,24 @@ export function asksForHint(
  * Bare "samjha" is "(I) understood" and is NOT a request; "samjha do" is
  * (second review). Saying they did not understand — "nahi samjha", "samajh
  * nahi aaya", "I don't understand" — is not a request either: like "pata
- * nahi" it is a miss (tutor-judge's DONT_KNOW, decided on the device), so the
- * ladder climbs to the worked example and the answer. As a request it stopped
- * at the hint, three times over (third review).
+ * nahi" it is a miss, so the ladder climbs to the worked example and the
+ * answer. As a request it stopped at the hint, three times over (third
+ * review). Said alone, with nothing but filler around it, the device decides
+ * that miss before any model is asked (tutor-judge's `dontKnowIn`, read first
+ * by apps/classroom/src/lib/judge.ts `resolveSpokenAnswer`); said beside an
+ * answer — "nahi samjha, plasma?" — it goes to the model, which weighs both.
  */
-const EXPLAIN = /\b(?:explain|samjhao|samjhaiye|samjhaao|samjhado|samjhaa? (?:do|dijiye|dena))\b/g;
+const EXPLAIN =
+  /\b(?:explain|samjhao|samjhaiye|samjhaye|samjhaao|samjhado|samjhana|samjhaa? (?:do|dijiye|dena)|samjhaa? sakt[ei])\b/g;
 const EXPLAIN_FILLER = new Set([
   'again', 'another', 'way', 'differently', 'different', 'once', 'more', 'phir', 'dobara', 'doosre', 'dusre',
   'tareeke', 'tarike', 'tarah', 'se', 'do', 'dijiye', 'it', 'that', 'this', 'please', 'can', 'could', 'you',
   'me', 'mujhe', 'ek', 'baar', 'aur', 'ji', 'na', 'yaar', 'miss', 'mam', 'maam', 'sir', 'in', 'a', 'kuch',
   // The everyday Hinglish around it (fourth review): "phir se explain karo".
   'karo', 'kijiye', 'kariye', 'karein', 'fir', 'dubara', 'thoda', 'zara',
+  // Asking her politely (fifth review): "aap phir se samjhaiye", "kya aap
+  // samjha sakti ho", "kya aap explain kar sakte ho", "one more time".
+  'aap', 'kya', 'sakte', 'sakti', 'ho', 'kar', 'one', 'time',
 ]);
 
 export function asksToExplainAgain(said: string): boolean {

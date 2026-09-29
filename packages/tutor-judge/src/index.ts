@@ -25,4 +25,4 @@ export { judgeSpokenAnswer, resolveCrossQuestion, parseVerdict, parseFollowUp } 
  * one of the 22 asks in the fifteen committed lessons has any — deliberately,
  * because a class ask is answered out of the student's own head. See match.ts.
  */
-export { MATCH_FLOOR, matchSpokenAnswer, type LocalMatch } from './match.ts';
+export { MATCH_FLOOR, dontKnowIn, matchSpokenAnswer, type LocalMatch } from './match.ts';

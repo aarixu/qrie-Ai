@@ -105,6 +105,39 @@ describe('asksToExplainAgain (H4)', () => {
       expect(asksToExplainAgain(said), said).toBe(true);
   });
 
+  // Fifth review: the polite forms a child uses to ask her were judged as answers.
+  it('hears the polite ways of asking her to explain it again', async () => {
+    const { asksToExplainAgain } = await import('../src/index');
+    for (const said of [
+      'aap phir se samjhaiye',
+      'aap explain kijiye',
+      'phir se samjhana',
+      'kya aap samjha sakte ho',
+      'kya aap samjha sakti ho',
+      'kya aap explain kar sakti ho',
+      'samjhaye na',
+      'can you explain it one more time',
+    ])
+      expect(asksToExplainAgain(said), said).toBe(true);
+  });
+
+  it('still leaves an answer that shares those words as an answer', async () => {
+    const { asksToExplainAgain } = await import('../src/index');
+    for (const said of [
+      'kya ho sakta hai',
+      'aap sahi ho',
+      'samjhana mushkil hai',
+      'teacher ka kaam samjhana hai',
+      'we can explain it by gravity',
+      'one time only',
+      'it happens one more time',
+      'samjha sakta hai',
+      'explain 2 times',
+      'the time is explained by the sun',
+    ])
+      expect(asksToExplainAgain(said), said).toBe(false);
+  });
+
   // Third review: as requests, "I don't understand" three times gave the hint
   // three times — a request stops at L3. Like "pata nahi", they go to the judge
   // as a miss, and the ladder climbs to the worked example and the answer.
