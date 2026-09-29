@@ -57,6 +57,7 @@ import {
   recordDoubtTopic,
   recordStruggle,
   recordWin,
+  sameTitle,
   setLastSession,
 } from '../lib/studentMemory';
 import type { AssistanceRung } from '@ai-tutor/ledger';
@@ -1758,7 +1759,17 @@ export function ClassRoom({
         saidPromise,
       };
     }
-    if (memory.lastTitle && memory.lastLessonId !== lesson.id) {
+    // The same class again: a topic prepared afresh has a new lesson id but
+    // is not "last time" — she said "Last time we did X. Today it's X."
+    if (memory.lastTitle && (memory.lastLessonId === lesson.id || sameTitle(memory.lastTitle, title))) {
+      return {
+        line: hi
+          ? `Welcome back${who}! Chalo, ${title} ek baar phir karte hain.${promise}`
+          : `Welcome back${who}! Let's go through ${title} again.${promise}`,
+        saidPromise,
+      };
+    }
+    if (memory.lastTitle) {
       const s = memory.struggle;
       const hard = s
         ? hi
@@ -2005,7 +2016,13 @@ export function ClassRoom({
   // phone it is the only place the conversation is visible.
   const lastDoubtLine = doubtLines[doubtLines.length - 1];
   // Her own line while she says one — praise, a hint, a nudge — else the narration.
-  const caption = inDoubt ? (lastDoubtLine?.text ?? '') : preferences.captions ? (tutorLine ?? player.caption) : '';
+  // During the warm-up only her own lines: the class's first line, under a
+  // question about another topic, read as part of it (production, 2026-09-29).
+  const caption = inDoubt
+    ? (lastDoubtLine?.text ?? '')
+    : preferences.captions
+      ? (tutorLine ?? (warmUp ? '' : player.caption))
+      : '';
 
   const barsShown = controlsShown || !canHideControls;
   const barClasses = barsShown ? 'opacity-100' : 'opacity-0 pointer-events-none';

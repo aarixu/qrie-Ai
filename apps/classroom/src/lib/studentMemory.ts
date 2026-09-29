@@ -102,6 +102,10 @@ const empty = (): StudentMemory => ({ version: 1, interests: [], struggles: [], 
 const clip = (s: string, max = MAX_TOPIC_CHARS): string =>
   s.replace(/["\\`]/g, "'").replace(/\s+/g, ' ').trim().slice(0, max);
 
+/** Whether a remembered (clipped) class title is this class's title. */
+export const sameTitle = (remembered: string, title: string): boolean =>
+  clip(title).toLowerCase() === remembered.toLowerCase();
+
 const isMark = (x: unknown): x is TopicMark => {
   const m = x as TopicMark | null;
   return (

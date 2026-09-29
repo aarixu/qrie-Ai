@@ -74,6 +74,7 @@ import { settingsStore } from '../src/stores/settings';
 import { flagStore, recentFlags } from '../src/stores/flags';
 import { progressStore } from '../src/stores/progress';
 import { ledgerOutbox, resetLedgerOutbox } from '../src/stores/ledger';
+import { setLastSession } from '../src/lib/studentMemory';
 
 /**
  * THE EXIT GATE FOR THIS FIX, IN THE REAL ROOM.
@@ -698,6 +699,15 @@ describe('the class-start warm-up', () => {
     expect(spoken.some((l) => l.includes('The answer is 4'))).toBe(true);
   });
 
+  it('captions only her own lines while it is up, never the class waiting under it', async () => {
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    const firstLine = askingLesson(RIGHT_WHY).beats[0].narration.slice(0, 30);
+    expect(host.textContent).toContain('If 2x = 8, what is x?');
+    expect(host.textContent).not.toContain(firstLine);
+  });
+
   it('files nothing when it is skipped, and the class begins', async () => {
     warm.items = [question];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
@@ -705,5 +715,22 @@ describe('the class-start warm-up', () => {
     await tapText(host, 'Skip warm-up');
     expect(answered()).toHaveLength(0);
     expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(true);
+  });
+});
+
+/**
+ * THE SAME CLASS, PREPARED AGAIN, IS NOT "LAST TIME" (production, 2026-09-29):
+ * a topic prepared afresh gets a new lesson id, and she said "Last time we did
+ * Equations with Variables on Both Sides. Today it's Equations with Variables
+ * on Both Sides."
+ */
+describe('her greeting when the last class was this one', () => {
+  it('welcomes them back to it, and does not call it last time', async () => {
+    setLastSession({ lessonId: 'an-earlier-preparation', title: lesson.title, beatsDone: 20, total: 20 });
+    await openClass({ tts: quickVoice() });
+    const greeting = spoken.find((l) => /^(Hi|Welcome back)\b/.test(l)) ?? '';
+    expect(greeting).toMatch(/^Welcome back/);
+    expect(greeting).not.toContain('Last time we did');
+    expect(greeting).toContain(lesson.title);
   });
 });
