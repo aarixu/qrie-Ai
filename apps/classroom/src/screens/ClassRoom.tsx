@@ -844,6 +844,8 @@ export function ClassRoom({
    * ear rests and the chips carry it — a mic that reopens forever nags.
    */
   const [ear, setEar] = useState<'off' | 'listening' | 'thinking'>('off');
+  /** Her cross-question about a right spoken answer is waiting on their reasoning. */
+  const [probing, setProbing] = useState(false);
   // A halted class holds no question: blanking it here is also what runs the
   // ear effect's cleanup below.
   const heldAskBeat =
@@ -896,6 +898,11 @@ export function ClassRoom({
      * or speak.
      */
     const over = (): boolean => cancelled || halt.halted;
+    // Whether the ear said a nudge on this question. If it gives up without
+    // one — a mic that will not open, a judge that failed — the quiet-tapper
+    // timer takes the question back (second review, 2026-09-29).
+    let nudged = false;
+    if (earHeld.current === heldAskBeat) earHeld.current = null;
     (async () => {
       if ((await askForMic()) !== 'granted') return;
       if (over()) return;
@@ -937,7 +944,10 @@ export function ClassRoom({
         setEar('listening');
         // Polled on every chunk: a halt, or a tap, closes the mic on the next one.
         const heard = await listenOnce({ isCancelled: () => over() || tapEpoch.current !== epoch });
-        if (heard.reason === 'cancelled' && !over()) continue;
+        // A tap landed while the mic was open or the words were being heard:
+        // the tap is the answer, and this one is dropped rather than recorded
+        // on top of it (second review, 2026-09-29).
+        if (!over() && (heard.reason === 'cancelled' || tapEpoch.current !== epoch)) continue;
         /**
          * WHEN THE ANSWER LANDED — not when the judge had finished with it.
          *
@@ -1060,7 +1070,9 @@ export function ClassRoom({
           if (over() || spokenNudge.halted) return;
           ledger.reopened(heldAskBeat, Date.now());
           quietSince = Date.now();
-          offeredHint = silences === 1;
+          nudged = true;
+          // Only a line that actually offered one makes a bare "haan" a yes.
+          offeredHint = silences === 1 && /hint/i.test(nudge.say);
           continue;
         }
 
@@ -1114,6 +1126,7 @@ export function ClassRoom({
          * contract; see lib/judge.ts for what that buys and what it gives up.
          */
         const resolved = await resolveSpokenAnswer(ask, heard.text).catch(() => null);
+        if (!over() && tapEpoch.current !== epoch) continue;
         if (over()) return;
         // A judge that failed says nothing and leaves the chips standing.
         if (resolved === null) return;
@@ -1214,6 +1227,9 @@ export function ClassRoom({
             attempt: priorTries + 1,
             rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
             ask,
+            // Which option their words were, so a named misconception gets
+            // its own follow-up question (C7) rather than the generic rethink.
+            ...(resolved.matched !== undefined ? { matchedOption: resolved.matched } : {}),
             lang: tutorLanguage(),
             now: Date.now(),
             recentLines: recentLines.current,
@@ -1292,6 +1308,9 @@ export function ClassRoom({
           // that stood here reached for exactly the raw transcript `heard` was
           // added to make unreachable, on a path that can never need it.
           probe = { answer: judged.heard ?? '', question: judged.say, askedAt: Date.now() };
+          // Their reasoning is asked for out loud: the chips step aside, or a
+          // tap would file a second answer to a question already answered.
+          setProbing(true);
           quietSince = Date.now();
           continue;
         }
@@ -1314,6 +1333,8 @@ export function ClassRoom({
         if (tries >= 3) return;
       }
     })().finally(() => {
+      setProbing(false);
+      if (!nudged && earHeld.current === heldAskBeat) earHeld.current = null;
       if (!cancelled) setEar('off');
     });
     return () => {
@@ -1347,7 +1368,12 @@ export function ClassRoom({
     let seen = tapEpoch.current;
     let timer: ReturnType<typeof setTimeout>;
     const tryNudge = (): void => {
-      if (halt.halted || earHeld.current === beatId) return;
+      if (halt.halted) return;
+      // The ear has it for now; look again, in case it gives the question back.
+      if (earHeld.current === beatId) {
+        timer = setTimeout(tryNudge, 4_000);
+        return;
+      }
       const ask = playerRef.current.pendingAsk;
       if (!ask || playerRef.current.beat?.id !== beatId) return;
       // A tap since the last look: they are not stuck, so the quiet starts again.
@@ -1384,7 +1410,7 @@ export function ClassRoom({
 
   // The choices leave the screen the moment an answer is in flight — a tap,
   // or a spoken answer being judged. What remains is the status chip.
-  const askChoicesHidden = askBusy || ear === 'thinking';
+  const askChoicesHidden = askBusy || ear === 'thinking' || probing;
 
   // Only a class that is actually playing hides its controls. Paused, finished,
   // not yet started or mid-doubt, they stay: in every one of those states the
@@ -1522,12 +1548,14 @@ export function ClassRoom({
    */
   const greeted = useRef(false);
   const left = useRef(false);
-  useEffect(
-    () => () => {
+  // Set again on mount: StrictMode's rehearsal unmount in development ran the
+  // cleanup, and a never-reset flag stopped every class after the greeting.
+  useEffect(() => {
+    left.current = false;
+    return () => {
       left.current = true;
-    },
-    [],
-  );
+    };
+  }, []);
   /**
    * The first line of the class, and what it used from the notebook — so the
    * promise is cleared and the struggle marked once they have been SAID

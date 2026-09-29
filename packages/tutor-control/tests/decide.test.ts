@@ -494,6 +494,20 @@ describe('decide: a named misconception is diagnosed before it is corrected (bri
     expect(LINES.rethink.en).toContain(say(a));
   });
 
+  it('asks it on a TAPPED option too, from the probe option with the same words (second review)', () => {
+    // Class-prep writes follow-ups on the probe's distractors; the chips a
+    // child taps are the ask's own options. Same words, same misconception.
+    const shown: AskInput = {
+      ...PROBED,
+      options: [
+        { text: 'x is three', correct: true, why: 'Three times seven is twenty-one.' },
+        { text: 'X is five ', correct: false, why: 'That comes from multiplying only the x by three.' },
+      ],
+    };
+    const a = decide(base({ ask: shown, matchedOption: 1 }));
+    expect(say(a)).toContain('What did you get when you opened the bracket');
+  });
+
   it('never asks a follow-up that gives the answer away', () => {
     const leaky: AskInput = {
       ...PROBED,

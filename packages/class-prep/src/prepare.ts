@@ -735,6 +735,21 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
       if (step.do !== 'ask') continue;
       const ask = step as { whyProbe?: unknown };
       if (ask.whyProbe === undefined) continue;
+      /**
+       * A blank or non-string follow-up (C7) is the field's fault, not the
+       * probe's: the validator refuses it, and a planner asked to put one on
+       * "each distractor" writes `"followUp": null` on the right answer. It
+       * used to reach validation and cost a paid repair round, or the class
+       * (second review, 2026-09-29). Only that field goes.
+       */
+      const options = (ask.whyProbe as { options?: unknown }).options;
+      if (Array.isArray(options)) {
+        for (const option of options) {
+          if (typeof option !== 'object' || option === null || !('followUp' in option)) continue;
+          const f = (option as { followUp?: unknown }).followUp;
+          if (typeof f !== 'string' || f.trim() === '') delete (option as { followUp?: unknown }).followUp;
+        }
+      }
       if (!usableProbe(ask.whyProbe)) {
         delete ask.whyProbe;
         dropped += 1;

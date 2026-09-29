@@ -175,6 +175,13 @@ export interface ResolvedAnswer {
   reading?: LocalMatch['by'];
   /** 0..1, the margin the local read won by. Local path only. */
   confidence?: number;
+  /**
+   * The index of the probe option the words matched, when that index means
+   * the same option to `decide()` — the child saw no list, or saw the probe's
+   * own. Local path only. It is how a spoken miss gets its option's C7
+   * follow-up (second review, 2026-09-29).
+   */
+  matched?: number;
 }
 
 /**
@@ -344,12 +351,16 @@ function readLocally(
   const option = probe.options[match.index];
   if (!option) return null;
 
+  // decide() reads the shown options when there are any, else the probe's.
+  const matched = shown.length === 0 || sawAList ? { matched: match.index } : {};
+
   if (option.correct === true) {
     return {
       verdict: { verdict: 'right', say: option.why, heard: said },
       path: 'local',
       reading: match.by,
       confidence: match.confidence,
+      ...matched,
     };
   }
 
@@ -374,6 +385,7 @@ function readLocally(
     path: 'local',
     reading: match.by,
     confidence: match.confidence,
+    ...matched,
   };
 }
 

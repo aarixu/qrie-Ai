@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { act } from 'react';
+import { StrictMode, act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -30,6 +30,8 @@ const ear = vi.hoisted(() => ({
   queued: [] as string[],
   polls: [] as (() => boolean)[],
   listens: 0,
+  /** Holds a heard answer back, like the transcription round trip does. */
+  hold: null as Promise<void> | null,
 }));
 vi.mock('../src/lib/mic', async (real) => ({
   ...(await real<typeof import('../src/lib/mic')>()),
@@ -37,12 +39,13 @@ vi.mock('../src/lib/mic', async (real) => ({
 }));
 vi.mock('../src/lib/ear', async (real) => ({
   ...(await real<typeof import('../src/lib/ear')>()),
-  listenOnce: (opts: { isCancelled?: () => boolean } = {}) => {
+  listenOnce: async (opts: { isCancelled?: () => boolean } = {}) => {
     ear.listens += 1;
     if (opts.isCancelled) ear.polls.push(opts.isCancelled);
     const text = ear.queued.shift();
     if (text === undefined) return new Promise(() => {});
-    return Promise.resolve({ text, reason: 'heard' as const });
+    if (ear.hold) await ear.hold;
+    return { text, reason: 'heard' as const };
   },
 }));
 
@@ -193,6 +196,7 @@ beforeEach(() => {
   ear.queued = [];
   ear.polls = [];
   ear.listens = 0;
+  ear.hold = null;
   vi.stubGlobal('fetch', async (url: string) => {
     if (String(url).includes('/api/llm')) llmCalls += 1;
     return {
@@ -420,6 +424,38 @@ describe('the held question, in the real room', () => {
     expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(true);
     // Not a wrong answer on record: no "not quite" for asking.
     expect(spoken.some((l) => /not quite|not yet|miss hua/i.test(l))).toBe(false);
+  });
+
+  it('drops a spoken answer that lands after they tapped (second review)', async () => {
+    let release: () => void = () => undefined;
+    ear.hold = new Promise<void>((r) => (release = r));
+    ear.queued = ['Four'];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Two');
+    release();
+    await tick(10);
+    // Their tap was the answer: no judge call for the words, no praise, no move on.
+    expect(llmCalls).toBe(0);
+    expect(spoken.some((l) => l.includes(RIGHT_WHY))).toBe(false);
+    expect(spoken).not.toContain(lesson.beats[1].narration);
+  });
+
+  it('starts the class after the greeting under StrictMode, as development runs it', async () => {
+    const host = document.body.appendChild(document.createElement('div'));
+    const root = createRoot(host);
+    roots.push(root);
+    await act(async () => {
+      root.render(
+        <StrictMode>
+          <MemoryRouter initialEntries={['/lesson/class10-blood']}>
+            <ClassRoom lesson={askingLesson(RIGHT_WHY)} tts={quickVoice()} diagrams={{}} onExit={() => undefined} warm />
+          </MemoryRouter>
+        </StrictMode>,
+      );
+    });
+    await tick(10);
+    expect(spoken).toContain(lesson.beats[0].narration);
   });
 
   it('does not start the class when they leave while she is greeting them', async () => {

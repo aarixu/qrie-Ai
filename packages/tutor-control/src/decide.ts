@@ -175,7 +175,7 @@ function onWrong(ctx: Ctx): Action {
   if (floor < 1) {
     // A named misconception gets its own diagnostic question first (C7): the
     // tutor finds out WHY before she corrects anything. Never one that leaks.
-    const followUp = ctx.matched?.correct !== true ? ctx.matched?.followUp?.trim() : undefined;
+    const followUp = ctx.matched?.correct !== true ? followUpFor(input.ask, ctx.matched) : undefined;
     if (followUp && !leaks(followUp, ctx.secrets)) {
       return act(ctx, {
         kind: 'rethink',
@@ -376,6 +376,21 @@ function headOf(input: DecideInput, floor: AssistanceRung): string {
   const belief = u === undefined ? 'unassisted unknown' : `unassisted ${u.toFixed(2)}`;
   const matched = input.matchedOption === undefined ? '' : `, matched option ${input.matchedOption}`;
   return `${input.verdict} on attempt ${input.attempt} at rung ${floor}${matched} (${belief})`;
+}
+
+/**
+ * The diagnostic follow-up for a wrong option: its own, else the why-probe
+ * option with the same words. Class-prep writes follow-ups on the probe's
+ * distractors, and a child taps the ask's own chips — without this no
+ * prepared class ever asked one (second review, 2026-09-29).
+ */
+function followUpFor(ask: AskInput, matched: AskOption | undefined): string | undefined {
+  if (!matched) return undefined;
+  const own = matched.followUp?.trim();
+  if (own) return own;
+  const key = matched.text.trim().toLowerCase();
+  const twin = ask.whyProbe?.options.find((o) => o.correct !== true && o.text.trim().toLowerCase() === key);
+  return twin?.followUp?.trim() || undefined;
 }
 
 /** The options the judge matched against: shown ones, else the why-probe's. */

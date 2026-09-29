@@ -10,8 +10,22 @@ import { asksForHint } from '../src/index';
  */
 describe('asksForHint', () => {
   it('hears a short request for help in English and Hinglish', () => {
-    for (const said of ['hint', 'Give me a hint', 'hint do', 'hint dijiye please', 'help', 'madad karo', "I don't know", 'pata nahi', 'samajh nahi aaya', 'not sure'])
+    for (const said of ['hint', 'Give me a hint', 'hint do', 'hint dijiye please', 'help', 'help me', 'madad karo', 'ek hint do na'])
       expect(asksForHint(said, { afterOffer: false }), said).toBe(true);
+  });
+
+  it("leaves I don't know to the judge, which reads it as a miss so the ladder can climb", () => {
+    for (const said of ["I don't know", 'pata nahi', 'samajh nahi aaya', 'not sure'])
+      expect(asksForHint(said, { afterOffer: true }), said).toBe(false);
+  });
+
+  it('never takes an answer that only uses a help word for one (second review)', () => {
+    for (const said of ['Roots help absorb water', 'they help in digestion', 'madad karta hai', 'not sure, maybe 12', 'hint is 12'])
+      expect(asksForHint(said, { afterOffer: true }), said).toBe(false);
+  });
+
+  it('never takes a thinking noise for a yes', () => {
+    expect(asksForHint('hmm', { afterOffer: true })).toBe(false);
   });
 
   it('takes a bare yes as a request only right after she offered a hint', () => {

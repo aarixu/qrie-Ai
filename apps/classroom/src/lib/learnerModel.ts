@@ -156,7 +156,17 @@ async function bringForward(): Promise<void> {
     .catch(() => null);
   // Another fold already brought it forward while the ledger was being read.
   if (modelStore.get() !== stored) return;
-  const whole = rebuilt !== null && typeof rebuilt !== 'string' && rebuilt.events > 0 && rebuilt.onlyStored.length === 0;
+  // Whole: every outcome the device holds is there, with at least as much
+  // evidence — an outcome with some events never synced is a short read too
+  // (second review, 2026-09-29).
+  const whole =
+    rebuilt !== null &&
+    typeof rebuilt !== 'string' &&
+    rebuilt.events > 0 &&
+    rebuilt.onlyStored.length === 0 &&
+    Object.entries(stored.states ?? {}).every(
+      ([id, st]) => (rebuilt.model.states[id]?.observations ?? 0) >= (st?.observations ?? 0),
+    );
   modelStore.set(whole ? rebuilt.model : migrateModel(stored));
 }
 
@@ -176,9 +186,12 @@ export function recordLocally(
         return;
       }
       await bringForward();
+      // Brought forward again at the fold itself: a sync that wrote an older
+      // model while the ledger was being read must not reach foldSession,
+      // which would start it from empty (second review, 2026-09-29).
       modelStore.set(
         foldSession(
-          modelStore.get(),
+          migrateModel(modelStore.get()),
           { id: session.id, startedAt: session.startedAt },
           events,
           index,

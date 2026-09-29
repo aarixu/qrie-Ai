@@ -70,6 +70,22 @@ beforeEach(() => {
 });
 
 describe('a spoken answer against an authored whyProbe', () => {
+  it('says which probe option it matched, so decide() can ask that option’s follow-up (second review)', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    const resolved = await resolveSpokenAnswer(ask({ whyProbe: probe() }), 'the sugar melted into the water');
+    expect(resolved.path).toBe('local');
+    expect(resolved.matched).toBe(1);
+  });
+
+  it('names no match when the child was shown a different list than the probe', async () => {
+    const { resolveSpokenAnswer } = await import('../src/lib/judge');
+    const resolved = await resolveSpokenAnswer(
+      ask({ whyProbe: probe(), options: [{ text: 'something else', correct: true }, { text: 'and another' }] }),
+      'the sugar melted into the water',
+    );
+    expect(resolved.matched).toBeUndefined();
+  });
+
   it('resolves a verbatim right answer with NO model call, and speaks the authored why', async () => {
     const { resolveSpokenAnswer } = await import('../src/lib/judge');
     const resolved = await resolveSpokenAnswer(

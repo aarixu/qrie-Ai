@@ -139,6 +139,24 @@ describe('dropBadProbes — degrade to no probe, never to no class', () => {
     board: [{ do: 'ask' as const, question: 'Q?', whyProbe }],
   });
 
+  it('keeps a probe whose follow-up is blank, and drops only that field (second review)', () => {
+    const beats = [
+      askWith({
+        askedAs: 'open',
+        options: [
+          { text: 'a', correct: true, why: 'x', followUp: null },
+          { text: 'b', why: 'y', followUp: '' },
+          { text: 'c', why: 'z', followUp: 'Why did you pick c?' },
+        ],
+      }),
+    ];
+    expect(dropBadProbes(beats)).toBe(0);
+    const options = (beats[0].board[0].whyProbe as { options: Record<string, unknown>[] }).options;
+    expect('followUp' in options[0]).toBe(false);
+    expect('followUp' in options[1]).toBe(false);
+    expect(options[2].followUp).toBe('Why did you pick c?');
+  });
+
   it('drops a probe with two right answers', () => {
     const beats = [
       askWith({
