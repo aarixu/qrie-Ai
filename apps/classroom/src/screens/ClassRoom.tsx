@@ -1018,16 +1018,49 @@ export function ClassRoom({
          * spoken, exactly as the tap path does it, so the retry is already
          * standing on the right rung.
          */
+        /**
+         * A WRONG SPOKEN ANSWER CLIMBS THE SAME LADDER AS A TAP (E2, 2026-09-29).
+         *
+         * The judge only CLASSIFIES here; `decide()` chooses the help — look
+         * again (L1), the authored hint (L3), the answer and why (L8) — so a
+         * spoken answer and a tapped one get the same tutor, in the child's
+         * language, never with a model-invented hint. Filed before it is said,
+         * and their (screened) answer and the hint are written in the
+         * question's work area. When decide() has nothing authored to say, the
+         * judge's own line is the fallback, screened as a model's.
+         */
+        let ladderLine: string | null = null;
         if (judged.verdict === 'wrong') {
-          ledger.helped(heldAskBeat, judged.gave === 'hint' ? 3 : 2, false);
+          const action = decide({
+            verdict: 'wrong',
+            attempt: tries + 1,
+            rungSoFar: tapRung.current.get(heldAskBeat) ?? 0,
+            ask,
+            lang: tutorLanguage(),
+            now: Date.now(),
+            recentLines: recentLines.current,
+          });
+          tapRung.current.set(heldAskBeat, action.rung);
+          ledger.helped(heldAskBeat, action.helped ?? (judged.gave === 'hint' ? 3 : 2), false);
+          if (action.say) {
+            ladderLine = action.say;
+            recentLines.current = [...recentLines.current.slice(-8), action.say];
+          }
+          const hintText = action.boardIntent?.text ?? (action.kind === 'hint' ? ask.hint : undefined);
+          board.writeHeld(heldAskBeat, [
+            ...(judged.heard ? [{ author: 'student' as const, steps: [{ say: '', ink: [{ op: 'write', text: `✗ ${judged.heard}` }] }] }] : []),
+            ...(hintText ? [{ author: 'lesson' as const, steps: [{ say: '', ink: [{ op: 'note', text: hintText }] }] }] : []),
+          ]);
         }
         // A whyProbe matched on the device answers with the lesson's own
         // why or hint, so it is the lesson speaking (`sayAuthored`, like a
         // tap); anything the judge's model wrote is screened as a model's.
         const spoken =
-          resolved.path === 'local'
-            ? await halt.sayAuthored(judged.say)
-            : await halt.say(judged.say, 'ear');
+          ladderLine !== null
+            ? await halt.sayAuthored(ladderLine)
+            : resolved.path === 'local'
+              ? await halt.sayAuthored(judged.say)
+              : await halt.say(judged.say, 'ear');
         if (over()) return;
         // An off-limits answer (judged.halt): she has just declined it, and
         // reopening the mic to ask the question again would talk over her —
@@ -1081,7 +1114,9 @@ export function ClassRoom({
         // judge round trip this whole change exists to take out.
         ledger.reopened(heldAskBeat, Date.now());
         tries += 1;
-        if (tries >= 2) return; // two misses — the hint stands, the chips wait
+        // Three misses: look again, the hint, then the answer and why — after
+        // that the chips wait, and a tap on the right one closes it.
+        if (tries >= 3) return;
       }
     })().finally(() => {
       if (!cancelled) setEar('off');
@@ -1091,6 +1126,47 @@ export function ClassRoom({
       setEar('off');
     };
   }, [heldAskBeat, lesson, tts]);
+
+  /**
+   * THE QUIET TAPPER GETS A NUDGE TOO (E4, 2026-09-29).
+   *
+   * The ear's loop nudges a student who is silent at an open mic. A student
+   * with no mic (denied, "not now", none on the device) only taps, and until
+   * now a held question simply waited on them forever. Twelve seconds after
+   * the question surfaces — if nothing is being listened to, answered or asked
+   * — she says one content-free line, once per question (filed as L1 help).
+   */
+  const earRef = useRef(ear);
+  earRef.current = ear;
+  const askBusyRef = useRef(askBusy);
+  askBusyRef.current = askBusy;
+  const micAskRef = useRef(micAsk);
+  micAskRef.current = micAsk;
+  useEffect(() => {
+    if (!heldAskBeat) return;
+    const beatId = heldAskBeat;
+    const timer = setTimeout(() => {
+      if (halt.halted || earRef.current !== 'off' || askBusyRef.current || micAskRef.current !== null) return;
+      const ask = playerRef.current.pendingAsk;
+      if (!ask || playerRef.current.beat?.id !== beatId) return;
+      const nudge = decide({
+        verdict: 'silent',
+        attempt: (tapTries.current.get(beatId) ?? 0) + 1,
+        rungSoFar: tapRung.current.get(beatId) ?? 0,
+        ask,
+        lang: tutorLanguage(),
+        now: Date.now(),
+        recentLines: recentLines.current,
+      });
+      if (nudge.helped !== null) ledger.helped(beatId, nudge.helped, nudge.requested);
+      if (!nudge.say) return;
+      recentLines.current = [...recentLines.current.slice(-8), nudge.say];
+      void halt.sayAuthored(nudge.say);
+    }, 12_000);
+    return () => clearTimeout(timer);
+    // Once per held question; the refs carry the live state.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [heldAskBeat]);
 
   // The choices leave the screen the moment an answer is in flight — a tap,
   // or a spoken answer being judged. What remains is the status chip.
