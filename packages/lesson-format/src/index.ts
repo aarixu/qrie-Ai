@@ -8,6 +8,7 @@ export type {
   Fill,
   Lesson,
   WhyProbe,
+  WorkedExample,
   AskOption,
   WorkArea,
 } from './types';

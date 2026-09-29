@@ -210,6 +210,20 @@ function beatErrors(
       errs.push(`${path}: ask expect must be a non-empty string when present`);
     if (ask.hint !== undefined && !isStr(ask.hint))
       errs.push(`${path}: ask hint must be a non-empty string when present`);
+    // C6: a worked example of a SIMILAR problem (the L5 rung). Optional; when
+    // present, 1 to 6 steps, each with a spoken line and a board line.
+    const worked = (ask as { workedExample?: unknown }).workedExample;
+    if (worked !== undefined) {
+      const steps = isObj(worked) ? (worked as { steps?: unknown }).steps : undefined;
+      if (
+        !Array.isArray(steps) ||
+        steps.length < 1 ||
+        steps.length > 6 ||
+        !steps.every((s) => isObj(s) && isStr((s as { say?: unknown }).say) && isStr((s as { line?: unknown }).line))
+      ) {
+        errs.push(`${path}: ask workedExample needs 1 to 6 steps, each with a non-empty say and line`);
+      }
+    }
     if (ask.options !== undefined) {
       const options = ask.options as { text?: unknown; correct?: unknown }[];
       if (!Array.isArray(options) || options.length < 2) {
@@ -252,6 +266,8 @@ function beatErrors(
             );
           if (options.some((o) => isObj(o) && o.hint !== undefined && !isStr(o.hint)))
             errs.push(`${path}: a whyProbe option hint must be a non-empty string when present`);
+          if (options.some((o) => isObj(o) && (o as { followUp?: unknown }).followUp !== undefined && !isStr((o as { followUp?: unknown }).followUp)))
+            errs.push(`${path}: a whyProbe option followUp must be a non-empty string when present`);
           const correct = options.filter((o) => isObj(o) && o.correct === true).length;
           if (correct !== 1) {
             errs.push(

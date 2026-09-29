@@ -274,3 +274,48 @@ describe('two asks on one board keep their own judgement', () => {
     expect(JSON.stringify(result.lesson.elements)).not.toContain('is right because');
   });
 });
+
+/**
+ * C6 (2026-09-29): the planner's worked example reaches the lesson (the layout
+ * copies an ask field by field and has never heard of it), and one whose
+ * maths does not hold is dropped rather than failing the class.
+ */
+describe('the worked example survives to the lesson, and only if its maths holds', () => {
+  it('re-attaches a well-formed worked example and drops one the maths check fails', async () => {
+    const { dropBadWorkedExamples } = await import('../src/prepare');
+    const beats = [
+      {
+        board: [
+          {
+            do: 'ask',
+            question: 'Solve 2x + 3 = 11.',
+            workedExample: {
+              steps: [
+                { say: 'A similar one: three y plus five is twenty.', line: '3y + 5 = 20' },
+                { say: 'Take five from both sides.', line: '3y = 15' },
+                { say: 'Divide by three.', line: 'y = 5' },
+              ],
+            },
+          },
+          {
+            do: 'ask',
+            question: 'Solve 4x = 12.',
+            workedExample: {
+              steps: [
+                { say: 'Here: five z is twenty.', line: '5z = 20' },
+                { say: 'Divide by five.', line: 'z = 3' },
+              ],
+            },
+          },
+          { do: 'ask', question: 'Q?', workedExample: { steps: [] } },
+        ],
+      },
+    ];
+    const dropped = dropBadWorkedExamples(beats);
+    expect(dropped).toBe(2);
+    const asks = beats[0].board as { workedExample?: unknown }[];
+    expect(asks[0].workedExample).toBeDefined();
+    expect(asks[1].workedExample).toBeUndefined();
+    expect(asks[2].workedExample).toBeUndefined();
+  });
+});

@@ -9,6 +9,7 @@ import {
   type ImagePart,
   type Lesson,
   type WhyProbe,
+  type WorkedExample,
 } from '@ai-tutor/lesson-format';
 import { reviewLesson } from './review.ts';
 import { screenSpine } from './screenSpine.ts';
@@ -27,6 +28,7 @@ import {
 import { verifySvg } from './verify.ts';
 import { classMustAsk, inkWaitsForALine, saidButNotWritten } from './saidNotWritten.ts';
 import { gateLesson, type GateProblem, type MathsCheck } from './gate.ts';
+import { checkLines } from '../../maths-check/src/index.ts';
 import type {
   Blueprint,
   PrepProgress,
@@ -414,6 +416,9 @@ export function assemble(
     asks.forEach((a, n) => {
       const probe = askSteps[n]?.whyProbe;
       if (probe) a.ask = { ...a.ask, whyProbe: probe };
+      // The worked example (C6) is copied past the layout the same way.
+      const worked = (askSteps[n] as { workedExample?: WorkedExample } | undefined)?.workedExample;
+      if (worked) a.ask = { ...a.ask, workedExample: worked };
     });
 
     // A beat left with nothing to show was a beat about a picture that failed;
@@ -739,6 +744,47 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
   return dropped;
 }
 
+/**
+ * A WORKED EXAMPLE THAT IS WRONG, OR MIS-SHAPED, GOES — NOT THE CLASS (C6).
+ *
+ * The L5 rung writes it on the board in her hand, so its maths must hold: the
+ * lines are checked together by @ai-tutor/maths-check (a claim like "z = 3"
+ * that contradicts "5z = 20" fails), and a step that is blank, or more than
+ * six, is the validator's refusal. Either way the field is deleted and the
+ * ask simply skips L5 — the same posture as `dropBadProbes`. Returns how many
+ * were dropped.
+ */
+export function dropBadWorkedExamples(beats: readonly { board?: readonly { do: string }[] }[]): number {
+  let dropped = 0;
+  for (const beat of beats) {
+    for (const step of beat.board ?? []) {
+      if (step.do !== 'ask') continue;
+      const ask = step as { workedExample?: unknown };
+      if (ask.workedExample === undefined) continue;
+      const steps = (ask.workedExample as { steps?: unknown } | null)?.steps;
+      const shaped =
+        Array.isArray(steps) &&
+        steps.length >= 1 &&
+        steps.length <= 6 &&
+        steps.every(
+          (s) =>
+            typeof (s as { say?: unknown })?.say === 'string' &&
+            (s as { say: string }).say.trim() !== '' &&
+            typeof (s as { line?: unknown })?.line === 'string' &&
+            (s as { line: string }).line.trim() !== '',
+        );
+      const holds =
+        shaped &&
+        checkLines((steps as { line: string }[]).map((s, i) => ({ id: `w${i}`, text: s.line }))).failures.length === 0;
+      if (!holds) {
+        delete ask.workedExample;
+        dropped += 1;
+      }
+    }
+  }
+  return dropped;
+}
+
 /** Exactly what `validateLesson` will accept — see lesson-format/src/validate.ts. */
 function usableProbe(probe: unknown): boolean {
   if (typeof probe !== 'object' || probe === null) return false;
@@ -870,6 +916,10 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
   const badProbes = dropBadProbes(blueprint.beats);
   if (badProbes > 0) {
     issues.push(`Dropped ${badProbes} whyProbe(s) the planner mis-shaped.`);
+  }
+  const badWorked = dropBadWorkedExamples(blueprint.beats);
+  if (badWorked > 0) {
+    issues.push(`Dropped ${badWorked} worked example(s) that were mis-shaped or whose maths did not hold.`);
   }
 
 
@@ -1018,6 +1068,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
         issues.push('Capped the repaired plan to at most two checks per ask beat.');
       }
       const repairedProbes = dropBadProbes(fixed.beats);
+      dropBadWorkedExamples(fixed.beats);
       if (repairedProbes > 0) {
         issues.push(`Dropped ${repairedProbes} whyProbe(s) the repaired plan mis-shaped.`);
       }
@@ -1181,6 +1232,7 @@ export async function prepareClass(opts: PrepOptions): Promise<PrepResult> {
           issues.push('Capped the corrected plan to at most two checks per ask beat.');
         }
         const correctedProbes = dropBadProbes(fixed.beats);
+        dropBadWorkedExamples(fixed.beats);
         if (correctedProbes > 0) {
           issues.push(`Dropped ${correctedProbes} whyProbe(s) the corrected plan mis-shaped.`);
         }

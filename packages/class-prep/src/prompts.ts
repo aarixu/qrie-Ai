@@ -524,6 +524,17 @@ The class can stop. Use it:
   reply — the reason in her voice, never "correct!" or "wrong". "askedAs" is
   "open" for a normal spoken ask; "options" only when the ask itself uses the
   confusable-pairs exception above and genuinely shows its options.
+- Each DISTRACTOR in "whyProbe" also carries "followUp": ONE short question
+  that finds out WHY a student gave that answer, asked before anything is
+  explained — "What did you get when you opened the bracket?", "Where did
+  the heat come from?". Never the answer, never a hint that gives it away.
+- EVERY ask ALSO carries "workedExample": a SIMILAR problem with DIFFERENT
+  numbers or a different case, solved in 2 to 4 steps —
+    "workedExample":{"steps":[{"say","line"}, ...]}
+  "line" is what she writes on the board (maths in symbols, correct and
+  exact); "say" is the same step in words, never reading notation aloud. It
+  must NOT contain this ask's own answer: it is the help a stuck student gets
+  after the hint, to copy the method, not the result.
 
 Where an ask earns its place:
 - RETRIEVAL: after teaching a chunk, ask it back before moving on. Asking

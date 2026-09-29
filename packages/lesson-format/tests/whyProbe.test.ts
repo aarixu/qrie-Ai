@@ -133,3 +133,40 @@ describe('the checks cap on ask beats (PRD-4 req 2)', () => {
     expect(validateLesson(doc).ok).toBe(true);
   });
 });
+
+/**
+ * C6/C7 (2026-09-29): an ask may carry a worked example of a SIMILAR problem
+ * (the L5 rung) and each whyProbe distractor a diagnostic follow-up. Both are
+ * optional; when present they are held to a shape the player can trust.
+ */
+describe('worked example and follow-up (C6/C7)', () => {
+  const worked = {
+    steps: [
+      { say: 'Here is a similar one: three y plus five is twenty.', line: '3y + 5 = 20' },
+      { say: 'Take five from both sides.', line: '3y = 15' },
+    ],
+  };
+
+  it('accepts a well-formed worked example and a distractor follow-up', () => {
+    const probe = {
+      ...goodProbe,
+      options: [goodProbe.options[0], { ...goodProbe.options[1], followUp: 'How many chambers did you count on the top?' }],
+    };
+    const r = validateLesson(withAsk({ question: 'How many chambers?', whyProbe: probe, workedExample: worked } as LooseBeat['ask']));
+    expect(r.ok, r.ok ? '' : (r as { errors: string[] }).errors.join('\n')).toBe(true);
+  });
+
+  it('refuses a worked example with a blank step or too many steps', () => {
+    const blank = validateLesson(withAsk({ question: 'Q?', workedExample: { steps: [{ say: '', line: 'x' }] } } as LooseBeat['ask']));
+    expect(blank.ok).toBe(false);
+    const long = validateLesson(
+      withAsk({ question: 'Q?', workedExample: { steps: Array.from({ length: 7 }, () => ({ say: 's', line: 'l' })) } } as LooseBeat['ask']),
+    );
+    expect(long.ok).toBe(false);
+  });
+
+  it('refuses a follow-up that is not a non-empty string', () => {
+    const probe = { ...goodProbe, options: [goodProbe.options[0], { ...goodProbe.options[1], followUp: '' }] };
+    expect(validateLesson(withAsk({ question: 'Q?', whyProbe: probe })).ok).toBe(false);
+  });
+});

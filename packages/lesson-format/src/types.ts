@@ -87,6 +87,18 @@ export interface AskOption {
   why?: string;
   /** A nudge short of the answer, for the first wrong try. */
   hint?: string;
+  /**
+   * DIAGNOSE BEFORE CORRECTING (brief §2, C7, 2026-09-29). On a wrong option:
+   * one short question that finds out WHY the student thought it — "What did
+   * you get when you opened the bracket?" — asked on the first miss instead of
+   * a generic "look again". Optional; never the answer.
+   */
+  followUp?: string;
+}
+
+/** A similar problem, worked step by step (C6): what the L5 rung of the help ladder says and writes. */
+export interface WorkedExample {
+  steps: { say: string; line: string }[];
 }
 
 export interface WhyProbe {
@@ -401,6 +413,13 @@ export interface Beat {
      * about this field.
      */
     whyProbe?: WhyProbe;
+    /**
+     * A SIMILAR problem, worked (C6, 2026-09-29) — the L5 rung of the help
+     * ladder: different numbers, 1 to 6 steps, each a spoken line and the maths
+     * it writes. Never this ask's own answer (tutor-control's leak check drops
+     * one that is). Optional: a class without one skips L5.
+     */
+    workedExample?: WorkedExample;
   };
   teaches?: string[];
   /**

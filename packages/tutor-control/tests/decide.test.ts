@@ -453,3 +453,49 @@ describe('decide: over every branch', () => {
     for (const [, input] of grid().slice(0, 500)) expect(() => decide(input)).not.toThrow();
   });
 });
+
+describe('decide: a named misconception is diagnosed before it is corrected (brief §2, C7)', () => {
+  const PROBED: AskInput = {
+    question: 'Solve 3(x + 4) = 21. What is x?',
+    expect: 'x = 3',
+    hint: 'Open the bracket first.',
+    whyProbe: {
+      askedAs: 'open',
+      options: [
+        { text: 'x is three', correct: true, why: 'Three times seven is twenty-one.' },
+        {
+          text: 'x is five',
+          correct: false,
+          why: 'That comes from multiplying only the x by three.',
+          followUp: 'What did you get when you opened the bracket?',
+        },
+      ],
+    },
+  };
+
+  it('asks the distractor’s follow-up question on the first miss, not a generic rethink', () => {
+    const a = decide(base({ ask: PROBED, matchedOption: 1 }));
+    expect(a.kind).toBe('rethink');
+    expect(a.helped).toBe(1);
+    expect(say(a)).toContain('What did you get when you opened the bracket');
+    expect(a.because).toMatch(/follow-up/i);
+  });
+
+  it('falls back to the generic rethink when the matched option has no follow-up', () => {
+    const a = decide(base({ ask: OPEN_WITH_PROBE, matchedOption: 1 }));
+    expect(a.kind).toBe('rethink');
+    expect(LINES.rethink.en).toContain(say(a));
+  });
+
+  it('never asks a follow-up that gives the answer away', () => {
+    const leaky: AskInput = {
+      ...PROBED,
+      whyProbe: {
+        askedAs: 'open',
+        options: [PROBED.whyProbe!.options[0], { ...PROBED.whyProbe!.options[1], followUp: 'Is x equal to 3?' }],
+      },
+    };
+    const a = decide(base({ ask: leaky, matchedOption: 1 }));
+    expect(say(a)).not.toContain('Is x equal to 3?');
+  });
+});

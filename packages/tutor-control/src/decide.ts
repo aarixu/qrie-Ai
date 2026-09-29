@@ -172,6 +172,18 @@ function onWrong(ctx: Ctx): Action {
   }
 
   if (floor < 1) {
+    // A named misconception gets its own diagnostic question first (C7): the
+    // tutor finds out WHY before she corrects anything. Never one that leaks.
+    const followUp = ctx.matched?.correct !== true ? ctx.matched?.followUp?.trim() : undefined;
+    if (followUp && !leaks(followUp, ctx.secrets)) {
+      return act(ctx, {
+        kind: 'rethink',
+        rung: 1,
+        helped: 1,
+        lines: [followUp],
+        because: `${ctx.head}: first miss on a named misconception; its diagnostic follow-up (L1)`,
+      });
+    }
     return act(ctx, {
       kind: 'rethink',
       rung: 1,
