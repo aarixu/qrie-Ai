@@ -30,6 +30,12 @@ const FILLER = new Set([
   'give', 'can', 'could', 'you', 'get', 'need', 'want', 'do', 'de', 'dena', 'dijiye', 'dijiyega', 'dedo',
   'karo', 'kariye', 'kar', 'chahiye', 'mujhe', 'mujhko', 'ek', 'sa', 'thoda', 'sir', 'maam', 'mam', 'miss',
   'didi', 'ji', 'yaar', 'na', 'ok', 'okay', 'haan', 'yes', 'with', 'this', 'it', 'is', 'there', 'any', 'koi',
+  // How children ask (third review, 2026-09-29): "can I have a hint", "may I",
+  // "tell me", "what is the hint", "hint batao", "koi hint milega", "hint mil
+  // sakta hai", "hint de sakte ho".
+  'have', 'may', 'tell', 'what', 'whats', 'will', 'would', 'shall', 'another', 'more', 'again',
+  'batao', 'bataiye', 'bata', 'bataoge', 'milega', 'milegi', 'mil', 'sakta', 'sakti', 'sakte', 'ho', 'hai', 'hain',
+  'kya', 'aur', 'phir', 'se',
 ]);
 
 const YES = new Set(['yes', 'yeah', 'yep', 'yup', 'haan', 'haa', 'han', 'ha', 'ji', 'hanji', 'haanji', 'okay', 'ok', 'sure', 'please']);

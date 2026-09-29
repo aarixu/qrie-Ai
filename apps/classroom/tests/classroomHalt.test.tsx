@@ -43,7 +43,17 @@ vi.mock('../src/lib/ear', async (real) => ({
     ear.listens += 1;
     if (opts.isCancelled) ear.polls.push(opts.isCancelled);
     const text = ear.queued.shift();
-    if (text === undefined) return new Promise(() => {});
+    // Nothing to say yet: the mic stays open until the room closes it, the
+    // way the real one closes on its next chunk.
+    if (text === undefined)
+      return new Promise((resolve) => {
+        const poll = setInterval(() => {
+          if (opts.isCancelled?.()) {
+            clearInterval(poll);
+            resolve({ text: null, reason: 'cancelled' as const });
+          }
+        }, 10);
+      });
     if (ear.hold) await ear.hold;
     return { text, reason: 'heard' as const };
   },
@@ -410,8 +420,10 @@ describe('the held question, in the real room', () => {
     expect(ear.polls.length).toBeGreaterThan(0);
     const listening = ear.polls[ear.polls.length - 1];
     expect(listening()).toBe(false);
+    const opened = ear.listens;
     await tap(host, 'Two');
-    expect(listening()).toBe(true);
+    // That listen was closed by the tap, and a fresh one opened after her reply.
+    expect(ear.listens).toBeGreaterThan(opened);
   });
 
   it('hears "hint do" as a request for the hint, not as an answer to judge', async () => {
@@ -465,6 +477,44 @@ describe('the held question, in the real room', () => {
     await tick(10);
     expect(host.textContent).toContain("I'm not sure how to answer this question.");
     expect(llmCalls).toBe(1);
+  });
+
+  it('still halts on distress in words that landed after a tap (third review)', async () => {
+    let release: () => void = () => undefined;
+    ear.hold = new Promise<void>((r) => (release = r));
+    ear.queued = ['i want to kill myself'];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Two');
+    release();
+    await tick(10);
+    expect(host.querySelector('[role="alertdialog"]')).not.toBeNull();
+    expect(spoken[spoken.length - 1]).toBe(SUPPORT_REPLY);
+  });
+
+  it('hears the reply to a follow-up question as reasoning, not as a second answer (C7)', async () => {
+    const probed = askingLesson(RIGHT_WHY);
+    probed.beats[0].ask = {
+      ...probed.beats[0].ask!,
+      whyProbe: {
+        askedAs: 'options',
+        options: [
+          { text: 'Four', correct: true, why: RIGHT_WHY },
+          { text: 'Two', correct: false, why: 'Only two were counted.', followUp: 'Which two did you count?' },
+        ],
+      },
+    } as never;
+    const host = await openClass({ lesson: probed, tts: quickVoice() });
+    await tick();
+    // Said after the tap: the open listen closes on the tap, the next one hears it.
+    ear.queued = ['I counted the red cells and the plasma'];
+    await tap(host, 'Two');
+    await tick(20);
+    expect(spoken).toContain('Which two did you count?');
+    expect(llmCalls).toBe(0);
+    expect(spoken.some((l) => /another go|once more/i.test(l))).toBe(true);
+    // Not judged: no hint for answering what she asked.
+    expect(spoken.some((l) => l.includes('Count the workers on the board.'))).toBe(false);
   });
 
   it('does not start the class when they leave while she is greeting them', async () => {

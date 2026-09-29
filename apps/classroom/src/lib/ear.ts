@@ -118,15 +118,27 @@ export interface Heard {
  * Never throws: a silent room, a denied mic and a dead network are all
  * ordinary outcomes - the chips under the question carry those cases.
  */
-export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Promise<Heard> {
+/**
+ * A mic that has delivered nothing for this long is not a quiet room — the
+ * endpointer hears silence as low-level chunks — it is a mic that stopped:
+ * an AudioContext suspended by the app going to the background, a device
+ * taken by a call. Chunks come every CHUNK_MS.
+ */
+const MIC_STALL_MS = 3_000;
+
+export async function listenOnce(
+  opts: { isCancelled?: () => boolean; stallMs?: number } = {},
+): Promise<Heard> {
   const isCancelled = opts.isCancelled ?? ((): boolean => false);
+  const stallMs = opts.stallMs ?? MIC_STALL_MS;
+  let lastChunkAt = Date.now();
   const preroll: Int16Array[] = [];
   const kept: Int16Array[] = [];
   const pointer = createEndpointer();
 
-  let finish: (state: 'heard' | 'nothing' | 'cancelled') => void = () => undefined;
+  let finish: (state: 'heard' | 'nothing' | 'cancelled' | 'dead') => void = () => undefined;
   let done = false;
-  const outcome = new Promise<'heard' | 'nothing' | 'cancelled'>((resolve) => {
+  const outcome = new Promise<'heard' | 'nothing' | 'cancelled' | 'dead'>((resolve) => {
     finish = (state) => {
       if (!done) {
         done = true;
@@ -137,6 +149,7 @@ export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Pr
 
   const mic = createMicCapture((chunk) => {
     if (done) return;
+    lastChunkAt = Date.now();
     if (isCancelled()) {
       finish('cancelled');
       return;
@@ -157,10 +170,25 @@ export async function listenOnce(opts: { isCancelled?: () => boolean } = {}): Pr
   } catch {
     return { text: null, reason: 'error' };
   }
+  /**
+   * THE WATCHDOG (third review, 2026-09-29). Cancellation and the endpointer
+   * were only ever looked at when a chunk arrived, so a mic that stopped
+   * delivering held this promise forever — and with her cross-question
+   * waiting and the chips hidden, the child had no way on. A cancel is now
+   * seen within a quarter second, and a stalled mic ends the listen as an
+   * error, which every caller already treats as "the mic did not work".
+   */
+  lastChunkAt = Date.now();
+  const watchdog = setInterval(() => {
+    if (isCancelled()) finish('cancelled');
+    else if (Date.now() - lastChunkAt > stallMs) finish('dead');
+  }, 250);
   const state = await outcome;
+  clearInterval(watchdog);
   mic.stop();
 
   if (state === 'cancelled') return { text: null, reason: 'cancelled' };
+  if (state === 'dead') return { text: null, reason: 'error' };
   if (state === 'nothing') return { text: null, reason: 'silence' };
 
   const all = [...preroll, ...kept];

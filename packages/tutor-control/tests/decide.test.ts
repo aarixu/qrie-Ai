@@ -553,3 +553,23 @@ describe('decide: an authored why keeps its content words', () => {
     expect(praised('Exactly! The gaps hold it.')).not.toContain('Exactly! The');
   });
 });
+
+describe('decide: a follow-up is marked as one', () => {
+  it('flags the C7 follow-up so its reply is heard as reasoning, not a second answer', () => {
+    const ask: AskInput = {
+      question: 'Solve 3(x + 2) = 21.',
+      expect: 'x = 5',
+      whyProbe: {
+        askedAs: 'open',
+        options: [
+          { text: 'x is five', correct: true, why: 'Three times seven is twenty-one.' },
+          { text: 'x is seven', correct: false, why: 'Only the x was multiplied.', followUp: 'What did you get when you opened the bracket?' },
+        ],
+      },
+    };
+    const a = decide({ verdict: 'wrong', attempt: 1, rungSoFar: 0, ask, matchedOption: 1, lang: 'en', now: 0 });
+    expect(a.followUp).toBe(true);
+    const plain = decide({ verdict: 'wrong', attempt: 1, rungSoFar: 0, ask: { question: 'Q?', expect: 'x = 5' }, lang: 'en', now: 0 });
+    expect(plain.followUp).toBeUndefined();
+  });
+});

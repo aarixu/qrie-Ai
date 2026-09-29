@@ -23,7 +23,15 @@ import {
   type VertexOptions,
 } from './vertex.ts';
 import { DEFAULT_SPEECH_MODEL } from './relays.ts';
-import { PCM_CONTENT_TYPE, VERTEX_SPEECH_MODEL, maxSpeechBytes, speakOnVertex, sseToPcm, vertexSpeechCall } from './vertexSpeech.ts';
+import {
+  PCM_CONTENT_TYPE,
+  VERTEX_SPEECH_MODEL,
+  estimatedSpeechTokens,
+  maxSpeechBytes,
+  speakOnVertex,
+  sseToPcm,
+  vertexSpeechCall,
+} from './vertexSpeech.ts';
 import { VERTEX_HEAR_MODEL, hearOnVertex } from './vertexHear.ts';
 import {
   usageFromClass,
@@ -495,11 +503,23 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
             body: call.body,
             fallbackContentType: PCM_CONTENT_TYPE,
             contentType: PCM_CONTENT_TYPE,
-            // Booked when the stream ends, from Vertex's own counts.
+            // Booked when the stream ends or is cancelled: Vertex's own counts,
+            // or an estimate from the audio when its count never arrived.
             // Ended early if it runs far past what the line needs (#1).
             transform: () =>
               sseToPcm(
-                (u) => note(usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, { status: u.audioBytes > 0 ? 200 : 502, ...u })),
+                (u) =>
+                  note(
+                    usageFromVertexSpeech(base, VERTEX_SPEECH_MODEL, {
+                      status: u.audioBytes > 0 ? 200 : 502,
+                      ...u,
+                      // Vertex's count arrives in the last event; a line the
+                      // cap or the student ended never got it (third review).
+                      ...(u.outputTokens === undefined && u.audioBytes > 0
+                        ? { outputTokens: estimatedSpeechTokens(u.audioBytes) }
+                        : {}),
+                    }),
+                  ),
                 { maxAudioBytes: maxSpeechBytes(text) },
               ),
             // A stream that will not start (a 429, a 5xx) gets one collected retry.
@@ -510,7 +530,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     }
 
     // No service account (a laptop): the OpenRouter voice, as before.
-    const out = speechRelay(req, deps.key, deps.speechUrl);
+    const out = speechRelay(req, deps.key, deps.speechUrl, text);
     if (out.body.kind === 'stream') {
       const model = new URL(req.url, 'http://relay.local').searchParams.get('model') ?? DEFAULT_SPEECH_MODEL;
       return {

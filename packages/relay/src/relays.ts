@@ -214,9 +214,12 @@ export const DEFAULT_SPEECH_VOICE = 'aura-2-thalia-en';
  * playing on the first chunk — the whole reason a class does not pause
  * between sentences.
  */
-export function speechRelay(req: RelayRequest, key: string, own?: string): RelayResponse {
+export function speechRelay(req: RelayRequest, key: string, own?: string, said?: string): RelayResponse {
   const asked = new URL(req.url, 'http://relay.local');
-  const text = asked.searchParams.get('text')?.trim();
+  // `said` is the line the handler read and metered (a POST body, or the
+  // query) — speaking anything else would speak text nobody paid for (third
+  // review, 2026-09-29: `?text=` beside a POST body was spoken whole).
+  const text = (said ?? asked.searchParams.get('text'))?.trim();
   if (!text) return fail(400, 'nothing to say');
 
   /**

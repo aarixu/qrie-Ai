@@ -45,7 +45,8 @@ import { useBoardSession } from '../lib/boardSession';
 import { createDoubtBoard } from '../lib/doubtBoard';
 import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
-import { asksForHint, decide } from '@ai-tutor/tutor-control';
+import { LINES, asksForHint, decide } from '@ai-tutor/tutor-control';
+import { fromStudent } from '../lib/safety';
 import { screen } from '@ai-tutor/safety';
 import {
   clearCommitment,
@@ -408,6 +409,8 @@ export function ClassRoom({
    * over, which is when the ear may listen again.
    */
   const tapEpoch = useRef(0);
+  /** The held question whose last line was a C7 follow-up, waiting on their reasoning. */
+  const followUpOpen = useRef<string | null>(null);
   const tapSettled = useRef<Promise<void>>(Promise.resolve());
   const beginTap = (): (() => void) => {
     tapEpoch.current += 1;
@@ -456,6 +459,7 @@ export function ClassRoom({
       });
       tapRung.current.set(beatId, action.rung);
       if (action.helped !== null) ledger.helped(beatId, action.helped, true);
+      followUpOpen.current = null;
       // Only what decide() approved goes on the board: it has refused an
       // authored hint that gives the answer away, and falling back to that
       // hint here put the answer up anyway (overnight review #11/#22).
@@ -554,6 +558,8 @@ export function ClassRoom({
       tapRung.current.set(beatId, action.rung);
       if (action.helped !== null) ledger.helped(beatId, action.helped, action.requested);
       if (action.say) recentLines.current = [...recentLines.current.slice(-8), action.say];
+      // A follow-up asked about their pick: what they say next is reasoning.
+      followUpOpen.current = action.followUp ? beatId : null;
       // Her notebook (lib/studentMemory.ts): a miss marks the topic hard; a
       // right answer with no help at all marks it a win.
       const where = { topic: player.beat.topic, lessonId: lesson.id };
@@ -968,7 +974,13 @@ export function ClassRoom({
         // A tap landed while the mic was open or the words were being heard:
         // the tap is the answer, and this one is dropped rather than recorded
         // on top of it (second review, 2026-09-29).
-        if (!over() && (heard.reason === 'cancelled' || tapEpoch.current !== epoch)) continue;
+        if (!over() && (heard.reason === 'cancelled' || tapEpoch.current !== epoch)) {
+          // Dropped as an answer, never unread: distress in those words still
+          // stops the class (third review, 2026-09-29). `fromStudent` files
+          // the flag; `halt.heard` halts on it.
+          if (heard.text && fromStudent(heard.text, lesson.id).say !== null && halt.heard(heard.text, 'ear')) return;
+          continue;
+        }
         /**
          * WHEN THE ANSWER LANDED — not when the judge had finished with it.
          *
@@ -1136,6 +1148,26 @@ export function ClassRoom({
           continue;
         }
         offeredHint = false;
+        /**
+         * THEIR REPLY TO A FOLLOW-UP QUESTION IS REASONING, NOT AN ANSWER
+         * (C7; third review, 2026-09-29). She asked why they chose what they
+         * did; judging the reply against the held question filed a second
+         * miss and climbed the ladder for answering what she asked. Heard,
+         * screened, thanked — and the question is theirs to try again.
+         */
+        if (followUpOpen.current === heldAskBeat) {
+          followUpOpen.current = null;
+          if (fromStudent(heard.text, lesson.id).say !== null && halt.heard(heard.text, 'ear')) return;
+          const thanks = LINES.afterFollowUp[tutorLanguage()];
+          const line = thanks.find((l) => !recentLines.current.includes(l)) ?? thanks[0];
+          recentLines.current = [...recentLines.current.slice(-8), line];
+          setEar('off');
+          const spokenThanks = await sayLine(line);
+          if (over() || spokenThanks.halted) return;
+          ledger.reopened(heldAskBeat, Date.now());
+          quietSince = Date.now();
+          continue;
+        }
         setEar('thinking');
         /**
          * THE CLASS JUDGES ITS OWN ASK WHEN IT CAN AFFORD TO.
@@ -1147,8 +1179,10 @@ export function ClassRoom({
          * contract; see lib/judge.ts for what that buys and what it gives up.
          */
         const resolved = await resolveSpokenAnswer(ask, heard.text).catch(() => null);
-        if (!over() && tapEpoch.current !== epoch) continue;
         if (over()) return;
+        // Distress first, then a tap that landed meanwhile (third review).
+        if (resolved?.verdict.halt && halt.heard(heard.text, 'ear')) return;
+        if (tapEpoch.current !== epoch) continue;
         // A judge that failed says nothing and leaves the chips standing.
         if (resolved === null) return;
         const judged = resolved.verdict;
@@ -1194,6 +1228,9 @@ export function ClassRoom({
           )
             recordWin(where);
         }
+        // A right answer is on record from here: the chips step aside now,
+        // not after her reply, or a tap during it filed a second answer.
+        if (judged.verdict === 'right') setProbing(true);
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
           // The ledger keeps what the counter cannot: their actual words, the
@@ -1257,6 +1294,7 @@ export function ClassRoom({
           });
           tapRung.current.set(heldAskBeat, action.rung);
           movingOn = action.kind === 'moveOn';
+          followUpOpen.current = action.followUp ? heldAskBeat : null;
           /**
            * What decide() gave, or nothing. The old fallback filed rung 2 or 3
            * whenever decide() gave no help (a moveOn after the reveal), which

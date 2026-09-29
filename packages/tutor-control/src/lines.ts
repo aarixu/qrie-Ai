@@ -95,6 +95,21 @@ const sayAgain: Fixed = {
   ],
 };
 
+/**
+ * After their reply to a follow-up question (C7): heard, not judged, and back
+ * to the question itself. Their reply was reasoning, not a second answer.
+ */
+const afterFollowUp: Fixed = {
+  en: [
+    "Thanks — that helps me see how you're thinking. Now have another go at the question.",
+    'Okay, I see what you mean. Now try the question once more.',
+  ],
+  'hi-en': [
+    'Achha, samajh gayi tum kaise soch rahe ho. Ab sawaal phir se try karo.',
+    'Theek hai, samajh aaya. Ab ek baar phir sawaal try karo.',
+  ],
+};
+
 /** After the reveal, still not there: no blame, and it will come back. */
 const moveOn: Fixed = {
   en: [
@@ -168,6 +183,7 @@ export const LINES = {
   nudge,
   haveAGo,
   sayAgain,
+  afterFollowUp,
   moveOn,
   praise,
   praiseAfterHelp,

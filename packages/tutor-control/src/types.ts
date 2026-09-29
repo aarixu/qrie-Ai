@@ -136,6 +136,12 @@ export interface Action {
   mustNotReveal: string[];
   /** Ask again later, on a different item. */
   scheduleRetest: boolean;
+  /**
+   * `say` is a named misconception's diagnostic question (C7), not a line
+   * about this ask. Their reply to it is not a second answer to the ask: the
+   * caller hears it as reasoning, and asks the question again.
+   */
+  followUp?: true;
   errorClass: ErrorClass;
   /** Why, for the ledger. Never spoken. Present on every action. */
   because: string;

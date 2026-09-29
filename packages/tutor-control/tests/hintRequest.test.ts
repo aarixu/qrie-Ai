@@ -9,6 +9,11 @@ import { asksForHint } from '../src/index';
  * child's answer to the question — a wrong answer on record for saying "yes".
  */
 describe('asksForHint', () => {
+  it('hears the ways children actually ask (third review)', () => {
+    for (const said of ['Can I have a hint?', 'may I have a hint', 'hint batao', 'hint bataiye', 'please tell me a hint', 'koi hint milega', 'hint mil sakta hai', 'what is the hint', 'hint de sakte ho'])
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(true);
+  });
+
   it('hears a short request for help in English and Hinglish', () => {
     for (const said of ['hint', 'Give me a hint', 'hint do', 'hint dijiye please', 'help', 'help me', 'madad karo', 'ek hint do na'])
       expect(asksForHint(said, { afterOffer: false }), said).toBe(true);

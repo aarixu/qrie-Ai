@@ -94,7 +94,8 @@ export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string 
  * answered 400 "Request contains an invalid argument" (measured 2026-09-29,
  * and it took her voice down in production for five minutes). So the cap is
  * on the stream instead: `sseToPcm` ends the line once it has carried this
- * much audio, which also ends the upstream request.
+ * much audio, which also ends the upstream request, and `speakOnVertex`'s
+ * collected path stops reading at the same budget.
  *
  * A teacher speaks about 14 characters a second (a measured 56-character
  * Hinglish line came back as 4.4 s); six a second is more than double that
@@ -102,9 +103,23 @@ export function speechPrompt(text: string, lang: SpeechLanguage = 'en'): string 
  * 48,000 bytes a second.
  */
 export function maxSpeechBytes(text: string): number {
-  const seconds = Math.max(3, [...text].length / 6);
+  // A digit is said as a word or more ("240" is "two hundred forty"), so
+  // each one counts three times; four seconds at the least, so a short line
+  // with a number in it is never cut mid-number (third review, 2026-09-29).
+  const chars = [...text].length;
+  const digits = (text.match(/[0-9]/g) ?? []).length;
+  const seconds = Math.max(4, (chars + 2 * digits) / 5);
   return Math.ceil(seconds * 48_000);
 }
+
+/**
+ * Audio tokens for audio Vertex sent, when its own count never arrived: a
+ * line the cap or the student ended stops before the final event that
+ * carries `usageMetadata`. ~32 audio tokens a second (measured, and the
+ * price row's note in tools/sql/model_price.sql). An ESTIMATE, so a report
+ * can tell it apart only by the missing prompt count.
+ */
+export const estimatedSpeechTokens = (audioBytes: number): number => Math.round((audioBytes / 48_000) * 32);
 
 export function speechRequestBody(text: string, lang: SpeechLanguage): string {
   return JSON.stringify({
@@ -383,7 +398,25 @@ export async function speakOnVertex(
     return failed(502, `Google auth failed: ${(e as Error).message}`);
   }
 
-  let raw: string;
+  const chunks: Uint8Array[] = [];
+  let mimeType = '';
+  let promptTokens: number | undefined;
+  let outputTokens: number | undefined;
+  let size = 0;
+  const limit = maxSpeechBytes(text);
+  const take = (block: string): void => {
+    const event = readEvent(block);
+    for (const a of event.audio) {
+      chunks.push(a);
+      size += a.byteLength;
+    }
+    mimeType ||= event.mime;
+    if (event.usage) {
+      promptTokens = count(event.usage.promptTokenCount) ?? promptTokens;
+      outputTokens = count(event.usage.candidatesTokenCount) ?? outputTokens;
+    }
+  };
+
   try {
     const res = await doFetch(call.url, {
       method: 'POST',
@@ -393,7 +426,32 @@ export async function speakOnVertex(
         ? { signal: AbortSignal.timeout(SPEECH_TIMEOUT_MS) }
         : {}),
     });
-    raw = await res.text();
+    const reader = res.ok ? res.body?.getReader() : undefined;
+    if (reader) {
+      // Read as it comes, and stop once the line has carried its budget
+      // (third review #7: this path had no cap at all).
+      const decoder = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (value) buf += decoder.decode(value, { stream: true });
+        buf = buf.replace(/\r/g, '');
+        let cut: number;
+        while ((cut = buf.indexOf('\n\n')) >= 0) {
+          take(buf.slice(0, cut));
+          buf = buf.slice(cut + 2);
+        }
+        if (size >= limit) {
+          void reader.cancel().catch(() => undefined);
+          break;
+        }
+        if (done) {
+          if (buf.trim() !== '') take(buf);
+          break;
+        }
+      }
+    }
+    const raw = reader ? '' : await res.text();
     if (!res.ok) {
       let message = `Vertex speech ${res.status}`;
       try {
@@ -403,36 +461,27 @@ export async function speakOnVertex(
       }
       return failed(res.status, message);
     }
+    if (!reader) for (const block of raw.replace(/\r/g, '').split('\n\n')) take(block);
   } catch (e) {
     return failed(502, `Vertex speech could not be reached: ${(e as Error).message}`);
   }
 
-  const chunks: Uint8Array[] = [];
-  let mimeType = '';
-  let promptTokens: number | undefined;
-  let outputTokens: number | undefined;
-  for (const block of raw.replace(/\r/g, '').split('\n\n')) {
-    const event = readEvent(block);
-    chunks.push(...event.audio);
-    mimeType ||= event.mime;
-    if (event.usage) {
-      promptTokens = count(event.usage.promptTokenCount) ?? promptTokens;
-      outputTokens = count(event.usage.candidatesTokenCount) ?? outputTokens;
-    }
-  }
-
+  const kept = Math.min(size, limit);
   const tokens = {
     ...(promptTokens !== undefined ? { promptTokens } : {}),
-    ...(outputTokens !== undefined ? { outputTokens } : {}),
+    // Vertex's own count, or an estimate from the audio when a line cut at
+    // its budget ended before the event that carries it.
+    ...(outputTokens !== undefined ? { outputTokens } : size > 0 ? { outputTokens: estimatedSpeechTokens(size) } : {}),
   };
-  const size = chunks.reduce((n, c) => n + c.byteLength, 0);
   if (size === 0) return { ...failed(502, 'Vertex answered without any audio'), ...tokens };
 
-  const pcm = new Uint8Array(size);
+  const pcm = new Uint8Array(kept - (kept % 2));
   let at = 0;
   for (const c of chunks) {
-    pcm.set(c, at);
-    at += c.byteLength;
+    if (at >= pcm.byteLength) break;
+    const part = c.subarray(0, pcm.byteLength - at);
+    pcm.set(part, at);
+    at += part.byteLength;
   }
   const pcmOnly = speak.format === 'pcm';
   return {

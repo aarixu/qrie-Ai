@@ -178,6 +178,7 @@ function onWrong(ctx: Ctx): Action {
     const followUp = ctx.matched?.correct !== true ? followUpFor(input.ask, ctx.matched) : undefined;
     if (followUp && !leaks(followUp, ctx.secrets)) {
       return act(ctx, {
+        followUp: true,
         kind: 'rethink',
         rung: 1,
         helped: 1,
@@ -331,6 +332,7 @@ interface Draft {
   secrets?: string[];
   boardIntent?: Action['boardIntent'];
   scheduleRetest?: boolean;
+  followUp?: true;
 }
 
 /**
@@ -361,6 +363,8 @@ function act(ctx: Ctx, d: Draft): Action {
     because: say === undefined ? `${d.because}; every line would repeat or leak, so nothing is said` : d.because,
   };
   if (say !== undefined) action.say = say;
+  // Only a follow-up that is actually said is one.
+  if (d.followUp && say !== undefined) action.followUp = true;
   if (d.boardIntent) action.boardIntent = d.boardIntent;
   return action;
 }

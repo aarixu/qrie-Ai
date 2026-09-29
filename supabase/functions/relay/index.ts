@@ -153,12 +153,12 @@ const deps: HandlerDeps = {
    */
   ...(Deno.env.get('RELAY_DISABLED') ? { disabled: true } : {}),
   /**
-   * Her voice, from our own box, when one is configured.
-   *
-   * 86% of what a class costs is speech and all of it is cash. Point this at a
-   * host running `tools/speech` and that line becomes rent instead. It must be
-   * reachable from the edge, so a laptop will not do — this is the VPS switch.
-   * Unset, speech goes to the vendor exactly as before.
+   * Her voice, from our own box — used ONLY when no Vertex service account
+   * is set (packages/relay/src/handler.ts `speechUrl`). With Vertex, every
+   * line is Gemini on Vertex and this is ignored, because the box speaks
+   * English only and the tutor speaks Hinglish. It stays the cost lever for
+   * the day the box has a Hinglish voice; it must be reachable from the edge,
+   * so a laptop will not do.
    */
   ...(Deno.env.get('CURIE_SPEECH_URL') ? { speechUrl: Deno.env.get('CURIE_SPEECH_URL') } : {}),
   ...(vertex ? { vertex } : {}),

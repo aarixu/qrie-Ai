@@ -390,8 +390,25 @@ describe('what one line may cost (#1)', () => {
   });
 
   it('gives a line audio in proportion to its words, with a floor', () => {
-    expect(maxSpeechBytes('Hi.')).toBe(3 * 48_000);
-    expect(maxSpeechBytes('a'.repeat(600))).toBe(100 * 48_000);
+    expect(maxSpeechBytes('Hi.')).toBe(4 * 48_000);
+    expect(maxSpeechBytes('a'.repeat(600))).toBe(120 * 48_000);
+  });
+
+  it('gives a digit the time its spoken words take (third review #11)', () => {
+    // "So 15% of 240 is 36." needs about 4 s; it used to get 3.3 s.
+    expect(maxSpeechBytes('So 15% of 240 is 36.')).toBeGreaterThanOrEqual(6 * 48_000);
+  });
+
+  it('caps the collected path too, and estimates the tokens a cut line never reported (#7)', async () => {
+    const big = new Uint8Array(4 * 48_000 + 1000).fill(1);
+    const out = await speakOnVertex(
+      'Hi.',
+      { tokens, fetch: (async () => vertexStream(sse([audioEvent(big)]))) as unknown as typeof fetch },
+      { format: 'pcm' },
+    );
+    expect(out.status).toBe(200);
+    expect(bytesOf(out.response).byteLength).toBe(4 * 48_000);
+    expect(out.outputTokens).toBe(Math.round(((4 * 48_000 + 1000) / 48_000) * 32));
   });
 
   it('ends the stream, in whole samples, once a line has carried its budget, and books it once', async () => {
