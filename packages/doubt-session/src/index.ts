@@ -6,7 +6,7 @@ export {
   type HandoffState,
   type SpeakResult,
 } from './handoff';
-export { buildContext, type DoubtContext } from './context';
+export { buildContext, type DoubtContext, type DoubtLanguage } from './context';
 export {
   buildDoubtBrief,
   recallTargets,

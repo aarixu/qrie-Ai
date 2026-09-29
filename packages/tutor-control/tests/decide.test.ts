@@ -229,6 +229,21 @@ describe('decide: a right answer', () => {
     expect(LINES.praiseAfterReveal['hi-en'].some((line) => say(hi).startsWith(line))).toBe(true);
   });
 
+  it('does not praise twice when the authored why opens with its own "yes" (overnight review #33)', () => {
+    const affirming: AskInput = {
+      question: 'Which is prime?',
+      options: [
+        { text: '7', correct: true, why: 'Yes — seven has only two factors, one and itself.' },
+        { text: '9', correct: false, why: 'Nine is three threes.' },
+      ],
+    };
+    for (const lang of ['en', 'hi-en'] as const) {
+      const a = decide(base({ verdict: 'right', ask: affirming, matchedOption: 0, lang }));
+      expect(say(a)).toContain('Seven has only two factors');
+      expect(say(a)).not.toMatch(/Yes —/);
+    }
+  });
+
   it('says what was right about it, from the authored why', () => {
     const a = decide(base({ verdict: 'right', ask: OPTIONS, matchedOption: 1 }));
     expect(say(a)).toContain('Seven has only two factors');
@@ -518,5 +533,23 @@ describe('decide: a named misconception is diagnosed before it is corrected (bri
     };
     const a = decide(base({ ask: leaky, matchedOption: 1 }));
     expect(say(a)).not.toContain('Is x equal to 3?');
+  });
+});
+
+describe('decide: an authored why keeps its content words', () => {
+  it('strips a leading "yes" but never a first word that is content', () => {
+    const ask = (why: string): AskInput => ({
+      question: 'Q?',
+      options: [
+        { text: 'a', correct: true, why },
+        { text: 'b', correct: false, why: 'No.' },
+      ],
+    });
+    const praised = (why: string) => decide({ verdict: 'right', attempt: 1, rungSoFar: 0, ask: ask(why), matchedOption: 0, lang: 'en', now: 0 }).say ?? '';
+    expect(praised('Right angles are ninety degrees.')).toContain('Right angles are ninety degrees.');
+    expect(praised('Right-angled triangles obey it.')).toContain('Right-angled triangles obey it.');
+    expect(praised('Good conductors let heat through.')).toContain('Good conductors let heat through.');
+    expect(praised('Exactly! The gaps hold it.')).toContain('The gaps hold it.');
+    expect(praised('Exactly! The gaps hold it.')).not.toContain('Exactly! The');
   });
 });

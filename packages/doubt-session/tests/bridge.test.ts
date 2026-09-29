@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import type { DoubtContext } from '../src/context';
-import { entryLine, exitLine } from '../src/bridge';
+import { closingLine, entryLine, exitLine } from '../src/bridge';
 
 const ctxFor = (beatId: string, topic = 'photosynthesis'): DoubtContext => ({
   lessonId: 'l1',
@@ -41,5 +41,30 @@ describe('bridge lines', () => {
   it('entry and exit are different sentences for the same moment', () => {
     const ctx = ctxFor('beat-3');
     expect(entryLine(ctx)).not.toBe(exitLine(ctx));
+  });
+});
+
+/**
+ * A HINGLISH CLASS STAYS HINGLISH THROUGH THE DOUBT (overnight review #27).
+ * The lines that open and close a doubt were English only, so a child who
+ * chose Hinglish was stepped out of their own language at the seam.
+ */
+describe('bridge lines in the child’s language', () => {
+  const hinglish = (id: string): DoubtContext => ({ ...ctxFor(id, 'light reaction'), lang: 'hi-en' });
+  const english = /\b(What's your doubt|Let's pick|Let's continue|Back to the lesson|Let's move on|Let's go back|Let's carry on)\b/;
+
+  it('opens, closes and caps a doubt in Hinglish', () => {
+    for (const id of ['a', 'b', 'c', 'd', 'e', 'f']) {
+      const entry = entryLine(hinglish(id));
+      expect(entry).toContain('light reaction');
+      expect(entry).not.toMatch(english);
+      expect(exitLine(hinglish(id))).not.toMatch(english);
+      expect(closingLine(hinglish(id))).not.toMatch(english);
+      expect(exitLine(hinglish(id))).toMatch(/\b(chalo|wapas|haath)\b/i);
+    }
+  });
+
+  it('keeps English when no language is set', () => {
+    expect(exitLine(ctxFor('a'))).toBe(exitLine({ ...ctxFor('a'), lang: 'en' }));
   });
 });

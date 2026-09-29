@@ -14,7 +14,7 @@ import {
   prepareDoubtTurn,
   type TurnInput,
 } from '../src/lib/doubtBoard';
-import { MALFORMED_REPLY_LINE } from '../src/lib/geminiAgent';
+import { MALFORMED_REPLY_LINE, MALFORMED_REPLY_LINE_HI } from '../src/lib/geminiAgent';
 import { flagStore, recentFlags } from '../src/stores/flags';
 
 /**
@@ -354,6 +354,12 @@ describe('a reply with no ink, as the typed tutor wrote them before steps', () =
     const out = prepareDoubtTurn(input([{ say: '', ink: [{ op: 'teleport' }] }]));
     if (out.kind !== 'turn') throw new Error('expected a turn');
     expect(out.lines.map((l) => l.say)).toEqual([MALFORMED_REPLY_LINE]);
+  });
+
+  it('says the "muddled" line in Hinglish to a Hinglish class (#27)', () => {
+    const out = prepareDoubtTurn({ ...input([{ say: '', ink: [{ op: 'teleport' }] }]), lang: 'hi-en' });
+    if (out.kind !== 'turn') throw new Error('expected a turn');
+    expect(out.lines.map((l) => l.say)).toEqual([MALFORMED_REPLY_LINE_HI]);
   });
 
   it('a recall named in a step comes back on its line, and only a beat the student has seen', () => {

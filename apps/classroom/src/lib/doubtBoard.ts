@@ -15,7 +15,7 @@ import { recallTargets, type DoubtContext } from '@ai-tutor/doubt-session';
 import { quoteForPrompt } from '@ai-tutor/safety';
 import { toStudent } from './safety';
 import { layTurn, type Author, type BoardSession, type LaidTurn, type LayResult } from './boardSession';
-import { MALFORMED_REPLY_LINE } from './geminiAgent';
+import { malformedLine } from './geminiAgent';
 import type { HaltCause } from './sessionHalt';
 
 /**
@@ -503,7 +503,7 @@ export function prepareDoubtTurn(input: TurnInput): PreparedTurn {
 
   // Never silence: one fixed line when nothing she wrote is left to say.
   if (!lines.some((l) => l.say)) {
-    lines.push({ say: leaked > 0 ? LINES.haveAGo[input.lang][0] : MALFORMED_REPLY_LINE, ink: [] });
+    lines.push({ say: leaked > 0 ? LINES.haveAGo[input.lang][0] : malformedLine(input.lang), ink: [] });
   }
 
   const opsDropped = laid?.dropped.length ?? 0;

@@ -26,6 +26,12 @@ export interface AgentIO {
   recall(beatId: string): void;
   /** Signal that the doubt is resolved — triggers the exit bridge. */
   done(): void;
+  /**
+   * Start fetching the audio for a line she is about to say, so it is ready
+   * when the current one ends. Optional: a voice that cannot prime ignores it.
+   * Only for a line that has already been through the reply's safety screen.
+   */
+  prime?(text: string): void;
 }
 
 export interface AgentSession {
@@ -76,16 +82,24 @@ export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapt
       const prev =
         ctx.recentBeats.length >= 2 ? ctx.recentBeats[ctx.recentBeats.length - 2] : null;
 
+      // Her lines here in the child's language too (overnight review #27).
+      const hi = ctx.lang === 'hi-en';
       if (opening) {
         enqueue(() =>
-          io.say(`I'm listening. What would you like to ask about '${ctx.beatTopic}'? Go ahead.`),
+          io.say(
+            hi
+              ? `Main sun rahi hoon. '${ctx.beatTopic}' ke baare mein kya poochna hai? Bolo.`
+              : `I'm listening. What would you like to ask about '${ctx.beatTopic}'? Go ahead.`,
+          ),
         );
       }
       if (opening && prev !== null) {
         enqueue(async () => {
           io.recall(prev.id);
           await io.say(
-            `Remember, just before this we saw '${prev.topic}' — I've brought it back on the board, we'll connect the two.`,
+            hi
+              ? `Yaad hai, isse just pehle humne '${prev.topic}' dekha tha — maine use board pe wapas la diya hai, dono ko jodte hain.`
+              : `Remember, just before this we saw '${prev.topic}' — I've brought it back on the board, we'll connect the two.`,
           );
         });
       }
@@ -97,12 +111,16 @@ export function createStubAgent(options: { opening?: boolean } = {}): AgentAdapt
           if (userMessages === 1) {
             enqueue(() =>
               io.say(
-                `Good question — it's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
+                hi
+                  ? `Achha sawaal — yahan confuse hona bilkul normal hai. Board ko dhyaan se dekho: '${ctx.beatTopic}' ko aise socho, main step by step samjhaati hoon.`
+                  : `Good question — it's completely natural to feel confused here. Look at the board carefully: think of '${ctx.beatTopic}' this way, and I'll walk you through it step by step.`,
               ),
             );
           } else if (userMessages === 2) {
             enqueue(async () => {
-              await io.say(`Great, sounds like that's clear now. Let's get back to the class.`);
+              await io.say(
+                hi ? `Badhiya, lagta hai ab clear hai. Chalo class pe wapas chalte hain.` : `Great, sounds like that's clear now. Let's get back to the class.`,
+              );
               // done() usually triggers our own stop() synchronously via the
               // handoff's leaving sequence — re-check before signalling.
               if (!stopped) io.done();

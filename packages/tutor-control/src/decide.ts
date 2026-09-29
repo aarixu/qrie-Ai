@@ -122,7 +122,7 @@ function onRight(ctx: Ctx): Action {
   const helpedBefore = floor >= 1;
   const unassisted = input.mastery?.unassisted;
   const weakRecord = !helpedBefore && unassisted !== undefined && unassisted < GAP_THRESHOLD;
-  const why = (ctx.matched?.correct ? ctx.matched.why : undefined) ?? correctWhy(input.ask);
+  const why = unaffirmed((ctx.matched?.correct ? ctx.matched.why : undefined) ?? correctWhy(input.ask));
   // After the reveal it was read back, not worked out, and the praise says so.
   const openers =
     floor >= 8
@@ -432,6 +432,24 @@ function secretsOf(ask: AskInput): string[] {
     if (o.correct === true) add(o.text);
   }
   return [...out];
+}
+
+/**
+ * An authored why that opens with its own "Yes —" or "Exactly!", with that
+ * opener taken off: the praise line already said it, and hearing it twice
+ * reads as surprise that they managed it (overnight review #33).
+ *
+ * Only when punctuation follows it: "Right angles", "Right-angled" and
+ * "Good conductors" are content, not praise, and keep their first word.
+ */
+const AFFIRMATION =
+  /^(?:yes|yeah|yep|exactly|right|correct|spot on|that'?s right|that'?s it|well done|good|great|nice|haan|han|bilkul|sahi|ekdum|shabash)\b\s*(?:[!.,:;—–]|\s-\s)[\s!.,:;—–-]*/i;
+
+function unaffirmed(why: string | undefined): string | undefined {
+  let rest = why?.trim() ?? '';
+  for (let i = 0; i < 3 && AFFIRMATION.test(rest); i++) rest = rest.replace(AFFIRMATION, '').trim();
+  if (rest === '') return undefined;
+  return rest[0].toUpperCase() + rest.slice(1);
 }
 
 /** Sentences joined, each ending in punctuation, blanks dropped. */

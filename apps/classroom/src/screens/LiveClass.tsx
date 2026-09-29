@@ -1035,7 +1035,43 @@ function SomebodyIsPreparing({ topic, seconds }: { topic: string; seconds: numbe
  * what it is doing, and a student who can see a picture being drawn for them
  * is waiting FOR something rather than just waiting.
  */
+/**
+ * Where preparation stands when the room opens: warm entry starts the class
+ * at the drawing phase, which class-prep reports at 0.3 (prepare.ts).
+ */
+const ROOM_OPENS_AT = 0.3;
+
+/** What each phase is, in words for a child — not the prep's own log lines. */
+const PHASE_LINE: Record<PrepProgress['phase'], string> = {
+  planning: 'Planning how to teach it…',
+  checking: 'Checking everything on the board is right…',
+  drawing: 'Drawing the pictures…',
+  done: 'Ready.',
+  failed: 'Something went wrong.',
+};
+
+/**
+ * THE BAR MOVES FOR THE WHOLE WAIT (overnight review #32).
+ *
+ * It used to be prep's own `done`, which runs 0.05 → 0.27 across the forty
+ * to eighty seconds before the room opens at 0.3 — a bar that crawled a
+ * quarter of the way and then vanished into the class. Now the part before
+ * the room is the whole bar, and between prep's reports it creeps on the
+ * clock (never past 90%), so a fifty-second model call still visibly moves.
+ */
+export function readiness(done: number | undefined, elapsedSeconds: number): number {
+  const reported = Math.min(0.95, Math.max(0, (done ?? 0.05) / ROOM_OPENS_AT));
+  const creep = 0.9 * (1 - Math.exp(-Math.max(0, elapsedSeconds) / 35));
+  return Math.max(reported, creep);
+}
+
 function GettingReady({ topic, progress }: { topic: string; progress: PrepProgress | null }) {
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    const started = Date.now();
+    const timer = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000);
+    return () => clearInterval(timer);
+  }, []);
   return (
     <div className="bg-stage min-h-screen grid place-items-center px-6">
       <div className="flex flex-col items-center gap-5 text-center max-w-sm">
@@ -1052,16 +1088,16 @@ function GettingReady({ topic, progress }: { topic: string; progress: PrepProgre
           Meera is preparing your class on {topic}
         </p>
         <p className="font-body-md text-body-md text-white/70">
-          {progress?.message ?? 'Reading the topic…'}
+          {progress ? PHASE_LINE[progress.phase] : 'Reading the topic…'}
         </p>
         <div className="w-56 h-1.5 rounded-full bg-white/25 overflow-hidden">
           <div
-            className="h-full rounded-full bg-white transition-[width] duration-500"
-            style={{ width: `${Math.round((progress?.done ?? 0.05) * 100)}%` }}
+            className="h-full rounded-full bg-white transition-[width] duration-1000"
+            style={{ width: `${Math.round(readiness(progress?.done, elapsed) * 100)}%` }}
           />
         </div>
-        <p className="font-label-md text-label-md text-white/50">
-          She is setting up the board.
+        <p className="font-label-md text-label-md text-white/50 tabular-nums">
+          She is setting up the board. {elapsed}s — a new topic usually takes about a minute.
         </p>
       </div>
     </div>

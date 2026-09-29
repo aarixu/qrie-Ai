@@ -690,3 +690,59 @@ describe('the language the child chose', () => {
     expect(system.content).toContain(REGISTER['hi-en']);
   });
 });
+
+/**
+ * A BOARD REPLY, SPOKEN STEP BY STEP (overnight review #30, #41).
+ */
+describe('a board reply', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  // An earlier test leaves the workspace in Hinglish.
+  beforeEach(() => setTutorLanguage('en'));
+  const settleAll = async () => {
+    for (let i = 0; i < 8; i += 1) await new Promise((r) => setTimeout(r, 0));
+  };
+  const steps = JSON.stringify({ steps: [{ say: 'One.', ink: [] }, { say: 'Two.', ink: [] }, { say: 'Three.', ink: [] }], recallBeatId: null, done: false });
+  const replying = () =>
+    vi.stubGlobal('fetch', async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ choices: [{ message: { content: steps }, finish_reason: 'stop' }] }),
+    }));
+  const board = (turn: () => unknown) => ({ turn, onScreen: () => ({}), holding: () => null }) as never;
+
+  it('fetches the next sentence while the current one is being said', async () => {
+    replying();
+    const said: string[] = [];
+    const primed: string[] = [];
+    const lines = ['One.', 'Two.', 'Three.'].map((say) => ({ say, show: () => undefined }));
+    const s = createGeminiAgent({ student: { klass: 10 } as never, board: board(() => ({ lines })) }).start(ctx, {
+      say: async (t: string, o?: { onStart?: () => void }) => {
+        said.push(t);
+        o?.onStart?.();
+      },
+      recall: () => {},
+      done: () => {},
+      prime: (t: string) => void primed.push(t),
+    });
+    s.sendUserText('why four?');
+    await settleAll();
+    expect(said).toEqual(['One.', 'Two.', 'Three.']);
+    expect(primed).toEqual(['Two.', 'Three.']);
+  });
+
+  it('a failure while speaking says the muddled line, not a second answer from the stand-in', async () => {
+    replying();
+    const said: string[] = [];
+    const fallback = { start: () => ({ sendUserText: () => said.push('STAND-IN'), stop: () => {} }) };
+    const s = createGeminiAgent({
+      student: { klass: 10 } as never,
+      fallback: fallback as never,
+      board: board(() => {
+        throw new RangeError('checker fault');
+      }),
+    }).start(ctx, { say: async (t: string) => void said.push(t), recall: () => {}, done: () => {} });
+    s.sendUserText('why four?');
+    await settleAll();
+    expect(said).toEqual([MALFORMED_REPLY_LINE]);
+  });
+});

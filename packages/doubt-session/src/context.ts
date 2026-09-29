@@ -1,7 +1,17 @@
 import type { Lesson } from '@ai-tutor/lesson-format';
 
+/** The tutor language the child chose: English, or Hinglish in Roman script. */
+export type DoubtLanguage = 'en' | 'hi-en';
+
 /** Everything the live agent is told when it takes over. */
 export interface DoubtContext {
+  /**
+   * The language her fixed lines are said in — the bridge in and out, the
+   * turn cap's closing, the scripted stand-in's lines. Absent is English.
+   * The caller sets it (the app's onboarding choice); `buildContext` does not
+   * know it.
+   */
+  lang?: DoubtLanguage;
   lessonId: string;
   beatId: string;
   beatTopic: string;

@@ -606,6 +606,18 @@ export function ClassRoom({
   };
 
   const [handoffState, setHandoffState] = useState<HandoffState>('PLAYING');
+  /**
+   * "I'M NOT SURE" MEANS SOMETHING, SO THE CHIP SAYS IT (overnight review #28).
+   *
+   * It used to raise a hand and stop: Meera asked "what's your doubt?" and
+   * waited on typing, and on a phone the input stayed hidden behind the
+   * keyboard button. Now the chip's own words go to her as the student's
+   * first message once the doubt is live — she already knows the question
+   * that is holding and must not answer it (geminiAgent's board brief) — and
+   * the typing row is opened for whatever they say next.
+   */
+  const notSureOpener = useRef<string | null>(null);
+  const sendTextRef = useRef<(text: string) => void>(() => undefined);
   const [textLines, setTextLines] = useState<TranscriptLine[]>([]);
   const [, setRecallBeatId] = useState<string | null>(null);
 
@@ -788,6 +800,7 @@ export function ClassRoom({
         speak: (text, onSaid, onStart) =>
           sayRevealing((t) => halt.say(t, 'model-reply', onSaid), text, onStart, () => halt.halted),
         onPause: () => playerRef.current.pause(),
+        prime: (text) => ttsRef.current.prime?.(text),
         onResume: () => {
           // Recall view ends with the doubt; play() re-speaks the current beat,
           // which doubles as a natural re-anchor into the lesson. The doubt's
@@ -813,6 +826,14 @@ export function ClassRoom({
   useEffect(() => {
     const offState = handoff.on('statechange', () => {
       setHandoffState(handoff.state);
+      // The "I'm not sure" chip's words, said for them the moment she is
+      // there to hear them (overnight review #28).
+      if (handoff.state === 'LIVE' && notSureOpener.current !== null) {
+        const opener = notSureOpener.current;
+        notSureOpener.current = null;
+        sendTextRef.current(opener);
+      }
+      if (handoff.state === 'PLAYING') notSureOpener.current = null;
       if (handoff.state === 'PLAYING') {
         // Doubt over — clear the room so the next one starts fresh.
         setTextLines([]);
@@ -1483,7 +1504,8 @@ export function ClassRoom({
   const raiseHand = async () => {
     // A halted class takes no hand: there is no doubt left to open.
     if (halt.halted) return;
-    const ctx = buildContext(lesson, player.beatIndex);
+    // Her lines into and out of the doubt in the child's language (#27).
+    const ctx = { ...buildContext(lesson, player.beatIndex), lang: tutorLanguage() };
     // What the board must not give away, and a fresh doubt on the board.
     heldAskRef.current = player.pendingAsk ?? null;
     board.beginDoubt();
@@ -1685,6 +1707,16 @@ export function ClassRoom({
    * what LEAVES the device is the cleaned version, and a sentence that needs a
    * person halts the class (lib/sessionHalt.ts) instead of reaching a model.
    */
+  const notSure = () => {
+    if (halt.halted) return;
+    notSureOpener.current =
+      tutorLanguage() === 'hi-en'
+        ? 'Mujhe samajh nahi aa raha, is sawaal ka jawab kaise doon?'
+        : "I'm not sure how to answer this question.";
+    setTyping(true);
+    void raiseHand();
+  };
+
   const sendText = (text: string) => {
     if (halt.halted) return;
     setTextLines((prev) => [...prev, { role: 'student', text, final: true }]);
@@ -1704,6 +1736,8 @@ export function ClassRoom({
     track('doubt_message_sent', { lessonId: lesson.id, length: text.length });
     handoff.sendUserText(out.forward);
   };
+
+  sendTextRef.current = sendText;
 
   const endDoubt = () => {
     if (!halt.halted) handoff.endDoubt();
@@ -1878,7 +1912,7 @@ export function ClassRoom({
                     💡 Give me a hint
                   </button>
                   <button
-                    onClick={() => void raiseHand()}
+                    onClick={notSure}
                     className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
                   >
                     🙋 I'm not sure
@@ -1952,8 +1986,14 @@ export function ClassRoom({
         </aside>
       </main>
 
-      {/* On a phone Meera floats over the board, Meet PiP style. */}
-      <div className="lg:hidden absolute right-4 bottom-[96px] z-40">
+      {/* On a phone Meera floats over the board, Meet PiP style — at the top
+          while a question is holding, because at the bottom she covered the
+          answer chips on a 360 px phone (overnight review #29). */}
+      <div
+        className={`lg:hidden absolute right-4 z-40 ${
+          player.pendingAsk && !inDoubt ? 'top-[64px]' : 'bottom-[96px]'
+        }`}
+      >
         <TutorTile mode={tutorMode} variant="pip" clone={tile} />
       </div>
 

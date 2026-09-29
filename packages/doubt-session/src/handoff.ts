@@ -85,6 +85,8 @@ export interface HandoffOptions {
   onResume(): void;
   /** Canvas jump during LIVE. */
   onRecall?(beatId: string): void;
+  /** Fetch a line's audio ahead of time (the streamed voice's `prime`). */
+  prime?(text: string): void;
   /**
    * Student messages one doubt may carry before she closes it with
    * `closingLine`. Defaults to DEFAULT_MAX_STUDENT_TURNS.
@@ -218,6 +220,9 @@ export function createHandoff(opts: HandoffOptions): Handoff {
       if (state === 'LIVE') opts.onRecall?.(beatId);
     },
     done: () => beginLeaving(exitLine),
+    prime: (text) => {
+      if (state === 'LIVE') opts.prime?.(text);
+    },
   };
 
   function beginLeaving(line: (ctx: DoubtContext) => string): void {

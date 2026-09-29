@@ -373,6 +373,13 @@ export function buildDoubtSystemPrompt(ctx: DoubtContext, student: StudentContex
 export const MALFORMED_REPLY_LINE =
   "Sorry, I got muddled saying that. Could you ask me once more, maybe in different words?";
 
+/** The same line for a child who chose Hinglish (overnight review #27). */
+export const MALFORMED_REPLY_LINE_HI =
+  'Sorry, bolte-bolte main thoda uljha gayi. Ek baar phir se puchoge, shayad alag shabdon mein?';
+
+export const malformedLine = (lang?: string): string =>
+  lang === 'hi-en' ? MALFORMED_REPLY_LINE_HI : MALFORMED_REPLY_LINE;
+
 /**
  * What she says when the provider's own filter stopped the turn.
  *
@@ -395,9 +402,9 @@ export const FILTERED_REPLY_LINE = "Let's keep our class on the lesson — ask m
  * trusted; a reply that is not the asked-for shape becomes
  * MALFORMED_REPLY_LINE, never its own text.
  */
-export function parseAgentReply(raw: string, canRecall: (beatId: string) => boolean): AgentReply {
+export function parseAgentReply(raw: string, canRecall: (beatId: string) => boolean, lang?: string): AgentReply {
   const fallback: AgentReply = {
-    say: MALFORMED_REPLY_LINE,
+    say: malformedLine(lang),
     recallBeatId: null,
     done: false,
   };
@@ -474,7 +481,7 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           return { say: FILTERED_REPLY_LINE, recallBeatId: null, done: false };
         }
         history.push({ role: 'model', text: reply.text });
-        return parseAgentReply(reply.text, (id) => isRecallable(ctx, id));
+        return parseAgentReply(reply.text, (id) => isRecallable(ctx, id), tutorLanguage());
       };
 
       const deliver = async (reply: AgentReply): Promise<void> => {
@@ -488,8 +495,19 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
           for (const [i, line] of turn.lines.entries()) {
             if (stopped) return;
             if (line.recall) io.recall(line.recall);
-            // The line's ink is drawn when her voice starts the sentence.
-            await io.say(line.say, { onStart: line.show, more: i < turn.lines.length - 1 });
+            const next = turn.lines[i + 1]?.say;
+            // The line's ink is drawn when her voice starts the sentence, and
+            // the NEXT sentence's audio starts fetching then — each step used
+            // to pay Vertex's 1-2 s to first audio as dead air between
+            // sentences (overnight review #30). The lines were screened in
+            // `board.turn` before any of them is said.
+            await io.say(line.say, {
+              onStart: () => {
+                line.show();
+                if (next && !stopped) io.prime?.(next);
+              },
+              more: i < turn.lines.length - 1,
+            });
           }
         } else {
           await io.say(reply.say);
@@ -503,7 +521,18 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
         chain = chain
           .then(async () => {
             if (stopped) return;
-            await deliver(await call(userText));
+            const reply = await call(userText);
+            /**
+             * A failure while SPEAKING the reply is not a failed call
+             * (overnight review #41): handing the question to the scripted
+             * tutor then answered it a second time over lines already said.
+             * She says the muddled line and the doubt stays open.
+             */
+            try {
+              await deliver(reply);
+            } catch {
+              if (!stopped) await io.say(malformedLine(tutorLanguage()));
+            }
           })
           .catch(async () => {
             // Rule 1: a failed call must hand the room back, never hold it.
@@ -516,7 +545,11 @@ export function createGeminiAgent(opts: GeminiAgentOptions): AgentAdapter {
               scripted.sendUserText(userText);
               return;
             }
-            await io.say("Hmm, I'm having trouble connecting right now. Let's continue the class — try raising your hand again in a bit.");
+            await io.say(
+              tutorLanguage() === 'hi-en'
+                ? 'Hmm, abhi connection mein thodi dikkat hai. Chalo class continue karte hain — thodi der mein phir haath utha dena.'
+                : "Hmm, I'm having trouble connecting right now. Let's continue the class — try raising your hand again in a bit.",
+            );
             if (!stopped) io.done();
           });
       };

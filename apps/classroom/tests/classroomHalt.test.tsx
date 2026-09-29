@@ -458,6 +458,15 @@ describe('the held question, in the real room', () => {
     expect(spoken).toContain(lesson.beats[0].narration);
   });
 
+  it('says "I am not sure" for them, so Meera starts guiding instead of waiting on typing (#28)', async () => {
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick();
+    await tap(host, "I'm not sure");
+    await tick(10);
+    expect(host.textContent).toContain("I'm not sure how to answer this question.");
+    expect(llmCalls).toBe(1);
+  });
+
   it('does not start the class when they leave while she is greeting them', async () => {
     const held: Array<() => void> = [];
     const greetingHeld: TtsAdapter = {
