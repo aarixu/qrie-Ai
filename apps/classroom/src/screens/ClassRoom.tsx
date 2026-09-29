@@ -528,8 +528,9 @@ export function ClassRoom({
   const workTurn = useRef<(() => void) | null>(null);
   const workingRef = useRef(false);
   workingRef.current = working;
-  /** Their steps, held here so a pause or a hand that unmounts the panel keeps them. */
+  /** Their steps and half-typed line, held here so a pause or a hand that unmounts the panel keeps them. */
   const [workSteps, setWorkSteps] = useState<WorkedStep[]>([]);
+  const [workDraft, setWorkDraft] = useState('');
   const openWorking = (): void => {
     workTurn.current?.();
     workTurn.current = beginTap();
@@ -543,6 +544,7 @@ export function ClassRoom({
   useEffect(() => {
     closeWorking();
     setWorkSteps([]);
+    setWorkDraft('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player.beat?.id]);
 
@@ -551,35 +553,43 @@ export function ClassRoom({
     const ask = player.pendingAsk;
     if (!ask || !player.beat) return;
     const beatId = player.beat.id;
+    // Answered already, and only her praise was cut short: nothing more to file.
+    if (answeredRight.current === beatId) return;
     const hi = tutorLanguage() === 'hi-en';
-    // The student's own words: screened like a typed doubt before anything is
-    // written or said. Distress halts the class; an off-limits line gets her
-    // redirect; neither reaches the board.
-    const screened = halt.typedDoubt(step.text);
-    if (screened.forward === null) {
-      if (screened.reply !== null) await sayLine(inLanguage(screened.reply, tutorLanguage()));
-      return;
-    }
-    // What leaves this function is the cleaned text — a phone number or an
-    // address masked — the same as a typed doubt's (third review).
-    const said = screen(step.text, 'from-student');
-    const shown = said.kind === 'clean' ? said.text : step.text;
-    const v = step.verdict;
-    const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
-    board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${shown}` }] }] }]);
+    // The turn is taken before anything is said about the step — her redirect
+    // too, or closing the panel opened the mic under it (fifth review).
     const settle = beginTap();
-    // The question restated is not a step; a step on the way is not the answer.
-    const restated = restates(workStart, step.text);
-    const expectedEq = expectedEquation(ask.expect, workStart);
-    const isTheAnswer =
-      v.ok === true &&
-      !restated &&
-      ((v.solved !== undefined && solvesAsExpected(ask.expect, v.solved)) ||
-        (expectedEq !== null && sameEquation(expectedEq, step.text)));
     try {
+      // The student's own words: screened like a typed doubt before anything is
+      // written or said. Distress halts the class; an off-limits line gets her
+      // redirect; neither reaches the board.
+      const screened = halt.typedDoubt(step.text);
+      if (screened.forward === null) {
+        if (screened.reply !== null) await sayLine(inLanguage(screened.reply, tutorLanguage()));
+        return;
+      }
+      // What leaves this function is the cleaned text — a phone number or an
+      // address masked — the same as a typed doubt's (third review).
+      const said = screen(step.text, 'from-student');
+      const shown = said.kind === 'clean' ? said.text : step.text;
+      const v = step.verdict;
+      const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
+      board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${shown}` }] }] }]);
+      // The question restated is not a step; a step on the way is not the answer;
+      // a sum on the side never is (fifth review).
+      const restated = restates(workStart, step.text);
+      const expectedEq = expectedEquation(ask.expect, workStart);
+      const isTheAnswer =
+        v.ok === true &&
+        v.aside !== true &&
+        !restated &&
+        ((v.solved !== undefined && solvesAsExpected(ask.expect, v.solved)) ||
+          (expectedEq !== null && sameEquation(expectedEq, step.text)));
       if (isTheAnswer) {
         // Solved: their answer, worked out and checked line by line. Nothing
-        // to tap while she praises it, and the question is answered once.
+        // to tap while she praises it, and the question is answered once —
+        // a pause or a hand that cuts the praise brings it back answered.
+        answeredRight.current = beatId;
         setAskBusy(true);
         closeWorking();
         recordAnswerAtBeat(lesson, beatId, true);
@@ -598,7 +608,9 @@ export function ClassRoom({
             const spoken = await sayLine(praise.say);
             if (spoken.halted) return;
           }
-          // Still this question: a seek or a hand while she spoke has moved on.
+          // Not this question any more (a seek), or not held right now (a
+          // pause or a hand): the held-question effect opens the gate when it
+          // comes back (`answeredRight`).
           if (playerRef.current.pendingAsk !== ask) return;
           playerRef.current.answer(correctIndex(ask));
         } finally {
@@ -674,6 +686,8 @@ export function ClassRoom({
     const option = ask.options?.[index];
     const correct = option ? option.correct === true : true;
     const beatId = player.beat.id;
+    // Answered right already, its praise cut short: the gate opens, nothing is filed again.
+    if (answeredRight.current === beatId) return;
     /**
      * An OPEN ask has no options, and its button is a "carry on" — the
      * player's gate resolution, not an answer. It used to be recorded as a
@@ -735,6 +749,7 @@ export function ClassRoom({
       else if (remember && (tapRung.current.get(beatId) ?? 0) === 0 && attempt === 1 && !helpedByDoubt.current.has(beatId))
         recordWin(where);
       if (correct) {
+        answeredRight.current = beatId;
         if (action.say) {
           const spoken = await sayLine(action.say);
           if (spoken.halted) return;
@@ -1061,6 +1076,9 @@ export function ClassRoom({
   /** The held question the ear has taken (mic granted): its silences are the ear's to nudge. */
   const earHeld = useRef<string | null>(null);
 
+  /** The held question answered right whose gate has not opened yet (a cut-short praise). */
+  const answeredRight = useRef<string | null>(null);
+
   // The question surfacing is what starts the clock on an answer. It is its own
   // effect because the ear's effect returns early on a denied mic, and a
   // student without a microphone still answers by tapping.
@@ -1068,7 +1086,15 @@ export function ClassRoom({
     // The class moved on: whatever was standing is over, and if that beat
     // comes round again — a seek back — it is genuinely being asked afresh.
     if (askFiled.current !== null && askFiled.current !== player.beat?.id) askFiled.current = null;
+    if (answeredRight.current !== null && answeredRight.current !== player.beat?.id) answeredRight.current = null;
     if (!heldAskBeat) return;
+    // Answered right, and her praise cut short by a pause or a hand: the
+    // question comes back answered, not asked again (fifth review).
+    if (answeredRight.current === heldAskBeat) {
+      const standing = playerRef.current.pendingAsk;
+      if (standing) playerRef.current.answer(correctIndex(standing));
+      return;
+    }
     if (askFiled.current === heldAskBeat) {
       // The same question, back after a pause or a raised hand. No second
       // `asked` — but the clock has to restart, or the minutes the student
@@ -1136,6 +1162,9 @@ export function ClassRoom({
         if (workingRef.current) {
           setEar('off');
           await new Promise((r) => setTimeout(r, 200));
+          // The quiet is measured from when they stopped working (fifth review).
+          quietSince = Date.now();
+          offeredHint = false;
           continue;
         }
         if (tapEpoch.current !== epoch) {
@@ -1445,6 +1474,7 @@ export function ClassRoom({
         if (judged.verdict === 'right') setProbing(true);
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
+          if (judged.verdict === 'right') answeredRight.current = heldAskBeat;
           // The ledger keeps what the counter cannot: their actual words, the
           // verdict the judge reached, and how long the thinking took. A turn
           // the safety screen stopped is dropped entirely rather than trimmed.
@@ -1655,7 +1685,9 @@ export function ClassRoom({
       }
       // Something is happening — she is talking, a tap is being answered, the
       // mic question is up. Look again shortly.
-      if (speaking.current > 0 || askBusyRef.current || micAskRef.current !== null || earRef.current !== 'off') {
+      // Working it out is not silence (fifth review: a no-mic student typing
+      // a step was nudged, and the nudge filed as help).
+      if (speaking.current > 0 || askBusyRef.current || micAskRef.current !== null || earRef.current !== 'off' || workingRef.current) {
         timer = setTimeout(tryNudge, 4_000);
         return;
       }
@@ -2310,15 +2342,17 @@ export function ClassRoom({
                   )}
                 </span>
               )}
-              {/* Hidden while an answer is weighed. Its steps are held by the room
-                  (`workSteps`), so a pause or a hand that unmounts it loses nothing
-                  (third and fourth reviews). */}
+              {/* Hidden while an answer is weighed. Its steps and its half-typed
+                  line are held by the room (`workSteps`, `workDraft`), so a pause
+                  or a hand that unmounts it loses nothing (third to fifth reviews). */}
               {working && player.pendingAsk && (
                 <span className={askChoicesHidden ? 'hidden' : 'w-full'}>
                   <WorkPanel
                     start={workStart}
                     steps={workSteps}
                     onSteps={setWorkSteps}
+                    draft={workDraft}
+                    onDraft={setWorkDraft}
                     onStep={(step) => void onWorkedStep(step)}
                     onClose={closeWorking}
                   />

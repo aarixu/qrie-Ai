@@ -1,7 +1,7 @@
 import { toPoly } from './expr.ts';
 import { parseLine, type Statement } from './parse.ts';
 import * as P from './poly.ts';
-import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } from './rational.ts';
+import { TooLarge, div, equals, formatRational, isZero, mul, neg, type Rational } from './rational.ts';
 
 /**
  * ONE STEP OF A STUDENT'S WORKING, CHECKED AGAINST THE STEP BEFORE IT (T8.1).
@@ -145,6 +145,25 @@ export function workableEquation(line: string): boolean {
     return claimOf(st) === null && claimOf({ ...st, sides: [st.sides[1], st.sides[0]] }) === null;
   } catch {
     return false;
+  }
+}
+
+/**
+ * The one value of a linear equation in one unknown ("2x + 3 = 11" → x = 4),
+ * or null for anything `workableEquation` refuses. What "Work it out" is
+ * working towards.
+ */
+export function solveOne(line: string): { name: string; value: Rational } | null {
+  if (!workableEquation(line)) return null;
+  const parsed = parseLine(line);
+  if (!parsed.ok) return null;
+  try {
+    const row = P.linearRow(equationOf(parsed.line.statements[0]));
+    if (!row || row.coefs.size !== 1) return null;
+    const [[name, coef]] = [...row.coefs];
+    return { name, value: div(neg(row.constant), coef) };
+  } catch {
+    return null;
   }
 }
 

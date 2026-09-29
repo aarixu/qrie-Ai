@@ -1016,7 +1016,74 @@ describe('working it out, eighth review', () => {
     const chips = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes('Give me a hint'))!.closest('div.absolute')!;
     expect(chips.className).toContain('bottom-[76px]');
     const caption = host.querySelector('p span.line-clamp-2, p span.line-clamp-3');
-    if (caption) expect(caption.className).toBe('line-clamp-2');
+    expect(caption).not.toBeNull();
+    expect(caption!.className).toBe('line-clamp-2');
+  });
+
+  // Fifth review: a true check sum ("8 + 3 = 11") was taken as the answer.
+  it('never takes a sum on the side as the answer', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $2x + 3 = 11$', expect: 'Four, since 2 × 4 + 3 = 11' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    await typeStep(host, '8 + 3 = 11');
+    expect(moved()).toBe(false);
+    expect(answeredRows()).toHaveLength(0);
+    await typeStep(host, 'x = 4');
+    expect(moved()).toBe(true);
+  });
+
+  // Fifth review: a pause during her praise re-asked the question, and the
+  // answer was filed twice.
+  it('files a solved answer once, even when a pause cuts her praise', async () => {
+    const held: Array<() => void> = [];
+    let holding = false;
+    const tts: TtsAdapter = {
+      speak(text) {
+        spoken.push(text);
+        return holding ? new Promise<void>((r) => held.push(r)) : Promise.resolve();
+      },
+      cancel() {
+        for (const r of held.splice(0)) r();
+      },
+    };
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3x = 9$', expect: 'x = 3' }), tts });
+    await tick();
+    await tap(host, 'Work it out');
+    holding = true;
+    await typeStep(host, 'x = 3');
+    await act(async () => {
+      byLabel(host, 'Pause the class').click();
+    });
+    holding = false;
+    await tick(5);
+    await act(async () => {
+      byLabel(host, 'Play the class').click();
+    });
+    await tick(20);
+    expect(answeredRows()).toHaveLength(1);
+    expect(moved()).toBe(true);
+  });
+
+  // Fifth review: a half-typed line went with the panel on a pause.
+  it('keeps a half-typed step through a pause', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    const input = byLabel(host, 'Your next step') as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    await act(async () => {
+      setter.call(input, '3x + 12');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await act(async () => {
+      byLabel(host, 'Pause the class').click();
+    });
+    await tick(5);
+    await act(async () => {
+      byLabel(host, 'Play the class').click();
+    });
+    await tick(10);
+    expect((byLabel(host, 'Your next step') as HTMLInputElement).value).toBe('3x + 12');
   });
 
   it('hides the quick replies while they work', async () => {
@@ -1028,6 +1095,7 @@ describe('working it out, eighth review', () => {
     expect(hasButton(host, 'Say your answer out loud')).toBe(false);
     // And what they type is legible: dark ink on the light field.
     expect(byLabel(host, 'Your next step').className).not.toContain('text-stage-ink');
+    expect(byLabel(host, 'Your next step').className).toMatch(/(^|\s)text-stage(\s|$)/);
   });
 
   it('answers the question once, with nothing to tap while she praises it', async () => {

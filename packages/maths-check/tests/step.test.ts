@@ -131,3 +131,15 @@ describe('workableEquation: what the "Work it out" panel can check', () => {
     expect(workableEquation('not maths')).toBe(false);
   });
 });
+
+describe('solveOne: the one value of a linear equation in one unknown', () => {
+  it('solves it, and refuses anything else', async () => {
+    const { solveOne, formatRational } = await import('../src/index');
+    expect(formatRational(solveOne('2x + 3 = 11')!.value)).toBe('4');
+    expect(solveOne('2x + 3 = 0')).toMatchObject({ name: 'x' });
+    expect(formatRational(solveOne('2x + 3 = 0')!.value)).toBe('-3/2');
+    expect(solveOne('x^2 = 9')).toBeNull();
+    expect(solveOne('x + y = 3')).toBeNull();
+    expect(solveOne('7 = 7')).toBeNull();
+  });
+});

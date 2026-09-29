@@ -1,20 +1,25 @@
 import { latexToPlain } from '@ai-tutor/lesson-format';
-import { equationIn, formatRational, sameEquation, workableEquation, type Rational } from '@ai-tutor/maths-check';
+import { equals, evaluate, sameEquation, solveOne, workableEquation, type Rational } from '@ai-tutor/maths-check';
 
 /**
- * WHAT "WORK IT OUT" CAN CHECK, AND WHAT COUNTS AS THE ANSWER (T8.1, eighth
- * review 2026-09-29).
+ * WHAT "WORK IT OUT" CAN CHECK, AND WHAT COUNTS AS THE ANSWER (T8.1; eighth,
+ * third, fourth and fifth reviews, 2026-09-29).
  *
- * The panel follows a student's working from the question's equation to an
- * answer, so it is offered only where that path exists: a board form holding
- * exactly one equation, read as it means (`latexToPlain`, never the width
- * ruler), that is one linear equation in one unknown and not already solved.
- * "Is $x = 5$ a solution of $2x + 3 = 11$?" holds two; "$2^{x} = 32$" and a
- * quadratic are past what the checker can follow; and "If $3x + 2 = 11$, find
- * the value of $2x + 1$" asks for something the working never reaches (third
- * review) — any other piece of maths with a letter in it, beyond the unknown
- * itself, takes the panel away. And the question must ask for the unknown, or
- * expect an equation as its answer (below).
+ * ONE RULE FOR BOTH. Four review rounds each found phrasings that keyword and
+ * first-number heuristics got wrong — a panel offered that could never
+ * finish, a right answer refused, a check sum taken. So now:
+ *   - the question's equation is solved (`solveOne`);
+ *   - the values `expect` names as its answer are read (`answerValues`);
+ *   - the panel is offered exactly when that solution is among them, or when
+ *     the answer is itself an equation in the unknown (`expectedEquation`);
+ *   - a solved step is taken exactly when its value is among them.
+ * An offered panel can therefore always be finished, and a solved step is
+ * taken exactly when it is what the question asked for.
+ *
+ * The board form must hold exactly one equation, read as it means
+ * (`latexToPlain`), one linear equation in one unknown and not already solved,
+ * and no other maths in a letter beyond the unknown itself ("If $3x + 2 = 11$,
+ * find the value of $2x + 1$" asks for something else).
  */
 export function workStartOf(ask: { question?: string; written?: string; expect?: string } | null | undefined): string | null {
   const written = ask?.written;
@@ -25,32 +30,54 @@ export function workStartOf(ask: { question?: string; written?: string; expect?:
   if (pieces.some((tex) => !tex.includes('=') && /[A-Za-z]/.test(tex) && !/^\s*[A-Za-z]\s*$/.test(tex))) return null;
   const plain = latexToPlain(`$${equations[0]}$`);
   if (plain === null || !workableEquation(plain)) return null;
-  // And the working can reach the answer: the question asks for the unknown
-  // ("solve", "find the value of y"), or its answer is itself an equation.
-  // "What remains on the left side?", answered in words, is neither — the
-  // panel ticked "x + 3 = 7" and could never finish (production, phone).
-  const asks = `${ask?.question ?? ''} ${written}`;
-  const forTheUnknown = /\bsolve\b|\bvalue of\b|\bfind\s+\$?\s*[a-z]\b/i.test(asks);
-  return forTheUnknown || expectedEquation(ask?.expect, plain) !== null ? plain : null;
+  const solution = solveOne(plain);
+  if (!solution) return null;
+  // No expected answer to read: only a question that plainly asks for the unknown.
+  if (!ask?.expect) return /\bsolve\b|\bvalue of\s+\$?[a-z]\b|\bfind\s+\$?[a-z]\b/i.test(`${ask?.question ?? ''} ${written}`) ? plain : null;
+  return solvesAsExpected(ask.expect, solution) || expectedEquation(ask.expect, plain) !== null ? plain : null;
 }
 
-/** A number as a planner writes one: a sign, a decimal, a fraction. */
-const NUM = String.raw`-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?`;
-/** Not followed by more of a number — a sentence's full stop is not a decimal. */
-const AFTER = String.raw`(?!\d|\.\d|\s*\/\s*\d)`;
+const UNITS = [
+  'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+  'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen',
+];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const NUMBER_WORD = [...UNITS, ...TENS.filter(Boolean), 'hundred', 'thousand', 'lakh'].join('|');
+/** "twenty-five", "two hundred and five", "minus four": one run of number words. */
+const NUMBER_PHRASE = new RegExp(
+  String.raw`\b(?:(?:minus|negative)\s+)?(?:${NUMBER_WORD})(?:(?:[\s-]+(?:and\s+)?)(?:${NUMBER_WORD}))*\b`,
+  'gi',
+);
 
-const NUMBER_WORDS: Record<string, number> = {
-  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
-  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17,
-  eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70,
-  eighty: 80, ninety: 90, hundred: 100,
-};
+/** A run of number words as its value ("twenty-five" → 25, "two hundred" → 200). */
+function wordsToNumber(phrase: string): number {
+  let total = 0;
+  let current = 0;
+  const words = phrase.toLowerCase().split(/[\s-]+/).filter((w) => w !== 'and');
+  const negative = words[0] === 'minus' || words[0] === 'negative';
+  for (const w of negative ? words.slice(1) : words) {
+    const unit = UNITS.indexOf(w);
+    const tens = TENS.indexOf(w);
+    if (unit >= 0) current += unit;
+    else if (tens >= 2) current += tens * 10;
+    else if (w === 'hundred') current = (current || 1) * 100;
+    else if (w === 'thousand') {
+      total += (current || 1) * 1000;
+      current = 0;
+    } else if (w === 'lakh') {
+      total += (current || 1) * 100000;
+      current = 0;
+    }
+  }
+  const value = total + current;
+  return negative ? -value : value;
+}
 
 /**
- * `expect` as plain maths (fourth review): LaTeX read, a mixed number made a
- * fraction ("2½", "2 1/2", "2\frac{1}{2}" → 5/2), every dash a minus, "- 2",
- * "(-2)" and "+3" made plain numbers, "2 x 4" read as a product, and number
- * words made numbers ("Four, since …").
+ * `expect` as plain maths: LaTeX read (a mixed number made a fraction first),
+ * number words made numbers, currency and thousands separators dropped, every
+ * dash a minus, "(-2)", "- 2" and "+3" made plain numbers, "2 x 4" read as a
+ * product, and a parenthesised fraction "(-3)/(2)" made "-3/2".
  */
 function plainExpect(expect: string): string {
   const mixed = (whole: string, top: string, bottom: string): string =>
@@ -58,63 +85,119 @@ function plainExpect(expect: string): string {
   let t = expect.replace(/(\d+)\s*\\[dt]?frac\s*\{(\d+)\}\s*\{(\d+)\}/g, (_, w, a, b) => mixed(w, a, b));
   t = latexToPlain(t) ?? t;
   return t
+    .replace(NUMBER_PHRASE, (phrase) => ` ${wordsToNumber(phrase)} `)
+    .replace(/₹|\bRs\.?|\bINR\b/gi, ' ')
+    .replace(/(?<=\d),(?=\d{2,3}\b)/g, '')
     .replace(/[−–—]/g, '-')
     .replace(/(\d+)\s*½/g, (_, w) => mixed(w, '1', '2'))
     .replace(/½/g, '1/2')
     .replace(/(\d+)\s+(\d+)\s*\/\s*(\d+)/g, (_, w, a, b) => mixed(w, a, b))
-    .replace(/\((\d+)\)\/\((\d+)\)/g, '$1/$2')
+    .replace(/\((-?\d+(?:\.\d+)?)\)\s*\/\s*\((-?\d+(?:\.\d+)?)\)/g, '$1/$2')
     .replace(/\(\s*(-)\s*(\d+(?:\.\d+)?)\s*\)/g, '$1$2')
     .replace(/(=|\bis)\s*([+-])\s*(\d)/gi, (_, lead, sign, d) => `${lead} ${sign === '-' ? '-' : ''}${d}`)
+    .replace(/(^|[^\d])\.(\d)/g, '$10.$2')
     .replace(/(\d)\s+x\s+(\d)/g, '$1 × $2')
-    .replace(new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join('|')})\\b`, 'gi'), (w) => String(NUMBER_WORDS[w.toLowerCase()]));
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** The value of the arithmetic at the start of `text` ("8 + 4", "12 cm" → 12), or null. */
+function leadingValue(text: string): Rational | null {
+  const arithmetic = text.match(/^\s*[-\d.(][\d.\s+\-×*/÷()]*/)?.[0];
+  if (!arithmetic) return null;
+  try {
+    return evaluate(arithmetic.replace(/×/g, '*').replace(/÷/g, '/').trim());
+  } catch {
+    return null;
+  }
+}
+
+const OPERATOR = /[+\-×*/÷^(]/;
+const CLOSING = /[+\-×*/÷^)=]/;
+/** Where a clause ends: a stop, a semicolon or colon, a comma, or the words that start a reason or a check. */
+const CLAUSE_END = /[,;:]|\.(?!\d)|\b(?:so|since|because|as|which|and|check)\b/i;
+
+/**
+ * The values `expect` names as the answer for `letter` (fifth review).
+ *
+ * The letter's own values first — "x = 4", "x = 8 + 4 = 12" (the end of the
+ * chain), "12 = x", "x is 4". Without them, every number that stands on its
+ * own ("Five.", "The son is 12 years old", "₹1,200") and the result of every
+ * sum ("… = 50 cm²"), but never a number inside a sum ("2 × 4 + 3", "(12 + 3)")
+ * or a coefficient ("2x").
+ */
+export function answerValues(expect: string, letter: string): Rational[] {
+  const plain = plainExpect(expect);
+  const own: Rational[] = [];
+  const is = new RegExp(String.raw`(?<![A-Za-z0-9])${letter}\s*(?:=|\bis\b)`, 'g');
+  for (const m of plain.matchAll(is)) {
+    const rest = plain.slice((m.index ?? 0) + m[0].length);
+    const chain = rest.split(CLAUSE_END)[0];
+    const sides = chain.split('=');
+    const value = leadingValue(sides[sides.length - 1]);
+    if (value) own.push(value);
+  }
+  const reversed = new RegExp(String.raw`(-?\d+(?:\.\d+)?(?:\/\d+)?)\s*=\s*${letter}(?![A-Za-z0-9])(?!\s*[+\-×*/÷^(])`, 'g');
+  for (const m of plain.matchAll(reversed)) {
+    const before = plain.slice(0, m.index).trimEnd();
+    if (before && (OPERATOR.test(before[before.length - 1]) || before.endsWith('='))) continue;
+    const value = leadingValue(m[1]);
+    if (value) own.push(value);
+  }
+  if (own.length > 0) return own;
+
+  const loose: Rational[] = [];
+  for (const m of plain.matchAll(/-?\d+(?:\.\d+)?(?:\/\d+)?/g)) {
+    const start = m.index ?? 0;
+    const end = start + m[0].length;
+    const before = plain.slice(0, start).trimEnd();
+    const prev = before[before.length - 1] ?? '';
+    // A digit or a point just before is part of a bigger number, read already.
+    if (/[\d.]/.test(plain[start - 1] ?? '')) continue;
+    // A minus after a number or a sum is subtraction: the number is inside it.
+    if (m[0].startsWith('-') && /[\d)]/.test(prev)) continue;
+    if (!m[0].startsWith('-') && OPERATOR.test(prev)) continue;
+    // "2x": a coefficient. "(12": inside a sum.
+    if (/[A-Za-z]/.test(plain[end] ?? '')) continue;
+    const next = plain.slice(end).trimStart()[0] ?? '';
+    if (CLOSING.test(next)) continue;
+    const value = leadingValue(m[0]);
+    if (value) loose.push(value);
+  }
+  return loose;
 }
 
 /**
- * Whether a solved step ("x = 4") is the answer `expect` describes.
- *
- * A ✓ solved step already follows from the question's own equation; what is
- * left to settle is whether this unknown is what the question asked for
- * (fourth review: "7, because 2 × 3 + 1 = 7" and "Area = 10 × 5 = 50 cm²"
- * were taken for x = 3 and l = 10). In order:
- *   1. where `expect` gives this letter a value ("x = 4", "4 = x", "x is 4"),
- *      the step must be one of them;
- *   2. the answer is the clause before "since", "because", "(" or ";" — an
- *      equation in the letter there is itself the answer
- *      (`expectedEquation`), and a value is not;
- *   3. else the value is the number after the clause's last "=", else after
- *      its first "is", else its first number ("Five.", "15 years");
- *   4. with no number at all, the working speaks for itself.
+ * Whether a solved step ("x = 4") is the answer `expect` describes: its value
+ * is among the values `expect` names (`answerValues`). With no `expect` the
+ * working speaks for itself.
  */
 export function solvesAsExpected(expect: string | undefined, solved: { name: string; value: Rational }): boolean {
   if (!expect) return true;
-  const n = solved.name;
-  const claim = `${n} = ${formatRational(solved.value)}`;
-  const same = (v: string): boolean => sameEquation(claim, `${n} = ${v.replace(/\s+/g, '')}`);
-  const plain = plainExpect(expect);
-  const values = [
-    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s*=\\s*(${NUM})${AFTER}`, 'g'))].map((m) => m[1]),
-    ...[...plain.matchAll(new RegExp(`(?<![\\w.])(${NUM})\\s*=\\s*${n}(?![A-Za-z0-9])`, 'g'))].map((m) => m[1]),
-    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s+is\\s+(${NUM})${AFTER}`, 'gi'))].map((m) => m[1]),
-  ];
-  if (values.length > 0) return values.some(same);
-  const clause = plain.split(/\bsince\b|\bbecause\b|\(|;/i)[0];
-  if (clause.includes('=') && new RegExp(`(?<![A-Za-z])${n}(?![A-Za-z])`).test(clause)) return false;
-  const eq = clause.lastIndexOf('=');
-  const is = /\bis\b/i.exec(clause);
-  const tail = eq >= 0 ? clause.slice(eq + 1) : is ? clause.slice(is.index + 2) : clause;
-  const value = tail.match(new RegExp(`${NUM}${AFTER}`));
-  return value === null || same(value[0]);
+  return answerValues(expect, solved.name).some((v) => equals(v, solved.value));
 }
 
+/** An equation made of numbers, single letters and operators, somewhere in a sentence. */
+const EQUATION_IN_TEXT = /(?:\d+(?:\.\d+)?|(?<![A-Za-z])[A-Za-z](?![A-Za-z])|[+\-×*/÷^()]|\s)+=(?:\d+(?:\.\d+)?|(?<![A-Za-z])[A-Za-z](?![A-Za-z])|[+\-×*/÷^()]|\s)+/;
+
 /**
- * The one equation `expect` names as the answer ("What remains is x + 3 = 7."),
- * or null: when it holds more than one ("2x = 8, so x = 4" — the first is a
- * step on the way), or when it is the question's own equation restated.
+ * The one equation `expect` names as the answer ("What remains is x + 3 = 7.",
+ * "Open the bracket: 3x + 12 = 21."), or null: when `expect` holds more than
+ * one ("2x = 8, so x = 4" — the first is a step on the way), when the equation
+ * has no unknown in it (a check, "2 × 4 + 3 = 11"), when it cannot be read,
+ * or when it is the question's own equation written again as it stands.
  */
 export function expectedEquation(expect: string | undefined, start: string | null): string | null {
-  if (!expect || (expect.match(/=/g) ?? []).length !== 1) return null;
-  const eq = equationIn(expect);
-  if (!eq || (start !== null && sameEquation(eq, start))) return null;
+  if (!expect) return null;
+  const plain = plainExpect(expect);
+  if ((plain.match(/=/g) ?? []).length !== 1) return null;
+  let eq = plain.match(EQUATION_IN_TEXT)?.[0].trim();
+  if (!eq) return null;
+  // A parenthesis the sentence opened around it is not part of it.
+  while (eq.startsWith('(') && (eq.match(/\(/g) ?? []).length > (eq.match(/\)/g) ?? []).length) eq = eq.slice(1).trim();
+  while (eq.endsWith(')') && (eq.match(/\)/g) ?? []).length > (eq.match(/\(/g) ?? []).length) eq = eq.slice(0, -1).trim();
+  if (!/[A-Za-z]/.test(eq) || !sameEquation(eq, eq)) return null;
+  if (start !== null && restates(start, eq)) return null;
   return eq;
 }
 

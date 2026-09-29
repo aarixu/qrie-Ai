@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { checkStep, type StepVerdict } from '@ai-tutor/maths-check';
 
 /**
@@ -31,6 +30,8 @@ export function WorkPanel({
   start,
   steps,
   onSteps,
+  draft,
+  onDraft,
   onStep,
   onClose,
 }: {
@@ -38,10 +39,13 @@ export function WorkPanel({
   /** Held by the room, so the working outlives the panel (a pause, a hand). */
   steps: WorkedStep[];
   onSteps: (steps: WorkedStep[]) => void;
+  /** The half-typed line, held by the room for the same reason. */
+  draft: string;
+  onDraft: (draft: string) => void;
   onStep: (step: WorkedStep) => void;
   onClose: () => void;
 }) {
-  const [draft, setDraft] = useState('');
+  const setDraft = (next: string | ((d: string) => string)): void => onDraft(typeof next === 'function' ? next(draft) : next);
 
   const submit = () => {
     const text = draft.trim();
