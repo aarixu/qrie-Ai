@@ -34,6 +34,7 @@ import {
 } from '../stores/outcomes';
 import { masteryFromModel } from '../lib/learnerModel';
 import { useClassLedger } from '../lib/classLedger';
+import { warmUpFor, type WarmUpQuestion } from '../lib/warmUp';
 import { profileStore } from '../stores/profile';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore, setPreference } from '../stores/preferences';
@@ -92,6 +93,13 @@ const PREPARE_MS = 5_000;
  * long a Class 6-10 student thinks before they are stuck (UNVERIFIED).
  */
 const QUIET_BEFORE_NUDGE_MS = 20_000;
+
+/**
+ * How long the class waits, after her greeting, for the warm-up lookup (it
+ * loads the syllabus map when a review is due). A placeholder (UNVERIFIED on a
+ * phone): past it the class starts without a warm-up.
+ */
+const WARM_UP_WAIT_MS = 2_500;
 
 /** Route wrapper: /lesson/:lessonId → load + validate, then hand to the classroom. */
 export function LessonRoute() {
@@ -1786,6 +1794,77 @@ export function ClassRoom({
     });
   }, [classStarted, player.beatIndex, player.state, lesson, halt, remember]);
 
+  /**
+   * THE WARM-UP (E6-E8, 2026-09-29). When a review is due, the class opens
+   * with one or two questions on it — after her greeting, before the first
+   * beat, and never on a resumed class. Looked up while the room gets ready;
+   * a lookup that has not answered WARM_UP_WAIT_MS after the greeting is
+   * dropped and the class starts. A tap is filed cold (`ledger.warmedUp`), she
+   * says whether it was right, and a skip files nothing.
+   */
+  const warmUpReady = useRef<Promise<WarmUpQuestion[]> | null>(null);
+  const warmUpTap = useRef<((chosen: number | null) => void) | null>(null);
+  const [warmUp, setWarmUp] = useState<{
+    question: WarmUpQuestion;
+    step: number;
+    of: number;
+    chosen: number | null;
+  } | null>(null);
+  useEffect(() => {
+    warmUpReady.current = warmUpFor(lesson.topicRef);
+  }, [lesson.topicRef]);
+  // Leaving mid-question lets the waiting class start go; it stops on `left`.
+  useEffect(() => () => warmUpTap.current?.(null), []);
+
+  const runWarmUp = async (): Promise<void> => {
+    const items = await Promise.race([
+      warmUpReady.current ?? Promise.resolve([]),
+      new Promise<WarmUpQuestion[]>((resolve) => setTimeout(() => resolve([]), WARM_UP_WAIT_MS)),
+    ]);
+    if (items.length === 0 || left.current || halt.halted) return;
+    const hi = tutorLanguage() === 'hi-en';
+    track('warm_up_started', { lessonId: lesson.id, items: items.length });
+    for (const [step, question] of items.entries()) {
+      setWarmUp({ question, step, of: items.length, chosen: null });
+      const tapped = new Promise<number | null>((resolve) => {
+        warmUpTap.current = resolve;
+      });
+      // The clock starts when she has finished asking, or at the tap if that
+      // comes first — the same rule the class's own questions keep.
+      let clockFrom = Date.now();
+      let answered = false;
+      const lead =
+        step === 0
+          ? hi
+            ? `Class se pehle ek chhota sa warm-up — ${question.title}. Yaad hai?`
+            : `Before we start, a quick warm-up on ${question.title}. Do you remember this one?`
+          : hi
+            ? 'Ek aur.'
+            : 'One more.';
+      void sayLine(lead).then(() => {
+        if (!answered) clockFrom = Date.now();
+      });
+      const chosen = await tapped;
+      answered = true;
+      warmUpTap.current = null;
+      if (chosen === null || left.current || halt.halted) break;
+      ledger.warmedUp(question, chosen, Date.now() - clockFrom);
+      setWarmUp({ question, step, of: items.length, chosen });
+      const answer = question.options[question.correctIndex];
+      const said = await sayLine(
+        chosen === question.correctIndex
+          ? hi
+            ? 'Bilkul sahi — tumhe yaad tha!'
+            : "That's right — you remembered it!"
+          : hi
+            ? `Sahi jawab hai ${answer}. Koi baat nahi — ise jaldi phir dekhenge.`
+            : `The answer is ${answer}. No worries — we'll come back to it soon.`,
+      );
+      if (said.halted || left.current) break;
+    }
+    setWarmUp(null);
+  };
+
   const startClass = async () => {
     if (halt.halted) return;
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
@@ -1801,6 +1880,10 @@ export function ClassRoom({
       // is repeated at every class.
       if (greeting.saidPromise) clearCommitment();
       if (greeting.saidStruggle) markStruggleMentioned(greeting.saidStruggle.topic, greeting.saidStruggle.lessonId);
+      if (!canResume) {
+        await runWarmUp();
+        if (left.current || halt.halted) return;
+      }
     }
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
@@ -2086,6 +2169,49 @@ export function ClassRoom({
                   <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={() => setWorking(false)} />
                 </span>
               )}
+            </div>
+          )}
+
+          {/* The warm-up: a due review, asked before the first beat. */}
+          {warmUp && !inDoubt && (
+            <div className="absolute inset-0 z-30 grid place-items-center bg-stage/40 backdrop-blur-[2px] px-4">
+              <div className="w-full max-w-md rounded-2xl bg-stage-surface p-4 text-stage-ink shadow-lg ring-1 ring-white/15">
+                <p className="font-label-sm text-[11.5px] font-bold uppercase tracking-wide text-stage-blue">
+                  Warm-up · {warmUp.step + 1} of {warmUp.of}
+                </p>
+                <p className="mt-0.5 font-label-sm text-[12px] text-stage-ink-dim">{warmUp.question.title}</p>
+                <p className="mt-2 font-body-md text-[15px] leading-snug">{warmUp.question.question}</p>
+                <div className="mt-3 grid gap-2">
+                  {warmUp.question.options.map((option, i) => {
+                    const shown = warmUp.chosen !== null;
+                    const tone = !shown
+                      ? 'hover:ring-stage-blue'
+                      : i === warmUp.question.correctIndex
+                        ? 'ring-2 ring-stage-green'
+                        : i === warmUp.chosen
+                          ? 'ring-2 ring-stage-red'
+                          : 'opacity-60';
+                    return (
+                      <button
+                        key={i}
+                        disabled={shown}
+                        onClick={() => warmUpTap.current?.(i)}
+                        className={`min-h-[44px] rounded-xl bg-stage/60 px-3.5 py-2 text-left font-body-md text-[14px] leading-snug ring-1 ring-white/15 transition-transform active:scale-95 ${tone}`}
+                      >
+                        <span className="font-bold text-stage-blue">{String.fromCharCode(65 + i)}.</span> {option}
+                      </button>
+                    );
+                  })}
+                </div>
+                {warmUp.chosen === null && (
+                  <button
+                    onClick={() => warmUpTap.current?.(null)}
+                    className="mt-3 min-h-[44px] w-full rounded-full px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink-dim hover:text-stage-ink"
+                  >
+                    Skip warm-up
+                  </button>
+                )}
+              </div>
             </div>
           )}
 

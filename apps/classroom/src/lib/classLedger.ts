@@ -9,6 +9,7 @@ import {
 } from '@ai-tutor/ledger';
 import { answeredOutcomesAtBeat, outcomesAtBeat, outcomesOf } from '../stores/outcomes';
 import { closeSession, logAnswer, logEvent, logReflection, openSession } from '../stores/ledger';
+import type { WarmUpQuestion } from './warmUp';
 
 /**
  * WHAT THE CLASSROOM TELLS THE LEDGER.
@@ -124,6 +125,13 @@ export interface ClassLedger {
   helped(beatId: string, rung: AssistanceRung, requested: boolean, strategy?: string): void;
   /** A hand went up. */
   confused(beatId: string): void;
+  /**
+   * A warm-up question at the start of the class was answered. A review is
+   * a cold retrieval of ANOTHER outcome: rung 0, first attempt, filed under
+   * the question's own outcome and topic. A skipped warm-up files nothing —
+   * wanting to get to the class is not forgetting.
+   */
+  warmedUp(question: WarmUpQuestion, chosenIndex: number, ms: number): void;
 }
 
 interface AskState {
@@ -606,6 +614,26 @@ export function useClassLedger(lesson: Lesson, playing: boolean, ended: boolean)
           outcomeIds: outcomesAtBeat(lesson, beatId),
           topicRef: lesson.topicRef,
           payload: { beatId, lessonId: lesson.id },
+        });
+      },
+
+      warmedUp(question, chosenIndex, ms) {
+        ensureOpen();
+        const correct = chosenIndex === question.correctIndex;
+        const named = correct ? undefined : question.misconceptions[chosenIndex];
+        logAnswer({
+          surface: 'tap',
+          outcomeIds: [question.nodeId],
+          topicRef: question.topicRef,
+          probeId: question.id,
+          chosenIndex,
+          correct,
+          ms: Math.max(0, ms),
+          attempt: 1,
+          assistanceRung: 0,
+          hintsShown: 0,
+          verdict: correct ? 'right' : 'wrong',
+          misconceptionId: named && named.trim() !== '' ? named : undefined,
         });
       },
     }),

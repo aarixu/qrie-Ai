@@ -59,10 +59,21 @@ vi.mock('../src/lib/ear', async (real) => ({
   },
 }));
 
+/**
+ * THE WARM-UP'S QUESTIONS, and nothing else about it. Empty unless a test
+ * says otherwise, so every other class in this file starts as it always has.
+ */
+const warm = vi.hoisted(() => ({ items: [] as unknown[] }));
+vi.mock('../src/lib/warmUp', async (real) => ({
+  ...(await real<typeof import('../src/lib/warmUp')>()),
+  warmUpFor: async () => warm.items,
+}));
+
 import { ClassRoom } from '../src/screens/ClassRoom';
 import { settingsStore } from '../src/stores/settings';
 import { flagStore, recentFlags } from '../src/stores/flags';
 import { progressStore } from '../src/stores/progress';
+import { ledgerOutbox, resetLedgerOutbox } from '../src/stores/ledger';
 
 /**
  * THE EXIT GATE FOR THIS FIX, IN THE REAL ROOM.
@@ -207,6 +218,8 @@ beforeEach(() => {
   ear.polls = [];
   ear.listens = 0;
   ear.hold = null;
+  warm.items = [];
+  resetLedgerOutbox();
   vi.stubGlobal('fetch', async (url: string) => {
     if (String(url).includes('/api/llm')) llmCalls += 1;
     return {
@@ -625,5 +638,72 @@ describe('the held question, in the real room', () => {
     for (const resolve of held.splice(0)) resolve();
     await tick(10);
     expect(spoken).not.toContain(lesson.beats[0].narration);
+  });
+});
+
+/**
+ * THE CLASS OPENS WITH A WARM-UP WHEN A REVIEW IS DUE (E6-E8).
+ *
+ * One authored probe per due outcome, asked after her greeting and before the
+ * first beat; the tap is filed cold under the probe's own outcome, she says
+ * whether it was right, and the class begins.
+ */
+describe('the class-start warm-up', () => {
+  const question = {
+    id: 'probe-7',
+    nodeId: 'maths8-lin-solve',
+    title: 'Solving linear equations',
+    topicRef: 'class8-maths/linear/solve',
+    question: 'If 2x = 8, what is x?',
+    options: ['2', '4', '6', '16'],
+    correctIndex: 1,
+    misconceptions: ['', '', '', ''],
+  };
+  const tapText = async (host: HTMLElement, text: string): Promise<void> => {
+    const chip = [...host.querySelectorAll('button')].find((b) => b.textContent?.trim().endsWith(text));
+    if (!chip) throw new Error(`no button reads "${text}"`);
+    await act(async () => {
+      chip.click();
+    });
+    await tick(10);
+  };
+  const answered = () => ledgerOutbox.get().pending.filter((e) => e.kind === 'answered');
+
+  it('asks the due review before the class, files the tap cold, and then teaches', async () => {
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+
+    expect(host.textContent).toContain('If 2x = 8, what is x?');
+    // The class has not begun under it: the first beat's chips are not up.
+    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(false);
+
+    await tapText(host, '4');
+    expect(answered()).toHaveLength(1);
+    expect(answered()[0]).toMatchObject({ outcomeIds: ['maths8-lin-solve'], topicRef: 'class8-maths/linear/solve' });
+    expect(answered()[0].payload).toMatchObject({ probeId: 'probe-7', chosenIndex: 1, correct: true, assistanceRung: 0 });
+    expect(spoken.some((l) => /remembered/i.test(l))).toBe(true);
+
+    await tick(10);
+    expect(host.textContent).not.toContain('If 2x = 8, what is x?');
+    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(true);
+  });
+
+  it('says the right answer after a wrong one', async () => {
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await tapText(host, '16');
+    expect(answered()[0].payload).toMatchObject({ chosenIndex: 3, correct: false, assistanceRung: 0 });
+    expect(spoken.some((l) => l.includes('The answer is 4'))).toBe(true);
+  });
+
+  it('files nothing when it is skipped, and the class begins', async () => {
+    warm.items = [question];
+    const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    await tapText(host, 'Skip warm-up');
+    expect(answered()).toHaveLength(0);
+    expect([...host.querySelectorAll('button')].some((b) => b.textContent?.includes('Four'))).toBe(true);
   });
 });

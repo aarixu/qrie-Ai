@@ -1,4 +1,4 @@
-import type { GraphIndex, ModelParams } from '@ai-tutor/knowledge-graph';
+import type { GraphIndex, ModelParams, ProbeBank } from '@ai-tutor/knowledge-graph';
 import { loadDiagnosticDataFor } from './diagnosticData';
 import { modelStore } from '../stores/model';
 import { profileStore } from '../stores/profile';
@@ -25,6 +25,14 @@ export function currentIndex(): GraphIndex | null {
   if (klass === null) return null;
   const data = loadDiagnosticDataFor(klass, profile.subjects);
   return data ? (data.index as GraphIndex) : null;
+}
+
+/** The authored questions over the same map `currentIndex` returns, or null with it. */
+export function currentBank(): ProbeBank | null {
+  const profile = profileStore.get();
+  const klass = klassOf(settingsStore.get(), profile);
+  if (klass === null) return null;
+  return loadDiagnosticDataFor(klass, profile.subjects)?.bank ?? null;
 }
 
 /**

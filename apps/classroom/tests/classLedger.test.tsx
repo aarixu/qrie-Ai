@@ -697,3 +697,41 @@ describe('a second lesson taken in the same mount', () => {
     room.unmount();
   });
 });
+
+describe('a warm-up answer (E6-E8)', () => {
+  const question = {
+    id: 'probe-7',
+    nodeId: 'maths8-lin-solve',
+    title: 'Solve a linear equation',
+    topicRef: 'class8-maths/linear/solve',
+    question: 'If 2x = 8, x is',
+    options: ['2', '4', '6', '16'],
+    correctIndex: 1,
+    misconceptions: ['halved twice', '', 'added', 'multiplied'],
+  };
+
+  it('is a cold retrieval of the outcome it probes, filed under its own topic', () => {
+    const room = mount();
+    room.ledger().warmedUp(question, 3, 6000);
+    const row = events().find((e) => e.kind === 'answered')!;
+    // Before the class plays, and about another topic: the outcome, topic and
+    // probe are the question's own, never this lesson's.
+    expect(row).toMatchObject({
+      outcomeIds: ['maths8-lin-solve'],
+      topicRef: 'class8-maths/linear/solve',
+      surface: 'tap',
+    });
+    expect(row.payload).toMatchObject({
+      probeId: 'probe-7',
+      chosenIndex: 3,
+      correct: false,
+      ms: 6000,
+      attempt: 1,
+      assistanceRung: 0,
+      hintsShown: 0,
+      verdict: 'wrong',
+      misconceptionId: 'multiplied',
+    });
+    room.unmount();
+  });
+});
