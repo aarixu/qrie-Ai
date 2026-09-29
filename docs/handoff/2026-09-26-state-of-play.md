@@ -68,6 +68,12 @@ Every task was followed by a background review; each finding was fixed with a te
 
 **Verified on production:** POST speech 200 (first chunk 2.7–3.2 s); "I'm not sure" → Meera guides on the board without giving the answer; the hint chip writes in the work area and captions her line; the class resumes on the same question.
 
+**Built after the review rounds (2026-09-29 afternoon, deployed):**
+- **T6, typeset maths (Aarav: "why is it in English? Use LaTeX"):** an ask now has `written`, the board form with its maths in LaTeX (`$…$`), while `question` stays the spoken form. The stage typesets with KaTeX (MIT): handwritten lines with `$…$`, and every formula element (so old classes' equations are typeset too). Verified in the canvas lab. The 4 published linear-equations classes keep their worded questions until they are prepared again and republished (SQL, Aarav's OK).
+- **T4a F1-F3:** spaced review in the pure fold. Boxes 0-5 on the 1/2/5/12/30/60-day ladder; a box climbs once a session and only when due. Exposure is kept apart from retrieval. MODEL_VERSION 3.
+- **T4a E6-E8:** `nextActivity` checks, in order: due reviews, then a shaky prerequisite, then the next topic. The Lesson Complete screen shows "Quick review first" and holds the autoplay while a review is due. The warm-up items (C3 templates) are not built.
+- Seven rounds of background review, each finding fixed with a failing test first; maths-check was reworked four times on real Class 6-10 board shapes.
+
 **Found on production, not fixed:** a student in the Class 6–8 band who opens a Class 10 topic by URL prepares it cold, because the catalogue query is filtered by band (`klass=gte.6&klass=lte.8`) even though that topic is published. `/api/prep/lock` answers 503 "we cannot answer this second" (the class still prepares). PostHog capture answers 401 (key).
 
 **Left for Aarav:** #40 — the keep route refuses a class whose spine trips the bare distress patterns, even when prep's reader allowed the line. Kept strict on purpose; the only cost is re-preparing. #3 — `kept_by` on `prepared_class` needs an LMS-lane migration. Speech units are still priced at 0.29/char, which was Deepgram's price; on Vertex a line costs about 0.43 paise/char.
