@@ -27,6 +27,15 @@ export { foldSession } from './fold.ts';
 
 export { migrateModel } from './migrate.ts';
 
+export {
+  EXPOSURE_RUNG,
+  RETRIEVAL_GAP_MS,
+  REVIEW_LADDER_DAYS,
+  TOP_BOX,
+  isRetrieval,
+  reviewAt,
+} from './memory.ts';
+
 export { chooseAsk, type AskChoice } from './ask.ts';
 
 export { gainPerLearningMinute, unassistedGain } from './metric.ts';

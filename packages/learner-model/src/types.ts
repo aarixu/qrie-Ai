@@ -116,10 +116,18 @@ export interface ConceptState {
   coldWins: Record<string, { first: string; last: string }>;
 
   /**
-   * WRITTEN FROM DAY ONE AND NOT DRIVEN UNTIL PHASE 6. Present so that turning
-   * spaced retrieval on is wiring rather than a migration across a table
-   * holding every student's beliefs.
+   * SPACED REVIEW (F1-F3, memory.ts). `box` is 0-5 on the 1/2/5/12/30/60-day
+   * ladder, null until the outcome is first taught or answered; `nextReviewAt`
+   * is when it is due. `lastExposedAt` is the last time they were SHOWN it
+   * (a taught beat, an answer at rung >= 5) and `lastRetrievedAt` the last
+   * cold answer at least a day after that; `retrievalCount` and
+   * `retrievalAccuracy` count those retrievals only.
+   *
+   * `memoryStrength` is still written as 0 and driven by nothing.
    */
+  box: number | null;
+  lastExposedAt: string | null;
+  lastRetrievedAt: string | null;
   memoryStrength: number;
   nextReviewAt: string | null;
   retrievalCount: number;
@@ -138,8 +146,13 @@ export interface ConceptState {
  * least a nudge (B4), and `masteredAt` / `coldWins` added (B8). A v1 model
  * credited every hinted answer at full weight; a migrated one keeps that
  * credit until a rebuild replaces it.
+ *
+ * 3 (2026-09-29): spaced review (F1-F3) — `box`, `lastExposedAt`,
+ * `lastRetrievedAt`, and `nextReviewAt` / `retrievalCount` /
+ * `retrievalAccuracy` now driven. A migrated v2 model starts every outcome
+ * with no box, so its reviews begin at the next time each one is met.
  */
-export const MODEL_VERSION = 2;
+export const MODEL_VERSION = 3;
 
 /** B8's line: unassisted belief at or above this, on spaced distinct items. */
 export const MASTERY_LINE = 0.8;
@@ -215,6 +228,9 @@ export const emptyConceptState = (outcomeId: string): ConceptState => ({
   lastUnassistedSuccessAt: null,
   masteredAt: null,
   coldWins: {},
+  box: null,
+  lastExposedAt: null,
+  lastRetrievedAt: null,
   memoryStrength: 0,
   nextReviewAt: null,
   retrievalCount: 0,

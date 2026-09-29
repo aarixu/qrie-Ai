@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { emptyModel } from '@ai-tutor/learner-model';
+import { MODEL_VERSION, emptyModel } from '@ai-tutor/learner-model';
 import type { LearningSession, LedgerEvent } from '@ai-tutor/ledger';
 
 /**
@@ -136,7 +136,7 @@ describe('a stored model from an older version', () => {
     } as never);
     await recordLocally(session, [answer]);
     const model = loadModel();
-    expect(model.version).toBe(2);
+    expect(model.version).toBe(MODEL_VERSION);
     expect(model.states.n2?.unassistedMastery).toBe(0.8);
     expect(model.states.n2?.observations).toBe(6);
     expect(model.states.n1.unassistedObservations).toBe(1);

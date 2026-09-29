@@ -174,6 +174,15 @@ describe('replay', () => {
    * added `masteredAt` and `coldWins`. Nothing else moved: every unassisted
    * number, count and date is byte for byte what it was.
    */
+  /**
+   * And a third time on 2026-09-29, deliberately (MODEL_VERSION 3, F1-F3).
+   * `a` was taught on day 1 and answered right cold in that same session:
+   * listening, not remembering, so that cold win no longer counts toward
+   * `masteredAt` (its coldWins are now empty — masteredAt was null anyway).
+   * Its day-2 cold miss is a retrieval that failed: box 0, due a day later.
+   * `b` was never taught: its first answer opens box 0, and each cold right
+   * answer after that climbs (box 2, due five days on). No belief moved.
+   */
   it('reproduces the known state byte for byte', () => {
     // The invariant the old fixture violated, asserted here so a future fold
     // cannot quietly reintroduce it: a node is observed once per event that
@@ -199,14 +208,15 @@ describe('replay', () => {
           taughtCount: 1,
           lastPracticedAt: '2026-09-15T10:00:00.000Z',
           lastUnassistedSuccessAt: '2026-09-14T10:00:00.000Z',
-          // One cold win, on B2. The seq-3 answer names `a` and `b` both.
+          // No cold win: the one right answer came in the session it was taught.
           masteredAt: null,
-          coldWins: {
-            'beat:/B2': { first: '2026-09-14T10:00:00.000Z', last: '2026-09-14T10:00:00.000Z' },
-          },
+          coldWins: {},
+          box: 0,
+          lastExposedAt: '2026-09-14T10:00:00.000Z',
+          lastRetrievedAt: '2026-09-15T10:00:00.000Z',
           memoryStrength: 0,
-          nextReviewAt: null,
-          retrievalCount: 0,
+          nextReviewAt: '2026-09-16T10:00:00.000Z',
+          retrievalCount: 1,
           retrievalAccuracy: 0,
         },
         b: {
@@ -230,15 +240,18 @@ describe('replay', () => {
             'beat:/B2': { first: '2026-09-14T10:00:00.000Z', last: '2026-09-14T10:00:00.000Z' },
             'beat:/B3': { first: '2026-09-15T10:00:00.000Z', last: '2026-09-15T10:00:00.000Z' },
           },
+          box: 2,
+          lastExposedAt: null,
+          lastRetrievedAt: '2026-09-15T10:00:00.000Z',
           memoryStrength: 0,
-          nextReviewAt: null,
-          retrievalCount: 0,
-          retrievalAccuracy: 0,
+          nextReviewAt: '2026-09-20T10:00:00.000Z',
+          retrievalCount: 2,
+          retrievalAccuracy: 1,
         },
       },
       foldedThrough: { at: '2026-09-15T10:00:00.000Z', sessionId: 's2', seq: 2 },
       helpInFlight: { sessionId: 's2', byAsk: {} },
-      version: 2,
+      version: 3,
     });
   });
 });

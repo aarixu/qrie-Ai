@@ -1,3 +1,4 @@
+import { exposedThisSession, onAnswer, onExposure } from './memory.ts';
 import {
   GraphIndex,
   PRIOR,
@@ -97,7 +98,7 @@ export function foldSession(
         next = foldAnswer(next, session, event, help, index, params);
         break;
       case 'taught':
-        next = foldTaught(next, event);
+        next = foldTaught(next, event, session);
         break;
       case 'confused':
         next = foldConfused(next, event);
@@ -363,7 +364,11 @@ function foldAnswer(
       updated.unassistedObservations = prev.unassistedObservations + 1;
       if (payload.correct) {
         updated.lastUnassistedSuccessAt = event.at;
-        updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+        // Right after being shown it, in this same session, is listening,
+        // not remembering: no cold win toward `masteredAt` (F1-F3).
+        if (!exposedThisSession(prev, session.startedAt)) {
+          updated.coldWins = recordColdWin(prev.coldWins, itemKey(event, payload), session.startedAt);
+        }
       }
       // B8, on the session clock: the stamp and the spacing read the same time.
       updated.masteredAt = stampMastery(updated, session.startedAt);
@@ -372,13 +377,16 @@ function foldAnswer(
       updated.assistedPerformance = moved[nodeId] ?? prev.assistedPerformance;
     }
 
+    // The review ladder (F1-F3), on the session clock like `masteredAt`.
+    Object.assign(updated, onAnswer(prev, session.startedAt, rung, payload.correct));
+
     states[nodeId] = updated;
   }
 
   return { ...model, states };
 }
 
-function foldTaught(model: LearnerModel, event: LedgerEvent): LearnerModel {
+function foldTaught(model: LearnerModel, event: LedgerEvent, session: FoldSession): LearnerModel {
   const states = { ...model.states };
   for (const id of event.outcomeIds) {
     const prev = states[id] ?? emptyConceptState(id);
@@ -419,6 +427,9 @@ function foldTaught(model: LearnerModel, event: LedgerEvent): LearnerModel {
       taughtCount: times,
       observations: prev.observations + 1,
       lastPracticedAt: event.at,
+      // Being taught it is an exposure (F1-F3): it opens the review ladder,
+      // and a right answer inside this session is not yet remembering.
+      ...onExposure(prev, session.startedAt),
     };
   }
   return { ...model, states };
