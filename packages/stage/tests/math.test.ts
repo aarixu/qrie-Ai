@@ -73,6 +73,46 @@ describe('which formulas are typeset (seventh review)', () => {
     expect(typesetsAsMaths('ΔPQR ≅ ΔXYZ')).toBe(true);
     expect(typesetsAsMaths('HCF × LCM = a × b')).toBe(false);
   });
+  it('leaves the board abbreviations plain, and still typesets capital formulas (ninth review)', async () => {
+    const { typesetsAsMaths } = await import('../src/math');
+    expect(typesetsAsMaths('GCD(12, 18) = 6')).toBe(false);
+    expect(typesetsAsMaths('RBC : WBC = 600 : 1')).toBe(false);
+    expect(typesetsAsMaths('TDS = 10')).toBe(false);
+    expect(typesetsAsMaths('By BPT, AD/DB = AE/EC')).toBe(false);
+    for (const abbr of ['GCD', 'BPT', 'LSA', 'DNA', 'ATP', 'LPG', 'CNG', 'RBC', 'WBC', 'PVC', 'CFC', 'NCERT', 'TDS']) {
+      expect(typesetsAsMaths(`${abbr} = 10`), abbr).toBe(false);
+    }
+    expect(typesetsAsMaths('SI = PRT/100')).toBe(true);
+    expect(typesetsAsMaths('PE = mgh')).toBe(true);
+    expect(typesetsAsMaths('v = u + at')).toBe(true);
+    expect(typesetsAsMaths('E = mc^2')).toBe(true);
+    expect(typesetsAsMaths('HCF × LCM = a × b')).toBe(false);
+    expect(typesetsAsMaths('MRP = 500')).toBe(false);
+    expect(typesetsAsMaths('v = 60 kmph')).toBe(false);
+    expect(typesetsAsMaths('Mass of Reactants = Mass of Products')).toBe(false);
+    expect(typesetsAsMaths('CO2 + H2O')).toBe(false);
+  });
+  it('typesets angle and triangle names, vowels and all (ninth review)', async () => {
+    const { typesetsAsMaths, formulaTex, texToHtml } = await import('../src/math');
+    for (const line of ['∠ABC = 90°', '∠AOB = 90°', 'ΔABC ~ ΔDEF', 'ΔABC ≅ ΔDEF', '△ABC ≅ △DEF', 'ΔABC ∼ ΔDEF']) {
+      expect(typesetsAsMaths(line), line).toBe(true);
+      expect(texToHtml(formulaTex(line)), line).not.toBeNull();
+    }
+    // A point name written bare beside ones the formula has already named.
+    expect(typesetsAsMaths('ΔABC ≅ ΔDBC ⇒ ar (ABC) = ar (DBC)')).toBe(true);
+    // An abbreviation stays one even when its letters are point names.
+    expect(typesetsAsMaths('ΔSAT ≅ ΔTAS (SAS)')).toBe(false);
+    // Four capitals after the sign are not a point name.
+    expect(typesetsAsMaths('∠ABCD = 90°')).toBe(false);
+  });
+  it('sets "is similar to" as ∼, never as the space LaTeX makes of a bare ~ (ninth review)', async () => {
+    const { typesetsAsMaths, formulaTex, texToHtml } = await import('../src/math');
+    expect(formulaTex('ΔABC ~ ΔDEF')).toBe(String.raw`ΔABC \sim ΔDEF`);
+    expect(texToHtml(formulaTex('ΔABC ~ ΔDEF'))).toContain('∼');
+    // Any other ~ still keeps a formula plain.
+    expect(typesetsAsMaths('c ~ 3 × 10^8 m/s')).toBe(false);
+    expect(typesetsAsMaths('x ~ ΔDEF')).toBe(false);
+  });
   it('raises a whole bracketed power', async () => {
     const { formulaTex } = await import('../src/math');
     expect(formulaTex('a^m × a^n = a^(m+n)')).toBe('a^m × a^n = a^{m+n}');

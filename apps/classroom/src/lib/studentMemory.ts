@@ -102,19 +102,24 @@ const empty = (): StudentMemory => ({ version: 1, interests: [], struggles: [], 
 const clip = (s: string, max = MAX_TOPIC_CHARS): string =>
   s.replace(/["\\`]/g, "'").replace(/\s+/g, ' ').trim().slice(0, max);
 
+/** Words a title shares with any other; they say nothing about which class it is. */
+const TITLE_STOP_WORDS: ReadonlySet<string> = new Set(['the', 'a', 'an', 'and', 'of', 'in', 'on', 'for', 'to', 'with', 'its']);
+
 /**
- * Whether two class titles name the same class: half or more of their words in
- * common. A topic prepared again can be retitled ("Equations with Variables on
- * Both Sides" / "Solving Equations with Variables on Both Sides"); two lessons
- * on one topic ("The Heart" / "Blood & Its Components") are not the same.
+ * Whether two class titles name the same class. Each title's words are taken
+ * lower-cased, without the stop words above; the titles match when they share
+ * at least one word and the shared words are half or more of the SHORTER
+ * title's words. A topic prepared again can be retitled ("Linear Equations" /
+ * "Solving Linear Equations in One Variable"); two lessons on one topic ("The
+ * Heart" / "Blood & Its Components") are not the same.
  */
 export function similarTitle(a: string, b: string): boolean {
-  const words = (t: string) => new Set(t.toLowerCase().match(/[a-z0-9]+/g) ?? []);
+  const words = (t: string) =>
+    new Set((t.toLowerCase().match(/[a-z0-9]+/g) ?? []).filter((w) => !TITLE_STOP_WORDS.has(w)));
   const x = words(a);
   const y = words(b);
   const common = [...x].filter((w) => y.has(w)).length;
-  const all = new Set([...x, ...y]).size;
-  return all > 0 && common / all >= 0.5;
+  return common > 0 && common / Math.min(x.size, y.size) >= 0.5;
 }
 
 /** Whether a remembered (clipped) class title is this class's title. */
