@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { handOverDevice } from '../stores/localStore';
+// Registers its own device reset; loaded here so it is registered before the
+// handover below can run (lib/preparedCache.ts).
+import './preparedCache';
 import { track } from './telemetry';
 import { connectSync } from './sync';
 import {

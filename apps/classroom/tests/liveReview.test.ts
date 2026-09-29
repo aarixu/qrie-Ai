@@ -21,7 +21,7 @@ const prepared = vi.hoisted(() => ({
     report: { topic: 'T', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [] },
   })),
 }));
-const posted = vi.hoisted(() => ({ calls: [] as { url: string; body: unknown }[] }));
+const posted = vi.hoisted(() => ({ calls: [] as { url: string; body: unknown }[], refuse: false }));
 
 vi.mock('@ai-tutor/class-prep', async (importOriginal) => {
   const real = (await importOriginal()) as Record<string, unknown>;
@@ -36,7 +36,7 @@ vi.mock('../src/lib/browserImage', () => ({
 vi.mock('../src/lib/relay', () => ({
   relayFetch: async (url: string, init?: { body?: string }) => {
     posted.calls.push({ url, body: init?.body ? JSON.parse(init.body) : undefined });
-    return new Response('{}');
+    return new Response('{}', { status: posted.refuse ? 422 : 200 });
   },
 }));
 
@@ -96,6 +96,18 @@ describe('keep() keeps only a reviewed class', () => {
   });
 });
 
+describe('a live lesson is filed under its topic', () => {
+  it('carries the topicRef it was prepared for', async () => {
+    const { stampTopic } = await import('../src/screens/LiveClass');
+    const lesson = { id: 'l', title: 'T', beats: [], elements: [] } as unknown as Lesson;
+    stampTopic(lesson, 'class8/x/y');
+    expect(lesson.topicRef).toBe('class8/x/y');
+    const own = { ...lesson, topicRef: 'class8/x/z' } as Lesson;
+    stampTopic(own, 'class8/x/y');
+    expect(own.topicRef).toBe('class8/x/z');
+  });
+});
+
 describe('keep() also keeps the class on this device', () => {
   const lesson: Lesson = {
     formatVersion: 1,
@@ -112,10 +124,29 @@ describe('keep() also keeps the class on this device', () => {
   };
   const ask = { topic: 'The Kidney', klass: 10, minutes: 3, subject: 'Science', topicRef: 'class10-science/life-processes/excretion' };
 
+  it('keeps a class on the device only once the catalogue has taken it', async () => {
+    const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
+    const device = createPreparedCache(memoryBackend());
+    posted.refuse = true;
+    await keep({ lesson, assets: {}, report: passed }, ask, [], device);
+    posted.refuse = false;
+    await new Promise((r) => setTimeout(r, 0));
+    expect(await device.find(ask.topicRef)).toBeNull();
+  });
+
+  it('keeps a Hinglish class on the device, for the student it was taught to', async () => {
+    const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
+    const device = createPreparedCache(memoryBackend());
+    await keep({ lesson: { ...lesson, language: 'hi-en' }, assets: {}, report: passed }, ask, [], device);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(await device.find(ask.topicRef, 'hi-en')).toMatchObject({ lesson: { language: 'hi-en' } });
+  });
+
   it('keeps on the device exactly what the catalogue would keep', async () => {
     const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
     const device = createPreparedCache(memoryBackend());
     await keep({ lesson, assets: { t: '<svg/>' }, report: passed }, ask, [], device);
+    await new Promise((r) => setTimeout(r, 0));
     expect(await device.find(ask.topicRef)).toMatchObject({ lesson: { title: 'The Kidney' } });
 
     // One the catalogue refuses (no review) is not kept here either.

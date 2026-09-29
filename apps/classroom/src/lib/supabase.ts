@@ -1,5 +1,7 @@
 import { createClient, type SupabaseClient, type User } from '@supabase/supabase-js';
 import { wipeDevice } from '../stores/localStore';
+// Registers its own device reset before any wipe (lib/preparedCache.ts).
+import './preparedCache';
 import { forgetTicket } from './relay';
 import type { CloudBackend } from './sync';
 

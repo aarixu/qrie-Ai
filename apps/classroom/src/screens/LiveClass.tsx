@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { interestLine } from '../lib/studentMemory';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { saveable, type PrepProgress } from '@ai-tutor/class-prep';
+import { saveable, whyNotSaveable, type PrepProgress } from '@ai-tutor/class-prep';
 import type { Lesson } from '@ai-tutor/lesson-format';
 import {
   mintPrepId,
@@ -14,6 +14,7 @@ import {
 } from '../lib/liveClass';
 import { fetchCatalog, findKeptTopic, findTopic, forgetCatalog, type CatalogEntry } from '../lib/content';
 import { preparedCache, type PreparedCache } from '../lib/preparedCache';
+import { tutorLanguage } from '../lib/workspace';
 import { reportPrepFailure } from '../lib/prepFailure';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { settingsStore } from '../stores/settings';
@@ -174,7 +175,7 @@ export async function keep(
   names: readonly string[],
   device: PreparedCache = preparedCache,
 ): Promise<void> {
-  const saved = saveable(made, {
+  const meta = {
     topicRef: ask.topicRef,
     klass: ask.klass,
     subject: ask.subject,
@@ -190,12 +191,27 @@ export async function keep(
     // And checked by the keep gate (class-prep's gate.ts): a report with no
     // gate on it is refused, not read as a pass.
     requireGate: true,
-  });
-  if (!saved) return;
-  // And on this device, until an operator publishes it: the catalogue serves
-  // only published classes, so the student who had it made paid for it again
-  // on every reload (lib/preparedCache.ts).
-  if (ask.topicRef) await device.remember(ask.topicRef, made.lesson, made.assets);
+  };
+  const saved = saveable(made, meta);
+  /**
+   * AND ON THIS DEVICE, for the student who had it made, until an operator
+   * publishes it (lib/preparedCache.ts): the catalogue serves only published
+   * classes, so they paid for it again on every reload. Never awaited — a
+   * storage hiccup must not hold the lock this function's caller releases.
+   *
+   * Two cases only. A class the catalogue ACCEPTED (its POST answered ok, so
+   * the relay's own screens passed it). And a class kept back from the
+   * catalogue for one reason alone — it is taught in this student's language —
+   * which is theirs to replay and nobody else's.
+   */
+  const onDevice = (): void => {
+    if (ask.topicRef) void device.remember(ask.topicRef, made.lesson, made.assets);
+  };
+  if (!saved) {
+    const why = whyNotSaveable(made, meta);
+    if (why.length > 0 && why.every((reason) => reason.startsWith('taught in "'))) onDevice();
+    return;
+  }
   try {
     const res = await relayFetch('/api/class', {
       method: 'POST',
@@ -205,10 +221,22 @@ export async function keep(
     // The catalogue was read before this class existed, so the copy in memory
     // still says the topic is cold. Without this the very next visit prepares
     // it all over again and the writer refuses it as a duplicate.
-    if (res.ok) forgetCatalog();
+    if (res.ok) {
+      forgetCatalog();
+      onDevice();
+    }
   } catch {
     // Nothing to do and nothing to say: the class is playing.
   }
+}
+
+/**
+ * A live lesson filed under the topic it was prepared for. The planner writes
+ * no topicRef, so the room's greeting, its warm-up and every ledger row of a
+ * live class had none (fourth review). A lesson that carries one keeps it.
+ */
+export function stampTopic(lesson: Lesson, topicRef: string | undefined): void {
+  if (topicRef && !lesson.topicRef) lesson.topicRef = topicRef;
 }
 
 export function LiveClassRoute() {
@@ -506,7 +534,7 @@ export function LiveClassRoute() {
         }
         // Prepared here before and not yet published: played from the device,
         // for nothing, with no wait (lib/preparedCache.ts).
-        const onDevice = await preparedCache.find(ask.topicRef);
+        const onDevice = await preparedCache.find(ask.topicRef, tutorLanguage());
         if (cancelled) return;
         if (onDevice) {
           track('class_from_device', { beats: onDevice.lesson.beats.length });
@@ -729,6 +757,7 @@ export function LiveClassRoute() {
               waitedMs: Math.round(performance.now() - startedAt),
               beats: d.lesson.beats.length,
             });
+            stampTopic(d.lesson, ask.topicRef);
             setDraft(d);
           },
           onArt: () => {
