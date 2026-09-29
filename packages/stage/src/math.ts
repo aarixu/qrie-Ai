@@ -49,18 +49,22 @@ export function texToHtml(tex: string): string | null {
  * meant. Formulas are plain text by the planner's contract, and plain text
  * with words in it — "Mass of Reactants = Mass of Products", "Profit % =
  * (Profit / CP) × 100", "A --> B" — comes out of KaTeX as run-together italics
- * (seventh review, 2026-09-29). So: `$…$`-delimited, or no word of two or
- * more letters (sin, cos, tan and log excepted), no %, #, &, ~, and no arrow.
+ * (seventh review, 2026-09-29). So: `$…$`-delimited, or no word (a run of
+ * three or more letters with a vowel in it — sin, cos, tan and log excepted),
+ * no chemical formula, no %, #, &, ~, and no arrow.
  */
 export function typesetsAsMaths(text: string): boolean {
   const t = text.trim();
   if (/^\$[^$]+\$$/.test(t)) return true;
   if (/[%#&~]|->|<-|→/.test(t)) return false;
-  // A power with more than one character and no braces ("10^-9") would raise
-  // only its first character.
-  if (/\^(?![{(])\S{2,}/.test(t)) return false;
-  // Letters side by side are a product ("mc^2", "xy"); three or more are a word.
-  const words = t.match(/[A-Za-z]{3,}/g) ?? [];
+  // A power LaTeX would raise only the first character of, without braces:
+  // "10^-9", "2^10". "x^2-5x" and "I^2Rt" raise one character, as meant.
+  if (/\^(?:-|\d{2,}|[A-Za-z]{2,})/.test(t)) return false;
+  // "H2O", "CO2": a chemical formula would be set as italic variables.
+  if (/[A-Z][a-z]?\d+[A-Z]|[A-Z]{2,}\d/.test(t)) return false;
+  // Letters side by side are a product ("mgh", "2ab"); a run with a vowel in
+  // it is a word (eighth review: "PE = mgh" was refused).
+  const words = (t.match(/[A-Za-z]{3,}/g) ?? []).filter((w) => /[aeiou]/i.test(w));
   return words.every((w) => /^(sin|cos|tan|log|cot|sec|cosec)$/i.test(w));
 }
 
@@ -71,10 +75,15 @@ export function typesetsAsMaths(text: string): boolean {
  * minus signs.
  */
 export function formulaTex(text: string): string {
-  return text
+  const tex = text
     .trim()
     .replace(/^\$|\$$/g, '')
     .replace(/\s*(?:-{2,}|\.{2,}|…|—)\s*\(([0-9]+|[ivx]+)\)\s*$/i, String.raw` \qquad ($1)`);
+  // Plain-text functions set upright, as functions, not as italic letters
+  // (eighth review: "sin 30" was set as s·i·n·30). KaTeX has no \cosec.
+  return tex
+    .replace(/(?<![\\A-Za-z])cosec(?![A-Za-z])/g, String.raw`\operatorname{cosec}`)
+    .replace(/(?<![\\A-Za-z{])(sin|cos|tan|cot|sec|log)(?![A-Za-z])/g, String.raw`\$1`);
 }
 
 /** A board line with `$…$` maths in it, as HTML: words escaped, maths typeset. */

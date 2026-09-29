@@ -11,8 +11,10 @@ import { checkStep, type StepVerdict } from '@ai-tutor/maths-check';
  * (`checkStep`): right, a calculation gone wrong, or a step that changed the
  * equation. The room decides what she says and writes (ClassRoom).
  *
- * `start` is the question's own equation when it has one; without it the
- * first step becomes the line the next is checked against.
+ * `start` is the one equation in the question's board form, when the room
+ * found one it can follow (lib/workAnswer.ts `workStartOf`); without it the
+ * first step becomes the line the next is checked against. The list of steps
+ * scrolls, so a long working never pushes the panel off a phone.
  */
 
 export interface WorkedStep {
@@ -62,7 +64,7 @@ export function WorkPanel({
       </div>
       {start && <p className="font-body-md text-[13px] opacity-70 mb-1">Start: {start}</p>}
       {steps.length > 0 && (
-        <ol className="mb-2 space-y-0.5 font-body-md text-[14px]">
+        <ol className="mb-2 max-h-28 overflow-y-auto space-y-0.5 font-body-md text-[14px]">
           {steps.map((s, i) => (
             <li key={i}>
               <span aria-hidden>{s.verdict.ok === true ? '✓' : s.verdict.ok === false ? '✗' : '?'}</span> {s.text}

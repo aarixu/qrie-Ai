@@ -125,7 +125,8 @@ export function mathPlain(text: string): string {
  * width and is lossy on purpose ("2^{x}" reads as "2x" there); this keeps the
  * meaning: powers as "^(…)", fractions as "(a)/(b)", "\div" as "÷".
  *
- * Null when the maths holds a command this cannot translate faithfully — the
+ * Null when the maths holds a command this cannot translate faithfully, a
+ * mixed number, or a subscript — the
  * caller then treats the line as unreadable rather than checking a guess
  * (seventh review, 2026-09-29: "2^{x} = 32" was read as "2x = 32" and a correct
  * class was refused).
@@ -140,14 +141,16 @@ export function latexToPlain(text: string): string | null {
   if (!hasMath(text)) return text;
   let failed = false;
   const out = text.replace(/\$([^$]+)\$/g, (_, tex: string) => {
+    // A mixed number ("2\frac{1}{2}") would read as 2 × ½, and a subscript
+    // would be dropped, so x_{1} and x_{2} both read as x (eighth review).
+    if (/\d\s*\\[dt]?frac/.test(tex) || /_/.test(tex)) failed = true;
     let t = tex;
     for (let i = 0; i < 4; i += 1) {
       t = t
         .replace(/\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)')
         .replace(/\\sqrt\s*\{([^{}]*)\}/g, '√($1)')
         .replace(/\\(?:text|mathrm|operatorname|mathbf|mathit)\s*\{([^{}]*)\}/g, '$1')
-        .replace(/\^\s*\{([^{}]*)\}/g, '^($1)')
-        .replace(/_\s*\{([^{}]*)\}/g, '');
+        .replace(/\^\s*\{([^{}]*)\}/g, '^($1)');
     }
     t = t
       .replace(/\\left|\\right/g, '')

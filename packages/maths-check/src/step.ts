@@ -14,6 +14,13 @@ import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } fro
  *     the method is fine, a calculation is not.
  *   - PROCEDURAL: the line is not the same equation any more ("3x + 4 = 21"
  *     after "3(x + 4) = 21" — the bracket was opened on one term only).
+ *   - VALUE: a final "x = n" that does not make the line before true, where
+ *     terms had to move to get there ("x = 17" after "x + 5 = 12"): it may be
+ *     the sum or the move, so it is named as neither. After "3x = 9" the only
+ *     step left is the division, and "x = 6" is ARITHMETIC.
+ *
+ * Every statement of a step must follow from the one before it, and every
+ * link of a chain ("3(x + 4) = 3x + 12 = 21") must hold, not only its ends.
  *
  * THE RULE. A line's equation is its first side minus its last. A step is
  * right when its equation is a non-zero multiple of the previous one's — the
@@ -28,7 +35,7 @@ import { TooLarge, div, equals, formatRational, isZero, mul, type Rational } fro
 
 export type StepVerdict =
   | { ok: true; solved?: { name: string; value: Rational } }
-  | { ok: false; kind: 'arithmetic' | 'procedural'; reason: string }
+  | { ok: false; kind: 'arithmetic' | 'procedural' | 'value'; reason: string }
   | { ok: null; reason: string };
 
 const equationOf = (st: Statement): P.Poly => P.sub(toPoly(st.sides[0].expr), toPoly(st.sides[st.sides.length - 1].expr));
@@ -63,16 +70,78 @@ function arithmeticSlip(st: Statement): string | null {
   return null;
 }
 
-/** "x = 3" alone: the letter and its value. */
+/** "x = 3" alone, or chained to it ("x = 9/3 = 3"): the letter and its value. */
 function claimOf(st: Statement): { name: string; value: Rational } | null {
-  if (st.sides.length !== 2) return null;
-  const [l, r] = st.sides.map((s) => toPoly(s.expr));
+  if (st.sides.length < 2) return null;
+  const [l, r] = [st.sides[0], st.sides[st.sides.length - 1]].map((s) => toPoly(s.expr));
   const vars = [...P.variablesOf(l)];
   if (vars.length !== 1 || P.variablesOf(r).size !== 0) return null;
   // The left side is the letter itself, nothing more.
   if (!P.isZero(P.sub(l, P.variable(vars[0])))) return null;
   const value = P.constantValue(r);
   return value === null ? null : { name: vars[0], value };
+}
+
+/** "3x = 9", "x/2 = 4": one term in the letter against a number — only a division is left. */
+function dividingThrough(st: Statement): boolean {
+  if (st.sides.length < 2) return false;
+  const [l, r] = [st.sides[0], st.sides[st.sides.length - 1]].map((s) => toPoly(s.expr));
+  const one = (a: P.Poly, b: P.Poly) => a.size === 1 && P.variablesOf(a).size === 1 && P.variablesOf(b).size === 0;
+  return one(l, r) || one(r, l);
+}
+
+/**
+ * A chain "a = b = c" claims every link. Each must be an identity (3(x + 4) =
+ * 3x + 12), all numbers (checked by `arithmeticSlip`), or the statement's own
+ * equation; "3(x + 4) = 3x + 4 = 21" breaks at its first link.
+ */
+function brokenLink(st: Statement): boolean {
+  if (st.sides.length < 3) return false;
+  const whole = equationOf(st);
+  const polys = st.sides.map((side) => toPoly(side.expr));
+  for (let i = 0; i + 1 < polys.length; i++) {
+    const link = P.sub(polys[i], polys[i + 1]);
+    if (P.isZero(link)) continue;
+    if (P.variablesOf(polys[i]).size === 0 && P.variablesOf(polys[i + 1]).size === 0) continue;
+    if (proportional(whole, link) !== null) continue;
+    return true;
+  }
+  return false;
+}
+
+/** Why `st` does not follow from `ref` (whose statement is `refSt`). */
+function notFollowing(st: Statement, ref: P.Poly, refSt: Statement): StepVerdict {
+  // "x = 6" after "3x = 9": the method was right and the division was not.
+  // "x = 12 - 2" after "2x = 12" shows the operation they chose — the
+  // wrong one — so it is the method, not the sum.
+  const claim = claimOf(st);
+  const bare = /^\s*-?\d+(\.\d+)?(\s*\/\s*\d+)?\s*$/.test(st.sides.at(-1)?.source ?? '');
+  if (claim && bare && P.variablesOf(ref).size === 1 && ref.size <= 2) {
+    const reason = `${claim.name} = ${formatRational(claim.value)} does not make the line before true`;
+    return { ok: false, kind: dividingThrough(refSt) ? 'arithmetic' : 'value', reason };
+  }
+  return { ok: false, kind: 'procedural', reason: 'this step is not the same equation as the line before' };
+}
+
+/**
+ * Whether the "Work it out" panel can check a question's equation: one
+ * linear equation in one unknown, not already solved. Quadratics, pairs of
+ * equations and a given value ("x = 3") are past what `checkStep` can follow
+ * to an answer, so the panel is not offered for them (eighth review).
+ */
+export function workableEquation(line: string): boolean {
+  const parsed = parseLine(line);
+  if (!parsed.ok || parsed.line.statements.length !== 1) return false;
+  const st = parsed.line.statements[0];
+  if (st.sides.length !== 2) return false;
+  try {
+    const eq = equationOf(st);
+    const vars = [...P.variablesOf(eq)];
+    if (vars.length !== 1 || P.degreeIn(eq, vars[0]) !== 1) return false;
+    return claimOf(st) === null && claimOf({ ...st, sides: [st.sides[1], st.sides[0]] }) === null;
+  } catch {
+    return false;
+  }
 }
 
 /** Does `value` make the previous equation true? */
@@ -145,23 +214,18 @@ export function checkStep(previous: string, step: string): StepVerdict {
         : { ok: true };
     }
 
-    const next = equationOf(now.line.statements[now.line.statements.length - 1]);
-    if (proportional(prev, next) !== null) {
-      const solved = claims.length === 1 ? claims[0] : null;
-      return solved ? { ok: true, solved } : { ok: true };
+    // Each statement from the one before it, starting from the line before.
+    let ref = prev;
+    let refSt = prevStatements[prevStatements.length - 1];
+    for (const st of now.line.statements) {
+      if (brokenLink(st)) return { ok: false, kind: 'procedural', reason: 'one link of this chain is not the same as the next' };
+      const eq = equationOf(st);
+      if (proportional(ref, eq) === null) return notFollowing(st, ref, refSt);
+      ref = eq;
+      refSt = st;
     }
-
-    // "x = 6" after "3x = 9": the method was right and the division was not.
-    // "x = 12 - 2" after "2x = 12" shows the operation they chose — the
-    // wrong one — so it is the method, not the sum.
-    const claim = claims.length === 1 ? claims[0] : null;
-    const bare = /^\s*-?\d+(\.\d+)?(\s*\/\s*\d+)?\s*$/.test(
-      now.line.statements[now.line.statements.length - 1].sides.at(-1)?.source ?? '',
-    );
-    if (claim && bare && P.variablesOf(prev).size === 1 && prev.size <= 2) {
-      return { ok: false, kind: 'arithmetic', reason: `${claim.name} = ${formatRational(claim.value)} does not make the line before true` };
-    }
-    return { ok: false, kind: 'procedural', reason: 'this step is not the same equation as the line before' };
+    const solved = claimOf(refSt);
+    return solved ? { ok: true, solved } : { ok: true };
   } catch (e) {
     if (e instanceof P.NotPolynomial || e instanceof TooLarge) return { ok: null, reason: 'this step is past what can be checked' };
     throw e;

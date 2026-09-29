@@ -25,5 +25,7 @@ export { AnchorRegistry, type AnchorEntry } from './anchors';
 // export { Viewport } from './viewport';
 // Scene and computeVisible are implemented in Scene.tsx / visible.ts:
 export { Scene } from './Scene';
+/** A board line with `$…$` maths as safe HTML: words escaped, maths typeset. */
+export { lineToHtml } from './math';
 export { computeVisible } from './visible';
 export { computeFrame, bboxOf, type Rect } from './frame';

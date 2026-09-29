@@ -26,9 +26,9 @@ import { fromStudent, toStudent } from './safety';
  * `sayAuthored`: refused once the class has halted like everything else, but
  * never the cause of a halt. See `sayAuthored` for why.
  *
- * There is no typed-answer surface in the classroom at this tip; a typed
- * answer, when one exists, is student words like the ear's and belongs on
- * `heard`.
+ * Typed working ("Work it out" in ClassRoom) is student words too, and goes
+ * through `typedDoubt` before it is written on the board or answered: distress
+ * halts the class, an off-limits line gets her redirect.
  *
  * What the halt does, in this order, once and never again:
  *

@@ -47,6 +47,22 @@ describe('which formulas are typeset (seventh review)', () => {
     expect(typesetsAsMaths('A --> B')).toBe(false);
     expect(typesetsAsMaths('1 nm = 10^-9 m')).toBe(false);
   });
+  it('typesets powers and products, and leaves a chemical formula as written (eighth review)', async () => {
+    const { typesetsAsMaths } = await import('../src/math');
+    expect(typesetsAsMaths('(a+b)^2=a^2+2ab+b^2')).toBe(true);
+    expect(typesetsAsMaths('x^2-5x+6=0')).toBe(true);
+    expect(typesetsAsMaths('H = I^2Rt')).toBe(true);
+    expect(typesetsAsMaths('PE = mgh')).toBe(true);
+    expect(typesetsAsMaths('d = √((x2 - x1)^2 + (y2 - y1)^2)')).toBe(true);
+    expect(typesetsAsMaths('H2O = 2(1) + 16 = 18 u')).toBe(false);
+    expect(typesetsAsMaths('CO2 + H2O')).toBe(false);
+    expect(typesetsAsMaths('2^10 = 1024')).toBe(false);
+  });
+  it('sets sin, cos and log upright, as functions', async () => {
+    const { formulaTex } = await import('../src/math');
+    expect(formulaTex('sin 30 = 1/2')).toBe(String.raw`\sin 30 = 1/2`);
+    expect(formulaTex('cosec A = 1 / sin A')).toBe(String.raw`\operatorname{cosec} A = 1 / \sin A`);
+  });
   it('will not typeset a runaway or oversized piece of maths', async () => {
     const { texToHtml } = await import('../src/math');
     expect(texToHtml('x'.repeat(401))).toBeNull();

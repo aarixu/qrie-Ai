@@ -21,7 +21,7 @@ export {
   type Skipped,
 } from './check.ts';
 export { checkLesson, equationLines } from './lesson.ts';
-export { checkStep, equationIn, sameEquation, type StepVerdict } from './step.ts';
+export { checkStep, equationIn, sameEquation, workableEquation, type StepVerdict } from './step.ts';
 export {
   parseExpression,
   parseLine,

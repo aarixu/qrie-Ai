@@ -36,4 +36,14 @@ describe('latexToPlain', () => {
     const { latexToPlain } = await import('../src/index');
     expect(latexToPlain(String.raw`$\int x\,dx$`)).toBeNull();
   });
+  // Eighth review: "2(1)/(2)" reads as 1, and x_{1} and x_{2} both read as x.
+  it('refuses a mixed number and a subscript rather than misread them', async () => {
+    const { latexToPlain } = await import('../src/index');
+    expect(latexToPlain(String.raw`Find $x$: $x - 1\frac{1}{4} = 2$`)).toBeNull();
+    expect(latexToPlain(String.raw`$2\frac{3}{5} = \frac{13}{5}$`)).toBeNull();
+    expect(latexToPlain(String.raw`Given: $x_{1} = 2$, $x_{2} = 6$`)).toBeNull();
+    expect(latexToPlain(String.raw`$a_n = a + (n - 1)d$`)).toBeNull();
+    // A product with a fraction is still read: "3 × ½" is not a mixed number.
+    expect(latexToPlain(String.raw`$3 \times \frac{1}{2} = 1.5$`)).toBe('3 × (1)/(2) = 1.5');
+  });
 });

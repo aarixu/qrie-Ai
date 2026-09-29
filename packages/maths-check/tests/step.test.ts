@@ -77,3 +77,43 @@ describe('is this step the answer asked for?', () => {
     expect(sameEquation('x = 3', '3 = x')).toBe(true);
   });
 });
+
+/** Round-8 review: steps a Class 6-10 student really writes, judged wrongly. */
+describe('checkStep, eighth review', () => {
+  it('checks every link of a chained step, not only its ends', () => {
+    expect(checkStep('3(x + 4) = 21', '3(x + 4) = 3x + 4 = 21')).toMatchObject({ ok: false, kind: 'procedural' });
+    expect(checkStep('3(x + 4) = 21', '3(x + 4) = 3x + 12 = 21').ok).toBe(true);
+  });
+
+  it('checks every statement of a step, not only its last', () => {
+    expect(checkStep('3(x + 4) = 21', '3x + 4 = 21, 3x + 12 = 21')).toMatchObject({ ok: false, kind: 'procedural' });
+    expect(checkStep('3(x + 4) = 21', '3x + 12 = 21 => 3x = 9').ok).toBe(true);
+  });
+
+  it('counts a chained value as solved', () => {
+    const v = checkStep('3x = 9', 'x = 9/3 = 3');
+    expect(v.ok).toBe(true);
+    if (v.ok === true) expect(v.solved && formatRational(v.solved.value)).toBe('3');
+  });
+
+  it('does not call a wrong value a calculation slip when terms had to move', () => {
+    // Added 5 instead of taking it away: not "your method is fine".
+    expect(checkStep('x + 5 = 12', 'x = 17')).toMatchObject({ ok: false, kind: 'value' });
+    // Dividing through, the value is the calculation.
+    expect(checkStep('3x = 9', 'x = 6')).toMatchObject({ ok: false, kind: 'arithmetic' });
+  });
+});
+
+describe('workableEquation: what the "Work it out" panel can check', () => {
+  it('is one linear equation in one unknown, not yet solved', async () => {
+    const { workableEquation } = await import('../src/index');
+    expect(workableEquation('3(x + 4) = 21')).toBe(true);
+    expect(workableEquation('(x - 2)/4 = 3')).toBe(true);
+    expect(workableEquation('x = 3')).toBe(false);
+    expect(workableEquation('x^2 - 5x + 6 = 0')).toBe(false);
+    expect(workableEquation('x + y = 14')).toBe(false);
+    expect(workableEquation('2x = 32, x = 5')).toBe(false);
+    expect(workableEquation('7 = 7')).toBe(false);
+    expect(workableEquation('not maths')).toBe(false);
+  });
+});
