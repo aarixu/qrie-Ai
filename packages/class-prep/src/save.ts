@@ -239,6 +239,31 @@ const REMEMBERS_A_SESSION: RegExp[] = [
    */
   /welcome back(?:\s*[,.!]|\s+to (?:class|the class|our|the lesson|the board)|\s*$)/i,
   /picking up (?:from )?where (?:we|you) (?:left|stopped)/i,
+  /**
+   * THE SAME CLAIMS IN HINGLISH (fifth review).
+   *
+   * A class taught in "hi-en" is never kept for everybody, but it is kept on
+   * the device of the student it was made for (the classroom's keep()) when
+   * its language is the only thing wrong with it. With only the English forms
+   * above, "Pichhli class mein humne nucleus padha tha" passed, was kept, and
+   * was replayed on their next visit, about a class that was no longer their
+   * last.
+   *
+   * The rules above, carried over: "pichhli baar" (or a code-mixed "last
+   * time") needs a "hum"/"humne", and only a class, lesson or session may be
+   * triggered by a "tum" or "aap". "kal" is both yesterday and tomorrow, so
+   * only "kal humne" — the past — is a claim. "jahan ... ruka tha" is left
+   * alone, because water and trains stop too; "hum ruke the" and "roki thi"
+   * are somebody stopping a class.
+   */
+  /\b(?:last (?:time|class|lesson|session)|pichh?l[ei] (?:baar|class|lesson|session))\b[^.!?]{0,40}\b(?:hum|humne|hamne)\b/i,
+  /\bpichh?l[ei] (?:class|lesson|session)\b[^.!?]{0,40}\b(?:tum|tumne|aap|aapne)\b/i,
+  /\bh[au]mne\b[^.!?]{0,30}\bpichh?l[ei] (?:baar|class|lesson|session)\b/i,
+  /\b(?:humari|hamari|tumhari|aapki)\s+pichh?l[ei]\s+(?:class|lesson)\b/i,
+  /\bkal h[au]mne\b/i,
+  /\bjahan\b[^.!?]{0,20}\b(?:chh?od[aei]|rok[aei]|ruke)\s+th[aei]\b/i,
+  /\b(?:phir se|wapas|vapas)\b[^.!?]{0,20}\bswagat\b/i,
+  /\byaad (?:hai|karo)\b[^.!?]{0,40}\bh[au]mne\b[^.!?]{0,40}\bth[aei]\b/i,
 ];
 
 /** The phrases in a spine that claim a shared past, if any. */

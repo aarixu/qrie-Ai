@@ -105,6 +105,82 @@ describe('the prepared class kept on this device', () => {
     expect(await cache.find('t')).toBeNull();
   });
 
+  // Fifth review: a malformed row threw out of find(), LiveClass showed the
+  // failed-class screen, and Try again read the same row and threw again.
+  it.each([
+    ['null', null],
+    ['undefined', undefined],
+    ['a string', 'the kidney'],
+    ['a number', 42],
+  ])('is a miss, never an error, for a stored lesson that is %s', async (_, stored) => {
+    const backend = memoryBackend();
+    const cache = createPreparedCache(backend, () => 1_000);
+    await backend.put({ topicRef: 't', lesson: stored as unknown as Lesson, assets: {}, at: 1_000 });
+    await expect(cache.find('t')).resolves.toBeNull();
+  });
+
+  it('is a miss, never an error, for a lesson that reads but will not copy', async () => {
+    const backend = memoryBackend();
+    const cache = createPreparedCache(backend, () => 1_000);
+    const odd = { ...lesson('k'), extra: 1n } as unknown as Lesson;
+    await backend.put({ topicRef: 't', lesson: odd, assets: {}, at: 1_000 });
+    await expect(cache.find('t')).resolves.toBeNull();
+  });
+
+  it.each([
+    ['null', null],
+    ['a string', '<svg/>'],
+    ['a picture that is not text', { t: 7 }],
+  ])('is a miss for stored pictures that are %s', async (_, assets) => {
+    const backend = memoryBackend();
+    const cache = createPreparedCache(backend, () => 1_000);
+    await backend.put({ topicRef: 't', lesson: lesson('k'), assets: assets as unknown as Record<string, string>, at: 1_000 });
+    await expect(cache.find('t')).resolves.toBeNull();
+  });
+
+  it.each([
+    ['no time at all', undefined],
+    ['a time that is not a number', 'yesterday'],
+    ['NaN', Number.NaN],
+  ])('treats a row kept at %s as expired', async (_, at) => {
+    const backend = memoryBackend();
+    const cache = createPreparedCache(backend, () => 1_000);
+    await backend.put({ topicRef: 't', lesson: lesson('k'), assets: {}, at: at as unknown as number });
+    await expect(cache.find('t')).resolves.toBeNull();
+  });
+
+  // Fifth review: a previous student's keep() still waiting on its POST wrote
+  // their class to the device after the handover had emptied it.
+  it('drops a write begun before the device was emptied', async () => {
+    const cache = createPreparedCache(memoryBackend(), () => 1_000);
+    const since = cache.generation();
+    await cache.clear();
+    await cache.remember('t', lesson('k'), {}, since);
+    expect(await cache.find('t')).toBeNull();
+
+    // The next student's own class is still kept.
+    await cache.remember('t', lesson('k'), {}, cache.generation());
+    expect(await cache.find('t')).not.toBeNull();
+  });
+
+  it('takes back a write that lands after the device was emptied', async () => {
+    const rows = memoryBackend();
+    let land: () => void = () => undefined;
+    const slow = {
+      ...rows,
+      put: async (entry: Parameters<typeof rows.put>[0]) => {
+        await new Promise<void>((resolve) => (land = resolve));
+        await rows.put(entry);
+      },
+    };
+    const cache = createPreparedCache(slow, () => 1_000);
+    const writing = cache.remember('t', lesson('k'), {});
+    await cache.clear();
+    land();
+    await writing;
+    expect(await cache.find('t')).toBeNull();
+  });
+
   it('answers a miss, not never, when storage hangs', async () => {
     const hanging = {
       get: () => new Promise<never>(() => undefined),

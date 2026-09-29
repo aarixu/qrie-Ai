@@ -17,14 +17,16 @@ import { registerDeviceReset } from '../stores/localStore';
  *   - without its per-student lines (`fill`), and filed under its topic;
  *   - served only in the language it was taught in;
  *   - emptied when the device passes to another student or is wiped
- *     (`registerDeviceReset`, below);
+ *     (`registerDeviceReset`, below); a keep() begun before that is dropped,
+ *     or taken back out if its write was already under way (`generation`);
  *   - never ahead of the catalogue: LiveClass looks there first, so a
  *     published copy wins. A class an operator retracts is not known here —
  *     which is why it is kept for a day, not longer.
  *
  * IndexedDB, because a class carries its pictures as data URLs and
- * localStorage holds a few megabytes. Every failure, and anything slower than
- * `timeoutMs`, is a miss: the class is then prepared as it always was.
+ * localStorage holds a few megabytes. Every failure, a row that does not read
+ * back as a class, and anything slower than `timeoutMs` is a miss: the class is
+ * then prepared as it always was.
  */
 
 export const KEEP_ON_DEVICE_MS = 24 * 60 * 60 * 1000;
@@ -52,14 +54,27 @@ export interface CacheBackend {
 export interface PreparedCache {
   /** The class kept for this topic (in `language`, when given), or null — never an error. */
   find(topicRef: string, language?: string): Promise<CachedClass | null>;
-  /** Keep it; a failure is silent, the class is already playing. */
-  remember(topicRef: string, lesson: Lesson, assets: Record<string, string>): Promise<void>;
-  /** Empty it: another student has the device. */
+  /**
+   * Keep it; a failure is silent, the class is already playing. `since` is the
+   * generation() the work that made it began under (the generation at this
+   * call when left out): if clear() has run since, nothing is kept.
+   */
+  remember(topicRef: string, lesson: Lesson, assets: Record<string, string>, since?: number): Promise<void>;
+  /** Empty it: another student has the device. Moves the generation on. */
   clear(): Promise<void>;
+  /** How many times this cache has been emptied; what `since` is checked against. */
+  generation(): number;
 }
 
 const within = <T>(work: Promise<T>, ms: number, fallback: T): Promise<T> =>
   Promise.race([work, new Promise<T>((resolve) => setTimeout(() => resolve(fallback), ms))]);
+
+/** Artwork as remember() keeps it: text by element id. */
+const isAssets = (value: unknown): value is Record<string, string> =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object.values(value).every((art) => typeof art === 'string');
 
 /** The class as this device keeps it: no per-student lines, filed under its topic. */
 function forDevice(lesson: Lesson, topicRef: string): Lesson {
@@ -74,21 +89,38 @@ export function createPreparedCache(
   clock: () => number = Date.now,
   timeoutMs: number = STORAGE_TIMEOUT_MS,
 ): PreparedCache {
+  let cleared = 0;
   return {
     async find(topicRef, language) {
-      const kept = await within(backend.get(topicRef).catch(() => undefined), timeoutMs, undefined);
-      if (!kept || clock() - kept.at > KEEP_ON_DEVICE_MS) return null;
-      // What storage hands back is re-read as a lesson, never trusted — and
-      // made the device's form again: a copy an earlier version kept still
-      // carried the per-student lines.
-      const read = validateLesson(forDevice(kept.lesson, topicRef));
-      if (!read.ok) return null;
-      if (language !== undefined && (read.lesson.language ?? 'en') !== language) return null;
-      return { ...kept, lesson: read.lesson };
+      // A miss, never an error, whatever the row holds (fifth review): LiveClass
+      // would show a thrown find() as a class that failed, and Try again would
+      // read the same row.
+      try {
+        const kept = await within(backend.get(topicRef).catch(() => undefined), timeoutMs, undefined);
+        // A row with no usable time is expired, not kept for ever.
+        if (!kept || !Number.isFinite(kept.at) || clock() - kept.at > KEEP_ON_DEVICE_MS) return null;
+        // What storage hands back is re-read as a lesson, never trusted, and
+        // only then made the device's form again: a copy an earlier version
+        // kept still carried the per-student lines.
+        const read = validateLesson(kept.lesson);
+        if (!read.ok || !isAssets(kept.assets)) return null;
+        const lesson = forDevice(read.lesson, topicRef);
+        if (language !== undefined && (lesson.language ?? 'en') !== language) return null;
+        return { ...kept, lesson };
+      } catch {
+        return null;
+      }
     },
-    async remember(topicRef, lesson, assets) {
+    async remember(topicRef, lesson, assets, since = cleared) {
+      // Begun before the device was emptied: this is the previous student's class.
+      if (since !== cleared) return;
       const work = (async () => {
         await backend.put({ topicRef, lesson: forDevice(lesson, topicRef), assets: { ...assets }, at: clock() });
+        // Emptied while that write was under way: take it back out.
+        if (since !== cleared) {
+          await backend.remove(topicRef);
+          return;
+        }
         const all = (await backend.all()).sort((a, b) => b.at - a.at);
         for (const old of all.slice(MAX_ON_DEVICE)) await backend.remove(old.topicRef);
       })().catch(() => undefined);
@@ -96,8 +128,11 @@ export function createPreparedCache(
       await within(work, timeoutMs, undefined);
     },
     async clear() {
+      // Before any wait, so a remember() still running sees it.
+      cleared += 1;
       await within(backend.clear().catch(() => undefined), timeoutMs, undefined);
     },
+    generation: () => cleared,
   };
 }
 
