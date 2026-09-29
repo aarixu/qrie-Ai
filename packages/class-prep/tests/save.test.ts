@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Lesson } from '@ai-tutor/lesson-format';
-import { saveable, whyNotSaveable } from '../src/save';
+import { remembersASession, saveable, whyNotSaveable } from '../src/save';
 import type { PrepReport } from '../src/types';
 
 /**
@@ -326,5 +326,69 @@ describe('why a class was not kept — said to the operator who paid for it', ()
       const refused = saveable({ lesson: l, assets: a, report }, m) === null;
       expect(whyNotSaveable({ lesson: l, assets: a, report }, m).length > 0).toBe(refused);
     }
+  });
+});
+
+/**
+ * A SHARED PAST SAID IN HINGLISH (fifth review).
+ *
+ * A class kept back from the catalogue only because it is taught in "hi-en"
+ * is still kept on the device of the student it was made for (the classroom's
+ * keep()), and replayed to them the next day. The guard that stops a spine
+ * claiming a session knew only English ways of saying it, so this one was
+ * kept and replayed.
+ */
+describe('a shared past said in Hinglish', () => {
+  const hinglish = (narration: string): Lesson => {
+    const l = { ...lesson(), language: 'hi-en' as const };
+    l.beats[0].narration = narration;
+    return l;
+  };
+  const passed: PrepReport = { ...clean, gate: { problems: [] } };
+
+  const claims = [
+    'Pichhli class mein humne nucleus padha tha. Aaj hum kidney padhenge.',
+    'Pichli baar hum cell wall par ruke the.',
+    'Last time humne photosynthesis dekha tha.',
+    'Humne pichhli class mein dil ke chaar khaane dekhe the.',
+    'Pichhli class mein tumne fractions ko jodna seekha tha.',
+    'Tumhari pichhli class Cell Structure par thi.',
+    'Kal humne dekha tha ki khoon kaise bahta hai.',
+    'Chalo, wahin se shuru karte hain jahan humne chhoda tha.',
+    'Aaj hum wahin se aage badhenge jahan hum ruke the.',
+    // The app's own Hinglish greeting says it this way (ClassRoom.tsx).
+    'Chalo, class wahi se aage badhaate hain jahan roki thi.',
+    'Pichhli class mein hamne atom dekha tha.',
+    'Aapka phir se swagat hai!',
+    'Yaad hai humne kya padha tha?',
+  ];
+
+  it.each(claims)('is caught: "%s"', (narration) => {
+    expect(remembersASession(hinglish(narration))).not.toEqual([]);
+    // More than the language: so keep() never takes it for a class held back
+    // only because it is this student's.
+    const why = whyNotSaveable({ lesson: hinglish(narration), assets: assets(), report: passed }, meta);
+    expect(why.some((reason) => !reason.startsWith('taught in "'))).toBe(true);
+  });
+
+  const ordinary = [
+    'Aaj hum kidney padhenge.',
+    'Nucleus cell ka control centre hai.',
+    'Humne abhi dekha ki kidney khoon ko filter karti hai.',
+    'Kal hum dekhenge ki paudhe khana kaise banate hain.',
+    'Pichhle hafte chaand poora tha — yeh ek lunar cycle hai.',
+    'Pichhli baar jab tumne indradhanush dekha tha, woh refraction tha.',
+    'Khoon wapas dil mein aata hai.',
+    'Jahan do rekhayein milti hain, wahan ek kon banta hai.',
+    'Jahan paani ruka tha, wahan mitti jam gayi.',
+    'Yeh is chapter ka aakhri step hai.',
+    'Hum ek ek step karke chalenge.',
+  ];
+
+  it.each(ordinary)('leaves ordinary Hinglish teaching alone: "%s"', (narration) => {
+    expect(remembersASession(hinglish(narration))).toEqual([]);
+    expect(whyNotSaveable({ lesson: hinglish(narration), assets: assets(), report: passed }, meta)).toEqual([
+      'taught in "hi-en", and only English is kept',
+    ]);
   });
 });

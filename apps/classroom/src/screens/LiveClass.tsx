@@ -175,6 +175,10 @@ export async function keep(
   names: readonly string[],
   device: PreparedCache = preparedCache,
 ): Promise<void> {
+  // The device as this begins (lib/preparedCache.ts). Handed to another
+  // student while the POST below is in flight, it is emptied, and this class
+  // is not written back onto it when the POST answers.
+  const since = device.generation();
   const meta = {
     topicRef: ask.topicRef,
     klass: ask.klass,
@@ -205,7 +209,7 @@ export async function keep(
    * which is theirs to replay and nobody else's.
    */
   const onDevice = (): void => {
-    if (ask.topicRef) void device.remember(ask.topicRef, made.lesson, made.assets);
+    if (ask.topicRef) void device.remember(ask.topicRef, made.lesson, made.assets, since);
   };
   if (!saved) {
     const why = whyNotSaveable(made, meta);

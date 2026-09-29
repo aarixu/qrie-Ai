@@ -21,7 +21,12 @@ const prepared = vi.hoisted(() => ({
     report: { topic: 'T', totalMs: 1, planMs: 1, visualsMs: 1, issues: [], visuals: [] },
   })),
 }));
-const posted = vi.hoisted(() => ({ calls: [] as { url: string; body: unknown }[], refuse: false }));
+const posted = vi.hoisted(() => ({
+  calls: [] as { url: string; body: unknown }[],
+  refuse: false,
+  /** When set, the POST answers only once this settles. */
+  hold: null as Promise<void> | null,
+}));
 
 vi.mock('@ai-tutor/class-prep', async (importOriginal) => {
   const real = (await importOriginal()) as Record<string, unknown>;
@@ -36,6 +41,7 @@ vi.mock('../src/lib/browserImage', () => ({
 vi.mock('../src/lib/relay', () => ({
   relayFetch: async (url: string, init?: { body?: string }) => {
     posted.calls.push({ url, body: init?.body ? JSON.parse(init.body) : undefined });
+    if (posted.hold) await posted.hold;
     return new Response('{}', { status: posted.refuse ? 422 : 200 });
   },
 }));
@@ -153,5 +159,47 @@ describe('keep() also keeps the class on this device', () => {
     const other = createPreparedCache(memoryBackend());
     await keep({ lesson, assets: {}, report: { ...passed, review: undefined } }, ask, [], other);
     expect(await other.find(ask.topicRef)).toBeNull();
+  });
+
+  // Fifth review: the Hinglish device-only keep skipped the shared-past check,
+  // because that check knew only English ways of saying it.
+  it('keeps no Hinglish class that claims a session it never had', async () => {
+    const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
+    const device = createPreparedCache(memoryBackend());
+    const remembering: Lesson = {
+      ...lesson,
+      language: 'hi-en',
+      beats: [
+        {
+          id: 'b1',
+          topic: 'kidney',
+          narration: 'Pichhli class mein humne nucleus padha tha. Aaj hum kidney padhenge.',
+          show: ['t'],
+        },
+      ],
+    };
+    await keep({ lesson: remembering, assets: {}, report: passed }, ask, [], device);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(await device.find(ask.topicRef, 'hi-en')).toBeNull();
+  });
+
+  // Fifth review: the previous student's keep(), still waiting on its POST,
+  // wrote their class onto the device after the handover had emptied it.
+  it('keeps nothing on a device emptied while the catalogue was answering', async () => {
+    const { createPreparedCache, memoryBackend } = await import('../src/lib/preparedCache');
+    const device = createPreparedCache(memoryBackend());
+    let answer: () => void = () => undefined;
+    posted.hold = new Promise<void>((resolve) => (answer = resolve));
+    try {
+      const keeping = keep({ lesson, assets: {}, report: passed }, ask, [], device);
+      await new Promise((r) => setTimeout(r, 0));
+      await device.clear();
+      answer();
+      await keeping;
+    } finally {
+      posted.hold = null;
+    }
+    await new Promise((r) => setTimeout(r, 0));
+    expect(await device.find(ask.topicRef)).toBeNull();
   });
 });
