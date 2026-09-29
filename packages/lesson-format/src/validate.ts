@@ -200,12 +200,17 @@ function beatErrors(
   if (beat.ask !== undefined) {
     const ask = beat.ask as {
       question?: unknown;
+      written?: unknown;
       options?: unknown;
       expect?: unknown;
       hint?: unknown;
       whyProbe?: unknown;
     };
     if (!isStr(ask.question)) errs.push(`${path}: ask needs a non-empty question`);
+    if (ask.written !== undefined) {
+      if (!isStr(ask.written)) errs.push(`${path}: an ask's written question must be a non-empty string when present`);
+      else if ((ask.written.match(/\$/g) ?? []).length % 2 !== 0) errs.push(`${path}: an ask's written question has an unclosed maths group`);
+    }
     if (ask.expect !== undefined && !isStr(ask.expect))
       errs.push(`${path}: ask expect must be a non-empty string when present`);
     if (ask.hint !== undefined && !isStr(ask.hint))

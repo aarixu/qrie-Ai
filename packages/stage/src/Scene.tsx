@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactElement } from 'react';
 import { CANVAS_H, CANVAS_W, splitPartRef, type Element, type Lesson, type Point, type Tone } from '@ai-tutor/lesson-format';
 import { computeFrame, flowHeight, noteBoxHeight, FLOW_GAP, FLOW_STEP_H, type Rect } from './frame';
+import { formulaTex, hasMath, lineToHtml, texToHtml } from './math';
 import {
   graphicLabelSize,
   textWidth,
@@ -829,18 +830,38 @@ function renderHandwrite(el: Extract<Element, { kind: 'handwrite' }>): ReactElem
           style={pace}
         />
       </mask>
-      <text
-        x={el.x}
-        y={el.y}
-        textAnchor="middle"
-        fontFamily={FONT_WRITE}
-        fontSize={size}
-        fontWeight={600}
-        fill={color}
-        mask={`url(#${maskId})`}
-      >
-        {el.text}
-      </text>
+      {hasMath(el.text) ? (
+        // Words in her hand, maths typeset (T6): HTML inside the board, under
+        // the same writing mask, so it still appears as she writes.
+        <foreignObject x={left - 10} y={el.y - size} width={width + 20} height={size * 1.8} mask={`url(#${maskId})`} overflow="visible">
+          <div
+            className="stage-math"
+            style={{
+              fontFamily: FONT_WRITE,
+              fontSize: size,
+              fontWeight: 600,
+              color,
+              textAlign: 'center',
+              whiteSpace: 'nowrap',
+              lineHeight: `${size * 1.8}px`,
+            }}
+            dangerouslySetInnerHTML={{ __html: lineToHtml(el.text) }}
+          />
+        </foreignObject>
+      ) : (
+        <text
+          x={el.x}
+          y={el.y}
+          textAnchor="middle"
+          fontFamily={FONT_WRITE}
+          fontSize={size}
+          fontWeight={600}
+          fill={color}
+          mask={`url(#${maskId})`}
+        >
+          {el.text}
+        </text>
+      )}
       {/* The nib: it travels the same distance in the same time as the mask. */}
       <circle
         className="stage-nib"
@@ -1002,12 +1023,29 @@ function renderElement(el: Element, svg?: string, litParts: readonly string[] = 
           strokeLinejoin="round"
         />
       );
-    case 'formula':
+    case 'formula': {
+      /**
+       * An equation, typeset (T6). A formula is maths through and through, so
+       * its whole text is read as LaTeX — "v = s / t" and "2x + 3 = 11" come out
+       * as a maths book prints them — and one KaTeX cannot read keeps the old
+       * monospace line.
+       */
+      const tex = formulaTex(el.text);
+      const html = texToHtml(tex);
+      if (html !== null) {
+        const w = Math.max(80, textWidth(`$${tex}$`, 26) * 1.4);
+        return (
+          <foreignObject x={el.x - w / 2} y={el.y - 30} width={w} height={48} overflow="visible">
+            <div className="stage-math" style={{ fontSize: 26, color: INK, textAlign: 'center', whiteSpace: 'nowrap', lineHeight: '48px' }} dangerouslySetInnerHTML={{ __html: html }} />
+          </foreignObject>
+        );
+      }
       return (
         <text x={el.x} y={el.y} textAnchor="middle" fontFamily={FONT_MONO} fontStyle="italic" fontSize={24} letterSpacing={0.5} fill={INK}>
           {el.text}
         </text>
       );
+    }
     case 'image':
       return renderImage(el, svg);
     case 'diagram':

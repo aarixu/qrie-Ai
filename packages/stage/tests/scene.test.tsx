@@ -191,9 +191,10 @@ describe('Scene: every element kind renders', () => {
     expect(html).toContain('points="100,400 160,380 220,420"');
   });
 
-  it('formula is monospace italic', () => {
-    expect(html).toContain('E = mc^2');
-    expect(html).toContain('font-style="italic"');
+  it('formula is typeset as maths (T6), not printed as its source', () => {
+    // KaTeX writes the superscript as its own element; the caret is gone.
+    expect(html).toContain('katex');
+    expect(html).not.toContain('E = mc^2');
   });
 
   it('image references its src and shows its label', () => {

@@ -37,6 +37,8 @@ export {
   LIST_INDENT,
   LIST_HEADING_GAP,
   fitText,
+  hasMath,
+  mathPlain,
   writeMs,
   graphicLabelSize,
   BESIDE_GAP,

@@ -433,12 +433,14 @@ export function layoutBeat(
       step: Math.max(0, saysSeen - 1),
       ask: {
         question: step.question,
+        ...(step.written ? { written: step.written } : {}),
         ...(step.options ? { options: step.options } : {}),
         ...(step.expect ? { expect: step.expect } : {}),
         ...(step.hint ? { hint: step.hint } : {}),
       },
     });
-    items.push({ do: 'write', text: step.question, tone: 'accent' });
+    // Written with its maths as maths (T6): the LaTeX form when there is one.
+    items.push({ do: 'write', text: step.written ?? step.question, tone: 'accent' });
     origin.push(boardIndex);
     questionItem.set(n, items.length - 1);
     /** What the question and its options take, so the work area gets the rest of a page. */

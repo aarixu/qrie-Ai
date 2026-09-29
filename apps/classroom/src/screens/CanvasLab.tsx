@@ -25,6 +25,9 @@ export function CanvasLab() {
     try {
       setPrepared(await prepareLiveClass({ topic, klass, minutes }, setProgress));
     } catch (e) {
+      // The whole error, stack included: this is the lab, and a message alone
+      // ("cannot read trim") names no file.
+      console.error('[canvas-lab] preparation failed', e);
       setError(e instanceof Error ? e.message : String(e));
       setProgress(null);
     }

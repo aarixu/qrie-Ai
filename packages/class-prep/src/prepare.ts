@@ -3,6 +3,7 @@ import { drawPicture, type ImageAdapter, type VisionAdapter } from './picture.ts
 import { findOnTheWeb, type WebImageAdapter } from './fromWeb.ts';
 import {
   PART_SEPARATOR,
+  mathPlain,
   validateLesson,
   type Beat,
   type Element,
@@ -733,7 +734,20 @@ export function dropBadProbes(beats: readonly { board?: readonly { do: string }[
   for (const beat of beats) {
     for (const step of beat.board ?? []) {
       if (step.do !== 'ask') continue;
-      const ask = step as { whyProbe?: unknown };
+      const ask = step as { whyProbe?: unknown; written?: unknown; question?: unknown };
+      // A board form (T6) that is blank or has an unclosed $…$ goes on its
+      // own: the board writes the spoken question instead, and the class is
+      // not refused for it.
+      if (ask.written !== undefined) {
+        const w = ask.written;
+        if (typeof w !== 'string' || w.trim() === '' || (w.match(/\$/g) ?? []).length % 2 !== 0) delete ask.written;
+      }
+      // A planner that wrote only the board form: she says it with its maths
+      // read as symbols, rather than the preparation crashing on a missing
+      // question (found in the canvas lab, 2026-09-29).
+      if ((typeof ask.question !== 'string' || ask.question.trim() === '') && typeof ask.written === 'string') {
+        ask.question = mathPlain(ask.written);
+      }
       if (ask.whyProbe === undefined) continue;
       /**
        * A blank or non-string follow-up (C7) is the field's fault, not the

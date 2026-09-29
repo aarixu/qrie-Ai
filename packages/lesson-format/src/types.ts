@@ -401,7 +401,13 @@ export interface Beat {
    * is an open prediction the tutor resolves herself.
    */
   ask?: {
+    /** The question as she says it: maths in words, never notation. */
     question: string;
+    /**
+     * The question as written on the board, maths in LaTeX between `$…$`
+     * (T6, 2026-09-29). Absent: the board wrote `question`.
+     */
+    written?: string;
     /** What a right answer contains — for the ear that judges a spoken reply; never written on the board. */
     expect?: string;
     /** The nudge a wrong spoken try gets, short of the answer. */

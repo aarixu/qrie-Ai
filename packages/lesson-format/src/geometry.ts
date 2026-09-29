@@ -92,9 +92,35 @@ export function flowHeight(steps: number, direction: 'row' | 'column' = 'row'): 
   return steps * FLOW_STEP_H + (steps - 1) * FLOW_GAP;
 }
 
-/** How wide one line of text will be drawn at this size. */
+/**
+ * MATHS ON THE BOARD IS WRITTEN IN LaTeX, BETWEEN `$…$` (T6, 2026-09-29).
+ *
+ * Aarav: "this question should be written as an equation, why is it in
+ * English? Use LaTeX." A board line may carry inline maths — "If $x + y = 7$,
+ * write $x$ in terms of $y$" — and the stage typesets it (KaTeX). The layout
+ * still measures plain characters, so this is how wide the maths will read:
+ * the LaTeX with its markup taken off, "\frac{a}{b}" as "a/b".
+ */
+export const hasMath = (text: string): boolean => /\$[^$]+\$/.test(text);
+
+export function mathPlain(text: string): string {
+  if (!hasMath(text)) return text;
+  return text.replace(/\$([^$]+)\$/g, (_, tex: string) =>
+    tex
+      .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '$1/$2')
+      .replace(/\\sqrt\s*\{([^{}]*)\}/g, '√$1')
+      .replace(/\\(?:left|right|displaystyle|,|;|!|quad|qquad)/g, ' ')
+      .replace(/\\(?:times|cdot|div|pm|neq|leq|geq|le|ge|ne|pi|theta|alpha|beta|degree|circ)/g, '×')
+      .replace(/\\[a-zA-Z]+/g, '')
+      .replace(/[{}^_\\]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim(),
+  );
+}
+
+/** How wide one line of text will be drawn at this size — maths measured by what it reads as. */
 export function textWidth(text: string, size: number, mono = false): number {
-  return text.length * size * (mono ? EM_MONO : EM_SANS);
+  return mathPlain(text).length * size * (mono ? EM_MONO : EM_SANS);
 }
 
 /**
@@ -112,7 +138,10 @@ export function textWidth(text: string, size: number, mono = false): number {
 export function wrapLines(text: string, w: number, size: number): string[] {
   const lines: string[] = [];
   let line = '';
-  for (const word of text.split(/\s+/)) {
+  // A `$…$` group is one word, whatever spaces it holds: maths is never
+  // broken across two lines, and a half-open `$` would typeset nothing.
+  const words = hasMath(text) ? (text.match(/(?:\$[^$]*\$|[^\s$])+/g) ?? [text]) : text.split(/\s+/);
+  for (const word of words) {
     const next = line ? `${line} ${word}` : word;
     if (line && textWidth(next, size) > w) {
       lines.push(line);
@@ -207,7 +236,7 @@ export function fitText(
 ): number {
   if (text.length === 0 || maxWidth <= 0) return preferred;
   const em = mono ? EM_MONO : EM_SANS;
-  return Math.max(min, Math.min(preferred, maxWidth / (text.length * em)));
+  return Math.max(min, Math.min(preferred, maxWidth / (mathPlain(text).length * em)));
 }
 
 /**

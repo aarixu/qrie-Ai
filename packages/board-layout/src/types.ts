@@ -62,7 +62,14 @@ export type Instruction =
    */
   | {
       do: 'ask';
+      /** The question as she SAYS it — maths in words ("x plus y equals seven"). */
       question: string;
+      /**
+       * The question as it is WRITTEN on the board, maths in LaTeX between
+       * `$…$` ("If $x + y = 7$, write $x$ in terms of $y$."), typeset by the
+       * stage (T6). Absent: the board writes `question`.
+       */
+      written?: string;
       /** What a right answer contains — for the judge, never for the board. */
       expect?: string;
       /** The nudge a wrong spoken try gets. */

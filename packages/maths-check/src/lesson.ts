@@ -19,7 +19,7 @@
  * second, starting with "=", does not parse and is skipped.
  */
 
-import type { Element, Lesson } from '@ai-tutor/lesson-format';
+import { mathPlain, type Element, type Lesson } from '@ai-tutor/lesson-format';
 import { checkLines, type CheckResult, type Line } from './check.ts';
 
 const READ_KINDS: ReadonlySet<Element['kind']> = new Set(['formula', 'handwrite', 'text', 'note']);
@@ -41,7 +41,9 @@ export function equationLines(lesson: Lesson): Line[] {
       continue;
     }
     if (!READ_KINDS.has(el.kind) || !('text' in el) || !el.text.includes('=')) continue;
-    out.push(section === undefined ? { id: el.id, text: el.text } : { id: el.id, text: el.text, section });
+    // Maths written in LaTeX (T6) is read as what it says: "$\frac{a}{b} = 2$" is "a/b = 2".
+    const text = mathPlain(el.text);
+    out.push(section === undefined ? { id: el.id, text } : { id: el.id, text, section });
   }
   return out;
 }

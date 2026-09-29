@@ -337,3 +337,21 @@ describe('the worked example survives to the lesson, and only if its maths holds
     expect(asks[2].workedExample).toBeUndefined();
   });
 });
+
+describe('the board form of a question (T6)', () => {
+  it('drops a written question with an unclosed maths group, and keeps a good one', () => {
+    const bad = { id: 'b1', topic: 't', narration: '', board: [{ do: 'ask' as const, question: 'Q?', written: 'If $x + y = 7, what is x?' }] };
+    const good = { id: 'b2', topic: 't', narration: '', board: [{ do: 'ask' as const, question: 'Q?', written: 'If $x + y = 7$, what is $x$?' }] };
+    dropBadProbes([bad, good]);
+    expect('written' in bad.board[0]).toBe(false);
+    expect(good.board[0].written).toBe('If $x + y = 7$, what is $x$?');
+  });
+});
+
+describe('an ask the planner gave only a board form', () => {
+  it('says the board form rather than crashing on a missing question', () => {
+    const beat = { id: 'b1', topic: 't', narration: '', board: [{ do: 'ask' as const, written: 'If $x + y = 7$, what is $x$?' }] };
+    dropBadProbes([beat as never]);
+    expect((beat.board[0] as { question?: string }).question).toBe('If x + y = 7, what is x?');
+  });
+});

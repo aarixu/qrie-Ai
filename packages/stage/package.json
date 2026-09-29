@@ -6,7 +6,8 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@ai-tutor/lesson-format": "*"
+    "@ai-tutor/lesson-format": "*",
+    "katex": "^0.18.9"
   },
   "peerDependencies": {
     "react": "^19.0.0",
