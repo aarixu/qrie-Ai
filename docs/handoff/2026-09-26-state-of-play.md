@@ -85,6 +85,8 @@ Every task was followed by a background review; each finding was fixed with a te
 - C3 (≥144 question templates), and Metric v2 which depends on them, need Aarav's spot check.
 - T9.2's automatic halt is a DB job, so it belongs to the LMS lane.
 
+**Found by probing production preparation (2026-09-29 evening, fixed):** one cold preparation in five of a Class 8 topic crashed with "Cannot read properties of undefined (reading 'trim')" — the planner left a `say` without text. A fuzz over a real plan found the same crash from a title, write, card, list item and caption; `parsePlan` now drops such instructions. One earlier production preparation was refused by the maths gate ("does not add up"); five probes did not reproduce it, and the refused lines are now logged (console) and printable with `tools/prewarm/probe-maths.mjs`.
+
 **Found on production, not fixed:** a student in the Class 6–8 band who opens a Class 10 topic by URL prepares it cold, because the catalogue query is filtered by band (`klass=gte.6&klass=lte.8`) even though that topic is published. `/api/prep/lock` answers 503 "we cannot answer this second" (the class still prepares). PostHog capture answers 401 (key).
 
 **Left for Aarav:** #40 — the keep route refuses a class whose spine trips the bare distress patterns, even when prep's reader allowed the line. Kept strict on purpose; the only cost is re-preparing. #3 — `kept_by` on `prepared_class` needs an LMS-lane migration. Speech units are still priced at 0.29/char, which was Deepgram's price; on Vertex a line costs about 0.43 paise/char.
