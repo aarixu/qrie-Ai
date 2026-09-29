@@ -12,7 +12,7 @@ import {
   waitForHolder,
   type LivePrep,
 } from '../lib/liveClass';
-import { fetchCatalog, findTopic, forgetCatalog, type CatalogEntry } from '../lib/content';
+import { fetchCatalog, findKeptTopic, findTopic, forgetCatalog, type CatalogEntry } from '../lib/content';
 import { useLessonVoice } from '../lib/lessonVoice';
 import { settingsStore } from '../stores/settings';
 import { preferencesStore } from '../stores/preferences';
@@ -487,7 +487,9 @@ export function LiveClassRoute() {
       // lesson route rather than replayed here, so there is exactly one place
       // that mounts a room around a saved lesson.
       if (ask.topicRef) {
-        const existing = (await fetchCatalog()).find((e) => e.topicRef === ask.topicRef);
+        const existing =
+          (await fetchCatalog()).find((e) => e.topicRef === ask.topicRef) ??
+          (await findKeptTopic(ask.topicRef).catch(() => null));
         if (cancelled) return;
         if (existing) {
           navigate(`/lesson/${existing.id}`, { replace: true });

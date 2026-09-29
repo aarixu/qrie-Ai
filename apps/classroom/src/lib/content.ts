@@ -104,7 +104,7 @@ const KEPT_TIMEOUT_MS = 4000;
  */
 const LOOK_BACK_CLASSES = 2;
 
-async function fetchKeptClasses(): Promise<CatalogEntry[]> {
+async function fetchKeptClasses(one?: { topicRef: string } | { id: string }): Promise<CatalogEntry[]> {
   const db = supabase();
   if (!db) return [];
 
@@ -128,7 +128,11 @@ async function fetchKeptClasses(): Promise<CatalogEntry[]> {
     .select('id, topic_ref, title, subtitle, klass, subject')
     .eq('review_status', 'published')
     .is('retracted_at', null);
-  if (mine !== null) query = query.lte('klass', mine).gte('klass', mine - LOOK_BACK_CLASSES);
+  // One topic asked for by name is served whatever the band; the band keeps
+  // only the whole-catalogue read small.
+  if (one && 'topicRef' in one) query = query.eq('topic_ref', one.topicRef);
+  else if (one) query = query.eq('id', one.id);
+  else if (mine !== null) query = query.lte('klass', mine).gte('klass', mine - LOOK_BACK_CLASSES);
 
   const answered = await Promise.race([
     query,
@@ -252,8 +256,22 @@ export async function fetchLesson(entry: CatalogEntry): Promise<Lesson> {
   return pointAtItsOwnFolder(result.lesson, entry);
 }
 
+/**
+ * The kept, published class for one topic, or null — looked up by the topic
+ * itself, so a student outside that class's band who opens its address is
+ * served it rather than having it prepared again from cold (found on
+ * production, 2026-09-29). The whole-catalogue read stays banded.
+ */
+export async function findKeptTopic(topicRef: string): Promise<CatalogEntry | null> {
+  const kept = await fetchKeptClasses({ topicRef });
+  return kept.find((e) => e.topicRef === topicRef) ?? null;
+}
+
 export async function findEntry(lessonId: string): Promise<CatalogEntry | null> {
-  return (await fetchCatalog()).find((e) => e.id === lessonId) ?? null;
+  const listed = (await fetchCatalog()).find((e) => e.id === lessonId);
+  if (listed) return listed;
+  // Not in this student's band: the lesson route asks for it by id.
+  return (await fetchKeptClasses({ id: lessonId })).find((e) => e.id === lessonId) ?? null;
 }
 
 /** A chapter's topics joined with their lessons, in syllabus order. */
