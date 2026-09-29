@@ -27,6 +27,8 @@ export { foldSession } from './fold.ts';
 
 export { migrateModel } from './migrate.ts';
 
+export { MAX_REVIEWS, nextActivity, type NextActivity, type NextInput } from './next.ts';
+
 export {
   EXPOSURE_RUNG,
   RETRIEVAL_GAP_MS,
