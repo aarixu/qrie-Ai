@@ -128,16 +128,18 @@ export function asksForHint(
  * samjhaiye" — not an answer. Same narrow rule as a hint: at most seven words,
  * no digit, and nothing but the ask and filler around it.
  *
- * Bare "samjha" is "(I) understood" and is NOT a request; "samjha do" is, and
- * so is saying they did not understand — "nahi samjha", "samajh nahi aaya",
- * "I don't understand" (second review).
+ * Bare "samjha" is "(I) understood" and is NOT a request; "samjha do" is
+ * (second review). Saying they did not understand — "nahi samjha", "samajh
+ * nahi aaya", "I don't understand" — is not a request either: like "pata
+ * nahi" it goes to the judge as a miss, so the ladder climbs to the worked
+ * example and the answer. As a request it stopped at the hint, three times
+ * over (third review).
  */
-const EXPLAIN =
-  /\b(?:explain|samjhao|samjhaiye|samjhaao|samjha (?:do|dijiye|dena)|(?:nahi|nahin|nhi) samjh?a|samajh (?:nahi|nahin|nhi) (?:aaya|aya|aa raha|aa rha)|(?:i )?(?:dont|do not|didnt|did not) (?:understand|get it)|not understood)\b/g;
+const EXPLAIN = /\b(?:explain|samjhao|samjhaiye|samjhaao|samjha (?:do|dijiye|dena))\b/g;
 const EXPLAIN_FILLER = new Set([
   'again', 'another', 'way', 'differently', 'different', 'once', 'more', 'phir', 'dobara', 'doosre', 'dusre',
   'tareeke', 'tarike', 'tarah', 'se', 'do', 'dijiye', 'it', 'that', 'this', 'please', 'can', 'could', 'you',
-  'me', 'mujhe', 'ek', 'baar', 'aur', 'ji', 'na', 'yaar', 'miss', 'mam', 'maam', 'sir', 'in', 'a',
+  'me', 'mujhe', 'ek', 'baar', 'aur', 'ji', 'na', 'yaar', 'miss', 'mam', 'maam', 'sir', 'in', 'a', 'kuch',
 ]);
 
 export function asksToExplainAgain(said: string): boolean {

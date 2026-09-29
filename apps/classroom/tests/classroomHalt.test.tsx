@@ -783,6 +783,17 @@ describe('the class-start warm-up', () => {
     expect((ended.at(-1)?.payload as { activeMs: number }).activeMs).toBeGreaterThanOrEqual(100);
   });
 
+  // Third review: placement answers fall due the next day, and a brand-new
+  // student heard "Welcome back … from an earlier class" and never "I'm Meera".
+  it('introduces her on a first class, and does not call the placement an earlier class', async () => {
+    warm.items = [question];
+    await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
+    await tick(10);
+    const lead = spoken.find((l) => /warm-up/i.test(l)) ?? '';
+    expect(lead).toMatch(/^Hi\b.*I'm Meera/);
+    expect(lead).not.toContain('earlier class');
+  });
+
   it('files nothing when it is skipped, and the class begins', async () => {
     warm.items = [question];
     const host = await openClass({ lesson: askingLesson(RIGHT_WHY), tts: quickVoice() });
@@ -914,6 +925,49 @@ describe('working it out, eighth review', () => {
       [false, 1],
       [true, 2],
     ]);
+  });
+
+  // Third review: the ear thinking unmounted the panel, and the steps went.
+  it('keeps their working while the mic is open, and does not judge what it hears', async () => {
+    const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' }), tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    const listened = ear.listens;
+    // Said aloud while they work: the next listen would hear it.
+    ear.queued = ['three x plus twelve equals twenty one'];
+    await typeStep(host, '3x + 12 = 21');
+    await tick(20);
+    expect(ear.listens).toBe(listened);
+    expect(host.querySelector('[aria-label="Work it out"]')?.textContent).toContain('3x + 12 = 21');
+    expect(answeredRows()).toHaveLength(0);
+  });
+
+  it('takes the right answer however the expected answer is written', async () => {
+    for (const expect_ of [
+      'x is 4, since 2x = 8',
+      'Four, since 2 × 4 + 3 = 11',
+      String.raw`$x = \frac{8}{2}$`,
+      'The answer is 4 because 2(4) + 3 = 11.',
+    ]) {
+      spoken = [];
+      // Each class from its start: the last one saved its place past the question.
+      progressStore.set({ lessons: {}, lastLessonId: null });
+      const host = await openClass({ lesson: withAsk({ question: 'Solve it.', written: 'Solve $2x + 3 = 11$', expect: expect_ }), tts: quickVoice() });
+      await tick();
+      await tap(host, 'Work it out');
+      await typeStep(host, 'x = 4');
+      expect(moved(), expect_).toBe(true);
+      for (const root of roots.splice(0)) act(() => root.unmount());
+    }
+  });
+
+  it('is not offered when the question asks for another expression', async () => {
+    const host = await openClass({
+      lesson: withAsk({ question: 'Find it.', written: 'If $3x + 2 = 11$, find the value of $2x + 1$.', expect: '7' }),
+      tts: quickVoice(),
+    });
+    await tick();
+    expect(hasButton(host, 'Work it out')).toBe(false);
   });
 
   it('hides the quick replies while they work', async () => {

@@ -90,6 +90,13 @@ describe('checkStep, eighth review', () => {
     expect(checkStep('3(x + 4) = 21', '3x + 12 = 21 => 3x = 9').ok).toBe(true);
   });
 
+  // Third review: the walk refused a side sum written beside the step.
+  it('lets a side calculation stand beside the step', () => {
+    expect(checkStep('3x + 12 = 21', '21 - 12 = 9, 3x = 9').ok).toBe(true);
+    expect(checkStep('3x + 12 = 21', '21 - 12 = 9 => 3x = 9').ok).toBe(true);
+    expect(checkStep('3x + 12 = 21', '21 - 12 = 8, 3x = 8')).toMatchObject({ ok: false, kind: 'arithmetic' });
+  });
+
   it('counts a chained value as solved', () => {
     const v = checkStep('3x = 9', 'x = 9/3 = 3');
     expect(v.ok).toBe(true);

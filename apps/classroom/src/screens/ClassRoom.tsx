@@ -96,9 +96,9 @@ const PREPARE_MS = 5_000;
 const QUIET_BEFORE_NUDGE_MS = 20_000;
 
 /**
- * How long the class waits, after her greeting, for the warm-up lookup (it
- * loads the syllabus map when a review is due). A placeholder (UNVERIFIED on a
- * phone): past it the class starts without a warm-up.
+ * How long the class waits, before anything is said, for the warm-up lookup
+ * (it loads the syllabus map when a review is due). A placeholder (UNVERIFIED
+ * on a phone): past it the class starts without a warm-up.
  */
 const WARM_UP_WAIT_MS = 2_500;
 
@@ -517,7 +517,25 @@ export function ClassRoom({
   const [working, setWorking] = useState(false);
   const workStart = useMemo(() => workStartOf(player.pendingAsk?.written), [player.pendingAsk]);
   const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
-  useEffect(() => setWorking(false), [player.beat?.id]);
+  /**
+   * While they work, the ear is paused: what a child reads out of their own
+   * working is not an answer, and the ear thinking unmounted the panel and
+   * wiped their steps (third review). Opening it takes the turn the way a tap
+   * does (`beginTap`); closing it gives the turn back.
+   */
+  const workTurn = useRef<(() => void) | null>(null);
+  const openWorking = (): void => {
+    workTurn.current?.();
+    workTurn.current = beginTap();
+    setWorking(true);
+  };
+  const closeWorking = (): void => {
+    setWorking(false);
+    workTurn.current?.();
+    workTurn.current = null;
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => closeWorking(), [player.beat?.id]);
 
   const onWorkedStep = async (step: WorkedStep) => {
     if (halt.halted || askBusyRef.current) return;
@@ -533,9 +551,13 @@ export function ClassRoom({
       if (screened.reply !== null) await sayLine(inLanguage(screened.reply, tutorLanguage()));
       return;
     }
+    // What leaves this function is the cleaned text — a phone number or an
+    // address masked — the same as a typed doubt's (third review).
+    const said = screen(step.text, 'from-student');
+    const shown = said.kind === 'clean' ? said.text : step.text;
     const v = step.verdict;
     const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
-    board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${step.text}` }] }] }]);
+    board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${shown}` }] }] }]);
     const settle = beginTap();
     // The question restated is not a step; a step on the way is not the answer.
     const restated = restates(workStart, step.text);
@@ -550,9 +572,9 @@ export function ClassRoom({
         // Solved: their answer, worked out and checked line by line. Nothing
         // to tap while she praises it, and the question is answered once.
         setAskBusy(true);
-        setWorking(false);
+        closeWorking();
         recordAnswerAtBeat(lesson, beatId, true);
-        ledger.answered({ beatId, correct: true, surface: 'text', answerText: step.text });
+        ledger.answered({ beatId, correct: true, surface: 'text', answerText: shown });
         const praise = decide({
           verdict: 'right',
           attempt: (tapTries.current.get(beatId) ?? 0) + 1,
@@ -579,10 +601,15 @@ export function ClassRoom({
       // the next is another try (eighth review: only the right one was).
       if (v.ok === false && isFinalValue(step.text)) {
         recordAnswerAtBeat(lesson, beatId, false);
-        ledger.answered({ beatId, correct: false, surface: 'text', answerText: step.text });
+        ledger.answered({ beatId, correct: false, surface: 'text', answerText: shown });
         tapTries.current.set(beatId, (tapTries.current.get(beatId) ?? 0) + 1);
       }
-      const line = restated
+      const solvedNotTaken = v.ok === true && v.solved !== undefined && !restated;
+      const line = solvedNotTaken
+        ? hi
+          ? 'Sahi — ab isse sawaal ka jawab nikaalo.'
+          : 'Right — now use that to answer the question.'
+        : restated
         ? hi
           ? 'Yeh toh wahi sawaal hai — ab isme ek step lo.'
           : "That's the equation we started with — now change it by one step."
@@ -597,8 +624,8 @@ export function ClassRoom({
               : v.ok === false
                 ? hi ? 'Hmm, isse equation badal gaya. Jo ek side ke saath karo, wahi doosri side ke saath bhi karo.' : 'Hmm, that changes the equation. Whatever you do to one side, do to the other.'
                 : hi ? 'Yeh step main padh nahi paayi — aise likho: 3x + 12 = 21.' : "I couldn't read that step — write it like 3x + 12 = 21.";
-      const said = await sayLine(line);
-      if (!said.halted && v.ok === false && isFinalValue(step.text)) ledger.reopened(beatId, Date.now());
+      const spoken = await sayLine(line);
+      if (!spoken.halted && v.ok === false && isFinalValue(step.text)) ledger.reopened(beatId, Date.now());
     } finally {
       settle();
     }
@@ -1863,10 +1890,10 @@ export function ClassRoom({
 
   /**
    * THE WARM-UP (E6-E8, 2026-09-29). When a review is due, the class opens
-   * with one or two questions on it — after her greeting, before the first
-   * beat, and never on a resumed class. Looked up while the room gets ready;
-   * a lookup that has not answered WARM_UP_WAIT_MS after the greeting is
-   * dropped and the class starts. A tap is filed cold (`ledger.warmedUp`), she
+   * with one or two questions on it — before her greeting's recap (the warm-up
+   * says hello), before the first beat, and never on a resumed class. Looked
+   * up while the room gets ready; a lookup that has not answered
+   * WARM_UP_WAIT_MS after the class starts is dropped and she greets them. A tap is filed cold (`ledger.warmedUp`), she
    * says whether it was right, and a skip files nothing.
    */
   const warmUpReady = useRef<Promise<WarmUpQuestion[]> | null>(null);
@@ -1899,11 +1926,18 @@ export function ClassRoom({
       let answered = false;
       // Never the outcome's title before the tap: in 63 of the bank's probes
       // the title holds the answer word for word (second review).
+      // A student with no class behind them — only the placement test, whose
+      // answers fall due the next day — is met, not welcomed back (third review).
+      const returning = greetingMemory(hi ? 'hi-en' : 'en').lastTitle !== undefined;
       const lead =
         step === 0
-          ? hi
-            ? `Welcome back${who}! Class se pehle ek chhota sa warm-up — pichhli class se ek sawaal.`
-            : `Welcome back${who}! Before we start, a quick warm-up question from an earlier class.`
+          ? returning
+            ? hi
+              ? `Welcome back${who}! Class se pehle ek chhota sa warm-up — pichhli class se ek sawaal.`
+              : `Welcome back${who}! Before we start, a quick warm-up question from an earlier class.`
+            : hi
+              ? `Hi${who}! Main Meera hoon. Class se pehle ek chhota sa warm-up sawaal.`
+              : `Hi${who}! I'm Meera. Before we start, a quick warm-up question.`
           : hi
             ? 'Ek aur.'
             : 'One more.';
@@ -2233,7 +2267,7 @@ export function ClassRoom({
                   )}
                   {workable && (
                     <button
-                      onClick={() => setWorking(true)}
+                      onClick={openWorking}
                       className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
                     >
                       ✍️ Work it out
@@ -2241,9 +2275,11 @@ export function ClassRoom({
                   )}
                 </span>
               )}
-              {working && player.pendingAsk && !askChoicesHidden && (
-                <span className="w-full">
-                  <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={() => setWorking(false)} />
+              {/* Hidden, never unmounted, while an answer is weighed: unmounting
+                  threw their steps away (third review). */}
+              {working && player.pendingAsk && (
+                <span className={askChoicesHidden ? 'hidden' : 'w-full'}>
+                  <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={closeWorking} />
                 </span>
               )}
             </div>

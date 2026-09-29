@@ -113,8 +113,8 @@ export interface Action {
    * The rung in force on this ask once this action has happened — what the
    * caller passes back as `rungSoFar` next turn. Never below the one before
    * it. Help that does not climb files its rung in `helped` without moving
-   * this: a content-free nudge (L1), and an explanation or hint the student
-   * asked for (a request never brings the answer nearer).
+   * this: a content-free nudge (L1), and an explanation the student asked for
+   * (L7). A hint asked for does move it, to L3 and never past it.
    */
   rung: AssistanceRung;
   /**

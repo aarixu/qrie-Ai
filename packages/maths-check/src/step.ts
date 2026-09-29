@@ -218,6 +218,9 @@ export function checkStep(previous: string, step: string): StepVerdict {
     let ref = prev;
     let refSt = prevStatements[prevStatements.length - 1];
     for (const st of now.line.statements) {
+      // A sum worked beside the step ("21 - 12 = 9, 3x = 9") says nothing
+      // about the equation, and `arithmeticSlip` has already checked it.
+      if (st.sides.every((side) => P.variablesOf(toPoly(side.expr)).size === 0)) continue;
       if (brokenLink(st)) return { ok: false, kind: 'procedural', reason: 'one link of this chain is not the same as the next' };
       const eq = equationOf(st);
       if (proportional(ref, eq) === null) return notFollowing(st, ref, refSt);

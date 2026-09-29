@@ -62,9 +62,12 @@ export function typesetsAsMaths(text: string): boolean {
   if (/\^(?:-|\d{2,}|[A-Za-z]{2,})/.test(t)) return false;
   // "H2O", "CO2": a chemical formula would be set as italic variables.
   if (/[A-Z][a-z]?\d+[A-Z]|[A-Z]{2,}\d/.test(t)) return false;
-  // Letters side by side are a product ("mgh", "2ab"); a run with a vowel in
-  // it is a word (eighth review: "PE = mgh" was refused).
-  const words = (t.match(/[A-Za-z]{3,}/g) ?? []).filter((w) => /[aeiou]/i.test(w));
+  // Letters side by side are a product ("mgh", "2ab"); a word is a run of
+  // three with a vowel in it, any run of four or more ("kmph"), or three or
+  // more capitals ("HCF", "MRP") — eighth and third reviews.
+  const words = (t.match(/[A-Za-z]{3,}/g) ?? []).filter(
+    (w) => /[aeiou]/i.test(w) || w.length >= 4 || /^[A-Z]{3,}$/.test(w),
+  );
   return words.every((w) => /^(sin|cos|tan|log|cot|sec|cosec)$/i.test(w));
 }
 
@@ -78,7 +81,9 @@ export function formulaTex(text: string): string {
   const tex = text
     .trim()
     .replace(/^\$|\$$/g, '')
-    .replace(/\s*(?:-{2,}|\.{2,}|…|—)\s*\(([0-9]+|[ivx]+)\)\s*$/i, String.raw` \qquad ($1)`);
+    .replace(/\s*(?:-{2,}|\.{2,}|…|—)\s*\(([0-9]+|[ivx]+)\)\s*$/i, String.raw` \qquad ($1)`)
+    // "a^(m+n)": LaTeX raises only the bracket; the whole power goes up.
+    .replace(/\^\(([^()]*)\)/g, '^{$1}');
   // Plain-text functions set upright, as functions, not as italic letters
   // (eighth review: "sin 30" was set as s·i·n·30). KaTeX has no \cosec.
   return tex

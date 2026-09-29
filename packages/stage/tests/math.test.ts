@@ -58,6 +58,18 @@ describe('which formulas are typeset (seventh review)', () => {
     expect(typesetsAsMaths('CO2 + H2O')).toBe(false);
     expect(typesetsAsMaths('2^10 = 1024')).toBe(false);
   });
+  it('leaves abbreviations and units plain (third review)', async () => {
+    const { typesetsAsMaths } = await import('../src/math');
+    expect(typesetsAsMaths('HCF × LCM = a × b')).toBe(false);
+    expect(typesetsAsMaths('LCM(4, 6) = 12')).toBe(false);
+    expect(typesetsAsMaths('MRP = 500')).toBe(false);
+    expect(typesetsAsMaths('v = 60 kmph')).toBe(false);
+    expect(typesetsAsMaths('PE = mgh')).toBe(true);
+  });
+  it('raises a whole bracketed power', async () => {
+    const { formulaTex } = await import('../src/math');
+    expect(formulaTex('a^m × a^n = a^(m+n)')).toBe('a^m × a^n = a^{m+n}');
+  });
   it('sets sin, cos and log upright, as functions', async () => {
     const { formulaTex } = await import('../src/math');
     expect(formulaTex('sin 30 = 1/2')).toBe(String.raw`\sin 30 = 1/2`);

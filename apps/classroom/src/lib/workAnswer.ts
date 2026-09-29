@@ -10,12 +10,17 @@ import { equationIn, formatRational, sameEquation, workableEquation, type Ration
  * exactly one equation, read as it means (`latexToPlain`, never the width
  * ruler), that is one linear equation in one unknown and not already solved.
  * "Is $x = 5$ a solution of $2x + 3 = 11$?" holds two; "$2^{x} = 32$" and a
- * quadratic are past what the checker can follow.
+ * quadratic are past what the checker can follow; and "If $3x + 2 = 11$, find
+ * the value of $2x + 1$" asks for something the working never reaches (third
+ * review) — any other piece of maths with a letter in it, beyond the unknown
+ * itself, takes the panel away.
  */
 export function workStartOf(written: string | undefined): string | null {
   if (!written) return null;
-  const equations = [...written.matchAll(/\$([^$]*)\$/g)].map((m) => m[1]).filter((tex) => tex.includes('='));
+  const pieces = [...written.matchAll(/\$([^$]*)\$/g)].map((m) => m[1]);
+  const equations = pieces.filter((tex) => tex.includes('='));
   if (equations.length !== 1) return null;
+  if (pieces.some((tex) => !tex.includes('=') && /[A-Za-z]/.test(tex) && !/^\s*[A-Za-z]\s*$/.test(tex))) return null;
   const plain = latexToPlain(`$${equations[0]}$`);
   return plain !== null && workableEquation(plain) ? plain : null;
 }
@@ -27,22 +32,38 @@ const NUMBER = /-?\d+(?:\.\d+)?(?:\s*\/\s*\d+)?/g;
 /**
  * Whether a solved step ("x = 4") is the answer `expect` describes.
  *
- * The last "letter = number" in `expect` is its answer ("Subtract 3 from both
- * sides: 2x = 8, so x = 4." — x = 4). With none, an `expect` holding some
- * other equation asks for something else ("2x + 5 = 11" when x is only the way
- * there), one number is the answer, and none at all leaves the working to
- * speak for itself.
+ * A ✓ solved step already follows from the question's own equation, so it is
+ * taken unless `expect` says otherwise (third review: "x is 4, since 2x = 8",
+ * "Four, since 2 × 4 + 3 = 11" and "$x = \frac{8}{2}$" all refused x = 4):
+ *   - where `expect` gives this letter a value ("x = 4", "4 = x", "x is 4"),
+ *     the step must be one of them;
+ *   - else, where it holds an equation in the letter, that equation is the
+ *     answer (`expectedEquation`) and a value is not;
+ *   - else, where it holds exactly one number and nothing else to go on, it
+ *     must be that number ("7" when the question asked for 2x + 1);
+ *   - else the working speaks for itself.
  */
 export function solvesAsExpected(expect: string | undefined, solved: { name: string; value: Rational }): boolean {
-  const claim = `${solved.name} = ${formatRational(solved.value)}`;
   if (!expect) return true;
-  const forms = [...expect.matchAll(SOLVED_FORM)];
-  const last = forms[forms.length - 1];
-  if (last) return sameEquation(claim, `${last[1]} = ${last[2]}`);
-  if (expect.includes('=')) return false;
-  const numbers = expect.match(NUMBER) ?? [];
-  if (numbers.length === 1) return sameEquation(claim, `${solved.name} = ${numbers[0]}`);
-  return numbers.length === 0;
+  const claim = `${solved.name} = ${formatRational(solved.value)}`;
+  const plain = (latexToPlain(expect) ?? expect).replace(/−/g, '-').replace(/\((\d+)\)\/\((\d+)\)/g, '$1/$2');
+  const n = solved.name;
+  const values = [
+    ...[...plain.matchAll(SOLVED_FORM)].filter((m) => m[1] === n).map((m) => m[2]),
+    ...[...plain.matchAll(new RegExp(`(?<![\\w.])(-?\\d+(?:\\.\\d+)?(?:\\s*/\\s*\\d+)?)\\s*=\\s*${n}(?![A-Za-z0-9])`, 'g'))].map((m) => m[1]),
+    ...[...plain.matchAll(new RegExp(`(?<![A-Za-z0-9])${n}\\s+is\\s+(-?\\d+(?:\\.\\d+)?(?:\\s*/\\s*\\d+)?)`, 'gi'))].map((m) => m[1]),
+  ];
+  if (values.length > 0) return values.some((v) => sameEquation(claim, `${n} = ${v}`));
+  // An equation in the letter is itself the answer ("What remains is
+  // x + 3 = 7."), which `expectedEquation` matches; a value is not it. An
+  // all-number equation is a check ("2 × 4 + 3 = 11") and says nothing.
+  const equationsInLetter = plain
+    .split(/[;,:]|\.(?!\d)|\bso\b|\bsince\b|\bbecause\b/)
+    .filter((part) => part.includes('=') && new RegExp(`(?<![A-Za-z])${n}(?![A-Za-z])`).test(part));
+  if (equationsInLetter.length > 0) return false;
+  const numbers = plain.match(NUMBER) ?? [];
+  if (numbers.length === 1 && !plain.includes('=')) return sameEquation(claim, `${n} = ${numbers[0]}`);
+  return true;
 }
 
 /**

@@ -98,7 +98,18 @@ describe('asksToExplainAgain (H4)', () => {
     const { asksToExplainAgain } = await import('../src/index');
     for (const said of ['samjha', 'ji samjha', 'samjha sir', 'haan samjha'])
       expect(asksToExplainAgain(said), said).toBe(false);
-    for (const said of ['nahi samjha', 'samajh nahi aaya', "I don't understand", 'I did not understand', 'samjha do', 'samjha dijiye'])
+    for (const said of ['samjha do', 'samjha dijiye', 'phir se samjha dena'])
       expect(asksToExplainAgain(said), said).toBe(true);
+  });
+
+  // Third review: as requests, "I don't understand" three times gave the hint
+  // three times — a request stops at L3. Like "pata nahi", they go to the judge
+  // as a miss, and the ladder climbs to the worked example and the answer.
+  it('leaves not understanding to the judge, so the ladder climbs', async () => {
+    const { asksToExplainAgain, asksForHint } = await import('../src/index');
+    for (const said of ['nahi samjha', 'samajh nahi aaya', "I don't understand", 'kuch samajh nahi aaya', 'samjha nahi']) {
+      expect(asksToExplainAgain(said), said).toBe(false);
+      expect(asksForHint(said, { afterOffer: false }), said).toBe(false);
+    }
   });
 });
