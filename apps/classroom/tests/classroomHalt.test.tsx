@@ -540,6 +540,32 @@ describe('the held question, in the real room', () => {
     expect(spoken).toContain(lesson.beats[1].narration);
   });
 
+  it('checks typed working step by step, and takes a solving step as the answer (T8.1)', async () => {
+    const worked = askingLesson(RIGHT_WHY);
+    worked.beats[0].ask = { question: 'Solve three times x plus four equals twenty one.', written: 'Solve $3(x + 4) = 21$', expect: 'x = 3' } as never;
+    const host = await openClass({ lesson: worked, tts: quickVoice() });
+    await tick();
+    await tap(host, 'Work it out');
+    const type = async (text: string) => {
+      const input = byLabel(host, 'Your next step') as HTMLInputElement;
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+      await act(async () => {
+        setter.call(input, text);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      await tap(host, 'Check step');
+    };
+    await type('3x + 4 = 21');
+    expect(spoken.some((l) => /changes the equation/.test(l))).toBe(true);
+    await type('3x + 12 = 21');
+    expect(spoken.some((l) => /that step holds/.test(l))).toBe(true);
+    await type('3x = 21 - 12 = 8');
+    expect(spoken.some((l) => /calculation is off/.test(l))).toBe(true);
+    await type('x = 3');
+    await tick(10);
+    expect(spoken).toContain(lesson.beats[1].narration);
+  });
+
   it('does not start the class when they leave while she is greeting them', async () => {
     const held: Array<() => void> = [];
     const greetingHeld: TtsAdapter = {

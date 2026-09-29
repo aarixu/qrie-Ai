@@ -28,7 +28,8 @@ import { closeSession, logAnswer, logEvent, logReflection, openSession } from '.
 export interface AnsweredInput {
   beatId: string;
   correct: boolean;
-  surface: 'tap' | 'voice';
+  /** 'text': worked out in typed steps (T8.1). */
+  surface: 'tap' | 'voice' | 'text';
   chosenIndex?: number | null;
   verdict?: Verdict;
   /** The raw words, for a spoken or typed answer. Normalised before storage. */

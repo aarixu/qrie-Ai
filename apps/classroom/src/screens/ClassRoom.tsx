@@ -66,6 +66,8 @@ import { TutorTile, type TutorMode } from '../ui/TutorTile';
 import type { ClipManifest } from '@ai-tutor/teacher-clone';
 import { DoubtPanel } from '../ui/DoubtPanel';
 import { SupportScreen } from '../ui/SupportScreen';
+import { WorkPanel, type WorkedStep } from '../ui/WorkPanel';
+import { mathPlain } from '@ai-tutor/lesson-format';
 
 /**
  * How long the controls stay after the last touch. Long enough to find the
@@ -473,6 +475,68 @@ export function ClassRoom({
       ledger.reopened(beatId, Date.now());
     } finally {
       setAskBusy(false);
+      settle();
+    }
+  };
+
+  /**
+   * WORKING IT OUT, STEP BY STEP (T8.1). On an open question whose board form
+   * holds an equation, the student can type their working a line at a time;
+   * each step is checked against the last (maths-check `checkStep`), written
+   * on the board in their name with a tick or a cross, and answered in her
+   * words. A step that solves it is their answer, recorded as typed.
+   */
+  const [working, setWorking] = useState(false);
+  const workStart = useMemo(() => {
+    const written = player.pendingAsk?.written;
+    const eq = written?.match(/\$([^$]*=[^$]*)\$/)?.[1];
+    return eq ? mathPlain(`$${eq}$`) : null;
+  }, [player.pendingAsk]);
+  const workable = Boolean(player.pendingAsk && !(player.pendingAsk.options ?? []).length && workStart);
+  useEffect(() => setWorking(false), [player.beat?.id]);
+
+  const onWorkedStep = async (step: WorkedStep) => {
+    if (halt.halted) return;
+    const ask = player.pendingAsk;
+    if (!ask || !player.beat) return;
+    const beatId = player.beat.id;
+    const hi = tutorLanguage() === 'hi-en';
+    const v = step.verdict;
+    const mark = v.ok === true ? '✓' : v.ok === false ? '✗' : '?';
+    board.writeHeld(beatId, [{ author: 'student', steps: [{ say: '', ink: [{ op: 'write', text: `${mark} ${step.text}` }] }] }]);
+    const settle = beginTap();
+    try {
+      if (v.ok === true && v.solved) {
+        // Solved: their answer, worked out and checked line by line.
+        recordAnswerAtBeat(lesson, beatId, true);
+        ledger.answered({ beatId, correct: true, surface: 'text', answerText: step.text });
+        const praise = decide({
+          verdict: 'right',
+          attempt: (tapTries.current.get(beatId) ?? 0) + 1,
+          rungSoFar: tapRung.current.get(beatId) ?? 0,
+          ask,
+          lang: tutorLanguage(),
+          now: Date.now(),
+          recentLines: recentLines.current,
+        });
+        setWorking(false);
+        if (praise.say) {
+          const spoken = await sayLine(praise.say);
+          if (spoken.halted) return;
+        }
+        player.answer(correctIndex(ask));
+        return;
+      }
+      const line =
+        v.ok === true
+          ? hi ? 'Haan, yeh step sahi hai. Aage badho.' : 'Good — that step holds. Keep going.'
+          : v.ok === false && v.kind === 'arithmetic'
+            ? hi ? 'Method theek hai, par ek calculation galat hai — use dobara nikaalo.' : 'Your method is fine, but one calculation is off — work it out again.'
+            : v.ok === false
+              ? hi ? 'Hmm, isse equation badal gaya. Jo ek side ke saath karo, wahi doosri side ke saath bhi karo.' : 'Hmm, that changes the equation. Whatever you do to one side, do to the other.'
+              : hi ? 'Yeh step main padh nahi paayi — aise likho: 3x + 12 = 21.' : "I couldn't read that step — write it like 3x + 12 = 21.";
+      await sayLine(line);
+    } finally {
       settle();
     }
   };
@@ -1983,6 +2047,19 @@ export function ClassRoom({
                   >
                     🙋 I'm not sure
                   </button>
+                  {workable && (
+                    <button
+                      onClick={() => setWorking(true)}
+                      className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
+                    >
+                      ✍️ Work it out
+                    </button>
+                  )}
+                </span>
+              )}
+              {working && player.pendingAsk && (
+                <span className="w-full">
+                  <WorkPanel start={workStart} onStep={(step) => void onWorkedStep(step)} onClose={() => setWorking(false)} />
                 </span>
               )}
             </div>
