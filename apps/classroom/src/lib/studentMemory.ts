@@ -8,30 +8,40 @@
  * for the current lesson, a streak, and nothing else — every doubt started
  * from zero.
  *
- * WHAT IS KEPT, AND WHAT IS NOT. On the DEVICE only (localStorage), and only
- * what a tutor would jot in a notebook:
+ * WHAT IS KEPT, AND WHAT IS NOT. On the DEVICE (localStorage), and only what a
+ * tutor would jot in a notebook:
  *   - interests, from a FIXED list the student taps at onboarding — never free
- *     text, so nothing a child typed can ride into a prompt;
+ *     text;
  *   - topics that were hard (a wrong answer), topics that went well (right with
- *     no help), and topics they raised a hand about — the lesson's own topic
- *     line, never the child's words;
- *   - the last class and how far it got, and the one-line commitment they
- *     accepted at the end of a class.
- * No name (the greeting reads the profile directly), no transcripts, no
- * answers. `forgetMemory` clears it. Server-side memory waits for the LMS
- * lane's tables (the learner entity, TD6); until then a new phone starts fresh.
+ *     no help), and topics they raised a hand about — the topic line of an
+ *     AUTHORED or reviewed class only (ClassRoom's `remember`), never the
+ *     child's words and never the title of a page they brought in;
+ *   - the last class and how far it got, and the promise they picked at the end
+ *     of a class (stored as an id, spoken once, then cleared).
+ * No name, no answers, no transcripts.
  *
- * It reaches her through `memoryNotes` — a few private lines in the persona's
- * notes block, which the prompt tells her never to read out — and through
- * `greetingMemory`, which the class's first line uses.
+ * WHERE IT GOES. `memoryNotes` become a few private lines in the doubt tutor's
+ * prompt (sent through the relay to Google Vertex, like the rest of a doubt);
+ * `greetingMemory` feeds the class's first spoken line. Nothing here reaches
+ * class preparation for a class that could be kept (LiveClass.tsx).
+ *
+ * WHEN IT IS CLEARED. Account deletion and a different signed-in student on the
+ * same phone (`registerDeviceReset`); "Reset progress" clears everything but the
+ * interests (`forgetProgressMemory`). A TRIAL (`mayPersist()` false: no consent
+ * yet, a kiosk, a guest) neither reads nor writes it — a guest never hears, and
+ * is never briefed from, another child's notebook.
  */
 
-import type { TutorLanguage } from './workspace';
+import { mayPersist, type TutorLanguage } from './workspace';
 import { registerDeviceReset } from '../stores/localStore';
 
 const KEY = 'qrie:student-memory';
+/** Written by the first greeting build (2026-09-29, one commit); cleared with the rest. */
+const OLD_LAST_CLASS_KEY = 'qrie:last-class';
 const MAX_TOPICS = 8;
 const MAX_TOPIC_CHARS = 80;
+/** Topics as they appear inside a note line — short, so the instruction survives the cap. */
+const NOTE_TOPIC_CHARS = 40;
 const DAY = 86_400_000;
 
 /** The list a student picks from. Ids are stored; labels are shown. */
@@ -52,6 +62,19 @@ export const INTERESTS = [
 export type InterestId = (typeof INTERESTS)[number]['id'];
 const INTEREST_IDS: ReadonlySet<string> = new Set(INTERESTS.map((i) => i.id));
 
+/**
+ * The promises offered at the end of a class. Stored by id; the screen shows
+ * English (app UI is English for everyone) and she SAYS it in the child's
+ * language.
+ */
+export const PROMISES = {
+  'no-hints-3': { en: '3 questions without hints', 'hi-en': '3 sawaal bina hint ke' },
+  'revise-10': { en: 'revise this for 10 minutes', 'hi-en': '10 minute ka revision' },
+  'explain-home': { en: 'explain it to someone at home', 'hi-en': 'ghar pe kisi ko samjhaana' },
+} as const;
+export type PromiseId = keyof typeof PROMISES;
+const PROMISE_IDS: ReadonlySet<string> = new Set(Object.keys(PROMISES));
+
 interface TopicMark {
   topic: string;
   lessonId: string;
@@ -59,6 +82,8 @@ interface TopicMark {
   count: number;
   /** A later unassisted win on the same topic. */
   resolved?: boolean;
+  /** When the greeting last named it, so it is named at most once. */
+  mentionedAt?: number;
 }
 
 export interface StudentMemory {
@@ -68,27 +93,51 @@ export interface StudentMemory {
   wins: TopicMark[];
   doubts: TopicMark[];
   lastSession?: { lessonId: string; title: string; at: number; beatsDone: number; total: number };
-  commitment?: { text: string; lessonTitle: string; at: number };
+  commitment?: { id: PromiseId; lessonTitle: string; at: number };
 }
 
 const empty = (): StudentMemory => ({ version: 1, interests: [], struggles: [], wins: [], doubts: [] });
 
-const clip = (s: string): string => s.replace(/\s+/g, ' ').trim().slice(0, MAX_TOPIC_CHARS);
+/** One line of plain text: no quotes or backslashes (it is quoted in a prompt), capped. */
+const clip = (s: string, max = MAX_TOPIC_CHARS): string =>
+  s.replace(/["\\`]/g, "'").replace(/\s+/g, ' ').trim().slice(0, max);
+
+const isMark = (x: unknown): x is TopicMark => {
+  const m = x as TopicMark | null;
+  return (
+    typeof m === 'object' &&
+    m !== null &&
+    typeof m.topic === 'string' &&
+    typeof m.lessonId === 'string' &&
+    Number.isFinite(m.at) &&
+    Number.isFinite(m.count)
+  );
+};
+const marks = (v: unknown): TopicMark[] =>
+  Array.isArray(v) ? v.filter(isMark).map((m) => ({ ...m, topic: clip(m.topic) })).slice(-MAX_TOPICS) : [];
 
 export function readMemory(): StudentMemory {
+  // A trial persists nothing and is told nothing (see the header).
+  if (!mayPersist()) return empty();
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return empty();
-    const m = JSON.parse(raw) as Partial<StudentMemory>;
-    if (m?.version !== 1) return empty();
+    const m = JSON.parse(raw) as Partial<StudentMemory> | null;
+    if (!m || m.version !== 1) return empty();
+    const ls = m.lastSession;
+    const cm = m.commitment;
     return {
       version: 1,
-      interests: (m.interests ?? []).filter((i): i is InterestId => INTEREST_IDS.has(i)),
-      struggles: Array.isArray(m.struggles) ? m.struggles : [],
-      wins: Array.isArray(m.wins) ? m.wins : [],
-      doubts: Array.isArray(m.doubts) ? m.doubts : [],
-      ...(m.lastSession ? { lastSession: m.lastSession } : {}),
-      ...(m.commitment ? { commitment: m.commitment } : {}),
+      interests: Array.isArray(m.interests) ? m.interests.filter((i): i is InterestId => INTEREST_IDS.has(i)) : [],
+      struggles: marks(m.struggles),
+      wins: marks(m.wins),
+      doubts: marks(m.doubts),
+      ...(ls && typeof ls.lessonId === 'string' && typeof ls.title === 'string' && Number.isFinite(ls.at)
+        ? { lastSession: { ...ls, title: clip(ls.title) } }
+        : {}),
+      ...(cm && PROMISE_IDS.has(cm.id) && Number.isFinite(cm.at)
+        ? { commitment: { id: cm.id, lessonTitle: clip(String(cm.lessonTitle ?? '')), at: cm.at } }
+        : {}),
     };
   } catch {
     // A corrupt or unreadable store is a fresh notebook, never a broken class.
@@ -97,6 +146,7 @@ export function readMemory(): StudentMemory {
 }
 
 function write(m: StudentMemory): void {
+  if (!mayPersist()) return;
   try {
     localStorage.setItem(KEY, JSON.stringify(m));
   } catch {
@@ -107,8 +157,9 @@ function write(m: StudentMemory): void {
 function mark(list: readonly TopicMark[], at: { topic: string; lessonId: string }, now: number): TopicMark[] {
   const topic = clip(at.topic);
   if (topic === '') return [...list];
-  const found = list.find((x) => x.topic === topic);
-  const rest = list.filter((x) => x.topic !== topic);
+  const same = (x: TopicMark) => x.topic === topic && x.lessonId === at.lessonId;
+  const found = list.find(same);
+  const rest = list.filter((x) => !same(x));
   const next: TopicMark = found
     ? { ...found, at: now, count: found.count + 1, resolved: false }
     : { topic, lessonId: at.lessonId, at: now, count: 1 };
@@ -126,14 +177,16 @@ export function recordStruggle(at: { topic: string; lessonId: string }, now = Da
   write({ ...m, struggles: mark(m.struggles, at, now) });
 }
 
-/** A right answer with no help on this topic; a matching struggle is marked resolved. */
+/** A right answer with no help on this topic; the matching struggle is marked resolved. */
 export function recordWin(at: { topic: string; lessonId: string }, now = Date.now()): void {
   const m = readMemory();
   const topic = clip(at.topic);
   write({
     ...m,
     wins: mark(m.wins, at, now),
-    struggles: m.struggles.map((s) => (s.topic === topic ? { ...s, resolved: true } : s)),
+    struggles: m.struggles.map((s) =>
+      s.topic === topic && s.lessonId === at.lessonId ? { ...s, resolved: true } : s,
+    ),
   });
 }
 
@@ -151,91 +204,128 @@ export function setLastSession(
   write({ ...m, lastSession: { ...s, title: clip(s.title), at: now } });
 }
 
-export function setCommitment(c: { text: string; lessonTitle: string }, now = Date.now()): void {
+export function setCommitment(c: { id: PromiseId; lessonTitle: string }, now = Date.now()): void {
+  if (!PROMISE_IDS.has(c.id)) return;
   const m = readMemory();
-  write({ ...m, commitment: { text: clip(c.text), lessonTitle: clip(c.lessonTitle), at: now } });
+  write({ ...m, commitment: { id: c.id, lessonTitle: clip(c.lessonTitle), at: now } });
 }
 
+/** The promise has been said back to them once; it is not repeated at every class forever. */
 export function clearCommitment(): void {
   const m = readMemory();
-  const { commitment: _drop, ...rest } = m;
+  const { commitment: _said, ...rest } = m;
   write(rest);
+}
+
+/** The greeting named this struggle; it is not named again. */
+export function markStruggleMentioned(topic: string, lessonId: string, now = Date.now()): void {
+  const m = readMemory();
+  write({
+    ...m,
+    struggles: m.struggles.map((s) => (s.topic === topic && s.lessonId === lessonId ? { ...s, mentionedAt: now } : s)),
+  });
+}
+
+/** "Reset progress": every mark, the last class and the promise go; the interests they chose stay. */
+export function forgetProgressMemory(): void {
+  const m = readMemory();
+  write({ version: 1, interests: m.interests, struggles: [], wins: [], doubts: [] });
 }
 
 export function forgetMemory(): void {
   try {
     localStorage.removeItem(KEY);
+    localStorage.removeItem(OLD_LAST_CLASS_KEY);
   } catch {
     // Nothing to forget.
   }
 }
 
-// A phone handed to the next student, or a student deleted, clears this too.
+// Account deletion, or a different signed-in student on this phone, clears it.
 registerDeviceReset(KEY, forgetMemory);
 
-const ago = (at: number, now: number, lang: TutorLanguage): string => {
+const ago = (at: number, now: number): string => {
   const days = Math.floor((now - at) / DAY);
-  if (lang === 'hi-en') return days <= 0 ? 'aaj' : days === 1 ? 'kal' : `${days} din pehle`;
   return days <= 0 ? 'today' : days === 1 ? 'yesterday' : `${days} days ago`;
 };
 
 const labelOf = (id: InterestId): string => INTERESTS.find((i) => i.id === id)?.label.toLowerCase() ?? id;
+const noteTopic = (t: string): string => `"${clip(t, NOTE_TOPIC_CHARS)}"`;
 
 /**
- * A few private notes for her prompt. Plain facts, each one actionable — what
- * to reach for, what to check, what to build on. Empty when there is nothing.
+ * At most six private notes for her prompt, most useful first (the promise and
+ * open trouble before history), each short enough that its instruction
+ * survives the persona's 300-character cap. Empty when there is nothing.
  */
 export function memoryNotes(lang: TutorLanguage, now = Date.now()): string[] {
   const m = readMemory();
   const notes: string[] = [];
-  if (m.interests.length > 0) {
-    const likes = m.interests.map(labelOf).join(', ');
+  if (m.commitment) {
     notes.push(
-      lang === 'hi-en'
-        ? `They enjoy ${likes}. When an everyday example would help, take it from these (in Hinglish), but never force it.`
-        : `They enjoy ${likes}. When an everyday example would help, take it from these, but never force it.`,
+      `At the end of last class they promised themselves: ${PROMISES[m.commitment.id].en}. Encourage it; never scold if it did not happen.`,
     );
   }
   const hard = m.struggles.filter((s) => !s.resolved).slice(-3);
   if (hard.length > 0) {
     notes.push(
-      `Recently found hard: ${hard.map((s) => `"${s.topic}" (${s.count} miss${s.count > 1 ? 'es' : ''}, ${ago(s.at, now, 'en')})`).join('; ')}. If today touches these, check that part gently first.`,
+      `Recently found hard: ${hard.map((s) => `${noteTopic(s.topic)} (${ago(s.at, now)})`).join('; ')}. If today touches these, check that part gently first.`,
     );
   }
-  const fixed = m.struggles.filter((s) => s.resolved).slice(-2);
-  if (fixed.length > 0) {
-    notes.push(`Got past earlier trouble with: ${fixed.map((s) => `"${s.topic}"`).join(', ')} — worth a word of recognition if it comes up.`);
+  if (m.interests.length > 0) {
+    const likes = m.interests.map(labelOf).join(', ');
+    notes.push(
+      `They enjoy ${likes}. When an everyday example would help, take it from these${lang === 'hi-en' ? ', in Hinglish' : ''} — never force it.`,
+    );
   }
-  const wins = m.wins.slice(-3);
-  if (wins.length > 0) notes.push(`Answered well on their own: ${wins.map((w) => `"${w.topic}"`).join(', ')}. Build on these.`);
-  const doubts = m.doubts.slice(-3);
-  if (doubts.length > 0) notes.push(`Raised a hand before about: ${doubts.map((d) => `"${d.topic}"`).join(', ')}.`);
   if (m.lastSession) {
     const s = m.lastSession;
     const done = s.beatsDone >= s.total ? 'finished it' : `stopped ${s.beatsDone} of ${s.total} steps in`;
-    notes.push(`Last class: "${s.title}", ${ago(s.at, now, 'en')} — ${done}.`);
+    notes.push(`Last class: ${noteTopic(s.title)}, ${ago(s.at, now)} — ${done}.`);
   }
-  if (m.commitment) notes.push(`They promised themselves: "${m.commitment.text}". Encourage it; never scold if it did not happen.`);
-  return notes;
+  const wins = m.wins.slice(-3);
+  if (wins.length > 0) notes.push(`Answered well on their own: ${wins.map((w) => noteTopic(w.topic)).join(', ')}. Build on these.`);
+  const doubts = m.doubts.slice(-3);
+  if (doubts.length > 0) notes.push(`Raised a hand before about: ${doubts.map((d) => noteTopic(d.topic)).join(', ')}.`);
+  return notes.slice(0, 6);
 }
 
-/** What the class's first line needs: the last class, the commitment, one open struggle. */
-export function greetingMemory(): {
+/**
+ * What the class's first line may say: the last class; the promise (then
+ * cleared by the caller, once said); and ONE struggle — only from the last
+ * class, missed at least twice, within three days, never named before.
+ */
+export function greetingMemory(lang: TutorLanguage, now = Date.now()): {
   lastTitle?: string;
   lastLessonId?: string;
-  commitment?: { text: string; lessonTitle: string };
-  struggle?: string;
+  promise?: string;
+  struggle?: { topic: string; lessonId: string };
 } {
   const m = readMemory();
-  const open = m.struggles.filter((s) => !s.resolved);
+  const last = m.lastSession;
+  const struggle = last
+    ? m.struggles
+        .filter(
+          (s) =>
+            !s.resolved &&
+            s.mentionedAt === undefined &&
+            s.lessonId === last.lessonId &&
+            s.count >= 2 &&
+            now - s.at < 3 * DAY,
+        )
+        .at(-1)
+    : undefined;
   return {
-    ...(m.lastSession ? { lastTitle: m.lastSession.title, lastLessonId: m.lastSession.lessonId } : {}),
-    ...(m.commitment ? { commitment: { text: m.commitment.text, lessonTitle: m.commitment.lessonTitle } } : {}),
-    ...(open.length > 0 ? { struggle: open[open.length - 1].topic } : {}),
+    ...(last ? { lastTitle: last.title, lastLessonId: last.lessonId } : {}),
+    ...(m.commitment ? { promise: PROMISES[m.commitment.id][lang] } : {}),
+    ...(struggle ? { struggle: { topic: struggle.topic, lessonId: struggle.lessonId } } : {}),
   };
 }
 
-/** One planner line from their interests, or none (live class prep, LiveClass.tsx). */
+/**
+ * One planner line from their interests — for a class that is NEVER kept (a
+ * free-text or brought-in page, no topicRef). A kept class is replayed to every
+ * later student on the topic, so one child's hobbies must not shape it.
+ */
 export function interestLine(): string[] {
   const likes = readMemory().interests.map(labelOf);
   return likes.length > 0

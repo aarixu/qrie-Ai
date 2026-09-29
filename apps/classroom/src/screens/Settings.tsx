@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { forgetProgressMemory } from '../lib/studentMemory';
 import { useNavigate } from 'react-router-dom';
 import { BRAND } from '../brand';
 import { version } from '../../package.json';
@@ -128,6 +129,9 @@ export function Settings() {
   const resetProgress = () => {
     progressStore.set({ lessons: {}, lastLessonId: null });
     doubtLogStore.set([]);
+    // Her notebook too: hard topics, wins, doubts, the last class and the
+    // promise go; the interests they picked stay (lib/studentMemory.ts).
+    forgetProgressMemory();
     setConfirmingReset(false);
   };
 

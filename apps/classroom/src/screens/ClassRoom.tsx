@@ -47,7 +47,9 @@ import { sayRevealing } from '../lib/voiceStart';
 import { tutorLanguage } from '../lib/workspace';
 import { decide } from '@ai-tutor/tutor-control';
 import {
+  clearCommitment,
   greetingMemory,
+  markStruggleMentioned,
   memoryNotes,
   recordDoubtTopic,
   recordStruggle,
@@ -235,6 +237,7 @@ export function ClassRoom({
   clone,
   onExit,
   warm = false,
+  remember = true,
 }: {
   lesson: Lesson;
   /**
@@ -258,6 +261,12 @@ export function ClassRoom({
    * exists precisely to make the wait shorter, not to move it.
    */
   warm?: boolean;
+  /**
+   * Whether her notebook (lib/studentMemory.ts) may note this class. False for
+   * a free-text or brought-in-page class: its titles and topics are built from
+   * the child's own words, which the notebook never keeps.
+   */
+  remember?: boolean;
 }) {
   const navigate = useNavigate();
   const player = usePlayer(lesson, tts);
@@ -404,6 +413,8 @@ export function ClassRoom({
 
   /** Per held question: taps so far, and the highest ladder rung delivered (decide()). */
   const tapTries = useRef(new Map<string, number>());
+  /** Held questions the student raised a hand on — help, so no "win" is noted there. */
+  const helpedByDoubt = useRef(new Set<string>());
   const tapRung = useRef(new Map<string, AssistanceRung>());
   /** Her recent fixed lines, so decide() never says the same one twice in a row. */
   const recentLines = useRef<string[]>([]);
@@ -483,8 +494,9 @@ export function ClassRoom({
       // Her notebook (lib/studentMemory.ts): a miss marks the topic hard; a
       // right answer with no help at all marks it a win.
       const where = { topic: player.beat.topic, lessonId: lesson.id };
-      if (!correct) recordStruggle(where);
-      else if ((tapRung.current.get(beatId) ?? 0) === 0 && attempt === 1) recordWin(where);
+      if (remember && !correct) recordStruggle(where);
+      else if (remember && (tapRung.current.get(beatId) ?? 0) === 0 && attempt === 1 && !helpedByDoubt.current.has(beatId))
+        recordWin(where);
       if (correct) {
         if (action.say) {
           const spoken = await halt.sayAuthored(action.say);
@@ -980,8 +992,15 @@ export function ClassRoom({
         // Her notebook: the same marks for a spoken answer as for a tap.
         {
           const where = { topic: playerRef.current.beat?.topic ?? lesson.title, lessonId: lesson.id };
-          if (judged.verdict === 'wrong') recordStruggle(where);
-          else if (judged.verdict === 'right' && tries === 0 && (tapRung.current.get(heldAskBeat) ?? 0) === 0) recordWin(where);
+          if (remember && judged.verdict === 'wrong') recordStruggle(where);
+          else if (
+            remember &&
+            judged.verdict === 'right' &&
+            tries === 0 &&
+            (tapRung.current.get(heldAskBeat) ?? 0) === 0 &&
+            !helpedByDoubt.current.has(heldAskBeat)
+          )
+            recordWin(where);
         }
         if (judged.verdict !== 'unclear') {
           recordAnswerAtBeat(lesson, heldAskBeat, judged.verdict === 'right');
@@ -1248,7 +1267,9 @@ export function ClassRoom({
     heldAskRef.current = player.pendingAsk ?? null;
     board.beginDoubt();
     // Her notebook: the topic they raised a hand about — never their words.
-    recordDoubtTopic({ topic: player.beat?.topic ?? lesson.title, lessonId: lesson.id });
+    if (remember) recordDoubtTopic({ topic: player.beat?.topic ?? lesson.title, lessonId: lesson.id });
+    // A hand raised AT a held question is help on it: a right answer after it is not a win.
+    if (player.pendingAsk && player.beat) helpedByDoubt.current.add(player.beat.id);
     logDoubt(lesson.id, ctx.beatId);
     // Located precisely: this hand is about the outcomes THIS beat teaches,
     // not about the chapter it happens to sit in.
@@ -1305,62 +1326,81 @@ export function ClassRoom({
    * shared lesson; the name travels only in this one spoken line.
    */
   const greeted = useRef(false);
-  const greetingLine = (): string | null => {
-    const first = (profileStore.get().name ?? '').trim().split(/\s+/)[0] ?? '';
+  /**
+   * The first line of the class, and what it used from the notebook — so the
+   * promise is cleared and the struggle marked once they have been SAID
+   * (lib/studentMemory.ts: named once, never at every class forever).
+   */
+  const greetingLine = (): { line: string; saidPromise: boolean; saidStruggle?: { topic: string; lessonId: string } } => {
+    const first = (profileStore.get().name ?? '').trim().split(/s+/)[0] ?? '';
     const hi = tutorLanguage() === 'hi-en';
-    const memory = greetingMemory();
+    const memory = greetingMemory(hi ? 'hi-en' : 'en');
     const title = lesson.title;
     const who = first ? ` ${first}` : '';
     // Their own promise from last time comes first — a tutor who remembers it
-    // is a tutor who noticed them.
-    const promise = memory.commitment
+    // is a tutor who noticed them. Said once, then cleared.
+    const promise = memory.promise
       ? hi
-        ? ` Pichhli baar tumne khud se promise kiya tha: "${memory.commitment.text}" — aaj try karte hain!`
-        : ` Last time you promised yourself: "${memory.commitment.text}" — let's try it today!`
+        ? ` Pichhli baar tumne khud se promise kiya tha — ${memory.promise}. Aaj try karte hain!`
+        : ` Last time you promised yourself: ${memory.promise}. Let's try it today!`
       : '';
+    const saidPromise = promise !== '';
     if (canResume) {
-      return hi
-        ? `Welcome back${who}! Chalo, ${title} wahi se aage badhaate hain jahan chhoda tha.${promise}`
-        : `Welcome back${who}! Let's pick up ${title} right where we left off.${promise}`;
+      return {
+        line: hi
+          ? `Welcome back${who}! Chalo, ${title} wahi se aage badhaate hain jahan chhoda tha.${promise}`
+          : `Welcome back${who}! Let's pick up ${title} right where we left off.${promise}`,
+        saidPromise,
+      };
     }
     if (memory.lastTitle && memory.lastLessonId !== lesson.id) {
-      const hard = memory.struggle
+      const s = memory.struggle;
+      const hard = s
         ? hi
-          ? ` "${memory.struggle}" thoda tricky laga tha — koi baat nahi, woh bhi pakka karenge.`
-          : ` "${memory.struggle}" felt tricky — no worries, we'll make that solid too.`
+          ? ` Pichhli baar ${s.topic} thoda tricky laga tha — koi baat nahi, woh bhi pakka karenge.`
+          : ` ${s.topic} felt tricky last time — no worries, we'll make that solid too.`
         : '';
-      return hi
-        ? `Welcome back${who}! Pichhli baar humne ${memory.lastTitle} padha tha.${hard} Aaj hum ${title} karenge.${promise}`
-        : `Welcome back${who}! Last time we did ${memory.lastTitle}.${hard} Today it's ${title}.${promise}`;
+      return {
+        line: hi
+          ? `Welcome back${who}! Pichhli baar humne ${memory.lastTitle} padha tha.${hard} Aaj hum ${title} karenge.${promise}`
+          : `Welcome back${who}! Last time we did ${memory.lastTitle}.${hard} Today it's ${title}.${promise}`,
+        saidPromise,
+        ...(s ? { saidStruggle: s } : {}),
+      };
     }
-    return hi
-      ? `Hi${who}! Main Meera hoon. Aaj hum ${title} padhenge — koi bhi doubt ho toh haath uthana. Chalo shuru karein!`
-      : `Hi${who}! I'm Meera. Today we're doing ${title} — raise your hand any time you have a doubt. Let's begin!`;
+    return {
+      line: hi
+        ? `Hi${who}! Main Meera hoon. Aaj hum ${title} padhenge — koi bhi doubt ho toh haath uthana. Chalo shuru karein!`
+        : `Hi${who}! I'm Meera. Today we're doing ${title} — raise your hand any time you have a doubt. Let's begin!`,
+      saidPromise,
+    };
   };
 
   // Her notebook: where this class has got to, every beat — so the next
   // greeting knows the last class even when the student left halfway.
   const classStarted = player.state !== 'idle';
   useEffect(() => {
-    if (!classStarted || halt.halted) return;
+    if (!classStarted || halt.halted || !remember) return;
     setLastSession({
       lessonId: lesson.id,
       title: lesson.title,
       beatsDone: player.state === 'ended' ? lesson.beats.length : player.beatIndex,
       total: lesson.beats.length,
     });
-  }, [classStarted, player.beatIndex, player.state, lesson, halt]);
+  }, [classStarted, player.beatIndex, player.state, lesson, halt, remember]);
 
   const startClass = async () => {
     if (halt.halted) return;
     track('lesson_started', { lessonId: lesson.id, resumed: canResume, beats: lesson.beats.length });
     if (!greeted.current) {
       greeted.current = true;
-      const line = greetingLine();
-      if (line) {
-        const spoken = await halt.sayAuthored(line);
-        if (spoken.halted) return;
-      }
+      const greeting = greetingLine();
+      const spoken = await halt.sayAuthored(greeting.line);
+      if (spoken.halted) return;
+      // Said once: the promise is cleared and the struggle marked, so neither
+      // is repeated at every class.
+      if (greeting.saidPromise) clearCommitment();
+      if (greeting.saidStruggle) markStruggleMentioned(greeting.saidStruggle.topic, greeting.saidStruggle.lessonId);
     }
     player.play();
     if (canResume) player.seek(savedBeat); // play() starts at 0; seek jumps mid-flight
@@ -1601,13 +1641,13 @@ export function ClassRoom({
                     onClick={() => void requestHint()}
                     className="min-h-[44px] rounded-full bg-stage-primary px-4 py-2 font-label-md text-[13px] font-semibold text-on-stage-primary shadow-md transition-transform active:scale-95"
                   >
-                    💡 {tutorLanguage() === 'hi-en' ? 'Hint do' : 'Give me a hint'}
+                    💡 Give me a hint
                   </button>
                   <button
                     onClick={() => void raiseHand()}
                     className="min-h-[44px] rounded-full bg-stage-surface px-4 py-2 font-label-md text-[13px] font-semibold text-stage-ink shadow-md ring-1 ring-white/15 transition-transform active:scale-95"
                   >
-                    🙋 {tutorLanguage() === 'hi-en' ? 'Samajh nahi aaya' : "I'm not sure"}
+                    🙋 I'm not sure
                   </button>
                 </span>
               )}

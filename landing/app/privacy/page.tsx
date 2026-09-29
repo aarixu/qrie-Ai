@@ -127,12 +127,15 @@ export default function PrivacyPage() {
         </p>
         <p>
           To teach you better, the tutor keeps a small notebook about you on your
-          device: the hobbies you picked from a list, which topics felt hard or
-          went well, what you raised your hand about (the topic, not your words),
-          your last class, and the promise you chose at the end of it. It is not
-          sent to us as a notebook — a few of its lines go along with your
-          questions to the tutor so she can use them. Deleting your account, or
-          another student signing in on the same phone, clears it.
+          device: the hobbies you picked from a list, which topics of our own
+          lessons felt hard or went well, what you raised your hand about (the
+          topic, not your words), your last class, and the promise you chose at
+          the end of it. We do not store it on our servers. When you ask a doubt,
+          a few of its lines travel with your question through our server to
+          Google Vertex AI, so the tutor can use them. Resetting your progress
+          clears it (your hobbies stay until you change them); deleting your
+          account, or a different signed-in student on the same phone, clears all
+          of it. In a trial, nothing is written to it.
         </p>
       </Section>
 
@@ -186,13 +189,16 @@ export default function PrivacyPage() {
           and a short summary of how you have been doing: which ideas you got
           right or wrong, what you raised a hand on, what you know well and what
           is still shaky, how many days in a row you have studied, and the last
-          class you took. If you bring your own page to learn from, it receives
+          class you took — and, only for a page or topic of your own that is
+          never kept for others, the hobbies you picked. If you bring your own page to learn from, it receives
           the words on that page. During a class it receives the lines she is
           about to say, so it can speak them; a recording of each answer you say
           out loud, so it can write it down; and what you ask or answer, so she
           can reply. When you ask a doubt, it also receives your class, how many
           days in a row you have studied, how many times you have raised a hand
-          in that class, and how well you seem to know what it teaches. We do not
+          in that class, how well you seem to know what it teaches, and a few
+          lines from your notebook: your hobbies, topics that felt hard or went
+          well, what you raised a hand about, your last class and your promise. We do not
           send it your phone number, your address or your account. These requests
           go to Google&apos;s global service, so they may be handled outside India.
         </p>

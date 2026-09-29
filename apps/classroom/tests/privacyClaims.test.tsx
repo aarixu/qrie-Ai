@@ -381,3 +381,26 @@ describe('the trial screen', () => {
     expect(text()).toMatch(/report/i);
   });
 });
+
+/**
+ * HER NOTEBOOK (lib/studentMemory.ts, 2026-09-29). Whatever it holds and
+ * wherever its lines go, the page a parent reads says so — and the
+ * onboarding screen does not claim the hobbies "stay on this phone" when a
+ * few of its lines go to the model with a doubt.
+ */
+describe('the student notebook is on the page, truthfully', () => {
+  it('names what the notebook holds, that it goes to Google Vertex with a doubt, and how it is cleared', () => {
+    const text = privacyPageText().replace(/\s+/g, ' ');
+    expect(text).toMatch(/notebook/i);
+    expect(text).toMatch(/hobbies/i);
+    expect(text).toMatch(/Google Vertex AI, so the tutor can use them/);
+    expect(text).toMatch(/Resetting your progress clears it/);
+    expect(text).toMatch(/In a trial, nothing is written to it/);
+  });
+
+  it('the onboarding interests screen says the hobbies travel to the AI', () => {
+    const onboarding = fs.readFileSync(path.resolve(process.cwd(), 'apps/classroom/src/screens/Onboarding.tsx'), 'utf8');
+    expect(onboarding).not.toMatch(/It stays on this phone/);
+    expect(onboarding).toMatch(/sent with your questions to the AI/);
+  });
+});

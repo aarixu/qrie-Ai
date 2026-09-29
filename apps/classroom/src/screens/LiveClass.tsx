@@ -691,10 +691,9 @@ export function LiveClassRoute() {
       const made = await prepareLiveClass(
         {
           ...ask,
-          // What they enjoy (lib/studentMemory.ts, a fixed list): a real-life
-          // example drawn from it lands better. Not personal data about the
-          // child beyond a hobby, and never their name.
-          studentLines: [...studentLines, ...interestLine()],
+          // What they enjoy (lib/studentMemory.ts) — only for a class that is never
+          // kept (no topicRef): a kept class is replayed to every later student.
+          studentLines: ask.topicRef ? studentLines : [...studentLines, ...interestLine()],
           outcomes,
         },
         (p) => {
@@ -977,6 +976,9 @@ export function LiveClassRoute() {
       diagrams={artwork}
       // The student has already watched her set up. One wait, not two.
       warm
+      // Her notebook remembers only a class the syllabus names (a topicRef): a
+      // free-text or brought-in page's titles are the child's own words.
+      remember={Boolean(topicRef)}
       onExit={() => navigate('/')}
     />
   );

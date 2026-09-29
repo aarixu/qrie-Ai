@@ -492,10 +492,10 @@ export function Onboarding() {
           {step === 'interests' && (
             <div className="text-center">
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
-                What do you enjoy{name.trim() ? `, ${name.trim().split(/s+/)[0]}` : ''}?
+                What do you enjoy{name.trim() ? `, ${name.trim().split(/\s+/)[0]}` : ''}?
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant mb-stack-md">
-                Pick any. Meera uses them for examples in class. It stays on this phone.
+                Pick any. Meera uses them to choose examples for you. They are kept on this phone, and sent with your questions to the AI that runs Meera (Google's), only for that.
               </p>
               <div className="flex flex-wrap justify-center gap-2">
                 {INTERESTS.map((it) => {
