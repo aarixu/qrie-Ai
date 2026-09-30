@@ -39,10 +39,14 @@ describe('hearOnVertex', () => {
     });
     expect(seen[0].url).toContain(`/models/${VERTEX_HEAR_MODEL}:generateContent`);
     const body = JSON.parse(seen[0].body);
-    const parts = body.contents[0].parts;
-    expect(parts[0].text).toMatch(/Roman script/);
-    expect(parts[0].text).toMatch(/never in Devanagari/);
-    expect(parts[1].inlineData).toEqual({ mimeType: 'audio/wav', data: 'AQID' });
+    // The instruction is the system instruction, with worked Roman examples,
+    // and thinking is off: measured 2026-09-30 as what took the ear from a
+    // 2.25 s median with Devanagari answers to 1.36 s with none.
+    expect(body.systemInstruction.parts[0].text).toMatch(/Latin alphabet/);
+    expect(body.systemInstruction.parts[0].text).toMatch(/NEVER output Devanagari/);
+    expect(body.systemInstruction.parts[0].text).toContain('"pata nahi"');
+    expect(body.generationConfig.thinkingConfig).toEqual({ thinkingBudget: 0 });
+    expect(body.contents[0].parts).toEqual([{ inlineData: { mimeType: 'audio/wav', data: 'AQID' } }]);
     expect(out.status).toBe(200);
     expect(out.response.body).toEqual({ kind: 'json', value: { text: 'Mujhe lagta hai ki kidney blood filter karti hai.' } });
     expect(out.promptTokens).toBe(259);
@@ -63,6 +67,76 @@ describe('hearOnVertex', () => {
       fetch: (async () => reply('', 429)) as unknown as typeof fetch,
     });
     expect(out.status).toBe(429);
+  });
+
+  it('spells out any Devanagari that still comes back, so the screen can read it', async () => {
+    const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      fetch: (async () => reply('हां समझ आ गया')) as unknown as typeof fetch,
+    });
+    expect(out.response.body).toEqual({ kind: 'json', value: { text: 'haan samajh aa gaya' } });
+  });
+
+  it('sends a second call when the first is slow, and uses whichever answers first', async () => {
+    let calls = 0;
+    const aborted: boolean[] = [];
+    const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      hedgeAfterMs: 20,
+      fetch: (async (_url: string, init: RequestInit) => {
+        const n = ++calls;
+        init.signal?.addEventListener('abort', () => aborted.push(n === 1));
+        // The first hangs until aborted; the second answers.
+        if (n === 1) return new Promise<Response>((_, reject) => init.signal?.addEventListener('abort', () => reject(new Error('aborted'))));
+        return reply('second');
+      }) as unknown as typeof fetch,
+    });
+    expect(calls).toBe(2);
+    expect(out.response.body).toEqual({ kind: 'json', value: { text: 'second' } });
+    // The slow one is let go rather than waited on.
+    expect(aborted).toContain(true);
+  });
+
+  it('makes one call only when the first answers in time', async () => {
+    let calls = 0;
+    await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      hedgeAfterMs: 50,
+      fetch: (async () => {
+        calls++;
+        return reply('first');
+      }) as unknown as typeof fetch,
+    });
+    await new Promise((r) => setTimeout(r, 80));
+    expect(calls).toBe(1);
+  });
+
+  it('retries at once after a failure a retry can fix, but not after one it cannot', async () => {
+    const statuses: number[][] = [];
+    for (const first of [503, 400]) {
+      const seen: number[] = [];
+      const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+        tokens,
+        hedgeAfterMs: 10_000,
+        fetch: (async () => {
+          seen.push(seen.length + 1);
+          return seen.length === 1 ? reply('', first) : reply('again');
+        }) as unknown as typeof fetch,
+      });
+      statuses.push([seen.length, out.status]);
+    }
+    expect(statuses).toEqual([
+      [2, 200],
+      [1, 400],
+    ]);
+  });
+
+  it('answers the last failure when both calls fail', async () => {
+    const out = await hearOnVertex(new Uint8Array([1]), 'audio/wav', {
+      tokens,
+      fetch: (async () => reply('', 503)) as unknown as typeof fetch,
+    });
+    expect(out.status).toBe(503);
   });
 
   it('answers 502 when the credential cannot be minted', async () => {
