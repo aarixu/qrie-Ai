@@ -38,6 +38,7 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 Aarav:
 - **MVP-1 is school and college students only.** Professional courses and the computer sandbox are the future (the "universal learning" section below is kept for then).
 - **School** is built after canvas, voice and the avatar are perfect. He will say what to do after app testing.
+- **School scope, and school before college (later the same day):** CBSE first, Class 6–12. Class 6–10: English, Social Science, Science, Maths. Class 11–12: the science stream only — Physics, Chemistry, Maths, Biology. See the live-tutor section below: our Class 6–9 syllabus data follows the wrong books.
 - **College.** Topics are mostly the same everywhere; one or two differ by university. So we build a general, topic-wise curriculum per subject, grounded in the web, and the student checks it against their own university syllabus. A college curriculum is **built when the first student for it arrives, and charged for**, then reused wherever it fits.
 
 This is well founded. UGC's LOCF gives **model** curricula that universities are free to adapt, and NEP's four-year UG gives every student their own mix of Major, Minor and other courses. AICTE's model curriculum keeps the engineering core the same across the country: subject names and credits vary; the skeleton does not.
@@ -52,7 +53,7 @@ Canvas, voice and avatar are made perfect after app testing, to his instructions
 
 **School track.**
 
-- Name, class (6–10), board (CBSE/NCERT first), subjects (Maths, Science).
+- Name, class (6–12), board (CBSE first), subjects: English, Social Science, Science and Maths for Class 6–10; Physics, Chemistry, Maths and Biology for Class 11–12 (science stream only).
 - School name (optional); the chapter each subject is on now, or "don't know"; the next test or exam date (optional).
 - Tutor language; days per week and minutes.
 - Then the **mandatory placement** (no skip; "finish later" allowed), then the live **introduction class**, which fixes the Curriculum.
@@ -105,7 +106,9 @@ The node ladder, mandatory placement, the Curriculum engine (in step with the sc
 - The Curriculum engine.
 - The introduction class.
 - Changes by request.
-- **Every Class 6–10 Maths and Science topic prepared and published before students arrive.** That is 116 chapters and 671 topics — about Rs 20,000 one-time at about Rs 30 per class (UNVERIFIED; the cost meter's `model_price` table is still empty). It needs a review and publish queue: today, publishing is a SQL update needing Aarav's OK.
+- **The syllabus rebuilt to the current NCERT books,** with graphs and probes: Class 6–9 fixed; English 6–10, Social Science 6–10, Physics 11 and all of Class 12 added. That is 28 subject maps; we have 13 (see the live-tutor section).
+- **Every topic in scope prepared and published before students arrive.** For Class 6–10 Maths and Science alone we counted 116 chapters and 671 topics — about Rs 20,000 one-time at about Rs 30 per class (UNVERIFIED; the cost meter's `model_price` table is still empty). That count is partly from the old books; the new scope is larger and is counted after the rebuild. It needs a review and publish queue: today, publishing is a SQL update needing Aarav's OK.
+- **The live tutor** (proactive, Socratic) — the live-tutor section below.
 
 **College:**
 
@@ -126,7 +129,7 @@ The node ladder, mandatory placement, the Curriculum engine (in step with the sc
 ### 5. Order
 
 1. Canvas, voice, avatar.
-2. School structure: Home fix → mandatory placement → C8 and probes → status ladder → Curriculum engine → introduction class → changes by request → prepare and publish all 671 topics.
+2. School (before college, Aarav): the live-tutor prototype → the syllabus rebuilt to the current books → Home fix → mandatory placement → C8 and probes → status ladder → Curriculum engine → introduction class → changes by request → subject packs → prepare and publish every topic.
 3. College: the onboarding track → the Course Map builder and its student check → payments → the first programmes.
 4. LAM calibration (L2 onwards) runs alongside, as data arrives.
 
@@ -139,7 +142,170 @@ Professional courses and the sandbox come later.
 - NEP four-year only, or CBCS and annual schemes too?
 - Is the student's own check enough, or does a person review a course map before it is sold?
 - The login method for college students.
-- The school board: CBSE/NCERT only at first?
+- ~~The school board: CBSE/NCERT only at first?~~ **Decided 2026-09-30: CBSE first, with the scope above.**
+
+---
+
+## ► NEXT TRACK (Aarav, 2026-09-30): a live tutor — proactive, Socratic, human — and the LAM that drives her. PLAN, NOT BUILT
+
+Aarav, after taking the Respiration class: *"aisa laga ki main koi recorded class dekh raha hoon. Usne welcome kiya aur fir recorded class ki tarah bolne laga. Use proactive and humanoid nature ka hona chahiye jo natural human tutor ko mimic kare."* He also asked how the LAM gets better. And he set the school scope: **CBSE first, Class 6–12. Class 6–10: English, Social Science, Science, Maths. Class 11–12: the science stream only — Physics, Chemistry, Maths, Biology.** School comes before college.
+
+**Plan only.** The build waits for his go, per his rule on canvas, avatar and tutor behaviour.
+
+### Why it felt recorded (MEASURED 2026-09-30: lesson files and code read)
+
+1. **That class asks nothing.** `content/class10-respiration/lesson.json` has 7 beats, 294 spoken words (about 2 minutes at a normal pace — an estimate) and **zero asks**. It was written before the "ask, and WAIT" rules in `packages/class-prep/src/prompts.ts`. **10 of the 15 lessons in `content/` have zero asks:** blood, excretion, respiration, mitochondria, particle size, conservation of mass, what is an atom, characteristics of particles, structure of the atom, and nucleus. The other 5 ask 4–5 times each.
+2. **Even a class that asks is a recording with stops.** The narration is written before the class and is the same for every student. The live parts are only:
+   - the greeting line (from `studentMemory`);
+   - the reply to an answer, judged against pre-written `whyProbe` options;
+   - the help ladder `decide()`;
+   - a nudge after 20 s of silence (`QUIET_BEFORE_NUDGE_MS`);
+   - a doubt. The student must raise a hand; Gemini Live then pauses the class and, in the code's own words, hands "the room back to the recording" (`apps/classroom/src/lib/liveAgent.ts`).
+3. **Nothing she says between questions can use what the student just said,** because it was written before they said it.
+4. **She never starts a conversation on her own,** except at a prepared ask or after a silence.
+
+### What good human tutors do (research)
+
+- **Socratic.** Highly effective tutors "draw as much as possible from the student" and correct indirectly (Lepper's INSPIRE model).
+- **Expectation and misconception tailored dialogue.** Tutors ask a hard question, know the good answer and the likely wrong ideas, and steer across several turns. AutoTutor was built on this from about 100 hours of human tutoring. We already pre-write this per ask (`whyProbe`, `followUp`); we only use it at the asks.
+- **Interactive beats passive.** Learning rises from passive to active, constructive and interactive (Chi & Wylie's ICAP). Listening to narration is passive.
+- **Wait time.** Waiting 3–5 seconds after a question made student answers 300–700 % longer (Rowe).
+- **AI can do this.** A Harvard RCT (Kestin et al., 2025) found an AI tutor built on these practices — expert-written scaffolds, step by step, with guardrails — gave more than double the median learning gain of an active-learning class.
+
+### The design: a tutor with a lesson plan, not a recording with stops
+
+**The one change: flip the default.** Today the recording runs the class and a live model is called in for doubts. Afterwards, **the live tutor runs the class**, and the prepared material is what she teaches from.
+
+**1. Prepared once per topic, shared and verified (as today).**
+
+- The board scenes and pictures.
+- The key ideas in order, each tied to its nodes. For each idea:
+  - an opener: a prediction, or a question from the student's life;
+  - the expected answer and the named misconceptions, each with a follow-up (today's `whyProbe`);
+  - 2 alternates and a worked example;
+  - 3+ check questions;
+  - short core explanations — the lines a teacher has rehearsed.
+- It all passes today's gates: maths-check, the leak check, the reviewer and the safety screen. Nothing about any student is in it.
+
+**2. Live, per student, every turn.** The conversation itself.
+
+- She speaks in short turns — one idea, about 20–30 seconds — then hands the turn to the student.
+- She answers exactly what they said, using their name, interests, school chapter and last class.
+- She decides whether to go deeper, go back or move on.
+
+**3. The conductor: the LAM, in code.** After every student turn, the conductor picks the next **move**; the model picks only the **words**.
+
+- **The moves:** elicit what they know; predict, then reveal; explain one idea; check; ask why (a follow-up); hint; a worked example; another way (an alternate); teach it back to me; go back to a prerequisite; practise; recap by retrieval; check in (energy or confusion); move on; take a break.
+- **What it reads:**
+  - the unassisted mastery of this idea's nodes;
+  - the last answer's verdict, and any misconception seen;
+  - their pace, and the time left.
+- **Every move is written to the ledger with a "because".**
+- **Guardrails in code:**
+  - no answer before the ladder allows it;
+  - no idea skipped without evidence it is held;
+  - every board write goes through the same gates.
+- This is the "within a class" policy from the LAM plan below (layer 3). **It does not exist today, so it becomes the first LAM piece.**
+
+**4. The behaviours she is held to.** Each is measured.
+
+- She opens with a question about their life or what they know — never an announcement.
+- She asks before she tells, at every idea.
+- She never talks for more than about 30 s without handing over the turn.
+- She picks up their words ("tumne kaha 'saans lena' — yahi confusion hai").
+- She notices and changes course: a long silence, a fast wrong answer, "pata nahi", repeated doubts. She offers another way, or checks in.
+- She has them explain each idea back.
+- She ties the class to their school chapter and exam date.
+- She ends by having them recall 2–3 things, and plans the next class with them.
+
+**5. Voice and turn-taking** (the voice and avatar work Aarav will direct; listed so the design fits it):
+
+- Barge-in: the student can cut her off. Gemini Live does this natively; a Google forum thread reports a barge-in gap on the 3.1 live preview (UNVERIFIED for us).
+- Short backchannels ("hmm", "achha").
+- 3–5 s of real waiting after a question before any nudge.
+- Fillers only to cover real latency.
+- The avatar reacts while she listens.
+
+**6. Where it runs.** Two options to test.
+
+- **A. One Gemini Live session per class.** Today's doubt agent grows into the whole class: the lesson plan is in its context, and the moves are tools the conductor allows or refuses. Most natural voice, lowest latency. Cost per minute to be measured.
+- **B. A pipeline.** Our ear (speech to text) → the conductor → a Flash text model writes the line → Gemini TTS. More control, and core lines can be cached and shared. Slower turns.
+- **Recommendation:** build A for one topic behind a flag (the doubt agent already does this in miniature), measure latency and cost against B, then choose.
+- **Cost, said plainly.** A live class costs more than a recording: every turn is a model call and live audio. It is measured in the prototype. The Rs 5 ceiling is set aside for now, per Aarav.
+
+**7. Subject packs, for the Class 6–12 scope.** The moves are the same for every subject; each subject adds its own item types and board forms.
+
+- **Maths.** Step-checked working (built). Class 11–12 calculus and matrices are beyond maths-check, so the reviewer checks them until the checker grows.
+- **Physics** (and Science 6–10). Predict-then-reveal experiments and diagrams. Physics 11–12 adds vectors, graphs and derivations.
+- **Chemistry.** Equations and structures on the board. No chemistry notation exists in the repo today (no `mhchem`, MEASURED).
+- **Biology.** Labelled diagrams and processes.
+- **English.** Reading a passage together, meaning and inference questions, grammar practice that is checked, feedback on writing, and spoken practice.
+- **Social Science.** Maps (geography), timelines and sources (history), and cause-and-effect or case questions (civics, economics).
+
+### Measuring "live, not recorded" (before Aarav tests it)
+
+**Per class, from the ledger:**
+
+- her longest stretch of talking;
+- the student's share of talk;
+- questions per 5 minutes;
+- seconds until the student's first turn;
+- the share of her turns that use the student's words;
+- how often she changed course.
+
+**Proposed targets (to tune):** the first student turn within 30 s; no tutor stretch over 45 s; the student talking at least 30 % of the class; a question at least every 2 minutes.
+
+**Simulated students.** Scripted personas play whole classes: one who knows it, one confused, one silent, one bored, one in Hinglish, one off topic, and one who says "just tell me". A judge scores each transcript on a rubric — asked before telling, never gave the answer early, reacted to what was said. It runs like the content check. Then Aarav tests it himself.
+
+### How the LAM gets better, in order (details in the LAM plan below)
+
+1. **The in-class conductor** (new, first). A rule-based move policy, with a "because" on every move.
+2. **Items:** 3+ per node for every Class 6–12 subject, so a node can be re-checked with a fresh question.
+3. **Belief updated every turn.** The spoken judge, step checks and the help rung already feed it; the conductor reads it after each turn.
+4. **A prediction logged for every answer** (AUC and Brier). This is the L1 exit.
+5. **Calibration** (IRT, FSRS) as data arrives. L2.
+6. **Bandits for the move choice** (which explanation works for this student), inside the guardrails. L4.
+
+### School scope, CBSE first — and our syllabus data is out of date (MEASURED 2026-09-30)
+
+**The scope** is 28 subject maps: Class 6–10 × 4 subjects, plus Class 11–12 × 4. **We have 13.**
+
+Checked against NCERT's own contents pages (reprint 2026-27, downloaded from ncert.nic.in):
+
+| Our file | What it holds | What CBSE uses now |
+|---|---|---|
+| `class6-science` | the old book ("Components of Food", …) | *Curiosity* ("The Wonderful World of Science", …) |
+| `class7-science` | **Class 6 *Curiosity*'s chapters, labelled Class 7** | *Curiosity* Class 7 ("The Ever-Evolving World of Science", …) — not in the repo |
+| `class8-science` | the old book ("Crop Production and Management", …) | *Curiosity* Class 8 ("Exploring the Investigative World of Science", …) |
+| `class6-mathematics` | *Ganita Prakash* | current ✓ |
+| `class7-mathematics` | the old book ("Integers", …) | *Ganita Prakash* Class 7 ("Large Numbers Around Us", …) |
+| `class8-mathematics` | the old book ("Rational Numbers", …) | *Ganita Prakash* Class 8 ("A Square and A Cube", …) |
+| `class9-*` | the old books | New Class 9 books for 2026-27 (Maths *Ganita Manjari*, Social Science, English *Kaveri*, Science), REPORTED by news sites; confirm on ncert.nic.in |
+
+- **Class 10–12:** check for new books before building.
+- **The knowledge graphs and probes are built on these syllabi,** so Class 6–9 must be rebuilt. The "671 topics" in the MVP-1 section counts partly the wrong books.
+- **Missing entirely:** English 6–10, Social Science 6–10, Physics 11, and all of Class 12.
+- **How:** syllabus from NCERT's contents (the `tools/pull-syllabus` tool) → graph (`tools/gen-graph`) → probes → Aarav's spot check. English and Social Science also need their new item types.
+
+### Order (proposed)
+
+0. **A quick fix, needing Aarav's OK:** retire or re-prepare the 10 lessons with no questions, so no class plays as a recording. Publishing needs his OK.
+1. **After his direction on canvas, voice and avatar:** the live-tutor prototype on one topic — the conductor, the live session, the move tools, the metrics and the simulated students.
+2. **Rebuild the syllabus to the current NCERT books:** fix Class 6–9; add English, Social Science, Physics 11 and Class 12. Then the graphs and probes.
+3. **The study structure:** the Home fix, mandatory placement, the introduction class and the Curriculum engine (the plan below).
+4. **Subject packs:** English, Social Science, Chemistry notation, Physics 11–12.
+5. **Prepare and publish every topic.**
+6. **LAM calibration** as data arrives.
+
+### Decisions only Aarav can make
+
+- Live option A (a whole-class Gemini Live session) or B (a pipeline). Or let Claude build both for one topic and show him.
+- The 10 lessons with no questions: retire them now, or re-prepare them? Either way, publishing needs his OK.
+- Class 9: follow the new 2026-27 books? Recommended, since schools use them.
+- English: which part first — reading and literature, grammar, writing, or spoken English?
+- How much should the student talk? The proposed default is at least 30 %, the same for Class 6 and Class 12 until measured.
+
+Sources: [Lepper's INSPIRE model](https://www.eoas.ubc.ca/research/cwsei/resources/INSPIRE-Guidelines.pdf) · [AutoTutor, 17 years](https://files.eric.ed.gov/fulltext/ED586834.pdf) · [ICAP](https://www.tandfonline.com/doi/abs/10.1080/00461520.2014.965823) · [Rowe on wait time](https://journals.sagepub.com/doi/10.1177/002248718603700110) · [Kestin et al. 2025](https://www.nature.com/articles/s41598-025-97652-6) · [Gemini Live API](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/multimodal-live) · [the 3.1 barge-in report](https://discuss.ai.google.dev/t/gemini-3-1-flash-live-preview-live-api-server-never-emits-interrupted-barge-in-when-the-user-is-already-speaking-as-the-models-turn-begins/174346) · [NCERT *Curiosity* 8](https://ncert.nic.in/textbook/pdf/hecu1ps.pdf) · [new Class 9 books, reported](https://www.pw.live/school-prep/exams/ncert-releases-new-class-9-maths-and-social-science-textbooks-for-2026-27)
 
 ---
 
@@ -272,7 +438,7 @@ Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a 
 
 ### Decisions only Aarav can make
 
-- **Board.** CBSE/NCERT only at first, or state boards too?
+- ~~**Board.** CBSE/NCERT only at first, or state boards too?~~ **Decided 2026-09-30: CBSE first, Class 6–12** (see the live-tutor section).
 - **Placement length.** One sitting for both subjects (up to about 40 questions), or one per subject on different days?
 - **The introduction class.** Should it also ask about coaching and tuition, and let a parent join?
 - **Pace defaults.** Days per week, minutes per class.
