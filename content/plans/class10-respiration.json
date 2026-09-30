@@ -1,0 +1,882 @@
+{
+  "formatVersion": 1,
+  "id": "class10-science-life-processes-respiration",
+  "topicRef": "class10-science/life-processes/respiration",
+  "title": "Respiration",
+  "klass": 10,
+  "subject": "Science",
+  "boardLessonId": "class10-respiration",
+  "minutes": 10,
+  "opener": {
+    "id": "opener-energy-for-a-sprint",
+    "question": "Think of the last time you ran hard, maybe to catch the school bus or to take a quick single in cricket. Your legs worked very hard for those few seconds. Where do you think that energy came from?",
+    "expect": "Names food as the source, for example rice, roti or glucose, broken down inside the body. Saying that breathing or oxygen helps is a good partial answer.",
+    "answer": "It came from the food you ate. Your cells broke it down and set its energy free.",
+    "why": "Food like rice and roti is broken down into glucose. Your cells break down that glucose, using oxygen, to release the energy stored in it.",
+    "hint": "Why do you feel weak and tired if you skip lunch and then have to play?",
+    "misconceptions": [
+      {
+        "id": "energy-from-the-air",
+        "soundsLike": "From the air I breathe. The oxygen gives me energy.",
+        "why": "Oxygen is needed, but on its own it is not the fuel. It helps set free energy that is stored in something else.",
+        "followUp": "What makes you feel that the air itself has the energy in it?"
+      },
+      {
+        "id": "energy-from-the-heart",
+        "soundsLike": "From my heart. It pumps faster and gives my legs energy.",
+        "why": "The heart is a pump. It moves blood around the body, but it does not make the energy your legs use.",
+        "followUp": "What do you notice about your heart during a run that makes you think so?"
+      }
+    ],
+    "alternates": [
+      {
+        "mode": "everyday",
+        "say": "A scooter moves only when there is petrol in its tank. Think about what your body fills its tank with every day."
+      },
+      {
+        "mode": "analogy",
+        "say": "A chulha gives heat only when wood or gas is burnt in it. Something has to be used up to give energy."
+      }
+    ],
+    "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+  },
+  "ideas": [
+    {
+      "id": "breathing-vs-respiration",
+      "title": "Breathing is not respiration",
+      "nodeIds": ["sci10-lp-respiration-vs-breathing"],
+      "board": { "beatId": "hook", "focus": ["n_hook"] },
+      "predict": {
+        "id": "breathing-predict",
+        "question": "Imagine you hold your breath for ten seconds. During those ten seconds, do you think your body stops using energy?",
+        "expect": "No. The body keeps using energy, because the heart keeps beating and the cells keep working, even though no air moves.",
+        "answer": "No. Your cells keep releasing and using energy even while you hold your breath.",
+        "why": "Your heart keeps beating and your cells keep working, so they need energy every second. Holding your breath only stops air moving in and out of your lungs.",
+        "hint": "While you hold your breath, does your heart stop beating?",
+        "misconceptions": [
+          {
+            "id": "no-breath-no-energy",
+            "soundsLike": "Yes. If I am not breathing, no energy is being made.",
+            "why": "Holding your breath stops air moving, but it does not switch your cells off. There is still oxygen in your lungs and blood for a short while.",
+            "followUp": "What do you think breathing does for the body that would make the energy stop?"
+          }
+        ],
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "When you sleep, you hardly move at all. Yet your heart beats all night, and you wake up warm."
+          },
+          {
+            "mode": "analogy",
+            "say": "A van delivers gas cylinders to a house, but the cooking happens on the stove in the kitchen. The van and the stove do different jobs."
+          }
+        ],
+        "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+      },
+      "points": [
+        {
+          "id": "breathing-p1",
+          "say": "Breathing is only the movement of air. You pull air into your lungs and push it out again, which brings oxygen in and takes carbon dioxide out.",
+          "ask": {
+            "id": "breathing-p1-ask",
+            "question": "So after a hard run, why do you think you breathe faster?",
+            "expect": "To bring in oxygen faster, and take out carbon dioxide faster, because the working muscles are using more.",
+            "answer": "Because your working muscles are using oxygen faster, so you breathe faster to bring more in.",
+            "why": "Hard work needs more energy, and releasing that energy uses more oxygen. Faster breathing brings it in faster and also takes out the extra carbon dioxide.",
+            "hint": "What does the air you breathe in carry that your hard-working muscles use up?",
+            "misconceptions": [
+              {
+                "id": "breathe-in-carbon-dioxide",
+                "soundsLike": "To take in more carbon dioxide.",
+                "why": "Carbon dioxide is the gas we breathe out. It is left over after our cells break down food, so the body gets rid of it.",
+                "followUp": "What makes you think our body needs to take in carbon dioxide?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "everyday",
+                "say": "Blow gently on a dying coal in an angithi and it glows again. A fire needs a steady supply of air."
+              }
+            ],
+            "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+          }
+        },
+        {
+          "id": "breathing-p2",
+          "say": "Respiration happens inside every cell of your body. There, food in the form of glucose is broken down, and the energy stored in it is released.",
+          "ask": {
+            "id": "breathing-p2-ask",
+            "question": "So right now, while you sit still and listen, is respiration still going on in your cells?",
+            "expect": "Yes. Cells respire all the time, even at rest, because the body always needs energy.",
+            "answer": "Yes. Your cells release energy all the time, even when you sit still.",
+            "why": "Even at rest your heart beats, your brain works and your body keeps repairing itself. All of that needs energy, every second.",
+            "hint": "What is your brain doing right now, and does that need energy?",
+            "misconceptions": [
+              {
+                "id": "respiration-only-when-active",
+                "soundsLike": "No. Only when I am running or doing some work.",
+                "why": "Your body needs energy even at rest, to keep the heart beating and to keep repairing itself.",
+                "followUp": "Why do you feel the body needs energy only when it moves?"
+              },
+              {
+                "id": "respiration-only-in-lungs",
+                "soundsLike": "It is going on only in my lungs, when I breathe.",
+                "why": "The lungs only take air in and out. The breaking down of food to release energy happens in cells all over the body, even in your toes.",
+                "followUp": "What makes you think respiration happens only in the lungs?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "everyday",
+                "say": "A phone lying on the table with its screen off is still using a little battery, just to stay on."
+              }
+            ],
+            "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+          }
+        }
+      ],
+      "check": [
+        {
+          "id": "breathing-check-1",
+          "question": "In your own words, what is the difference between breathing and respiration?",
+          "expect": "Breathing moves air in and out of the lungs, taking in oxygen and giving out carbon dioxide. Respiration is the breakdown of food, glucose, inside cells to release energy.",
+          "answer": "Breathing moves air in and out of the lungs. Respiration breaks down food inside every cell to release energy.",
+          "why": "Breathing only brings in oxygen and takes out carbon dioxide. The energy itself is released inside the cells.",
+          "hint": "Which of the two needs your lungs, and which one could go on in a cell of your big toe?",
+          "misconceptions": [
+            {
+              "id": "breathing-same-as-respiration",
+              "soundsLike": "Both are the same thing. Respiration means breathing.",
+              "why": "In everyday talk people use the words loosely. In science they are two different processes, and they happen in different places.",
+              "followUp": "What makes them feel like the same thing to you?"
+            },
+            {
+              "id": "breathing-and-respiration-swapped",
+              "soundsLike": "Breathing releases energy from glucose, and respiration is taking in oxygen.",
+              "why": "You have both jobs right, but the two names are swapped round.",
+              "followUp": "Which one do you think happens in the lungs, and why?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "visual",
+              "say": "Picture your chest rising and falling. Now picture one tiny cell deep inside your leg muscle. Ask what is happening in each place."
+            }
+          ],
+          "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+        },
+        {
+          "id": "breathing-check-2",
+          "question": "A fish has no lungs and takes oxygen from water through its gills. Do the cells in a fish's tail still carry out respiration?",
+          "expect": "Yes. Every living cell releases energy from food; gills, like lungs, only take in oxygen.",
+          "answer": "Yes. The gills only take in oxygen, and the tail cells still break down food to release energy.",
+          "why": "Animals get oxygen in different ways, with lungs or with gills, but every living cell has to release energy from food.",
+          "hint": "Does the tail need energy to swish, and where would that energy have to be released?",
+          "misconceptions": [
+            {
+              "id": "no-lungs-no-respiration",
+              "soundsLike": "No. A fish has no lungs, so it cannot respire.",
+              "why": "Lungs and gills only bring oxygen into the body. They are not where respiration is done.",
+              "followUp": "What do you think the lungs have to do with respiration?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "steps",
+              "say": "First, does the tail move? Next, does moving need energy? Then, where is energy released in any animal?"
+            },
+            {
+              "mode": "everyday",
+              "say": "A tree has no lungs either, yet it stays alive and keeps growing."
+            }
+          ],
+          "nodeIds": ["sci10-lp-respiration-vs-breathing"]
+        }
+      ],
+      "teachBack": {
+        "prompt": "Now you be the teacher. Explain the difference between breathing and respiration to me, as if I were your younger cousin.",
+        "expect": "Breathing moves air in and out of the lungs, bringing in oxygen and taking out carbon dioxide. Respiration happens in every cell, all the time, where food is broken down to release energy."
+      }
+    },
+    {
+      "id": "respiration-equation",
+      "title": "What goes in and what comes out",
+      "nodeIds": ["sci10-lp-respiration-equation"],
+      "board": { "beatId": "equation", "focus": ["f_resp", "n_resp"] },
+      "predict": {
+        "id": "equation-predict",
+        "question": "In photosynthesis, a leaf uses carbon dioxide and water to make glucose and oxygen. When your cells break glucose down again to get its energy, what do you guess comes out at the end?",
+        "expect": "Carbon dioxide and water, the opposite of photosynthesis, along with energy.",
+        "answer": "Carbon dioxide and water come out, and energy is released.",
+        "why": "Respiration runs the opposite way to photosynthesis. Glucose and oxygen go in, and carbon dioxide, water and energy come out.",
+        "hint": "Which gas do you breathe out, and what forms on a cold mirror when you breathe on it?",
+        "misconceptions": [
+          {
+            "id": "glucose-and-oxygen-come-out",
+            "soundsLike": "Glucose and oxygen come out, like in photosynthesis.",
+            "why": "That is what photosynthesis makes. Respiration does the opposite job: it uses glucose up instead of making it.",
+            "followUp": "Why do you think the same things would come out of both?"
+          },
+          {
+            "id": "oxygen-comes-out",
+            "soundsLike": "Oxygen comes out.",
+            "why": "Oxygen is used up in respiration. That is why we have to keep breathing it in.",
+            "followUp": "What makes you think oxygen would come out at the end?"
+          }
+        ],
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "Build a small house out of Lego bricks, then pull it apart. Pulling it apart gives you back the bricks you started with."
+          }
+        ],
+        "nodeIds": ["sci10-lp-respiration-equation"]
+      },
+      "points": [
+        {
+          "id": "equation-p1",
+          "say": "Here is the reaction: glucose and oxygen go in, and carbon dioxide, water and energy come out. It runs the opposite way to photosynthesis.",
+          "ask": {
+            "id": "equation-p1-ask",
+            "question": "So why do you think the air you breathe out has more carbon dioxide than the air around you?",
+            "expect": "Because cells make carbon dioxide in respiration, as a product, and it is carried to the lungs and breathed out.",
+            "answer": "Because your cells make carbon dioxide when they break down glucose with oxygen, and you breathe it out.",
+            "why": "Your cells make carbon dioxide when they break down glucose with oxygen. The blood carries it to the lungs and we breathe it out, so breathed-out air turns lime water milky faster than room air.",
+            "hint": "In the equation, is carbon dioxide on the side that goes in, or the side that comes out?",
+            "misconceptions": [
+              {
+                "id": "carbon-dioxide-just-passes-through",
+                "soundsLike": "Because we breathe in carbon dioxide and it just comes back out.",
+                "why": "The air around us has only a little carbon dioxide. The extra must be coming from somewhere inside the body.",
+                "followUp": "What makes you think the carbon dioxide just passes through us?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "everyday",
+                "say": "Blow through a straw into lime water and it turns milky quickly. Pump room air through it with a pichkari and it takes much longer."
+              }
+            ],
+            "nodeIds": ["sci10-lp-respiration-equation"]
+          }
+        },
+        {
+          "id": "equation-p2",
+          "say": "The energy released is used at once to make a molecule called ATP. ATP is the cell's energy currency, spent like a charged battery to move muscles, make proteins and carry nerve messages.",
+          "ask": {
+            "id": "equation-p2-ask",
+            "question": "When your leg muscle tightens to kick a football, what does it spend to get the energy?",
+            "expect": "ATP, made using the energy released in respiration.",
+            "answer": "It spends ATP, which was made using the energy released in respiration.",
+            "why": "The energy from breaking down glucose is first stored in ATP. The muscle breaks down ATP to get the energy it needs to contract.",
+            "hint": "Does the muscle use glucose directly, or something the cell makes with the energy from glucose?",
+            "misconceptions": [
+              {
+                "id": "muscle-spends-glucose-directly",
+                "soundsLike": "It uses glucose directly.",
+                "why": "Glucose is the fuel, but its energy is first turned into one form that every job in the cell can use.",
+                "followUp": "Why do you think the muscle would use glucose directly?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "analogy",
+                "say": "A charged battery can run a torch, a fan or a toy car. The cell also keeps its energy in one form that can run any job."
+              },
+              {
+                "mode": "everyday",
+                "say": "You may earn money in many ways, but you spend the same rupees on anything you buy."
+              }
+            ],
+            "nodeIds": ["sci10-lp-respiration-equation"]
+          }
+        }
+      ],
+      "check": [
+        {
+          "id": "equation-check-1",
+          "question": "Tell me the respiration reaction in words: what goes in, and what comes out?",
+          "expect": "Glucose and oxygen go in; carbon dioxide, water and energy come out.",
+          "answer": "Glucose and oxygen go in. Carbon dioxide, water and energy come out.",
+          "why": "The cell breaks down glucose using oxygen. Carbon dioxide and water are what is left, and the energy is released.",
+          "hint": "What is the cell's fuel, which gas does it need to break that fuel down, and what is left over?",
+          "misconceptions": [
+            {
+              "id": "water-in-oxygen-out",
+              "soundsLike": "Glucose and water go in, and carbon dioxide and oxygen come out.",
+              "why": "Two of those are on the wrong side. Photosynthesis has them the other way round, which makes them easy to mix up.",
+              "followUp": "How did you decide which side water goes on?"
+            },
+            {
+              "id": "photosynthesis-for-respiration",
+              "soundsLike": "Carbon dioxide and water go in, and glucose and oxygen come out.",
+              "why": "That is photosynthesis, where a plant makes glucose. Respiration breaks glucose down, so glucose cannot be what comes out.",
+              "followUp": "Where have you seen that reaction before?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "steps",
+              "say": "First name the cell's fuel. Then name the gas it needs to break that fuel down. Then think of what you breathe out, and what forms on a cold mirror."
+            }
+          ],
+          "workedExample": {
+            "steps": [
+              {
+                "say": "Let us read a similar reaction first, photosynthesis. The leaf takes in carbon dioxide from the air and water through its roots.",
+                "line": "carbon dioxide + water"
+              },
+              {
+                "say": "Using sunlight and chlorophyll, it makes glucose.",
+                "line": "(sunlight, chlorophyll) → glucose"
+              },
+              {
+                "say": "And it gives out oxygen, so in photosynthesis glucose and oxygen are what come out.",
+                "line": "+ oxygen"
+              }
+            ]
+          },
+          "nodeIds": ["sci10-lp-respiration-equation"]
+        },
+        {
+          "id": "equation-check-2",
+          "question": "At night there is no sunlight, so a plant cannot do photosynthesis. Does it still respire at night, and which gas does it give out then?",
+          "expect": "Yes, plants respire day and night; at night they give out carbon dioxide.",
+          "answer": "Yes. The plant still respires at night, and it gives out carbon dioxide.",
+          "why": "Plant cells need energy all the time, so they respire all the time. At night there is no photosynthesis to use up that carbon dioxide, so it goes out through the stomata.",
+          "hint": "Does a plant's root cell need energy at night, and what does respiration make besides water and energy?",
+          "misconceptions": [
+            {
+              "id": "plants-do-not-respire",
+              "soundsLike": "No. Plants only do photosynthesis, they do not respire.",
+              "why": "Plants make their food by photosynthesis, but their cells still have to break that food down to get energy.",
+              "followUp": "What makes you think plants never need to break their food down?"
+            },
+            {
+              "id": "plants-give-oxygen-at-night",
+              "soundsLike": "Yes, and it gives out oxygen.",
+              "why": "A plant gives out oxygen from photosynthesis, and photosynthesis needs light. In the dark, only respiration is going on.",
+              "followUp": "Why do you think the plant gives out oxygen even in the dark?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "everyday",
+              "say": "You are asleep at night too, yet you keep breathing out the same gas all night long."
+            }
+          ],
+          "nodeIds": ["sci10-lp-respiration-equation"]
+        }
+      ],
+      "teachBack": {
+        "prompt": "Pretend I have never heard of respiration. Tell me what goes in, what comes out, and how it is linked to photosynthesis.",
+        "expect": "Glucose and oxygen go in; carbon dioxide, water and energy come out. The energy is used to make ATP. It runs the opposite way to photosynthesis."
+      }
+    },
+    {
+      "id": "with-oxygen",
+      "title": "With oxygen: into the mitochondria",
+      "nodeIds": ["sci10-lp-mitochondria-role", "sci10-lp-aerobic-vs-anaerobic"],
+      "board": { "beatId": "aerobic", "focus": ["b_aerobic", "n_aerobic_out"] },
+      "predict": {
+        "id": "oxygen-predict",
+        "question": "Glucose can be broken down with oxygen or without it. Which way do you guess gets more energy out of the same amount of glucose?",
+        "expect": "With oxygen, aerobic, gets more energy, much more.",
+        "answer": "With oxygen. It gets far more energy out of the same glucose.",
+        "why": "With oxygen, glucose is broken down completely, all the way to carbon dioxide and water, so much more of its energy is released.",
+        "hint": "Does a fire in a chulha burn better when you blow air into it, or when you cover it?",
+        "misconceptions": [
+          {
+            "id": "no-oxygen-more-energy",
+            "soundsLike": "Without oxygen, because the cell has to work harder.",
+            "why": "Working harder is not the same as getting more out. Without oxygen, the glucose is not broken down completely.",
+            "followUp": "Why do you think working without oxygen would give more energy?"
+          }
+        ],
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "Squeeze a lemon fully and you get all its juice. Give it one quick squeeze and much of the juice stays inside."
+          },
+          {
+            "mode": "everyday",
+            "say": "A candle under an upturned glass burns well at first, then grows weak as the air runs out."
+          }
+        ],
+        "nodeIds": ["sci10-lp-aerobic-vs-anaerobic"]
+      },
+      "points": [
+        {
+          "id": "oxygen-p1",
+          "say": "The first step is the same in every kind of respiration. In the cytoplasm, glucose, a six-carbon molecule, is broken into a three-carbon molecule called pyruvate.",
+          "ask": {
+            "id": "oxygen-p1-ask",
+            "question": "So if a cell had no oxygen at all, could it still do this first step?",
+            "expect": "Yes, because the first step happens in every kind of respiration, including the kinds without oxygen.",
+            "answer": "Yes. Breaking glucose into pyruvate happens in every kind of respiration, even without oxygen.",
+            "why": "This first step is shared by every pathway, including the ones in yeast and in muscles that are short of oxygen.",
+            "hint": "Did we say anything about oxygen when we talked about this first step?",
+            "misconceptions": [
+              {
+                "id": "every-step-needs-oxygen",
+                "soundsLike": "No. Respiration always needs oxygen.",
+                "why": "Some respiration happens with no oxygen at all, for example in yeast. So the first step cannot depend on oxygen.",
+                "followUp": "What makes you think every kind of respiration needs oxygen?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "analogy",
+                "say": "Vegetables are chopped before cooking, whether you cook them on a gas stove or on a chulha. The first step does not depend on how you finish."
+              }
+            ],
+            "nodeIds": ["sci10-lp-aerobic-vs-anaerobic"]
+          }
+        },
+        {
+          "id": "oxygen-p2",
+          "say": "When oxygen is there, pyruvate is broken down in the mitochondria into carbon dioxide and water. This releases a lot of energy, and it is called aerobic respiration.",
+          "ask": {
+            "id": "oxygen-p2-ask",
+            "question": "So why do you think the mitochondria are called the powerhouse of the cell?",
+            "expect": "Because aerobic respiration, the breakdown of pyruvate with oxygen, happens there and releases the most energy.",
+            "answer": "Because the breakdown of pyruvate with oxygen, which releases the most energy, happens in them.",
+            "why": "The pathway with oxygen releases far more energy than any pathway without it, and that pathway runs in the mitochondria.",
+            "hint": "What did we just say happens inside the mitochondria when oxygen is there?",
+            "misconceptions": [
+              {
+                "id": "mitochondria-make-oxygen",
+                "soundsLike": "Because they make oxygen for the cell.",
+                "why": "Mitochondria use oxygen; they do not make it. The oxygen comes in from the air we breathe.",
+                "followUp": "What makes you think the mitochondria make oxygen?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "analogy",
+                "say": "A town has many small shops, but one power station supplies most of its electricity."
+              }
+            ],
+            "nodeIds": ["sci10-lp-mitochondria-role"]
+          }
+        }
+      ],
+      "check": [
+        {
+          "id": "oxygen-check-1",
+          "question": "Where in the cell is pyruvate broken down using oxygen?",
+          "expect": "In the mitochondria.",
+          "answer": "In the mitochondria.",
+          "why": "Glucose is first broken into pyruvate in the cytoplasm. With oxygen, the pyruvate is then broken down into carbon dioxide and water inside the mitochondria.",
+          "hint": "Is it the same place as the first step, or a special part of the cell that releases most of the energy?",
+          "misconceptions": [
+            {
+              "id": "chloroplast-is-the-site",
+              "soundsLike": "In the chloroplast.",
+              "why": "Chloroplasts are where plants make glucose using sunlight. Animal cells have no chloroplasts, yet they respire too.",
+              "followUp": "Why do you think the chloroplast would do this job?"
+            },
+            {
+              "id": "nucleus-is-the-site",
+              "soundsLike": "In the nucleus, because it controls the cell.",
+              "why": "The nucleus controls the cell, but it does not break down food for energy.",
+              "followUp": "What does the nucleus do that makes you pick it?"
+            },
+            {
+              "id": "cytoplasm-is-the-site",
+              "soundsLike": "In the cytoplasm.",
+              "why": "The cytoplasm is where the first step happens, glucose to pyruvate. The next step, with oxygen, happens somewhere else.",
+              "followUp": "What makes you think it happens in the cytoplasm?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "visual",
+              "say": "Picture a cell as a room full of jelly. Floating in the jelly are small bean-shaped bodies with folded insides. Which part sounds like a special workshop?"
+            }
+          ],
+          "nodeIds": ["sci10-lp-mitochondria-role"]
+        },
+        {
+          "id": "oxygen-check-2",
+          "question": "Your friend says the energy for running is released in the lungs, because that is where the oxygen comes in. Where would you tell your friend it is really released?",
+          "expect": "In the cells of the working leg muscles, mainly in their mitochondria, not in the lungs.",
+          "answer": "In the cells of your leg muscles, mostly in their mitochondria, not in your lungs.",
+          "why": "The lungs only take oxygen into the blood. The blood carries it to your leg muscles, and the mitochondria in the muscle cells use it to release the energy for running.",
+          "hint": "Where does the blood take the oxygen after it leaves the lungs?",
+          "misconceptions": [
+            {
+              "id": "energy-released-in-lungs",
+              "soundsLike": "My friend is right, it is in the lungs.",
+              "why": "The lungs are only where oxygen enters the blood. Where oxygen comes in is not where it is used.",
+              "followUp": "What makes you think the energy is released where the oxygen comes in?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "analogy",
+              "say": "Petrol is filled at the petrol pump, but it is burnt in the car's engine."
+            }
+          ],
+          "nodeIds": ["sci10-lp-mitochondria-role", "sci10-lp-respiration-vs-breathing"]
+        }
+      ],
+      "teachBack": {
+        "prompt": "Explain to me, step by step, what happens to glucose in a cell that has plenty of oxygen.",
+        "expect": "In the cytoplasm, glucose, a six-carbon molecule, is broken into pyruvate, a three-carbon molecule. With oxygen, pyruvate is broken down in the mitochondria into carbon dioxide and water, releasing a lot of energy. This is aerobic respiration."
+      }
+    },
+    {
+      "id": "short-of-oxygen",
+      "title": "Short of oxygen: lactic acid in muscles",
+      "nodeIds": ["sci10-lp-lactic-acid", "sci10-lp-aerobic-vs-anaerobic"],
+      "board": { "beatId": "anaerobic", "focus": ["b_anaerobic", "n_anaerobic_out"] },
+      "predict": {
+        "id": "muscle-predict",
+        "question": "In the last over of a match you sprint between the wickets again and again, and your lungs cannot bring in oxygen fast enough. What do you think your leg muscles do then: stop working, or find another way to get energy?",
+        "expect": "They find another way: they keep going for a while by getting energy without enough oxygen.",
+        "answer": "They find another way. For a while they get energy without enough oxygen.",
+        "why": "Muscle cells short of oxygen switch to a pathway that does not need oxygen. They can keep going for a while, but they get much less energy.",
+        "hint": "At the end of a sprint, when you are out of breath, do your legs stop dead, or can you still push on for a bit?",
+        "misconceptions": [
+          {
+            "id": "muscles-stop-dead",
+            "soundsLike": "They stop working. No oxygen means no energy.",
+            "why": "If that were true, you would collapse the moment you ran out of breath. People can still push on for a while.",
+            "followUp": "Why do you think a muscle would stop completely without enough oxygen?"
+          }
+        ],
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "When the electricity goes, many homes switch to an inverter. It gives less power, but the fans keep running for a while."
+          }
+        ],
+        "nodeIds": ["sci10-lp-lactic-acid"]
+      },
+      "points": [
+        {
+          "id": "muscle-p1",
+          "say": "When your muscle cells run short of oxygen, pyruvate takes another path. It is changed into lactic acid, which is also a three-carbon molecule, and much less energy is released.",
+          "ask": {
+            "id": "muscle-p1-ask",
+            "question": "Lactic acid still has all three carbons of pyruvate, so how far do you think the glucose was broken down?",
+            "expect": "Only partly, not completely, not all the way to carbon dioxide and water, which is why less energy is released.",
+            "answer": "Only partly. It was not broken down all the way to carbon dioxide and water.",
+            "why": "With oxygen, pyruvate is broken into three separate molecules of carbon dioxide. Lactic acid keeps all three carbons together, so the breakdown stopped early and less energy came out.",
+            "hint": "With oxygen, pyruvate ends up as carbon dioxide with one carbon each, so is lactic acid broken into pieces that small?",
+            "misconceptions": [
+              {
+                "id": "lactic-acid-is-full-breakdown",
+                "soundsLike": "Fully. It was broken down completely.",
+                "why": "A complete breakdown ends with small molecules like carbon dioxide, each with one carbon. Lactic acid still has as many carbons as pyruvate.",
+                "followUp": "What makes you think the glucose was broken down completely?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "visual",
+                "say": "Picture pyruvate as three beads on one string. With oxygen, the string is cut into three single beads. Now picture lactic acid: how many beads are still on its string?"
+              }
+            ],
+            "nodeIds": ["sci10-lp-aerobic-vs-anaerobic", "sci10-lp-lactic-acid"]
+          }
+        },
+        {
+          "id": "muscle-p2",
+          "say": "During sudden hard activity, lactic acid builds up in the muscles, and this build-up causes cramps. That is why your legs can cramp after a hard sprint.",
+          "ask": {
+            "id": "muscle-p2-ask",
+            "question": "So if you get a cramp in your calf after a race, what does that tell you about your calf muscle during the race?",
+            "expect": "It was short of oxygen, working without enough oxygen, so it made lactic acid.",
+            "answer": "It was short of oxygen, so it was making lactic acid.",
+            "why": "Muscle cells make lactic acid when they run short of oxygen, and its build-up is what causes the cramp.",
+            "hint": "What has to be going on inside a muscle for it to start making lactic acid?",
+            "misconceptions": [
+              {
+                "id": "cramp-means-too-much-oxygen",
+                "soundsLike": "It was getting too much oxygen.",
+                "why": "More oxygen would let the muscle break pyruvate down fully, and then no lactic acid would pile up.",
+                "followUp": "What makes you think the muscle was getting extra oxygen?"
+              },
+              {
+                "id": "cramp-means-muscle-stopped-respiring",
+                "soundsLike": "It had stopped respiring completely.",
+                "why": "A muscle that makes lactic acid is still respiring. It is still breaking down glucose, just not all the way.",
+                "followUp": "What makes you think the muscle had stopped respiring?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "everyday",
+                "say": "Cramps come at the end of a hard sprint, not on a slow walk. Think about what is different for your muscles in those two cases."
+              }
+            ],
+            "nodeIds": ["sci10-lp-lactic-acid"]
+          }
+        }
+      ],
+      "check": [
+        {
+          "id": "muscle-check-1",
+          "question": "What do your muscle cells make when they run short of oxygen, and what does it cause?",
+          "expect": "Lactic acid, whose build-up causes cramps.",
+          "answer": "Lactic acid. When it builds up in the muscles, it causes cramps.",
+          "why": "Short of oxygen, muscle cells change pyruvate into lactic acid instead of breaking it down fully. Its build-up during sudden activity causes cramps.",
+          "hint": "What three-carbon substance did we say pyruvate turns into in a muscle that is short of oxygen?",
+          "misconceptions": [
+            {
+              "id": "muscles-make-alcohol",
+              "soundsLike": "Alcohol and carbon dioxide.",
+              "why": "Alcohol and carbon dioxide are what yeast makes without oxygen. Our muscle cells take a different path.",
+              "followUp": "What makes you think our muscles do the same as yeast?"
+            },
+            {
+              "id": "carbon-dioxide-causes-cramps",
+              "soundsLike": "Carbon dioxide builds up and causes cramps.",
+              "why": "Carbon dioxide is carried away by the blood and breathed out. The cramp comes from something that stays in the muscle.",
+              "followUp": "Why do you think the carbon dioxide would stay in the muscle?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "everyday",
+              "say": "Run up four floors of stairs in a hurry. The cramp that can come in your thighs is caused by something piling up inside the muscle."
+            }
+          ],
+          "nodeIds": ["sci10-lp-lactic-acid"]
+        },
+        {
+          "id": "muscle-check-2",
+          "question": "Two friends cover the same distance. One jogs slowly all the way, and the other sprints flat out. Who is more likely to get a cramp, and why?",
+          "expect": "The sprinter, because the sprinter's muscles run short of oxygen and make lactic acid, which builds up.",
+          "answer": "The sprinter. The sprinter's muscles run short of oxygen and make lactic acid, which builds up.",
+          "why": "The jogger's breathing keeps up with the muscles' need for oxygen. The sprinter's muscles need oxygen faster than it can arrive.",
+          "hint": "Which friend would be panting hard, and what does panting tell you about the oxygen in their legs?",
+          "misconceptions": [
+            {
+              "id": "longer-run-more-cramps",
+              "soundsLike": "The jogger, because they are running for longer.",
+              "why": "Running longer at an easy pace is not what causes cramps. What matters is what happens in a muscle that works very hard, very suddenly.",
+              "followUp": "Why do you think running for longer would cause more cramps?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "analogy",
+              "say": "A tank with a thin inlet pipe keeps up if you open one tap. Open all the taps at once and it runs dry, even though water is still coming in."
+            }
+          ],
+          "nodeIds": ["sci10-lp-lactic-acid", "sci10-lp-aerobic-vs-anaerobic"]
+        }
+      ],
+      "teachBack": {
+        "prompt": "Tell me the story of a sprint from your leg muscle's point of view. What happens when the oxygen runs short, and why does it hurt afterwards?",
+        "expect": "Short of oxygen, the muscle cells change pyruvate into lactic acid instead of carbon dioxide and water. Much less energy is released, and lactic acid builds up and causes cramps."
+      }
+    },
+    {
+      "id": "yeast",
+      "title": "Yeast without oxygen: ethanol and carbon dioxide",
+      "nodeIds": ["sci10-lp-yeast-fermentation", "sci10-lp-aerobic-vs-anaerobic"],
+      "board": { "beatId": "yeast", "focus": ["x_yeast"] },
+      "predict": {
+        "id": "yeast-predict",
+        "question": "Picture this. You stir some yeast into sugar water in a bottle, stretch a balloon over its mouth, and leave it in a warm place. What do you think happens to the balloon, and why?",
+        "expect": "The balloon swells up, or inflates, because the yeast makes a gas, carbon dioxide.",
+        "answer": "The balloon slowly swells up, because the yeast gives off carbon dioxide gas.",
+        "why": "Yeast uses the sugar as food. As it breaks the sugar down, it gives off carbon dioxide gas, which collects in the bottle and fills the balloon.",
+        "hint": "What would have to be made inside the bottle for a balloon on top of it to change?",
+        "misconceptions": [
+          {
+            "id": "yeast-gives-oxygen",
+            "soundsLike": "It fills with oxygen from the yeast.",
+            "why": "Oxygen is given out by green plants in sunlight. Yeast is not a plant, and it does not make its own food.",
+            "followUp": "Why do you think the yeast would give out oxygen?"
+          },
+          {
+            "id": "nothing-happens-to-balloon",
+            "soundsLike": "Nothing will happen to the balloon.",
+            "why": "Yeast is alive, and it uses the sugar as food. Living things that break down food give something off.",
+            "followUp": "What do you think the yeast does with the sugar?"
+          },
+          {
+            "id": "yeast-swells-up",
+            "soundsLike": "The yeast grows and swells and pushes the balloon up.",
+            "why": "Yeast cells are far too tiny to fill a balloon by swelling. Only a gas could take up that much space.",
+            "followUp": "What makes you think the yeast itself could get big enough to push the balloon?"
+          }
+        ],
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "Bread or pav dough made with yeast, left in a warm place for an hour, becomes bigger and full of tiny holes."
+          }
+        ],
+        "nodeIds": ["sci10-lp-yeast-fermentation"]
+      },
+      "points": [
+        {
+          "id": "yeast-p1",
+          "say": "Without oxygen, yeast changes pyruvate into ethanol, a kind of alcohol, and carbon dioxide, releasing much less energy than with oxygen. This is fermentation, which is anaerobic respiration.",
+          "ask": {
+            "id": "yeast-p1-ask",
+            "question": "So how is what yeast makes different from what your muscles make when they are short of oxygen?",
+            "expect": "Yeast makes ethanol and carbon dioxide, while muscles make lactic acid.",
+            "answer": "Yeast makes ethanol and carbon dioxide, while our muscles make lactic acid.",
+            "why": "Both start from pyruvate without enough oxygen, but they take different paths. Yeast ends with ethanol and carbon dioxide, and our muscle cells end with lactic acid.",
+            "hint": "What did we say builds up in your legs after a sprint, and is it the same as what yeast makes?",
+            "misconceptions": [
+              {
+                "id": "yeast-also-makes-lactic-acid",
+                "soundsLike": "They are the same. Both make lactic acid.",
+                "why": "Our muscle cells make lactic acid, but yeast takes a different path, and one of its products is a gas.",
+                "followUp": "Why do you think yeast and muscle cells would make the same thing?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "visual",
+                "say": "Picture two roads leaving the same junction, called pyruvate. One road runs through our muscles, the other through yeast, and each ends somewhere different."
+              }
+            ],
+            "nodeIds": ["sci10-lp-yeast-fermentation", "sci10-lp-aerobic-vs-anaerobic"]
+          }
+        },
+        {
+          "id": "yeast-p2",
+          "say": "The carbon dioxide from yeast forms bubbles. That is why bread dough made with yeast rises, and why this gas turns lime water milky in the lab.",
+          "ask": {
+            "id": "yeast-p2-ask",
+            "question": "So why do you think a slice of bread made with yeast has so many small holes in it?",
+            "expect": "The holes were bubbles of carbon dioxide made by the yeast and trapped in the dough.",
+            "answer": "The holes were bubbles of carbon dioxide from the yeast, trapped in the dough.",
+            "why": "As the yeast respires, carbon dioxide forms bubbles that get trapped in the dough. The dough rises, and the bubbles stay as small holes after baking.",
+            "hint": "When dough rises, what do you think is taking up the extra space inside it?",
+            "misconceptions": [
+              {
+                "id": "boiling-alcohol-lifts-dough",
+                "soundsLike": "Because the alcohol boils and pushes the dough up.",
+                "why": "The dough rises before it goes into the oven, at room temperature, when nothing is boiling. So something else must be filling it.",
+                "followUp": "What makes you think the alcohol boils while the dough is rising?"
+              }
+            ],
+            "alternates": [
+              {
+                "mode": "everyday",
+                "say": "Look closely at a slice of pav. The holes look like tiny balloons that have been popped."
+              }
+            ],
+            "nodeIds": ["sci10-lp-yeast-fermentation"]
+          }
+        }
+      ],
+      "check": [
+        {
+          "id": "yeast-check-1",
+          "question": "What does yeast make when it respires without oxygen?",
+          "expect": "Ethanol, or alcohol, and carbon dioxide, with some energy.",
+          "answer": "Ethanol and carbon dioxide, with some energy.",
+          "why": "Without oxygen, yeast changes pyruvate into ethanol and carbon dioxide. This is fermentation, a kind of anaerobic respiration.",
+          "hint": "One product blew up the balloon, so what is the other one that stays behind in the sugar water?",
+          "misconceptions": [
+            {
+              "id": "yeast-makes-lactic-acid",
+              "soundsLike": "Lactic acid.",
+              "why": "Lactic acid is what our muscle cells make when they are short of oxygen. Yeast takes a different path.",
+              "followUp": "Why do you think yeast makes the same thing as a muscle short of oxygen?"
+            },
+            {
+              "id": "yeast-makes-oxygen-and-water",
+              "soundsLike": "Oxygen and water.",
+              "why": "Yeast uses up food; it does not give out oxygen. Oxygen comes from plants doing photosynthesis.",
+              "followUp": "What makes you think yeast would give out oxygen?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "analogy",
+              "say": "Our muscles and yeast are two cooks given the same ingredient, pyruvate. The muscle cook makes lactic acid. The yeast cook makes two things, and one of them is a gas."
+            }
+          ],
+          "nodeIds": ["sci10-lp-yeast-fermentation"]
+        },
+        {
+          "id": "yeast-check-2",
+          "question": "In a lab, a tube carries the gas from yeast in sugar water into a test tube of lime water. What would you expect to see in the lime water, and why?",
+          "expect": "The lime water turns milky, because the yeast gives off carbon dioxide.",
+          "answer": "The lime water turns milky, because the yeast gives off carbon dioxide.",
+          "why": "Carbon dioxide turns lime water milky. Fermenting yeast gives off carbon dioxide, so the gas bubbling through the tube turns the lime water milky.",
+          "hint": "Which gas did the yeast give off in the balloon bottle, and which test for that gas uses lime water?",
+          "misconceptions": [
+            {
+              "id": "no-gas-from-yeast",
+              "soundsLike": "Nothing, because yeast only makes alcohol.",
+              "why": "Yeast does make alcohol, but that is not all it makes. Remember what blew up the balloon.",
+              "followUp": "Why do you think the yeast would make no gas?"
+            }
+          ],
+          "alternates": [
+            {
+              "mode": "everyday",
+              "say": "Think back to the balloon on the yeast bottle. The same gas can be led through a tube instead."
+            }
+          ],
+          "workedExample": {
+            "steps": [
+              {
+                "say": "Here is a similar test you can do with your own breath. Blow gently through a straw into fresh lime water.",
+                "line": "breath → lime water"
+              },
+              {
+                "say": "After a little while, the clear lime water turns milky.",
+                "line": "clear → milky"
+              },
+              {
+                "say": "Our breath carries a gas that our cells make in respiration, and that gas is what changes the lime water.",
+                "line": "a gas from our cells → the change"
+              }
+            ]
+          },
+          "nodeIds": ["sci10-lp-yeast-fermentation"]
+        }
+      ],
+      "teachBack": {
+        "prompt": "Imagine your younger cousin asks why bread dough rises. Explain it to them using what you now know about yeast.",
+        "expect": "Yeast respires without oxygen, which is fermentation. It makes ethanol and carbon dioxide, and the carbon dioxide bubbles make the dough rise."
+      }
+    }
+  ],
+  "recap": {
+    "prompts": [
+      "Tell me what goes into respiration and what comes out.",
+      "Tell me the three things pyruvate can turn into, and where each one happens.",
+      "Tell me, in one line each, how breathing and respiration are different."
+    ]
+  },
+  "facts": [
+    "Breathing moves air in and out of the lungs, while the energy itself is released inside cells when food is broken down in respiration.",
+    "Respiration goes on in every living cell all the time, even when we sit still or sleep, because the body always needs energy to keep itself working.",
+    "Carbohydrates in rice, potatoes and bread are broken down during digestion to form glucose, the fuel our cells use.",
+    "In respiration, glucose combines with oxygen in our cells to give carbon dioxide, water and energy, written as C6H12O6 + 6O2 gives 6CO2 + 6H2O + energy.",
+    "Respiration is an exothermic reaction, because energy is given out in it.",
+    "In terms of what goes in and what comes out, respiration is the opposite of photosynthesis, which uses carbon dioxide and water to make glucose and oxygen.",
+    "The first step in every kind of respiration is the breakdown of glucose, a six-carbon molecule, into a three-carbon molecule called pyruvate, and it happens in the cytoplasm.",
+    "With oxygen, pyruvate is broken down in the mitochondria into three molecules of carbon dioxide, and water, and this is aerobic respiration.",
+    "Aerobic respiration releases a lot more energy than anaerobic respiration.",
+    "In yeast, without oxygen, pyruvate is changed into ethanol and carbon dioxide, and this is fermentation, a kind of anaerobic respiration.",
+    "When our muscle cells are short of oxygen, pyruvate is changed into lactic acid, which is also a three-carbon molecule.",
+    "A build-up of lactic acid in our muscles during sudden activity causes cramps.",
+    "The energy released in respiration is used at once to make ATP, the cell's energy currency, which powers jobs like muscle contraction, making proteins and carrying nerve impulses.",
+    "Plants respire too: they exchange gases through the stomata, and the large spaces between their cells keep every cell in contact with air.",
+    "At night plants mainly give out carbon dioxide, but in the day the carbon dioxide from their respiration is used up in photosynthesis, so they mainly give out oxygen.",
+    "The air we breathe out has more carbon dioxide than the air around us, so it turns lime water milky faster."
+  ],
+  "sources": [
+    "NCERT Science, Class X, Chapter 5 Life Processes, Section 5.3 Respiration: glucose to pyruvate in the cytoplasm, the three pathways and Figure 5.8, lactic acid and cramps, the ATP box, gas exchange in plants, Activities 5.4 and 5.5 (Reprint 2026-27), https://ncert.nic.in/textbook/pdf/jesc105.pdf",
+    "NCERT Science, Class X, Chapter 5 Life Processes, Section 5.1 What are Life Processes: the body needs energy even when sitting still or asleep; Section 5.3: fish take dissolved oxygen through their gills, and blood carries oxygen from the lungs to the cells and carbon dioxide back, https://ncert.nic.in/textbook/pdf/jesc105.pdf",
+    "NCERT Science, Class X, Chapter 1 Chemical Reactions and Equations, Section 1.2: respiration as an exothermic reaction, equation 1.18, and the photosynthesis equation 1.12 (Reprint 2026-27), https://ncert.nic.in/textbook/pdf/jesc101.pdf",
+    "Board lesson content/class10-respiration/lesson.json: beats hook, equation, aerobic, anaerobic and yeast",
+    "Knowledge graph packages/knowledge-graph/data/class10-science.json nodes sci10-lp-respiration-vs-breathing, sci10-lp-respiration-equation, sci10-lp-aerobic-vs-anaerobic, sci10-lp-mitochondria-role, sci10-lp-lactic-acid and sci10-lp-yeast-fermentation; misconceptions from class10-science.probes.json"
+  ]
+}
