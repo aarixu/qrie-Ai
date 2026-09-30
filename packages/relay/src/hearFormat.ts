@@ -7,16 +7,21 @@
  *
  * COMPRESSED AUDIO IS NOW TAKEN AS WELL (Aarav, 2026-09-30: "relay ka 0.7 sec
  * bhi fix karo"). Measured that day: a 3-4 s answer is 105-136 KB as WAV
- * and 10-13 KB as Opus. The upload alone cost about 0.12 s on a good line,
- * with spikes to 3 s, and a phone's uplink is worse. Vertex heard Opus
- * (webm, ogg) and AAC (mp4) as well as the WAV, with the same prompt-token
- * count (tools/voice-probe, 2026-09-30).
+ * and 10-13 KB as Opus. Vertex heard Opus (webm, ogg) and AAC (mp4) as well
+ * as the WAV, with the same prompt-token count (tools/voice-probe,
+ * 2026-09-30). It is NOT free: Vertex took about 0.2 s longer on Opus
+ * (median 1.64 s against 1.45 s, 24 calls each), and through the live relay
+ * the smaller upload saved about 0.23 s on a good line. So on good Wi-Fi it
+ * is a wash; it pays on a weak phone uplink, where 120 KB takes most of a
+ * second and 12 KB does not, and it removes the upload spikes (one of 12
+ * WAV-sized posts took 3.2 s).
  *
  * The meter cannot read a compressed body's duration from its size, so it is
  * charged in two steps:
- *   1. at the door, as if it were the longest answer the ear takes
- *      (`COMPRESSED_HEAR_SECONDS`: ten seconds of speech, plus the lead-in
- *      and the trailing quiet the ear keeps);
+ *   1. at the door, as a long answer (`COMPRESSED_HEAR_SECONDS`: ten seconds
+ *      of speech, the ear's cap, and two more). The app's recording runs from
+ *      the moment the mic opens, so one that waited a while for the first
+ *      word is longer than that — which is what step 2 is for;
  *   2. after Vertex answers, its own prompt-token count says how long the
  *      audio really was, and anything past step 1 is claimed as well
  *      (`heardSeconds`). Whatever is claimed after the call has been made

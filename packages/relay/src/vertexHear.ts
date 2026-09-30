@@ -29,7 +29,9 @@ import { romaniseDevanagari } from './romanise.ts';
  * That is why any Devanagari that still comes back is spelled out in Roman
  * letters here (romanise.ts) before the transcript leaves the relay.
  *
- * THE SLOW TAIL. One call in eight took 29 s on the old settings. A second,
+ * THE SLOW TAIL. One call in eight took 29 s on the old settings, and on the
+ * new ones 2 of 48 still took 17 s and 23 s (median 1.45 s, three in four
+ * under 1.8 s; 2026-09-30). A second,
  * identical call is sent if the first has not answered in HEDGE_AFTER_MS,
  * and whichever answers first is used; the other is aborted. The second
  * call also goes at once when the first fails with a status a retry can
@@ -51,7 +53,7 @@ export const HEAR_INSTRUCTION = [
 /** How long one call may take before it is given up. */
 const HEAR_TIMEOUT_MS = 8_000;
 /** How long the first call has before a second, identical one is sent. */
-export const HEDGE_AFTER_MS = 2_500;
+export const HEDGE_AFTER_MS = 2_000;
 /** Statuses a second call can reasonably fix. */
 const RETRYABLE = new Set([408, 429, 500, 502, 503, 504]);
 
