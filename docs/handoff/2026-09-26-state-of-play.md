@@ -33,6 +33,143 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 ---
 
+## ► NEXT TRACK (Aarav, 2026-09-30): the study structure — PLAN, NOT BUILT
+
+Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a Class 10 topic). His direction: design the syllabus, curriculum and study structure first; a mandatory placement test whose questions the LAM chooses; a node-based standard for progress; a live introduction class that finds out where the student's school is and builds their curriculum; a tutor that can change the curriculum when a student asks for something relevant; and later, beyond school — college and professional courses with an AI-built curriculum sold once for lifetime access. **Plan only; nothing below is built except where it says so.**
+
+### Why Respiration opened (MEASURED, 2026-09-30, code read)
+
+- Home's subject tiles ignore the student's class. `firstReadyChapter` (apps/classroom/src/screens/Home.tsx) walks **every** syllabus for the subject, Class 6 to 11, and opens the first chapter that has a prepared class. Every published class is Class 9–10 Science, so "Science" for a Class 8 student lands on Class 10 Life Processes → Respiration.
+- The big "start" button (`firstTopic`) filters by class but not by subject, and takes chapter 0 of whichever syllabus sorts first (Class 8 → Mathematics, Rational Numbers).
+- Nothing on Home reads a curriculum, because there is none: there is a syllabus (what exists) and a learner model (what we believe), and no object that says "this student, this order, this week".
+- The placement test can be skipped ("Skip for now" on the last onboarding step).
+
+### What we have today (MEASURED, code read)
+
+| Piece | Today |
+|---|---|
+| Syllabus | NCERT-shaped, Class 6–10 Maths and Science (+ Class 11 Biology, Chemistry, Maths): subject → chapter → topic (`packages/syllabus/data`). |
+| Knowledge graph ("Learning Outcome Map") | One map per class and subject; each **node is an observable learning outcome** with prerequisites, difficulty 1–5 and its `topicRef` (the join key to classes). Class 6–10: 193–762 nodes per map, about 4,700 in all. **No edges between classes** (C8: zero `*.links.json`). |
+| Question bank | About one authored multiple-choice probe per node, each wrong option naming a misconception (Class 9 Maths: 132 probes for 370 nodes). |
+| Placement test | `packages/diagnostic`: knowledge-space selection — ask the node whose answer would move the most belief (uncertainty × reach through prerequisites), spread across chapters, 12–20 questions, stops early at 75 % coverage; deterministic. Skippable. Scoped to the student's class (maps two classes back are loaded, but no cross-class edges carry belief between them). |
+| Learner model | Event-sourced from the ledger. Per node: unassisted mastery (rung-0 answers only — the only number a decision reads), assisted performance, evidence counts, spaced-review box (1/2/5/12/30/60 days), exposure kept apart from retrieval. Slip/guess default until a placement trains them. |
+| "What next" | `nextActivity`: due reviews → a shaky prerequisite of what comes next → the next syllabus topic. |
+| LAM in class | `decide()`: the help ladder (rethink → hint → worked example → another way → answer), strategy-tagged, every step recorded. |
+| Curriculum | **None.** No pacing, no school alignment, no plan the student can see or change. |
+
+### How Squirrel AI does it (REPORTED by Squirrel AI in press and marketing; their algorithms are not public — UNVERIFIED beyond that)
+
+- **Granularity.** "Nano-level" knowledge points: about 300 junior-high maths points split into about 30,000, with up to nine levels of breakdown. Each point is marked for difficulty, importance, mastery and status.
+- **Graph.** A Bayesian-network-like graph that links weak relations between points as well as strong ones.
+- **Student model.** A combination of IRT, knowledge space theory, Bayesian knowledge tracing and Bayesian networks ("PKS", a probabilistic knowledge state). On top of knowledge it models the learner ("MCM": thinking model, capacity, methodology) and behaviour ("MIBA").
+- **Flow.** An entry diagnostic, then a personal learning path aimed at weak points, skipping what is already held.
+- **Architecture.** An ontology layer (learning objectives, content, error analysis), an algorithm layer and an interaction layer.
+- **LAM, the "Large Adaptive Model" (2024).** Their flagship name: a multimodal model trained on data from 24 million students and 10 billion learning behaviours. It handles voice and text, has more than 100 dialogue scenarios and recognises emotion. They report question accuracy rising from 78 % to 93 %.
+
+**Compared with us.** The shape is the same: a graph of fine-grained points, a probabilistic belief per point, an adaptive entry test and a path over the graph. The differences that matter:
+
+1. **Granularity.** Their points are finer: about 30,000 for one subject stage, against our 193–762 per class.
+2. **Questions.** They have many questions per point. We have about one, so we cannot re-test a node with a fresh item.
+3. **Calibration.** Their items and parameters are calibrated from millions of students. Ours are priors until data arrives.
+4. **The learner.** They model the learner as well as the knowledge (MCM).
+
+**Where we are ahead, and should stay.** Unassisted mastery is kept apart from assisted mastery, exposure from retrieval, and every help step is recorded — they do not publish these. And our tutor is a live, human-like class, not only practice.
+
+### The design (proposed)
+
+**1. The progress standard: the node.**
+
+- **Hierarchy.** Subject → Class → Chapter → Topic → Outcome (node) → later, micro-skills under a node where the data shows students split.
+- **Per node, per student**, as today:
+  - unassisted mastery with its evidence count;
+  - assisted performance;
+  - memory box and next review;
+  - named misconceptions seen.
+- **One status ladder** shown everywhere, to the student, the parent and the teacher, all derived from those numbers: Not started → Learning → Practised (with help) → Secure (cold, right) → Mastered (cold, right, and retained across a spaced review).
+- **Needed for it:**
+  - 3+ probes per node, so a node can be re-tested with a question the student has not seen;
+  - cross-class prerequisite edges (C8) — without them a Class 8 gap cannot be traced to Class 6;
+  - later, IRT calibration of every probe from real answers.
+
+**2. Onboarding → a mandatory placement test chosen by the LAM.**
+
+- **Onboarding** asks for class, subjects (Maths and/or Science), board (CBSE/NCERT first) and tutor language, then the placement test. **No skip.**
+- **The test.** The same knowledge-space engine, per subject, about 12–20 questions each, stopping early when confident. Scope: this class plus two back, joined by the C8 edges. It must also honour a pause: "finish later" saves progress, but no class opens before it is done.
+- **What the LAM decides.** The question order, and when to stop. What comes out is a node map of held, shaky and unknown, plus named misconceptions.
+
+**3. The first class: a live introduction.**
+
+- **What she already knows (the skeleton):** the placement result, the syllabus, and today's date against the school year.
+- **What she does, as a tutor would.** She greets them and asks:
+  - which school and board;
+  - which chapter the class is on now;
+  - when the next test or exam is;
+  - what feels hard, and how many days a week they can study.
+- **What she proposes.** She tells them what she found ("you're on Chapter 5 at school, and two ideas it rests on from Class 7 are shaky"), then offers:
+  - **(a) keep pace with school** — start at the current chapter, with a short catch-up on the gaps;
+  - **(b) the whole syllabus from the start.**
+  Either way the full syllabus is covered in the end.
+- **Output.** A **Curriculum**, saved and shown on screen: the ordered chapters and topics, a weekly pace, the review slots and the catch-up items. The student confirms or adjusts it by talking.
+- **Its board.** A skeleton that is prepared once and fills in live from what they say.
+
+**4. The Curriculum engine** (new; code, not model).
+
+- **Order.** The topological order of the graph (prerequisites first), aligned to the school's chapter order in "keep pace" mode. Due reviews and gap remediation (`nextActivity`) are woven in.
+- **Pace.** Weeks to the exam or the year's end, divided by the remaining nodes, adjusted by the measured learning rate.
+- **Re-plan triggers:**
+  - the school moved ahead;
+  - an exam date was added;
+  - mastery ran ahead of or behind plan;
+  - the student asked.
+- **Home becomes "Today's class"** from the curriculum. This retires the tiles that opened Respiration.
+
+**5. The student can change the curriculum; the tutor handles it.**
+
+- **The flow.** In class or on Home, the student says "test next week on Chapter 7", "more practice on fractions" or "skip this, I know it". The model turns the request into a structured edit. The LAM checks it in code:
+  - it is inside their syllabus or a prerequisite of it;
+  - it does not skip a node they have not shown they hold (a "skip" becomes a quick check instead);
+  - it passes the safety screen.
+- **Then it applies the edit and says what changed.** An irrelevant request is declined politely, with the reason.
+- **Every edit is recorded** in the ledger.
+
+**6. Beyond school (later): an AI-built course, sold once.**
+
+- **Onboarding branch.** "School" or "Something else": a category (a college subject, a competitive exam, a professional skill, a hobby), then the goal, the current level, the time per week and the deadline.
+- **Building the course** (the same pipeline as a school class, one level up):
+  - the model drafts a knowledge graph (outcomes, prerequisites, difficulty);
+  - a reviewer model checks it against sources;
+  - probes are generated per node and gated like today's classes;
+  - a syllabus preview is shown with a **one-time lifetime price**;
+  - after payment: a placement test on the new graph, then the same curriculum engine and live classes.
+- **Things to settle before building it:**
+  - **Accuracy at college level** — source grounding, and expert review for courses many buy.
+  - **Cost** — graph plus probes cost a few rupees; classes cost about Rs 30 each, prepared only when reached, and shared across buyers of the same course. So popular courses become templates.
+  - **Payments, refunds and consumer law.**
+  - **What "lifetime" means** if the model or the product changes.
+
+### Order of work (proposed; each step shippable and testable on its own)
+
+1. **Bug fix.** Home is scoped to the student's class and chosen subjects (the Respiration bug). Small.
+2. **Mandatory placement.** Remove the skip; test per chosen subject; resume a half-done test. Small.
+3. **C8.** Cross-class prerequisite edges for Maths and Science 6–10 (content work; needs Aarav's spot check).
+4. **More probes.** Grow the bank to 3 per node (generated, gated, spot-checked), so a node can be re-tested.
+5. **The status ladder** on Progress, Home and the teacher/parent views.
+6. **The Curriculum object and engine.** "Today's class" on Home.
+7. **The live introduction class**, which builds the curriculum by conversation (the model proposes; code writes).
+8. **Curriculum changes by request**, through the tutor, validated by the LAM.
+9. **Calibration.** IRT from real answers once there is data; the learner profile (pace, persistence) — the MCM-like layer.
+10. **Beyond school:** the course builder, preview, pricing and payment. A separate track, after the school product is proven.
+
+### Decisions only Aarav can make
+
+- **Board.** CBSE/NCERT only at first, or state boards too?
+- **Placement length.** One sitting for both subjects (up to about 40 questions), or one per subject on different days?
+- **The introduction class.** Should it also ask about coaching and tuition, and let a parent join?
+- **Pace defaults.** Days per week, minutes per class.
+- **Beyond school.** The price band, and whether a course is reviewed by a person before it is sold.
+
+---
+
 ## ► NEXT SESSION STARTS HERE — build the tutor, T0 first
 
 Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."* The build plan is in Part 2, "The AI tutor build plan — T0–T9". This section records what 2026-09-28 proved and what to do first.
