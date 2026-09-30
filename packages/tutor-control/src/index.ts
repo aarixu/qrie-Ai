@@ -33,3 +33,20 @@ export type {
   Verdict,
   WorkedExample,
 } from './types.ts';
+export type {
+  Ack,
+  AlternateMode,
+  Conductor,
+  ConductorOptions,
+  ConductorSnapshot,
+  Move,
+  MoveKind,
+  PlanIdea,
+  PlanMisconception,
+  PlanPoint,
+  PlanQuestion,
+  Reading,
+  StudentClass,
+  TeachingPlan,
+} from './conductor/types.ts';
+export { STUDENT_CLASSES } from './conductor/types.ts';
