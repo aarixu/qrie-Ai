@@ -105,3 +105,27 @@ describe('the enrolment name', () => {
     expect(input.value.length).toBeLessThanOrEqual(40);
   });
 });
+
+/** Aarav, 2026-09-30: no mascot in the onboarding wizard. */
+describe('the onboarding wizard', () => {
+  it('shows no tutor tile, on the first door or the name step', async () => {
+    const host = document.body.appendChild(document.createElement('div'));
+    const root = createRoot(host);
+    roots.push(root);
+    await act(async () => {
+      root.render(
+        <MemoryRouter initialEntries={['/onboarding']}>
+          <Onboarding />
+        </MemoryRouter>,
+      );
+    });
+    const tile = () => host.querySelector('[aria-label$=" teaching"]');
+    expect(tile()).toBeNull();
+    const own = [...host.querySelectorAll('button')].find((b) => b.textContent?.includes("I'm here on my own"))!;
+    await act(async () => {
+      own.click();
+    });
+    expect(host.querySelector('input[aria-label="Your first name"]')).not.toBeNull();
+    expect(tile()).toBeNull();
+  });
+});

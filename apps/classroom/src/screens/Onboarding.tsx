@@ -15,7 +15,6 @@ import {
 } from '../lib/studySchedule';
 import { setRemindersEnabled, setStudyDays, setStudyMinute } from '../stores/schedule';
 import { askForNotifications } from '../lib/reminders';
-import { TutorTile } from '../ui/TutorTile';
 import { writeWorkspace, type EntryPath, type TutorLanguage } from '../lib/workspace';
 import { INTERESTS, setInterests } from '../lib/studentMemory';
 
@@ -273,9 +272,6 @@ export function Onboarding() {
               </div>
             ) : (
               <div className="text-center">
-                <div className="grid place-items-center mb-5">
-                  <TutorTile mode="teaching" variant="pip" />
-                </div>
                 <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                   How did you get here?
                 </h1>
@@ -323,9 +319,6 @@ export function Onboarding() {
 
           {step === 'name' && (
             <div className="text-center">
-              <div className="grid place-items-center mb-5">
-                <TutorTile mode="teaching" variant="pip" />
-              </div>
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
                 What should I call you?
               </h1>
