@@ -33,6 +33,116 @@ recorded under "Mistakes worth not repeating" so they are not re-made.
 
 ---
 
+## ► MVP-1 (Aarav, 2026-09-30): school and college students — what "fully functional" takes. PLAN, NOT BUILT
+
+Aarav:
+- **MVP-1 is school and college students only.** Professional courses and the computer sandbox are the future (the "universal learning" section below is kept for then).
+- **School** is built after canvas, voice and the avatar are perfect. He will say what to do after app testing.
+- **College.** Topics are mostly the same everywhere; one or two differ by university. So we build a general, topic-wise curriculum per subject, grounded in the web, and the student checks it against their own university syllabus. A college curriculum is **built when the first student for it arrives, and charged for**, then reused wherever it fits.
+
+This is well founded. UGC's LOCF gives **model** curricula that universities are free to adapt, and NEP's four-year UG gives every student their own mix of Major, Minor and other courses. AICTE's model curriculum keeps the engineering core the same across the country: subject names and credits vary; the skeleton does not.
+
+### 0. First (Aarav's order)
+
+Canvas, voice and avatar are made perfect after app testing, to his instructions. Nothing below starts before that.
+
+### 1. Onboarding: one flow, two tracks
+
+**First screen.** "My school set this up" (LMS enrolment, unchanged) or "I'm on my own". Then: **"What are you studying?" — School | College.** More options later.
+
+**School track.**
+
+- Name, class (6–10), board (CBSE/NCERT first), subjects (Maths, Science).
+- School name (optional); the chapter each subject is on now, or "don't know"; the next test or exam date (optional).
+- Tutor language; days per week and minutes.
+- Then the **mandatory placement** (no skip; "finish later" allowed), then the live **introduction class**, which fixes the Curriculum.
+
+**College track.**
+
+- **Where:** name, state, university (a searchable list, or "not listed"), college (optional).
+- **What:** programme (B.Sc, B.A, B.Com, B.Tech, BCA, BBA, …), branch or specialisation, year and semester, and the scheme (NEP four-year, CBCS or annual).
+- **This semester's subjects**, and for NEP whether each is a Major, a Minor or another type. For each subject: upload the syllabus (PDF or photo), paste a link, or "build it for me".
+- **Exams:** internal and end-semester dates.
+- **Goal:** clear a backlog, top marks, understanding, or competitive-exam preparation.
+- Language, and days per week.
+- Then a preview and price for each subject, payment, a placement test per subject, and an introduction class.
+- **College needs a real account** (phone or email login), because it is paid. Today's anonymous start is not enough.
+
+### 2. The college Course Map, built on demand
+
+**The key.** A subject's canonical name at its level (for example, "B.Sc Physics — Mechanics, semester 1"), plus a **university variant** where one exists.
+
+**Building it:**
+
+1. **A canonical map.** Search the web for the model curricula (UGC LOCF, AICTE), several universities' syllabi for the subject and standard textbook contents. Draft units, then topics, then outcomes (nodes), with prerequisites and difficulty. A reviewer model cross-checks the draft against the sources, and the **citations are stored**.
+2. **Aligning it to their university.** If the student gave their syllabus, read it (the existing brought-page pipeline, `packages/class-prep/src/fromWeb.ts`, plus vision for a photo or PDF). Map it onto the canonical map: topics that match, topics missing from ours (added), and topics extra to theirs (marked optional). The result is that university's variant.
+3. **Their check.** A unit-by-unit checklist — "is this your syllabus?" They tick, untick or add topics, then confirm. What they correct is fed back into the variant; when many students agree, the stored map changes.
+4. **Questions per node,** generated and gated like school probes, and the placement test built from them.
+5. **Classes prepared lazily** when a student reaches a node, cached, and shared with everyone on that node.
+
+**Reuse.** The next student with the same subject (and university) gets the stored map at once, and still checks it. Maps are versioned per academic year.
+
+**Charging.** The student whose request builds a map pays. Later students pay the product price, and cost us less.
+
+**Limits, said plainly:**
+
+- **College maths checking.** maths-check reads polynomial algebra; calculus and linear algebra are checked by the reviewer only until the checker grows.
+- **Programming subjects** (BCA, B.Tech CS) need the code sandbox; until then they are taught on the board.
+
+### 3. One engine for both tracks
+
+The node ladder, mandatory placement, the Curriculum engine (in step with the school chapter or the college semester, and the exam dates), the introduction class, changes by request, spaced review and the LAM. These are the "study structure" and "LAM better than Squirrel AI" plans below.
+
+### 4. What must exist for MVP-1 to be fully functional
+
+**School:**
+
+- Home per class and subject (the Respiration bug).
+- Mandatory placement.
+- C8 cross-class links.
+- 3+ probes per node.
+- The status ladder.
+- The Curriculum engine.
+- The introduction class.
+- Changes by request.
+- **Every Class 6–10 Maths and Science topic prepared and published before students arrive.** That is 116 chapters and 671 topics — about Rs 20,000 one-time at about Rs 30 per class (UNVERIFIED; the cost meter's `model_price` table is still empty). It needs a review and publish queue: today, publishing is a SQL update needing Aarav's OK.
+
+**College:**
+
+- The onboarding track, and account login.
+- The Course Map builder: web research, the reviewer, the syllabus reader, the student's check.
+- **Storage** for versioned, reusable course maps. The LMS owns the database, so this is an LMS-lane migration.
+- **Payments** (UPI, for example through Razorpay), receipts and a refund policy.
+- Placement-test generation for a new map.
+- Planner prompts tuned for college level.
+
+**Both:**
+
+- DPDP compliance (TD14).
+- The cost meter (`model_price` rows).
+- Analytics (the PostHog key answers 401 today).
+- Support and reporting.
+
+### 5. Order
+
+1. Canvas, voice, avatar.
+2. School structure: Home fix → mandatory placement → C8 and probes → status ladder → Curriculum engine → introduction class → changes by request → prepare and publish all 671 topics.
+3. College: the onboarding track → the Course Map builder and its student check → payments → the first programmes.
+4. LAM calibration (L2 onwards) runs alongside, as data arrives.
+
+Professional courses and the sandbox come later.
+
+### Decisions only Aarav can make
+
+- The college pricing unit: per subject, per semester or per year. And whether the first builder pays more.
+- Which programmes first (B.Sc / B.Com / B.A / B.Tech?), and which states' universities first.
+- NEP four-year only, or CBCS and annual schemes too?
+- Is the student's own check enough, or does a person review a course map before it is sold?
+- The login method for college students.
+- The school board: CBSE/NCERT only at first?
+
+---
+
 ## ► NEXT TRACK (Aarav, 2026-09-30): the study structure — PLAN, NOT BUILT
 
 Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a Class 10 topic). His direction: design the syllabus, curriculum and study structure first; a mandatory placement test whose questions the LAM chooses; a node-based standard for progress; a live introduction class that finds out where the student's school is and builds their curriculum; a tutor that can change the curriculum when a student asks for something relevant; and later, beyond school — college and professional courses with an AI-built curriculum sold once for lifetime access. **Plan only; nothing below is built except where it says so.**
@@ -170,7 +280,9 @@ Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a 
 
 ---
 
-## ► NEXT TRACK (Aarav, 2026-09-30): universal learning, and a computer to learn on — PLAN, NOT BUILT
+## ► FUTURE, AFTER MVP-1 (Aarav, 2026-09-30): universal learning, and a computer to learn on — PLAN, NOT BUILT
+
+**Saved for later (Aarav, 2026-09-30): professional courses and the sandbox come after MVP-1 (school and college).** College subjects in MVP-1 use the Course Map in the MVP-1 section above, not this.
 
 Aarav: QRIE should be **universal** — anyone can learn anything. Someone who wants Python says so at onboarding, and the AI builds a top-notch curriculum personalised to them. Later, a **computer and programming sandbox beside the canvas**, so programming is learnt live with the AI, and any professional software — Excel, DaVinci Resolve — is learnt hands-on, with the AI monitoring and teaching the lessons.
 
