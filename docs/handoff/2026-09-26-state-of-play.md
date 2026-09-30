@@ -132,7 +132,7 @@ Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a 
 - **Then it applies the edit and says what changed.** An irrelevant request is declined politely, with the reason.
 - **Every edit is recorded** in the ledger.
 
-**6. Beyond school (later): an AI-built course, sold once.**
+**6. Beyond school (later) — superseded by "universal learning, and a computer to learn on" below; the outline here stays for the pricing notes.**
 
 - **Onboarding branch.** "School" or "Something else": a category (a college subject, a competitive exam, a professional skill, a hobby), then the goal, the current level, the time per week and the deadline.
 - **Building the course** (the same pipeline as a school class, one level up):
@@ -167,6 +167,110 @@ Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a 
 - **The introduction class.** Should it also ask about coaching and tuition, and let a parent join?
 - **Pace defaults.** Days per week, minutes per class.
 - **Beyond school.** The price band, and whether a course is reviewed by a person before it is sold.
+
+---
+
+## ► NEXT TRACK (Aarav, 2026-09-30): universal learning, and a computer to learn on — PLAN, NOT BUILT
+
+Aarav: QRIE should be **universal** — anyone can learn anything. Someone who wants Python says so at onboarding, and the AI builds a top-notch curriculum personalised to them. Later, a **computer and programming sandbox beside the canvas**, so programming is learnt live with the AI, and any professional software — Excel, DaVinci Resolve — is learnt hands-on, with the AI monitoring and teaching the lessons.
+
+### 1. "Learn anything": the universal curriculum
+
+**Onboarding branch.** "School" or "Learn anything". For "Learn anything", Meera holds a short live intake conversation instead of a form. She asks:
+
+- what they want to learn, and why: a job, a project, an exam, a hobby;
+- where they are now;
+- how much time they have, and their deadline;
+- which device they have (phone, laptop);
+- their language.
+
+Then a short placement on the drafted map — for a skill, it includes one small hands-on task.
+
+**A personal path over a vetted master map.** A new graph is not invented per student; quality and cost both depend on this.
+
+- **Master maps.** For each popular domain (Python, JavaScript, SQL, Excel/spreadsheets, data analysis, DaVinci Resolve, Tally, …) we keep one master outcome map. It is drafted by the model from official documentation and reference syllabi, checked by a reviewer model, and spot-checked by a person before it is sold.
+- **Personalisation is choosing and ordering.** A student's curriculum is a selected sub-map (what their goal needs, minus what the placement shows they hold), ordered by prerequisite, paced to their time, and ending in **projects that match their goal** (for example, "automate your own expense sheet").
+- **A topic with no master map** is still drafted on demand, marked unreviewed, and improved as learners go through it.
+
+**Items per node** are graded automatically wherever possible:
+
+- code tasks with unit tests;
+- spreadsheet tasks with a checker that reads the cells and formulas;
+- software tasks with a state or screenshot checker;
+- concept questions.
+
+**Selling it.** A preview of the syllabus and projects, then **one lifetime price** (updates included), then the same engine as school: the placement, the node ladder, spaced review, the Curriculum engine, and changes by request.
+
+**Why it stays affordable.** A class is prepared once per **master-map node**, not per student, and served to everyone who reaches that node. The live tutor personalises it in the room. The curriculum itself costs a few rupees to build.
+
+### 2. The computer beside the canvas — four levels, cheapest first
+
+**L1 — a code sandbox in the browser.**
+
+- **What runs.** Python through **Pyodide** (WebAssembly; numpy, pandas and matplotlib included), notebook cells in the JupyterLite style, SQL through sql.js or DuckDB-WASM, and JavaScript through **WebContainers**. WebContainers needs a commercial licence for production use (UNVERIFIED; check before building).
+- **Cost.** It runs on the student's own device: compute costs us about nothing. Python runs on a phone too.
+- **What the tutor sees:** events, not pixels — every run, its output, the error and the test results.
+- **How she uses them.** An error becomes a diagnosis ("you're adding a string to a number"), then the help ladder (`decide()`), then the ledger. **A task passed unaided is rung-0 evidence on that node**, exactly like a school answer.
+- **Layout.** The board explains; a "Try it" pane beside it holds the editor. She can highlight a line in the editor, and the board mirrors the key step.
+
+**L2 — a server sandbox**, for what a browser cannot run: native packages, databases, multi-file projects, long runs, other languages.
+
+- Firecracker microVMs (E2B, or self-hosted), started only when needed.
+- About $0.05–0.17 per sandbox-hour on E2B's metered rates, so roughly Rs 4–14 an hour.
+
+**L3 — a desktop companion for real software on the learner's own computer.** This is the recommended route for professional software.
+
+- **What it is.** A small desktop app (Tauri or Electron) that, with explicit permission, shares one window with the tutor. The tutor sees frames — every few seconds, or on a click, which keeps cost down — and, where the operating system allows, the accessibility tree.
+- **What she does.** She speaks the steps, **points with an on-screen overlay** ("click Insert → PivotTable"), watches them do it, and checks the result:
+  - by reading the saved file (an .xlsx through a parser);
+  - or with a vision rubric on a screenshot.
+- **Why this route.** No licence problem (it is their own Excel or Resolve), and no GPU cost for us.
+- **Privacy.** Window-only capture, a visible pause button, nothing stored after the session unless they allow it.
+- **Streaming pricing.** On the Gemini Live API, video input is billed at 258 tokens a second at one frame a second. Frames sent only on events cut that several times over. The price per token for video: UNVERIFIED.
+
+**L4 — our computer, streamed** (premium), for learners with no laptop, or software they do not own.
+
+- **How.** A cloud desktop streamed to the browser through Kasm Workspaces, Guacamole or noVNC.
+- **Cost.** A GPU machine for Resolve costs about $0.58 an hour on-demand (AWS g4dn.xlarge, Mumbai) — about Rs 48 an hour before streaming bandwidth. So it is **sold as hour packs**, never inside the lifetime price.
+- **Licensing must be settled first:**
+  - **Microsoft Office** on a shared cloud machine needs a licence per user (Shared Computer Activation / SPLA).
+  - **DaVinci Resolve (free edition)** on hosted machines: the terms are not clearly documented (UNVERIFIED — read the Blackmagic EULA).
+  - Where licensing blocks it, teach the same skill on LibreOffice or OnlyOffice, or on the learner's Google Sheets through L3.
+
+**Web-native simulations** (alongside L1) teach the concepts before the real tool: a built-in spreadsheet widget for formulas and references, and a mini timeline for cuts and keyframes. They are fully instrumented and cost nothing, and they are where rung-0 evidence is cleanest.
+
+### 3. The LAM, extended to skills
+
+- **Procedural skills become nodes** ("insert a pivot table", "apply a colour-grading node", "write a for-loop over a list"), with prerequisites like any other.
+- **The evidence for a skill** is a task done unaided in the sandbox, simulation or companion (rung 0). A hint, or the tutor pointing, is assisted evidence, as today. A **transfer task** (the same skill in a new setting) confirms "Secure". Spaced review (FSRS) keeps procedures from fading.
+- **Misconceptions for skills** come from recurring errors (TypeError patterns, a wrong cell reference type), and the tutor names them.
+- **Everything else is the same:** the scoreboard, the ledger, the "because", the privacy rules.
+
+### 4. Order (each step shippable; after the school product is proven)
+
+1. **U0 — Python beginners.** The intake conversation, a master map, items with tests, the Pyodide pane beside the board, and run events feeding the LAM. Try the lifetime price with real learners.
+2. **U1 — more code.** SQL (DuckDB-WASM), data analysis (pandas), JavaScript (WebContainers, once the licence is checked).
+3. **U2 — spreadsheets.** The built-in spreadsheet widget for concepts; then real Google Sheets or Excel through a browser extension (it reads the web page, which is cheaper than video) or the L3 companion.
+4. **U3 — the desktop companion.** Any installed software: Excel desktop, DaVinci Resolve, Tally, Photoshop, AutoCAD.
+5. **U4 — the streamed cloud computer.** Premium hour packs, once the licences are settled.
+
+"Learn anything" topics that need no computer (languages, finance, exam prep) use today's class and board from U0.
+
+### 5. Risks, said plainly
+
+- **Accuracy of AI-built courses.** The fixes: master maps, grounding in official documentation, a reviewer, a human spot check before sale, and learner reports.
+- **Licensing:** Office, Resolve, WebContainers.
+- **Privacy of screen capture.**
+- **Phone-only learners** cannot do desktop software; L4 is the only way for them, and it is not cheap.
+- **"Lifetime"** has to be defined (what if a tool changes version). Consumer law and refunds apply.
+
+### Decisions only Aarav can make
+
+- The first universal domain (Python recommended: the sandbox is free and it runs on a phone).
+- The price band for a lifetime course.
+- Whether a person reviews each master map before it is sold.
+- Whether a desktop companion app is acceptable (it has to be installed), or browser-only first.
+- The premium cloud-computer hour price.
 
 ---
 
