@@ -1,4 +1,4 @@
-import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE } from '@ai-tutor/voice';
+import { createMicCapture, micLevelOf, MIC_SAMPLE_RATE, type Recorded } from '@ai-tutor/voice';
 import { relayFetch } from './relay';
 
 /**
@@ -105,11 +105,24 @@ export function wavOf(pcm: Int16Array, sampleRate: number): ArrayBuffer {
 /** A few chunks from just before speech started, so the first syllable is kept. */
 const PREROLL_CHUNKS = 3;
 const CHUNK_MS = 100;
+/**
+ * Quiet kept at the end of a WAV answer. The endpointer only ends an answer
+ * after `silenceMs` of quiet, and that quiet used to be uploaded whole: 900 ms
+ * of nothing in every answer, a quarter of a typical one.
+ */
+const TRAILING_QUIET_CHUNKS = 2;
+/** How long to wait for the recorder to hand over its recording after stop. */
+const RECORDING_FLUSH_MS = 1_000;
 
 export interface Heard {
   /** What the student said, or null when nothing usable arrived. */
   text: string | null;
   reason: 'heard' | 'silence' | 'cancelled' | 'error';
+  /**
+   * When the endpointer decided they had finished (`performance.now()`), so a
+   * caller can split its wait into the endpoint and the transcription.
+   */
+  speechEndedAt?: number;
 }
 
 /**
@@ -135,6 +148,8 @@ export async function listenOnce(
   const preroll: Int16Array[] = [];
   const kept: Int16Array[] = [];
   const pointer = createEndpointer();
+  const levels: number[] = [];
+  let speechEndedAt: number | undefined;
 
   let finish: (state: 'heard' | 'nothing' | 'cancelled' | 'dead') => void = () => undefined;
   let done = false;
@@ -154,7 +169,8 @@ export async function listenOnce(
       finish('cancelled');
       return;
     }
-    const state = pointer.feed(micLevelOf(chunk), CHUNK_MS);
+    const level = micLevelOf(chunk);
+    const state = pointer.feed(level, CHUNK_MS);
     if (state === 'waiting') {
       // A rolling tail of quiet, so the answer's first syllable is not clipped.
       preroll.push(chunk);
@@ -162,8 +178,13 @@ export async function listenOnce(
       return;
     }
     kept.push(chunk);
+    levels.push(level);
+    if (state === 'heard') speechEndedAt = performance.now();
     if (state === 'heard' || state === 'nothing') finish(state);
-  }, CHUNK_MS);
+    // Recorded as well as streamed: a compressed copy is a tenth of the upload
+    // (packages/relay/src/hearFormat.ts). Where the browser cannot record, the
+    // PCM below is sent as a WAV, exactly as before.
+  }, CHUNK_MS, { record: true });
 
   try {
     await mic.start();
@@ -191,7 +212,16 @@ export async function listenOnce(
   if (state === 'dead') return { text: null, reason: 'error' };
   if (state === 'nothing') return { text: null, reason: 'silence' };
 
-  const all = [...preroll, ...kept];
+  const recording = await Promise.race([
+    mic.recording(),
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), RECORDING_FLUSH_MS)),
+  ]);
+
+  // The quiet that ended the answer, all but its first moments.
+  let end = kept.length;
+  while (end > 1 && levels[end - 1] < EAR_DEFAULTS.stopLevel) end -= 1;
+  end = Math.min(kept.length, end + TRAILING_QUIET_CHUNKS);
+  const all = [...preroll, ...kept.slice(0, end)];
   const pcm = new Int16Array(all.reduce((n, c) => n + c.length, 0));
   let at = 0;
   for (const c of all) {
@@ -229,17 +259,31 @@ export async function listenOnce(
    * on, because `tools/speech` measured the same family at 0.30x realtime and
    * hopeless on Hinglish — it goes back in FRONT of this, not instead of it.
    */
+  const ended = speechEndedAt !== undefined ? { speechEndedAt } : {};
   try {
-    const res = await relayFetch('/api/hear', {
-      method: 'POST',
-      headers: { 'content-type': 'audio/wav' },
-      body: wavOf(pcm, MIC_SAMPLE_RATE),
-    });
+    const res = await postAnswer(recording, pcm);
     const data = (await res.json().catch(() => ({}))) as { text?: string };
-    if (!res.ok) return { text: null, reason: 'error' };
+    if (!res.ok) return { text: null, reason: 'error', ...ended };
     const text = (data.text ?? '').trim();
-    return text ? { text, reason: 'heard' } : { text: null, reason: 'silence' };
+    return text ? { text, reason: 'heard', ...ended } : { text: null, reason: 'silence', ...ended };
   } catch {
-    return { text: null, reason: 'error' };
+    return { text: null, reason: 'error', ...ended };
   }
+}
+
+/**
+ * The compressed recording when there is one, else the WAV. A relay that
+ * does not take compressed audio yet (415, one deployed before 2026-09-30) is
+ * asked again with the WAV, so the app and the relay can ship in either order.
+ */
+async function postAnswer(recording: Recorded | null, pcm: Int16Array): Promise<Response> {
+  const wav = (): Promise<Response> =>
+    relayFetch('/api/hear', { method: 'POST', headers: { 'content-type': 'audio/wav' }, body: wavOf(pcm, MIC_SAMPLE_RATE) });
+  if (!recording) return wav();
+  const res = await relayFetch('/api/hear', {
+    method: 'POST',
+    headers: { 'content-type': recording.type },
+    body: recording.blob,
+  });
+  return res.status === 415 ? wav() : res;
 }

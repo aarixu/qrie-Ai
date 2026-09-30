@@ -1,4 +1,5 @@
 import { isAllowedClassPath, unsafeMarkup } from './markup.ts';
+import { MAX_COMPRESSED_HEAR_BYTES, hearFormat, mediaType } from './hearFormat.ts';
 // By relative path with the extension, the way the Edge Function reaches every
 // other module here: Deno resolves files, not package names, and this gate has
 // to run in production or it is not a gate. `packages/safety` is pure — no
@@ -398,29 +399,29 @@ export function hearRelay(
   /**
    * WHAT THE METER IS ABLE TO PRICE.
    *
-   * The vendor bills by the SECOND, and the meter turns bytes into seconds by
-   * dividing by `HEARD_BYTES_PER_SECOND` — which is only true of the raw
-   * 16 kHz mono PCM `ear.ts` actually posts. A compressed body of the same
-   * duration is a fraction of the bytes, so it would be charged a fraction of
-   * the units: 16 kbps opus is about 2,000 bytes a second against 32,000, and
-   * a day's budget would then buy something like seventy-seven hours of
-   * transcription. Nothing else stops it — the per-minute request limit is
-   * nowhere near binding on a body that large.
+   * The vendor bills by the SECOND. Raw 16 kHz mono PCM is priced by its bytes
+   * (`HEARD_BYTES_PER_SECOND`); a compressed body cannot be, because its size
+   * says little about its length — 16 kbps opus is about 2,000 bytes a second
+   * against 32,000, so pricing it by bytes would sell a day's budget as some
+   * seventy-seven hours of transcription.
    *
-   * So rather than pricing a body the meter cannot read, refuse it. `ear.ts`
-   * posts `audio/wav` and nothing else, which makes this a guard on a state
-   * that should never occur rather than a restriction on a caller.
+   * So a compressed body (hearFormat.ts) is taken only where Vertex is the ear,
+   * because Vertex's own token count is what prices it afterwards: charged at
+   * the door as the longest answer the ear sends, then topped up from what
+   * Vertex says it heard (handler.ts). The OpenRouter ear returns no such
+   * count, so it still takes WAV and nothing else.
    *
-   * The cap is generous against the same source: `EAR_DEFAULTS.maxSpeechMs` is
-   * ten seconds and the endpointer's hard stop is the longest answer taken
-   * whole, so a minute of 16 kHz 16-bit mono — under 2 MB — is already three
-   * times the longest thing the room can send.
+   * The caps are generous against the same source: `EAR_DEFAULTS.maxSpeechMs`
+   * is ten seconds, so a minute of 16 kHz 16-bit mono — under 2 MB — is
+   * already three times the longest thing the room can send, and a minute at
+   * 48 kbps is well under the compressed cap.
    */
-  const type = (req.headers['content-type'] ?? 'audio/wav').split(';')[0].trim().toLowerCase();
-  if (type !== 'audio/wav' && type !== 'audio/wave' && type !== 'audio/x-wav') {
-    return { ok: false, response: fail(415, `this relay hears audio/wav, not ${type}`) };
+  const format = hearFormat(req.headers['content-type']);
+  if (format === null || (format === 'compressed' && needsKey)) {
+    const type = mediaType(req.headers['content-type']);
+    return { ok: false, response: fail(415, `this relay hears ${needsKey ? 'audio/wav' : 'audio/wav, webm, ogg or mp4'}, not ${type}`) };
   }
-  if (req.body.byteLength > MAX_HEAR_BYTES) {
+  if (req.body.byteLength > (format === 'pcm' ? MAX_HEAR_BYTES : MAX_COMPRESSED_HEAR_BYTES)) {
     return { ok: false, response: fail(413, 'that answer is longer than this relay takes') };
   }
 

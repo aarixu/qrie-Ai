@@ -194,3 +194,22 @@ describe('nextStartTime', () => {
     expect(nextStartTime(10, 0, 0.06)).toBeCloseTo(10.06, 6);
   });
 });
+
+describe('recordingType', () => {
+  const setRecorder = (supported: string[] | null): void => {
+    (globalThis as { MediaRecorder?: unknown }).MediaRecorder =
+      supported === null ? undefined : { isTypeSupported: (t: string) => supported.includes(t) };
+  };
+
+  it('prefers Opus, takes AAC in MP4 where Opus is missing, and records nothing with neither', async () => {
+    const { recordingType } = await import('../src/audio');
+    setRecorder(['audio/webm;codecs=opus', 'audio/mp4']);
+    expect(recordingType()).toBe('audio/webm;codecs=opus');
+    setRecorder(['audio/mp4']);
+    expect(recordingType()).toBe('audio/mp4');
+    setRecorder(['audio/wav']);
+    expect(recordingType()).toBeNull();
+    setRecorder(null);
+    expect(recordingType()).toBeNull();
+  });
+});

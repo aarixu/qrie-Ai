@@ -8,7 +8,8 @@ import {
   type RelayResponse,
   type SavedClass,
 } from './relays.ts';
-import { admit, type Gate, type RelayName } from './gate.ts';
+import { UNITS, admit, type Gate, type RelayName } from './gate.ts';
+import { COMPRESSED_HEAR_SECONDS, hearFormat, heardSeconds } from './hearFormat.ts';
 import { readSpeech } from './speechInput.ts';
 import { handleReport, isUuid, type ReportStore } from './report.ts';
 import { handlePrep, type PrepLocks } from './prep.ts';
@@ -396,8 +397,23 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     if (!read.ok) return fail(read.status, read.why);
   }
 
+  /**
+   * HER GOOGLE CREDENTIAL IS MINTED WHILE THE CALLER IS CHECKED, NOT AFTER
+   * (Aarav, 2026-09-30: "relay ka 0.7 sec bhi fix karo"). A fresh Edge
+   * isolate has no cached token, and minting one is a signed assertion plus a
+   * round trip to Google, which used to wait for verification and the meter
+   * to finish first. The exchange is free: nothing billed reaches a model
+   * before `admit` says yes. The token source is single-flight, so the model
+   * call below joins this mint rather than starting a second one.
+   */
+  if (deps.vertex && (relay === 'llm' || relay === 'speech' || relay === 'hear')) {
+    void deps.vertex.tokens.token().catch(() => undefined);
+  }
+
+  const admitStarted = Date.now();
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
+  const admitMs = Date.now() - admitStarted;
 
   /**
    * WHICH PREPARATION THIS CALL BELONGS TO, when the app says.
@@ -443,7 +459,9 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
       } catch {
         return fail(400, 'the request body was not JSON');
       }
+      const modelStarted = Date.now();
       const answer = await completeOnVertex(chat as Parameters<typeof completeOnVertex>[0], deps.vertex);
+      const modelMs = Date.now() - modelStarted;
       // The name the BOOKS know, not the name the browser sent. Callers speak
       // OpenAI and ask for `google/gemini-3.7-flash`; model_price stores the
       // Vertex name. Recording the prefixed one made price_at() miss every row
@@ -452,7 +470,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
       note(usageFromVertex(base, model, answer.status, answer.status === 200 ? (answer.body as OpenAiReply) : undefined));
       return {
         status: answer.status,
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'application/json', 'server-timing': serverTiming(admitMs, modelMs) },
         body: { kind: 'json', value: answer.body },
       };
     }
@@ -565,12 +583,41 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   const heard = hearRelay(req, deps.key, !deps.vertex);
   if (!heard.ok) return heard.response;
   if (deps.vertex) {
+    const modelStarted = Date.now();
     const transcript = await hearOnVertex(heard.audio, heard.contentType, deps.vertex);
+    const modelMs = Date.now() - modelStarted;
     note(usageFromVertexHear(base, VERTEX_HEAR_MODEL, transcript, heard.audio));
-    return transcript.response;
+    // A compressed answer was charged at the door as the longest the ear
+    // sends; anything Vertex says it heard past that is claimed now
+    // (hearFormat.ts). The call is made; this holds the next one.
+    if (hearFormat(heard.contentType) === 'compressed' && transcript.promptTokens !== undefined) {
+      const over = heardSeconds(transcript.promptTokens) - COMPRESSED_HEAR_SECONDS;
+      if (over > 0) {
+        try {
+          void deps.gate.ledger.claim(admitted.userId, 'hear', Math.ceil(over * UNITS.hear.units)).catch(() => undefined);
+        } catch {
+          // A ledger that throws before returning a promise: the same answer.
+        }
+      }
+    }
+    return {
+      ...transcript.response,
+      headers: { ...transcript.response.headers, 'server-timing': serverTiming(admitMs, modelMs) },
+    };
   }
   const { model, language, contentType, audio } = heard;
   const transcribed = await deps.transcribe({ model, language, contentType, audio });
   note(usageFromHear(base, heard.model, transcribed.status, heard.audio));
   return transcribed;
+}
+
+/**
+ * WHERE A CALL'S TIME WENT, for the caller to read (the Server-Timing header;
+ * the Edge adapter exposes it to the browser). `admit` is identity plus the
+ * meter; `model` is the Vertex call. Everything else a caller measures —
+ * their total minus these two — is the network between them and this
+ * function. Durations only: nothing about the caller or the content.
+ */
+export function serverTiming(admitMs: number, modelMs: number): string {
+  return `admit;dur=${Math.max(0, Math.round(admitMs))}, model;dur=${Math.max(0, Math.round(modelMs))}`;
 }

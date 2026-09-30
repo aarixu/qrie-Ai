@@ -2,6 +2,7 @@ import { speechText } from './speechInput.ts';
 import { fail, type RelayRequest, type RelayResponse } from './relays.ts';
 import type { Verifier } from './auth.ts';
 import { readTicket } from './ticket.ts';
+import { COMPRESSED_HEAR_SECONDS, hearFormat } from './hearFormat.ts';
 
 /**
  * THE LOCK AND THE METER.
@@ -112,9 +113,9 @@ export const UNITS: Record<RelayName, Price> = {
  * what apps/classroom/src/lib/ear.ts wraps in a WAV header. The same divisor
  * tools/measure/model-cost.mjs turns recorded bytes into billed seconds with.
  *
- * The vendor bills by DURATION, so a body encoded denser than raw PCM is
- * undercharged. Bounded rather than decoded: the ear posts what ear.ts built,
- * and a caller who posts something else is still held by REQUESTS_PER_MINUTE.
+ * The vendor bills by DURATION, so this divisor prices raw PCM only. A
+ * compressed body (webm, ogg, mp4) is priced by hearFormat.ts instead: the
+ * longest answer at the door, topped up from Vertex's own count afterwards.
  */
 export const HEARD_BYTES_PER_SECOND = 32_000;
 
@@ -138,8 +139,15 @@ export function unitsFor(relay: RelayName, req: RelayRequest): number {
       const text = speechText(req);
       return Math.max(1, Math.ceil([...text].length * price.units));
     }
-    case 'second':
-      return Math.max(1, Math.ceil((req.body.byteLength / HEARD_BYTES_PER_SECOND) * price.units));
+    case 'second': {
+      // A compressed body is charged as the longest answer the ear sends, and
+      // topped up after Vertex says how long it was (hearFormat.ts).
+      const seconds =
+        hearFormat(req.headers['content-type']) === 'compressed'
+          ? COMPRESSED_HEAR_SECONDS
+          : req.body.byteLength / HEARD_BYTES_PER_SECOND;
+      return Math.max(1, Math.ceil(seconds * price.units));
+    }
   }
 }
 

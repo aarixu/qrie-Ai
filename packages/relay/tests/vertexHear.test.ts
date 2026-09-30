@@ -194,16 +194,69 @@ describe('the hear relay with Vertex configured', () => {
     );
   });
 
+  it('says where its time went: identity and the meter, then the model', async () => {
+    const d = deps({ vertex: { tokens, fetch: (async () => reply('haan')) as unknown as typeof fetch } });
+    const out = await handleRelay(req(), d.deps);
+    expect(out.headers['server-timing']).toMatch(/^admit;dur=\d+, model;dur=\d+$/);
+  });
+
+  it('starts minting the Google credential while the caller is still being verified', async () => {
+    const order: string[] = [];
+    let letThrough: () => void = () => undefined;
+    const slowGate: Gate = {
+      verify: async () => {
+        order.push('verify started');
+        await new Promise<void>((r) => (letThrough = r));
+        order.push('verify done');
+        return { ok: true, user: { userId: 'student-1' } };
+      },
+      ledger: createMemoryLedger(),
+    };
+    const warming = {
+      token: async () => {
+        order.push('token');
+        return 'tok';
+      },
+      projectId: 'proj-1',
+    };
+    const d = deps({ gate: slowGate, vertex: { tokens: warming, fetch: (async () => reply('haan')) as unknown as typeof fetch } });
+    const pending = handleRelay(req(), d.deps);
+    await new Promise((r) => setTimeout(r, 10));
+    letThrough();
+    await pending;
+    expect(order.indexOf('token')).toBeLessThan(order.indexOf('verify done'));
+  });
+
+  // The credential may be warmed for a caller who is then refused (the
+  // exchange is free); the model is never called for one.
+  it('never calls the model for a caller it refuses', async () => {
+    let modelCalls = 0;
+    const d = deps({
+      vertex: {
+        tokens,
+        fetch: (async () => {
+          modelCalls++;
+          return reply('x');
+        }) as unknown as typeof fetch,
+      },
+    });
+    const out = await handleRelay(req({ headers: { 'content-type': 'audio/wav' } }), d.deps);
+    expect(out.status).toBe(401);
+    expect(modelCalls).toBe(0);
+  });
+
   it('works with no OpenRouter key at all', async () => {
     const d = deps({ key: '', vertex: { tokens, fetch: (async () => reply('haan')) as unknown as typeof fetch } });
     const out = await handleRelay(req(), d.deps);
     expect(out.status).toBe(200);
   });
 
-  it('keeps every guard the old ear had: POST only, wav only, not empty', async () => {
+  // Compressed audio is taken on Vertex since 2026-09-30 (hearFormat.test.ts);
+  // a type the ear does not know is still refused.
+  it('keeps every guard the old ear had: POST only, audio only, not empty', async () => {
     const d = deps({ vertex: { tokens, fetch: (async () => reply('x')) as unknown as typeof fetch } });
     expect((await handleRelay(req({ body: new Uint8Array() }), d.deps)).status).toBe(400);
-    expect((await handleRelay(req({ headers: { authorization: 'Bearer good', 'content-type': 'audio/ogg' } }), d.deps)).status).toBe(415);
+    expect((await handleRelay(req({ headers: { authorization: 'Bearer good', 'content-type': 'audio/flac' } }), d.deps)).status).toBe(415);
   });
 
   it('still uses OpenRouter on a laptop with no service account', async () => {

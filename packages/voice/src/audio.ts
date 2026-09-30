@@ -229,6 +229,35 @@ export interface MicCapture {
   start(): Promise<void>;
   /** Releases the mic and stops emitting. Safe to call twice. */
   stop(): void;
+  /**
+   * With `record`, the compressed recording of everything the mic heard from
+   * start to stop; settles once the recorder has flushed after stop(). Null
+   * when the browser cannot record a type the ear takes, or nothing was
+   * recorded.
+   */
+  recording(): Promise<Recorded | null>;
+}
+
+/** A compressed recording and its bare media type (`audio/webm`, `audio/ogg`, `audio/mp4`). */
+export interface Recorded {
+  blob: Blob;
+  type: string;
+}
+
+/**
+ * WHAT TO RECORD IN, best first: Opus where the browser has it (Chrome,
+ * Android, Firefox), AAC in MP4 where it does not (Safari). The relay's ear
+ * takes exactly these (packages/relay/src/hearFormat.ts). 32 kbps: at 24 kbps
+ * Opus lost the word "hint" on a measured clip (2026-09-30).
+ */
+export const RECORDING_TYPES = ['audio/webm;codecs=opus', 'audio/ogg;codecs=opus', 'audio/mp4'] as const;
+export const RECORDING_BITS_PER_SECOND = 32_000;
+
+/** The first recording type this browser supports, or null. */
+export function recordingType(): string | null {
+  const recorder = (globalThis as { MediaRecorder?: { isTypeSupported?: (t: string) => boolean } }).MediaRecorder;
+  if (!recorder || typeof recorder.isTypeSupported !== 'function') return null;
+  return RECORDING_TYPES.find((t) => recorder.isTypeSupported!(t)) ?? null;
 }
 
 /**
@@ -242,8 +271,13 @@ export interface MicCapture {
 export function createMicCapture(
   onChunk: (pcm16: Int16Array) => void,
   chunkMs: number = DEFAULT_CHUNK_MS,
+  options: { record?: boolean } = {},
 ): MicCapture {
   let running = false;
+  let recorder: MediaRecorder | null = null;
+  const recordedParts: Blob[] = [];
+  let settleRecording: (r: Recorded | null) => void = () => undefined;
+  const recorded = new Promise<Recorded | null>((resolve) => (settleRecording = resolve));
   let ctx: AudioContext | null = null;
   let stream: MediaStream | null = null;
   let source: MediaStreamAudioSourceNode | null = null;
@@ -276,6 +310,18 @@ export function createMicCapture(
 
   const stop = (): void => {
     running = false;
+    // The recorder first: it flushes what it holds as it stops, and only
+    // then may the tracks it records go.
+    if (recorder && recorder.state !== 'inactive') {
+      try {
+        recorder.stop();
+      } catch {
+        settleRecording(null);
+      }
+    } else {
+      settleRecording(null);
+    }
+    recorder = null;
     release();
   };
 
@@ -298,6 +344,26 @@ export function createMicCapture(
     if (!running) {
       release();
       return;
+    }
+
+    const type = options.record ? recordingType() : null;
+    if (type) {
+      try {
+        const bare = type.split(';')[0];
+        recorder = new MediaRecorder(stream, { mimeType: type, audioBitsPerSecond: RECORDING_BITS_PER_SECOND });
+        recorder.ondataavailable = (e: BlobEvent): void => {
+          if (e.data && e.data.size > 0) recordedParts.push(e.data);
+        };
+        recorder.onstop = (): void => {
+          const blob = new Blob(recordedParts, { type: bare });
+          settleRecording(blob.size > 0 ? { blob, type: bare } : null);
+        };
+        recorder.onerror = (): void => settleRecording(null);
+        recorder.start();
+      } catch {
+        recorder = null;
+        settleRecording(null);
+      }
     }
 
     // Ask for the rate the API wants; browsers that refuse are handled by
@@ -342,7 +408,7 @@ export function createMicCapture(
     sink.connect(ctx.destination);
   };
 
-  return { start, stop };
+  return { start, stop, recording: () => (options.record ? recorded : Promise.resolve(null)) };
 }
 
 // ---------------------------------------------------------------------------

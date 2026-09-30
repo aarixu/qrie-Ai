@@ -20,8 +20,12 @@ export {
   nextStartTime,
   createMicCapture,
   createAudioPlayer,
+  recordingType,
+  RECORDING_TYPES,
+  RECORDING_BITS_PER_SECOND,
   type PcmChunker,
   type MicCapture,
+  type Recorded,
   type AudioPlayer,
 } from './audio';
 

@@ -121,6 +121,10 @@ const CORS = {
   'access-control-allow-headers': 'authorization, content-type, x-session-id, x-prep-id',
   'access-control-allow-methods': 'GET, POST, OPTIONS',
   'access-control-max-age': '86400',
+  // Where a call's time went (handler.ts `serverTiming`): readable by the app
+  // for its latency numbers, which a cross-origin response hides unless told.
+  'access-control-expose-headers': 'server-timing',
+  'timing-allow-origin': '*',
 };
 
 /**
