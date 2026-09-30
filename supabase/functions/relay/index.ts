@@ -48,6 +48,12 @@
 //                          supabase secrets set --env-file <(printf 'GOOGLE_SERVICE_ACCOUNT_JSON=%s' "$(cat key.json)")
 //                        rather than on a command line, where the private key
 //                        would land in shell history.
+//   GEMINI_API_KEY       optional. The Gemini Developer API (AI Studio) key,
+//                        used ONLY to mint Live ephemeral tokens at
+//                        /relay/live-token (packages/relay/src/liveToken.ts).
+//                        Absent: that one route answers 503 'unconfigured'
+//                        and every other route is untouched — which is why it
+//                        is not in the `missing` list below.
 // Supabase supplies SUPABASE_URL, SUPABASE_ANON_KEY and
 // SUPABASE_SERVICE_ROLE_KEY by itself.
 
@@ -76,6 +82,7 @@ const SERVICE_ROLE_KEY = env('SUPABASE_SERVICE_ROLE_KEY');
 const OPENROUTER_API_KEY = env('OPENROUTER_API_KEY');
 const TICKET_SECRET = env('RELAY_TICKET_SECRET');
 const SERVICE_ACCOUNT_JSON = env('GOOGLE_SERVICE_ACCOUNT_JSON');
+const GEMINI_API_KEY = env('GEMINI_API_KEY');
 
 /**
  * GOOGLE CLOUD, WHEN THERE IS A KEY FOR IT — AND NO QUIET WAY BACK.
@@ -162,6 +169,8 @@ const deps: HandlerDeps = {
    */
   ...(Deno.env.get('CURIE_SPEECH_URL') ? { speechUrl: Deno.env.get('CURIE_SPEECH_URL') } : {}),
   ...(vertex ? { vertex } : {}),
+  // Live tokens only; passed when set so that absent reads as absent, not ''.
+  ...(GEMINI_API_KEY ? { geminiApiKey: GEMINI_API_KEY } : {}),
   gate: {
     verify,
     ledger,

@@ -26,7 +26,19 @@ import { readTicket } from './ticket.ts';
  * file cannot tell the difference.
  */
 
-export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons';
+/**
+ * `live` is not a relay the way the others are: nothing passes through it.
+ * It mints a token (liveToken.ts) and the browser then talks to Google
+ * directly, so the mint is the ONLY moment the meter sees a Live class. It is
+ * named here so that moment is priced like any other call.
+ *
+ * It needs no migration to be claimed. claim_relay (0016, the current body)
+ * declares `p_relay` and never reads it, and relay_usage has no relay column,
+ * so 'live' is metered, counted against both daily ceilings and the per-minute
+ * window exactly like 'llm'. It is NOT recordable as usage: see `UsageEvent`
+ * in usage.ts.
+ */
+export type RelayName = 'llm' | 'speech' | 'hear' | 'class' | 'icons' | 'live';
 
 /**
  * The route families that spend no vendor money: a report, a prep lock, an
@@ -99,12 +111,54 @@ export type Price =
   | { per: 'character'; units: number }
   | { per: 'second'; units: number };
 
+/**
+ * ONE LIVE CLASS, CLAIMED AT THE MINT, BECAUSE THE MINT IS ALL WE SEE.
+ *
+ * A Live session bills Google straight from the browser; no byte of it passes
+ * this server. So the whole expected class is claimed when its token is
+ * minted — per call, flat, like llm and for a stronger version of llm's
+ * reason: nothing about the session exists yet.
+ *
+ * AN ESTIMATE, AND EVERY INPUT IS UNVERIFIED. Rates are Google's published
+ * paid tier for gemini-3.8-live and gemini-3.1-flash-live-preview (one row,
+ * https://ai.google.dev/gemini-api/docs/pricing, read 2026-09-30): audio in
+ * $3/M, audio out $12/M, text in $0.75/M, 25 audio tokens a second. The class
+ * is ~10 minutes with the mic streaming throughout and her speaking for ~5:
+ *
+ *   mic in       600 s x 25 = 15,000 audio tokens x $3/M     $0.0450
+ *   her voice    300 s x 25 =  7,500 audio tokens x $12/M    $0.0900
+ *   re-reading the context on every turn — 20 tutor turns, one every 30 s:
+ *     the instruction + plan, ~3,000 text tokens a turn
+ *                  20 x 3,000 = 60,000 x $0.75/M            $0.0450
+ *     half the session's audio so far on average,
+ *     (15,000 + 7,500) / 2 = 11,250 a turn
+ *                  20 x 11,250 = 225,000 x $3/M             $0.6750
+ *   ----------------------------------------------------------------
+ *   one class                                                $0.8550
+ *   x Rs 95.6/USD (the table's rate) = Rs 81.74 = 8,174 paise -> 8,200
+ *   units, rounded up to the next hundred.
+ *
+ * The re-reading line is most of it and the least known. That a Live turn
+ * bills every token already in the session's context is what a web search
+ * attributed to Google Cloud's Vertex pricing page (the page itself was not
+ * read); whether the Gemini API bills the same, whether silent mic audio stays
+ * in that context, and what the tutor's own audio costs when re-read (priced
+ * above as audio in) are all UNVERIFIED. The lab's measured CostLines will
+ * say; re-price from them.
+ *
+ * WHAT THIS NUMBER DOES TO THE DAY, said out loud: 8,200 of a student's 12,000
+ * units is ONE Live class a student a day. 50,000 a project day fits six, and
+ * six leave 800 units for every other call in the product before claim_relay
+ * starts answering 'capped'. And the claim is made before the mint and is
+ * never refunded, so a mint Google refuses still costs the student that class.
+ */
 export const UNITS: Record<RelayName, Price> = {
   llm: { per: 'call', units: 85 },
   hear: { per: 'second', units: 0.69 },
   speech: { per: 'character', units: 0.29 },
   class: { per: 'call', units: 10 },
   icons: { per: 'call', units: 1 },
+  live: { per: 'call', units: 8_200 },
 };
 
 /**

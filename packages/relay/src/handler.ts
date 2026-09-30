@@ -33,6 +33,7 @@ import {
   vertexSpeechCall,
 } from './vertexSpeech.ts';
 import { VERTEX_HEAR_MODEL, hearOnVertex } from './vertexHear.ts';
+import { liveTokenUnconfigured, mintLiveToken, readLiveTokenRequest } from './liveToken.ts';
 import {
   usageFromClass,
   usageFromHear,
@@ -115,6 +116,18 @@ export interface HandlerDeps {
    * credential too.
    */
   vertex?: VertexOptions;
+  /**
+   * The Gemini Developer API key (AI Studio), for ONE thing: minting Live
+   * ephemeral tokens at /live-token (liveToken.ts). Ephemeral tokens are a
+   * Gemini Developer API feature minted with this key; the Vertex service
+   * account above plays no part in them. The key itself never leaves the
+   * server — the browser gets a token pinned to one model, good for one new
+   * session within two minutes.
+   *
+   * Absent means that route answers 503 with reason 'unconfigured'; nothing
+   * else in the relay reads it.
+   */
+  geminiApiKey?: string;
   /**
    * Hand raw audio to a transcriber. Left to the host because it is the one
    * place a platform's FormData shows through; `transcribeViaFormData` in
@@ -309,6 +322,32 @@ export async function handleTicket(req: RelayRequest, gate: Gate): Promise<Relay
 }
 
 /**
+ * A Live token, for a verified caller whose claim for one whole class was
+ * allowed — in that order, and both before Google is called.
+ *
+ * The meter has to be paid HERE because it never sees the class: the session
+ * runs from the browser straight to Google, so this mint is the only request
+ * of a Live class that reaches the relay. `UNITS.live` in gate.ts is what it
+ * costs and why. No usage row is written, deliberately: `UsageEvent` in
+ * usage.ts says why 'live' cannot be one yet.
+ *
+ * Refusals that cost nothing come before the meter, as for the class relay:
+ * the wrong method, a host with no key, a model the app does not use.
+ */
+async function handleLiveToken(req: RelayRequest, deps: HandlerDeps): Promise<RelayResponse> {
+  if (req.method !== 'POST') return fail(405, 'POST only');
+  if (!deps.geminiApiKey) return liveTokenUnconfigured();
+
+  const asked = readLiveTokenRequest(req);
+  if (!asked.ok) return asked.response;
+
+  const admitted = await admit(req, 'live', deps.gate);
+  if (!admitted.ok) return admitted.response;
+
+  return mintLiveToken(deps.geminiApiKey, { model: asked.model, ...(deps.now ? { now: deps.now } : {}) });
+}
+
+/**
  * Route, admit, then relay.
  *
  * The order matters and is the whole point of the file: NOTHING reaches
@@ -354,9 +393,13 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
   }
 
   const path = new URL(req.url, 'http://relay.local').pathname;
-  if (path.split('/').filter(Boolean).pop() === 'ticket') {
+  const last = path.split('/').filter(Boolean).pop();
+  if (last === 'ticket') {
     return handleTicket(req, deps.gate);
   }
+  // Below the switch for the ticket's reason: a Live token outlives the
+  // switch by its whole half hour.
+  if (last === 'live-token') return handleLiveToken(req, deps);
 
   // The route families beside the relays. Each does its own admission —
   // identity plus the per-minute window, zero units. These ones DO sit

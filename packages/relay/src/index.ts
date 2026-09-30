@@ -112,6 +112,25 @@ export {
 
 export { TICKET_TTL_MS, mintTicket, readTicket, type Ticket } from './ticket.ts';
 
+// Live voice in production: a short-lived token minted with the Gemini key,
+// so the browser can open a Live socket without ever holding the key.
+export {
+  LIVE_CONSTRAINED_URL,
+  LIVE_TOKEN_ENDPOINT,
+  LIVE_TOKEN_MODELS,
+  LIVE_TOKEN_NEW_SESSION_MS,
+  LIVE_TOKEN_TTL_MS,
+  LIVE_TOKEN_USES,
+  MAX_LIVE_TOKEN_REQUEST_BYTES,
+  isLiveTokenModel,
+  liveTokenUnconfigured,
+  mintLiveToken,
+  readLiveTokenRequest,
+  type LiveTokenModel,
+  type LiveTokenOptions,
+  type LiveTokenReply,
+} from './liveToken.ts';
+
 export {
   createMemoryUsage,
   createSupabaseUsage,
