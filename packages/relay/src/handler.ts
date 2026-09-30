@@ -410,10 +410,8 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     void deps.vertex.tokens.token().catch(() => undefined);
   }
 
-  const admitStarted = Date.now();
   const admitted = await admit(req, relay, deps.gate);
   if (!admitted.ok) return admitted.response;
-  const admitMs = Date.now() - admitStarted;
 
   /**
    * WHICH PREPARATION THIS CALL BELONGS TO, when the app says.
@@ -470,7 +468,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
       note(usageFromVertex(base, model, answer.status, answer.status === 200 ? (answer.body as OpenAiReply) : undefined));
       return {
         status: answer.status,
-        headers: { 'content-type': 'application/json', 'server-timing': serverTiming(admitMs, modelMs) },
+        headers: { 'content-type': 'application/json', 'server-timing': serverTiming(admitted.timing, modelMs) },
         body: { kind: 'json', value: answer.body },
       };
     }
@@ -602,7 +600,7 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
     }
     return {
       ...transcript.response,
-      headers: { ...transcript.response.headers, 'server-timing': serverTiming(admitMs, modelMs) },
+      headers: { ...transcript.response.headers, 'server-timing': serverTiming(admitted.timing, modelMs) },
     };
   }
   const { model, language, contentType, audio } = heard;
@@ -613,11 +611,15 @@ export async function handleRelay(req: RelayRequest, deps: HandlerDeps): Promise
 
 /**
  * WHERE A CALL'S TIME WENT, for the caller to read (the Server-Timing header;
- * the Edge adapter exposes it to the browser). `admit` is identity plus the
- * meter; `model` is the Vertex call. Everything else a caller measures —
- * their total minus these two — is the network between them and this
- * function. Durations only: nothing about the caller or the content.
+ * the Edge adapter exposes it to the browser). `verify` is identity, `claim`
+ * the meter, `model` the Vertex call. Everything else a caller measures —
+ * their total minus these — is the network between them and this function.
+ * Durations only: nothing about the caller or the content.
  */
-export function serverTiming(admitMs: number, modelMs: number): string {
-  return `admit;dur=${Math.max(0, Math.round(admitMs))}, model;dur=${Math.max(0, Math.round(modelMs))}`;
+export function serverTiming(admit: { verifyMs: number; claimMs: number } | undefined, modelMs: number): string {
+  const dur = (n: number): number => Math.max(0, Math.round(n));
+  return [
+    ...(admit ? [`verify;dur=${dur(admit.verifyMs)}`, `claim;dur=${dur(admit.claimMs)}`] : []),
+    `model;dur=${dur(modelMs)}`,
+  ].join(', ');
 }

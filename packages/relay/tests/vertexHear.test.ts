@@ -197,7 +197,7 @@ describe('the hear relay with Vertex configured', () => {
   it('says where its time went: identity and the meter, then the model', async () => {
     const d = deps({ vertex: { tokens, fetch: (async () => reply('haan')) as unknown as typeof fetch } });
     const out = await handleRelay(req(), d.deps);
-    expect(out.headers['server-timing']).toMatch(/^admit;dur=\d+, model;dur=\d+$/);
+    expect(out.headers['server-timing']).toMatch(/^verify;dur=\d+, claim;dur=\d+, model;dur=\d+$/);
   });
 
   it('starts minting the Google credential while the caller is still being verified', async () => {

@@ -195,7 +195,12 @@ export interface Gate {
 }
 
 export type Admission =
-  | { ok: true; userId: string }
+  | {
+      ok: true;
+      userId: string;
+      /** How long identity and the meter each took, in ms, for Server-Timing. */
+      timing?: { verifyMs: number; claimMs: number };
+    }
   | { ok: false; response: RelayResponse };
 
 /**
@@ -280,16 +285,18 @@ export async function admit(
     if (ticket) userId = ticket.userId;
   }
 
+  const verifyStarted = Date.now();
   if (userId === null) {
     const verified = await gate.verify(req.headers['authorization'] ?? req.headers['Authorization']);
     if (!verified.ok) return { ok: false, response: fail(verified.status, verified.why) };
     userId = verified.user.userId;
   }
+  const claimStarted = Date.now();
 
   const claim = await gate.ledger.claim(userId, relay, unitsFor(relay, req));
   if (!claim.allowed) return { ok: false, response: refuse(claim) };
 
-  return { ok: true, userId };
+  return { ok: true, userId, timing: { verifyMs: claimStarted - verifyStarted, claimMs: Date.now() - claimStarted } };
 }
 
 /**

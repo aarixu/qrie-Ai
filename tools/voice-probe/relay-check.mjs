@@ -41,19 +41,32 @@ const SAID = [
   'pata nahi, ek hint do na',
   'haan samajh aa gaya, aage chalo',
 ];
-const times = [];
-for (let i = 0; i < SAID.length; i++) {
-  const file = `tools/voice-probe/out/clip-${i}.wav`;
-  if (!existsSync(file)) continue;
-  const t0 = performance.now();
-  const res = await fetch(`${RELAY}/api/hear`, { method: 'POST', headers: { ...headers, 'content-type': 'audio/wav' }, body: readFileSync(file) });
-  const ms = Math.round(performance.now() - t0);
-  const body = await res.json().catch(() => ({}));
-  times.push(ms);
-  console.log(`hear ${res.status} ${ms} ms  said "${SAID[i]}"  heard "${body.text ?? JSON.stringify(body).slice(0, 120)}"${/[ऀ-ॿ]/.test(body.text ?? '') ? '  <-- DEVANAGARI' : ''}`);
+// Each answer as the WAV and, where probe.mjs's clips were also encoded
+// (ffmpeg, 32 kbps Opus), as the compressed recording the app now sends.
+for (const [ext, type] of [['wav', 'audio/wav'], ['webm', 'audio/webm']]) {
+  const times = [];
+  const inside = [];
+  for (let i = 0; i < SAID.length; i++) {
+    const file = `tools/voice-probe/out/clip-${i}.${ext}`;
+    if (!existsSync(file)) continue;
+    const bytes = readFileSync(file);
+    const t0 = performance.now();
+    const res = await fetch(`${RELAY}/api/hear`, { method: 'POST', headers: { ...headers, 'content-type': type }, body: bytes });
+    const ms = Math.round(performance.now() - t0);
+    const body = await res.json().catch(() => ({}));
+    const timing = res.headers.get('server-timing') ?? '';
+    const part = (name) => Number(new RegExp(`${name};dur=([0-9]+)`).exec(timing)?.[1] ?? NaN);
+    const [verify, claim, model] = [part('verify'), part('claim'), part('model')];
+    times.push(ms);
+    if (Number.isFinite(model)) inside.push({ verify, claim, model, network: ms - verify - claim - model });
+    console.log(`hear ${ext} ${res.status} ${ms} ms (${bytes.length} B; ${timing || 'no server-timing'})  heard "${body.text ?? JSON.stringify(body).slice(0, 120)}"${/[ऀ-ॿ]/.test(body.text ?? '') ? '  <-- DEVANAGARI' : ''}`);
+  }
+  const med = (xs) => [...xs].sort((a, b) => a - b)[Math.floor(xs.length / 2)];
+  if (times.length) {
+    console.log(`hear ${ext} through the relay: median ${med(times)} ms, slowest ${Math.max(...times)} ms` +
+      (inside.length ? `; median verify ${med(inside.map((x) => x.verify))} ms, claim ${med(inside.map((x) => x.claim))} ms, model ${med(inside.map((x) => x.model))} ms, network+edge ${med(inside.map((x) => x.network))} ms` : ''));
+  }
 }
-times.sort((a, b) => a - b);
-if (times.length) console.log(`hear through the relay: median ${times[Math.floor(times.length / 2)]} ms, slowest ${times[times.length - 1]} ms`);
 
 for (const [lang, text] of [
   ['en', 'Good thinking. So where in the cell does the glucose start breaking down?'],
