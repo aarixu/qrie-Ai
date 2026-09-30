@@ -170,6 +170,108 @@ Aarav chose Class 8 Science, opened his first class, and got **Respiration** (a 
 
 ---
 
+## ► NEXT TRACK (Aarav, 2026-09-30): a LAM better than Squirrel AI's — PLAN, NOT BUILT
+
+Aarav: *"mujhe Squirrel AI se better LAM banana hai."* "Better" has to be something we can measure, or it is a slogan. So this plan defines better first, then the machine, then the order.
+
+### What "better" means here (the scoreboard)
+
+1. **Primary.** Unassisted mastery gain per learning minute. This is the repo's one number: rung-0 answers only, so help cannot count as learning.
+2. **Retention.** Right, cold, on a spaced review 30 days later.
+3. **Prediction.** Every answer is predicted before it arrives. We measure AUC and Brier on held-out answers, so we know whether the model knows the student.
+4. **Efficacy.** In-product A/B and micro-randomised trials, then a controlled trial with a partner school, published with the method. Squirrel's efficacy numbers are largely its own.
+5. **Cost.** At or under Rs 5 per student-hour. **Trust:** a "because" on every decision, no camera or emotion surveillance, and the DPDP rules.
+
+### Where Squirrel AI is ahead, and how we close each gap
+
+Their side is as reported by Squirrel AI, UNVERIFIED.
+
+| They have | We close it with |
+|---|---|
+| Data from 24M students and 10B behaviours | Cold start: pre-train on public data (EdNet, 131M interactions; ASSISTments; Eedi, with misconceptions; Junyi). LLM-estimated item difficulty before any student answers. Then a flywheel: every class writes the ledger, and parameters are re-fitted nightly. |
+| ~30,000 hand-made "nano" points per stage | Split a node **only where students split** (the data shows two skills inside one outcome). Plus 3–10 items per node, generated and verified (maths-check, reviewer, human spot checks). |
+| Calibrated items and parameters | Rasch/IRT fitted per item once it has enough answers; slip and guess per probe (the trainer exists: `currentParams`). |
+| Years of content and teachers in learning centres | A live AI tutor that prepares any topic, with teacher insight through the LMS. |
+
+### Where we are already ahead, and must stay
+
+- **Help is separated from mastery.** Unassisted mastery is kept apart from assisted mastery, and exposure apart from retrieval. Every help step is recorded with its rung and strategy. A hinted right answer can never masquerade as mastery.
+- **Process evidence, not only answers.** Working is checked step by step (`checkStep`: arithmetic slip, method error or wrong value), spoken reasoning is judged, and misconceptions are named per distractor. A score says what; this says why.
+- **A live, human-like class** with a help ladder (`decide()`), not only practice sets. In Hinglish or English.
+- **Explainability.** Every decision carries a "because" in the ledger.
+- **Cost and privacy.** Rs 5 an hour on a phone; no hardware, no cameras.
+
+### The machine: five layers (proposed)
+
+**1. The knowledge space**, as ontology.
+
+- **Nodes** are observable outcomes. They get cross-class and cross-subject prerequisite edges (C8).
+- **Misconceptions** become nodes of their own (a registry: T3), linked to the distractors and step errors that reveal them.
+- **Items** come in several kinds — multiple choice, numeric, open, spoken, step-by-step working — and each carries its parameters.
+- **Micro-skills** are added by data-driven splitting.
+
+**2. The learner state.**
+
+- **Knowledge**, in three versions:
+  - v1, today: a BKT-like belief with knowledge-space propagation;
+  - v2: IRT-calibrated items, and BKT per node with an individual prior;
+  - v3: an attention-based knowledge-tracing model (the simpleKT/AKT family), trained offline on our ledger plus the public sets. It runs in **shadow mode** — it predicts, but does not decide — until it beats v2 on held-out answers.
+- **Features only we have** go into every version: the help rung, the strategy used, the reasoning verdict, step errors and time taken.
+- **Memory.** An FSRS-style model (difficulty, stability, retrievability) replaces the Leitner boxes. It is fitted on our reviews and schedules each node to a target recall.
+- **Misconceptions.** The probability, per student, of each named misconception.
+- **Learner profile** (the part Squirrel calls MCM, done ethically): pace, persistence, help-seeking (hint abuse and wheel-spinning, both built), which explanation strategy works for this student (H5 tags), and confidence calibration. Asked, and inferred from behaviour — never read off a camera.
+
+**3. The policy** decides what to do next, on three time scales:
+
+- **Within a question:** `decide()`, today's ladder.
+- **Within a class:** when to probe, when to practise, when to move on, and the difficulty to aim at (a ~70–85 % success zone).
+- **Across classes:** the Curriculum engine — the next topic, reviews, remediation, keeping pace with school, exam dates.
+
+It starts rule-based, as today. Then **contextual bandits** take the choices whose outcome we can measure (which explanation strategy, which item difficulty), inside hard guardrails:
+
+- never skip a prerequisite not shown held cold;
+- never reveal the answer early;
+- always record a "because".
+
+Every policy is evaluated offline by replaying the ledger before it goes live.
+
+**4. The generative layer (LLM).** The tutor's voice and board, explanations, new items, curriculum proposals. **The LLM proposes; code decides and verifies:** maths-check, the leak check, the reviewer, the safety screen. This is where a class beats a practice app.
+
+**5. Evaluation**, always on:
+
+- the prediction log (AUC and Brier);
+- the primary metric and 30-day retention;
+- cost per student-hour;
+- micro-randomised trials inside the product;
+- a dashboard;
+- a published method.
+
+### Where it runs
+
+- **Learner state** is computed on the device, and on the server by the ledger fold (both built).
+- **Training is offline:** export the ledger, fit IRT, FSRS and the KT model in Python (pyKT), and ship the parameters as JSON. No model call at decision time, so the Rs 5 ceiling holds.
+
+### Order (each phase has an exit gate)
+
+- **L0 — built.** The ledger; unassisted mastery; the knowledge-space placement test; `decide()`; spaced review; the warm-up; step checking; spoken judging.
+- **L1 — foundations.** From the study-structure plan: mandatory placement, C8 edges, 3+ items per node, the misconception registry, the status ladder, the Curriculum engine.
+  - *Exit:* every decision records a "because"; a prediction is logged for every answer.
+- **L2 — calibration.** Rasch/IRT per item once it has about 200 answers; FSRS fitted to our reviews; per-probe slip and guess trained; LLM difficulty priors for new items.
+  - *Exit:* held-out AUC and Brier beat L0's (targets set once the baseline is measured).
+- **L3 — deep knowledge tracing in shadow.** Pre-trained on the public sets, fine-tuned on our ledger.
+  - *Exit:* it beats L2 on held-out answers for two weeks, then it switches on.
+- **L4 — policy learning.** Bandits for strategy and difficulty, and micro-randomised trials with guardrails.
+  - *Exit:* a measured gain in the primary metric.
+- **L5 — the learner profile, and teacher and parent insight.** An efficacy trial with a partner school, then publish.
+
+### Honest limits
+
+- **Deep models need data.** Until we have hundreds of thousands of our own interactions, the gains come from the item bank, the graph edges, calibration and FSRS — not from a bigger model. Research on large knowledge-tracing datasets finds simple models competitive.
+- **Public datasets are not NCERT.** They pre-train the dynamics of learning; the node mapping is ours to do.
+- **Everything needs DPDP compliance** (TD14: consent and data retention) before training on student data.
+
+---
+
 ## ► NEXT SESSION STARTS HERE — build the tutor, T0 first
 
 Aarav, 2026-09-28: *"mai nye session me AI tutor bnaan complete krunga."* The build plan is in Part 2, "The AI tutor build plan — T0–T9". This section records what 2026-09-28 proved and what to do first.
