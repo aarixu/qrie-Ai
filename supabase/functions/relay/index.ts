@@ -136,10 +136,10 @@ const CORS = {
  * WHO IS ASKING: Supabase is asked over the network (auth.ts
  * createSupabaseVerifier), which also refuses a session that has signed out.
  * createJwksVerifier (the signature checked here) was tried on 2026-10-01 and
- * measured: the check itself fell from 35-87 ms to 1-4 ms, but nearly every
- * call lands on a fresh isolate and the meter's claim then paid the
- * connection to Supabase that the identity call used to pay, rising from about
- * 65 to about 90 ms. About 15 ms saved, for tokens that would outlive sign-out
+ * measured: the check itself fell to 1-4 ms, but nearly every call lands on a
+ * fresh isolate and the meter's claim then paid the connection to Supabase
+ * that the identity call used to pay. Identity plus meter: median about 91 ms
+ * against about 125 ms. 10-35 ms saved, for tokens that would outlive sign-out
  * by up to an hour — so it is not used here.
  */
 const verify = cacheVerifier(createSupabaseVerifier(SUPABASE_URL, ANON_KEY));

@@ -2,8 +2,7 @@
  * PUSH THE PROJECT'S PUBLIC SIGNING KEYS TO THE RELAY (RELAY_JWKS).
  *
  * NOT IN USE: the deployed relay checks sign-ins over the network again, and
- * nothing reads RELAY_JWKS (measured 2026-10-01: the local check saved about
- * 15 ms; see createJwksVerifier). Kept for the day the relay wires
+ * nothing reads RELAY_JWKS (measured 2026-10-01: the local check saved 10-35 ms; see createJwksVerifier). Kept for the day the relay wires
  * createJwksVerifier back in.
  *
  * The relay checks a sign-in's signature itself (packages/relay/src/auth.ts

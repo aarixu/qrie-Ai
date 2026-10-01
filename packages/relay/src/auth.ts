@@ -97,13 +97,14 @@ export function createSupabaseVerifier(
  * signed out. A token checked here stays good until its own expiry (one hour
  * by default) even after sign-out.
  *
- * AND WHAT IT BOUGHT, MEASURED (2026-10-01, deployed, 36 calls): the check
- * fell from 35-87 ms to 1-4 ms, but nearly every call lands on a fresh
- * isolate, and the meter's claim — the next call to the same Supabase host —
- * then paid the connection the identity call used to pay, rising from about
- * 65 ms to about 90 ms. About 15 ms in all. Not worth the hour, so the
- * deployed relay does not use this (supabase/functions/relay/index.ts). It
- * becomes worth it where nothing else needs that connection.
+ * AND WHAT IT BOUGHT, MEASURED (2026-10-01, deployed, 36 calls each way, the
+ * same hour): the check fell to 1-4 ms, but nearly every call lands on a
+ * fresh isolate, and the meter's claim — the next call to the same Supabase
+ * host — then paid the connection the identity call used to pay. Identity
+ * plus meter: median about 91 ms against about 125 ms, mean about 140-150 ms
+ * against about 160 ms. 10-35 ms in all. Not worth the hour, so the deployed
+ * relay does not use this (supabase/functions/relay/index.ts). It becomes
+ * worth it where nothing else needs that connection.
  *
  * Anything this cannot check — a legacy HS256 token, a key id the published
  * set does not have (a rotation newer than the cached keys), or keys that
