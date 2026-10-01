@@ -5,7 +5,7 @@
   "title": "Respiration",
   "klass": 10,
   "subject": "Science",
-  "boardLessonId": "class10-respiration",
+  "boardLessonId": "class10-respiration-live-board",
   "minutes": 20,
   "opener": {
     "id": "opener-energy-for-a-sprint",

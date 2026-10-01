@@ -65,7 +65,8 @@ describe('writing a kept class into a content folder', () => {
     expect(fs.existsSync(path.join(dir, 'class10-respiration/generated/p.png'))).toBe(true);
     const lessons = readJson('index.json').lessons;
     expect(lessons.map((l: { id: string }) => l.id)).toEqual(['class10-respiration', 'class10-blood']);
-    expect(lessons[0]).toMatchObject({ title: 'Respiration', path: 'class10-respiration/lesson.json' });
+    // The catalogue keeps the name its menus already show.
+    expect(lessons[0]).toMatchObject({ title: 'Old', path: 'class10-respiration/lesson.json' });
   });
 
   it('refuses a file path that would leave the class folder', () => {

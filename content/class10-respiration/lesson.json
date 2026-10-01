@@ -1,90 +1,1650 @@
 {
   "formatVersion": 1,
   "id": "class10-respiration",
-  "title": "Respiration",
-  "subtitle": "Class 10 · Life Processes",
+  "title": "Respiration in Living Organisms",
+  "subtitle": "How cells unlock energy from food",
   "language": "en",
-  "topicRef": "class10-science/life-processes/respiration",
-  "canvas": { "w": 1000, "h": 620 },
+  "canvas": {
+    "w": 12340,
+    "h": 620
+  },
   "elements": [
-    { "kind": "title", "id": "t_title", "x": 500, "y": 80, "text": "Respiration", "sub": "Burning fuel without a flame" },
-
-    { "kind": "note", "id": "n_hook", "x": 110, "y": 240, "w": 240, "text": "Breathing is NOT respiration. Breathing just moves air. Respiration happens inside every single cell." },
-
-    { "kind": "formula", "id": "f_resp", "x": 500, "y": 240, "text": "C6H12O6 + 6O2 --> 6CO2 + 6H2O + ENERGY" },
-    { "kind": "note", "id": "n_resp", "x": 340, "y": 310, "w": 320, "text": "Glucose + oxygen → carbon dioxide + water + energy. The exact reverse of photosynthesis!", "tone": "accent" },
-
-    { "kind": "box", "id": "b_glucose", "x": 120, "y": 220, "w": 170, "h": 85, "label": "GLUCOSE" },
-    { "kind": "box", "id": "b_aerobic", "x": 430, "y": 150, "w": 210, "h": 85, "label": "AEROBIC\nwith oxygen", "tone": "good" },
-    { "kind": "box", "id": "b_anaerobic", "x": 430, "y": 320, "w": 210, "h": 85, "label": "ANAEROBIC\nwithout oxygen", "tone": "bad" },
-    { "kind": "arrow", "id": "a_g_ae", "from": { "x": 295, "y": 240 }, "to": { "x": 425, "y": 195 }, "tone": "good" },
-    { "kind": "arrow", "id": "a_g_an", "from": { "x": 295, "y": 285 }, "to": { "x": 425, "y": 360 }, "tone": "bad" },
-    { "kind": "note", "id": "n_aerobic_out", "x": 680, "y": 155, "w": 240, "text": "Lots of energy. CO2 + water. Happens in mitochondria.", "tone": "good" },
-    { "kind": "note", "id": "n_anaerobic_out", "x": 680, "y": 325, "w": 240, "text": "Very little energy. In muscles: lactic acid — that's the cramp after a sprint!", "tone": "bad" },
-
-    { "kind": "text", "id": "x_yeast", "x": 500, "y": 480, "text": "In yeast, anaerobic respiration makes alcohol + CO2 — that's how bread rises", "muted": true },
-
-    { "kind": "note", "id": "n_recap", "x": 340, "y": 450, "w": 320, "text": "Every cell burns glucose all day, every day. Oxygen makes the burn efficient.", "tone": "accent" }
+    {
+      "kind": "title",
+      "id": "b1_0",
+      "x": 500,
+      "y": 86,
+      "text": "Respiration",
+      "sub": "Energy release inside cells"
+    },
+    {
+      "kind": "graphic",
+      "id": "b1__runner",
+      "x": 386.6925,
+      "y": 192,
+      "w": 45.47,
+      "h": 45.47,
+      "noun": "runner",
+      "label": "Running fast",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "b1__lungs",
+      "x": 265.42775,
+      "y": 255.47,
+      "w": 45.47,
+      "h": 45.47,
+      "noun": "lungs",
+      "label": "Lungs (Breathing)",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "b1__cell",
+      "x": 507.95725,
+      "y": 255.47,
+      "w": 45.47,
+      "h": 45.47,
+      "noun": "cell",
+      "label": "Cell (Respiration)",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "b1_9",
+      "from": {
+        "x": 324.89775000000003,
+        "y": 278.205
+      },
+      "to": {
+        "x": 493.95724999999993,
+        "y": 278.205
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b1_9_label",
+      "x": 316.28300000000013,
+      "y": 241.32550000000015,
+      "text": "Oxygen carried by blood",
+      "size": 13.94,
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "b1_10",
+      "x": 147.40000000000003,
+      "y": 326.94,
+      "w": 705.1999999999999,
+      "heading": "Breathing vs Respiration",
+      "items": [
+        {
+          "term": "Breathing",
+          "meaning": "Physical process of gas exchange in respiratory organs"
+        },
+        {
+          "term": "Respiration",
+          "meaning": "Biochemical breakdown of food inside cells to release energy"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "b2_1",
+      "x": 1760,
+      "y": 86,
+      "text": "Aerobic Respiration",
+      "sub": "Complete breakdown of glucose"
+    },
+    {
+      "kind": "image",
+      "id": "mitochondrion_cell",
+      "x": 1562,
+      "y": 150,
+      "w": 396,
+      "h": 261,
+      "src": "generated/mitochondrion_cell.png",
+      "alt": "Diagram of a cell showing cytoplasm and mitochondrion with folded inner membrane"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_5",
+      "x": 1489.7,
+      "y": 170,
+      "text": "Mitochondrion",
+      "size": 20
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_6",
+      "x": 2014.8,
+      "y": 170,
+      "text": "Cytoplasm",
+      "size": 20
+    },
+    {
+      "kind": "formula",
+      "id": "b2_9",
+      "x": 3020,
+      "y": 235.32,
+      "text": "C6H12O6 + 6O2 -> 6CO2 + 6H2O + 38 ATP"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_10",
+      "x": 3020,
+      "y": 322.4,
+      "text": "Site: Mitochondria (Aerobic)",
+      "size": 36
+    },
+    {
+      "kind": "handwrite",
+      "id": "b2_11",
+      "x": 3020,
+      "y": 410.4,
+      "text": "ATP: Energy currency of the cell",
+      "size": 36
+    },
+    {
+      "kind": "box",
+      "id": "b2_13_c0",
+      "x": 3850,
+      "y": 251,
+      "w": 860,
+      "h": 128,
+      "label": "",
+      "tone": "accent",
+      "as": "banner"
+    },
+    {
+      "kind": "text",
+      "id": "b2_13_h0",
+      "x": 4280,
+      "y": 289,
+      "text": "Energy Cycle",
+      "size": 19
+    },
+    {
+      "kind": "text",
+      "id": "b2_13_b0",
+      "x": 4280,
+      "y": 317.8,
+      "text": "Photosynthesis stores solar energy in glucose. Aerobic respiration releases that stored",
+      "size": 16
+    },
+    {
+      "kind": "text",
+      "id": "b2_13_b0_l1",
+      "x": 4280,
+      "y": 340.2,
+      "text": "energy for cellular work.",
+      "size": 16
+    },
+    {
+      "kind": "title",
+      "id": "b3_1",
+      "x": 5540,
+      "y": 86,
+      "text": "Pathways of Glucose Breakdown",
+      "sub": "Aerobic versus Anaerobic"
+    },
+    {
+      "kind": "flow",
+      "id": "b3_3",
+      "x": 5110,
+      "y": 211,
+      "w": 860,
+      "steps": [
+        {
+          "label": "Glucose",
+          "note": "6-carbon molecule"
+        },
+        {
+          "label": "Pyruvate",
+          "note": "3-carbon molecule + Some Energy"
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b3_4",
+      "x": 5540,
+      "y": 400.4,
+      "text": "Step 1: Glycolysis occurs in Cytoplasm (No oxygen needed)",
+      "size": 36
+    },
+    {
+      "kind": "chart",
+      "id": "b3_6",
+      "x": 6370,
+      "y": 150,
+      "w": 860,
+      "h": 150.94,
+      "chartType": "bar",
+      "caption": "ATP Produced per Glucose Molecule",
+      "unit": "ATP",
+      "data": [
+        {
+          "label": "Aerobic (with O2)",
+          "value": 38
+        },
+        {
+          "label": "Anaerobic (without O2)",
+          "value": 2
+        }
+      ],
+      "tone": "accent"
+    },
+    {
+      "kind": "list",
+      "id": "b3_8",
+      "x": 6447.4,
+      "y": 326.94,
+      "w": 705.1999999999999,
+      "heading": "Comparison",
+      "items": [
+        {
+          "term": "Aerobic Respiration",
+          "meaning": "Uses oxygen, occurs in mitochondria, complete breakdown, yields 38 ATP"
+        },
+        {
+          "term": "Anaerobic Respiration",
+          "meaning": "Without oxygen, occurs in cytoplasm, incomplete breakdown, yields only 2 ATP"
+        }
+      ]
+    },
+    {
+      "kind": "title",
+      "id": "b4_1",
+      "x": 8060,
+      "y": 86,
+      "text": "Anaerobic Respiration in Muscle Cells",
+      "sub": "Lack of Oxygen during strenuous exercise"
+    },
+    {
+      "kind": "graphic",
+      "id": "b4__muscle",
+      "x": 7660.516363636363,
+      "y": 192,
+      "w": 122,
+      "h": 122,
+      "noun": "leg",
+      "label": "Active muscle",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "b4__cramp_leg",
+      "x": 8089.283636363636,
+      "y": 192,
+      "w": 122,
+      "h": 122,
+      "noun": "leg",
+      "label": "Cramping muscle",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "b4_5",
+      "from": {
+        "x": 7796.516363636363,
+        "y": 253
+      },
+      "to": {
+        "x": 8075.283636363636,
+        "y": 253
+      },
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_5_label",
+      "x": 7935.9,
+      "y": 175.9894461859979,
+      "text": "Lactic acid builds up",
+      "size": 22.887296611434543,
+      "tone": "bad"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_7",
+      "x": 8060,
+      "y": 383.4,
+      "text": "Demand for energy exceeds oxygen supply",
+      "size": 36
+    },
+    {
+      "kind": "formula",
+      "id": "b4_9",
+      "x": 8060,
+      "y": 462.32,
+      "text": "Pyruvate (3-carbon) -> Lactic Acid (3-carbon) + 2 ATP"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b4_12",
+      "x": 9320,
+      "y": 327.4,
+      "text": "Accumulation of lactic acid causes painful cramps",
+      "size": 36,
+      "tone": "bad"
+    },
+    {
+      "kind": "mark",
+      "id": "b4_10",
+      "x": 7655.68,
+      "y": 428.32,
+      "w": 808.64,
+      "h": 52.400000000000006,
+      "shape": "box",
+      "tone": "accent"
+    },
+    {
+      "kind": "title",
+      "id": "b5_1",
+      "x": 10580,
+      "y": 86,
+      "text": "Anaerobic Respiration in Yeast",
+      "sub": "Fermentation"
+    },
+    {
+      "kind": "graphic",
+      "id": "b5__yeast",
+      "x": 10218.216363636364,
+      "y": 192,
+      "w": 122,
+      "h": 122,
+      "noun": "yeast",
+      "label": "Yeast cells",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "graphic",
+      "id": "b5__dough",
+      "x": 10616.823636363637,
+      "y": 192,
+      "w": 122,
+      "h": 122,
+      "noun": "bread",
+      "label": "Rising dough",
+      "labelSide": "beside"
+    },
+    {
+      "kind": "arrow",
+      "id": "b5_5",
+      "from": {
+        "x": 10354.216363636364,
+        "y": 253
+      },
+      "to": {
+        "x": 10602.823636363637,
+        "y": 253
+      },
+      "tone": "accent"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b5_5_label",
+      "x": 10478.52,
+      "y": 175.17519822976212,
+      "text": "CO2 expands dough",
+      "size": 25.21371934353679,
+      "tone": "accent"
+    },
+    {
+      "kind": "formula",
+      "id": "b5_7",
+      "x": 10580,
+      "y": 374.32,
+      "text": "Pyruvate -> Ethanol (C2H5OH) + CO2 + 2 ATP"
+    },
+    {
+      "kind": "handwrite",
+      "id": "b5_10",
+      "x": 10580,
+      "y": 461.4,
+      "text": "Fermentation: Anaerobic breakdown into ethanol and CO2",
+      "size": 36
+    },
+    {
+      "kind": "handwrite",
+      "id": "b5_12",
+      "x": 11840,
+      "y": 327.4,
+      "text": "Trapped CO2 bubbles make dough soft and fluffy",
+      "size": 36
+    },
+    {
+      "kind": "mark",
+      "id": "b5_8",
+      "x": 10257.52,
+      "y": 340.32,
+      "w": 644.96,
+      "h": 52.400000000000006,
+      "shape": "box",
+      "tone": "accent"
+    }
   ],
   "beats": [
     {
-      "id": "hook",
-      "topic": "Breathing is not respiration",
-      "narration": "Let me start by breaking a myth. Breathing is not respiration. Breathing only moves air in and out of your lungs — that's transport. Respiration is what happens after: deep inside every one of your cells, fuel is being burned. Right now. Billions of tiny fires without a single flame.",
-      "show": ["t_title", "n_hook"],
-      "focus": ["n_hook"],
-      "minMs": 2000,
-      "teaches": ["sci10-lp-respiration-vs-breathing"]
+      "id": "b1_1",
+      "topic": "Breathing versus Respiration",
+      "narration": "Hello! What's up — ready to dive in?",
+      "show": [
+        "b1_0"
+      ],
+      "frame": [
+        "b1_0"
+      ]
     },
     {
-      "id": "equation",
-      "topic": "The respiration equation",
-      "narration": "Here is the reaction. Glucose plus oxygen gives carbon dioxide, water, and energy. Look closely — does it feel familiar? It is photosynthesis running backwards. Plants build glucose to store energy; cells break glucose to release it.",
-      "show": ["f_resp", "n_resp"],
-      "focus": ["f_resp"],
-      "minMs": 2500,
-      "teaches": ["sci10-lp-respiration-equation"]
+      "id": "b1_2",
+      "topic": "Breathing versus Respiration",
+      "narration": "Think about the last time you ran to catch a school bus or sprinted in PT period.",
+      "show": [
+        "b1_0",
+        "b1__runner"
+      ],
+      "frame": [
+        "b1_0",
+        "b1__runner"
+      ]
     },
     {
-      "id": "two_paths",
-      "topic": "Aerobic vs anaerobic",
-      "narration": "Now, glucose can be broken two ways. With oxygen — aerobic respiration. Without oxygen — anaerobic respiration. Same starting fuel, very different results. Watch the two paths.",
-      "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an"],
-      "focus": ["b_glucose"],
-      "teaches": ["sci10-lp-aerobic-vs-anaerobic"]
+      "id": "b1_3",
+      "topic": "Breathing versus Respiration",
+      "narration": "Your chest heaved, taking in huge gulps of air. Why do our bodies need to take in oxygen during and after running?",
+      "ask": {
+        "question": "Why do our bodies need to take in oxygen during and after running?",
+        "expect": "To release energy from the food or glucose stored inside our cells.",
+        "hint": "Think about what your muscle cells are burning to keep you running.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "To release energy from glucose inside cells",
+              "correct": true,
+              "why": "The oxygen travels to every single cell to break down food and unlock energy."
+            },
+            {
+              "text": "To fill up the lungs so they do not collapse",
+              "correct": false,
+              "why": "Lungs hold the air, but the demand comes from muscles burning fuel.",
+              "followUp": "Where does that oxygen go after leaving the lungs?"
+            },
+            {
+              "text": "To cool down the body temperature",
+              "correct": false,
+              "why": "Sweating cools us down; oxygen is consumed as chemical fuel in cells.",
+              "followUp": "What chemical process is happening inside muscles that uses oxygen?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "A car burns petrol with air to produce movement.",
+              "line": "Petrol + Oxygen -> Motion + Exhaust"
+            },
+            {
+              "say": "Similarly, our cells burn glucose with oxygen to produce usable energy.",
+              "line": "Glucose + Oxygen -> Energy + Carbon Dioxide"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "Just like a kitchen gas stove needs oxygen to burn gas and cook food, your cells need oxygen to burn digested food for energy.",
+            "line": "Fuel + Oxygen -> Energy"
+          },
+          {
+            "mode": "analogy",
+            "say": "Breathing is like the delivery truck bringing fuel cylinders to a factory, while respiration is the factory running its machines on that fuel.",
+            "line": "Breathing: gas exchange; Respiration: energy release"
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1__runner"
+      ],
+      "frame": [
+        "b1_0",
+        "b1__runner"
+      ]
     },
     {
-      "id": "aerobic",
-      "topic": "Aerobic respiration — mitochondria",
-      "narration": "The aerobic path is the efficient one. Inside the mitochondria — the powerhouse of the cell — glucose is fully broken down with oxygen, releasing a large amount of energy, plus carbon dioxide and water. This is how you are powered almost all the time.",
-      "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_aerobic_out"],
-      "focus": ["b_aerobic", "n_aerobic_out"],
-      "teaches": ["sci10-lp-mitochondria-role", "sci10-lp-aerobic-vs-anaerobic"]
+      "id": "b1_4",
+      "topic": "Breathing versus Respiration",
+      "narration": "Breathing is simply taking air in and pushing it out through your lungs.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs"
+      ],
+      "frame": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs"
+      ]
     },
     {
-      "id": "anaerobic",
-      "topic": "Anaerobic respiration — lactic acid",
-      "narration": "But sprint hard for a minute and your muscles run out of oxygen. They switch to the anaerobic path — much less energy, and a leftover called lactic acid. That burning cramp in your legs after running? That's lactic acid. Now you know its name.",
-      "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_aerobic_out", "n_anaerobic_out"],
-      "focus": ["b_anaerobic", "n_anaerobic_out"],
-      "minMs": 2000,
-      "teaches": ["sci10-lp-lactic-acid", "sci10-lp-aerobic-vs-anaerobic"]
+      "id": "b1_5",
+      "topic": "Breathing versus Respiration",
+      "narration": "Respiration, on the other hand, is the chemical breakdown of glucose inside every living cell to release energy.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10"
+      ],
+      "frame": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10"
+      ],
+      "teaches": [
+        "sci10-lp-respiration-vs-breathing"
+      ]
     },
     {
-      "id": "yeast",
-      "topic": "Anaerobic respiration in yeast",
-      "narration": "One more twist. In yeast, the anaerobic path produces alcohol and carbon dioxide instead. Those CO2 bubbles are exactly what makes bread rise and dosa batter puff up overnight. Think about it — your breakfast is powered by respiration too.",
-      "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "x_yeast"],
-      "focus": ["x_yeast"],
-      "teaches": ["sci10-lp-yeast-fermentation"]
+      "id": "b2_1",
+      "topic": "Aerobic Respiration in Mitochondria",
+      "narration": "When oxygen is available, cells carry out aerobic respiration.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell"
+      ],
+      "frame": [
+        "b2_1",
+        "mitochondrion_cell"
+      ]
     },
     {
-      "id": "recap",
-      "topic": "Recap",
-      "narration": "So remember: respiration is the cell burning glucose for energy — with oxygen when it can, without when it must. Breathing just delivers the oxygen; the real fire is in the cell. Next, we'll see how all this fuel and oxygen actually travels around the body. Doubts? Raise your hand.",
-      "show": ["b_glucose", "b_aerobic", "b_anaerobic", "a_g_ae", "a_g_an", "n_recap"],
-      "focus": ["n_recap"],
-      "checks": ["sci10-lp-aerobic-vs-anaerobic", "sci10-lp-respiration-vs-breathing"]
+      "id": "b2_2",
+      "topic": "Aerobic Respiration in Mitochondria",
+      "narration": "The power station where this happens is the mitochondrion.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6"
+      ],
+      "frame": [
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6"
+      ]
+    },
+    {
+      "id": "b2_3",
+      "topic": "Aerobic Respiration in Mitochondria",
+      "narration": "Inside the mitochondrion, glucose reacts completely with oxygen to produce carbon dioxide, water, and energy in the form of ATP.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11"
+      ],
+      "frame": [
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11"
+      ]
+    },
+    {
+      "id": "b2_4",
+      "topic": "Aerobic Respiration in Mitochondria",
+      "narration": "Notice this chemical equation carefully. It is the exact chemical reverse of photosynthesis.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1"
+      ],
+      "frame": [
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1"
+      ]
+    },
+    {
+      "id": "b2_5",
+      "topic": "Aerobic Respiration in Mitochondria",
+      "narration": "Which organelle is the site of aerobic respiration inside the cell?",
+      "ask": {
+        "question": "Which organelle is the site of aerobic respiration inside the cell?",
+        "expect": "The mitochondrion (or mitochondria).",
+        "hint": "Think of the organelle known as the powerhouse of the cell.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Mitochondria",
+              "correct": true,
+              "why": "Mitochondria contain the enzymes required for complete oxidation of pyruvate into carbon dioxide and water."
+            },
+            {
+              "text": "Nucleus",
+              "correct": false,
+              "why": "The nucleus stores genetic material DNA, it does not carry out cellular respiration.",
+              "followUp": "Which organelle is called the powerhouse of the cell?"
+            },
+            {
+              "text": "Ribosome",
+              "correct": false,
+              "why": "Ribosomes synthesise proteins, they do not release energy from glucose.",
+              "followUp": "Where are the oxidative enzymes that produce ATP located?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Plants make food using sunlight in chloroplasts.",
+              "line": "6CO2 + 6H2O -> C6H12O6 + 6O2"
+            },
+            {
+              "say": "Cells break that food down using oxygen in mitochondria.",
+              "line": "C6H12O6 + 6O2 -> 6CO2 + 6H2O + Energy"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "visual",
+            "say": "Picture the mitochondrion as a furnace: glucose and oxygen go in, exhaust gases carbon dioxide and water vapor come out, and energy coins called ATP are minted.",
+            "line": "Mitochondria = Cellular Furnace"
+          },
+          {
+            "mode": "analogy",
+            "say": "If glucose is a cheque of high value, mitochondria are the bank counter that cashes it into usable small currency notes called ATP.",
+            "line": "Glucose -> Mitochondria -> 38 ATP"
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1"
+      ],
+      "frame": [
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1"
+      ],
+      "teaches": [
+        "sci10-lp-mitochondria-role",
+        "sci10-lp-respiration-equation"
+      ],
+      "checks": [
+        "sci10-lp-respiration-vs-breathing"
+      ]
+    },
+    {
+      "id": "b3_1",
+      "topic": "Glucose Breakdown Pathways",
+      "narration": "Every single breakdown starts in the cytoplasm with the same first step.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4"
+      ],
+      "frame": [
+        "b3_1",
+        "b3_3",
+        "b3_4"
+      ]
+    },
+    {
+      "id": "b3_2",
+      "topic": "Glucose Breakdown Pathways",
+      "narration": "From pyruvate, the pathway splits based on whether oxygen is present or absent.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6"
+      ],
+      "frame": [
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6"
+      ]
+    },
+    {
+      "id": "b3_3",
+      "topic": "Glucose Breakdown Pathways",
+      "narration": "Aerobic respiration yields roughly nineteen times more energy per glucose than anaerobic respiration.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8"
+      ],
+      "frame": [
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8"
+      ]
+    },
+    {
+      "id": "b3_4",
+      "topic": "Glucose Breakdown Pathways",
+      "narration": "Why does aerobic respiration yield so much more ATP than anaerobic respiration?",
+      "ask": {
+        "question": "Why does aerobic respiration yield so much more ATP than anaerobic respiration?",
+        "expect": "Because glucose is completely oxidised or broken down into carbon dioxide and water in the presence of oxygen.",
+        "hint": "Think about whether the glucose molecule is broken down completely or only partially.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Glucose is completely broken down in the presence of oxygen",
+              "correct": true,
+              "why": "Oxygen allows complete oxidation of carbon bonds all the way to carbon dioxide, releasing all stored chemical energy."
+            },
+            {
+              "text": "Oxygen itself contains all the energy",
+              "correct": false,
+              "why": "Energy comes from chemical bonds in glucose; oxygen is just the electron acceptor that lets it break down fully.",
+              "followUp": "Does the energy come from oxygen or from the bonds in food?"
+            },
+            {
+              "text": "Anaerobic respiration destroys the energy",
+              "correct": false,
+              "why": "Energy is never destroyed; in anaerobic pathways, most of the energy remains trapped in unoxidised products like ethanol or lactic acid.",
+              "followUp": "Where is the remaining energy trapped when glucose is not fully oxidised?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Burning wood completely to fine ash releases all its heat.",
+              "line": "Wood + O2 -> Ash + Maximum Heat"
+            },
+            {
+              "say": "Charring wood without air leaves behind charcoal with most heat still trapped.",
+              "line": "Wood (No O2) -> Charcoal (Energy still trapped)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "analogy",
+            "say": "Aerobic respiration is like completely burning dry logs to fine ash. Anaerobic is like half-burning it into charcoal, leaving most energy locked inside.",
+            "line": "Complete oxidation = 38 ATP vs Partial oxidation = 2 ATP"
+          },
+          {
+            "mode": "steps",
+            "say": "First, 6-carbon glucose splits into 3-carbon pyruvate. With oxygen, all remaining carbon bonds break into carbon dioxide. Without oxygen, big 2-carbon or 3-carbon fragments remain unbroken.",
+            "line": "O2 present: Pyruvate -> CO2; O2 absent: Pyruvate -> Organic molecule"
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8"
+      ],
+      "frame": [
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8"
+      ],
+      "teaches": [
+        "sci10-lp-aerobic-vs-anaerobic"
+      ],
+      "checks": [
+        "sci10-lp-mitochondria-role",
+        "sci10-lp-respiration-equation"
+      ]
+    },
+    {
+      "id": "b4_1",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "Now let us see what happened in your legs during that sprint.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label"
+      ]
+    },
+    {
+      "id": "b4_2",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "When you exercise vigorously, your muscles demand energy faster than oxygen can reach them.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7"
+      ]
+    },
+    {
+      "id": "b4_3",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "To keep going, muscle cells temporarily switch to anaerobic respiration in the cytoplasm.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10"
+      ]
+    },
+    {
+      "id": "b4_4",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "Instead of turning into carbon dioxide, pyruvate turns into lactic acid.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ]
+    },
+    {
+      "id": "b4_5",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "A hot water bath or gentle massage improves blood circulation, breaking down the accumulated lactic acid.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ]
+    },
+    {
+      "id": "b4_6",
+      "topic": "Lactic Acid and Muscle Cramps",
+      "narration": "What substance is produced in our muscle cells when there is a lack of oxygen, causing cramps?",
+      "ask": {
+        "question": "What substance is produced in our muscle cells when there is a lack of oxygen, causing cramps?",
+        "expect": "Lactic acid.",
+        "hint": "It is a three-carbon acid formed from pyruvate during temporary anaerobic respiration.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Lactic acid",
+              "correct": true,
+              "why": "Under oxygen shortage, pyruvate is converted into 3-carbon lactic acid, which accumulates and causes muscle cramps."
+            },
+            {
+              "text": "Ethanol or alcohol",
+              "correct": false,
+              "why": "Yeast produces alcohol, human muscles produce lactic acid.",
+              "followUp": "Do human muscle cells produce ethanol or an acid during anaerobic respiration?"
+            },
+            {
+              "text": "Carbonic acid",
+              "correct": false,
+              "why": "Carbon dioxide dissolves as carbonic acid, but muscle cramp is caused specifically by lactic acid from pyruvate.",
+              "followUp": "Which three-carbon compound is formed directly from pyruvate without oxygen in muscle?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Resting muscle has plenty of oxygen.",
+              "line": "Pyruvate + Oxygen -> CO2 + H2O (No cramps)"
+            },
+            {
+              "say": "Sprinting muscle lacks sufficient oxygen.",
+              "line": "Pyruvate -> Lactic Acid (Cramps occur)"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "Think of a factory generator switching to emergency battery backup during a power cut. The muscle uses an emergency pathway that works fast but leaves behind lactic acid waste.",
+            "line": "Oxygen deficit -> Lactic acid backup"
+          },
+          {
+            "mode": "visual",
+            "say": "Imagine lactic acid molecules piling up in muscle fibres like sticky traffic, jamming the muscle until fresh blood flow washes it clear.",
+            "line": "Lactic acid accumulation -> Cramp"
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ],
+      "frame": [
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12"
+      ],
+      "teaches": [
+        "sci10-lp-lactic-acid"
+      ],
+      "checks": [
+        "sci10-lp-aerobic-vs-anaerobic"
+      ]
+    },
+    {
+      "id": "b5_1",
+      "topic": "Fermentation in Yeast",
+      "narration": "Microscopic fungi like yeast also respire without oxygen, but with a different result.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12",
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label"
+      ],
+      "frame": [
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label"
+      ]
+    },
+    {
+      "id": "b5_2",
+      "topic": "Fermentation in Yeast",
+      "narration": "In yeast, the three-carbon pyruvate is broken down into ethanol and carbon dioxide gas.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12",
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8"
+      ],
+      "frame": [
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8"
+      ]
+    },
+    {
+      "id": "b5_3",
+      "topic": "Fermentation in Yeast",
+      "narration": "We call this process fermentation.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12",
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10"
+      ],
+      "frame": [
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10"
+      ]
+    },
+    {
+      "id": "b5_4",
+      "topic": "Fermentation in Yeast",
+      "narration": "The carbon dioxide gas bubbles get trapped in dough, making bread and bhature fluffy.",
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12",
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10",
+        "b5_12"
+      ],
+      "frame": [
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10",
+        "b5_12"
+      ]
+    },
+    {
+      "id": "b5_5",
+      "topic": "Fermentation in Yeast",
+      "narration": "Why does bread dough rise when yeast is added to it?",
+      "ask": {
+        "question": "Why does bread dough rise when yeast is added to it?",
+        "expect": "Because yeast releases carbon dioxide gas bubbles during anaerobic respiration (fermentation).",
+        "hint": "Think about which gas is released during fermentation and gets trapped inside the dough.",
+        "whyProbe": {
+          "askedAs": "open",
+          "options": [
+            {
+              "text": "Yeast produces carbon dioxide gas which forms trapped bubbles",
+              "correct": true,
+              "why": "Anaerobic respiration in yeast releases carbon dioxide gas, which gets trapped in the stretchy gluten network and expands the dough."
+            },
+            {
+              "text": "Yeast multiplies and takes up physical space",
+              "correct": false,
+              "why": "Yeast cells are microscopic; the massive rise in volume is caused by expanding carbon dioxide gas bubbles.",
+              "followUp": "What gas is produced by yeast during fermentation?"
+            },
+            {
+              "text": "Ethanol evaporates and lifts the dough",
+              "correct": false,
+              "why": "Ethanol remains in liquid form until baking; the rising during proofing is driven by carbon dioxide gas.",
+              "followUp": "Which gas is released alongside ethanol in fermentation?"
+            }
+          ]
+        },
+        "workedExample": {
+          "steps": [
+            {
+              "say": "Baking soda with lemon juice releases carbon dioxide bubbles in dhokla batter.",
+              "line": "Acid + Carbonate -> CO2 bubbles"
+            },
+            {
+              "say": "Similarly, yeast respiring on sugar releases carbon dioxide bubbles in dough.",
+              "line": "Glucose -> Ethanol + CO2 bubbles"
+            }
+          ]
+        },
+        "alternates": [
+          {
+            "mode": "everyday",
+            "say": "When you make idli or bhatura batter, leaving it overnight lets microbes produce carbon dioxide gas bubbles that make the batter fluffy.",
+            "line": "Fermentation -> CO2 bubbles -> Fluffy texture"
+          },
+          {
+            "mode": "steps",
+            "say": "Yeast consumes sugar in flour without oxygen, producing ethanol and carbon dioxide gas. The gas cannot escape the thick dough, so it blows tiny pockets inside.",
+            "line": "Sugar -> Ethanol + CO2 gas"
+          }
+        ]
+      },
+      "show": [
+        "b1_0",
+        "b1__runner",
+        "b1__lungs",
+        "b1__cell",
+        "b1_9",
+        "b1_9_label",
+        "b1_10",
+        "b2_1",
+        "mitochondrion_cell",
+        "b2_5",
+        "b2_6",
+        "b2_9",
+        "b2_10",
+        "b2_11",
+        "b2_13_c0",
+        "b2_13_h0",
+        "b2_13_b0",
+        "b2_13_b0_l1",
+        "b3_1",
+        "b3_3",
+        "b3_4",
+        "b3_6",
+        "b3_8",
+        "b4_1",
+        "b4__muscle",
+        "b4__cramp_leg",
+        "b4_5",
+        "b4_5_label",
+        "b4_7",
+        "b4_9",
+        "b4_10",
+        "b4_12",
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10",
+        "b5_12"
+      ],
+      "frame": [
+        "b5_1",
+        "b5__yeast",
+        "b5__dough",
+        "b5_5",
+        "b5_5_label",
+        "b5_7",
+        "b5_8",
+        "b5_10",
+        "b5_12"
+      ],
+      "teaches": [
+        "sci10-lp-yeast-fermentation"
+      ],
+      "checks": [
+        "sci10-lp-lactic-acid"
+      ]
     }
-  ]
+  ],
+  "topicRef": "class10-science/life-processes/respiration"
 }

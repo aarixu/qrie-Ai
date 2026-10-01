@@ -108,7 +108,7 @@ describe('the checker catches', () => {
     const { plan, context } = copy();
     plan.ideas[1].board.beatId = 'equations';
     const { errors } = checkPlan(plan, context);
-    expect(errors).toContain('ideas[1].board.beatId: "equations" is not a beat of class10-respiration');
+    expect(errors).toContain('ideas[1].board.beatId: "equations" is not a beat of class10-respiration-live-board');
   });
 
   it('a key the type does not have, and a missing one', () => {
